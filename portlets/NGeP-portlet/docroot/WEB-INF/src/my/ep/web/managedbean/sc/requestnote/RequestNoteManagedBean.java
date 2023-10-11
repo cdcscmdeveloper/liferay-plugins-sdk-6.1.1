@@ -373,6 +373,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean qtyViewOnly = false;
     //28865 - End
     
+    //29557 - Start
+    private boolean purchaseInquiryContinuity = Boolean.FALSE;
+    //29557 - End
+    
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2153,4 +2157,25 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.qtyViewOnly = qtyViewOnly;
 	}
 	//28865 - End
+	
+	// 29557 - Start
+	/**
+	 * Checks if is purchase inquiry continuity.
+	 * 
+	 * @return the purchaseInquiryContinuity
+	 */
+	public boolean isPurchaseInquiryContinuity() {
+		return purchaseInquiryContinuity;
+	}
+
+	/**
+	 * Sets the purchase inquiry continuity.
+	 * 
+	 * @param purchaseInquiryContinuity
+	 *            the purchaseInquiryContinuity to set
+	 */
+	public void setPurchaseInquiryContinuity(boolean purchaseInquiryContinuity) {
+		this.purchaseInquiryContinuity = purchaseInquiryContinuity;
+	}
+	// 29557 - End
 }

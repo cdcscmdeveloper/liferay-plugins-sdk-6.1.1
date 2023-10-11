@@ -1,0 +1,35 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:outputPanel>
+		<p:dataTable rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices}"
+			width="100%" var="price" rowKey="#{price}">
+            <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.published.per.unit']}
+				</f:facet>
+				<h:outputText value="#{price.pricing.price}" size="10" readonly="true" style="text-align:right">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </h:outputText>
+			</p:column>
+			 <p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sc.price.inquiry.price.offered.per.unit']}
+				</f:facet>
+				<p:inputText requiredMessage="#{lbl['lbl.sc.price.inquiry.new.price.required']}" disabled="#{!isStockAvailable or !isPendingSupplierRespStatus}" required="#{isStockAvailable}" id="itemPricePromo" value="#{price.itemPrice}" size="10" style="text-align:right">
+					<p:ajax event="change" update="@([id$=itemPricePromo])" listener="#{purchaseInquiryBackingBean.onChangeNewPrice('02', price.itemPrice, price.pricing.price)}"/>
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </p:inputText>
+			</p:column>
+		</p:dataTable>
+	</p:outputPanel>
+</ui:composition>

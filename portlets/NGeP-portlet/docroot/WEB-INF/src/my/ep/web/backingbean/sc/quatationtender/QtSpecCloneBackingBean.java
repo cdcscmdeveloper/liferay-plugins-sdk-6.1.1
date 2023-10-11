@@ -135,6 +135,7 @@ public class QtSpecCloneBackingBean extends
 	private static final String FULFILMENT_SCHEDULE = "lbl.sc.spec.ful.schedule";
 	private static final String SPECIFICATION = "lbl.sc.committee.endorsement.specification";
 	private String scoreTypeN = "";//ahmaa-#25138
+	private static final BigDecimal TECHNICAL_ITEM_SCORE = new BigDecimal(50);//35113
 
 	public QtSpecCloneBackingBean() {
 		this.root = new DefaultTreeNode("Root Node", null);
@@ -415,8 +416,11 @@ public class QtSpecCloneBackingBean extends
 				&& this.getManagedBean().getScQtCheckSt2financeProposalList().size()!=0){
 					
 					for(ScQtCheckList toDelete:this.getManagedBean().getScQtCheckSt2financeProposalList()){
-						//if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-						//		.equalsIgnoreCase(toDelete.getDefinationType().getParameterCode())) {
+						if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+								.equalsIgnoreCase(toDelete.getDefinationType().getParameterCode()) && this.getManagedBean().getQt().isZonal()) {//34701_start
+							toDelete.setCloned(Boolean.TRUE);	
+							
+						}//34701_start
 							toDelete.setSelected(true);
 							toDelete.setDeleted(true);
 							//toRemove.add(toDelete);
@@ -1967,6 +1971,17 @@ public class QtSpecCloneBackingBean extends
 					
 				}
 			}
+			boolean isTechnicalItemExist=Boolean.FALSE;//35113-start
+			if (null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+				isTechnicalItemExist=Boolean.TRUE;
+				ScQtScoreSetting technicalItemScoresetting = new ScQtScoreSetting();
+				technicalItemScoresetting.setSettingType(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+				technicalItemScoresetting.setScQt(this.getManagedBean().getQt());
+				technicalItemScoresetting.setOverallTechnical(TECHNICAL_ITEM_SCORE);
+				technicalItemScoresetting.setPassingScore(TECHNICAL_ITEM_SCORE);
+				setUserDetails(technicalItemScoresetting);
+				this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+			}//35113-End
 			
 			settinglist = null;
 			this.getManagedBean().setTechnicalScoring(null);
@@ -2011,7 +2026,9 @@ public class QtSpecCloneBackingBean extends
 				this.getManagedBean().setTechPoints(score);
 				techWeightageSum();
 				techScoreSum();
+				if(!isTechnicalItemExist){//35113-start
 				technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
+				}//35113-End
 				
 			}
 		

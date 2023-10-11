@@ -344,8 +344,15 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					//start #29956
 					if(!this.getManagedBean().getPersonnelsRole().isEmpty()){
 						String epRole = getEpRoleDowngradePopupByPersonnel(this.getManagedBean().getPersonnelsRole());
+						this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
+						
 						this.getManagedBean().setTermAndConditionCheckOwner(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.pre.checkowner", new String[]{epRole}));
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
+						this.getManagedBean().setTermAndConditionCheckOwnerA(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a",new String[]{epRole}));
+						this.getManagedBean().setTermAndConditionCheckOwnerC(
+								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c",new String[]{epRole}));					
 					}
 					//end #29956
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
@@ -1288,6 +1295,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		//32627 START
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY);
+		//33778 - add new status 20400
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT);
 		//32627 END
 		reqDTO.setSupplierId(supplierId);
 		

@@ -42,8 +42,10 @@ import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
 import java.util.Set; //Bug #33988@Syazani - 27/09/2022
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -90,6 +92,7 @@ import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -1073,13 +1076,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	protected void updateSpkiDigiSignData(PmDigiSign pmDigiSign,
 			String docType, Long docId, String docNumber, String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 	}
@@ -3554,13 +3555,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 						}*/
 						// #26130 - Start.
-						constructSpecData(scLoa, master, question);
-						// #26130 - End.
-						constructTplSpecQuestion(dafaltValue,
-								newTplSpecQuestionsList, master, question);
-						//#26130 start
-						question.setListCombineZonal(getCOmbineZonalSPec(question,master));
-						//#26130 end
+						if (validateTplSpecMaster(scLoa, master)){
+							constructSpecData(scLoa, master, question);
+							// #26130 - End.
+							constructTplSpecQuestion(dafaltValue,
+									newTplSpecQuestionsList, master, question);
+							//#26130 start
+							if(validateTplSpecQuestion(scLoa, question)){
+								question.setListCombineZonal(getCOmbineZonalSPec(question,master));
+							}
+							
+							//#26130 end
+						}
+						
 					}
 					// 26130 - End.
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -3872,7 +3879,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										if (specList == null) {
 											specList = new ArrayList<>();
 										}
-										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
 									} else {
 										break;
 									}
@@ -3986,6 +4002,181 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 					}
 				}
+				//start - #29006 note 794
+				if (CollectionUtils.isNotEmpty(quoteResDTO.getProductAnswersTpl())) {
+
+					TplSpecMaster master = null;
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
+					for (TplSpecAnswer answer : quoteResDTO.getProductAnswersTpl()) {
+						if (answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone() != null) {
+							zoneId = answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId();
+						} else {
+							zoneId = 0l; // Long Object initialization
+						}
+
+						if (answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null) {
+							answer.getTplSpecQuestion().setClFulfilmentTypeCode(
+									scLoa.getScLoiLoa().getFulfilmentTypeCode());
+						}
+						if (days == null) {
+							days = answer.getTplSpecQuestion().getClDeliveryTerm();
+						} else {
+							if (!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())
+									&& (answer.getTplSpecQuestion().getClDeliveryTerm() != null)) {
+								days = answer.getTplSpecQuestion().getClDeliveryTerm();
+							}
+						}
+						
+						if (answer.getAnswerRemark() != null) {
+							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
+						} else {
+							answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
+						}
+
+						isWipData = answer.getIsWip();// #29006
+
+						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
+								&& (answer.getTplSpecQuestion().getClItem() != null)) {
+							// #25025 - Start.
+							List<String> specList = null;
+							boolean addSpecList = false;
+							for (TplSpecAnswer tplSpecAns : quoteResDTO.getProductAnswersTpl()) {
+								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
+										.getSpecQuestionId()) {
+									addSpecList = true;
+									continue;
+								}
+								if (addSpecList) {
+									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
+										if (specList == null) {
+											specList = new ArrayList<>();
+										}
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
+									} else {
+										break;
+									}
+								}
+							}
+							answer.getTplSpecQuestion().setSpecList(specList);
+							// #25025 - End.
+
+							/** This code is for LOA with Single Item Details **/
+
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * Details
+								 **/
+								if (days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							}
+						} else if (isSpecificationEnable && answer.getTplSpecQuestion().getClSpecDetail() != null) {
+							/**
+							 * This code is for LOA with Single Item
+							 * specification
+							 **/
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * specification
+								 **/
+								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							}
+						}
+					}
+					if (master != null) {
+						if (masters.size() == 0) {
+							masters.add(master);
+						} else {
+							boolean itemFound = false;
+							for (TplSpecMaster tplSpecMaster : masters) {
+								if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
+									itemFound = true;
+									break;
+								}
+							}
+							if (!itemFound) {
+								masters.add(master);
+							}
+						}
+					}
+				
+				}
+				//end - #29006 note 794
 			}
 			context.put(SSTConstant.serviceScope, dafaltValue);
 			context.put(SSTConstant.SUPPLIER_NAME, supplierName);
@@ -3994,6 +4185,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put(SSTConstant.bean, this);
 			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
 			context.put("isWipData", isWipData); // #29006
+			context.put("supplierId", scLoa.getScLoiLoa().getSmSupplier().getSupplierId()); // #29006
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
 					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
@@ -4707,7 +4899,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
-				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().trim())) {
+				if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK) && !validateDuplicateSets.add(scQtFinalizationReport.getTitle().toLowerCase().trim())) { //Bug #33988@Syazani -- 01/03/2023
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
@@ -4786,17 +4978,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		    reqDTO.setQtReportIdList(qtReportIds);
 		    reqDTO.setDocumentCategory(this.getManagedBean().getNewBriefingPaperReportList().get(0).getDocCategory());
 		    SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveFinalizationReport(reqDTO);
-		    if (null != resDTO && null != resDTO.getScQtFinalizationReports()
-		    		&& resDTO.getScQtFinalizationReports().size() > 0) {
-		    repLoop:	for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
-		    		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
-		    			if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-		    				scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
-		    				continue repLoop;
-		    			}
-		    		}
-		    	}
-		    }
+			if (null != resDTO && null != resDTO.getScQtFinalizationReports()
+					&& resDTO.getScQtFinalizationReports().size() > 0) {
+				repLoop: for (ScQtFinalizationReport repScQtFinalizationReport : resDTO.getScQtFinalizationReports()) {
+					for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
+						// Bug #33988@Syazani -- Start 14/03/2023
+						String repParaCode = repScQtFinalizationReport.getDefinationType() != null ? repScQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						String scQtParaCode = scQtFinalizationReport.getDefinationType() != null ? scQtFinalizationReport
+								.getDefinationType().getParameterCode() : "";
+						if (repScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())
+								&& repParaCode.equals(scQtParaCode)) {
+							// Bug #33988@Syazani -- End 14/03/2023
+							scQtFinalizationReport.setReportContent(repScQtFinalizationReport.getReportContent());
+							continue repLoop;
+						}
+					}
+				}
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -5134,8 +5333,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
 				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
 
-				// #25729 #174			 
-				if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0))
+				// #25729 #174
+				//BugBug #35061 - asyrafhaziq
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+				
+				if ((actualIntendedPrice.compareTo(indPriceThreshold) <=0))
 				{
 					return Boolean.TRUE;
 				}
@@ -5158,8 +5361,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 				List<ScQtFinalizationReport> briefingPaperReportList = new ArrayList<>();
 				// #18685 - Start. 
-				finalizationReport.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
-				finalizationReport.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
+				finalizationReport.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+				finalizationReport.setChangedBy(getUserIdSessionFromLoginId()); //#31849 add log key
                 // #18685 - End. 
 				briefingPaperReportList.add(finalizationReport);
 				reqDTO.setAddNewBriefingPaperReportList(briefingPaperReportList );
@@ -5643,10 +5846,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					} else {
 						ctType = scQt.getContractType().getParameterId();
 					}
-
-					if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-						return isBpkCentralContract = true;
+					
+					//#9019 Start #note-445 User unable to open side menu for Committee Appointment and Approval when ctType is null. 
+					//      Contract type is not selected while cancel QT
+					if(ctType != null){
+						if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+							return isBpkCentralContract = true;
+						}
 					}
+					//9019 End #note-445
 				}
 			
 			return isBpkCentralContract;
@@ -5797,226 +6005,144 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		//#26130 - end 04072022
 		//#26130 start		
-		private List<HashMap<String, String>>getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master){
+	private List<HashMap<String, String>> getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master) {
 
-			
-			List<HashMap<String, String>> listSpec = new ArrayList<>();
-			int countIndex = 0;
-			int indi = 0;
-			String whiteSpace = "&nbsp";
-			boolean getFirstValue = true;
-			if (question.getTplSpecZoneQties().size()  > 0){
-				
-				for (TplSpecZoneQty zone: question.getTplSpecZoneQties()){
-					
+		List<HashMap<String, String>> listSpec = new ArrayList<>();
+		int countIndex = 0;
+		int indi = 0;
+		String whiteSpace = "&nbsp";
+		boolean getFirstValue = true;
+
+		// 26130 - start
+		if (master.getTplSpecZone() != null) {
+			// 26130 - end
+			if (question.getTplSpecZoneQties().size() > 0) {
+
+				for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
+
 					HashMap<String, String> map = new HashMap<>();
-					if (countIndex == 0){
-						if (getFirstValue){
+					if (countIndex == 0) {
+						if (getFirstValue) {
 							map.put("clItem", question.getClItem());
 							map.put("uomName", question.getClUom().getUomName());
-							map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
-							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+							// #26130 - start
+							map.put("clPriceTypeCode",
+									getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+							// #26130 - end
+							map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
 							map.put("qty", zone.getQty().toString());
-							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0 ){
+							if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0) {
 								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 								map.put("qtyBerperingkat", tierValue);
-							}else {
+							} else {
 								String tierValue = "T/B";
 								map.put("qtyBerperingkat", tierValue);
 							}
-							
-							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
+
+							if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+									|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+											"Perkhidmatan")) {
 								map.put("clUomFrequency", question.getClUomFrequency().toString());
 								map.put("clUomPerDay", question.getClUomPerDay().toString());
 								map.put("clUomPerMonth", question.getClUomPerMonth().toString());
 							}
-							for (TplSpecAnswer answer: question.getTplSpecAnswers())
-							if (answer.getAnswerNumeric() != null){
-								map.put("answerNumeric", answer.getAnswerNumeric().toString());
-							}
+							for (TplSpecAnswer answer : question.getTplSpecAnswers())
+								if (answer.getAnswerNumeric() != null) {
+									map.put("answerNumeric", answer.getAnswerNumeric().toString());
+								}
 							getFirstValue = false;
-						}else {
+						} else {
 							map.put("clItem", whiteSpace);
 							map.put("uomName", whiteSpace);
 							map.put("clPriceTypeCode", whiteSpace);
-							map.put("zoneName",zone.getTplSpecZoneDtl().getZoneName());
+							map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
 							map.put("qtyBerperingkat", whiteSpace);
-							if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
+							if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+									|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+											"Perkhidmatan")) {
 								map.put("clUomFrequency", whiteSpace);
 								map.put("clUomPerDay", whiteSpace);
 								map.put("clUomPerMonth", whiteSpace);
 							}
 							map.put("qty", zone.getQty().toString());
-							for (TplSpecAnswer answer: question.getTplSpecAnswers()) {
-								if (answer.getAnswerNumeric() != null){
+							for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
+								if (answer.getAnswerNumeric() != null) {
 									map.put("answerNumeric", answer.getAnswerNumeric().toString());
 								}
 							}
-							
+
 						}
-						
-					
-						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-							map.put("feedback",question.getFeedbackList().get(i));
+
+						for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+							map.put("feedback", question.getFeedbackList().get(i));
 							break;
 						}
-						//26130 - start 04072022
-						for (int i = indi; i <question.getTplSpecZoneQties().size(); i++){
-							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;") && !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())){
-								map.put("answerRemark",question.getAnswerRemarkList().get(i));
+						// 26130 - start 04072022
+						for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;")
+									&& !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
+								map.put("answerRemark", question.getAnswerRemarkList().get(i));
 								break;
-							}else {
-								map.put("answerRemark",question.getAnswerRemarkList().get(i));
+							} else {
+								map.put("answerRemark", question.getAnswerRemarkList().get(i));
 							}
 						}
-						//#26130 - end 04072022
+						// #26130 - end 04072022
 						indi++;
 					}
 					listSpec.add(map);
 				}
-			}else {
-				//non-zonal
-				
-				
-					HashMap<String, String> map = new HashMap<>();
-					if (question.getQuestionType().equalsIgnoreCase("I")){
-						if (countIndex == 0){
-							if (getFirstValue){
-								map.put("clItem", question.getClItem());
-								map.put("uomName", question.getClUom().getUomName());
-								map.put("qty", question.getClQuantity().toString());
+			}
+		// 26130 - start
+		}
+		// 26130 - end
+		else {
+			// non-zonal
 
-								if(getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service") || getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")){
-									map.put("clUomFrequency", question.getClUomFrequency().toString());
-									map.put("clUomPerDay", question.getClUomPerDay().toString());
-									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
-								}else {
-									//product
-									map.put("clPriceTypeCode", getParameterDescForReport(question.getClPriceTypeCode()));
-									String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
-									map.put("qtyBerperingkat", tierValue);
-									
-								}
-								
-								for (String feedback:question.getFeedbackList()){
-									map.put("feedback", feedback);
-									break;
-								}
-								
-								for(String remark:question.getAnswerRemarkList()){
-									map.put("remark", remark);
-									break;
-								}
-							}
-							
-							listSpec.add(map);
+			HashMap<String, String> map = new HashMap<>();
+			if (question.getQuestionType().equalsIgnoreCase("I")) {
+				if (countIndex == 0) {
+					if (getFirstValue) {
+						map.put("clItem", question.getClItem());
+						map.put("uomName", question.getClUom().getUomName());
+						map.put("qty", question.getClQuantity().toString());
+
+						if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+								|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
+							map.put("clUomFrequency", question.getClUomFrequency().toString());
+							map.put("clUomPerDay", question.getClUomPerDay().toString());
+							map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+						} else {
+							// product
+							// #26130 - start
+							map.put("clPriceTypeCode",
+									getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+							// #26130 - end
+							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+							map.put("qtyBerperingkat", tierValue);
+
+						}
+
+						for (String feedback : question.getFeedbackList()) {
+							map.put("feedback", feedback);
+							break;
+						}
+
+						for (String remark : question.getAnswerRemarkList()) {
+							map.put("remark", remark);
+							break;
 						}
 					}
-					
-				
-				
+
+					listSpec.add(map);
+				}
 			}
-			return listSpec;
-			//#26130 end
 		}
+		return listSpec;
+		// #26130 end
+	}
 		//#26130 - zaim end
-		
-		//#10542 - start
-		/**
-		 * To download multiple files with specific path.
-		 * 
-		 * @param zipFileName
-		 * @param scAttachments
-		 * @throws IOException
-		 */
-		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesWithSpecificFolder(
-				String zipFileName, List<EvaluationReqDTO> listScAttachment, String downloadBy, String encryptionKey)
-				throws IOException {
-			PortletResponse portalresponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			HttpServletResponse response = PortalUtil
-					.getHttpServletResponse(portalresponse);
-			response.setContentType("application/zip");
-			response.setHeader("Content-Disposition", "attachment; filename="
-					+ zipFileName + ".zip");
-			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-					response.getOutputStream()));
-			
-			try {
-				downloadAllFilesAsZipFileWithSpecificFolder(zos,listScAttachment, downloadBy, encryptionKey);
 				
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			} finally {
-				zos.close();
-				response.flushBuffer();
-				FacesContext.getCurrentInstance().responseComplete();
-			}
-		}
-		
-		protected <ATTACHMENT extends ScAttachment> void downloadAllFilesAsZipFileWithSpecificFolder(ZipOutputStream zos,List<EvaluationReqDTO> listScAttachment, String downloadBy,String encryptionKey) throws IOException{
-			for (EvaluationReqDTO scAttachmentReq : listScAttachment) {
-				// Get the file
-				FileInputStream fis = null;
-				BufferedInputStream fif = null;
-				ScAttachment scAttachment = scAttachmentReq.getScAttachment();
-				
-				String supplierNo = "Supplier "+ scAttachmentReq.getSupplierNo();
-				
-				try{
-					if (null != scAttachment
-							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
-						File file = new File(getActualFilePath(scAttachment));
-						
-						if(downloadBy.equalsIgnoreCase("Supplier")){
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(supplierNo+"/"+scAttachment.getFileName()));
-							}
-						}else if(downloadBy.equalsIgnoreCase("Document")){
-							String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
-							
-							if(StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-								String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getTempFileName() + "." + extension));
-							} else {
-								zos.putNextEntry(new ZipEntry(checkListTitle+"/"+supplierNo+"/"+scAttachment.getFileName()));
-							}
-						}
-						
-						try {
-							fis = new FileInputStream(file);
-						} catch (FileNotFoundException fnfe) {
-							zos.write(("ERROR: Could not find file " + file
-									.getName()).getBytes());
-							continue;
-						}
-						 fif = new BufferedInputStream(fis);
-						
-						// Write the contents of the file
-						BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(encryptionKey);
-						bc.InitDecryptCipher();
-						bc.CBCDecryptFileZip(fif, zos);
-
-					// zos.write(data);
-					}
-				}
-				finally{
-					if(fis != null){
-						fis.close();
-					}
-					if(fif != null){
-						fif.close();
-					}
-					zos.closeEntry();
-				}
-			}
-		}
-		//#10542 - end
-		
-		
 		//#26130 start
 		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties){
 			StringBuffer sb = new StringBuffer();
@@ -6039,31 +6165,195 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 		}//11104_end
 
-		//25037 - note 677 - start
-		/**
-		 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
-		 * PBA, PBB, QCA, FSW, FSB, QCB, PPB
-		 * @return String (Parameter Type Code)
-		 */ 
-		public String getRepresentativeType(String committeeType) {
-			switch (committeeType) {
-			case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-			case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
-			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
-			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
-			case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
-			case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
-			case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
-				return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
-			default:
-				return "";
-		} 
+	// 25037 -start-
+	/**
+	 * Evaluate the corresponding Representative/Agency parameter type based on
+	 * committee type. PBA, PBB, QCA, FSW, FSB, QCB, PPB
+	 * 
+	 * @return String (Parameter Type Code)
+	 */
+	public String getRepresentativeType(String committeeType) {
+		switch (committeeType) {
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PPR;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+		case ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+		case ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK:
+			return ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+		default:
+			return "";
 		}
-		//25037 - note 677 - end
+	}
+
+	/**
+	 * Evaluate if taskname is endorsement and signoff
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean evaluateEndorseSignoffTask(String taskName) {
+		if (StringUtils.isEmpty(taskName))
+			return false;
+		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF,
+				BpmOutcomeConst.BPM_VIEW, BpmOutcomeConst.BPM_UPDATE};
+		String action = StringUtils.upperCase(taskName.split(" ")[0]);
+		return Arrays.asList(actions).contains(action);
+	}
+
+	/**
+	 * Evaluate if committee is editable by taskname for screen update committee
+	 * during evaluation and finalization
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean isCommitteeEditable(String taskName) {
+		taskName = taskName == null ? "" : taskName;
+		List<String> taskNames = new ArrayList<>();
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
+		taskNames.addAll(Arrays.asList(new String[] { SCProcessNameConst.FINALISE_FC_SELECTION,
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING }));
+		return taskNames.contains(taskName);
+	}
+	// 25037 -end-
+		
+		//26130 - start
+		public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
+			boolean isExist = Boolean.FALSE;
+			Long tempSpecQuestionID = null;
+			if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
+				for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+					if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
+							&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
+						TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+						if (question.getParentSpecQuestion() == null) {
+							tempSpecQuestionID = question.getSpecQuestionId();
+						} else {
+							tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
+						}
+						if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
+							isExist = Boolean.TRUE;
+							return isExist;
+						}
+					}
+				}
+			}
+			return isExist;
+		}
+		
+		public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master){
+			boolean isExist = false;
+			if (scloa.getScLoiLoaItems() != null) {
+				for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+					if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
+						TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+						if (specQuestion.getParentSpecQuestion() != null
+								&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
+								&& master.getSpecMasterId().equals(
+										specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
+							isExist = Boolean.TRUE;
+							return isExist;
+						}
+					}
+				}
+			}
+			return isExist;
+		}
+		//26130 - end
+
+		//10542 - Function for testing (Will be removed)
+		protected long convertMilliToSeconds(long milli){
+			return (milli/1000) % 60;
+		}
+		
+		/**
+		 * Defect: #34924
+		 * Method: Checking and validate using validator: string value has unrecognized symbol/character.
+		 * @param context the context
+		 * @param component the component
+		 * @param value the value
+		 */
+		public void isContentExistUnicode(FacesContext context, UIComponent component,
+				Object value) {
+			
+			String strContent = (String) value;
+			String labelNameVal = (String) component.getAttributes().get("label");
+			
+			boolean isExistUnicodeSymbol = Boolean.FALSE;
+			
+			if(strContent != null && !strContent.isEmpty()){
+				if(strContent.contains("\1")){//SOH
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\2")){//STX
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\3")){//ETX
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\4")){//EOT
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\5")){//ENQ
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\6")){//ACK
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\7")){//BEL
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\10")){
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\11")){//VT
+					isExistUnicodeSymbol = Boolean.TRUE;
+				/*}else if(strContent.contains("\14")){//SO
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\15")){//SI
+					isExistUnicodeSymbol = Boolean.TRUE;*/
+				}else if(strContent.contains("\16")){//DLE
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\17")){//DC1
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\18")){//DC2
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\19")){//DC3
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\20")){//DC4
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\21")){//NAK
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\22")){//SYN
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\23")){//ETB
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\24")){//CAN
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\25")){//EM
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\26")){//SUB
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\27")){//ESC
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\28")){//FS
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\29")){//GS
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\30")){//RS
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}else if(strContent.contains("\31")){//US
+					isExistUnicodeSymbol = Boolean.TRUE;
+				}
+			}
+			
+			if(isExistUnicodeSymbol){
+				if(labelNameVal != null && !labelNameVal.isEmpty()){
+					throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+							.getMessage(MessageConst.ERROR_760543,
+									new String[] {labelNameVal },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+			}
+		}
 }

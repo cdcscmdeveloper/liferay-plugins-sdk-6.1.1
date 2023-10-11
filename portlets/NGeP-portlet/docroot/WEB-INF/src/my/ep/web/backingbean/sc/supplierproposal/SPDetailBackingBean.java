@@ -703,6 +703,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			scQtProposal
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
+			if(null!=this.getManagedBean().getScQtSampleLable()){//35117-start
+				scQtProposal
+				.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
+			}//35117-End
 			this.getManagedBean().setScQtPRPExperiences(null);
 			String originalText = prepareOriginalText(getManagedBean()
 					.getSmSupplier());
@@ -1332,6 +1336,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				// 20220127@syazani - Enhancement #3657 - specific error message - Start
 				List<String> errorLst = null;
 				boolean isThrow = false;
+				int count=0;//#3657 Added Vinod
 				for (TplSpecAnswer answer : answers) {
 					if (isCompleted) {
 						// #21695 7/10/2021	START
@@ -1348,9 +1353,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
 								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
 								.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
-						if (!duplicateErrorZoneCheck(zone, errorLst))
+								if (!duplicateErrorZoneCheck(zone, errorLst) 
+										&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null
+										&& getManagedBean().getSelectedZone().getZoneName().equals(answer
+										.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName())){//#3657 Added zone name checking Vinod							
 							errorLst.add(zone);
 							isThrow = true;
+							//#3657 Start Vinod
+							} else if (!duplicateErrorZoneCheck(zone, errorLst)){
+								count++;
+							}
+								//#3657 End Vinod
 						}
 						// bug #31733 add condition 5/11/2021
 						// farid end #21695 7/10/2021
@@ -1384,6 +1397,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					}
 				}
 			
+				//#3657 Start Vinod
+				if(count!=0 
+					&& null!=this.getManagedBean().getQt()
+					&& null!=this.getManagedBean().getQt().getProcurementMode()
+					&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())){
+					scQtProposalChecklist.setSubmitted(false);
+				}
+				//#3657 End Vinod
+
 				if (isThrow && errorLst != null && errorLst.size() > 0) {
 					if (getManagedBean().getQt().isZonal()) {
 						StringBuffer strB = new StringBuffer();
@@ -1691,20 +1713,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
-					if (finProposalChecklist.isSubmitted()){
-						if (finProposalChecklist
-								.getScQtProposalChecklistAttachment() == null) {
-							finProposalChecklist.setSubmitted(false);
-							finProposalChecklist
-							.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						} else {
-							finProposalChecklist
-							.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						}
-					}else{
-						finProposalChecklist
-						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					}
+					//34493 - start
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(null);
+					} else{
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(null);
+					} 
+					//34493 - end
 				}
 			}
 
@@ -2234,39 +2251,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #28398 BUG - 26339 CR - End
 				}else{
 					//start Bug #28887
-					//33678 - start 
-					if (null != assetProposalChecklist && scQtPRPAssetLiability!=null) {					
-						String[] arr = new String[]{
-								"getCurrentAssets",
-								"getCurrentLiabilities",
-								"getTotalCashInHand", 
-								"getTotalAccountReceivable",
-								"getAcidRatio",
-								"getCurrentRatio"};
-						boolean attachmentRequired = false;
-						for(String method: arr){
-							Class<?>[] paramType = null;
-							Method m = scQtPRPAssetLiability.getClass().getMethod(method, paramType);
-							BigDecimal value = (BigDecimal)m.invoke(scQtPRPAssetLiability);
-							if(value!=null &&  value.compareTo(BigDecimal.ZERO)>0){
-								attachmentRequired = true;
-								break;
-							} 
-						} 
-						if (attachmentRequired){
-							if(assetProposalChecklist.getScQtProposalChecklistAttachment()!=null){
-								assetProposalChecklist.setSubmitted(true);
-								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-							}else{
-								assetProposalChecklist.setSubmitted(false); 
-								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE); 
-							} 
-						} else{
-							assetProposalChecklist.setSubmitted(true);
-							assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
-						} 
-					}
-					//33678 - end 
+					//34493 - start
+					if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						assetProposalChecklist.setSubmitted(false);
+						assetProposalChecklist.setCompliance(null);
+					} else{
+						assetProposalChecklist.setSubmitted(true);
+						assetProposalChecklist.setCompliance(null);
+					} 
+					//34493 - end
 					//end Bug #28887
 				}
 			}      	// #26339 Venkat End
@@ -6364,34 +6357,36 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		
 
 
-	// Bug #33947 5/9/2022 start
+	// Bug #33947 5/9/2022 && #35090 start
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
-		if (specQties != null) {
-
-			// remove log
-			// #21695 Farid Start - fix proposal checking 18/2/2022
-			System.out.println("---> 1dasdassdasa "
-					+ this.getManagedBean().getZones().size());
-			System.out.println("---> 2 "
-					+ specQties.getTplSpecZoneOffer().getTplSpecQuestion()
-							.getTplSpecZoneQties().size());
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-				for (TplSpecZoneDtl specZones : this.getManagedBean()
-						.getZones()) {
-					if (specQties.getTplSpecZoneDtl() != null) {
-						if (specZones.getSpecZoneId().equals(
-								specQties.getTplSpecZoneDtl().getSpecZoneId())) {
-							return true;
+		if (specQties != null &&
+				CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+			
+				if(this.getManagedBean().getZones().size() == 1){
+					
+					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
+								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
+								&& !specAns.isDisableRow() && specAns.getOffer() != null && specAns.getOffer().equals(false)) {
+							specQties.getTplSpecZoneOffer().setOffer(true);
+							specAns.setAnswerText("");
+							specAns.setAnswerNumeric(null);
+							specAns.setAnswerRemark(null);
+							specAns.setAnswerCompliance(null);
 						}
-
 					}
+				}
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null && 
+							specZones.getSpecZoneId().equals(specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+							return true;
+					}
+					
 				}
 				specQties.getTplSpecZoneOffer().setOffer(true);
 				specQties.getTplSpecZoneOffer().setNotApplicable(true);
-			}
-
 		}
-
 		return false;
 	}
 
@@ -6417,6 +6412,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	public void disableDefaultSelected() {		
 		for (TplSpecAnswer retrieveAns : this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList()) {
+			if(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion().getQuestionType())){
+				continue;
+			}//#35090
 			if (retrieveAns != null
 					&& this.getManagedBean().getZones().size() > 0) {
 				// adjust position flag here
@@ -6477,7 +6475,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							if(assetLiabilityUpload){
 								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 						    }else{
-						    	checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+						    	checklist.setCompliance(null);
 						    }
 						}
 	
@@ -6493,7 +6491,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							if(creditfacilityUpload){
 								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 							}else{
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
+								checklist.setCompliance(null);
 							}
 				        }
 			    }

@@ -1844,6 +1844,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						apprCat.setCancelledDate(new Date());
+						apprCat.setChangedBy(null); //#34209 - START_END
 						getManagedBean().getDeleteApprovedCategories().add(apprCat);
 					}
 				}
@@ -2061,6 +2062,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void initSupplierDisciplinaryAction(SmSupplier supplier) {
 		//getManagedBean().setEditDisciplinaryAction(false); //27857: Disciplinary Action - disabled hardcoded value - 26238
+		getManagedBean().setHasActiveDA(false); //#34626
 		DisciplinaryActionVO discipline = getInitDisciplinaryActionVO();
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
@@ -2151,7 +2153,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					discipline.getSmDiscplinaryAction().setEndDate(
 							disc.getEndDate());
 					discipline.setSuspend(true);
-					
+					getManagedBean().setHasActiveDA(true); //#34626
 					break;
 				}
 			}
