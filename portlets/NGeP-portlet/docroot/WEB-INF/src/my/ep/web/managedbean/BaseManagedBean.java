@@ -177,7 +177,7 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	//#28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
-	private boolean oldVersion;
+	private boolean newVersion;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1101,12 +1101,12 @@ public abstract class BaseManagedBean implements Serializable {
 		this.bpmVersionNo = bpmVersionNo;
 	}
 
-	public boolean isOldVersion() {
-		return oldVersion;
+	public boolean isNewVersion() {
+		return newVersion;
 	}
 
-	public void setOldVersion(boolean oldVersion) {
-		this.oldVersion = oldVersion;
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
 	}
 }
 
