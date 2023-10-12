@@ -1268,7 +1268,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						.getZoneTplSpecBeanMap().values());
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
-					clItemSize = templateSpecBeans.get(0).getSpecAnswerList().size();	// Enhancement #3657@Syazani 12/10/2023
+					// Enhancement #3657@Syazani 12/10/2023 -- Start
+					clItemSize = templateSpecBeans.get(0).getSpecAnswerList() != null
+							&& !templateSpecBeans.get(0).getSpecAnswerList().isEmpty() ? templateSpecBeans.get(0)
+							.getSpecAnswerList().size() : 0;
+					// Enhancement #3657@Syazani 12/10/2023 -- End
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
 						if (templateSpecBean.getSpecAnswerList() != null
