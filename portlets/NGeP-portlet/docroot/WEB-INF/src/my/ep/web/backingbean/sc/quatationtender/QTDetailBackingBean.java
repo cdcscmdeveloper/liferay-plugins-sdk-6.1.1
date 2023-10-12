@@ -3695,9 +3695,9 @@ public class QTDetailBackingBean extends
 								ScQtApprovalRemark.class));
                     	}
                          }else{
-							// 13344_start
-							if (!isApprovalScreen()) {
-								// 13344_End
+							// 13344, 25037 -start-
+							if (!isApprovalScreen() && existingApprovalTabs == null) {
+								// 13344, 25037 -End-
 	                        	 qtApproval.setScQtApprovalRemarks(initializeRemarks(
 	     								qtApproval, scQt.getCurrentWorkFlowStatus(),
 	     								qtApproval.getScQtApprovalRemarks(),
