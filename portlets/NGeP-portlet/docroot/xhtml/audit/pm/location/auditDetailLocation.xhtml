@@ -29,14 +29,7 @@
 				<h:outputText value="#{location.roleName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.docType']}" style="width :5%">
-				<h:outputText value="#{lbl['lbl.pm.state']}"
-					rendered="#{location.locationType == 'STATE'}" />
-				<h:outputText value="Adopt Division"
-					rendered="#{location.locationType == 'DIVISION'}" />
-				<h:outputText value="#{lbl['lbl.pm.district']}"
-					rendered="#{location.locationType == 'DISTRICT'}" />
-				<h:outputText value="#{lbl['lbl.pm.city']}"
-					rendered="#{location.locationType == 'CITY'}" />
+				<h:outputText value="#{location.paramLevel3}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.docNo']}" style="width :10%">
 				<h:outputText value="#{location.docNo}" />

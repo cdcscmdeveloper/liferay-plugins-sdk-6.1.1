@@ -26,8 +26,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 /**
  * Managed Bean for Location
  * 
- * @author venugopal
- * @since 30/07/2014
  * 
  */
 @ManagedBean(name = "locationAMB")

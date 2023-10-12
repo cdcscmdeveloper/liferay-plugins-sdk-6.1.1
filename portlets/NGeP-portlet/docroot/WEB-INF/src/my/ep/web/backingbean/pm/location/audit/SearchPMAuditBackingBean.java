@@ -46,18 +46,12 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 
 	}
 
-	// #32753 - START
-	/**
-	 * get faces scopes
-	 * 
-	 * @return FacesScopes
-	 */
-//	private FacesScopes getFacesScopes() {
-//		FacesScopes facesScopes = new FacesScopes();
-//		return facesScopes;
-//	}
+	public String getSelectionRoleCode() {
+		System.out.println("roleCode frm UI :::>>>: " + getManagedBean().getLocationSearchBean().getRoleCode());
+		return getManagedBean().getLocationSearchBean().getRoleCode();
+	}
 
-	// #32753 - END
+	public String roleCode;
 
 	public void preLoadingLocation() {
 		this.resetLocationSearchBean();
@@ -68,41 +62,35 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 
 	public void searchLocation() {
 		this.getManagedBean().setLazy(true);
-		// Enhancement29642 - start
-		// if (this.getManagedBean().getLocationSearchBean().getLocationType()
-		// == null) {
-		// throw new EpException(MessageConst.ERROR_100022,
-		// new String[] { ResourceBundleUtils.getMessage("lbl.pm.location.type",
-		// ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
-		// FacesScopes().getUserLocale()) });
-		//
-		// }
-		// Enhancement29642 - end
-		searchLocation.reloadData();
-	}
-	
+		this.getManagedBean().getLocationSearchBean().setSearching(true);
+		searchLocation.reloadData();	}
+
 	public void searchLocationDetail() {
 		this.getManagedBean().setLazy(true);
-
 		searchLocationDetail.reloadData();
 	}
 
 	public String backToSearch() {
 		getManagedBean().setSelectedType(null);
-		// getManagedBean().setLazy(true);
-		//detailData = false;
+		getManagedBean().getLocationSearchBean().setSearching(false);
 		return NAV_TO_SEARCH;
 	}
 
 	AuditLocationReqDTO locationReqDTO = new AuditLocationReqDTO();
 
-	public String redirectToLocation(String locationType,BigDecimal pmParameterLvlId,BigDecimal createBy,String roleCode) throws Exception {
-		getManagedBean().setLocationDetailType(locationType);
-		getManagedBean().getLocationSearchBean().setPmParameterLvlId(pmParameterLvlId);
-		getManagedBean().getLocationSearchBean().setRoleCode(roleCode);
-		getManagedBean().getLocationSearchBean().setCreatedBy(createBy.toString());
+	public String redirectToDetailsLocation(String locationType, BigDecimal pmParameterLvlId, BigDecimal createBy,
+			String roleCode) throws Exception {
+			getManagedBean().setLocationDetailType(locationType);
+			getManagedBean().getLocationSearchBean().setPmParameterLvlId(pmParameterLvlId);
+			getManagedBean().getLocationSearchBean().setRoleCode(roleCode);
+			getManagedBean().getLocationSearchBean().setCreatedBy(createBy.toString());
 		return NAV_TO_MAINTAIN;
-	}	
+	}
+
+	public boolean searching(boolean search) throws Exception {
+		getManagedBean().getLocationSearchBean().setSearching(search);
+		return getManagedBean().getLocationSearchBean().isSearching();
+	}
 
 	/**
 	 * search Master Location
@@ -124,22 +112,39 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				locationReqDTO.setpLanguage(languageCode);
 				AuditLocationSearchBean lSearchBean = getManagedBean().getLocationSearchBean();
+				if (lSearchBean.isSearching()) {
 				locationReqDTO.setpLvl1Code(lSearchBean.getSystemConfigParamLevel1());
 				locationReqDTO.setpLvl2Code(lSearchBean.getCategoryConfigParamLevel2());
 				locationReqDTO.setpLvl3Code(lSearchBean.getItemConfigParamLevel3());
-
 				locationReqDTO.setpRoleCode(lSearchBean.getRoleCode());
-
-
-				locationReqDTO.setCreatedBy(lSearchBean.getCreatedBy());
 				locationReqDTO.setPdateFrom(lSearchBean.getDateFrom());
-
 				locationReqDTO.setPdateTo(lSearchBean.getDateTo());
+				
+				lSearchBean.setSystemConfigParamLevel1OldVal(lSearchBean.getSystemConfigParamLevel1());
+				lSearchBean.setCategoryConfigParamLevel2OldVal(lSearchBean.getCategoryConfigParamLevel2());
+				lSearchBean.setItemConfigParamLevel3OldVal(lSearchBean.getItemConfigParamLevel3());
+				lSearchBean.setRoleCodeOldVal(lSearchBean.getRoleCode());
+				lSearchBean.setDateFromOldVal(lSearchBean.getDateFrom());
+				lSearchBean.setDateToOldVal(lSearchBean.getDateTo());
+				}else if(!lSearchBean.isSearching()){
+					locationReqDTO.setpLvl1Code(lSearchBean.getSystemConfigParamLevel1OldVal());
+					locationReqDTO.setpLvl2Code(lSearchBean.getCategoryConfigParamLevel2OldVal());
+					locationReqDTO.setpLvl3Code(lSearchBean.getItemConfigParamLevel3OldVal());
+					locationReqDTO.setpRoleCode(lSearchBean.getRoleCodeOldVal());
+					locationReqDTO.setPdateFrom(lSearchBean.getDateFromOldVal());
+					locationReqDTO.setPdateTo(lSearchBean.getDateToOldVal());
+				}
+				if (lSearchBean.getUserId() != null && lSearchBean.isSearching()){
+					locationReqDTO.setCreatedBy(lSearchBean.getUserId().toString());
+					lSearchBean.setUserIdOldVal(lSearchBean.getUserId());
+				}else if (lSearchBean.getUserId() != null && !lSearchBean.isSearching()){
+					locationReqDTO.setCreatedBy(lSearchBean.getUserIdOldVal().toString());
+				}
 
 				locationReqDTO.setLocationSearchBean(searchBean);
 				locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-				
+
 				AuditLocationResDTO resDTO = locationSO.searchLocationMasterResultList(locationReqDTO);
 
 				if (resDTO.isSuccessful()) {
@@ -152,9 +157,8 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 
 			return null;
 		}
-
 	}
-	
+
 	/**
 	 * search Details Location
 	 * 
@@ -176,28 +180,40 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 				AuditLocationSearchBean lSearchBean = getManagedBean().getLocationSearchBean();
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				locationReqDTO.setpLanguage(languageCode);
+				System.out.println("getPmParameterLvlId#### :::" + getManagedBean().getLocationSearchBean().getPmParameterLvlId());
 				System.out.println("getPmParameterLvlId ::: " + lSearchBean.getPmParameterLvlId());
 				System.out.println("getRoleCode ::: " + lSearchBean.getRoleCode());
 				System.out.println("getCreatedBy ::: " + lSearchBean.getCreatedBy());
-				if (lSearchBean.getPmParameterLvlId() != null) {
+				if (lSearchBean.getPmParameterLvlId() != null ) {
 					locationReqDTO.setPmParameterLvlId(lSearchBean.getPmParameterLvlId());
+					lSearchBean.setPmParameterLvlIdOldval(lSearchBean.getPmParameterLvlId());
 				}
 				if (lSearchBean.getRoleCode() != null) {
 					locationReqDTO.setpRoleCode(lSearchBean.getRoleCode());
+					lSearchBean.setRoleCodeOldVal(lSearchBean.getRoleCode());
 				}
-				if (lSearchBean.getCreatedBy() != null) {
+				if (lSearchBean.getCreatedBy() != null ) {
 					locationReqDTO.setCreatedBy(lSearchBean.getCreatedBy());
+					lSearchBean.setCreatedByOldVal(lSearchBean.getCreatedBy());
 				}
-				locationReqDTO.setPdateFrom(lSearchBean.getDateFrom());
-
+				if(lSearchBean.isSearching()){
+				locationReqDTO.setPdateFrom(lSearchBean.getDateFrom());				
 				locationReqDTO.setPdateTo(lSearchBean.getDateTo());
-
+				
+				lSearchBean.setPdateFromOldVal(lSearchBean.getDateFrom());
+				lSearchBean.setPdateToOldVal(lSearchBean.getDateTo());
+				}
+				if(!lSearchBean.isSearching()){
+					locationReqDTO.setPdateFrom(lSearchBean.getPdateFromOldVal());
+					locationReqDTO.setPdateTo(lSearchBean.getPdateToOldVal());
+				}
+				
 				locationReqDTO.setLocationSearchBean(searchBean);
 				locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
 
 				AuditLocationResDTO resDTO = locationSO.searchLocationDetailResultList(locationReqDTO);
-				
+
 				if (resDTO.isSuccessful()) {
 					return resDTO.getLocationResultBean();
 				}
@@ -208,24 +224,24 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 
 			return null;
 		}
-
 	}
-	
+
 	/**
 	 * Retrieve Dropdown Level1
 	 * 
 	 */
-	public List<VPmAuditLocationDTO> getLoadDropdown() {
-		IAuditLocationSO locationSO;
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		String selectedCode_L1 = getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1();
-		String selectedCode_L2 = getManagedBean().getLocationSearchBean().getCategoryConfigParamLevel2();
-		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-		List<VPmAuditLocationDTO> paramLvl1List = locationSO.getLoadDropdownList(languageCode, selectedCode_L1, selectedCode_L2);
-		System.out.println("paramLvl2List.size() ::::>>> ::: " + paramLvl1List.size());
-		return paramLvl1List;
-	}
+//	public List<VPmAuditLocationDTO> getLoadDropdown() {
+//		IAuditLocationSO locationSO;
+//		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+//		String selectedCode_L1 = getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1();
+//		String selectedCode_L2 = getManagedBean().getLocationSearchBean().getCategoryConfigParamLevel2();
+//		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
+//				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
+//		List<VPmAuditLocationDTO> paramLvl1List = locationSO.getLoadDropdownList(languageCode, selectedCode_L1,
+//				selectedCode_L2);
+//		System.out.println("paramLvl2List.size() ::::>>> ::: " + paramLvl1List.size());
+//		return paramLvl1List;
+//	}
 
 	/**
 	 * Retrieve Dropdown Level1
@@ -238,14 +254,14 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
 		List<VPmAuditLocationDTO> paramLvl1List = locationSO.getdropdownLvl1(languageCode);
 		System.out.println("paramLvl2List.size() ::::>>> ::: " + paramLvl1List.size());
-		for(VPmAuditLocationDTO d2 :paramLvl1List){
+		for (VPmAuditLocationDTO d2 : paramLvl1List) {
 			System.out.println("d2 getLevelCode >>> ::: " + d2.getLevelCode());
 			System.out.println("d2 getCodeName >>> ::: " + d2.getCodeName());
 			System.out.println("d2 getLevelId >>> ::: " + d2.getLevelId());
 		}
 		return paramLvl1List;
 	}
-	
+
 	/**
 	 * Retrieve Dropdown Level2
 	 * 
@@ -253,32 +269,38 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 	public List<VPmAuditLocationDTO> getDropdownLevel2() {
 		IAuditLocationSO locationSO;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		System.out.println("getManagedBean().getLevel1Selected()333@#!!! ::::>>> ::: " + getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1());
+		System.out.println("getManagedBean().getLevel1Selected()333@#!!! ::::>>> ::: "
+				+ getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1());
 		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-		List<VPmAuditLocationDTO> paramLvl2List = locationSO.getdropdownLvl2(languageCode,getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1());
+		List<VPmAuditLocationDTO> paramLvl2List = locationSO.getdropdownLvl2(languageCode, getManagedBean()
+				.getLocationSearchBean().getSystemConfigParamLevel1());
 		System.out.println("paramLvl2List.size() ::::>>> ::: " + paramLvl2List.size());
 		return paramLvl2List;
 	}
-	
+
 	/**
 	 * Retrieve Dropdown Level3
 	 * 
 	 */
 	public List<VPmAuditLocationDTO> getDropdownLevel3() {
 		IAuditLocationSO locationSO;
-		//getManagedBean().setSelectedType(locationType);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		System.out.println("getManagedBean().getLevel2Selected()333@#!!! ::::>>> ::: " + getManagedBean().getLocationSearchBean().getCategoryConfigParamLevel2());
-		System.out.println("getManagedBean().getSystemConfigParamLevel1()111@#!!! ::::>>> ::: " + getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1());
+		System.out.println("getManagedBean().getLevel2Selected()333@#!!! ::::>>> ::: "
+				+ getManagedBean().getLocationSearchBean().getCategoryConfigParamLevel2());
+		System.out.println("getManagedBean().getSystemConfigParamLevel1()111@#!!! ::::>>> ::: "
+				+ getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1());
 		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-		List<VPmAuditLocationDTO> paramLvl3List = locationSO.getdropdownLvl3(languageCode, getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1(),getManagedBean().getLocationSearchBean().getCategoryConfigParamLevel2());
+		List<VPmAuditLocationDTO> paramLvl3List = locationSO.getdropdownLvl3(languageCode, getManagedBean()
+				.getLocationSearchBean().getSystemConfigParamLevel1(), getManagedBean().getLocationSearchBean()
+				.getCategoryConfigParamLevel2());
 		System.out.println("paramLvl3List.size() ::::>>> ::: " + paramLvl3List.size());
-		System.out.println("getManagedBean().getLevel3Selected()555@#!!! ::::>>> ::: " + getManagedBean().getLocationSearchBean().getItemConfigParamLevel3());
+		System.out.println("getManagedBean().getLevel3Selected()555@#!!! ::::>>> ::: "
+				+ getManagedBean().getLocationSearchBean().getItemConfigParamLevel3());
 		return paramLvl3List;
 	}
-	
+
 	/**
 	 * Retrieve Dropdown Role List
 	 * 
@@ -289,93 +311,78 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
 		List<VPmAuditLocationDTO> dropdownRoleList = locationSO.getDropdownRoleList(languageCode);
-		
-		return dropdownRoleList;
-	}
-	
+
+		return dropdownRoleList;	}
+
 	/**
 	 * Retrieve Dropdown ActionBy List
 	 * 
 	 */
-	public List<VPmAuditLocationDTO> getActionByListbyRoleCode() {
-		IAuditLocationSO locationSO;
-		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-		List<VPmAuditLocationDTO> dropdownRoleList = locationSO.getActionByListbyRoleCode(this.getManagedBean().getLocationSearchBean().getRole());
-		this.getManagedBean().setVpmAuditLocationDTOList(dropdownRoleList);
-		return dropdownRoleList;
-	}
+//	public List<VPmAuditLocationDTO> getActionByListbyRoleCode() {
+//		IAuditLocationSO locationSO;
+//		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
+//				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
+//		List<VPmAuditLocationDTO> dropdownRoleList = locationSO.getActionByListbyRoleCode(this.getManagedBean()
+//				.getLocationSearchBean().getRole());
+//		this.getManagedBean().setVpmAuditLocationDTOList(dropdownRoleList);
+//		return dropdownRoleList;
+//	}
+
 	/**
 	 * search Details Location
 	 * 
 	 */
-	private class getActionByPagingDataModel extends PagingDataModel<VPmAuditLocationDTO> {
+//	private class getActionByPagingDataModel extends PagingDataModel<VPmAuditLocationDTO> {
+//
+//		private static final long serialVersionUID = 1L;
+//
+//		public getActionByPagingDataModel() {
+//
+//			super("searchActionBylist", getManagedBean().isLazy());
+//
+//		}
+//
+//		public ISearchResultBean<VPmAuditLocationDTO> pageChangeListener(ISearchBean<VPmAuditLocationDTO> searchBean) {
+//			IAuditLocationSO locationSO;
+//
+//			try {
+//				AuditLocationSearchBean lSearchBean = getManagedBean().getLocationSearchBean();
+//				locationReqDTO.setLocationType(getManagedBean().getLocationDetailType());
+//				if (lSearchBean.getRole() != null) {
+//					locationReqDTO.setRole(lSearchBean.getRole());
+//				}
+//				locationReqDTO.setLocationSearchBean(searchBean);
+//
+//				locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
+//						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
+//				AuditLocationResDTO resDTO = locationSO.getActionByResultlist(locationReqDTO);
+//
+//				if (resDTO.isSuccessful()) {
+//					return resDTO.getLocationResultBean();
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				throw new EpException(MessageConst.ERROR_770005);
+//			}
+//
+//			return null;
+//		}
+//
+//	}
 
-		private static final long serialVersionUID = 1L;
-
-		public getActionByPagingDataModel() {
-
-			super("searchActionBylist", getManagedBean().isLazy());
-
-		}
-
-		public ISearchResultBean<VPmAuditLocationDTO> pageChangeListener(ISearchBean<VPmAuditLocationDTO> searchBean) {
-			IAuditLocationSO locationSO;
-
-			try {
-				AuditLocationSearchBean lSearchBean = getManagedBean().getLocationSearchBean();
-				locationReqDTO.setLocationType(getManagedBean().getLocationDetailType());
-				if (lSearchBean.getRole()!= null) {
-					locationReqDTO.setRole(lSearchBean.getRole());
-				}
-				locationReqDTO.setLocationSearchBean(searchBean);
-
-				locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-				AuditLocationResDTO resDTO = locationSO.getActionByResultlist(locationReqDTO);
-
-				if (resDTO.isSuccessful()) {
-					return resDTO.getLocationResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(MessageConst.ERROR_770005);
-			}
-
-			return null;
-		}
-
-	}
-	
-	public void changeLocationType(){
+	public void changeLocationType() {
 		log.info("changeLocationType!!!");
 	}
-	
-	
-//	 public void retrieveLevel2List(AjaxBehaviorEvent e) {
-//	 String codeLevel2 = (String) e.getComponent().getAttributes().get("value");
-//	 System.out.println("codeLevel2 ::::>>> ****## " + codeLevel2);
-//	 VPmAuditLocationDTO reqDTO = new VPmAuditLocationDTO();
-//	 reqDTO.setParamLevel3(codeLevel2);
-//	 getManagedBean().setLevel2Selected(codeLevel2);
-//	 System.out.println("codeLevel2 ::::>>> ### " + codeLevel2);
-//	 getDropdownLevel3();
-//	 }
 
-	// public void retrieveStateList(AjaxBehaviorEvent e) {
-	// Long countryId = (Long) e.getComponent().getAttributes().get("value");
-	// StateReqDTO reqDTO = new StateReqDTO();
-	// reqDTO.setCountryId(countryId);
-	// IStateSO reqSO = (IStateSO)
-	// BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-	// IStateSO.class);
-	// StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-	// getManagedBean().setStates(resDTO.getStateList());
-	// }
+	public void resetGetActionBy() {
+		System.out.println("USERID ::: >>> ::: " + getManagedBean().getLocationSearchBean().getPmUser().getUserId());
+		Long userId = getManagedBean().getLocationSearchBean().getPmUser().getUserId();
+		getManagedBean().getLocationSearchBean().setUserId(new BigDecimal(userId));
+	}
 
 	/**
 	 * reset search bean fields
-	 */ 
+	 */
 	public void resetLocationSearchBean() {
 		log.info("resetLocationSearchBean");
 		getManagedBean().setLazy(false);
@@ -392,7 +399,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 	public void setSearchLocation(IPagingDataModel<VPmAuditLocationDTO> searchLocation) {
 		this.searchLocation = searchLocation;
 	}
-	
+
 	public void resetLocationDetailSearchBean() {
 		log.info("resetLocationDetailSearchBean");
 		getManagedBean().setLazy(false);
@@ -408,5 +415,16 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 
 	public void setSearchLocationDetail(IPagingDataModel<VPmAuditLocationDTO> searchLocationDetail) {
 		this.searchLocationDetail = searchLocationDetail;
+	}
+
+	public String getRoleCode() {
+		if (getManagedBean().getLocationSearchBean().getRoleCode() != null) {
+			return roleCode = getManagedBean().getLocationSearchBean().getRoleCode();
+		}
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 	}
 }

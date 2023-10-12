@@ -40,7 +40,8 @@ public abstract class AuditPMLocationBackingBeanTemplate implements Serializable
 	private String getRoleCode() {
 		String roleCode = getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value()
 				: getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value()) ? RoleCode.EP_ADMIN_1.value()
-						: getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value(): null;
+						: getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value()
+								: null;
 		return roleCode;
 	}
 
@@ -48,7 +49,7 @@ public abstract class AuditPMLocationBackingBeanTemplate implements Serializable
 
 	public abstract ArrayList<AUPMLocationMasterSPDTO> masterInsert(AuditPMBaseDTO auPMObj, Long userId,
 			BaseManagedBean managebean, String roleCode);
-	
+
 	private void pmauditSO(ArrayList<AUPMLocationMasterSPDTO> masterObjlist, AuditPMBaseDTO auPMObj) {
 		pmauditSO.insertAUDITPMSP(masterObjlist, auPMObj.detailObjlist);
 	}

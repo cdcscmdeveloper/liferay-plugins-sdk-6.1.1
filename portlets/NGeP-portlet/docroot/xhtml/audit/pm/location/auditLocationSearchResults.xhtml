@@ -11,10 +11,7 @@
 			value="#{locationAuditBackingBean.searchLocation}"
 			rowIndexVar="index" lazy="true">
 			<ac:paginator for="searchLocations"></ac:paginator>
-			<p:column headerText="#{lbl['lbl.pm.audit.actionBy']}" style="width :15%">
-				<h:outputText value="#{location.actionBy}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.audit.PM']}" style="width :10%">
+			<p:column headerText="#{lbl['lbl.pm.audit.config']}" style="width :10%">
 				<h:outputText value="#{location.paramLevel1}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.configCategory']}" style="width :10%"> 
@@ -23,15 +20,18 @@
 			<p:column headerText="#{lbl['lbl.pm.audit.configItem']}" style="width :10%"> 
 				<h:outputText value="#{location.paramLevel3}" />
 			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.audit.actionBy']}" style="width :15%">
+				<h:outputText value="#{location.actionBy}" />
+			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.Role']}" style="width :10%"> 
 				<h:outputText value="#{location.roleCode}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;text-align:center;">
+			<p:column headerText="#{lbl['lbl.pm.audit.action']}" style="width:5%;text-align:center;">
 				<p:commandLink
-					action="#{locationAuditBackingBean.redirectToLocation(location.paramLevel3,location.pmParameterLvlId,location.createBy,location.roleCode)}">
+					action="#{locationAuditBackingBean.redirectToDetailsLocation(location.paramLevel3,location.pmParameterLvlId,location.createBy,location.roleCode)}">
 					<p:graphicImage library="ep/images/design" 
 						title="#{lbl['lbl.pm.update.location']}"
-						value="/css/images/design/edit.png" />
+						value="/css/images/design/ico-view.png" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>

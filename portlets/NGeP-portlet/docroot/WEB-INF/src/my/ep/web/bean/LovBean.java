@@ -31,6 +31,8 @@ public class LovBean implements Serializable {
 	private String autoUpdateValue;
 	private boolean isDisplayResultWhenFirstLoad;
 	private boolean isDisplayResultWhenReset;
+	private boolean isStoreProc;
+	private String roleCode;
 	// #29832 start 
 	//added managedproperty to pass the value from simplequoteBB into LovBB to trigger delete selected list
 	@ManagedProperty(value="#{simpleQuoteBackingBean}")
@@ -171,6 +173,18 @@ public class LovBean implements Serializable {
 		this.simpleQuoteBackingBean = simpleQuoteBackingBean;
 	}
 	// #29832 end
+	public boolean isStoreProc() {
+		return isStoreProc;
+	}
+	public void setStoreProc(boolean isStoreProc) {
+		this.isStoreProc = isStoreProc;
+	}
+	public String getRoleCode() {
+		return roleCode;
+	}
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
 	
 	
 }

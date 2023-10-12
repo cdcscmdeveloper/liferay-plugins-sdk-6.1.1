@@ -6,7 +6,11 @@ package my.ep.web.bean.pm;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import my.ep.persistence.entity.pm.authorization.PmUser;
 
 /**
  * Search Bean for Location
@@ -21,9 +25,16 @@ public class AuditLocationSearchBean implements Serializable{
 	private String actionType;
 	private Date dateFrom;
 	private Date dateTo;
+	private Date dateFromOldVal;
+	private Date dateToOldVal;
+	private Date pdateFromOldVal;
+	private Date pdateToOldVal;
 	private String systemConfigParamLevel1;
 	private String categoryConfigParamLevel2;
 	private String itemConfigParamLevel3;
+	private String systemConfigParamLevel1OldVal;
+	private String categoryConfigParamLevel2OldVal;
+	private String itemConfigParamLevel3OldVal;
 	private String role;
 	private String actionBy;
 	private BigDecimal actionById;
@@ -32,10 +43,18 @@ public class AuditLocationSearchBean implements Serializable{
 	private Integer levelId2;
 	private Integer levelId3;
 	private BigDecimal pmParameterLvlId;
+	private BigDecimal pmParameterLvlIdOldval;
 	private String createdBy;
+	private String createdByOldVal;
 	private String roleCode;
+	private String roleCodeOldVal;
 	private Date pDatefrom;
 	private Date pDateto;
+	private BigDecimal userId;
+	private BigDecimal userIdOldVal;
+	private List<PmUser> searchPmUserList;
+	private PmUser pmUser;
+	private boolean isSearching = true;
 //	private String locationName;
 //	private String recordStatus;
 	//Enhancement29642 - Start
@@ -252,6 +271,158 @@ public class AuditLocationSearchBean implements Serializable{
 
 	public void setpDateto(Date pDateto) {
 		this.pDateto = pDateto;
+	}
+
+
+	public List<PmUser> getSearchPmUserList() {
+		if (searchPmUserList.size() <= 0)
+			searchPmUserList = new ArrayList<PmUser>();
+		return searchPmUserList;
+	}
+
+
+	public void setSearchPmUserList(List<PmUser> searchPmUserList) {
+		this.searchPmUserList = searchPmUserList;
+	}
+
+
+	public BigDecimal getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(BigDecimal userId) {
+		this.userId = userId;
+	}
+
+
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+
+
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+
+
+	public boolean isSearching() {
+		return isSearching;
+	}
+
+
+	public void setSearching(boolean isSearching) {
+		this.isSearching = isSearching;
+	}
+
+
+	public Date getPdateFromOldVal() {
+		return pdateFromOldVal;
+	}
+
+
+	public void setPdateFromOldVal(Date pdateFromOldVal) {
+		this.pdateFromOldVal = pdateFromOldVal;
+	}
+
+
+	public Date getPdateToOldVal() {
+		return pdateToOldVal;
+	}
+
+
+	public void setPdateToOldVal(Date pdateToOldVal) {
+		this.pdateToOldVal = pdateToOldVal;
+	}
+
+
+	public BigDecimal getPmParameterLvlIdOldval() {
+		return pmParameterLvlIdOldval;
+	}
+
+
+	public void setPmParameterLvlIdOldval(BigDecimal pmParameterLvlIdOldval) {
+		this.pmParameterLvlIdOldval = pmParameterLvlIdOldval;
+	}
+
+
+	public String getRoleCodeOldVal() {
+		return roleCodeOldVal;
+	}
+
+
+	public void setRoleCodeOldVal(String roleCodeOldVal) {
+		this.roleCodeOldVal = roleCodeOldVal;
+	}
+
+
+	public String getCreatedByOldVal() {
+		return createdByOldVal;
+	}
+
+
+	public void setCreatedByOldVal(String createdByOldVal) {
+		this.createdByOldVal = createdByOldVal;
+	}
+
+
+	public String getSystemConfigParamLevel1OldVal() {
+		return systemConfigParamLevel1OldVal;
+	}
+
+
+	public void setSystemConfigParamLevel1OldVal(String systemConfigParamLevel1OldVal) {
+		this.systemConfigParamLevel1OldVal = systemConfigParamLevel1OldVal;
+	}
+
+
+	public String getCategoryConfigParamLevel2OldVal() {
+		return categoryConfigParamLevel2OldVal;
+	}
+
+
+	public void setCategoryConfigParamLevel2OldVal(String categoryConfigParamLevel2OldVal) {
+		this.categoryConfigParamLevel2OldVal = categoryConfigParamLevel2OldVal;
+	}
+
+
+	public String getItemConfigParamLevel3OldVal() {
+		return itemConfigParamLevel3OldVal;
+	}
+
+
+	public void setItemConfigParamLevel3OldVal(String itemConfigParamLevel3OldVal) {
+		this.itemConfigParamLevel3OldVal = itemConfigParamLevel3OldVal;
+	}
+
+
+	public Date getDateFromOldVal() {
+		return dateFromOldVal;
+	}
+
+
+	public void setDateFromOldVal(Date dateFromOldVal) {
+		this.dateFromOldVal = dateFromOldVal;
+	}
+
+
+	public Date getDateToOldVal() {
+		return dateToOldVal;
+	}
+
+
+	public void setDateToOldVal(Date dateToOldVal) {
+		this.dateToOldVal = dateToOldVal;
+	}
+
+
+	public BigDecimal getUserIdOldVal() {
+		return userIdOldVal;
+	}
+
+
+	public void setUserIdOldVal(BigDecimal userIdOldVal) {
+		this.userIdOldVal = userIdOldVal;
 	}
 
 	/**
