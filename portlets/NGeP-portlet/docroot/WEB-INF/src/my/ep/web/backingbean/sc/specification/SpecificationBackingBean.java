@@ -2102,8 +2102,8 @@ public class SpecificationBackingBean extends
 						.getScQtCheckSt2techProposal());
 			}//#11104-End
 			
-			//#28784
-			if(this.getManagedBean().getQt().isDemoRequired()){
+			//#28784 - Include Demo WIP
+			if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 				this.getManagedBean().setDemoAction(true);
 				this.getManagedBean().setDemoType(true);
 				resetDemoSpecStatus();
@@ -4681,7 +4681,10 @@ public class SpecificationBackingBean extends
 				&& ParameterConst.EVALUATION_TYPES_TWO_TIER
 						.equalsIgnoreCase(this.getManagedBean().getQt()
 								.getEvaluationType())) {
-			//recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);//#28784
+			//#28784 - Demo WIP and normal Demo
+			if(!this.getManagedBean().isNewVersion()){
+				recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
+			}
 		}
 
 		searchBean.getDataFilterBeans().add(
@@ -10998,17 +11001,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setReadOnly(true);
 
 		}
-		
-		//#28784 - Demo WIP - Get Qt version and set to manageBean
-//		ICompositeValiditySO compositeSO = (ICompositeValiditySO) BusinessDelegate.getInstance().getServiceObject(
-//				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
-//		CompositeValidityReqDTO compositeReqDTO = new CompositeValidityReqDTO();
-//		compositeReqDTO.setCompositeValidityId(new Long(CompositeValidityConst.getPmCompositeValidity()));
-//		PmCompositeValidity composite = compositeSO.getCompositeByValidityId(compositeReqDTO).getPmCompositeValidity();
-//		String qtMinVersion = composite.getMinCompositeVersion();
-
-//		boolean isQtOldVersion = validateSupportedTask();
-//		this.getManagedBean().setOldVersion(isQtOldVersion);
 				
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		//35056 - 4serangkai - start
@@ -11045,8 +11037,8 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getQt();
 		
 		//#28784 - Demo WIP
-		boolean isQtOldVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-		this.getManagedBean().setOldVersion(isQtOldVersion);
+		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
 		
 		// #25638 - Start
 		if (null != this.getManagedBean().getCurrentStatusId()

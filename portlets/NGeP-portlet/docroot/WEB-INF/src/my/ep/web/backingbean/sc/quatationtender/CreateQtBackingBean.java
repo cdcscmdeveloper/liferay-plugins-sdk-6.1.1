@@ -4085,14 +4085,14 @@ public class CreateQtBackingBean extends
 
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
-	 * #28784
+	 * #28784 - Include Demo WIP
 	 * @param event
 	 *
 	 */
 	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
-		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()) {
 			String type = (String) event.getComponent().getAttributes().get("value");
 //			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 //			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
