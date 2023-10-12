@@ -1268,7 +1268,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						.getZoneTplSpecBeanMap().values());
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
-					clItemSize = templateSpecBeans.get(0).getSpecAnswerList().size();	// Enhancement #3657@Syazani 12/10/2023
+					// Enhancement #3657@Syazani 12/10/2023 -- Start
+					clItemSize = templateSpecBeans.get(0).getSpecAnswerList() != null
+							&& !templateSpecBeans.get(0).getSpecAnswerList().isEmpty() ? templateSpecBeans.get(0)
+							.getSpecAnswerList().size() : 0;
+					// Enhancement #3657@Syazani 12/10/2023 -- End
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
 						if (templateSpecBean.getSpecAnswerList() != null
@@ -1347,14 +1351,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			//#32783 fix revert old codes related to #21695 -END
 			List<String> errorLst = null;
 			boolean isThrow = false;
-			boolean isTender = ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode()) ? true : false;
-			Map<String, Integer> singleZoneAnswerSize = new HashMap<String, Integer>();
+			boolean isTender = ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+					.getProcurementMode().getParameterCode()) ? true : false;
+			Map<String, Integer> singleZoneAnswerSize = new HashMap<>();
 			for (TplSpecAnswer answer : answers) {
 				if (isCompleted) {
 					boolean isZoneUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
 							&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
-					boolean isNonZonalUomNull = answer.getRatePerUom() == null
-							&& answer.getTplSpecZoneQty() == null;
+					boolean isNonZonalUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null;
 					String zone = answer.getTplSpecZoneQty() != null
 							&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
 							&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
@@ -1396,7 +1400,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							isItemTypeService = true;
 						}
 						this.getManagedBean().getTemplateSpecBackingBean()
-							.calcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
+								.calcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
 					}
 					// 20210419@asyrafhaziq - Bug #30061 - start
 					if ((answer.getRatePerUom() != null && !answer.getRatePerUom().equals(0))
@@ -1406,8 +1410,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
 							isItemTypeService = true;
 						}
-						this.getManagedBean().getTemplateSpecBackingBean()
-								.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
+						this.getManagedBean()
+								.getTemplateSpecBackingBean()
+								.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer,
+										isItemTypeService);
 					}
 					// 20210419@asyrafhaziq - Bug #30061 - End
 					super.setUserDetails(answer);
@@ -1429,11 +1435,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			if (isThrow && errorLst != null && !errorLst.isEmpty()) {
 				if (getManagedBean().getQt().isZonal()) {
 					StringBuilder strB = new StringBuilder();
-					String unitPrice = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.unit.price", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					String unitPrice = ResourceBundleUtils.getMessage(SourcingConstants.LABEL_UNIT_PRICE,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 					for (String zone : errorLst) {
-						strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPrice,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+						strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538,
+								new String[] { unitPrice, zone }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale()));
 					}
-					throw new EpException(strB.toString());	
+					throw new EpException(strB.toString());
 				} else {
 					throw new EpException(MessageConst.ERROR_760464);
 				}
