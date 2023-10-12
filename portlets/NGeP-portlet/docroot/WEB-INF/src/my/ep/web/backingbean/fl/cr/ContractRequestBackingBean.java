@@ -7011,10 +7011,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 	}
 	//29401-end
-	
-<<<<<<< HEAD
-}
-=======
+
 	//35024-Start
 	/**
 	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not
@@ -7044,4 +7041,3 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//35024-End
 	
 }
->>>>>>> refs/remotes/origin/release-prd
