@@ -705,7 +705,14 @@
 			 	 							</p:outputPanel> 
 			 	 						</td>
 			 	 						<td style="margin-top: -3px">
-											<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+											<c:if test="#{isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
+											</c:if>
+											<c:if test="#{!isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+											</c:if>
 										</td>
 			 	 					</tr>
 			 	 				</table>			 	 				
@@ -727,7 +734,14 @@
 			 	 							</p:outputPanel> 
 			 	 						</td>
 			 	 						<td style="margin-top: -3px">
-											<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+											<c:if test="#{isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
+											</c:if>
+											<c:if test="#{!isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+											</c:if>
 										</td>
 			 	 					</tr>
 			 	 				</table>		

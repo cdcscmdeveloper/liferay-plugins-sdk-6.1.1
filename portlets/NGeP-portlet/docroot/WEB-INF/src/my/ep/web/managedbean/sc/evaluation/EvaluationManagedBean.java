@@ -610,6 +610,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String demoScore;
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
+	private boolean demoWip;//#28784 WIP @idham
 	//#28784 - end
 
 	/** The total technical package max score. */
@@ -647,6 +648,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//#10542 - start
 	private String downloadBy;
+	private byte[] technicalZipFileDownloadByDocument;
+	private byte[] technicalZipFileDownloadBySupplier;
+	private byte[] financialZipFileDownloadByDocument;
+	private byte[] financialZipFileDownloadBySupplier;
+	private String mainDocumentTitle;
 	//#10542 - end
 	
 	//#6906 start
@@ -4214,6 +4220,46 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public String getDownloadBy(){
 		return downloadBy;
 	}
+	
+	public byte[] getTechnicalZipFileDownloadByDocument() {
+		return technicalZipFileDownloadByDocument;
+	}
+	
+	public void setTechnicalZipFileDownloadByDocument(byte[] technicalZipFileDownloadByDocument){
+		this.technicalZipFileDownloadByDocument = technicalZipFileDownloadByDocument;
+	}
+	
+	public byte[] getTechnicalZipFileDownloadBySupplier() {
+		return technicalZipFileDownloadBySupplier;
+	}
+	
+	public void setTechnicalZipFileDownloadBySupplier(byte[] technicalZipFileDownloadBySupplier){
+		this.technicalZipFileDownloadBySupplier = technicalZipFileDownloadBySupplier;
+	}
+	
+	public byte[] getFinancialZipFileDownloadByDocument(){
+		return financialZipFileDownloadByDocument;
+	}
+	
+	public void setFinancialZipFileDownloadByDocument(byte[] financialZipFileDownloadByDocument){
+		this.financialZipFileDownloadByDocument = financialZipFileDownloadByDocument;
+	}
+	
+	public byte[] getFinancialZipFileDownloadBySupplier(){
+		return financialZipFileDownloadBySupplier;
+	}
+	
+	public void setFinancialZipFileDownloadBySupplier(byte[] financialZipFileDownloadBySupplier){
+		this.financialZipFileDownloadBySupplier = financialZipFileDownloadBySupplier;
+	}
+	
+	public void setMainDocumentTitle(String mainDocumentTitle){
+		this.mainDocumentTitle = mainDocumentTitle;
+	}
+	
+	public String getMainDocumentTitle(){
+		return mainDocumentTitle;
+	}
 	//#10542 - end
 
 	//#6906 - start
@@ -4321,4 +4367,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.financialPackagePaginator = financialPackagePaginator;
 	}
 	//34528-uat 4serangkai - end
+
+	public boolean isDemoWip() {
+		return demoWip;
+	}
+
+	public void setDemoWip(boolean demoWip) {
+		this.demoWip = demoWip;
+	}
 }

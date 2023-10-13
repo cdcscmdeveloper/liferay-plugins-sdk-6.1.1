@@ -1572,10 +1572,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal technicalItemScore;
 /** #21695 FARID END*/	
 	private BigDecimal totalScore = new BigDecimal(0);
-	//#29425 - start
-	private boolean newValueValidity;
-	private int newValidityDays;
-	//#29425 - end
 
 	private String locationLevel;
 
@@ -1857,6 +1853,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10870,35 +10868,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
 			this.committeeUpdateFlow = committeeUpdateFlow;
 		}
-		//#29425 - start
-		/**
-		 * @return the newValueValidity
-		 */
-		public boolean isNewValueValidity() {
-			return newValueValidity;
-		}
-
-		/**
-		 * @param newValueValidity the newValueValidity to set
-		 */
-		public void setNewValueValidity(boolean newValueValidity) {
-			this.newValueValidity = newValueValidity;
-		}
-		
-		/**
-		 * @return the newValidityDays
-		 */
-		public int getNewValidityDays() {
-			return newValidityDays;
-		}
-
-		/**
-		 * @param newValidityDays the newValidityDays to set
-		 */
-		public void setNewValidityDays(int newValidityDays) {
-			this.newValidityDays = newValidityDays;
-		}
-		//#29425 - end
 
 		public boolean isTechnicalOtherCheckList() {
 			return technicalOtherCheckList;
@@ -11785,6 +11754,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
+	}
+
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
 	}
 	
 }
