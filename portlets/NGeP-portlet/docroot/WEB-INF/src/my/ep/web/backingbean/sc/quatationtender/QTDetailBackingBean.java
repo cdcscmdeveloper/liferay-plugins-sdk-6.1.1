@@ -6054,7 +6054,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						scQt = tenderResDTO.getQtDetail();						
 						getManagedBean().setQt(scQt);
-						if(demoRequired){//#28784
+						if(demoRequired && this.getManagedBean().isNewVersion()){//#28784 - Include Demo WIP
 							getManagedBean().getQt().setDemoRequired(demoRequired);
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
@@ -6106,8 +6106,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							this.getManagedBean().setPtjSpecialApproval(scQt.getPtjSpecialApproval());
 						}
 						
-						//#28784
-						checkDemoPresentationByStatus();						
+						//#28784 - Include Demo WIP
+						if(this.getManagedBean().isNewVersion()){
+							checkDemoPresentationByStatus();	
+						}
 				
 					}
 
