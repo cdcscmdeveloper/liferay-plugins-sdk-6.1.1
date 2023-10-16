@@ -139,6 +139,7 @@
 				</th>
 				<td width="60%">
 					<p:outputPanel id="opDocTypeLov">
+					<!-- 20231012 #7465 Start -->
 					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="80"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
@@ -152,7 +153,8 @@
 						saveObject="taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType"
 						conditionField="#{taskReassignmentBackingBean.constuctConditionFields()}"
 						postUpdateListener="taskReassignmentBackingBean.onChangeDocType"/>
-						</p:outputPanel>
+					<!-- 20231012 #7465 End -->
+					</p:outputPanel>
 				</td>
 				
 				<td width="25%">
