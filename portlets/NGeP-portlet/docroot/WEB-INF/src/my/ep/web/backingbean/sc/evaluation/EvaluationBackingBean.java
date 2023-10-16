@@ -7944,6 +7944,8 @@ public void saveComplianceSample() {
 								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 								this.getManagedBean().getScQt()
 										.setTecEvaluationCheck(1);
+								this.getManagedBean().getScQt()
+								.setDemoNotificationCheck(null);//11104-Reendose
 								reqDTO.setScQt(this.getManagedBean().getScQt());
 								evalResDTO = evaluationSo
 										.saveReportDtls(reqDTO);
@@ -8003,6 +8005,8 @@ public void saveComplianceSample() {
 							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 							this.getManagedBean().getScQt()
 									.setTecEvaluationCheck(1);
+							this.getManagedBean().getScQt()
+							.setDemoNotificationCheck(null);//11104-Reendose
 							reqDTO.setScQt(this.getManagedBean().getScQt());
 							evalResDTO = evaluationSo.saveReportDtls(reqDTO);
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
