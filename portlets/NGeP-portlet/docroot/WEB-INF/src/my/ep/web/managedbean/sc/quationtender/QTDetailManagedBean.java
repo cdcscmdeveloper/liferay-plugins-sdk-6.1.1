@@ -125,6 +125,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -1863,6 +1864,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	//Bug #35061 - asyrafhaziq 
 	private String msgConfirmBelowIndi;
+	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;//11104
 
 	
 	public QTDetailManagedBean() {
@@ -11786,7 +11788,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
 		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
 	}
+	/**
+	 * 11104-Start
+	 * @return the existingSampleSpecQuestions
+	 */
+	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
+		return existingSampleSpecQuestions;
+	}
 
+	/**
+	 * @param existingSampleSpecQuestions the existingSampleSpecQuestions to set
+	 */
+	public void setExistingSampleSpecQuestions(
+			Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
+	}//11104-End
 	
 }
 

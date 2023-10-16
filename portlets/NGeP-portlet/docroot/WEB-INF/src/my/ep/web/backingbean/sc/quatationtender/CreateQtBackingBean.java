@@ -4045,6 +4045,7 @@ public class CreateQtBackingBean extends
 		if(type){
 			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
 		}else{
+			this.getManagedBean().getQt().setDemoNotificationCheck(null);//11104-Reendorse
 			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
 			if (deltechnicalproposalList == null) {
 				deltechnicalproposalList= new ArrayList<>();
