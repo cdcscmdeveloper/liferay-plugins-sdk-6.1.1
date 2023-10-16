@@ -31,6 +31,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -158,8 +159,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 				// Agency name does not exist for G2G
 				throw new EpException(MessageConst.ERROR_722659);
 			}
-			//35023 START 
 		} else {
+			//START 35023
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				SmSupplier smSupplier = SmServiceLookup.getSupplierSearchSO().retrieveSupplierByRegNo(
+						getManagedBean().getReactivateBasic().getRegNo());
+				if (smSupplier != null && smSupplier.getBusinessType().equalsIgnoreCase(
+						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+					throw new EpException(MessageConst.ERROR_722706);
+				}
+			}
+			//END 35023
 			getManagedBean()
 					.setSmSupplier(
 							SmServiceLookup
@@ -203,12 +213,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 				//#33129 - END
 			}
-			//#35023 START
-		} else if (getManagedBean().getSmSupplier() != null
-				&& getManagedBean().getSmSupplier().getBusinessType()
-						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
-			throw new EpException(MessageConst.ERROR_722706);
-			// #35023 END
 		} else {
 			//#28765 - Start
 			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER) && 
@@ -1016,7 +1020,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().setMailCities(null);
 			} else {
 				getManagedBean().setMailDivisions(null);
-				getManagedBean().getMailAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				if(getManagedBean().getMailAddr().getSmAddress().getPmDivision() != null){
+					getManagedBean().getMailAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				}
 				getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 				getManagedBean().setMailCities(null);
 			}
@@ -1058,7 +1064,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().setPermCities(null);
 			} else {
 				getManagedBean().setPermDivisions(null);
-				getManagedBean().getPermAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				if(getManagedBean().getPermAddr().getSmAddress().getPmDivision() != null){
+					getManagedBean().getPermAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				}
 				getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 				getManagedBean().setPermCities(null);
 			}
@@ -1097,6 +1105,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			perm = new SmPersonnelAddress();
 			perm.setAddressType(SupplierManagementConst.PERM_ADD);
 			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			perm.getSmAddress().setPmDivision(new PmDivision());//#34159
 			perm.setSmPersonnel(getManagedBean().getNewAdmin());
 			perm.setSameAsPerm(false);
 		} else {
@@ -1132,6 +1141,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			mail = new SmPersonnelAddress();
 			mail.setAddressType(SupplierManagementConst.MAIL_ADD);
 			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			mail.getSmAddress().setPmDivision(new PmDivision());//#34159
 			mail.setSmPersonnel(getManagedBean().getNewAdmin());
 			mail.setSameAsPerm(false);
 		} else {
@@ -1392,11 +1402,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 				
 				if(("14").equalsIgnoreCase(refAddress.getPmState().getStateId().toString())){
 					division.setDivisionId(refAddress.getPmDivision().getDivisionId());
+					updateMailAddLists("", "",refAddress.getPmDivision().getDivisionId().toString(), "");
 				} else {
 					division.setDivisionId(null);
 				}
-				updateMailAddLists("", "",refAddress.getPmDistrict().getDistrictId().toString(), "");
-				
 				address.setPmDivision(division);
 				district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
 				address.setPmDistrict(district);

@@ -10,7 +10,14 @@
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.branch.branchName']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.branchName}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBranch.branchName}"/>
+				<!-- #35194 -->
+				<ac:smFieldChangeAlertView 
+						isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+							and not empty viewSmApplBackingBean.managedBean.latestBranch.supplierBranchId}"
+						oriValue="#{viewSmApplBackingBean.managedBean.latestBranch.branchName}" 
+						currValue="#{viewSmApplBackingBean.managedBean.selectedBranch.branchName}" 
+						alertValue="#{viewSmApplBackingBean.managedBean.latestBranch.branchName}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.branch.address']}" /></td>

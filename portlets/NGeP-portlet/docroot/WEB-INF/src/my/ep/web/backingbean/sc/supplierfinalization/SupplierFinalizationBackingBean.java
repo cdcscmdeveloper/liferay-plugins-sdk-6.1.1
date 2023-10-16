@@ -1593,7 +1593,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			//validateEvaluationReports(SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			//saveEvaluationReportsDetaills();
- 			if (!skipValidation) {//25037 - merge same condition by 28834, add skipValidation flag
+ 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
 				//#27364 Start
 				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 				if (ParameterConst.DECISION_CANCEL
@@ -1612,9 +1612,9 @@ public class SupplierFinalizationBackingBean extends
 								&& !getManagedBean().isDisableJustifications()
 								// #28834 - End.
 								) {
-					if (this.getManagedBean().getJustification() == null
+					if ((this.getManagedBean().getJustification() == null
 							|| this.getManagedBean().getJustification()
-									.getReasonId() == null) {
+									.getReasonId() == null) && this.getManagedBean().isSubmit()) {//#35205 & #28834
 						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_100061,
 								new String[] { ResourceBundleUtils.getMessage(
@@ -1622,8 +1622,12 @@ public class SupplierFinalizationBackingBean extends
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 										new FacesScopes().getUserLocale()) });
 					}
+					
+					setNullSelectionForJustification(reqDTO);//#35205 & #28834
 				}
 			}
+ 			
+ 			setNullSelectionForJustification(reqDTO);//#35205 & #28834
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
@@ -1695,9 +1699,23 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
+	//#35205 & #28834 - Start
+	/**
+	 * Allow save data for justification dropdown is empty to null value       
+	 */
+	public void setNullSelectionForJustification(SuppFinalizationReqDTO reqDTO){
+		if(this.getManagedBean().getJustification() != null
+				&& this.getManagedBean().getJustification().getReasonId() == null 
+				&& !this.getManagedBean().isSubmit()){
+			reqDTO.getScQtFinalization().setJustification(null);
+		}
+	}
+	//#35205 & #28834 - End
+	
 	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO, boolean skipValidation) {//25037 note31
 		log.info("validateFinalizationReports");
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		boolean isSubmit = this.getManagedBean().isSubmit();//#35205
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
 		//Bug #29707
@@ -1730,7 +1748,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			//#28834 - Start 
-			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+			if(CollectionUtils.isNotEmpty(toBeRemovedReports) && isSubmit){//#35205 add isSubmit
 				if(skipValidation) return;//25037
 				navigateToEndorsementReportTab();
 			    throw new EpException(MessageConst.ERROR_770271);
