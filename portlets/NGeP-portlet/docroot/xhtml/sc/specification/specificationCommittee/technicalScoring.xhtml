@@ -278,8 +278,8 @@
 				</f:facet>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					style="text-align:right"
-					rendered="#{tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample  or 
-					(tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and specificationBackingBean.managedBean.newVersion)}" /> <!-- #28784 Include Demo WIP-->
+					rendered="#{(tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and specificationBackingBean.managedBean.newVersion) or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or 
+					tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample }" /> <!-- #28784 Include Demo WIP-->
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					id="techScoreWeight" required="true" maxlength="14"
