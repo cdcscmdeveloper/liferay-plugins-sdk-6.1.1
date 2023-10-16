@@ -42,8 +42,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -88,6 +90,7 @@ import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -4705,7 +4708,91 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return result;
 	}
-    // #11134 - end	
+    	// #11134 - end	
+	
+	/**
+	 * Defect: #34924
+	 * Method: Checking and validate using validator: string value has unrecognized symbol/character.
+	 * @param context the context
+	 * @param component the component
+	 * @param value the value
+	 */
+	public void isContentExistUnicode(FacesContext context, UIComponent component,
+			Object value) {
+		
+		String strContent = (String) value;
+		String labelNameVal = (String) component.getAttributes().get("label");
+		
+		boolean isExistUnicodeSymbol = Boolean.FALSE;
+		
+		if(strContent != null && !strContent.isEmpty()){
+			if(strContent.contains("\1")){//SOH
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\2")){//STX
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\3")){//ETX
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\4")){//EOT
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\5")){//ENQ
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\6")){//ACK
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\7")){//BEL
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\10")){
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\11")){//VT
+				isExistUnicodeSymbol = Boolean.TRUE;
+			/*}else if(strContent.contains("\14")){//SO
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\15")){//SI
+				isExistUnicodeSymbol = Boolean.TRUE;*/
+			}else if(strContent.contains("\16")){//DLE
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\17")){//DC1
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\18")){//DC2
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\19")){//DC3
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\20")){//DC4
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\21")){//NAK
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\22")){//SYN
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\23")){//ETB
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\24")){//CAN
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\25")){//EM
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\26")){//SUB
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\27")){//ESC
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\28")){//FS
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\29")){//GS
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\30")){//RS
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}else if(strContent.contains("\31")){//US
+				isExistUnicodeSymbol = Boolean.TRUE;
+			}
+		}
+		
+		if(isExistUnicodeSymbol){
+			if(labelNameVal != null && !labelNameVal.isEmpty()){
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+						.getMessage(MessageConst.ERROR_760543,
+								new String[] {labelNameVal },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		}
+	}
     
     	// #26226 - Start
 	/**
@@ -6026,7 +6113,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 25635-End
 
-	// 25037 - note 677 - start
+	// 25037 - start
 	/**
 	 * Evaluate the corresponding Representative/Agency parameter type based on committee type.
 	 * PBA, PBB, QCA, FSW, FSB, QCB, PPB
@@ -6052,6 +6139,43 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return "";
 		}
 	}
-	// 25037 - note 677 - end
+	// 25037 - end
+
+	// 25037 -start-
+	/**
+	 * Evaluate if taskname is endorsement and signoff
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean evaluateEndorseSignoffTask(String taskName) {
+		if (StringUtils.isEmpty(taskName))
+			return false;
+		
+		String[] actions = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_SIGNOFF,
+				BpmOutcomeConst.BPM_VIEW, BpmOutcomeConst.BPM_UPDATE};
+		String action = StringUtils.upperCase(taskName.split(" ")[0]);
+		return Arrays.asList(actions).contains(action);
+	}
+	// 25037 - end
+
+	// 25037 -start-
+	/**
+	 * Evaluate if committee is editable by taskname for screen update committee
+	 * during evaluation and finalization
+	 * 
+	 * @return String (BPM task Name)
+	 */
+	public boolean isCommitteeEditable(String taskName) {
+		taskName = taskName == null ? "" : taskName;
+		
+		List<String> taskNames = new ArrayList<>();
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
+		taskNames.addAll(Arrays.asList(new String[] { SCProcessNameConst.FINALISE_FC_SELECTION,
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING }));
+		
+		return taskNames.contains(taskName);
+	}
+	// 25037 -end-
 	
 }
