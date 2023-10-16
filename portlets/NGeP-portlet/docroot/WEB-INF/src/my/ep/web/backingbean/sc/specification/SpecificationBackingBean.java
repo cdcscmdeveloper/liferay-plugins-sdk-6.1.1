@@ -1397,7 +1397,11 @@ public class SpecificationBackingBean extends
 							.getScQtCheckSt2techProposal());
 					
 			}//#11104-End
-			addDemoTechnicalCheckList(); //#28784
+			
+			// #28784 - Demo WIP
+			if (this.getManagedBean().isNewVersion()) {
+				addDemoTechnicalCheckList(); // #28784
+			}
 			break;
 		case 3:
 			//1873 note 195 start
