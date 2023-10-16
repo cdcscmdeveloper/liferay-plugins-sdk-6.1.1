@@ -18076,14 +18076,14 @@ private void retriveCommitteeRemarksList(){
 						bc.InitDecryptCipher();
 						bc.CBCDecryptFileZip(fif, zos);
 						
-						// Write data to zos
-		                // Write the content of the entry (file content) here
-		                byte[] buffer = new byte[1024];
-		                int length;
-		                // Read from the file and write to zos
-		                while ((length = readFileContent(downloadByZipStructure, buffer)) != -1) {
-		                    zos.write(buffer, 0, length);
-		                }
+//						// Write data to zos
+//		                // Write the content of the entry (file content) here
+//		                byte[] buffer = new byte[1024];
+//		                int length;
+//		                // Read from the file and write to zos
+//		                while ((length = readFileContent(downloadByZipStructure, buffer)) != -1) {
+//		                    zos.write(buffer, 0, length);
+//		                }
 
 					}
 				}
