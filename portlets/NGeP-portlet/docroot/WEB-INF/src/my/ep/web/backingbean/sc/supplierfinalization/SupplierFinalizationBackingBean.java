@@ -5717,6 +5717,9 @@ public class SupplierFinalizationBackingBean extends
 					} 
 					
 					setSelectionMode(finalizationMethod.getParameterCode());
+					if (!this.getManagedBean().isItemize()) {					
+						createShortlistedSuppliersDataModel();
+					}
 				}
 			} 
 			
@@ -6585,7 +6588,13 @@ public class SupplierFinalizationBackingBean extends
 		}
 		ScQtFinalization scQtFinalization = 
 							getManagedBean().getScQtFinalization();
-		ScQtRecommend scQtRecommend = (ScQtRecommend) event.getObject();
+		ScQtRecommend scQtRecommend = null;
+		if(null == event && null!=this.getManagedBean().getLastSelectedItem()){
+			scQtRecommend = getManagedBean().getLastSelectedItem();
+		}else if(null != event){
+			scQtRecommend = (ScQtRecommend) event.getObject();
+			this.getManagedBean().setLastSelectedItem(scQtRecommend);
+		}
 		this.getManagedBean().setItemRowSelect(true);
 
 		// Reset selection
@@ -6616,6 +6625,7 @@ public class SupplierFinalizationBackingBean extends
 		getManagedBean().setSelectedItem(null);
 		getManagedBean().setItemRowSelect(false);
 		addSelectedItem(scQtRecommend);
+		this.getManagedBean().setLastSelectedItem(scQtRecommend);
 	}
 
 	private void addSelectedItem(ScQtRecommend scQtRecommend) {
@@ -6704,6 +6714,7 @@ public class SupplierFinalizationBackingBean extends
 							.getShortListedSupplierList())) {
 						scQtRecommend.setSelected(true);
 						addSelectedItem(scQtRecommend);
+						this.getManagedBean().setLastSelectedItem(scQtRecommend);
 					}
 				}
 				if (cancelledItems.size() > 0) {
@@ -7214,6 +7225,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setAwardSupplierList(null);
 			this.getManagedBean().setAwardSupplier(null);
 			this.getManagedBean().setSelectedItem(null);
+			selectItemEvent((SelectEvent)null);
 		} else {
 			//log.info("There are no selected items");
 			return;
