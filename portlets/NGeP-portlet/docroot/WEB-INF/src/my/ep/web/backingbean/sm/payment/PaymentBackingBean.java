@@ -1137,11 +1137,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	private String getCdcPaymentGatewayUrl(String merchantId,String billType){
 		
-		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
-			return EpPropertiesUtils.getInstance().getProperty("payment.url") + merchantId;
-		}else{
-			return EpPropertiesUtils.getInstance().getProperty("payment.url") + merchantId;
-		}		
+//		if (billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+//			return EpPropertiesUtils.getInstance().getProperty("payment.url") + merchantId;
+//		}else{
+//			return EpPropertiesUtils.getInstance().getProperty("payment.url") + merchantId;
+//		}
+		return EpPropertiesUtils.getInstance().getProperty("payment.url");
 	}
 
 	public String getCdcPaymentGatewayUrl() {
