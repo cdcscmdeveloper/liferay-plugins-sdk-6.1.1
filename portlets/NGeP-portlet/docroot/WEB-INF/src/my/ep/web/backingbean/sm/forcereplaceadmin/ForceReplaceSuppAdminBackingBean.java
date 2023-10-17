@@ -156,6 +156,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 				throw new EpException(MessageConst.ERROR_722659);
 			}
 		} else {
+			//START 35023
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				SmSupplier smSupplier = SmServiceLookup.getSupplierSearchSO().retrieveSupplierByRegNo(
+						getManagedBean().getReactivateBasic().getRegNo());
+				if (smSupplier != null && smSupplier.getBusinessType().equalsIgnoreCase(
+						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+					throw new EpException(MessageConst.ERROR_722706);
+				}
+			}
+			//END 35023
 			getManagedBean()
 					.setSmSupplier(
 							SmServiceLookup
@@ -199,12 +209,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 				//#33129 - END
 			}
-			//#35023 START
-		} else if (getManagedBean().getSmSupplier() != null
-				&& getManagedBean().getSmSupplier().getBusinessType()
-						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
-			throw new EpException(MessageConst.ERROR_722706);
-			// #35023 END
 		} else {
 			//#28765 - Start
 			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER) && 
