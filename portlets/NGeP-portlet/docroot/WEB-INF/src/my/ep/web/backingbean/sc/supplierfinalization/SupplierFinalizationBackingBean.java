@@ -11643,20 +11643,26 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	*/
 	public boolean evaluateSupplierDisabled(ScQtEvaluationResultDtl evalResultDtl){
 		Boolean isRefinalized = this.getManagedBean().getQtRefinalized();
-		isRefinalized = null == isRefinalized ? false: isRefinalized;
+		isRefinalized = null == isRefinalized ? false : isRefinalized;
+		boolean isBidding = ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(this.getManagedBean()
+				.getScQtFinalization().getFinalizationMethod().getParameterCode())
+				&& !isRefinalized;
 		ScQtProposal proposal = evalResultDtl.getQtEvaluationResult().getScQtProposal();
 		SmSupplier supplier = proposal.getScQtSupplier().getSmSupplier();
-		boolean periodExtensionRejected = proposal.getIsAgreeQtExtendPeriod() == null ? false:  proposal.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
-		boolean isBPKTaskAndClaimed = this.getManagedBean().isInitialDecisionFwdToBPK() && !this.getManagedBean().isReadOnly();
-		boolean isSelectionDisabled = evalResultDtl.isSuppSelectionDisabled()
-				|| this.getManagedBean().isDisableSupplierSelection()
-				|| (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(this.getManagedBean().getScQtFinalization().getFinalizationMethod().getParameterCode()) && !isRefinalized)
-				|| (supplier.isDisciplinaryActions() && !supplier.isWarningDA())
-				|| periodExtensionRejected
-				|| this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(), getManagedBean().getScQt())
-				|| this.isQTMaintenanceScreen()
-				|| !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed);
-		return isSelectionDisabled;
+		boolean periodExtensionRejected = proposal.getIsAgreeQtExtendPeriod() == null ? false : proposal
+				.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+		boolean isBPKTaskAndClaimed = this.getManagedBean().isInitialDecisionFwdToBPK()
+				&& !this.getManagedBean().isReadOnly(); 
+		return Arrays.asList(
+				new Boolean[] {
+						evalResultDtl.isSuppSelectionDisabled(),
+						this.getManagedBean().isDisableSupplierSelection(),
+						isBidding,
+						(supplier.isDisciplinaryActions() && !supplier.isWarningDA()),
+						periodExtensionRejected,
+						this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(),
+								getManagedBean().getScQt()), this.isQTMaintenanceScreen(),
+						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
 	}
 	//35157 - end
 }
