@@ -33,7 +33,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
-import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -115,7 +114,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract selectedContract;
 	private CtContract ctContract = new CtContract();
 	private GlAccountSearchBean glAccountSearchBean;
-	private FlFulfilmentRequest fulfilmentRequest;
+	//private FlFulfilmentRequest fulfilmentRequest;
 	
 	private List<FlRemark> previousRemarkList;
 	private List<FlAttachment> previousAttachmentList;	
@@ -177,7 +176,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Date minContractDate;
 	private Date maxContractDate;
 	
-	private String tempLogin; //TODO: temp and to be removed
+	private String tempLogin; 
 	private String espkbCommitmentNo;
 	private String ptjCodeName;
 	//start added for #24353
@@ -317,10 +316,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//26279 - end
 	//13984-start
 	private static String orgCode;
-    private static String orgName;
-    private static int backFlag;
-    private static String catalogueFlag;
-    //13984-end
+    	private static String orgName;
+    	private static int backFlag;
+    	private static String catalogueFlag;
+    	//13984-end
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
@@ -331,18 +330,19 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String itemSpecification;
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
-    // 28855 - End
-	  //11076 - start
-    private int totalExistingItem;
-    private int totalNewItemsAdded;
-    private int overallTotalItem;
-    private int validateItem;
-    private int addAllItem;
-    private int updateItem;
-    private int calculateTotalExist;
-    private int deleteItem;
-    private int deleteOverallItem;
-  //11076 - end
+    	// 28855 - End
+	//11076 - start
+	private int totalExistingItem;
+	private int totalNewItemsAdded;
+	private int overallTotalItem;
+	private int validateItem;
+	private int addAllItem;
+	private int updateItem;
+	private int calculateTotalExist;
+	private int deleteItem;
+	private int deleteOverallItem;
+	//11076 - end
+	private boolean bondIncomplete = false;//35024
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3126,191 +3126,202 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//24893 - end	
 
 	// start #17087
-		/**
-		 * @return the minContractDate
-		 */
-		public Date getMinContractDate() {
-			return minContractDate;
-		}
+	/**
+	 * @return the minContractDate
+	 */
+	public Date getMinContractDate() {
+		return minContractDate;
+	}
 
-		/**
-		 * @param minContractDate to set
-		 */
-		public void setMinContractDate(Date minContractDate) {
-			this.minContractDate = minContractDate;
-		}
-		/**
-		 * @return the maxContractDate
-		 */
-		public Date getMaxContractDate() {
-			return maxContractDate;
-		}
+	/**
+	 * @param minContractDate to set
+	 */
+	public void setMinContractDate(Date minContractDate) {
+		this.minContractDate = minContractDate;
+	}
+	
+	/**
+	 * @return the maxContractDate
+	 */
+	public Date getMaxContractDate() {
+		return maxContractDate;
+	}
 
-		/**
-		 * @param maxContractDate to set
-		 */
-		public void setMaxContractDate(Date maxContractDate) {
-			this.maxContractDate = maxContractDate;
-		}
-		// End #17087
+	/**
+	 * @param maxContractDate to set
+	 */
+	public void setMaxContractDate(Date maxContractDate) {
+		this.maxContractDate = maxContractDate;
+	}
+	// End #17087
 		
-		//13984-start
-		public String getOrgCode() {
-			return orgCode;
-		}
+	//13984-start
+	public String getOrgCode() {
+		return orgCode;
+	}
 
-		public void setOrgCode(String orgCode) {
-			this.orgCode = orgCode;
-		}
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
 		
-		public String getOrgName() {
-			return orgName;
-		}
+	public String getOrgName() {
+		return orgName;
+	}
 
-		public void setOrgName(String orgName) {
-			this.orgName = orgName;
-		}
-		//13984-end
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	//13984-end
 
-		//start-13984 - CrList - Back Button
-		public int getBackFlag() {
-			return backFlag;
-		}
+	//start-13984 - CrList - Back Button
+	public int getBackFlag() {
+		return backFlag;
+	}
 
-		public void setBackFlag(int backFlag) {
-			this.backFlag = backFlag;
-		}
+	public void setBackFlag(int backFlag) {
+		this.backFlag = backFlag;
+	}
 
-		public String getCatalogueFlag() {
-			return catalogueFlag;
-		}
+	public String getCatalogueFlag() {
+		return catalogueFlag;
+	}
 
-		public void setCatalogueFlag(String catalogueFlag) {
-			this.catalogueFlag = catalogueFlag;
-		}
-		//end-13984 - CrList - Back Button
+	public void setCatalogueFlag(String catalogueFlag) {
+		this.catalogueFlag = catalogueFlag;
+	}
+	//end-13984 - CrList - Back Button
 		
-		// 28855 - start
-		public boolean isDpFlag() {
-			return dpFlag;
-		}
+	// 28855 - start
+	public boolean isDpFlag() {
+		return dpFlag;
+	}
 
-		public void setDpFlag(boolean dpFlag) {
-			this.dpFlag = dpFlag;
-		}
+	public void setDpFlag(boolean dpFlag) {
+		this.dpFlag = dpFlag;
+	}
 
-		public List<ScRequestItemSpecOffer> getSpecificationList() {
-			return specificationList;
-		}
+	public List<ScRequestItemSpecOffer> getSpecificationList() {
+		return specificationList;
+	}
 
-		public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
-			this.specificationList = specificationList;
-		}
+	public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
+		this.specificationList = specificationList;
+	}
 
-		public List<ScRequestItemSpecOffer> getItemSpecList() {
-			return itemSpecList;
-		}
+	public List<ScRequestItemSpecOffer> getItemSpecList() {
+		return itemSpecList;
+	}
 
-		public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
-			this.itemSpecList = itemSpecList;
-		}
+	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
+		this.itemSpecList = itemSpecList;
+	}
 
-		public String getSupplierOffer() {
-			return supplierOffer;
-		}
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
 
-		public void setSupplierOffer(String supplierOffer) {
-			this.supplierOffer = supplierOffer;
-		}
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}
 
-		public String getNewOfferedSpec() {
-			return newOfferedSpec;
-		}
+	public String getNewOfferedSpec() {
+		return newOfferedSpec;
+	}
 
-		public void setNewOfferedSpec(String newOfferedSpec) {
-			this.newOfferedSpec = newOfferedSpec;
-		}
+	public void setNewOfferedSpec(String newOfferedSpec) {
+		this.newOfferedSpec = newOfferedSpec;
+	}
 
-		public String getItemSpecification() {
-			return itemSpecification;
-		}
+	public String getItemSpecification() {
+		return itemSpecification;
+	}
 
-		public void setItemSpecification(String itemSpecification) {
-			this.itemSpecification = itemSpecification;
-		}
-		// 28855 - End
+	public void setItemSpecification(String itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+	// 28855 - End
 		
-		//11076 -start
-		public int getTotalExistingItem() {
-			return totalExistingItem;
-		}
+	//11076 -start
+	public int getTotalExistingItem() {
+		return totalExistingItem;
+	}
 		
-		public void setTotalExistingItem(int totalExistingItem) {
-			this.totalExistingItem = totalExistingItem;
-		}
+	public void setTotalExistingItem(int totalExistingItem) {
+		this.totalExistingItem = totalExistingItem;
+	}
 
-		public int getTotalNewItemsAdded() {
-			return totalNewItemsAdded;
-		}
+	public int getTotalNewItemsAdded() {
+		return totalNewItemsAdded;
+	}
 
-		public void setTotalNewItemsAdded(int totalNewItemsAdded) {
-			this.totalNewItemsAdded = totalNewItemsAdded;
-		}
+	public void setTotalNewItemsAdded(int totalNewItemsAdded) {
+		this.totalNewItemsAdded = totalNewItemsAdded;
+	}
 
-		public int getOverallTotalItem() {
-			return overallTotalItem;
-		}
+	public int getOverallTotalItem() {
+		return overallTotalItem;
+	}
 
-		public void setOverallTotalItem(int overallTotalItem) {
-			this.overallTotalItem = overallTotalItem;
-		}
+	public void setOverallTotalItem(int overallTotalItem) {
+		this.overallTotalItem = overallTotalItem;
+	}
 
-		public int getValidateItem() {
-			return validateItem;
-		}
+	public int getValidateItem() {
+		return validateItem;
+	}
 
-		public void setValidateItem(int validateItem) {
-			this.validateItem = validateItem;
-		}
+	public void setValidateItem(int validateItem) {
+		this.validateItem = validateItem;
+	}
 
-		public int getAddAllItem() {
-			return addAllItem;
-		}
+	public int getAddAllItem() {
+		return addAllItem;
+	}
 
-		public void setAddAllItem(int addAllItem) {
-			this.addAllItem = addAllItem;
-		}
+	public void setAddAllItem(int addAllItem) {
+		this.addAllItem = addAllItem;
+	}
 
-		public int getUpdateItem() {
-			return updateItem;
-		}
+	public int getUpdateItem() {
+		return updateItem;
+	}
 
-		public void setUpdateItem(int updateItem) {
-			this.updateItem = updateItem;
-		}
+	public void setUpdateItem(int updateItem) {
+		this.updateItem = updateItem;
+	}
 		
-		public int getCalculateTotalExist() {
-			return calculateTotalExist;
-		}
+	public int getCalculateTotalExist() {
+		return calculateTotalExist;
+	}
 
-		public void setCalculateTotalExist(int calculateTotalExist) {
-			this.calculateTotalExist = calculateTotalExist;
-		}
+	public void setCalculateTotalExist(int calculateTotalExist) {
+		this.calculateTotalExist = calculateTotalExist;
+	}
 		
-		public int getDeleteItem() {
-			return deleteItem;
-		}
+	public int getDeleteItem() {
+		return deleteItem;
+	}
 
-		public void setDeleteItem(int deleteItem) {
-			this.deleteItem = deleteItem;
-		}
+	public void setDeleteItem(int deleteItem) {
+		this.deleteItem = deleteItem;
+	}
 
-		public int getDeleteOverallItem() {
-			return deleteOverallItem;
-		}
+	public int getDeleteOverallItem() {
+		return deleteOverallItem;
+	}
 
-		public void setDeleteOverallItem(int deleteOverallItem) {
-			this.deleteOverallItem = deleteOverallItem;
-		}
-		//11076 - end
+	public void setDeleteOverallItem(int deleteOverallItem) {
+		this.deleteOverallItem = deleteOverallItem;
+	}
+	//11076 - end
+	
+	//35024-Start
+	public boolean isBondIncomplete() {
+		return bondIncomplete;
+	}
+
+	public void setBondIncomplete(boolean bondIncomplete) {
+		this.bondIncomplete = bondIncomplete;
+	}
+	//35024-End	
 }
