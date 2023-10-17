@@ -7363,7 +7363,11 @@ public class SpecificationBackingBean extends
 					st2technicalproposalList);
 			checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 			this.getManagedBean().setTechStandaraChecklist(false);
-			addDemoTechnicalCheckList();//#28784
+			
+			//#28784 - Include WIP Demo
+			if(this.getManagedBean().isNewVersion()){
+				addDemoTechnicalCheckList();
+			}
 		} finally {
 		}
 	}

@@ -4133,6 +4133,8 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setDemoEvalDisabled(true);
 			}//#28784 - End
 
+		} else if(!this.getManagedBean().isNewVersion()) {
+			this.getManagedBean().setDemoType(false);
 		}
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		//#29521 - start
