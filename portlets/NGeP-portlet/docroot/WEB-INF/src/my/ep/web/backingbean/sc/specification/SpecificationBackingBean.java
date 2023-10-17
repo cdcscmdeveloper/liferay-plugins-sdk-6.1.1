@@ -233,6 +233,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
@@ -354,7 +355,8 @@ public class SpecificationBackingBean extends
 	private PmDigiSign pmDigiSign;
 	//11104
 	public static final String TECHNICAL_CHECKLIST_SAMPLE_MAIN="/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleMain.xhtml?faces-redirect=true";	
-	public static final String  TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW="/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";	
+	public static final String  TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW="/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";
+	public static final String SPECIFICATION_CHECKLIST_MAIN_PAGE="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";//11104
 
 
 	/**
@@ -1393,6 +1395,7 @@ public class SpecificationBackingBean extends
 			else if(this.getManagedBean().getQt().isSampleReq()){//#11104-start
 					checksampleChecklist(this.getManagedBean()
 							.getScQtCheckSt2techProposal());
+					
 			}//#11104-End
 			
 			// #28784 - Demo WIP
@@ -5713,7 +5716,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSampleSpecCheckList(new ArrayList<ScQtCheckList>());
 				for(ScQtCheckList checklist:technicalChecklist){
 					if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checklist
-							.getDefinationType().getParameterCode()) & QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {
+							.getDefinationType().getParameterCode()) && QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId())) {//11104_newEndorseStart
 						if(checkList.isBrandNew()){//#11104-start
 							checklist.setCloned(Boolean.TRUE);	
 						}//#11104-End
@@ -12985,6 +12988,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 			spReqDTO.setCommitteActivities(committeActivities);
+			spReqDTO.setSampleExist(checkISSampleExistWIPChecklist());//11104-Reendose
 
 		} else {
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
@@ -17387,6 +17391,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		}//34852_End
 		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
 		//Bug #33642 related to #25138 END
+		spReqDTO.setSampleExist(checkISSampleExistWIPChecklist());//11104-Reendose
 		IQTSpecSO specSO = getSpecSO();
 		try {
 			resDTO = specSO.updateSpecMaintananceDetails(spReqDTO);
@@ -17832,6 +17837,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
 			checkTechnicalAndFinancialSpec(this.getManagedBean().getQt()); // Bug #34065@Syazani 01/11/2022
+			spReqDTO.setSampleExist(checkISSampleExistWIPChecklist());//11104-Reendose
 		}
 		IQTSpecSO specSO = getSpecSO();
 		try {
@@ -20286,6 +20292,13 @@ if (null != checklist && !checklist.isEmpty()) {
 		.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 		templateSpecBean.setSpecMaster(this.getManagedBean().getSampleCheckList().getScQtDoc()
 				.getTplSpecMaster());
+		Map<Long,SampleQuestionBean> existingSampleSpecQuestion=this.getManagedBean().getExistingSampleSpecQuestions();//11104-ReEndoseStart
+		existingSampleSpecQuestion=new HashMap<>();
+		for(TplSpecQuestion sampleSpecQuestion:tmpresDTO.getSpecMaster().getTplSpecQuestions()){
+			SampleQuestionBean questionBean=new SampleQuestionBean(sampleSpecQuestion.getSpecQuestionId(), sampleSpecQuestion.isSampleReq(),sampleSpecQuestion.getSampleQuantity(),sampleSpecQuestion.getSampleScore());
+			existingSampleSpecQuestion.put(sampleSpecQuestion.getSpecQuestionId(),questionBean);
+		}
+		this.getManagedBean().setExistingSampleSpecQuestions(existingSampleSpecQuestion);//11104-ReEndoseEnd
 		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
 	}
 /***11104-start
@@ -20388,17 +20401,6 @@ public String saveSampleTemplateSpecDetails(boolean actionRender){
 			break;
 		}
 	}
-	if (!actionRender) {
-		specReqDTO.getScQtCheckList().setSampleStatus(
-				getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-	} else {
-		specReqDTO.getScQtCheckList().setSampleStatus(
-				getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
-	}
-	if (actionRender) {
-		validateSampleItems(specReqDTO.getScQtCheckList().getScQtDoc()
-				.getTplSpecMaster().getTplSpecQuestions());
-	}
 	List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();// 11104-start
 	if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
 		for (int i = 0; i < checklistRemoveList.size(); i++) {
@@ -20410,6 +20412,9 @@ public String saveSampleTemplateSpecDetails(boolean actionRender){
 		}
 	}
 	specReqDTO.setTobeRemoveList(checklistRemoveList);// 11104-End
+	specReqDTO=checkSampleSpecQuestionChange(specReqDTO);//11104_ReendorseNew
+	specReqDTO.getScQtCheckList().setSampleStatus(
+			 getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));//11104_ReendorseNew
 	SpecificationResDTO specresDTO = specSO
 			.saveSampleTemplateSpecs(specReqDTO);
 	if (specresDTO.isSuccessful()) {
@@ -20444,14 +20449,10 @@ public String saveSampleTemplateSpecDetails(boolean actionRender){
 		getManagedBean().setMarkDeletedTechChecklist(null);
 		getManagedBean().setMarkDeletedFinChecklist(null);// 11104-End
 		saveSpecMaintenanceWorkFlowStatus();
-		if (!actionRender) {
 			successMessage(
 					MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.qt.sampel.technical.panel.item.search.header"),
 					"", Boolean.FALSE);
-		} else {
-			return TECHNICAL_CHECKLIST_SAMPLE_MAIN;
-		}
 	}
 	return null;
 }
@@ -20466,47 +20467,27 @@ this.getManagedBean().setSampleItemName(" ");
  * validate sample items quantity and score during complete action.
  * @param specQuestions
  */
-private void validateSampleItems(List<TplSpecQuestion> specQuestions){
-	if (CollectionUtils.isNotEmpty(specQuestions)) {
-		int i = 0;// #11104
+private int validateSampleItems(List<TplSpecQuestion> specQuestions,int sampleExist){//11104_newEndorsestart
 		for (TplSpecQuestion question : specQuestions) {
 			if (question.isSampleReq()) {
-				i++;// #11104
+				sampleExist++;// #11104
 				if (null == question.getSampleQuantity()) {
-					String message = ResourceBundleUtils.getMessage(
-							"lbl.tpl.spec.content.quantity",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
-					String errorMessage = question.getClItem()
-							.concat("   ").concat(message);
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { errorMessage });
+					throw new EpException(MessageConst.ERROR_760548);
 				}
 				if (null == question.getSampleScore()) {
-					String message = ResourceBundleUtils
-							.getMessage(
-									"lbl.tpl.spec.content.scoring.settings.max.score",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()); // 11104
-					String errorMessage = question.getClItem()
-							.concat("   ").concat(message);
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { errorMessage });
+					throw new EpException(MessageConst.ERROR_760549);
 				}
 
 			}
 		}
-		if(i==0){//#11104-start
-			 throw new EpException(MessageConst.ERROR_760516);	
-		}//#11104-End
-	}
-}
+return  sampleExist;
+}//11104_newEndorseEnd
 /***11104-start
  * check sample checkist required or not based on sample radio selection.
  * @param allTechnicalChecklist
  */
 private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
-	if (CollectionUtils.isNotEmpty(allTechnicalChecklist)) {
+	if (null != allTechnicalChecklist) {//11104Reendorse-onlyDev
 		boolean specChecklist = false;
 		boolean sampleChecklist = false;
 		int i = 0;// 11104
@@ -20536,6 +20517,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				if (specChecklist || i == 0) {// 11104
 					checkList
 							.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					if(this.getManagedBean().getSpecMaintenanceScreen()
+				.equals(getSpecMaintenance()) && !isQTStatusPublished(this.getManagedBean().getQt().getQtStatus().getStatusId()) && null==this.getManagedBean().getQt().getDemoNotificationCheck()) {//11104-Reendorse
+						checkList
+						.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));	
+					}//11104-Reendorse
 				}
 				sampleChecklist = true;
 			}
@@ -23032,4 +23018,208 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 	}
 	// Bug #33661@Syazani 12/04/2023 -- End
+	
+	/**
+	 *11104-newEndorsestart
+	 *During the sample edit icon, check whether Existing TemplateSpec has sample data or not.
+	 * 
+	 */	
+	public boolean checkTemplateRequiredSample(ScQtCheckList templateChecklist){//11104_newEndorsestart
+		if (null == templateChecklist.getSampleStatus()
+				|| QTStatusConst.TS_PENDING_SUBMISSION.equals(templateChecklist
+						.getSampleStatus().getStatusId())) {
+			return Boolean.FALSE;
+		} else {
+			for (TplSpecQuestion specQuestion :  getTemplateSampleQuestions(templateChecklist)) {
+				if (BooleanUtils.isTrue(specQuestion.isSampleReq())) {
+					return Boolean.TRUE;
+				}
+			}
+		}
+		return Boolean.FALSE;
+	}//11104_newEndorseEnd
+	
+	/**
+	 * Complete Sample template spec details.user clicks on complete button in samplespecTechList
+	 * spec screens.
+	 */
+	public String completeSampleTemplateSpecDetails() {//11104_newEndorsestart
+		List<ScQtCheckList> sampleTemplateSpecs = this.getManagedBean()
+				.getSampleSpecCheckList();
+		if (CollectionUtils.isNotEmpty(sampleTemplateSpecs)) {
+			int sampleExist = 0;
+			boolean isTemplateSamplePending = Boolean.FALSE;
+			for (ScQtCheckList sampleSpecs : sampleTemplateSpecs) {
+				if (null == sampleSpecs.getSampleStatus()
+						|| QTStatusConst.TS_PENDING_SUBMISSION
+								.equals(sampleSpecs.getSampleStatus()
+										.getStatusId())) {
+					isTemplateSamplePending = Boolean.TRUE;
+				}
+				sampleExist = validateSampleItems(getTemplateSampleQuestions(sampleSpecs), sampleExist);
+			}
+			if (sampleExist == 0) {
+				throw new EpException(MessageConst.ERROR_760516);
+			}
+			if (BooleanUtils.isFalse(isTemplateSamplePending)
+					&& sampleExist >= 1) {
+				completeSampleDetails();
+				return SPECIFICATION_CHECKLIST_MAIN_PAGE;
+			} else {
+				throw new EpException(MessageConst.ERROR_760550);
+
+			}
+
+		}
+	
+	return null;
+	}//11104_newEndorseEnd
+	
+	private void completeSampleDetails(){//11104_newEndorsestart
+		List<ScQtCheckList> technicalChecklist = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		for (ScQtCheckList checklist : technicalChecklist) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+					.equalsIgnoreCase(checklist.getDefinationType()
+							.getParameterCode())) {
+				checklist
+						.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+				specReqDTO.setSampleCheckList(checklist);
+				break;
+			}
+		}
+		SpecificationResDTO resDTO = getQtSpecSO().completeSampleChecklist(
+				specReqDTO);
+		if (resDTO.isSuccessful()) {
+			specCommitteeResetData();
+			for (ScQtCheckList checklist : technicalChecklist) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+						.equalsIgnoreCase(checklist.getDefinationType()
+								.getParameterCode())) {
+					int index = technicalChecklist.indexOf(checklist);
+					technicalChecklist.set(index, resDTO.getSampleChecklist());
+				}
+			}
+			specReqDTO.setTobeRemoveList(null);
+			getManagedBean().setMarkDeletedTechChecklist(null);
+			getManagedBean().setMarkDeletedFinChecklist(null);
+			saveSpecMaintenanceWorkFlowStatus();
+		}
+		
+	}//11104_newEndorseEnd
+	private  SpecificationReqDTO checkSampleSpecQuestionChange(SpecificationReqDTO specReqDTO){//11104_newEndorsestart
+		if (null == specReqDTO.getScQtCheckList().getSampleStatus()
+				|| QTStatusConst.TS_PENDING_SUBMISSION.equals(specReqDTO
+						.getScQtCheckList().getSampleStatus().getStatusId())) {
+			specReqDTO.getSampleCheckList().setPmStatus(
+					getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+		} else {
+			if (null != specReqDTO.getSampleCheckList().getPmStatus()
+					&& !QTStatusConst.TS_PENDING_SUBMISSION.equals(specReqDTO
+							.getSampleCheckList().getPmStatus()
+							.getStatusId())) {
+				List<TplSpecQuestion> sampleQuestions = specReqDTO
+						.getScQtCheckList().getScQtDoc().getTplSpecMaster()
+						.getTplSpecQuestions();
+				boolean isExistingSampleItemChange = existingSampleQuestionChange(sampleQuestions);
+				if (isExistingSampleItemChange) {
+					specReqDTO
+							.getSampleCheckList()
+							.setPmStatus(
+									getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+				}
+
+			}
+		}
+		return specReqDTO;
+	}//11104_newEndorseEnd
+	private boolean existingSampleQuestionChange(List<TplSpecQuestion> sampleQuestions){//11104_newEndorsestart
+		boolean isExistingSampleItemChange = Boolean.FALSE;
+		for (TplSpecQuestion currentQuestion : sampleQuestions) {
+			SampleQuestionBean existingSpecQuestion = this.getManagedBean()
+					.getExistingSampleSpecQuestions()
+					.get(currentQuestion.getSpecQuestionId());
+			int sampleEqual = Boolean.compare(existingSpecQuestion.isSample(),
+					currentQuestion.isSampleReq());
+			if (sampleEqual != 0) {
+				return Boolean.TRUE;
+			}
+			BigDecimal existingQuantity = existingSpecQuestion
+					.getSampleQuestionQuantity() != null ? existingSpecQuestion
+					.getSampleQuestionQuantity() : BigDecimal.ZERO;
+			BigDecimal currentQuantity = currentQuestion.getSampleQuantity() != null ? currentQuestion
+					.getSampleQuantity() : BigDecimal.ZERO;
+			if (existingQuantity.compareTo(currentQuantity) != 0) {
+				return Boolean.TRUE;
+			}
+			BigDecimal existingScore = existingSpecQuestion
+					.getSampleQuestionScore() != null ? existingSpecQuestion
+					.getSampleQuestionScore() : BigDecimal.ZERO;
+			BigDecimal currentScore = currentQuestion.getSampleScore() != null ? currentQuestion
+					.getSampleScore() : BigDecimal.ZERO;
+			if (existingScore.compareTo(currentScore) != 0) {
+				return Boolean.TRUE;
+			}
+		}
+		return isExistingSampleItemChange;
+	}//11104_newEndorseEnd
+	/**
+	 * check Sample specQuestionExist for wiP QT.
+	 * @return boolean
+	 */
+	public boolean  checkISSampleExistWIPChecklist(){//11104_newEndorseStart
+		boolean qtSample = this.getManagedBean().getQt().isSampleReq();
+		List<ScQtCheckList> technicalChecklist = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		if (qtSample
+				&& (isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())) {
+			this.getManagedBean()
+					.getQt()
+					.setDemoNotificationCheck(
+							SourcingConstants.SAMPLE_WIP_CHECK);
+			return Boolean.TRUE;
+		} else if (qtSample
+				&& !isQTStatusPublished(this.getManagedBean().getQt()
+						.getQtStatus().getStatusId())
+				&& SourcingConstants.SAMPLE_WIP_CHECK.equals(this
+						.getManagedBean().getQt().getDemoNotificationCheck())) {
+			return Boolean.TRUE;
+		} else if (qtSample
+				&& !isQTStatusPublished(this.getManagedBean().getQt()
+						.getQtStatus().getStatusId())
+				&& null == this.getManagedBean().getQt()
+						.getDemoNotificationCheck()) {
+			
+			return Boolean.FALSE;
+		} else if (qtSample && CollectionUtils.isNotEmpty(technicalChecklist)) {
+			List<ScQtCheckList> sampleTemplateSpecChecklist = new ArrayList<>();
+			for (ScQtCheckList sampleCheckList : technicalChecklist) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(sampleCheckList.getDefinationType()
+								.getParameterCode())
+						&& QTStatusConst.TS_COMPLETED.equals(sampleCheckList
+								.getPmStatus().getStatusId())) {
+					sampleTemplateSpecChecklist.add(sampleCheckList);
+				}
+			}
+
+			return checkWiPSampleQuestionExist(sampleTemplateSpecChecklist);
+		}
+		return Boolean.FALSE;
+	}//11104_newEndorseEnd
+	private boolean checkWiPSampleQuestionExist(List<ScQtCheckList> sampleTemplateSpecChecklist){//11104_newEndorseStart
+		for (ScQtCheckList sampleSpecs : sampleTemplateSpecChecklist) {	
+			for (TplSpecQuestion specQuestion : getTemplateSampleQuestions(sampleSpecs)) {
+				if (BooleanUtils.isTrue(specQuestion.isSampleReq())) {
+					return Boolean.TRUE;
+				}
+			}
+
+		}
+		return Boolean.FALSE;
+	}//11104_newEndorseEnd
+
+
 }
