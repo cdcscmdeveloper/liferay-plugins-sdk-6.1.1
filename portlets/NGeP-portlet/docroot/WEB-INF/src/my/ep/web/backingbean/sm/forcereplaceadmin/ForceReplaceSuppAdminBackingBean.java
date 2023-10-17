@@ -154,6 +154,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 				throw new EpException(MessageConst.ERROR_722659);
 			}
 		} else {
+			//START 35023
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				SmSupplier smSupplier = SmServiceLookup.getSupplierSearchSO().retrieveSupplierByRegNo(
+						getManagedBean().getReactivateBasic().getRegNo());
+				if (smSupplier != null && smSupplier.getBusinessType().equalsIgnoreCase(
+						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+					throw new EpException(MessageConst.ERROR_722706);
+				}
+			}
+			//END 35023
 			getManagedBean()
 					.setSmSupplier(
 							SmServiceLookup
