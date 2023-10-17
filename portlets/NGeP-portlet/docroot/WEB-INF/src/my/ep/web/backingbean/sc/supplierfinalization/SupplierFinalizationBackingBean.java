@@ -6760,6 +6760,7 @@ return	remarksNotFound;
 					
 					setSelectionMode(finalizationMethod.getParameterCode());
 				}
+				createShortlistedSuppliersDataModel();//35140
 			} 
 			
 			//#28834 - Start
