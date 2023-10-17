@@ -1121,6 +1121,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.getPaymentAmt();
 			this.setvCode(vc);
 			this.getManagedBean().setTotalAmount(ttlAmt);
+			this.getManagedBean().setMerchantCode(merchantId);
 			cdcPaymentGatewayUrl = getCdcPaymentGatewayUrl(merchantId,pyBill.getBillType());
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			return "paymentGatewayCDCRequestSubmission";
