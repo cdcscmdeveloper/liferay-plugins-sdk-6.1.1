@@ -17351,11 +17351,13 @@ private void retriveCommitteeRemarksList(){
 	public void demoAttachmentChecking() {
 		if (!this.getManagedBean().isDemoWip()) {
 			ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
-			ScQtCheckListAttachment attachment = scQtChecklist.getScQtCheckListAttachment();
-			if (attachment == null) {
+			// ScQtCheckListAttachment attachment = scQtChecklist.getScQtCheckListAttachment();
+			if (null != this.getManagedBean().getScQtChecklist() && null == scQtChecklist.getScQtCheckListAttachment()) {
 				throw new EpException(MessageConst.ERROR_760329);
 			}
+
 		}
+		
 	}
 	
 	public String retriveTotalTechnicalScore(ScQtEvaluationResultDtl propId) {
