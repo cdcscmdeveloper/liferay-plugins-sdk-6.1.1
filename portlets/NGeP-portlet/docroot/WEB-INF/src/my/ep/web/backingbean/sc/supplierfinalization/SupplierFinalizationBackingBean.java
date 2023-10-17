@@ -1394,8 +1394,10 @@ public class SupplierFinalizationBackingBean extends
 
 			validateFinalizationReports(reqDTO, skipValidation);//25037 note31
 
-			if (!skipValidation) { 
-				//25037 - merge same condition by 28834, add skipValidation flag
+			// #35205, #28834 -start-
+			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex)
+			// #35205, #28834 -end-
+			{
 				//#27364 Start
 				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 				if (ParameterConst.DECISION_CANCEL
@@ -1414,9 +1416,12 @@ public class SupplierFinalizationBackingBean extends
 								&& !getManagedBean().isDisableJustifications()
 								// #28834 - End.
 						         ) {
-					if (this.getManagedBean().getJustification() == null
-							|| this.getManagedBean().getJustification()
-									.getReasonId() == null) {
+					// #35205, #28834 -start-
+					if ((this.getManagedBean().getJustification() == null || this.getManagedBean().getJustification()
+							.getReasonId() == null)
+							&& this.getManagedBean().isSubmit())
+					// #35205, #28834 -end-
+					{
 						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_100061,
 								new String[] { ResourceBundleUtils.getMessage(
@@ -1424,8 +1429,12 @@ public class SupplierFinalizationBackingBean extends
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 										new FacesScopes().getUserLocale()) });
 					}
+
+					setNullSelectionForJustification(reqDTO); // #35205 & #28834
 				}
 			}
+
+			setNullSelectionForJustification(reqDTO); // #35205 & #28834
 
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
@@ -1478,8 +1487,21 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
+	// #35205 & #28834 - Start
+	/**
+	 * Allow save data for justification dropdown is empty to null value       
+	 */
+	public void setNullSelectionForJustification(SuppFinalizationReqDTO reqDTO) {
+		if (this.getManagedBean().getJustification() != null
+				&& this.getManagedBean().getJustification().getReasonId() == null && !this.getManagedBean().isSubmit()) {
+			reqDTO.getScQtFinalization().setJustification(null);
+		}
+	}
+	// #35205 & #28834 - End	
+	
 	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO, boolean skipValidation) {//25037 note31
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		boolean isSubmit = this.getManagedBean().isSubmit(); // #35205, #28834
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
 		finalizationReports.addAll(this.getManagedBean()
@@ -1510,13 +1532,22 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			
-			//#28834 - Start 
-			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
+			// #28834, #35205 - Start
+			if (CollectionUtils.isNotEmpty(toBeRemovedReports) && isSubmit)
+			// #35205 -end-
+			{
 				// 25037 -start-
 				if (skipValidation)
 					return;
 				// 25037 -end-
 
+				navigateToEndorsementReportTab();
+			    throw new EpException(MessageConst.ERROR_770271);
+			}
+			//#28834 - End
+			
+			//#28834 - Start 
+			if(CollectionUtils.isNotEmpty(toBeRemovedReports)){
 				navigateToEndorsementReportTab();
 			    throw new EpException(MessageConst.ERROR_770271);
 			}
