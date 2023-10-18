@@ -5261,7 +5261,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		VelocityContext context = new VelocityContext();
 		//#32738 & #32739 - start
 		String procurementMode = "";
-		String title = scQt.getQtTitle().toUpperCase();
+		String title = scQt.getQtTitle(); // #32648 remove uppercase
 		//#32738 & #32739 - end
 
 		if (title == null) {
