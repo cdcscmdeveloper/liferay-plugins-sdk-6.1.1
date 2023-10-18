@@ -31,8 +31,7 @@ public class PopulateObjectListenersp implements ValueChangeListener {
 		
 		LovBean lovBean = lovBB.getBeanByLovId((String)event.getComponent().getAttributes().get("lovId"));
 		lovBB.setLovBean(lovBean);
-		
-//		ISearchResultBean resultBean = searchAction(lovSearchBean, true);
+
 		String conditionField = (String)event.getComponent().getAttributes().get("conditionField");
 		String saveObject = (String)event.getComponent().getAttributes().get("saveObject");
 		

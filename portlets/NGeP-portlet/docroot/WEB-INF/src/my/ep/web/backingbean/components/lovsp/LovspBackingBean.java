@@ -189,29 +189,6 @@ public class LovspBackingBean implements Serializable {
 	}
 	
 	/**
-	 * 
-	 * 
-	 * @param reqDTO
-	 */
-//	@SuppressWarnings("unchecked")
-//	private void excludeConsultant(LovReqDTO reqDTO) {
-//		debugLogger("Entered " + this.getClass().getName() + ".excludeConsultant(): ");
-//		if ("retriveSupplierAndGSTInfos".equals(reqDTO.getSearchMethod()) && null != reqDTO.getSearchBean()
-//				&& null != reqDTO.getSearchBean().getDataFilterBeans()) {
-//			debugLogger("Entered " + this.getClass().getName() + ".excludeConsultant(): Adding filter to exclude Consultant.");
-//			SearchFilterBean searchFilterBean = new SearchFilterBean();
-//			searchFilterBean.setAndOr(SearchCondition.CONDITION_AND.value());
-//			searchFilterBean.setCaseInsensitive(true);
-//			searchFilterBean.setSearchField("smAppl.smSupplier.smMofAccounts.supplierType");
-//			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
-//			searchFilterBean.setSearchValue(SupplierManagementConst.SUPP_TYPE_CONSULTANT);
-//			reqDTO.getSearchBean().getDataFilterBeans().add((searchFilterBean));
-//			debugLogger("Entered " + this.getClass().getName() + ".excludeConsultant(): Added filter to exclude Consultant.");
-//		}
-//		debugLogger("Exit " + this.getClass().getName() + ".excludeConsultant(): ");
-//	}
-	
-	/**
 	 * this method is to search and populate the actual object from DB when user enter any value in the LoV inputText
 	 * @param event
 	 * @throws Exception
@@ -373,20 +350,6 @@ public class LovspBackingBean implements Serializable {
 		return (saveOjbectIndex == null) ? 0 : Integer.parseInt(saveOjbectIndex);
 	}
 	
-	/**
-	 * validate the search value in the lov popup
-	 */
-//	private void validateBeforeSearch() {
-//		
-//		Object searchValue1 = ((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchValue();
-//		if(StringUtils.isNotBlank(searchValue1.toString())) {
-//			if(((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField() == null ||
-//					((SearchFilterBean)this.getLovSearchBean().getDataFilterBeans().get(0)).getSearchField().length() == 0) {
-//				throw new EpException(MessageConst.ERROR_100060);
-//			}
-//		}
-//	}
-
 	public void resetAction() {
 		if(getLovBean().isStoreProc()){
 			this.getSearchPmUserDataModel().resetData();

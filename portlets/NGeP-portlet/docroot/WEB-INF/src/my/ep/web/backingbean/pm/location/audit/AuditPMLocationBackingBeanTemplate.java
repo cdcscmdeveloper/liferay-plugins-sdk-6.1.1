@@ -2,11 +2,12 @@ package my.ep.web.backingbean.pm.location.audit;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import my.ep.biz.service.pm.common.audittrail.IAuditLocationSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.common.auditLocation.AUPMLocationMasterSPDTO;
-import my.ep.dto.pm.common.auditLocation.AuditPMBaseDTO;
+import my.ep.dto.pm.common.auditlocation.AUPMLocationMasterSPDTO;
+import my.ep.dto.pm.common.auditlocation.AuditPMBaseDTO;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -50,7 +51,7 @@ public abstract class AuditPMLocationBackingBeanTemplate implements Serializable
 	public abstract ArrayList<AUPMLocationMasterSPDTO> masterInsert(AuditPMBaseDTO auPMObj, Long userId,
 			BaseManagedBean managebean, String roleCode);
 
-	private void pmauditSO(ArrayList<AUPMLocationMasterSPDTO> masterObjlist, AuditPMBaseDTO auPMObj) {
-		pmauditSO.insertAUDITPMSP(masterObjlist, auPMObj.detailObjlist);
+	private void pmauditSO(List<AUPMLocationMasterSPDTO> masterObjlist, AuditPMBaseDTO auPMObj) {
+		pmauditSO.insertAUDITPMSP(masterObjlist, auPMObj.getDetailObjlist());
 	}
 }

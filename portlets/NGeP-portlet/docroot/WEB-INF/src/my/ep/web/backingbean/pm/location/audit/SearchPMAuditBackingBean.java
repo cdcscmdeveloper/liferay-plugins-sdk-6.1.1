@@ -12,9 +12,9 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.audittrail.IAuditLocationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.common.auditLocation.AuditLocationReqDTO;
-import my.ep.dto.pm.common.auditLocation.AuditLocationResDTO;
-import my.ep.dto.pm.common.auditLocation.VPmAuditLocationDTO;
+import my.ep.dto.pm.common.auditlocation.AuditLocationReqDTO;
+import my.ep.dto.pm.common.auditlocation.AuditLocationResDTO;
+import my.ep.dto.pm.common.auditlocation.VPmAuditLocationDTO;
 import my.ep.exception.EpException;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -230,23 +230,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 	 * Retrieve Dropdown Level1
 	 * 
 	 */
-//	public List<VPmAuditLocationDTO> getLoadDropdown() {
-//		IAuditLocationSO locationSO;
-//		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-//		String selectedCode_L1 = getManagedBean().getLocationSearchBean().getSystemConfigParamLevel1();
-//		String selectedCode_L2 = getManagedBean().getLocationSearchBean().getCategoryConfigParamLevel2();
-//		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
-//				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-//		List<VPmAuditLocationDTO> paramLvl1List = locationSO.getLoadDropdownList(languageCode, selectedCode_L1,
-//				selectedCode_L2);
-//		System.out.println("paramLvl2List.size() ::::>>> ::: " + paramLvl1List.size());
-//		return paramLvl1List;
-//	}
-
-	/**
-	 * Retrieve Dropdown Level1
-	 * 
-	 */
 	public List<VPmAuditLocationDTO> getDropdownLevel1() {
 		IAuditLocationSO locationSO;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
@@ -313,62 +296,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 		List<VPmAuditLocationDTO> dropdownRoleList = locationSO.getDropdownRoleList(languageCode);
 
 		return dropdownRoleList;	}
-
-	/**
-	 * Retrieve Dropdown ActionBy List
-	 * 
-	 */
-//	public List<VPmAuditLocationDTO> getActionByListbyRoleCode() {
-//		IAuditLocationSO locationSO;
-//		locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
-//				ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-//		List<VPmAuditLocationDTO> dropdownRoleList = locationSO.getActionByListbyRoleCode(this.getManagedBean()
-//				.getLocationSearchBean().getRole());
-//		this.getManagedBean().setVpmAuditLocationDTOList(dropdownRoleList);
-//		return dropdownRoleList;
-//	}
-
-	/**
-	 * search Details Location
-	 * 
-	 */
-//	private class getActionByPagingDataModel extends PagingDataModel<VPmAuditLocationDTO> {
-//
-//		private static final long serialVersionUID = 1L;
-//
-//		public getActionByPagingDataModel() {
-//
-//			super("searchActionBylist", getManagedBean().isLazy());
-//
-//		}
-//
-//		public ISearchResultBean<VPmAuditLocationDTO> pageChangeListener(ISearchBean<VPmAuditLocationDTO> searchBean) {
-//			IAuditLocationSO locationSO;
-//
-//			try {
-//				AuditLocationSearchBean lSearchBean = getManagedBean().getLocationSearchBean();
-//				locationReqDTO.setLocationType(getManagedBean().getLocationDetailType());
-//				if (lSearchBean.getRole() != null) {
-//					locationReqDTO.setRole(lSearchBean.getRole());
-//				}
-//				locationReqDTO.setLocationSearchBean(searchBean);
-//
-//				locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
-//						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
-//				AuditLocationResDTO resDTO = locationSO.getActionByResultlist(locationReqDTO);
-//
-//				if (resDTO.isSuccessful()) {
-//					return resDTO.getLocationResultBean();
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				throw new EpException(MessageConst.ERROR_770005);
-//			}
-//
-//			return null;
-//		}
-//
-//	}
 
 	public void changeLocationType() {
 		log.info("changeLocationType!!!");

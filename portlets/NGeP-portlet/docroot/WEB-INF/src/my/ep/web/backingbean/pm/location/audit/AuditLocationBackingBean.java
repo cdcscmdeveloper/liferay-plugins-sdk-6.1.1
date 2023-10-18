@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import my.ep.constant.audit.AuditConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.common.auditLocation.AUPMLocationDetailSPDTO;
-import my.ep.dto.pm.common.auditLocation.AUPMLocationMasterSPDTO;
-import my.ep.dto.pm.common.auditLocation.AuPMLocationDTO;
-import my.ep.dto.pm.common.auditLocation.AuditPMBaseDTO;
+import my.ep.dto.pm.common.auditlocation.AUPMLocationDetailSPDTO;
+import my.ep.dto.pm.common.auditlocation.AUPMLocationMasterSPDTO;
+import my.ep.dto.pm.common.auditlocation.AuPMLocationDTO;
+import my.ep.dto.pm.common.auditlocation.AuditPMBaseDTO;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 
@@ -87,8 +87,8 @@ public class AuditLocationBackingBean extends AuditPMLocationBackingBeanTemplate
 	private AuPMLocationDTO insertDivisionVal(AuPMLocationDTO auPMObj,LocationManagedBean locationManagedBean){
 		dtlObjName.setDocId(locationManagedBean.getResDivision().getDivisionId().intValue());
 		dtlObjStatus.setDocId(locationManagedBean.getResDivision().getDivisionId().intValue());
-		dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_DIV_DVSTATUS_FieldLabelid);
-		dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_DIV_DVNAME_FieldLabelid);
+		dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_DIV_DVSTATUS_FIELDLABELID);
+		dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_DIV_DVNAME_FIELDLABELID);
 		auPMObj.setLocCategory("DV");
 		if (null != locationManagedBean.getDivision().getDivisionId()&& locationManagedBean.getDivisionOldVal().getPmDivision().getDivisionId() != null) {
 			auPMObj.setLocOldDtlVal(true);
@@ -131,7 +131,7 @@ public class AuditLocationBackingBean extends AuditPMLocationBackingBeanTemplate
 			auPMObj.setLocOldDtlVal(true);
 			if (!locationManagedBean.getState().getStateName().equalsIgnoreCase(locationManagedBean.getStateOldVal().getPmState().getStateName())) {
 				auPMObj.setLocOldNameVal(true);
-				dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_ST_STNAME_FieldLabelid);
+				dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_ST_STNAME_FIELDLABELID);
 				dtlObjName.setOldValue(locationManagedBean.getStateOldVal().getPmState().getStateName());
 				dtlObjName.setNewValue(locationManagedBean.getResState().getStateName());
 				dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
@@ -140,7 +140,7 @@ public class AuditLocationBackingBean extends AuditPMLocationBackingBeanTemplate
 			}
 			if (locationManagedBean.getResState().getAdoptDivision() != locationManagedBean.getStateOldVal().getPmState().getAdoptDivision()) {
 				auPMObj.setLocOldAdoptDivVal(true);
-				dtlObjDV.setPmFieldLabelid(AuditConst.PM_AUD_ST_STDIV_FieldLabelid);
+				dtlObjDV.setPmFieldLabelid(AuditConst.PM_AUD_ST_STDIV_FIELDLABELID);
 				dtlObjDV.setOldValue(locationManagedBean.getStateOldVal().getPmState().getAdoptDivision() == true ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 				dtlObjDV.setNewValue(locationManagedBean.getResState().getAdoptDivision() == true ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 				dtlObjDV.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);				
@@ -149,7 +149,7 @@ public class AuditLocationBackingBean extends AuditPMLocationBackingBeanTemplate
 			}
 			if (locationManagedBean.getResState().getRecordStatusFlg() != locationManagedBean.getStateOldVal().getPmState().getRecordStatusFlg()) {
 				auPMObj.setLocOldStatusVal(true);
-				dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_ST_STSTATUS_FieldLabelid);
+				dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_ST_STSTATUS_FIELDLABELID);
 				dtlObjStatus.setOldValue(locationManagedBean.getStateOldVal().getPmState().getRecordStatusFlg()==1?AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
 				dtlObjStatus.setNewValue(locationManagedBean.getResState().getRecordStatusFlg()==1?AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
 				dtlObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
@@ -157,17 +157,17 @@ public class AuditLocationBackingBean extends AuditPMLocationBackingBeanTemplate
 				auPMObj.setDetailObjlist(detailObjlist);
 			}
 		} else {
-			dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_ST_STNAME_FieldLabelid);
+			dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_ST_STNAME_FIELDLABELID);
 			dtlObjName.setNewValue(locationManagedBean.getResState().getStateName());
 			dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			detailObjlist.add(dtlObjName);
 
-			dtlObjDV.setPmFieldLabelid(AuditConst.PM_AUD_ST_STDIV_FieldLabelid);
+			dtlObjDV.setPmFieldLabelid(AuditConst.PM_AUD_ST_STDIV_FIELDLABELID);
 			dtlObjDV.setNewValue(locationManagedBean.getResState().getAdoptDivision() == true ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 			dtlObjDV.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			detailObjlist.add(dtlObjDV);
 
-			dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_ST_STSTATUS_FieldLabelid);
+			dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_ST_STSTATUS_FIELDLABELID);
 			dtlObjStatus.setNewValue(locationManagedBean.getResState().getRecordStatusFlg()==1?AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
 			dtlObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			detailObjlist.add(dtlObjStatus);
@@ -179,9 +179,9 @@ public class AuditLocationBackingBean extends AuditPMLocationBackingBeanTemplate
 	
 	private AuPMLocationDTO insertDistrictVal(AuPMLocationDTO auPMObj,LocationManagedBean locationManagedBean){
 		auPMObj.setLocCategory("DS");
-		dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_ST_DSNAME_FieldLabelid);
+		dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_ST_DSNAME_FIELDLABELID);
 		dtlObjName.setDocId(locationManagedBean.getResDistrict().getDistrictId().intValue());
-		dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_ST_DSSTATUS_FieldLabelid); // District
+		dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_ST_DSSTATUS_FIELDLABELID); // District
 		dtlObjStatus.setDocId(locationManagedBean.getResDistrict().getDistrictId().intValue());	
 		if (null != locationManagedBean.getDistrict().getDistrictId() && locationManagedBean.getDistrictOldVal().getPmDistrict().getDistrictId() != null) {
 			/** UPDATE transaction ***/
@@ -217,8 +217,8 @@ public class AuditLocationBackingBean extends AuditPMLocationBackingBeanTemplate
 	private AuPMLocationDTO insertCityVal(AuPMLocationDTO auPMObj,LocationManagedBean locationManagedBean){
 		auPMObj.setLocCategory("CT");
 		dtlObjName.setDocId(locationManagedBean.getResCity().getCityId().intValue());
-		dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_CT_CTNAME_FieldLabelid);
-		dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_CT_CTSTATUS_FieldLabelid); // City
+		dtlObjName.setPmFieldLabelid(AuditConst.PM_AUD_CT_CTNAME_FIELDLABELID);
+		dtlObjStatus.setPmFieldLabelid(AuditConst.PM_AUD_CT_CTSTATUS_FIELDLABELID); // City
 		dtlObjStatus.setDocId(locationManagedBean.getResCity().getCityId().intValue());						
 		if (null != locationManagedBean.getCity().getCityId() && locationManagedBean.getCityOldVal().getPmCity().getCityId() != null) {
 			auPMObj.setLocOldDtlVal(true);
