@@ -17,6 +17,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO; //#21387
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
@@ -1645,30 +1646,29 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("**********claimTask");
 		
 		/*21387 - basri*/
-		//String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
-		
-		String docNumber = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNumber");
-		
+		String docNumber = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNumber");		 
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
-	
-		
+			 
 		if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
-		    List<WorklistItemVO>  list = this.getManagedBean().getTaskListGroupDataModel().getList();
-		    
-		    for(WorklistItemVO a : list){
-		    	String var = a.getDocNumber();
-		    	String taski = a.getTaskId();
-		    	if(var.equalsIgnoreCase(docNumber)){
-		    		claimBpmTaskGroup(taski);
-		    	}
-		    }
+			//#21387 - Start
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(docNumber);
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
+			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+					 if(getDocNumber.getDocNumber().equalsIgnoreCase(docNumber) && getDocNumber.getAcquiredBy() == null){
+						 claimTaskByTaskId(getDocNumber.getTaskId());
+		
+					 } 	   
+				 } 
+			}//#21387 - End			
 		}else{
 			claimBpmTask();
 		}
 		/*21387 - basri*/
 			
-			this.getManagedBean().getTaskListGroupDataModel().reloadData();
-			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
 		return "taskListView?faces-redirect=true";
 
@@ -1730,21 +1730,24 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
 		
-		//#31681 - basri 22/10/21
-		if(null == this.getManagedBean().getTaskIdPair()){
-			this.getManagedBean().setTaskIdPair("null");
-		}
-		
-		/*#31422-basri 190821*///(null == this.getManagedBean().getTaskIdPair())
-		if(!(this.getManagedBean().getTaskIdPair().equals("null"))){//#31681 - basri 22/10/21
-			reqDTO.setTaskId(this.getManagedBean().getTaskIdPair());
+		//#21387 - Start
+		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+			
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
+			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+					 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
+						 claimTaskByTaskId(getDocNumber.getTaskId());
+					 } 
+				 } 
+			}//#21387 - End			
+		}else{
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 	    	reqDTO.setCtxToken(token);
 	    	bpmSO.claimTask(reqDTO);
-		}		
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-    	reqDTO.setCtxToken(token);
-    	bpmSO.claimTask(reqDTO);
-		/*#31422-basri 190821*/
+		}
 
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
