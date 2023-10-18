@@ -305,6 +305,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
+			
+			//#34413 - Start
+		    if(scLoa.getJustificationType()!=null && !isPk7Periodic()){
+		    	scLoa.setJustificationType(null);
+		    }
+		    //#34413 - End
+			
 			if (!supplier) {
 				updateContractDetails(scLoa);
 			}
