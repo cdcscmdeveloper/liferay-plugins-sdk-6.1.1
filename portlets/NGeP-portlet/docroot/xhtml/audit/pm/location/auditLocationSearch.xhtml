@@ -5,9 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	 <p:blockUI widgetVar="blkPanelSearchTable"  block=":form" trigger="panelSearchId">  
-			  <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
-		 </p:blockUI> 	
+	<p:blockUI widgetVar="blkPanelSearchTable" block=":form"
+		trigger="panelSearchId">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
 	<p:panel id="locationSearchPanel"
 		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
 		<p:outputPanel>
@@ -100,9 +101,7 @@
 							var="roleItem" itemLabel="#{roleItem.roleCode}"
 							itemValue="#{roleItem.roleCode}" />
 						<p:ajax event="change" update="roles,searchActionBylist" />
-					</p:selectOneMenu>
-					<ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" />
-					</td>
+					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
 				<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
 				<td>&#160;</td>
 			</tr>
@@ -117,30 +116,34 @@
 						postUpdateListener="locationAuditBackingBean.resetGetActionBy()"
 						update="@form"
 						saveObject="locationAuditBackingBean.managedBean.locationSearchBean.pmUser"
-						tooltip = "#{lbl['lbl.pm.audit.tooltip.actionby']}" >
-					</ac:lovsp>
-					</td>
+						tooltip="#{lbl['lbl.pm.audit.tooltip.actionby']}">
+					</ac:lovsp></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateFrom']}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.audit.actiondateFrom']}" /></td>
 				<td><p:calendar id="fromDate" showOn="button" size="32"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						value="#{locationAuditBackingBean.managedBean.locationSearchBean.dateFrom}">
 						<p:ajax event="dateSelect" update="fromDate,toDate" />
-					</p:calendar></td>					
+					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
 				<td><p:calendar showOn="button" size="25"
+						label="#{lbl['lbl.pm.audit.actiondateTo']}"
+						required="#{locationAuditBackingBean.managedBean.locationSearchBean.dateFrom ne null or !locationAuditBackingBean.managedBean.locationSearchBean.dateFrom eq ''}"
 						mindate="#{locationAuditBackingBean.managedBean.locationSearchBean.dateFrom}"
 						id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-						value="#{locationAuditBackingBean.managedBean.locationSearchBean.dateTo}" >
+						value="#{locationAuditBackingBean.managedBean.locationSearchBean.dateTo}">
 					</p:calendar></td>
 			</tr>
 			<tr>
 				<td colspan="4" width="100%">
 					<div class="ppRightBtn">
-						<p:commandButton id="panelSearchId" value="#{lbl['lbl.btn.search']}"
-							onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();"
-							update="searchLocations" process="locationSearchPanel"
+						<p:commandButton id="panelSearchId"
+							value="#{lbl['lbl.btn.search']}"
+							onstart="blkPanelSearchTable.show();"
+							oncomplete="blkPanelSearchTable.hide();" update="searchLocations"
+							process="locationSearchPanel"
 							action="#{locationAuditBackingBean.searchLocation}" />
 						<p:commandButton id="searchButtonId"
 							value="#{lbl['lbl.btn.reset']}"
