@@ -3137,8 +3137,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					String roleCode = userRole.getPmRole().getRoleCode();
 					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 							&& userRole.getPmRole().isLimitRequired()) {
-						if (userRole.getApprovalLimit() == null
-								|| userRole.getApprovalLimit().compareTo(BigDecimal.ZERO) != 1) {
+						//SQ: remove compareTo
+						if (userRole.getApprovalLimit() == null || userRole.getApprovalLimit().intValue() != 1) {
 							throw new EpException(MessageConst.ERROR_770148,
 									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
