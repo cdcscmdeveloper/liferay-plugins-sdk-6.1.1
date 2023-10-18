@@ -11559,7 +11559,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else {
 			isShow = true;
 		}
-		
+		//35284 - start
+		boolean isFromQty = null != loiLoaItem.getTplSpecTierQty() && null != loiLoaItem.getTplSpecTierQty().getFromQty() ? loiLoaItem.getTplSpecTierQty().getFromQty().compareTo(BigDecimal.ONE)==0 : false;
+		boolean isSpecTierQty = null == loiLoaItem.getTplSpecTierQty() || isFromQty;
+		isShow = isSpecTierQty && isShow;
+		//35284 - end
+
 		return isShow;
 	}
 	//Bug #34757 - End
