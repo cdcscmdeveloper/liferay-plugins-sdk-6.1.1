@@ -11546,8 +11546,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	
 	public boolean isShowAssignButton(ScLoiLoaItem loiLoaItem) {
+		//35284 - start
+		if (loiLoaItem == null) {
+			return false;
+		}
+		//35284 - end
 		boolean isShow = false;
-		
 		if (loiLoaItem.getTplSpecZoneDtl() != null) {
 			if (this.getManagedBean().getFirstZone() == null) {
 				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
