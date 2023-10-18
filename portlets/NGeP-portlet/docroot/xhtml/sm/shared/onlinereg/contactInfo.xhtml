@@ -115,7 +115,7 @@
 				<td class="tdContent">
 					<h:panelGroup id="divisionContDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smResAdd.pmState.adoptDivision}">
 						<!-- #34159 - START -->
-						<p:selectOneMenu id="cmbResDivision"
+						<p:selectOneMenu id="cmbResDivision" required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmDivision.divisionId}"
 						style="width:80%">
