@@ -1732,6 +1732,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
 	private List<TabBean> tabOtherApproval;
+	private List<ScQtApprovalRequest> approvalRequestDtls;
+	private List<ScQtApprovalRequest> approvalRequestHistoryDtls;
 	//#25077 - End
 
 	//#25426 - Start
@@ -1853,6 +1855,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -10774,6 +10778,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
 			this.tabOtherApproval = tabOtherApproval;
 		}
+		
+		public List<ScQtApprovalRequest> getApprovalRequestDtls() {
+			return approvalRequestDtls;
+		}
+
+		public void setApprovalRequestDtls(List<ScQtApprovalRequest> approvalRequestDtls) {
+			this.approvalRequestDtls = approvalRequestDtls;
+		}
+
+		public List<ScQtApprovalRequest> getApprovalRequestHistoryDtls() {
+			return approvalRequestHistoryDtls;
+		}
+
+		public void setApprovalRequestHistoryDtls(List<ScQtApprovalRequest> approvalRequestHistoryDtls) {
+			this.approvalRequestHistoryDtls = approvalRequestHistoryDtls;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -11752,6 +11772,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
+	}
+
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
 	}
 	
 }

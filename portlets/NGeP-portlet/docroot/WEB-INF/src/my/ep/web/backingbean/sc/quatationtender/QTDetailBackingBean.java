@@ -4610,6 +4610,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				            //#25077 - End
 				            	
 				            	tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+				            	this.getManagedBean().setApprovalRequestHistoryDtls(approvalRequestHistory);//#25077
 				            
 				            //#25077 - Start
 				            }
@@ -4706,11 +4707,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						List<PmParameter> settings = null;
 						if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
+							boolean isApprovalOthers = false;
 							List<ScQtApprovalRequest> approvalRequest = qtApproval
 									.getScQtApprovalDtls();
 							if (null != approvalRequest
 									&& !approvalRequest.isEmpty()) {
 								for (int i = 0; i < approvalRequest.size(); i++) {
+									
+									isApprovalOthers = approvalRequest.get(i).isOthersApprovalOnly();
 									PmParameter parameter = approvalRequest
 											.get(i).getApproverAction();
 	                                 if (null == parameter) {
@@ -4822,7 +4826,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									}
 								}
 							}
-							tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+							
+							if(CollectionUtils.isNotEmpty(approvalRequest)){
+								 if(isApprovalOthers){
+									   tabBeans.add(new TabBean(titleName,approvalCategoryCode, qtApproval, settings));
+									   this.getManagedBean().setApprovalRequestDtls(approvalRequest);
+								   }else{
+									   this.getManagedBean().setApprovalRequestDtls(null);
+								 }
+							}
 					
 						}
 					} 
@@ -4831,8 +4843,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			this.getManagedBean().setTabOtherApproval(tabBeans);
-			//Bug #34694,25077
-			//this.getManagedBean().setApproverTabLoaded(true);
+			this.getManagedBean().setApproverTabLoaded(true);
 			
 		} finally {
 			detailSO = null;
@@ -6911,11 +6922,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		//9019 - End (Harun)
 		
-		//9019 - Start (Harun) #Note-398 and merge with #Note-487
-		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().getQt().getSpecApprovalReq() == true) {
-			this.getManagedBean().getQt().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setSpecApprovalReq(false);
-			reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+		//9019 - Start (Harun) #Note-398 and merge with #Note-487 and #35067
+		if (reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+				&& this.getManagedBean().getQt().getMinistrySpecSecrataryId() != null) {
+			if (this.getManagedBean().getQt().getMinistrySpecSecrataryId().getUserId() == null) {
+				this.getManagedBean().getQt().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setSpecApprovalReq(false);
+				reqDTO.getQtdetail().setMinistrySpecSecrataryId(null);
+			}
 		}
 		//9019 - End (Harun)
 		
@@ -7427,10 +7441,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// detailSO.validateApprovalDetails(reqDTO);
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
-					//Bug #34694,25077
-					//if (!getManagedBean().isApproverTabLoaded()) {
+					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
-					//}
+					}
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
@@ -9055,7 +9068,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * Added MOF Desk Officer
 	 * @return
 	 */
-	private boolean isDeskOfficer() {
+  public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
 			   || facesScopes.hasRoleUser(RoleCode.MOF_DESK_OFFICER.value());
