@@ -275,8 +275,7 @@ public class TemplateSpecBackingBean extends
 							//#25138(wip 4serangkai) bug -Start 8/6/2023
 							this.getManagedBean().setWipStatusMax(wipstatus);
 							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-									&& !templateSpecBean.getQt().isDemoRequired()) {
+							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 									evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 									evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
@@ -1131,6 +1130,7 @@ public class TemplateSpecBackingBean extends
 				}
 
 				specAnswer.setAnswerNumeric(totalPrice);
+				specAnswer.setComponentEmpty(false); //Enhancement #3657@Syazani 04/10/2023
 			}
 			log.info("end===============================================calcTotalAmount");
 			calcGrandTotalAmount(templateSpecBean);
@@ -5638,19 +5638,6 @@ public class TemplateSpecBackingBean extends
 		
 	}
 	//Bug #32110 related to #21695 Farid Start 30/11/2021
-	
-	// 20220127@syazani - Enhancement #3657 - specific error message - Start
-	public String getErrorMessageFinancialPropUnitPrice(boolean isZone, String zone, String unitPriceLabel) {
-		String msg = "";
-		if (isZone) {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPriceLabel,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		} else {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760464, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		}
-		return msg;
-	}
-	// 20220127@syazani - Enhancement #3657 - specific error message - End
-	
 	
 	//#28784
 	public void displayDemozoneQtyPopupAction(TemplateSpecBean templateSpecBean) {

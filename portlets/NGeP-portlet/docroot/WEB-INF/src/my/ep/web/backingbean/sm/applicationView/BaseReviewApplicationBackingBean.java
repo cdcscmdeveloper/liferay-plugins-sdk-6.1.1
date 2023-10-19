@@ -933,7 +933,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
@@ -1337,8 +1338,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
 					//#33467 - start, #32809 - nested loop for checking each SmManufacturingDtl for every SmSupplierCategory
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) continue;
-						if(activeManufacturingDtls.size() == 0) activeManufacturingDtls.add(manuFacDtl);
+						//Sonarqube #G22
+						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+							continue;
+						}
+						if(activeManufacturingDtls.isEmpty()){
+							activeManufacturingDtls.add(manuFacDtl);
+						}
 						SmManufacturingDtl manDtl = (SmManufacturingDtl) EntityHelper.getEntityBySinglePropertyFromList(
 								manuFacDtl.getManufacturingDtlId(), activeManufacturingDtls, "manufacturingDtlId");
 						if(manDtl == null){
