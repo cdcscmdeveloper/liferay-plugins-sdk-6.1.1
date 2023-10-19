@@ -4045,6 +4045,7 @@ public class CreateQtBackingBean extends
 		if(type){
 			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
 		}else{
+			this.getManagedBean().getQt().setDemoNotificationCheck(null);//11104-Reendorse
 			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
 			if (deltechnicalproposalList == null) {
 				deltechnicalproposalList= new ArrayList<>();
@@ -4133,6 +4134,8 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setDemoEvalDisabled(true);
 			}//#28784 - End
 
+		} else if(!this.getManagedBean().isNewVersion()) {
+			this.getManagedBean().setDemoType(false);
 		}
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		//#29521 - start
