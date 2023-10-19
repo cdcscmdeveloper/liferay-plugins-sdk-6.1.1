@@ -253,8 +253,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
-					rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
-								lOADetailBackingBean.isShowAssignButton(scLoiLoaItem))}" /><ui:remove>Bug #34757</ui:remove>
+					rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
 			</p:column>
 			<p:ajax event="page" listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this" update="@this" /><ui:remove>#34242</ui:remove>
 		</p:dataTable>
@@ -452,8 +451,7 @@
 								value="#{lbl['lbl.btn.assign']}"
 								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 								action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
-								rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
-											lOADetailBackingBean.isShowAssignButton(scLoiLoaItem))}" /><ui:remove>Bug #34757</ui:remove>
+								rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
 							</td>
 						</c:if>
 					<!-- #32280 - end -->
