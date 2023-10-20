@@ -18968,6 +18968,11 @@ private void retriveCommitteeRemarksList(){
 	//6906 - end
 	
 	//#28784 add demo condition - Start
+	/**
+	 * If demo required return 'P' else return 'T'
+	 * 
+	 * @return
+	 */
 	private String demoOrTechnicalEvaluation() {
 		if (this.getManagedBean().getScQt().isDemoRequired()) {
 			return QTConstants.PRESENTATION_DEMO_EVALUATION;
