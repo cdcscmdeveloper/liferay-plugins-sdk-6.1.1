@@ -11529,13 +11529,47 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//29007 - fix issue 2 search action note 347 - end
 	
 	//Bug #34757 - Start
+	/**
+	 * retrieve latest item code from LOA detail
+	 * 
+	 * @param reqItem
+	 * @return
+	 */
 	public String getLatestItemCode(ScRequestItem reqItem) {
 		
-		if (reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)) {
+		if (reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
+				|| reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
 			return getQtAwardSO().getCmItemExtensionCode(reqItem);
 		} else {
 			return reqItem.getCmItem().getExtensionCode();
 		}
+	}
+	
+	public boolean isShowAssignButton(ScLoiLoaItem loiLoaItem) {
+		//35284 - start
+		if (loiLoaItem == null) {
+			return false;
+		}
+		//35284 - end
+		boolean isShow = false;
+		if (loiLoaItem.getTplSpecZoneDtl() != null) {
+			if (this.getManagedBean().getFirstZone() == null) {
+				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
+			}
+			
+			if (this.getManagedBean().getFirstZone().equals(loiLoaItem.getTplSpecZoneDtl().getZoneName())) {
+				isShow = true;
+			}
+		} else {
+			isShow = true;
+		}
+		//35284 - start
+		boolean isFromQty = null != loiLoaItem.getTplSpecTierQty() && null != loiLoaItem.getTplSpecTierQty().getFromQty() ? loiLoaItem.getTplSpecTierQty().getFromQty().compareTo(BigDecimal.ONE)==0 : false;
+		boolean isSpecTierQty = null == loiLoaItem.getTplSpecTierQty() || isFromQty;
+		isShow = isSpecTierQty && isShow;
+		//35284 - end
+
+		return isShow;
 	}
 	//Bug #34757 - End
 	

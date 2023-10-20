@@ -367,6 +367,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
 	
+	private String firstZone;//Bug #34757
+	
 	private int retainPageNumber = 0;//#34242
 	
 	// Bug #35078@Syazani -- 22/09/2023 -- Start
@@ -2168,6 +2170,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setReadOnlyLOADownload(Boolean readOnlyLOADownload) {
 		this.readOnlyLOADownload = readOnlyLOADownload;
+	}
+
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
 	}
 
 	// Bug #35078@Syazani -- 22/09/2023 -- End
