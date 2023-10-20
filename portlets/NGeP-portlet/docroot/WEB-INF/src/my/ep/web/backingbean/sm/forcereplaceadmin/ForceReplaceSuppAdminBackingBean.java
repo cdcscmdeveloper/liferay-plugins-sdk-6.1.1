@@ -31,6 +31,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -158,8 +159,17 @@ public class ForceReplaceSuppAdminBackingBean extends
 				// Agency name does not exist for G2G
 				throw new EpException(MessageConst.ERROR_722659);
 			}
-			//35023 START 
 		} else {
+			//START 35023
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				SmSupplier smSupplier = SmServiceLookup.getSupplierSearchSO().retrieveSupplierByRegNo(
+						getManagedBean().getReactivateBasic().getRegNo());
+				if (smSupplier != null && smSupplier.getBusinessType().equalsIgnoreCase(
+						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
+					throw new EpException(MessageConst.ERROR_722706);
+				}
+			}
+			//END 35023
 			getManagedBean()
 					.setSmSupplier(
 							SmServiceLookup
@@ -203,12 +213,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 				//#33129 - END
 			}
-			//#35023 START
-		} else if (getManagedBean().getSmSupplier() != null
-				&& getManagedBean().getSmSupplier().getBusinessType()
-						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL)) {
-			throw new EpException(MessageConst.ERROR_722706);
-			// #35023 END
 		} else {
 			//#28765 - Start
 			if (getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER) && 
