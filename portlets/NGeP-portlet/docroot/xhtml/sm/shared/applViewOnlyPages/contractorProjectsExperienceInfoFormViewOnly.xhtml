@@ -174,21 +174,30 @@
 									id="contExpCatDt">
 									
 									<ac:paginator for="contExpCatDt" />
-									
+									<!-- #28175 - start -->
 									<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-										<h:outputText value="#{contExpCat.pmCategoryL1.categoryL1Code} - #{contExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{contExpCat.pmCategoryL1.categoryL1Code} - #{contExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
+										<h:outputText value="#{contExpCat.pmCategoryL1.categoryL1Code} - #{contExpCat.categoryL1Name}" style="float: left;white-space: normal;"
+											rendered="#{not viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
 									</p:column>
-						
-						
+									
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-										<h:outputText value="#{contExpCat.pmCategoryL2.categoryL2Code} - #{contExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{contExpCat.pmCategoryL2.categoryL2Code} - #{contExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
+										<h:outputText value="#{contExpCat.pmCategoryL2.categoryL2Code} - #{contExpCat.categoryL2Name}" style="float: left;white-space: normal;"
+											rendered="#{not viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
 									</p:column>
-						
+									
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-										<h:outputText value="#{contExpCat.pmCategoryL3.categoryL3Code} - #{contExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{contExpCat.pmCategoryL3.categoryL3Code} - #{contExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
+										<h:outputText value="#{contExpCat.pmCategoryL3.categoryL3Code} - #{contExpCat.categoryL3Name}" style="float: left;white-space: normal;"
+											rendered="#{not viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
 										<!-- #32008 -->
 										<ac:smFieldChangeTableAlertView object="#{contExpCat}" />
 									</p:column>
+									<!-- #28175 - end -->
 								 </p:dataTable>
 								 <br />
 							</td></tr>
