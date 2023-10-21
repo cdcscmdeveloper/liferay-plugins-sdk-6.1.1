@@ -259,6 +259,8 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
 			// #18685 - End.
 			
+			prepareUpdateCommitteeMember();//#25037
+			
 			// 28834 starts
 			if (getManagedBean().getQtRefinalized() && ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
 					&& this.getManagedBean().getOutComes().length > 0) {
