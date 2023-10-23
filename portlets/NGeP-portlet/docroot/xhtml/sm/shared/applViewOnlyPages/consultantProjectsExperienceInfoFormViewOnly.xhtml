@@ -208,22 +208,31 @@
 									rowKey="#{consExpCat}" rowIndexVar="index"
 									id="consExpCatDt">
 									
-									<ac:paginator for="contExpCatDt" />
-									
+									<ac:paginator for="consExpCatDt" />
+									<!-- #28175 - start -->
 									<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-										<h:outputText value="#{consExpCat.pmCategoryL1.categoryL1Code} - #{consExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{consExpCat.pmCategoryL1.categoryL1Code} - #{consExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
+										<h:outputText value="#{consExpCat.pmCategoryL1.categoryL1Code} - #{consExpCat.categoryL1Name}" style="float: left;white-space: normal;"
+											rendered="#{not viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
 									</p:column>
-						
-						
+									
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-										<h:outputText value="#{consExpCat.pmCategoryL2.categoryL2Code} - #{consExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{consExpCat.pmCategoryL2.categoryL2Code} - #{consExpCat.pmCategoryL2.categoryName}" style="float: left;white-space: normal;"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
+										<h:outputText value="#{consExpCat.pmCategoryL2.categoryL2Code} - #{consExpCat.categoryL2Name}" style="float: left;white-space: normal;"
+											rendered="#{not viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
 									</p:column>
-						
+									
 									<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-										<h:outputText value="#{consExpCat.pmCategoryL3.categoryL3Code} - #{consExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;" />
+										<h:outputText value="#{consExpCat.pmCategoryL3.categoryL3Code} - #{consExpCat.pmCategoryL3.categoryName}" style="float: left;white-space: normal;"
+											rendered="#{viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
+										<h:outputText value="#{consExpCat.pmCategoryL3.categoryL3Code} - #{consExpCat.categoryL3Name}" style="float: left;white-space: normal;"
+											rendered="#{not viewSmApplBackingBean.managedBean.smAppl.activeAppl}"/>
 										<!-- #32008 -->
 										<ac:smFieldChangeTableAlertView object="#{consExpCat}" />
 									</p:column>
+									<!-- #28175 - end -->
 								 </p:dataTable>
 								 <br />
 							 </td></tr>
