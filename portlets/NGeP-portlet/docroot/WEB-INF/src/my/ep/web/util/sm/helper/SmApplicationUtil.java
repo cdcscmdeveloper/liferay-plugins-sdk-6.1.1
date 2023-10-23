@@ -7313,6 +7313,11 @@ public class SmApplicationUtil {
 				break;
 			}
 		}
+		
+		
+		/////////////////dum dum
+		
+		
 		if(isGroup) return;
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		
