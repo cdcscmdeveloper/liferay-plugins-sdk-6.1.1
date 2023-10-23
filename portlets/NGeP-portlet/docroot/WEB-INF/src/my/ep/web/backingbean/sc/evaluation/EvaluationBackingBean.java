@@ -2082,7 +2082,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 
 				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-					List<String> evalstage = new ArrayList<String>();
+					List<String> evalstage = new ArrayList<>();
 					evalstage.add(evalStageDemoOrTechnical);
 					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 
