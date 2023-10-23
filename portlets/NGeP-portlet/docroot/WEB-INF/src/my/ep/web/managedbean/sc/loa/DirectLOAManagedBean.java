@@ -41,7 +41,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class directLOAManagedBean.
  * 
@@ -131,7 +130,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	/** The approver list. */
 	private List<PmUser> approverList;
 
-	// TODO - To be removed
 	/** The comittee users. */
 	private List<SelectItem> comitteeUsers;
 
@@ -310,7 +308,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	
 	// Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
-	// Bug #33674@Syazani - End	
+	// Bug #33674@Syazani - End
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	private Boolean downloadLOADisabled = true;
+
+	private Boolean readOnlyLOADownload = true;
+	// Bug #35078@Syazani -- 22/09/2023 -- End	
 	
 	/*#29007 Start Vinod*/
 	private boolean iconForDL = false;
@@ -1876,23 +1880,22 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setButtonHideSchActive(boolean buttonHideSchActive) {
 		this.buttonHideSchActive = buttonHideSchActive;
 	}
-	
-	  //#17376-start
-		/**
-		 * @return the isValidatewitness
-		 */
-		public boolean isValidatewitness() {
-			return isValidatewitness;
-		}
 
-		/**
-		 * @param isValidatewitness the isValidatewitness to set
-		 */
-		public void setValidatewitness(boolean isValidatewitness) {
-			this.isValidatewitness = isValidatewitness;
-		}
-		//#17376-End
-		
+	// #17376-start
+	/**
+	 * @return the isValidatewitness
+	 */
+	public boolean isValidatewitness() {
+		return isValidatewitness;
+	}
+
+	/**
+	 * @param isValidatewitness the isValidatewitness to set
+	 */
+	public void setValidatewitness(boolean isValidatewitness) {
+		this.isValidatewitness = isValidatewitness;
+	}
+	// #17376-End
 
 	//#24540 - start -
 	/**
@@ -1910,7 +1913,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.pk7Reasons = pk7Reasons;
 	}
 	//#24540 - end -
-	
+
 	public Long getSupplierBankId() {
 		return supplierBankId;
 	}
@@ -1918,6 +1921,24 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setSupplierBankId(Long supplierBankId) {
 		this.supplierBankId = supplierBankId;
 	}
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	public Boolean getDownloadLOADisabled() {
+		return downloadLOADisabled;
+	}
+
+	public void setDownloadLOADisabled(Boolean downloadLOADisabled) {
+		this.downloadLOADisabled = downloadLOADisabled;
+	}
+
+	public Boolean getReadOnlyLOADownload() {
+		return readOnlyLOADownload;
+	}
+
+	public void setReadOnlyLOADownload(Boolean readOnlyLOADownload) {
+		this.readOnlyLOADownload = readOnlyLOADownload;
+	}
+	// Bug #35078@Syazani -- 22/09/2023 -- End
 	
 	/*#29007 Start Vinod*/
 	public boolean isSupPropSpecDisable() {
