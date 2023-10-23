@@ -15,7 +15,7 @@
 			<h:outputText styleClass="instruction"  rendered="#{specificationBackingBean.managedBean.qt.panel}"
 			value="#{lbl['lbl.sc.spec.tech.check.list.panel.instruction']}"
 			escape="false" />
-			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineI26784nstructions.xhtml"></ui:include>
 			<h:outputText styleClass="instruction"  rendered="#{!specificationBackingBean.managedBean.qt.panel}"
 			value="#{lbl['lbl.sc.spec.tech.check.list.instruction1']}"
 			escape="false" />
@@ -372,7 +372,8 @@
 				
 				<!-- START #28784 -->
 				<p:commandLink
-					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD'}"
+					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD' and
+					specificationBackingBean.managedBean.newVersion}"
 					action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
 					update="@([id$=demoSpecTempId])"
 					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"> <!--#28784--> 		 			
