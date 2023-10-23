@@ -1210,34 +1210,34 @@ Should be product and service item display if exist
 	</tr>
 	
 	<tr align='left'>
-				<td><span style='font-size: 10px; font-family: Times New Roman;'>
-				<table width='100%' border="1">
+				<td><span>
+				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th>Zone</th> 
+							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-							<th>Nama Item</th>
-							<th>Kuantiti</th>
-							<th>Jenis Perkhidmatan</th>
+							<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
+							<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
+							<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach($productBean in $jadualHargaItemBean.productItemBeans)
 						<tr class="ui-content">
 							#if ($isZonal)
-								<td class="standard border-bottom left">
+								<td class="text_family">
 								#if($productBean.zonal) 
 									$productBean.zoneName
 								#end</td> 
 							#end
-							<td class="standard border-bottom left">$productBean.item</td>
-							<td class="standard border-bottom left alignRight">
+							<td class="text_family">$productBean.item</td>
+							<td class="text_family">
 								#if($productBean.tier)
 									$productBean.fromQty - $productBean.toQty
 								#else
 									$productBean.quantity 
 								#end
 							</td>
-							<td class="standard border-bottom left"></td>
+							<td class="text_family"></td>
 						</tr>
 					#end
 				</table>
@@ -1267,29 +1267,29 @@ Should be product and service item display if exist
 	</tr>
 	##26770 - end
 	<tr align='left'>
-			<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
-				<table width='100%' border="1">
+			<td><span style='font-weight: bold; font-size: 10px; font-family: Arial;'>
+				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th>Zone</th> 
+							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-						<th>Nama Item</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
 						##26770 - start
 						<th>Kuantiti</th>
-						<th>Jenis Perkhidmatan</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 						##26770 - end
 					</tr>
 					#set($String = "formatter") 
 					#foreach( $serviceBean in $jadualHargaItemBean.serviceItemBeans)
 						<tr class="ui-content">
 							#if ($isZonal)
-								<td class="standard border-bottom left">
+								<td class="text_family">
 								#if($serviceBean.zonal) 
 									 $serviceBean.zoneName
 								#end</td> 
 							#end
-							<td class="standard border-bottom left">$serviceBean.item</td>
-							<td class="standard border-bottom left alignRight">
+							<td class="text_family">$serviceBean.item</td>
+							<td class="text_family">
 									#if($serviceBean.quantity)
 									 $serviceBean.quantity
 								#else
@@ -1298,7 +1298,7 @@ Should be product and service item display if exist
 							</td>
 							
 							
-								<td class="standard border-bottom left"></td>
+								<td class="text_family"></td>
 							
 						</tr>
 					#end
