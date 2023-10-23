@@ -448,6 +448,10 @@ private class SpecMaintenanceSearchQtDataModel extends
     this.getManagedBean().setChecklist(false);
 	//#28784		
 	this.getManagedBean().setQtSpecMaintanance(true);	
+	
+		// #28784 - Demo WIP
+		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
    
 		QtnTenderSearchBean qtTnderBean = this.getManagedBean().getQtnTenderSearchBean();
 		IPagingDataModel<ScQt> qtdataModel = this.getManagedBean().getSearchQTDataModel();
