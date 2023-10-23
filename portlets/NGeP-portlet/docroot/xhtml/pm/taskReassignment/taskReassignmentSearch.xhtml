@@ -139,12 +139,14 @@
 				</th>
 				<td width="60%">
 					<p:outputPanel id="opDocTypeLov">
+					<!-- 20231010 #7465 Start -->
 					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="80"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
 						or (taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''
-						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null)}" 
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null
+						and not taskReassignmentBackingBean.managedBean.fromUserMaintenanceDetails)}" 
 		            	update="@this,:form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.document.type']}"
 						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType.codeName}"
@@ -152,6 +154,7 @@
 						conditionField="#{taskReassignmentBackingBean.constuctConditionFields()}"
 						postUpdateListener="taskReassignmentBackingBean.onChangeDocType"/>
 						</p:outputPanel>
+					<!-- 20231010 #7465 End -->
 				</td>
 				
 				<td width="25%">
