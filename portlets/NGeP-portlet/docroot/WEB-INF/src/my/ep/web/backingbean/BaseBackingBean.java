@@ -110,6 +110,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -4002,4 +4003,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//#21387 - End
+	
+	//#28175
+	/**
+	 * @param appl
+	 * @param catL3
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3){
+		if(catL3 == null){
+			return null;
+		}
+		SmAppl appl = getManagedBean().getSmAppl();
+		if(appl == null || appl.isActiveAppl() || EntityHelper.isCollectionEmpty(
+				appl.getSmSupplierCategories())){
+			return catL3.getCategoryName();
+		}
+		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
+				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
+		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
+	}
 }
