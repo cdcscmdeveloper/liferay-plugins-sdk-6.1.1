@@ -2075,26 +2075,23 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-				
-				if (this.getManagedBean().getScQt().isDemoRequired()) {
-					reqDTO.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
-				}
+				//#28784 remove partial condition and add demo in 4 serangkai - Start
 				// #25138 - #32437 - Start.
 				// wip status start
-				else if (this.getManagedBean().getScQt().isPartial() || !this.getManagedBean().getScQt().isPartial()) {
-					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+				String evalStageDemoOrTechnical = demoOrTechnicalEvaluation();
+				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 
-					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-						List<String> evalstage = new ArrayList<String>();
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
-						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+					List<String> evalstage = new ArrayList<String>();
+					evalstage.add(evalStageDemoOrTechnical);
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 
-						reqDTO.setResultStages(evalstage);
-						reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
+					reqDTO.setResultStages(evalstage);
+					reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 					} else {
-						reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+						reqDTO.setEvalStage(evalStageDemoOrTechnical);
 					}
-				}
+				//#28784 remove partial condition and add demo in 4 serangkai - 
 				// wip status end
 				// #25138 - #32437 - End.
 
@@ -2151,7 +2148,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			
 			// #25138, #21695 - start
 			List<String> evalstage = new ArrayList<String>();
-			evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+			//#28784 add demo condition - Start
+			String evalStageDemoOrTechnical = demoOrTechnicalEvaluation();
+			evalstage.add(evalStageDemoOrTechnical);
+			//#28784 add demo condition - End
 			evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 			
 			reqDTO.setResultStages(evalstage);
@@ -15813,17 +15813,19 @@ private void retriveCommitteeRemarksList(){
 				int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
 
 				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-					// #25138 for demo -start-
-					if (this.getManagedBean().getScQt().isDemoRequired()) {
-						evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-					} else {
-						evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					/**#28784 Generalise this method for demo - Start
+					 * (If #28784 (demo) deploy after 4 serangkai please remove commented code below:-)
+					 * if(this.getManagedBean().getScQt().isDemoRequired()){
+					 * evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+					 * }else{
+					 */
+					evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 						
-						EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+					EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
 						
-						specresDTO1.setSpecAnswerList(evalResDTO.getSpecAnswers());
-					}
-					// #25138 for demo -end-
+					specresDTO1.setSpecAnswerList(evalResDTO.getSpecAnswers());
+					/**}
+					 * #28784 Generalise this method for demo - End*/
 				} else {
 					evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
 				}
@@ -17943,4 +17945,19 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//bug #33582 - check proposal score for Modal Berbayar - end
+	
+	//#28784 add demo condition - Start
+	/**
+	 * If demo required return 'P' else return 'T'
+	 * 
+	 * @return
+	 */
+	private String demoOrTechnicalEvaluation() {
+		if (this.getManagedBean().getScQt().isDemoRequired()) {
+			return QTConstants.PRESENTATION_DEMO_EVALUATION;
+		} else {
+			return QTConstants.TECHNICAL_EVALUATION;
+		}
+	}
+	//#28784 add demo condition - End
 }
