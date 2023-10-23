@@ -83,6 +83,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -1372,7 +1373,11 @@ public class SpecificationBackingBean extends
 					checksampleChecklist(this.getManagedBean()
 							.getScQtCheckSt2techProposal());
 			}//#11104-End
-			addDemoTechnicalCheckList(); //#28784
+			
+			// #28784 - Demo WIP
+			if (this.getManagedBean().isNewVersion()) {
+				addDemoTechnicalCheckList(); // #28784
+			}
 			break;
 		case 3:
 			//1873 note 195 start
@@ -2080,8 +2085,8 @@ public class SpecificationBackingBean extends
 						.getScQtCheckSt2techProposal());
 			}//#11104-End
 			
-			//#28784
-			if(this.getManagedBean().getQt().isDemoRequired()){
+			//#28784 - Include Demo WIP
+			if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 				this.getManagedBean().setDemoAction(true);
 				this.getManagedBean().setDemoType(true);
 				resetDemoSpecStatus();
@@ -4648,23 +4653,23 @@ public class SpecificationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
-		
-		//recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);//11104
-		
+
+		// recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);//11104
+
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
 		if (null != this.getManagedBean().getQt()
-				&& ParameterConst.EVALUATION_TYPES_TWO_TIER
-						.equalsIgnoreCase(this.getManagedBean().getQt()
-								.getEvaluationType())) {
-			//recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);//#28784
+				&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
+						.getEvaluationType())) {
+			// #28784 - Demo WIP and normal Demo
+			if (!this.getManagedBean().isNewVersion()) {
+				recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
+			}
 		}
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_IN.value(), recommendList));
+				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), recommendList));
 
-		SelectItem[] items = getDropdownValuesBySearchBean(
-				ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
+		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
 		searchBean = null;
 		recommendList = null;
 		return items;
@@ -7336,7 +7341,11 @@ public class SpecificationBackingBean extends
 					st2technicalproposalList);
 			checklistSorting(getManagedBean().getScQtCheckSt2techProposal());
 			this.getManagedBean().setTechStandaraChecklist(false);
-			addDemoTechnicalCheckList();//#28784
+			
+			//#28784 - Include WIP Demo
+			if(this.getManagedBean().isNewVersion()){
+				addDemoTechnicalCheckList();
+			}
 		} finally {
 		}
 	}
@@ -11004,6 +11013,10 @@ public class SpecificationBackingBean extends
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
+		
+		// #28784 - Demo WIP
+		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
 		
 		// #25638 - Start
 		if (null != this.getManagedBean().getCurrentStatusId()
@@ -21891,7 +21904,7 @@ if(null!=allTechnicalChecklist){
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #28784
-	
+
 	/*#29187 Start Vinod*/
 	/**
 	 * This method is to get dropdown values for mandatory spec.
@@ -21946,21 +21959,24 @@ if(null!=allTechnicalChecklist){
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-		
+			
 		for(TplSpecQuestion itemQuestion : templateChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
 			specReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			specReqDTO.setItemName(itemQuestion.getClItem());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.retrieveTechSpecByItemNames(specReqDTO);
-			
-			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
-				for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-						if(question.isMandatorySpec()){
-							itemQuestion.setMandatorySpecForSample(true);
-						}
-				}
-			}
+				
+			checkMandatorySpecForSample(itemQuestion, resDTO);
 		}
+	}
+	private void checkMandatorySpecForSample(TplSpecQuestion itemQuestion, TemplateSpecResDTO resDTO) {
+	    if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+	        for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
+	            if (question.isMandatorySpec()) {
+	                itemQuestion.setMandatorySpecForSample(true);
+	            }
+	        }
+	    }
 	}
 	/*#29187 End Vinod*/
 
