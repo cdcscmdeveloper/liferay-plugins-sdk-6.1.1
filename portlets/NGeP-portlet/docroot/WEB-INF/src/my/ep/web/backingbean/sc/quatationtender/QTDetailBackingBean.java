@@ -7485,6 +7485,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
+				//#35285 & #25635 - Start
+				if(this.isQTStatusGreaterThanOrEquals(this.getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+				//#35285 & #25635 - End
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
 					if (!getManagedBean().isApproverTabLoaded()) {
@@ -7493,6 +7496,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
+				//#35285 & #25635 - Start
+				}else{
+					retrieveOthersApprovalTabDtl();
+					retrieveApprovalTabDtl();
+				}
+				//#35285 & #25635 - End
 				break;
 
 			case 4:
