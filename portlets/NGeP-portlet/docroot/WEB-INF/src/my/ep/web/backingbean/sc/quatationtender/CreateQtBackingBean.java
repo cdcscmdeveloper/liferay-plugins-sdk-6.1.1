@@ -4087,14 +4087,14 @@ public class CreateQtBackingBean extends
 
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
-	 * #28784
+	 * #28784 - Include Demo WIP
 	 * @param event
 	 *
 	 */
 	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
-		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()) {
 			String type = (String) event.getComponent().getAttributes().get("value");
 //			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 //			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -4133,16 +4133,18 @@ public class CreateQtBackingBean extends
 							.getManagedBean().isMaintanceFlow()) && !demoRequired) {
 				this.getManagedBean().setDemoSpecialCase(true);
 				this.getManagedBean().setDemoEvalDisabled(true);
-			}//#28784 - End
-
-		}
+			}
+			
+		} else if(!this.getManagedBean().isNewVersion()) {
+			this.getManagedBean().setDemoType(false);
+		}//#28784 - End
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		//#29521 - start
-		 if (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
-				QTDetailBackingBean qtDetailBackingBean = new QTDetailBackingBean();
-				qtDetailBackingBean.IdentifyID(event);
-			}
-		 //#29521 - end
+		if (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
+			QTDetailBackingBean qtDetailBackingBean = new QTDetailBackingBean();
+			qtDetailBackingBean.IdentifyID(event);
+		}
+		//#29521 - end
 	}
 
 	// #21695 Farid START 3/7/2021

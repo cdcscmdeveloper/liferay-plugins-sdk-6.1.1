@@ -17301,12 +17301,13 @@ private void retriveCommitteeRemarksList(){
 	// #28784 - start
 	//demo file upload (checklist) validation
 	public void demoAttachmentChecking() {
-		ScQtCheckList scQtChecklist = this.getManagedBean()
-				.getScQtChecklist();
-		ScQtCheckListAttachment attachment = scQtChecklist
-				.getScQtCheckListAttachment();
-		if (attachment == null) {
-			throw new EpException(MessageConst.ERROR_760329);
+		if (!this.getManagedBean().isDemoWip()) {
+			ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
+			// ScQtCheckListAttachment attachment = scQtChecklist.getScQtCheckListAttachment();
+			if (null != this.getManagedBean().getScQtChecklist() && null == scQtChecklist.getScQtCheckListAttachment()) {
+				throw new EpException(MessageConst.ERROR_760329);
+			}
+
 		}
 	}
 	

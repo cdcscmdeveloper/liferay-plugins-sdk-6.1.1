@@ -30,6 +30,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -492,6 +493,10 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
     this.getManagedBean().setChecklist(false);
 	//#28784		
 	this.getManagedBean().setQtSpecMaintanance(true);	
+	
+	// #28784 - Demo WIP
+	boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+	this.getManagedBean().setNewVersion(isQtNewVersion);
    
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
