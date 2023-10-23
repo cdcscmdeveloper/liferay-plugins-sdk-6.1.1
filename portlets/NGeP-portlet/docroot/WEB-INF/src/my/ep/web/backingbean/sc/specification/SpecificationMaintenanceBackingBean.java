@@ -492,6 +492,10 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
     this.getManagedBean().setChecklist(false);
 	//#28784		
 	this.getManagedBean().setQtSpecMaintanance(true);	
+	
+	// #28784 - Demo WIP
+	boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+	this.getManagedBean().setNewVersion(isQtNewVersion);
    
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
