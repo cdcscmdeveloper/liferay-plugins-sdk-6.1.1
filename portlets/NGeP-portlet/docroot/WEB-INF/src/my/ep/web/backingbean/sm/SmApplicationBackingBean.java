@@ -17984,4 +17984,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	//#28175 - end
+	
+	//#35145
+	/**
+	 * Race field is editable for non-SSM data & Lain2 Bangsa
+	 * @return
+	 */
+	public boolean isRaceDisabled(){
+		SmPersonnel per = getManagedBean().getSelectedShareHolder();
+		if(per.getPmRace() == null || per.getPmRace().getRaceId() == null){
+			return false;
+		}
+		if(per.getPmRace().getRaceCode().equals(SupplierManagementConst.LAIN2_BANGSA)){
+			return false;
+		}
+		return disableFieldSSm(per.isSsmData(), getManagedBean().getSmAppl().isApplValidWithSsm(), 
+				per.isRaceSsmNull());
+	}
 }
