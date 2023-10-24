@@ -5195,10 +5195,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 		//29728 -end
 		
-		private void foo(int bar) {
-			// This is a dummy method
-		}
-		
 		//34555-start
 		/**
 		 * Update delivery date based on delivery Term and uomCode.
