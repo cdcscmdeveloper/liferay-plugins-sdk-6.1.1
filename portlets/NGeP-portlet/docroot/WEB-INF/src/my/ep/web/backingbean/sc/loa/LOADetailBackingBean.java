@@ -8756,11 +8756,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setSelectedItemId(scLoiLoaItem.getLoiLoaItemId());
 			// #29006 - start - reendorsed (comment 528)
 			
-			//note 901
-			String selectSuppOffer = getSelectedSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
-			selectSuppOffer = selectSuppOffer.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
-			
-			getManagedBean().setSelectedSupplierOffer(selectSuppOffer);
+//29006-916 - comment start 		
+//			//note 901
+//			String selectSuppOffer = getSelectedSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
+//			selectSuppOffer = selectSuppOffer.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);		
+			getManagedBean().setSelectedSupplierOffer(getSelectedSupplierOffer());
+//29006-916 - comment end 			
 			getManagedBean().setItemNamePopup(scLoiLoaItem.getScRequestItem().getItemName());
 			// #29006 - end - reendorsed (comment 528)
 		} catch (Exception e) {
