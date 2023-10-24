@@ -224,16 +224,14 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 					
-					if(!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-						getManagedBean().setSelectedMinistry(
-								retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-						getManagedBean().setSelectedKumpulanPTJ(
-								retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+					if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+						getManagedBean().setSelectedMinistry(pmOrgProfile);
+					} else {
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					}
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+					if (!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
 						getManagedBean().setSelectedPTJ(pmOrgProfile);
-					}else if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-						getManagedBean().setSelectedMinistry(
-								pmOrgProfile);					
-						getManagedBean().setDisableMinistryField(true);
 					}
 //					getManagedBean().setSelectedMinistry(
 //							retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
