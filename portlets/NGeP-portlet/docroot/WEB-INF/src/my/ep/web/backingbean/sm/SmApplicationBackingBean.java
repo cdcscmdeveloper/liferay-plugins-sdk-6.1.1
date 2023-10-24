@@ -2252,7 +2252,7 @@ public class SmApplicationBackingBean extends
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
 				//#35130
-				if(personnel.isEquityOwner() && personnel.isSsmData()){
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
 						log.info("THIS IS THE VALUE OF THE TOTAL SHARE ////////////////////// " + shareAmtSsm);
