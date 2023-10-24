@@ -899,7 +899,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
 				//#35130
-				if(personnel.isEquityOwner() && personnel.isSsmData()){
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
