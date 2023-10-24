@@ -41,6 +41,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -50,7 +52,6 @@ import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,9 +63,12 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849  #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
+import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -84,9 +88,14 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849  #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.language.LanguageReqDTO;
+import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
+import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -134,10 +143,12 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.format.AttachmentDateFormat;
@@ -758,7 +769,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getDropdownValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1097,7 +1108,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}	
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Danial [3/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "",
+					SLALogConstant.COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1261,7 +1276,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				//33849-End
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBean", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1295,7 +1310,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -2443,7 +2458,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				bb.getManagedBean().setClaim(claim);
 				bb.getManagedBean().setTaskId(taskId);
-				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
+//				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
+				//21387 - Start
+				bb.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
+				bb.getManagedBean().setDocNo(resDTO.getDocNumber());
+				//21387 - End
 				bb.getManagedBean().setGroupTask(true);
 			} else {
 				log.info("====groupTask null===" + resDTO.isGroupTask());
@@ -3463,6 +3482,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	//#31269 - start
+	/**
+	 * View SSM information
+	 * @param smAppl
+	 */
 	public void redirectToViewSSMInfo(SmAppl smAppl){
 		getManagedBean().setSmAppl(smAppl);
 		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
@@ -3471,53 +3494,74 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
 		clearPersonnelList();
 		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-			if(!personnel.isSsmData()) continue;
+			if(!personnel.isSsmData()) {
+				continue;
+			}
 			
 			validateSsmPersonnel(personnel);
-			if(personnel.isEquityOwnerSsm())
-				getManagedBean().getPersonnelsOwner().add(personnel);
-			
-			if(personnel.isDirectorSsm())
-				getManagedBean().getPersonnelsDirector().add(personnel);
-			
+			if(personnel.isEquityOwnerSsm()){
+				getManagedBean().getPersonnelsOwnerSsm().add(personnel);
+			}
+			if(personnel.isDirectorSsm()){
+				getManagedBean().getSmPersonnelDirectorSsm().add(personnel);
+			}
 			getManagedBean().getPersonnelsSsm().add(personnel);
 		}
 		
 		getManagedBean().getSmSupplierBranchSsm().clear();
 		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
-			if(!branch.isSsmData()) continue;
+			if(!branch.isSsmData()) {
+				continue;
+			}
 			getManagedBean().getSmSupplierBranchSsm().add(branch);
 		}
 		
-		getManagedBean().getSmSupplierBranchSsm().clear();
-		for(SmSupplierBusiness business : getManagedBean().getSmAppl().getSmSupplier().getSmSupplierBusinesses()){
-			if(!business.isSsmData()) continue;
+		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
+		SupplierBusinessNatureResDTO resDTO = BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class)
+				.retrieveAllBusinessNatureBySupplierId(reqDTO);
+		for(SmSupplierBusiness business : resDTO.getBusinessNatureLs()){
+			if(!business.isSsmData()) {
+				continue;
+			}
 			getManagedBean().getSmSupplierBusinessSsm().add(business);
 		}
 		
 		getManagedBean().getSmEquityCompaniesSsm().clear();
 		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
-			if(!company.isSsmData()) continue;
+			if(!company.isSsmData()) {
+				continue;
+			}
 			getManagedBean().getSmEquityCompaniesSsm().add(company);
 		}
-		//#31269
-		RequestContext.getCurrentInstance().execute("viewssminfoWidgetVar.show()");
+		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
 	}
 	
+	/**
+	 * Check to render button view SSM info
+	 * @return
+	 */
 	public boolean renderViewSSMInfo(){
 		return getManagedBean().getSmAppl().isApplValidWithSsm()
 			&& businessTypeTovalidateWithSSM(null, 
 				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
 	}
 	
+	/**
+	 * Validate SSM personnel address
+	 * @param personnel
+	 * @return
+	 */
 	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
-		if(personnel == null || !personnel.isSsmData()) return personnel;
-		if(personnel.getSmPersonnelAddresses() != null){
-			for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
-				if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
-					Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
-					break;
-				}
+		if(personnel == null || !personnel.isSsmData() 
+			|| personnel.getSmPersonnelAddresses() == null) return personnel;
+		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
+			if(personnel.getSmPersonnelAddresses().get(i) != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress() != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
+				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
+				break;
 			}
 		}
 		return personnel;
@@ -4214,4 +4258,90 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return AddressUtils.getFullBranchAddress(smAddress);
 	}
 	//#34135 END
+	
+	//29021 - start 34865,34866,34867 - 29021 WIP
+	/**
+	 * Evaluate if QT is a wip document. ScoreSetting less than 7 indicate wip document.
+	 *
+	 * @param scQt
+	 * @return wip flag 
+	 */
+	public boolean evaluateWIP(ScQt scQt){
+		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
+		if(maxScoreSetting == null){
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			maxScoreSetting = evaluationSO.checkWipScoreSettingMax(reqDTO);
+			this.getManagedBean().setWipStatusMax(maxScoreSetting);
+		}
+		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
+	}
+	//29012 - end 34865,34866,34867 - 29021 WIP
+	
+	// 33410 - START
+	public String setFixedLanguageDisplay(Boolean isFixedDisplay, String languageCode){
+		LanguageReqDTO reqDTO = new LanguageReqDTO();
+		reqDTO.setLanguageCode(languageCode);
+		ILanguageSO languageSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+		LanguageResDTO resDTO = languageSO.retrieveLanguageByLanguageCode(reqDTO);
+		if(isFixedDisplay){
+			return resDTO.getLanguage().getLanguageCode();
+		} else {
+			return new FacesScopes().getUserLocale().getLanguage();
+		}
+	}
+	// 33410 - END
+	
+	//#21387 - Start
+	/**
+	 * Claim bpm task group By Document Number And Module
+	 * @param reqDTO
+	 * @return resDTO 
+	 */
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
+		BpmResponseDTO resDTO = new BpmResponseDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		try {
+
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(reqDTO.getDocNumber());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			bpmReqDTO.setModule(BpmConstants.MODULE_CT);
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			resDTO = bpmSO.getTasksByDocNoandModule(bpmReqDTO);
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	//#21387 - End
+	
+	//#28175
+	/**
+	 * @param appl
+	 * @param catL3
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3){
+		if(catL3 == null){
+			return null;
+		}
+		SmAppl appl = getManagedBean().getSmAppl();
+		if(appl == null || appl.isActiveAppl() || EntityHelper.isCollectionEmpty(
+				appl.getSmSupplierCategories())){
+			return catL3.getCategoryName();
+		}
+		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
+				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
+		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
+	}
 }

@@ -121,7 +121,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import org.python.core.exceptions;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -273,9 +272,10 @@ public class TemplateSpecBackingBean extends
 							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
 							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
 							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+							//#25138(wip 4serangkai) bug -Start 8/6/2023
+							this.getManagedBean().setWipStatusMax(wipstatus);
 							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-									&& !templateSpecBean.getQt().isDemoRequired()) {
+							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 									evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 									evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
@@ -1130,6 +1130,7 @@ public class TemplateSpecBackingBean extends
 				}
 
 				specAnswer.setAnswerNumeric(totalPrice);
+				specAnswer.setComponentEmpty(false); //Enhancement #3657@Syazani 04/10/2023
 			}
 			log.info("end===============================================calcTotalAmount");
 			calcGrandTotalAmount(templateSpecBean);
@@ -1270,7 +1271,7 @@ public class TemplateSpecBackingBean extends
 					RoleCode[] r = {RoleCode.SC_SECRETARY};
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
-					};
+					}
 //					if(authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.SC_SECRETARY.value()))){
 //						getManagedBean().setSecretaryValidate(true);
 //					}
@@ -1392,7 +1393,7 @@ public class TemplateSpecBackingBean extends
 					RoleCode[] r = {RoleCode.SC_SECRETARY};
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
-					};
+					}
 				}
 			}
 		}
@@ -3217,7 +3218,7 @@ public class TemplateSpecBackingBean extends
 								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
-		};
+		}
 
 		specMaster.setTotalEstAmount(totalEstAmount);
 	}
@@ -5496,20 +5497,20 @@ public class TemplateSpecBackingBean extends
 							specAns.setAnswerCompliance(null);
 						// Bug #32015 Farid start 5/11/2021
 							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((User))){
 								specAns.setUserScore(new BigDecimal(0));
 							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((Auto))){
 								specAns.setAutoScore(new BigDecimal(0));
 							}
 							
 						}
 						else{
 							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((User))){
 								specAns.setUserScore(null);
 							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((Auto))){
 								specAns.setUserScore(null);
 							}
 							
@@ -5638,19 +5639,6 @@ public class TemplateSpecBackingBean extends
 	}
 	//Bug #32110 related to #21695 Farid Start 30/11/2021
 	
-	// 20220127@syazani - Enhancement #3657 - specific error message - Start
-	public String getErrorMessageFinancialPropUnitPrice(boolean isZone, String zone, String unitPriceLabel) {
-		String msg = "";
-		if (isZone) {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPriceLabel,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		} else {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760464, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		}
-		return msg;
-	}
-	// 20220127@syazani - Enhancement #3657 - specific error message - End
-	
-	
 	//#28784
 	public void displayDemozoneQtyPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("zoneQtyPopupAction");
@@ -5676,7 +5664,7 @@ public class TemplateSpecBackingBean extends
 					if (userHasRole(r)) {
 						getManagedBean().setSecretaryValidate(true);
 					}
-					;
+					
 				}
 			}
 		}
@@ -5823,14 +5811,19 @@ public class TemplateSpecBackingBean extends
 	}
 	public void onchangeCompliance(TplSpecAnswer ans){
 		for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+			if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
 				&& ans.getCompliance()!=null
 				&& ans.getCompliance()==Boolean.FALSE){
-				answer.setCompliance(Boolean.FALSE);
-				answer.setUserScore(new BigDecimal(0));
-			}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())){
-				answer.setCompliance(Boolean.TRUE);
-				answer.setUserScore(null);
+					answer.setUserScore(BigDecimal.ZERO);
+			}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
+					&& ans.getCompliance()!=null
+					&& ans.getCompliance()==Boolean.TRUE
+					&& ans.getUserScore()!=null
+					&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0){
+						answer.setUserScore(null);
+			}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
+					&& ans.getCompliance()==null){
+						answer.setUserScore(null);
 			}
 		}
 	}

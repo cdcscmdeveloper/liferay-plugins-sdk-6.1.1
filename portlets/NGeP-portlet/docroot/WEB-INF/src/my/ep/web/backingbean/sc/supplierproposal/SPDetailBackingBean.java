@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.DecimalFormat;
@@ -42,7 +41,6 @@ import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -64,8 +62,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
@@ -97,7 +93,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -121,7 +116,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
@@ -690,7 +684,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		// initialized proposalSO outside of try to prevent nullpointerexception in catch clause
 		// removed finally clause as it is not needed
 		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);;
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 		ProposalReqDTO reqDTO = null;
 		try {
 //			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -703,6 +697,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			scQtProposal
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
+			if(null!=this.getManagedBean().getScQtSampleLable()){//35117-start
+				scQtProposal
+				.setScQtSampleLable(this.getManagedBean().getScQtSampleLable());
+			}//35117-End
 			this.getManagedBean().setScQtPRPExperiences(null);
 			String originalText = prepareOriginalText(getManagedBean()
 					.getSmSupplier());
@@ -1096,12 +1094,23 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		*/
 		//Bug #31725 End
 		//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
-		if(CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())){
+		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
-				if(finProposalChecklist.getScQtCheckList().getTitle().equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
-						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
+				if (finProposalChecklist.getScQtCheckList().getTitle()
+						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+					//#34726 start - flag to define process from technical, 
+					//save technical spec proposal is sending financialproposalchecklist(preparefinancialaction)
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
+					//#34726 start
 					prepareFinancialAction(finProposalChecklist);
 					saveFinancialSpecificationAction(false, true);
+					//#34726 start
+					//need to setback to false, because at financial proposal prepare button is trigger prepare financialaction
+					// this flag is needed in prepareFinancialAction during save technical proposal spec or click prepare at financial proposal
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
+					//#34726 end
 					break;
 				}
 			}
@@ -1229,13 +1238,18 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ProposalResDTO proposalResDTO;
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getFinancialQtProposalChecklist();
+		// Enhancement #3657@Syazani 12/10/2023 -- Start
+		int clItemSize = 0;
+		boolean isZonal = getManagedBean().getQt().isZonal();
+		// Enhancement #3657@Syazani 12/10/2023 -- End
+		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			List<TplSpecAnswer> answers = null;
 
-			if (getManagedBean().getQt().isZonal()) {
+			if (isZonal) {	// Enhancement #3657@Syazani 12/10/2023
 				// #21695 - #33391 - #33949 - Start.
 				if (getManagedBean().getSelectedZone() != null) {
 					getManagedBean().getZoneTplSpecBeanMap().put(
@@ -1265,6 +1279,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						.getZoneTplSpecBeanMap().values());
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
+					// Enhancement #3657@Syazani 12/10/2023 -- Start
+					clItemSize = templateSpecBeans.get(0).getSpecAnswerList() != null
+							&& !templateSpecBeans.get(0).getSpecAnswerList().isEmpty() ? templateSpecBeans.get(0)
+							.getSpecAnswerList().size() : 0;
+					// Enhancement #3657@Syazani 12/10/2023 -- End
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
 						if (templateSpecBean.getSpecAnswerList() != null
@@ -1338,88 +1357,109 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			//#32783 fix revert old codes related to #21695 -START
 	        if(answers == null || answers.size() == 0){
 	            throw new EpException(MessageConst.ERROR_760463);	
-	        } else {
-				//#32783 fix revert old codes related to #21695 -END
-				// 20220127@syazani - Enhancement #3657 - specific error message - Start
-				List<String> errorLst = null;
-				boolean isThrow = false;
-				int count=0;//#3657 Added Vinod
-				for (TplSpecAnswer answer : answers) {
-					if (isCompleted) {
-						// #21695 7/10/2021	START
-						//farid start #21695 to allow item has 0 qty and 0 price
-						// bug #31733 add condition 5/11/2021
-						if (answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
-								&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0
-								|| answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null) {
-						if (errorLst == null) {
-							errorLst = new ArrayList<String>();
-						}
+	        }// Enhancement #3657@Syazani 12/10/2023 -- Start
+	        
+			//#32783 fix revert old codes related to #21695 -END
+			List<String> errorLst = null;
+			boolean isThrow = false;
+			boolean isTender = ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+					.getProcurementMode().getParameterCode()) ? true : false;
+			Map<String, Integer> singleZoneAnswerSize = new HashMap<>();
+			for (TplSpecAnswer answer : answers) {
+				if (isCompleted) {
+					boolean isZoneUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
+							&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
+					boolean isNonZonalUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null;
+					String zone = answer.getTplSpecZoneQty() != null
+							&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
+							&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
+							.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
 
-						String zone = answer.getTplSpecZoneQty() != null
-								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
-								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
-								.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
-						if (!duplicateErrorZoneCheck(zone, errorLst) 
-								&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null
-								&& getManagedBean().getSelectedZone().getZoneName().equals(answer
-								.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName())){//#3657 Added zone name checking Vinod
+					// #21695 7/10/2021	START
+					// farid start #21695 to allow item has 0 qty and 0 price
+					// bug #31733 add condition 5/11/2021
+					if (isZoneUomNull || isNonZonalUomNull) {
+						answer.setComponentEmpty(true);
+						if (errorLst == null) {
+							errorLst = new ArrayList<>();
+						}
+	
+						if (!duplicateErrorZoneCheck(zone, errorLst)) {
 							errorLst.add(zone);
 							isThrow = true;
-						//#3657 Start Vinod
-						} else if (!duplicateErrorZoneCheck(zone, errorLst)){
-							count++;
 						}
-						//#3657 End Vinod
-						}
-						// bug #31733 add condition 5/11/2021
-						// farid end #21695 7/10/2021
-					}
-				
-					if (!isThrow) {
-						// added because of Bug #17772, please do not remove or
-						// change the order of if statements
-						if (answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)) {
-							boolean isItemTypeService = false;
-							if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
-									.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-								isItemTypeService = true;
-							}
-							this.getManagedBean().getTemplateSpecBackingBean()
-								.calcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
-						}
-						// 20210419@asyrafhaziq - Bug #30061 - start
-						if ((answer.getRatePerUom() != null && !answer.getRatePerUom().equals(0))
-								&& (answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134
-							boolean isItemTypeService = false;
-							if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
-									.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-								isItemTypeService = true;
-							}
-							this.getManagedBean().getTemplateSpecBackingBean()
-									.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
-						}
-						// 20210419@asyrafhaziq - Bug #30061 - End
-						super.setUserDetails(answer);
-					}
-				}
-				
-				if(count!=0) scQtProposalChecklist.setSubmitted(false);//#3657 Added Vinod
-			
-				if (isThrow && errorLst != null && errorLst.size() > 0) {
-					if (getManagedBean().getQt().isZonal()) {
-						StringBuffer strB = new StringBuffer();
-						String unitPrice = ResourceBundleUtils.getMessage("lbl.tpl.spec.content.unit.price", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-						for (String zone : errorLst) {
-							strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPrice,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
-						}
-						throw new EpException(strB.toString());	
 					} else {
-						throw new EpException(MessageConst.ERROR_760464);
+						answer.setComponentEmpty(false);
+						Integer zoneVal = singleZoneAnswerSize.get(zone);
+						if (zoneVal == null) {
+							singleZoneAnswerSize.put(zone, 1);
+						} else {
+							singleZoneAnswerSize.put(zone, zoneVal + 1);
+						}
+					}
+					// bug #31733 add condition 5/11/2021
+					// farid end #21695 7/10/2021
+				}
+			
+				if (!isThrow) {
+					// added because of Bug #17772, please do not remove or
+					// change the order of if statements
+					if (answer.getAnswerNumeric() == null || answer.getAnswerNumeric().equals(0)) {
+						boolean isItemTypeService = false;
+						if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+								.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+							isItemTypeService = true;
+						}
+						this.getManagedBean().getTemplateSpecBackingBean()
+								.calcTotalAmount(getManagedBean().getTemplateSpecBean(), answer, isItemTypeService);
+					}
+					// 20210419@asyrafhaziq - Bug #30061 - start
+					if ((answer.getRatePerUom() != null && !answer.getRatePerUom().equals(0))
+							&& (answer.getAnswerNumeric() != null && !answer.getAnswerNumeric().equals(0))) { // update for Bug #Bug #31134
+						boolean isItemTypeService = false;
+						if (getManagedBean().getTemplateSpecBean().getSpecMaster().getItemTypeCode().getParameterCode()
+								.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+							isItemTypeService = true;
+						}
+						this.getManagedBean()
+								.getTemplateSpecBackingBean()
+								.CheckAndUpdateCalcTotalAmount(getManagedBean().getTemplateSpecBean(), answer,
+										isItemTypeService);
+					}
+					// 20210419@asyrafhaziq - Bug #30061 - End
+					super.setUserDetails(answer);
+				}
+			}
+			
+			if (isTender && isZonal && singleZoneAnswerSize.size() > 0) {
+				for (Map.Entry<String, Integer> entry : singleZoneAnswerSize.entrySet()) {
+					int eachZonVal = entry.getValue();
+					if (eachZonVal != 0 && eachZonVal == clItemSize) {
+						isThrow = false;
+					} else if (eachZonVal != 0 && eachZonVal != clItemSize) {
+						isThrow = true;
+						break;
 					}
 				}
-				// 20220127@syazani - Enhancement #3657 - specific error message - End
+			}		
+		
+			if (isThrow && errorLst != null && !errorLst.isEmpty()) {
+				if (getManagedBean().getQt().isZonal()) {
+					StringBuilder strB = new StringBuilder();
+					String unitPrice = ResourceBundleUtils.getMessage(SourcingConstants.LABEL_UNIT_PRICE,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					for (String zone : errorLst) {
+						strB.append(MessageUtils.getMessage(MessageConst.ERROR_760538,
+								new String[] { unitPrice, zone }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale()));
+					}
+					throw new EpException(strB.toString());
+				} else {
+					throw new EpException(MessageConst.ERROR_760464);
+				}
 			}
+			// Enhancement #3657@Syazani 12/10/2023 -- End
+			
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
 					.getTplSpecQuestion().getClPriceTypeCode()
@@ -1441,7 +1481,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					BigDecimal totalPrice = tplHelper.calculateTotalAmount(
 							answer.getTplSpecQuestion(),
 							answer.getRatePerUom(), quantity);	
-					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) == 1) {
+					if (totalPrice != null && totalPrice.compareTo(compareTotalAmount) > 0) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 						throw new EpException(MessageConst.ERROR_760437);
 					}
 					//20200701@asyrafhaziq - Bug #28464 - End
@@ -2253,13 +2293,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #28398 BUG - 26339 CR - End
 				}else{
 					//34493 - start
-					if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+				   if (null != assetProposalChecklist) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					if ( assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 						assetProposalChecklist.setSubmitted(false);
 						assetProposalChecklist.setCompliance(null);
 					} else{
 						assetProposalChecklist.setSubmitted(true);
 						assetProposalChecklist.setCompliance(null);
 					} 
+				   }
 					//34493 - end
 				}
 			}      	// #26339 Venkat End
@@ -3153,6 +3195,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		String pageUrl = null;
 		String definationType = scQtProposalChecklist.getScQtCheckList()
 				.getDefinationType().getParameterCode();
+		// #34726 start
+		for (ScQtProposalChecklist tecChecklistDetail : this.getManagedBean().getTecCheckDetailsList()) {
+			if (tecChecklistDetail.getScQtCheckList().getTitle()
+					.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+					&& !tecChecklistDetail.isSubmitted() && !tecChecklistDetail.isFromTechnicalProposal()) {
+				throw new EpException(MessageConst.WARN_7602692);
+			}
+
+		}
+		// #34726 end
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
 
@@ -3945,7 +3997,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			MathContext mc = new MathContext(4);
 
 			//Start Bug #26498
-			if (totalCredit.compareTo(BigDecimal.ZERO) == 1){
+			if (totalCredit != null && totalCredit.compareTo(BigDecimal.ZERO) > 0){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //20230718@shafful - SQUBE BUG MINOR G17
 				percentagePaid = totalPaid.divide(totalCredit, mc).multiply(
 						BigDecimal.valueOf(100));
 			}
@@ -4167,7 +4219,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				scQtPRPExperience.setBrandNew(false);
 			}
 
-			prpExperience.setScQtProposal(proposalChecklist.getScQtProposal());
+			prpExperience.setScQtProposal(proposalChecklist != null ?proposalChecklist.getScQtProposal():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -5929,7 +5981,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							}
 						}
 						
-						if (CollectionUtils.isNotEmpty(catCodeList)) {
+						if (catCodeList != null && CollectionUtils.isNotEmpty(catCodeList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 							IQTDetailSO QtDetailsSO;
 							QuationTenderResDTO tenderResDTO;
 							
@@ -6036,7 +6088,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					zoneGeneralTrees.clear();	
 				}
 				
-				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+				if (specZoneDtls != null && CollectionUtils.isNotEmpty(specZoneDtls)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (TplSpecZoneDtl zone : specZoneDtls) {
 					
 						if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
@@ -6363,34 +6415,36 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		
 
 
-	// Bug #33947 5/9/2022 start
+	// Bug #33947 5/9/2022 && #35090 start
 	public boolean evaluateZonelistSupp(TplSpecZoneQty specQties) {
-		if (specQties != null) {
-
-			// remove log
-			// #21695 Farid Start - fix proposal checking 18/2/2022
-			System.out.println("---> 1dasdassdasa "
-					+ this.getManagedBean().getZones().size());
-			System.out.println("---> 2 "
-					+ specQties.getTplSpecZoneOffer().getTplSpecQuestion()
-							.getTplSpecZoneQties().size());
-			if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
-				for (TplSpecZoneDtl specZones : this.getManagedBean()
-						.getZones()) {
-					if (specQties.getTplSpecZoneDtl() != null) {
-						if (specZones.getSpecZoneId().equals(
-								specQties.getTplSpecZoneDtl().getSpecZoneId())) {
-							return true;
+		if (specQties != null &&
+				CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+			
+				if(this.getManagedBean().getZones().size() == 1){
+					
+					for (TplSpecAnswer specAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+						if (specAns != null && specAns.getTplSpecQuestion().getParentSpecQuestion() != null
+								&& specAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+								.equals(specQties.getTplSpecQuestion().getSpecQuestionId())
+								&& !specAns.isDisableRow() && specAns.getOffer() != null && specAns.getOffer().equals(false)) {
+							specQties.getTplSpecZoneOffer().setOffer(true);
+							specAns.setAnswerText("");
+							specAns.setAnswerNumeric(null);
+							specAns.setAnswerRemark(null);
+							specAns.setAnswerCompliance(null);
 						}
-
 					}
+				}
+				for (TplSpecZoneDtl specZones : this.getManagedBean().getZones()) {
+					if (specQties.getTplSpecZoneDtl() != null && 
+							specZones.getSpecZoneId().equals(specQties.getTplSpecZoneDtl().getSpecZoneId())) {
+							return true;
+					}
+					
 				}
 				specQties.getTplSpecZoneOffer().setOffer(true);
 				specQties.getTplSpecZoneOffer().setNotApplicable(true);
-			}
-
 		}
-
 		return false;
 	}
 
@@ -6416,6 +6470,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	public void disableDefaultSelected() {		
 		for (TplSpecAnswer retrieveAns : this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList()) {
+			if(ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion().getQuestionType())){
+				continue;
+			}//#35090
 			if (retrieveAns != null
 					&& this.getManagedBean().getZones().size() > 0) {
 				// adjust position flag here
@@ -6449,7 +6506,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					}
 				}
 			}
-			if (retrieveAns.isDisableRow()) {
+			if (retrieveAns != null && retrieveAns.isDisableRow()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				retrieveAns.setOffer(false);
 			}
 		}

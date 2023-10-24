@@ -147,7 +147,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	/** The qt. */
 	private ScQt qt;
-	
 	/**
 	 * @return the beans
 	 */

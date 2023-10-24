@@ -4,9 +4,7 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,11 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.collections.CollectionUtils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.model.StreamedContent;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -33,9 +26,11 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
-import my.ep.persistence.entity.sm.SmSupplier_;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author siew mei
@@ -177,6 +172,12 @@ public abstract class BaseManagedBean implements Serializable {
 	//#32236 start
 	private String outputPage;
 	//#32236 end
+	
+	private Integer wipStatusMax;
+	
+	//#28784 - Demo WIP - To display QT BPM version
+	private String bpmVersionNo;
+	private boolean newVersion;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1083,6 +1084,30 @@ public abstract class BaseManagedBean implements Serializable {
 		this.outputPage = outputPage;
 	}
 	//#32236 end
+
+	public Integer getWipStatusMax() {
+		return wipStatusMax;
+	}
+
+	public void setWipStatusMax(Integer wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}
+
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
+
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
+	}
 }
 
 // ***25201
