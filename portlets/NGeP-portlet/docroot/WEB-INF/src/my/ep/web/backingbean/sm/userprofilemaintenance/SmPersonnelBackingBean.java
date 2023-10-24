@@ -3003,7 +3003,13 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setCountryList(SmCommonUtil.getCountryList());
 			getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 			getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
-			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+			if(getManagedBean().isCheckingAfterSave()){
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+				getManagedBean().setCheckingAfterSave(false);
+			}else{
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+			}
+			
 		}
 		
 	}
@@ -3242,6 +3248,7 @@ public class SmPersonnelBackingBean extends
 	 * @return
 	 */
 	public String navigateToUpdateMOFUserPage(String personnelId) {
+		log.info("personnelId test 34810 == " + personnelId);
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -3628,11 +3635,14 @@ public class SmPersonnelBackingBean extends
 		
 		if (!resDTO1.isSuccessful()) {
 			throw new EpException(MessageConst.ERROR_722632);
+		}else{
+			getManagedBean().setCheckingAfterSave(true);
+			preRenderSmUserMaintenance();
+//			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
 		}
 
 //		 9569
 //		 Make sure table is updated
-		SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
 	}
 	//end - #34810
 	
