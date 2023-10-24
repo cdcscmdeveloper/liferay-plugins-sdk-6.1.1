@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -2994,7 +2995,14 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setCountryList(SmCommonUtil.getCountryList());
 			getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 			getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
-			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+			//34810 - start
+			if(getManagedBean().isCheckingAfterSave()){
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+				getManagedBean().setCheckingAfterSave(false);
+			}else{
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+			}
+			//34810 - end
 		}
 		
 	}
@@ -3308,9 +3316,9 @@ public class SmPersonnelBackingBean extends
 		return epRole;
 	}
 	
-	public void saveUserMOFUpdate() {
-		SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
-		
+	//start - #34810
+	public void saveUserMOFUpdate(SmPersonnel personnel) {
+	//end - #34810
 		//#9569 - Start
 		//to validate if user that admin want to delete or change role doesn't have any pending task - Start
 		//Cannot delete eP Role for {0} as there are pending tasks that belongs to this user.
@@ -3518,18 +3526,21 @@ public class SmPersonnelBackingBean extends
 					}
 					
 					if (personnel.getEpRole() != null) {
-						List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-						smPersonnelList.add(personnel);
-						reqDTO1.setSmPersonnelList(smPersonnelList);
-						reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-						resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+						//34810 - start
+						//comment part of this line to allow send email for one time only
+//						List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+//						smPersonnelList.add(personnel);
+//						reqDTO1.setSmPersonnelList(smPersonnelList);
+//						reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+//						resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
 						reqDTO2.setSmPersonnel(personnel);
-						log.info("End first update------------------------------------------------------");
+//						log.info("End first update------------------------------------------------------");
 						SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-						log.info("End second update------------------------------------------------------");
-						if (!resDTO1.isSuccessful()) {
-							throw new EpException(MessageConst.ERROR_722632);
-						}
+//						log.info("End second update------------------------------------------------------");
+//						if (!resDTO1.isSuccessful()) {
+//							throw new EpException(MessageConst.ERROR_722632);
+//						}
+						//34810 - end
 					} else {
 						reqDTO2.setSmPersonnel(personnel);
 						resDTO1 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
@@ -3571,12 +3582,65 @@ public class SmPersonnelBackingBean extends
 			countAuthUserWithRole(smPersonnelList2);
 			countContractSigner(smPersonnelList2);
 			epRoleList(null,2);
-		    SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+			//start - #34810
+//			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+			//end - #34810
 
 		  }catch (Exception ex){
 		      throw new EpException(MessageConst.ERROR_722632);
 		  }
 		}
+	
+	// start - #34810
+	public void checkingBeforeSave() {
+		SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
+
+		saveUserMOFUpdate(personnel);
+
+		Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
+		String identificationNo = personnel.getIdentificationNo();
+
+		IPersonnelSO personnelSO = SmServiceLookup.getPersonnelSO();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		reqDTO.setIdentificationNo(identificationNo);
+		PersonnelResDTO resDTO = personnelSO
+				.retrievePersonnelByIdentificationNoAndSuppIdForUserMaintenance(reqDTO);
+
+		if (resDTO.getSmPersonnelList().size() > 0) {
+			for (SmPersonnel SmPersonnel : resDTO.getSmPersonnelList()) {
+				getManagedBean().setSmAppl(SmPersonnel.getSmAppl());
+				resetAll();
+				getPersonnelInfoById(SmPersonnel.getPersonnelId().toString());
+				saveUserMOFUpdate(SmPersonnel);
+				System.out.println("masuk sini" + SmPersonnel.getPersonnelId());
+			}
+		}
+
+		PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+		PersonnelResDTO resDTO1 = new PersonnelResDTO();
+
+		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+		smPersonnelList.add(personnel);
+		reqDTO1.setSmPersonnelList(smPersonnelList);
+		reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+		resDTO1 = SmServiceLookup.getPersonnelSO()
+				.sendPersonnelActivationEmail(reqDTO1);
+
+		if (!resDTO1.isSuccessful()) {
+			throw new EpException(MessageConst.ERROR_722632);
+		} else {
+			getManagedBean().setCheckingAfterSave(true);
+			preRenderSmUserMaintenance();
+			// SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml",
+			// MessageConst.INFO_100002, null, null);
+		}
+
+		// 9569
+		// Make sure table is updated
+	}
+
+	// end - #34810
 	
 	public int checkSoftCert(){
 		int value = 4;
