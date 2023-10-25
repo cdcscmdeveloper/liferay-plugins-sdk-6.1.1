@@ -41,6 +41,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -767,11 +769,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getDropdownValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			//Sonarqube issues #21695
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -1274,7 +1276,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				//33849-End
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBean", getUserIdSessionFromLoginId(), e);
+			//Sonarqube issues
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "",
+					SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1308,11 +1312,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			//Sonarqube issues #21695
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -2456,7 +2460,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				bb.getManagedBean().setClaim(claim);
 				bb.getManagedBean().setTaskId(taskId);
-				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
+//				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
+				//21387 - Start
+				bb.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
+				bb.getManagedBean().setDocNo(resDTO.getDocNumber());
+				//21387 - End
 				bb.getManagedBean().setGroupTask(true);
 			} else {
 				log.info("====groupTask null===" + resDTO.isGroupTask());
@@ -3476,6 +3484,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	//#31269 - start
+	/**
+	 * View SSM information
+	 * @param smAppl
+	 */
 	public void redirectToViewSSMInfo(SmAppl smAppl){
 		getManagedBean().setSmAppl(smAppl);
 		getManagedBean().setSmSupplier(smAppl.getSmSupplier());
@@ -3484,7 +3496,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE	: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT);
 		clearPersonnelList();
 		for(SmPersonnel personnel : getManagedBean().getSmAppl().getSmPersonnels()){
-			if(!personnel.isSsmData()) continue;
+			if(!personnel.isSsmData()) {
+				continue;
+			}
 			
 			validateSsmPersonnel(personnel);
 			if(personnel.isEquityOwnerSsm()){
@@ -3498,43 +3512,56 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		
 		getManagedBean().getSmSupplierBranchSsm().clear();
 		for(SmSupplierBranch branch : getManagedBean().getSmAppl().getSmSupplierBranches()){
-			if(!branch.isSsmData()) continue;
+			if(!branch.isSsmData()) {
+				continue;
+			}
 			getManagedBean().getSmSupplierBranchSsm().add(branch);
 		}
 		
 		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
 		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());		
-		SupplierBusinessNatureResDTO resDTO = ((ISupplierBusinessNatureSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class))
+		SupplierBusinessNatureResDTO resDTO = BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierBusinessNatureSO.class)
 				.retrieveAllBusinessNatureBySupplierId(reqDTO);
 		for(SmSupplierBusiness business : resDTO.getBusinessNatureLs()){
-			if(!business.isSsmData()) continue;
+			if(!business.isSsmData()) {
+				continue;
+			}
 			getManagedBean().getSmSupplierBusinessSsm().add(business);
 		}
 		
 		getManagedBean().getSmEquityCompaniesSsm().clear();
 		for(SmEquityCompany company : getManagedBean().getSmAppl().getSmEquityCompanies()){
-			if(!company.isSsmData()) continue;
+			if(!company.isSsmData()) {
+				continue;
+			}
 			getManagedBean().getSmEquityCompaniesSsm().add(company);
 		}
 		RequestContext.getCurrentInstance().execute("viewssminfoDlg.show()");
 	}
 	
+	/**
+	 * Check to render button view SSM info
+	 * @return
+	 */
 	public boolean renderViewSSMInfo(){
 		return getManagedBean().getSmAppl().isApplValidWithSsm()
 			&& businessTypeTovalidateWithSSM(null, 
 				getManagedBean().getSmAppl().getSmSupplier().getBusinessType());
 	}
 	
+	/**
+	 * Validate SSM personnel address
+	 * @param personnel
+	 * @return
+	 */
 	public SmPersonnel validateSsmPersonnel(SmPersonnel personnel){
 		if(personnel == null || !personnel.isSsmData() 
 			|| personnel.getSmPersonnelAddresses() == null) return personnel;
 		for(int i=0; i < personnel.getSmPersonnelAddresses().size(); i++){
-			if(personnel.getSmPersonnelAddresses().get(i) == null
-				|| personnel.getSmPersonnelAddresses().get(i).getSmAddress() == null){
-				continue;
-			}
-			if(personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
+			if(personnel.getSmPersonnelAddresses().get(i) != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress() != null
+					&& personnel.getSmPersonnelAddresses().get(i).getSmAddress().isSsmData()){
 				Collections.swap(personnel.getSmPersonnelAddresses(), 0, i);
 				break;
 			}
@@ -4269,4 +4296,54 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	// 33410 - END
+	
+	//#21387 - Start
+	/**
+	 * Claim bpm task group By Document Number And Module
+	 * @param reqDTO
+	 * @return resDTO 
+	 */
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
+		BpmResponseDTO resDTO = new BpmResponseDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		try {
+
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(reqDTO.getDocNumber());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			bpmReqDTO.setModule(BpmConstants.MODULE_CT);
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			resDTO = bpmSO.getTasksByDocNoandModule(bpmReqDTO);
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	//#21387 - End
+	
+	//#28175
+	/**
+	 * @param appl
+	 * @param catL3
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3){
+		if(catL3 == null){
+			return null;
+		}
+		SmAppl appl = getManagedBean().getSmAppl();
+		if(appl == null || appl.isActiveAppl() || EntityHelper.isCollectionEmpty(
+				appl.getSmSupplierCategories())){
+			return catL3.getCategoryName();
+		}
+		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
+				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
+		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
+	}
 }

@@ -306,7 +306,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				/*scQtApprovalDtls
 						.setApprovalRequestAttachement(approvalReqAttachement);*/
 			}
-			approvalReqAttachement.setDocNo(scQtApprovalDtls.getScQtApproval().getScQt().getQtNo());
+			approvalReqAttachement.setDocNo(this.getManagedBean().getQt().getQtNo()); //#25077
 			//scAttachment = approvalReqAttachement;
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			scQtApprovalDtls.setApprovalRequestAttachement(approvalReqAttachement);
@@ -3076,7 +3076,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					approvalReqAttachement = new ScQtApprovalReqAttachement();
 					approvalReqAttachement.setApprovalRequest(scQtApprovalHistoryDtls);
 				}
-				approvalReqAttachement.setDocNo(scQtApprovalHistoryDtls.getScQtApproval().getScQt().getQtNo());
+				approvalReqAttachement.setDocNo(this.getManagedBean().getQt().getQtNo());
 				uploadAttachment(event.getFile(), approvalReqAttachement);
 				scQtApprovalHistoryDtls.setApprovalRequestAttachement(approvalReqAttachement);
 				if(approvalType.getParameterCode().equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)){
