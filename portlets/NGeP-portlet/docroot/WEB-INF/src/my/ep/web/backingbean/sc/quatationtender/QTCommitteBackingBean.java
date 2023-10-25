@@ -1902,16 +1902,18 @@ public class QTCommitteBackingBean extends
 		} else {
 			currentStatusId = getManagedBean().getCurrentStatusId();
 		}
-				
+		//25037 - start
+		Long currentCmtStatus = 0L;
+		if(this.getManagedBean().getCurrentCMTStatus()==null){
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
+			currentCmtStatus = wfStatus==null? currentCmtStatus: wfStatus.getPmStatus().getStatusId();
+			this.getManagedBean().setCurrentCMTStatus(currentCmtStatus);
+		}else{
+			currentCmtStatus = this.getManagedBean().getCurrentCMTStatus();
+		}
+		//25037 - end
+
 		if (this.getManagedBean().isMaintanceFlow()) {
-			//#25037-start
-			Long currentCmtStatus = 0L;
-			if(this.getManagedBean().getCurrentCMTStatus()==null){
-				ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
-				currentCmtStatus = wfStatus==null? currentCmtStatus: wfStatus.getPmStatus().getStatusId();
-			}else{
-				currentCmtStatus = this.getManagedBean().getCurrentCMTStatus();
-			}
 			if (Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(currentCmtStatus)
 					|| Arrays.asList(QTStatusConst.CMT_REVISION_APPROVAL_GROUP).contains(currentCmtStatus)
 						|| Arrays.asList(QTStatusConst.CMT_REVISION_GROUP).contains(currentCmtStatus)) {
@@ -2034,6 +2036,12 @@ public class QTCommitteBackingBean extends
 							}
 						}	
 					}
+					//25037 - start
+					if (QTStatusConst.CMT_PENDING_REVISION.equals(currentCmtStatus)
+							&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType)) {
+						return false;
+					}
+					//25037 - end
 				} else {
 					return false;
 				}
