@@ -2248,14 +2248,17 @@ public void saveComplianceSample() {
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+
 			//#25138, #21695 - start 
 			List<String> evalstage = new ArrayList<String>();
 			//#28784 add demo condition - Start
 			String evalStageDemoOrTechnical = demoOrTechnicalEvaluation();
 			evalstage.add(evalStageDemoOrTechnical);
 			//#28784 add demo condition - End
-			evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-			reqDTO.setResultStages(evalstage);
+			if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+			}			reqDTO.setResultStages(evalstage);
 			reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 			//#25138, #21695 - end
 			evaluationSO.generateEvaluationSheet(reqDTO);
@@ -18930,10 +18933,13 @@ private void retriveCommitteeRemarksList(){
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 				//#25138, #21695 - start 
 				List<String> evalstage = new ArrayList<String>();
 				evalstage.add(QTConstants.TECHNICAL_EVALUATION);
-				evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				}
 				reqDTO.setResultStages(evalstage);
 				reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 				
