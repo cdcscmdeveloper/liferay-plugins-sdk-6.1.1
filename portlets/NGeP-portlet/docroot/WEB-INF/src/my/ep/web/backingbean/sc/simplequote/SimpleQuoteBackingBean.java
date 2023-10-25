@@ -2383,6 +2383,27 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35298 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if ((tplSpecQuestion.getAnswerTypeCode() != null)
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+											.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))) {
+								if (tplSpecQuestion.getClFulfilmentTypeCode() != null
+										&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+												.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+									if (tplSpecQuestion.getClUomFrequency() != null) {
+										tplSpecQuestion.setClUomFrequency(null);
+									}
+									if (tplSpecQuestion.getClDurationMonth() != null) {
+										tplSpecQuestion.setClDurationMonth(null);
+									}
+								}
+							}
+						}
+						// Bug #35298 - end
+						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
