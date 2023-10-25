@@ -6011,6 +6011,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
+						
+						//#28784 - Demo WIP
+						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						this.getManagedBean().setNewVersion(isQtNewVersion);
+						
 						if(demoRequired && this.getManagedBean().isNewVersion()){//#28784 - Include Demo WIP
 							getManagedBean().getQt().setDemoRequired(demoRequired);
 							getManagedBean().getQt().setEvaluationType(evalType);
