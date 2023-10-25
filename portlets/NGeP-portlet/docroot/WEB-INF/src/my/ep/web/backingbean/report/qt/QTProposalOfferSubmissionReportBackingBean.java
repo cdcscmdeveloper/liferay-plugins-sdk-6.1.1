@@ -180,6 +180,7 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 				for (PmUserOrg pmUserOrg : resDTO.getPmUser().getPmUserOrgs()){
 					this.getManagedBean().setSupplierName(pmUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName());
 					this.getManagedBean().setLatestApplId(pmUserOrg.getPmOrgProfile().getSmSupplier().getSmAppl().getApplId());
+					this.getManagedBean().setSupplierId(pmUserOrg.getPmOrgProfile().getSmSupplier().getSupplierId());
 				}
 			}
 		}
