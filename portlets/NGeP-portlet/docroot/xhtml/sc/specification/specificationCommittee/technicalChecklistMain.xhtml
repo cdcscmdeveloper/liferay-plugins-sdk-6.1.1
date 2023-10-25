@@ -372,7 +372,8 @@
 				
 				<!-- START #28784 -->
 				<p:commandLink
-					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD'}"
+					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD' and
+					specificationBackingBean.managedBean.newVersion}"
 					action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
 					update="@([id$=demoSpecTempId])"
 					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"> <!--#28784--> 		 			

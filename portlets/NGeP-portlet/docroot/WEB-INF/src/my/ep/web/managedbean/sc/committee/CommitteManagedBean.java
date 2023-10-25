@@ -20,12 +20,12 @@ import javax.faces.model.SelectItem;
 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
-import my.ep.helper.Paginator; //#25037
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory; //#25037
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -1452,39 +1452,38 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 		}
 
-		// #25037 - start
-		public Paginator getHistoryPaginator() {
-			return historyPaginator;
-		}
+	// #25037 - start
+	public Paginator getHistoryPaginator() {
+		return historyPaginator;
+	}
 
-		public void setHistoryPaginator(Paginator historyPaginator) {
-			this.historyPaginator = historyPaginator;
-		}
+	public void setHistoryPaginator(Paginator historyPaginator) {
+		this.historyPaginator = historyPaginator;
+	}
 
-		public Paginator getMemberHistoryPaginator() {
-			return memberHistoryPaginator;
-		}
+	public Paginator getMemberHistoryPaginator() {
+		return memberHistoryPaginator;
+	}
 
-		public void setMemberHistoryPaginator(Paginator memberHistoryPaginator) {
-			this.memberHistoryPaginator = memberHistoryPaginator;
-		}
+	public void setMemberHistoryPaginator(Paginator memberHistoryPaginator) {
+		this.memberHistoryPaginator = memberHistoryPaginator;
+	}
 
-		public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
-			return selectedCommitteeHistory;
-		}
+	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+		return selectedCommitteeHistory;
+	}
 
-		public void setSelectedCommitteeHistory(
-				ScCommitteeMemberHistory selectedCommitteeHistory) {
-			this.selectedCommitteeHistory = selectedCommitteeHistory;
-		}
+	public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+		this.selectedCommitteeHistory = selectedCommitteeHistory;
+	}
 
-		public String getCurrentCommitteeType() {
-			return currentCommitteeType;
-		}
+	public String getCurrentCommitteeType() {
+		return currentCommitteeType;
+	}
 
-		public void setCurrentCommitteeType(String currentCommitteeType) {
-			this.currentCommitteeType = currentCommitteeType;
-		}
-		// #25037 - end
+	public void setCurrentCommitteeType(String currentCommitteeType) {
+		this.currentCommitteeType = currentCommitteeType;
+	}
+	// #25037 - end
 
 }
