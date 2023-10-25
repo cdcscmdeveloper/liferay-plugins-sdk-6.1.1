@@ -5177,10 +5177,15 @@ public class QTDetailBackingBean extends
 						}
 
 						scQt = tenderResDTO.getQtDetail();
+						
+						//#28784 - Demo WIP
+						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						this.getManagedBean().setNewVersion(isQtNewVersion);
 
 						getManagedBean().setQt(scQt);
 
-						if (demoRequired && this.getManagedBean().isNewVersion()){//#28784 - Include Demo WIP) {
+						//#28784 - Include Demo WIP
+						if (demoRequired && this.getManagedBean().isNewVersion()){
 							getManagedBean().getQt().setDemoRequired(demoRequired);
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
