@@ -20,12 +20,21 @@
 		<p:messages id="technicalChecklistSamplemain" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"
 			severity="error, info"></p:messages>
-		<table width="100%" class="BtnSpacing">
+			<ui:param name="isReadOnlyOrSpecMain"
+			value="#{!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" /><!-- #11104 Reendorse -->
+		<table style="width:100%;" class="BtnSpacing"><!-- #11104 Reendorse -->
 			<tr>
 				<td align="right"><p:commandButton process="@this" partialSubmit="true"
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
 						action="#{specificationBackingBean.committeeBackAction}" /> 
+						 <p:commandButton
+						value="#{lbl['lbl.btn.complete']}" process="@this"
+						partialSubmit="true"
+						rendered="#{((!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.completeSampleTemplateSpecDetails()}" /><!-- #11104 Reendorse -->
 					</td>
 			</tr>
 		</table>
