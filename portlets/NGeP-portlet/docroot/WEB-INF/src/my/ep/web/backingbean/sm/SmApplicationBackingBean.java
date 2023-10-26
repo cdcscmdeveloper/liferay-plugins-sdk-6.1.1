@@ -4548,14 +4548,20 @@ public class SmApplicationBackingBean extends
 		rqDto.setAppTypeCode(getManagedBean().getSmAppl().getApplType());
 		if (!getManagedBean().getSmAppl().getSmSupplierCategories().isEmpty()) {
 			List<Long> catL3Ids = new ArrayList<Long>();
-			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+			//28775 - Site Visit Grouping Enhancement - 28775 & 32726 - start
+			if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				for(SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 					catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
 				}
+			} else {
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
+					}
+				}
 			}
-
+			//28775 - Site Visit Grouping Enhancement - 28775 & 32726 - end
 			// temp fix to reduce the number of supporting documents retrieve
 			// for update & bumi.
 			if (catL3Ids.size() == 0) {
@@ -4563,8 +4569,8 @@ public class SmApplicationBackingBean extends
 			}
 
 			rqDto.setCategoryL3Ids(catL3Ids);
-			//log.info(" **** Total categories sent to Doc So ***"
-					//+ rqDto.getCategoryL3Ids().size());
+			log.info(" **** Total categories sent to Doc So ***"
+					+ rqDto.getCategoryL3Ids().size());
 		}
 		if (!getManagedBean().getSmAppl().getSmSupplierCerts().isEmpty()) {
 			List<Long> certIds = new ArrayList<>();
