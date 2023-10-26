@@ -3089,16 +3089,25 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 	}
-	 
-	// #30435, #25077 -start-
-	public void otherAppValueChanged(ValueChangeEvent event) {
+
+	// #30435,#34694,#25077 -start-
+	public void otherAppValueChangedICT(ValueChangeEvent event) {
 
 		if (null != event.getNewValue()) {
-			getManagedBean().setScQtAppRequestRemark(event.getNewValue().toString());
+			getManagedBean().setScQtAppRequestRemarkICT(event.getNewValue().toString());
 		}
 	}
-	// bug #30435, Enhancement #25077 - end
-	
+	// bug #30435,#34694,Enhancement #25077 - end
+
+	// #34694, #25077 -start-
+	public void otherAppValueChangedMITI(ValueChangeEvent event) {
+
+		if (null != event.getNewValue()) {
+			getManagedBean().setScQtAppRequestRemarkMITI(event.getNewValue().toString());
+		}
+	}
+	// #34694, #25077 -end-
+
 	/**
 	 * To remove the non bumi suppliers as open for Bumi for Restricted tender
 	 * 
