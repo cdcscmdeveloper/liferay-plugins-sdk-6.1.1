@@ -11797,7 +11797,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
-<<<<<<< HEAD
 	// #12471 Start
 	/**
 	 * Gets the organization category ptj constant.
@@ -12024,8 +12023,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtRemarksIdRemoveList = qtRemarksIdRemoveList;
 	}
 	//#9019 - End
-=======
->>>>>>> refs/remotes/origin/master
 	
 	public String getMsgConfirmBelowIndi() {
 		return msgConfirmBelowIndi;
