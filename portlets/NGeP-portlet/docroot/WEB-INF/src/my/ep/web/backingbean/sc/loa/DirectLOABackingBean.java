@@ -10855,17 +10855,17 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					if(null==zoneloiLoaItem 
 						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
 						zoneloiLoaItem=loiLoaItem;
-						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
+						itemsList.append("\n"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" \n");
 						zoneitemCount=0;
 					}
 					zoneitemCount++;
-					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
+					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" \n");
 					itemCount++;
 				}
 			}
 		}
 		if(itemCount>0){
-			throw new EpException(MessageConst.ERROR_775176, new String[] {itemsList.toString()});
+			throw new EpException(MessageConst.ERROR_776000, new String[] {itemsList.toString()});
 		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
 			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
