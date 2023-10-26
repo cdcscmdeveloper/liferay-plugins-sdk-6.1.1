@@ -36,19 +36,19 @@ public class QtReportConst implements Serializable {
 	public static final String SC_COMMITTEE_DTLS_TD_RPT_VAL = "SC_045";
 	public static final String SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL = "SC_046";
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
-	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
-	public static final String SC_BRIEFING_PAPER_RPT_VAL_WIP = "SC_081";
-	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
-	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_082";
+	public static final String SC_BRIEFING_PAPER_RPT_VAL_WIP = "SC_048";
+	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_081";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_049";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_082";
 	public static final String SC_LETTER_OF_ACCPT_CONTENT_RPT_VAL = "SC_075";
 	public static final String SC_PROP_VALID_PERIOD_EXT_RPT_VAL = "SC_076";
 	public static final String SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL = "SC_080";//#21692
-	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_071";
-	public static final String SC_OPENING_COMMITTEE_RPT_VAL_WIP = "SC_084";
-	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_072";
-	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_085";
-	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_073";
-	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_083";
+	public static final String SC_OPENING_COMMITTEE_RPT_VAL_WIP = "SC_071";
+	public static final String SC_OPENING_COMMITTEE_RPT_VAL = "SC_084";
+	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_072";
+	public static final String SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL = "SC_085";
+	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_073";
+	public static final String SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_ = "SC_083";
 	public static final String SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL = "SC_079"; //29580_14306
 	
 	
