@@ -10889,9 +10889,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		StringBuilder itemsList = new StringBuilder();
 		int completeItemCount = 0;
 		List<ScLoiLoaItem> completeItems= new ArrayList<>();
+		int zoneitemCount = 0;
+		ScLoiLoaItem zoneloiLoaItem = null;
+		boolean isZonal = this.getManagedBean().getScLoa().getScLoiLoa().isZonal();
 		
 		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
-			for(ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
+			for(ScLoiLoaItem loiLoaItem : sortLoiLoaItems(this.getManagedBean().getScLoa().getScLoiLoaItems(), isZonal)){
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 				specReqDto.setScQt(this.getManagedBean().getScQt());
 				specReqDto.setScLoiLoaItem(loiLoaItem);
@@ -10904,19 +10907,34 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						newSupplierOffer++;
 					}
 				}
-				if(!loiLoaItem.isComplete() && (newSupplierOffer>0||StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))){
+				if(null!=this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()){
+					loiLoaItem.setScLoa(this.getManagedBean().getScLoa());
+				}
+				if(!loiLoaItem.isComplete() 
+					&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+					&& !isZonal){
 					itemCount++;
-					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
+					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
+				}else if(!loiLoaItem.isComplete() 
+						&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+						&& isZonal){
+					if(null==zoneloiLoaItem 
+						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
+						zoneloiLoaItem=loiLoaItem;
+						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
+						zoneitemCount=0;
+					}
+					zoneitemCount++;
+					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
+					itemCount++;
 				}else if(loiLoaItem.isComplete()){
 					completeItemCount++;
 					completeItems.add(loiLoaItem);
 				}
-				if(null!=this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()){
-					loiLoaItem.setScLoa(this.getManagedBean().getScLoa());
-				}
 			}
 		}
 		if(itemCount>0){
+			itemsList.append("<br/>");
 			throw new EpException(MessageConst.ERROR_775175, new String[] {itemsList.toString()});
 		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
@@ -10954,9 +10972,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		int recordCount = 0;
 		int itemCount = 0;
 		StringBuilder itemsList = new StringBuilder();
+		int zoneitemCount = 0;
+		ScLoiLoaItem zoneloiLoaItem = null;
+		boolean isZonal = this.getManagedBean().getScLoa().getScLoiLoa().isZonal();
 		
 		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
-			for(ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
+			for(ScLoiLoaItem loiLoaItem : sortLoiLoaItems(this.getManagedBean().getScLoa().getScLoiLoaItems(), isZonal)){
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 				specReqDto.setScQt(this.getManagedBean().getScQt());
 				specReqDto.setScLoiLoaItem(loiLoaItem);
@@ -10969,9 +10990,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						newSupplierOffer++;
 					}
 				}
-				if(!loiLoaItem.isComplete() && (newSupplierOffer>0||StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))){
+				if(!loiLoaItem.isComplete() 
+					&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+					&& !isZonal){
 					itemCount++;
 					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
+				}else if(!loiLoaItem.isComplete() 
+						&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+						&& isZonal){
+					if(null==zoneloiLoaItem 
+						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
+						zoneloiLoaItem=loiLoaItem;
+						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
+						zoneitemCount=0;
+					}
+					zoneitemCount++;
+					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
+					itemCount++;
 				}
 			}
 		}
@@ -10992,6 +11027,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.approveBeforeupdateBpmTaskAction(bpmAction);
 			return;
 		}
+	}
+	private List<ScLoiLoaItem> sortLoiLoaItems(List<ScLoiLoaItem> loiLoaItems, boolean isZonal){
+		
+		if(isZonal){
+			Collections.sort(loiLoaItems, new Comparator<ScLoiLoaItem>() {
+				@Override
+				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+					return Long.compare(s1.getTplSpecZoneDtl().getSpecZoneId(), 
+							s2.getTplSpecZoneDtl().getSpecZoneId());
+				}
+			});
+		}else{
+			Collections.sort(loiLoaItems, new Comparator<ScLoiLoaItem>() {
+				@Override
+				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+					return Long.compare(s1.getLoiLoaItemId(), 
+							s2.getLoiLoaItemId());
+				}
+			});
+		}
+		
+		return loiLoaItems;
 	}
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//29007&31423
@@ -11607,7 +11664,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
 			}
 		}
-		totalPrice.setScale(2, BigDecimal.ROUND_UP);
+		totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_UP);
 
 		return totalPrice;
 	}
