@@ -6033,7 +6033,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tenderReqDTO.setQtId(qtId);
 				tenderReqDTO.setBdgDtlsReq(true);
 				QuationTenderResDTO tenderResDTO = null;
-				ScQt scQt = this.getManagedBean().getQt();
+				ScQt scQt = this.getManagedBean().getQt();				
+				
 				if (null == scQt
 						|| (scQt.isZonal()
 						/* && !scQt.isPanel() */
@@ -6059,6 +6060,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						scQt = tenderResDTO.getQtDetail();						
 						getManagedBean().setQt(scQt);
+						
+						//#28784 - Demo WIP
+						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						this.getManagedBean().setNewVersion(isQtNewVersion);
+						
 						if(demoRequired && this.getManagedBean().isNewVersion()){//#28784 - Include Demo WIP
 							getManagedBean().getQt().setDemoRequired(demoRequired);
 							getManagedBean().getQt().setEvaluationType(evalType);
@@ -7538,6 +7544,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
+				//#35285 & #25635 - Start
+				if(this.isQTStatusGreaterThanOrEquals(this.getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+				//#35285 & #25635 - End
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
 					if (!getManagedBean().isApproverTabLoaded()) {
@@ -7546,6 +7555,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					//#25077 - End
 					retrieveApprovalTabDtl();
 					}//25635&34502-End
+				//#35285 & #25635 - Start
+				}else{
+					retrieveOthersApprovalTabDtl();
+					retrieveApprovalTabDtl();
+				}
+				//#35285 & #25635 - End
 				break;
 
 			case 4:
