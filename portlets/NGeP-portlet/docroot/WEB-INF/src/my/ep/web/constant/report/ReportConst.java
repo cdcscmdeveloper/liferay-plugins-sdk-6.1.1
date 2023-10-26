@@ -96,8 +96,8 @@ public class ReportConst implements Serializable{
 	public static final String SC_PROPOSAL_DTLS_SERVICE_RPT_VAL = "SC_047";
 	public static final String SC_BRIEFING_PAPER_RPT_VAL = "SC_048";
 	public static final String SC_BRIEFING_PAPER_RPT_VAL_WIP = "SC_081";
-	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_049";
-	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_082";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL_WIP = "SC_049";
+	public static final String SC_EVALUATION_COMMITTEE_RPT_VAL = "SC_082";
 
 	public static final String SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL = "SC_050";
 	public static final String SC_PURCHASE_SUMMURY_ITEM_INQUIRY_S1_RPT_VAL = "SC_051";
