@@ -8613,9 +8613,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 											retriveSummaryEvaluationStage();
 											this.getManagedBean().setTabFinancialIndex(3);
 											outputTab = 2;
-											log.info("evaluation stage active index ======"+this.getManagedBean().getEvaluatioStageActiveIndex());
-											log.info("Financialtab stage active index ======"+this.getManagedBean().getEvaluatioStageActiveIndex());
-											log.info("wipstatus ====="+this.getManagedBean().getWipStatusMax());
 										}
 										//#25138(wip 4serangkai) bug -End 8/6/2023
 									}
