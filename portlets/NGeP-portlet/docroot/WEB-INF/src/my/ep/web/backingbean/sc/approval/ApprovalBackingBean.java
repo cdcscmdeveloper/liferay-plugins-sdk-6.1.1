@@ -282,7 +282,7 @@ public class ApprovalBackingBean extends
 				approvalReqAttachement.setApprovalRequest(scQtApprovalDtls);
 			}
 			
-			approvalReqAttachement.setDocNo(scQtApprovalDtls.getScQtApproval().getScQt().getQtNo());
+			approvalReqAttachement.setDocNo(this.getManagedBean().getQt().getQtNo()); // #34694,#25077
 
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			scQtApprovalDtls.setApprovalRequestAttachement(approvalReqAttachement);
@@ -1190,11 +1190,12 @@ public class ApprovalBackingBean extends
 			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 				showDialog = "reviceApprovalDlg.show()";
 
-				// #32376, #25077 - Start
-				if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)) {
+				// #34694, #32376, #25077 - Start
+				if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)
+						|| SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 					showDialog = "reviceApprovalDlgTemp.show()";
 				}
-				// #32376, #25077 - End
+				// #34694, #32376, #25077 - End
 			} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
 				showDialog = "rejectApprovalDlg.show()";
 			} else {
@@ -2508,6 +2509,13 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 	//#25077 - Start
 	/**
 	 * Upload attachment for history others approval.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void handleHistoryOtherFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
@@ -2520,7 +2528,7 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 				approvalReqAttachement.setApprovalRequest(scQtApprovalHistoryDtls);
 			}
 			
-			approvalReqAttachement.setDocNo(scQtApprovalHistoryDtls.getScQtApproval().getScQt().getQtNo());
+			approvalReqAttachement.setDocNo(this.getManagedBean().getQt().getQtNo()); // #34694,#25077
 			
 			uploadAttachment(event.getFile(), approvalReqAttachement);
 			
