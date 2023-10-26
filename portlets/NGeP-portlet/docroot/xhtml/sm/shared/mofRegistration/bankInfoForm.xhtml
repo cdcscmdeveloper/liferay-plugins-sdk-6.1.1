@@ -418,7 +418,9 @@
 					<td>
 				<p:outputPanel id="divisionBankFormDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBank.smAddress.pmState.adoptDivision}">
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+				<!-- #34159 - START -->
+				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
+							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.divisionId}"
 							id="smBankDivision">
@@ -429,6 +431,7 @@
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
 								update="smBankDist,smBankCity" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
