@@ -2388,16 +2388,18 @@ public class SimpleQuoteBackingBean extends
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
 							if ((tplSpecQuestion.getAnswerTypeCode() != null)
-									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
-											.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL))) {
-								if (tplSpecQuestion.getClFulfilmentTypeCode() != null
-										&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
-												.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-									if (tplSpecQuestion.getClUomFrequency() != null) {
-										tplSpecQuestion.setClUomFrequency(null);
-									}
-									if (tplSpecQuestion.getClDurationMonth() != null) {
-										tplSpecQuestion.setClDurationMonth(null);
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+								if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+									if (tplSpecQuestion.getClFulfilmentTypeCode() != null
+											&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+													.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+										if (tplSpecQuestion.getClUomFrequency() != null) {
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if (tplSpecQuestion.getClDurationMonth() != null) {
+											tplSpecQuestion.setClDurationMonth(null);
+										}
 									}
 								}
 							}
