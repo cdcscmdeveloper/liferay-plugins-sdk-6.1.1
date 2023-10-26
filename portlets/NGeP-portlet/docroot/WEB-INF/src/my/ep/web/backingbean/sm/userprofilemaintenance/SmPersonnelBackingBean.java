@@ -3003,7 +3003,15 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setCountryList(SmCommonUtil.getCountryList());
 			getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 			getManagedBean().setRaceSelectItems(SmApplicationUtil.getRaceSelectItems());
-			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+			//34810 - start
+			if(getManagedBean().isCheckingAfterSave()){
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+				getManagedBean().setCheckingAfterSave(false);
+			}else{
+				SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", "", null, null);
+			}
+			//34810 - end
+			
 		}
 		
 	}
@@ -3242,6 +3250,7 @@ public class SmPersonnelBackingBean extends
 	 * @return
 	 */
 	public String navigateToUpdateMOFUserPage(String personnelId) {
+		log.info("personnelId test 34810 == " + personnelId);
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setEditMode(true);
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -3525,18 +3534,21 @@ public class SmPersonnelBackingBean extends
 					}
 					
 					if (personnel.getEpRole() != null) {
-						List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-						smPersonnelList.add(personnel);
-						reqDTO1.setSmPersonnelList(smPersonnelList);
-						reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-						resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+						//34810 - start
+						//comment part of this line to allow send email for one time only
+//						List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+//						smPersonnelList.add(personnel);
+//						reqDTO1.setSmPersonnelList(smPersonnelList);
+//						reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+//						resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
 						reqDTO2.setSmPersonnel(personnel);
-						log.info("End first update------------------------------------------------------");
+//						log.info("End first update------------------------------------------------------");
 						SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
-						log.info("End second update------------------------------------------------------");
-						if (!resDTO1.isSuccessful()) {
-							throw new EpException(MessageConst.ERROR_722632);
-						}
+//						log.info("End second update------------------------------------------------------");
+//						if (!resDTO1.isSuccessful()) {
+//							throw new EpException(MessageConst.ERROR_722632);
+//						}
+						//34810 - end
 					} else {
 						reqDTO2.setSmPersonnel(personnel);
 						resDTO1 = SmServiceLookup.getPersonnelSO().updatePersonnelRecord(reqDTO2);
@@ -3602,24 +3614,35 @@ public class SmPersonnelBackingBean extends
 		reqDTO.setIdentificationNo(identificationNo);
 		PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppIdForUserMaintenance(reqDTO);
 
-		if (resDTO.getSmPersonnelList().size() > 1) {
+		if (resDTO.getSmPersonnelList().size() > 0) {
 			for (SmPersonnel SmPersonnel : resDTO.getSmPersonnelList()) {
-				MofRegistrationResDTO latestRejectedAppl = SmServiceLookup.getMofRegistrationSO()
-						.retrieveSupplierRejectedApplNewerThanLatestAppl(SmPersonnel.getSmAppl());
-
-				if (latestRejectedAppl != null && !SmPersonnel.getPersonnelId().equals(personnel.getPersonnelId())) {
-					getManagedBean().setSmAppl(SmPersonnel.getSmAppl());
-					resetAll();
-					getPersonnelInfoById(SmPersonnel.getPersonnelId().toString());
-					saveUserMOFUpdate(SmPersonnel);
-					System.out.println("masuk sini" + SmPersonnel.getPersonnelId());
-				}
+				getManagedBean().setSmAppl(SmPersonnel.getSmAppl());
+				resetAll();
+				getPersonnelInfoById(SmPersonnel.getPersonnelId().toString());
+				saveUserMOFUpdate(SmPersonnel);
+				System.out.println("masuk sini" + SmPersonnel.getPersonnelId());
 			}
-		} 
+		}
+		
+		PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
+		PersonnelResDTO resDTO1 = new PersonnelResDTO();
+		
+		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
+		smPersonnelList.add(personnel);
+		reqDTO1.setSmPersonnelList(smPersonnelList);
+		reqDTO1.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+		resDTO1 = SmServiceLookup.getPersonnelSO().sendPersonnelActivationEmail(reqDTO1);
+		
+		if (!resDTO1.isSuccessful()) {
+			throw new EpException(MessageConst.ERROR_722632);
+		}else{
+			getManagedBean().setCheckingAfterSave(true);
+			preRenderSmUserMaintenance();
+//			SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
+		}
 
 //		 9569
 //		 Make sure table is updated
-		SmCommonUtil.redirectToPage("supplierUserMaintenance.xhtml", MessageConst.INFO_100002, null, null);
 	}
 	//end - #34810
 	

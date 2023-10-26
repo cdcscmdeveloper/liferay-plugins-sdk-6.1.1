@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -503,10 +503,7 @@ public class CreateQtBackingBean extends
 					&& !"".equals(this.getManagedBean().getLoginRoleType())
 					&& "SC".equalsIgnoreCase(this.getManagedBean()
 							.getLoginRoleType())) {
-		 if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
-				 ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
-				 ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean().getFulfilmentType()) ||
-				 ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())){	
+		 	//Reopen #25726 note 131 - remove the condition as all fulfillment included
 			
 			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
@@ -537,7 +534,7 @@ public class CreateQtBackingBean extends
 			}
 		  }
 		}
-		}
+		
 		} finally {
 
 		}
@@ -1186,7 +1183,16 @@ public class CreateQtBackingBean extends
 			//Start Reopen 9019 #note-289 remove the alert message while save
 			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
 				// 25729#174 start
-				if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
+				//BugBug #35061 - asyrafhaziq
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+				
+				if ((!isPanel && enable.length > 0) && (amount.compareTo(indPriceThreshold) <=0)) {
+					//BugBug #35061 - asyrafhaziq 
+					//set message
+					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String. valueOf(indPriceThreshold).trim() });
+					this.getManagedBean().setMsgConfirmBelowIndi(msg.toString().trim());
+
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
 				// 25729#174 end
@@ -1427,8 +1433,8 @@ public class CreateQtBackingBean extends
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
-					  if (paramDesc.getPmParameter().getParameterId() == type) {   
-                
+					  if (paramDesc.getPmParameter().getParameterId()
+								.equals(Long.valueOf(type))) {  //Reopen #25726 note 131 - Restructure code to be identical with SIT                
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
 						this.getManagedBean().getQt()
@@ -1438,6 +1444,7 @@ public class CreateQtBackingBean extends
 				}
 				//End Reopen 9019 #note-289 remove the alert message while save
 			}
+			
 			// #25726 START
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
 					.getManagedBean().getFulfilmentType())) {
@@ -2905,7 +2912,12 @@ public class CreateQtBackingBean extends
 			//Start - 25729
 			if (null != amount) {
 				// 25729#174 Change 1 line code 
-				if (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0) {
+				//BugBug #35061 - asyrafhaziq
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+				
+				if (amount.compareTo(indPriceThreshold) <=0) {
+
 					setProcurementMode(scQt, amount, "Y");
 				} else {
 					setProcurementMode(scQt, amount);
@@ -4033,6 +4045,7 @@ public class CreateQtBackingBean extends
 		if(type){
 			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
 		}else{
+			this.getManagedBean().getQt().setDemoNotificationCheck(null);//11104-Reendorse
 			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
 			if (deltechnicalproposalList == null) {
 				deltechnicalproposalList= new ArrayList<>();
@@ -4073,14 +4086,14 @@ public class CreateQtBackingBean extends
 
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
-	 * #28784
+	 * #28784 - Include Demo WIP
 	 * @param event
 	 *
 	 */
 	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
-		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()) {
 			String type = (String) event.getComponent().getAttributes().get("value");
 //			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 //			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -4121,6 +4134,8 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setDemoEvalDisabled(true);
 			}//#28784 - End
 
+		} else if(!this.getManagedBean().isNewVersion()) {
+			this.getManagedBean().setDemoType(false);
 		}
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		//#29521 - start
