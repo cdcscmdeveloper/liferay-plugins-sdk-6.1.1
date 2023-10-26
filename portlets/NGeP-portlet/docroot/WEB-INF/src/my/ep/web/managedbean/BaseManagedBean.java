@@ -174,6 +174,10 @@ public abstract class BaseManagedBean implements Serializable {
 	//#32236 end
 	
 	private Integer wipStatusMax;
+	
+	//#28784 - Demo WIP - To display QT BPM version
+	private String bpmVersionNo;
+	private boolean newVersion;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1087,6 +1091,22 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
+	}
+
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
+
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
 	}
 }
 

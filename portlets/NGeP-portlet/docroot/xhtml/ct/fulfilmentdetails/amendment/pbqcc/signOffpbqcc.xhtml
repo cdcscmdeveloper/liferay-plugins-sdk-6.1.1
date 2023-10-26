@@ -11,7 +11,8 @@
 		toggleSpeed="500"
 		rendered="#{(ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecision or 
 		ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMeetingDecisionRevision)
-    		or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq)}">
+    		or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq)
+    		or (ctBackingBean.managedBean.viewSCL and ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq)}">
 		<h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth150">
 
@@ -24,7 +25,8 @@
 				size="25" id="calPbqDecision" navigator="true" required="true"
 				label="#{lbl['lbl.ct.pbm.decision.date']}" readonlyInput="true"
 				showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+							or ctBackingBean.managedBean.viewSCL}">
 			</p:calendar>
 
 			<h:panelGrid columns="2" style="float:right;">
@@ -34,7 +36,8 @@
 			<p:selectOneMenu id="pqQcDecisionId"
 				style="width:190px;margin-bottom: 10px;"
 				label="#{lbl['lbl.ct.decision']}"
-				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+				disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+							or ctBackingBean.managedBean.viewSCL}"
 				value="#{amendmentBackingBean.managedBean.pbQcApproved}">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="A" />
@@ -50,7 +53,8 @@
 			</h:panelGrid>
 			<h:panelGrid>
 				<p:inputTextarea id="justificationPbQCC" rows="4"
-					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+								or ctBackingBean.managedBean.viewSCL}"
 					style="width:180px;margin-bottom: 4px;" maxlength="200"
 					autoResize="false" label="#{lbl['lbl.txt.remarks']}"
 					onkeyup="limitTextArea(this,1000);"
@@ -68,7 +72,8 @@
 					update="uploadPbqcDecisionLetter, uploadPbqcDecisionLetterDlg"
 					icon="ui-icon-upload"
 					rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath == null}"
-					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}" />
+					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+								or ctBackingBean.managedBean.viewSCL}" />
 				<h:commandLink
 					value="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.fileName}"
 					rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath != null}"
@@ -77,7 +82,8 @@
 				<p:spacer width="3" />
 				<p:commandLink onclick="deletePbqcDecisionLetterDlg.show();"
 					rendered="#{ctBackingBean.managedBean.contractVer.pbqcDecisionLetterAttachment.filePath != null}"
-					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+					disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+								or ctBackingBean.managedBean.viewSCL}">
 					<h:graphicImage value="/css/images/design/icon_trash.png"
 						styleClass="tasklist_title1" />
 				</p:commandLink>
@@ -196,7 +202,8 @@
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{data.attended}"
 						disabled="#{data.memberRole.parameterCode == ParameterConst.committeeRoleSecretary
-							or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.disableDecisionDetails}" />
+							or amendmentBackingBean.managedBean.prepareLOA or amendmentBackingBean.managedBean.disableDecisionDetails
+							or ctBackingBean.managedBean.viewSCL}" />
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
@@ -216,7 +223,8 @@
 
 	<p:panel id="mofPanel" header="#{lbl['lbl.ct.panel.mof.meeting.decision']}" toggleable="true"  toggleSpeed="500"
 		rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMofMeetingDecision
-			or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)}">
+			or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)
+			or (ctBackingBean.managedBean.viewSCL and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)}">
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
 		
 		<h:panelGrid columns="2" style="float:right;">
@@ -226,7 +234,8 @@
 		<p:calendar value="#{ctBackingBean.managedBean.contractVer.ctAmendment.mofDecisionDate}" size="25" id="calMofDecision" navigator="true"
 			required="true" label="#{lbl['lbl.ct.mof.decision.date']}"
 			readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+						or ctBackingBean.managedBean.viewSCL}">
 		</p:calendar>
 		
 		<h:panelGrid columns="2" style="float:right;">
@@ -234,7 +243,9 @@
 			<p:outputLabel value="#{lbl['lbl.ct.decision']}"    />
 		</h:panelGrid>
    		<p:selectOneMenu id="mofDecisionId"  style="width:190px;margin-bottom: 10px;"
-     		label="#{lbl['lbl.ct.decision']}" disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+     		label="#{lbl['lbl.ct.decision']}" 
+     		disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+     					or ctBackingBean.managedBean.viewSCL}"
       		value="#{amendmentBackingBean.managedBean.mofApproved}" >
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""/>
 			    <f:selectItem itemLabel="#{lbl['lbl.ct.approve']}" itemValue="A"/>
@@ -249,7 +260,8 @@
      	</h:panelGrid>
     	<h:panelGrid>
     		<p:inputTextarea id="justificationMof" rows="4"
-    			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"
+    			disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+    						or ctBackingBean.managedBean.viewSCL}"
             	style="width:180px;margin-bottom: 4px;"   maxlength="200"  autoResize="false" 
          		label="#{lbl['lbl.txt.remarks']}"
             	onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
@@ -265,7 +277,8 @@
  			maxdate="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
   		  	mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
             readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-            disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+            disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+            			or ctBackingBean.managedBean.viewSCL}">
         </p:calendar>
         
 		<h:panelGrid columns="2" style="float:right;">
@@ -276,14 +289,16 @@
 			<p:commandButton oncomplete="uploadMofDecisionLetterDlg.show();return false;"
 				update="uploadMofDecisionLetter, uploadMofDecisionLetterDlg" icon="ui-icon-upload"
 				rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath == null}"
-		 		disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}"/>	
+		 		disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails 
+		 					or ctBackingBean.managedBean.viewSCL}"/>	
      		<h:commandLink value="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.fileName}" 
            		rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath != null}"
           		styleClass="blue_font" action="#{ctBackingBean.commonDownload(ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath, ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.fileName)}" />					
      		<p:spacer width="3"/>
          	<p:commandLink onclick="deleteMofDecisionLetterDlg.show();" 
 	           rendered="#{ctBackingBean.managedBean.contractVer.mofDecisionLetterAttachment.filePath != null}"
-	           disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails}">
+	           disabled="#{isPrepareLoa or amendmentBackingBean.managedBean.disableFinalAmendDetails or amendmentBackingBean.managedBean.disableDecisionDetails
+	           				or ctBackingBean.managedBean.viewSCL}">
 	   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 	      	</p:commandLink>
 		</h:panelGroup>
