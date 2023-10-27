@@ -1,5 +1,8 @@
 package my.ep.web.util.sm.helper;
 
+//#30457 - Start
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+//#30457 - Start
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -44,10 +47,12 @@ import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.rule.ISmRuleSO;
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.selfrequestsupplieradmin.ISelfRequestSupplierAdminSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
+import my.ep.biz.service.sm.sme.ISupplierSmeSO;
 import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
@@ -646,4 +651,36 @@ public class SmServiceLookup {
 						IUpgradeRoleSO.class);
 	}
 	//END LOG 12491
+	
+	//#30457-start
+	public static ICatalogueSO getCatalogueSO() {
+		return (ICatalogueSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						ICatalogueSO.class);
+	}
+	//#30457-end
+	
+	//#34209 - START
+	/**
+	 * Get ISupplierCategorySO
+	 * 
+	 * @return ISupplierCategorySO
+	 */
+	public static ISupplierCategorySO getSupplierCategorySO() {
+		return (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierCategorySO.class);
+	}
+	//#34209 - END
+	
+	// #29617 start
+	/**
+	 * Get ISupplierSmeSO
+	 * 
+	 * @return ISupplierSmeSO
+	 */
+	public static ISupplierSmeSO getSupplierSmeSO() {
+		return (ISupplierSmeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSmeSO.class);
+	}
+	// #29617 end
 }

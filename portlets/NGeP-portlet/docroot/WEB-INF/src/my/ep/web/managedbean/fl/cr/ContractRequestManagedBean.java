@@ -33,7 +33,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
-import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -316,6 +315,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	
+	//11076 - start
+    private int totalExistingItem;
+    private int totalNewItemsAdded;
+    private int overallTotalItem;
+    private int validateItem;
+    private int addAllItem;
+    private int updateItem;
+    private int calculateTotalExist;
+    private int deleteItem;
+    private int deleteOverallItem;
+    //11076 - end
+    private boolean bondIncomplete = false;//35024
+    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3072,67 +3085,152 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//24893 - end	
 
 	// start #17087
-		/**
-		 * @return the minContractDate
-		 */
-		public Date getMinContractDate() {
-			return minContractDate;
-		}
+	/**
+	 * @return the minContractDate
+	 */
+	public Date getMinContractDate() {
+		return minContractDate;
+	}
 
-		/**
-		 * @param minContractDate to set
-		 */
-		public void setMinContractDate(Date minContractDate) {
-			this.minContractDate = minContractDate;
-		}
-		/**
-		 * @return the maxContractDate
-		 */
-		public Date getMaxContractDate() {
-			return maxContractDate;
-		}
+	/**
+	 * @param minContractDate to set
+	 */
+	public void setMinContractDate(Date minContractDate) {
+		this.minContractDate = minContractDate;
+	}
+	
+	/**
+	 * @return the maxContractDate
+	 */
+	public Date getMaxContractDate() {
+		return maxContractDate;
+	}
 
-		/**
-		 * @param maxContractDate to set
-		 */
-		public void setMaxContractDate(Date maxContractDate) {
-			this.maxContractDate = maxContractDate;
-		}
-		// End #17087
+	/**
+	 * @param maxContractDate to set
+	 */
+	public void setMaxContractDate(Date maxContractDate) {
+		this.maxContractDate = maxContractDate;
+	}
+	// End #17087
 		
-		//13984-start
-		public String getOrgCode() {
-			return orgCode;
-		}
+	//13984-start
+	public String getOrgCode() {
+		return orgCode;
+	}
 
-		public void setOrgCode(String orgCode) {
-			this.orgCode = orgCode;
-		}
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
 		
-		public String getOrgName() {
-			return orgName;
-		}
+	public String getOrgName() {
+		return orgName;
+	}
 
-		public void setOrgName(String orgName) {
-			this.orgName = orgName;
-		}
-		//13984-end
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	//13984-end
 
-		//start-13984 - CrList - Back Button
-		public int getBackFlag() {
-			return backFlag;
-		}
+	//start-13984 - CrList - Back Button
+	public int getBackFlag() {
+		return backFlag;
+	}
 
-		public void setBackFlag(int backFlag) {
-			this.backFlag = backFlag;
-		}
+	public void setBackFlag(int backFlag) {
+		this.backFlag = backFlag;
+	}
 
-		public String getCatalogueFlag() {
-			return catalogueFlag;
-		}
+	public String getCatalogueFlag() {
+		return catalogueFlag;
+	}
 
-		public void setCatalogueFlag(String catalogueFlag) {
-			this.catalogueFlag = catalogueFlag;
-		}
-		//end-13984 - CrList - Back Button
+	public void setCatalogueFlag(String catalogueFlag) {
+		this.catalogueFlag = catalogueFlag;
+	}
+	//end-13984 - CrList - Back Button
+		
+	//11076 -start
+	public int getTotalExistingItem() {
+		return totalExistingItem;
+	}
+		
+	public void setTotalExistingItem(int totalExistingItem) {
+		this.totalExistingItem = totalExistingItem;
+	}
+
+	public int getTotalNewItemsAdded() {
+		return totalNewItemsAdded;
+	}
+
+	public void setTotalNewItemsAdded(int totalNewItemsAdded) {
+		this.totalNewItemsAdded = totalNewItemsAdded;
+	}
+
+	public int getOverallTotalItem() {
+		return overallTotalItem;
+	}
+
+	public void setOverallTotalItem(int overallTotalItem) {
+		this.overallTotalItem = overallTotalItem;
+	}
+
+	public int getValidateItem() {
+		return validateItem;
+	}
+
+	public void setValidateItem(int validateItem) {
+		this.validateItem = validateItem;
+	}
+
+	public int getAddAllItem() {
+		return addAllItem;
+	}
+
+	public void setAddAllItem(int addAllItem) {
+		this.addAllItem = addAllItem;
+	}
+
+	public int getUpdateItem() {
+		return updateItem;
+	}
+
+	public void setUpdateItem(int updateItem) {
+		this.updateItem = updateItem;
+	}
+		
+	public int getCalculateTotalExist() {
+		return calculateTotalExist;
+	}
+
+	public void setCalculateTotalExist(int calculateTotalExist) {
+		this.calculateTotalExist = calculateTotalExist;
+	}
+		
+	public int getDeleteItem() {
+		return deleteItem;
+	}
+
+	public void setDeleteItem(int deleteItem) {
+		this.deleteItem = deleteItem;
+	}
+
+	public int getDeleteOverallItem() {
+		return deleteOverallItem;
+	}
+
+	public void setDeleteOverallItem(int deleteOverallItem) {
+		this.deleteOverallItem = deleteOverallItem;
+	}
+	//11076 - end
+	
+	//35024-Start
+	public boolean isBondIncomplete() {
+		return bondIncomplete;
+	}
+
+	public void setBondIncomplete(boolean bondIncomplete) {
+		this.bondIncomplete = bondIncomplete;
+	}
+	//35024-End	
 }

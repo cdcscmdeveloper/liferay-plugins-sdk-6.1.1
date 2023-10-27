@@ -13,6 +13,7 @@ public class PpReportConst implements Serializable {
 	public static final String PP_EXPENDITURE_DETAIL_RPT_VAL = "PP_004";
 	public static final String PP_EXPENDITURE_PERFORMANCE_RPT_VAL = "PP_005";		//[#24976]
 	public static final String PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL = "PP_006";	//[#24974]
+	public static final String PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL = "PP_008";	//[#29484]
 	
 	public static final String [] PP_REPORTS_MINISTRY_IS_MANDATORY = {PP_PROCUREMENT_SUMM_RPT_VAL,PP_PROCUREMENT_DETAIL_RPT_VAL,PP_EXPENDITURE_SUMM_RPT_VAL,PP_EXPENDITURE_DETAIL_RPT_VAL};	//[#27197]
 	
@@ -69,6 +70,15 @@ public class PpReportConst implements Serializable {
 	 */
 	public String getPpBudgetAllocationAmendmentRptVal() {
 		return PP_BUDGET_ALLOCATION_AMENDMENT_RPT_VAL;
-	}	
+	}
+	
+	//start [#29484]
+	/**
+	 * @return the ppTotalApprovedPpPeMinistry
+	 */
+	public String getPpTotalApprovedPpPeMinistryRptVal() {
+		return PP_TOTAL_APPROVED_PP_PE_MINISTRY_RPT_VAL;
+	}
+	//end [#29484]
 	
 }

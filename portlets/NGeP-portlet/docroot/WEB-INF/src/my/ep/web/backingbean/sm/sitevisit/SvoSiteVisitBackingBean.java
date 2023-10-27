@@ -1566,6 +1566,41 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return generateToPdf(vmEquity, context, fileName);
 	}
 	
+	//#34166 - Start
+	public void test(String clientId, SmSvTask svTask){
+		String fieldsName = "";
+		for (SmSvBankInfo bank : svTask.getSmSvBankInfos()) {
+			if (bank.getRemark() != null){
+				if (bank.getRemark().contains("<") || bank.getRemark().contains(">")) {
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.remark",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null){
+				if(bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank().getSignatureInstruction().contains(">")){
+					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.terms.cond",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		for (SmSvFinChecklist checklist : svTask.getSmSvFinChecklists()) {
+			if(checklist.getRemark() != null){
+				if (checklist.getRemark().contains("<") || checklist.getRemark().contains(">")) {
+					fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter().getParameterCode());
+					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+							new String[] { fieldsName.toLowerCase() }));
+				}
+			}
+		}
+		
+		RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click()");
+	}
+	//#34166 - End
+
+	
 	/**
 	 * Generate Site Visit Template - Section B
 	 * @param svTask
@@ -2112,6 +2147,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("***********saveSiteVisitReport***********");
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
+		//#34166 - Start
+		checkRepresentative();
+		//#34166 - End
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		//for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()){
@@ -3010,15 +3048,28 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
-	public void validatorRequired(FacesContext f, UIComponent c, Object obj){
-		String remarks = (String) obj;
-		String fieldsName = (String) c.getAttributes().get("param");
+	public void checkRepresentative() {
+		Locale locale = new FacesScopes().getUserLocale();
+		String Name = ResourceBundleUtils.getMessage("lbl.sm.person.composition.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		String Designation = ResourceBundleUtils.getMessage("lbl.sm.userprofile.designation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		
-		if(remarks == null || remarks.isEmpty()){
-			String capitalizedStr = fieldsName.substring(0, 1).toUpperCase() + fieldsName.substring(1);
-			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775192,
-							new String[] { capitalizedStr })));
+		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() != null){
+			
+			if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+				String representatives = ResourceBundleUtils.getMessage("lbl.sm.companyinfo.intvw.represent",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(MessageConst.ERROR_775192, new String[] { representatives });
+			}
+			
+			for(SmSvInterviewee person : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
+				if(person.getName() == null || person.getName().isEmpty()){
+					String capitalizedStr = Name.substring(0, 1).toUpperCase() + Name.substring(1);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { capitalizedStr });
+				}
+				if(person.getDesignation() == null || person.getDesignation().isEmpty()){
+					String capitalizedStr = Designation.substring(0, 1).toUpperCase() + Designation.substring(1);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { capitalizedStr });
+				}
+			}
 		}
 	}
 	// #34166 - End

@@ -166,14 +166,16 @@
 							<h:outputText styleClass="instruction"
 								escape="false"
 								value="#{lbl['lbl.sm.download.natureofbusiness']}" />
+								<!-- 29832 start -->
 							<ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 								postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
 								headerText="#{lbl['lbl.sc.sq.business.nature']}" buttonLabel="#{lbl['lbl.btn.add']}"
 								selectionMode="multiple"
 								saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
 								autoUpdateValue="simpleQuoteBackingBean.managedBean.autoUpdate"
-								conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
-								update=":form:suppCriteria" />
+								conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}#{simpleQuoteBackingBean.excludeLevelCodeSupplier()}"
+								update=":#{p:component('suppCriteria')}" />
+								<!-- 29832 end -->
 							<p:commandButton value="#{lbl['lbl.btn.delete']}" id="simpleQuoteSupplierCriteriaBusinessNatureDeleteBtnId"
 							disabled="#{empty simpleQuoteBackingBean.managedBean.selectedBusinessNature}"
 								process="@this,byBusNatureDtl" partialSubmit="true"

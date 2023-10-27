@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.sdoreview;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +52,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -299,7 +301,21 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 				assignedPOName = setPOJobRoleWeigtage(reqDTO);
 			}
-			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			
+			// 29810 - start - add new data type in SMMOFRegDataType - saufi
+			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){
+				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");	
+				String dateStr = df.format(this.getManagedBean().getSmAppl().getSdoReceivedDate());	
+				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this.getManagedBean().getSmAppl().getSdoReceivedDate()));
+			}
+			
+			reqDTO.setBpmPojo(bpmObj);
+			//29810 - end
+			
+			//29810 - to check receive date value is there
+			//log.info("29810 ====== SdoReviewBackingBean ========= getReceivedDate " + ((SMMOFRegDataType) reqDTO.getBpmPojo()).getReceivedDate());
+			
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			
 			reqDTO.setToken(token);
@@ -332,6 +348,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721105,
 							new String[] {getManagedBean().getSmAppl().getApplNo(),getManagedBean().getSmAppl().getSmSupplier().getCompanyName()},MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
+					//14530
+					sendEmailtoSupplier(reqDTO);
 				}else{
 					//						String assignedPOName = getAssignedPOName(getManagedBean().getSmAppl().getApplNo());
 					
@@ -805,4 +823,22 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		}
 	}
 	//#11641 - End
+	
+	//14530 - Start
+		private void sendEmailtoSupplier(SdoReviewReqDTO sdoReviewReqDTO){
+			ISdoReviewSO sdoreqSO = SmServiceLookup.getSdoReviewSO();
+			SdoReviewResDTO sdoReviewResDTO = sdoreqSO.retrieveApplById(sdoReviewReqDTO);
+			SmAppl smappl = sdoReviewResDTO.getSmAppl();
+			
+			if (smappl.getApplId() == sdoReviewReqDTO.getApplId()){
+				try {
+					log.info("***sendEmailSDOInquirytoSupplpier - Start*****");
+					sdoreqSO.sendEmailSDOInquirytoSupplier(sdoReviewReqDTO);
+					log.info("***sendEmailSDOInquirytoSupplpier - Start*****" + sdoReviewReqDTO);
+				} catch (Exception ex){
+					log.info("sendEmailSDOEnquirytoSupplier ERROR :: " +ex.getMessage());
+				}
+			}
+		}
+	//14530 - End
 }

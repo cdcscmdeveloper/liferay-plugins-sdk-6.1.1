@@ -390,6 +390,11 @@ public class TemplateSpecBackingBean extends
 					questionToDelete.setClPriceTypeCode(null);
 				}	
 			}
+			//34617 - start
+			if (questionToDelete.getClPriceTypeCode() != null && questionToDelete.getClPriceTypeCode().getParameterType() == null){
+				questionToDelete.setClPriceTypeCode(null);
+			}
+			//34617 - end
 			
 			techicalDeleteQuestionList.add(questionToDelete);
 		}
@@ -2731,7 +2736,11 @@ public class TemplateSpecBackingBean extends
 
 		for (TplSpecEstimation specEstimation : specEstimations) {
 			// bugs #26234 if (specEstimation.getEstimatedCost() != null) {
-				if (specEstimationId != 0){
+			if (specEstimationId != 0 
+					//Bug #34926 -- Start // #25138 - Bug #32194 - Start.
+					&& null != specEstimation.getSpecEstimationId()
+					//Bug #34926 -- End // #25138 - Bug #32194 - End.	
+					){
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						totalEstAmount = totalEstAmount.add(specEstimation

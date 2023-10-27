@@ -2,8 +2,6 @@ package my.ep.web.managedbean.sm.applicationView;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -18,15 +16,15 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
-import my.ep.persistence.entity.sm.SmMofCert;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -69,6 +67,11 @@ public class ViewApplHistoryManagedBean extends
 	
 	//28771
 	private String SearchDocumentMode;
+	//#29482 - Start
+	private SmPersonnel smPersonnel;
+	//#29482 - End
+	//14530
+	private SmApplInquiry poToSupplierInquiry;
 	
 	private Boolean displayResubmitButton; //#31248
 
@@ -417,6 +420,23 @@ public class ViewApplHistoryManagedBean extends
 	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
 		this.selectedInquiryResponse = selectedInquiryResponse;
 	}
+	//#29482 - Start
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
+	}
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+	//#29482 - End
+	
+	//14530 - START
+	public SmApplInquiry getPoToSupplierInquiry() {
+		return poToSupplierInquiry;
+	}
+	public void setPoToSupplierInquiry(SmApplInquiry poToSupplierInquiry) {
+		this.poToSupplierInquiry = poToSupplierInquiry;
+	}
+	//14530 - END
 	public boolean isEmptyMandatoryDocHistory() {
 		return emptyMandatoryDocHistory;
 	}

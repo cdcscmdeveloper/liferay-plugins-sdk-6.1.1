@@ -177,8 +177,8 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+// #29832
 
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class SimpleQuoteBackingBean.
@@ -459,6 +459,8 @@ public class SimpleQuoteBackingBean extends
 	 * add panel or contract and non contract to simple quote from search
 	 * catalogue.
 	 * 
+	 * @param supplierId
+	 *            the supplier id
 	 * @param docId
 	 *            the doc id
 	 * @param panelItemFlag
@@ -467,7 +469,8 @@ public class SimpleQuoteBackingBean extends
 	 *            the compare supplier items
 	 * @return the string page navigate to simple quote page.
 	 */
-	public String simpleQuoteAction(Long docId, boolean panelItemFlag,
+	// #34579 - add new parameter on simpleQuoteAction method
+	public String simpleQuoteAction(Long supplierId, Long docId, boolean panelItemFlag,
 			List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		boolean isGovtSeller = Boolean.FALSE;
@@ -875,6 +878,15 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// #29800 - end
+		// #34579 - start
+		if (supplierId != null && supplierId != 0) {
+			if (scQuote.getSupplierId() == 0)
+				scQuote.setSupplierId(supplierId);
+		} else if (supplierId == 0) {
+			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
+				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
+		}
+		// #34579 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -5780,14 +5792,15 @@ public class SimpleQuoteBackingBean extends
 		specAnswerList = getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList();
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
-			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
-					specAnswerList.get(0).getTplSpecQuestion()
-							.getTplSpecMaster(), specAnswerList, locale);
 			//Bug_34259 - Start
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
 			specMaster.setSpecCreatedBySQ(true);	
 			//Bug_34259 - End
+			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
+					specAnswerList.get(0).getTplSpecQuestion()
+							.getTplSpecMaster(), specAnswerList, locale);
+			
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
@@ -8021,4 +8034,35 @@ public class SimpleQuoteBackingBean extends
 		preRenderView();
 	}
 	// #29800 - end
+
+	// #29832 @zaim added method to pass the value into lovBackingBean
+	
+	/**
+	 * @return SimpleQuoteManagedBean that contain SimpleQuoteManagedBean object.
+	 *
+	 */
+	
+	public SimpleQuoteManagedBean deleteSuccess(){
+		
+		return getManagedBean();
+	}
+	// #29832 end
+	
+    //29832 start
+	/**
+	 * @return list of PmBusinessNature level code 
+	 * that need to exclude.
+	 * The selected Business Nature will be exclude 
+	 * from Business Nature popup view.
+	 */
+	public String excludeLevelCodeSupplier(){
+		StringBuilder sb = new StringBuilder();
+		if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {
+			for(ScBusinessNatureQuoteCriteria quoteCriteria: getManagedBean().getScQuote().getBusinessNatureCriterias() ){
+				sb.append("|levelCode^" +quoteCriteria.getPmBusinessNature().getLevelCode());
+			}
+		}
+		return sb.toString();
+	}
+    //29832 - end
 }

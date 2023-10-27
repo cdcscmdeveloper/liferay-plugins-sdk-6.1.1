@@ -28,8 +28,11 @@
 					<ui:include
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
-			<td><h:inputHidden
-					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
+			<td>
+				<!-- #12483 - START -->
+				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.currentReviseReason() ne null}" styleClass="splNotesFonts" escape="false" />
+				<!-- #12483 - END -->
+				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
 				
 					<ui:remove>
@@ -57,6 +60,29 @@
 								value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 								partialSubmit="true" process="@this"
 								action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
+							<!-- #12483 - START -->
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									partialSubmit="true" process="@this"
+									action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
+									update=":form:tt:sendInqDialog" />
+							</c:if>
+							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+								<c:if
+									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+										<p:commandButton
+											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
+											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											partialSubmit="true" process="@this"
+											update=":form:tt:svcDialog"
+											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+									</c:if>
+								</c:if>
+							</c:if>
+							<!-- #12483 - END -->
 						</c:when>
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
@@ -227,9 +253,26 @@
 								<td><c:choose>
 										<c:when
 											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_VERIFY_APPL}">
-											<h:outputText value="#{lbl['lbl.sm.po.splNotes1']}"
-												styleClass="splNotesFonts" escape="false" />
-
+											<!-- #12483 - START -->
+											<table>
+												<tr>
+													<td><h:outputText
+															value="#{lbl['lbl.sm.po.splNotes1']}"
+															styleClass="splNotesFonts" escape="false" /></td>
+												</tr>
+												<tr>
+													<td>
+														<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+															<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+																<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+																	<h:outputText value="#{lbl['lbl.sm.po.splNotes1.siteVisit']}" styleClass="splNotesFonts" />
+																</c:if>
+															</c:if>
+														</c:if>
+													</td>
+												</tr>
+											</table>
+											<!-- #12483 - END -->
 										</c:when>
 										<c:when
 											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_SITE_VISIT_AFTER_APPROVE}">
@@ -261,10 +304,11 @@
 		<p:outputPanel layout="block" id="poEnquiryBlockPanel">
 			<ui:include src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 			<div align="right">
+				<!-- #12483 - START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
 					update="@([id$=Msg])" process="poEnquiryBlockPanel"
-					oncomplete="sendInqDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
+				<!-- #12483 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
 					onclick="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}" />
 			</div>

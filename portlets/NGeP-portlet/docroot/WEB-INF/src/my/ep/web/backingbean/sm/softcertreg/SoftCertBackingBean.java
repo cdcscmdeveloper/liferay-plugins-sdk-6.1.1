@@ -1571,6 +1571,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						}
 						count++;
 					}
+					//35033-start
+					if(personnelAddress.getSmAddress().getPostcode() == null || personnelAddress.getSmAddress().getPostcode().isEmpty()){
+						throw new EpException(MessageConst.ERROR_722682,
+								new String[] { personnel.getName() });
+					}//35033-end
 				}
 				if (personnel.getSmAppl().getSupplierType().equals(SupplierManagementConst.ACC_BASIC)){
 					if (count != 2){
@@ -1634,7 +1639,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					&& (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 							.contains(getManagedBean()
 									.getLoginUserPersonnelInfo().getEpRole()))
-					&& getManagedBean().getRevokePersonnelList().size() > 1) {
+					&& !getManagedBean().getRevokePersonnelList().isEmpty()) {//#29616
 				getManagedBean().setRenderRevokeButton(true);
 			} else {
 				getManagedBean().setRenderRevokeButton(false);
