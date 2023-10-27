@@ -10769,9 +10769,12 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		int recordCount = 0;
 		int itemCount = 0;
 		StringBuffer itemsList = new StringBuffer();
+		int zoneitemCount = 0;
+		ScLoiLoaItem zoneloiLoaItem = null;
+		boolean isZonal = this.getManagedBean().getScLoa().getScLoiLoa().isZonal();
 		
 		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_DIRECT_NEGO)){
-			for(ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()){
+			for(ScLoiLoaItem loiLoaItem : sortLoiLoaItems(this.getManagedBean().getScLoa().getScLoiLoaItems(), isZonal)){
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 				specReqDto.setScQt(this.getManagedBean().getScQt());
 				specReqDto.setScLoiLoaItem(loiLoaItem);
@@ -10784,14 +10787,28 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						newSupplierOffer++;
 					}
 				}
-				if(!loiLoaItem.isComplete() && (newSupplierOffer>0||StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))){
+				if(!loiLoaItem.isComplete() 
+						&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+						&& !isZonal){
 					itemCount++;
 					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
+				}else if(!loiLoaItem.isComplete() 
+						&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+						&& isZonal){
+					if(null==zoneloiLoaItem 
+						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
+						zoneloiLoaItem=loiLoaItem;
+						itemsList.append("\n"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" \n");
+						zoneitemCount=0;
+					}
+					zoneitemCount++;
+					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" \n");
+					itemCount++;
 				}
 			}
 		}
 		if(itemCount>0){
-			throw new EpException(MessageConst.ERROR_775176, new String[] {itemsList.toString()});
+			throw new EpException(MessageConst.ERROR_776000, new String[] {itemsList.toString()});
 		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
 			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
@@ -10806,6 +10823,29 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}else{
 			return;
 		}
+	}
+	private List<ScLoiLoaItem> sortLoiLoaItems(List<ScLoiLoaItem> loiLoaItems, boolean isZonal){
+		
+		if(isZonal){
+			Collections.sort(loiLoaItems, new Comparator<ScLoiLoaItem>() {
+				@Override
+				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+					return Long.compare(s1.getTplSpecZoneDtl().getSpecZoneId(), 
+							s2.getTplSpecZoneDtl().getSpecZoneId());
+				}
+			});
+		}else{
+			Collections.sort(loiLoaItems, new Comparator<ScLoiLoaItem>() {
+				@Override
+				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+					return Long.compare(s1.getLoiLoaItemId(), 
+							s2.getLoiLoaItemId());
+				}
+			});
+		}
+		
+		
+		return loiLoaItems;
 	}
 	public void resetLoaBpmVerify(){
 		this.getManagedBean().setLoaBpmVerify(null);
