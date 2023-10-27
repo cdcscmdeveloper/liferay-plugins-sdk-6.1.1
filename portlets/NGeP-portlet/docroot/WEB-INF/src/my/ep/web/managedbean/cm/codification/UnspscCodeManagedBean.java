@@ -20,6 +20,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class UnspscCodeManagedBean extends BaseManagedBean {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private CmRequestCode requestCode;
 	private String segmentTitle;
 	private String segmentDesc;
@@ -137,22 +141,22 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
-	};
+	}
 	public void setRecommendExtension(boolean recommendExtension){
 		this.recommendExtension = recommendExtension;
-	};
+	}
 	
 	public void toggleShowRecommend(){
 		this.showRecommend = !this.showRecommend;
-	};
+	}
 
 	public boolean isShowRecommend(){
 		return this.showRecommend;
-	};
+	}
 	
 	public boolean isCodeExtension(){
 		return this.requestCode.getDocNo().indexOf("RNE")>=0;
-	};
+	}
 	
 	
 	public CmBrand getSelectedBrand() {

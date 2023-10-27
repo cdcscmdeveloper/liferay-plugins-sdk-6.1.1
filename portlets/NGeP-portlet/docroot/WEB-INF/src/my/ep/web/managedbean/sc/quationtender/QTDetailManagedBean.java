@@ -125,6 +125,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -1576,10 +1577,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal technicalItemScore;
 /** #21695 FARID END*/	
 	private BigDecimal totalScore = new BigDecimal(0);
-	//#29425 - start
-	private boolean newValueValidity;
-	private int newValidityDays;
-	//#29425 - end
 
 	private String locationLevel;
 
@@ -1643,7 +1640,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmParameter pmParam;//bug #30435
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;//#25077
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;//#25077
-	private String scQtAppRequestRemark;//bug #30435
+	private String scQtAppRequestRemarkICT;//#25077
+	private String scQtAppRequestRemarkMITI;//#25077
 	private boolean approverTabLoaded = false;//bug #30435
 	
 	private boolean isApprovalScreen = false;
@@ -1665,7 +1663,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #29468 Vinod End
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
-	public boolean proposalValidityChangeValue; //#21692
+	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	
 	/**
@@ -1737,6 +1735,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedICT=false;
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
+	private List<TabBean> tabOtherApproval;
 	//#25077 - End
 	
 	//#25426 - Start
@@ -1826,6 +1825,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The qt remark missing issues. */
 	private boolean scQtRemarksEmpty = false; //#9019 08082022 (Harun)
 	
+	private List<ScRemark> qtRemarksIdRemoveList;//#9019 (Harun)
+	
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
@@ -1859,9 +1860,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				
 	// #29521 - end
 	
-	//#34451,#34458,#34450 related to #25138 -start
-	private int wipStatusMax;
-	//#34451,#34458,#34450 related to #25138 -end
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;//11104
 
 	
 	public QTDetailManagedBean() {
@@ -10772,6 +10773,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setFirstPagePA(boolean firstPagePA) {
 			this.firstPagePA = firstPagePA;
 		}
+		
+		public List<TabBean> getTabOtherApproval() {
+			return tabOtherApproval;
+		}
+
+		public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
+			this.tabOtherApproval = tabOtherApproval;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -10864,35 +10873,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
 			this.committeeUpdateFlow = committeeUpdateFlow;
 		}
-		//#29425 - start
-		/**
-		 * @return the newValueValidity
-		 */
-		public boolean isNewValueValidity() {
-			return newValueValidity;
-		}
-
-		/**
-		 * @param newValueValidity the newValueValidity to set
-		 */
-		public void setNewValueValidity(boolean newValueValidity) {
-			this.newValueValidity = newValueValidity;
-		}
-		
-		/**
-		 * @return the newValidityDays
-		 */
-		public int getNewValidityDays() {
-			return newValidityDays;
-		}
-
-		/**
-		 * @param newValidityDays the newValidityDays to set
-		 */
-		public void setNewValidityDays(int newValidityDays) {
-			this.newValidityDays = newValidityDays;
-		}
-		//#29425 - end
 
 		public boolean isTechnicalOtherCheckList() {
 			return technicalOtherCheckList;
@@ -11062,21 +11042,35 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
 			this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
 		}
-		// #25077 - End
 		
 		/**
-		 * @return the scQtAppRequestRemark
+		 * @return the scQtAppRequestRemarkICT
 		 */
-		public String getScQtAppRequestRemark() {
-			return scQtAppRequestRemark;
+		public String getScQtAppRequestRemarkICT() {
+			return scQtAppRequestRemarkICT;
 		}
 
 		/**
-		 * @param scQtAppRequestRemark the scQtAppRequestRemark to set
+		 * @param scQtAppRequestRemarkICT the scQtAppRequestRemarkICT to set
 		 */
-		public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
-			this.scQtAppRequestRemark = scQtAppRequestRemark;
+		public void setScQtAppRequestRemarkICT(String scQtAppRequestRemarkICT) {
+			this.scQtAppRequestRemarkICT = scQtAppRequestRemarkICT;
 		}
+
+		/**
+		 * @return the scQtAppRequestRemarkMITI
+		 */
+		public String getScQtAppRequestRemarkMITI() {
+			return scQtAppRequestRemarkMITI;
+		}
+
+		/**
+		 * @param scQtAppRequestRemarkMITI the scQtAppRequestRemarkMITI to set
+		 */
+		public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
+			this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
+		}
+		// #25077 - End
 
 		/**
 		 * @return the approverTabLoaded
@@ -11750,23 +11744,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
-	
-	//#34451,#34458,#34450 related to #25138 -start
-	/**
-	 * @return the max wip 3serangkai
-	 */
-	public int getWipStatusMax() {
-		return wipStatusMax;
-	}
-
-	/**
-	 * @param  max wip check 3serangkai
-	 *            the wipRequired to set
-	 */
-	public void setWipStatusMax(int wipStatusMax) {
-		this.wipStatusMax = wipStatusMax;
-	}
-	//#34451,#34458,#34450 related to #25138 -end
 
 	//#21692 - Start
 	public ScQtEpvSupplierResponse getSuppResp() {
@@ -11785,7 +11762,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
+	
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
 
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+	/**
+	 * 11104-Start
+	 * @return the existingSampleSpecQuestions
+	 */
+	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
+		return existingSampleSpecQuestions;
+	}
+
+	/**
+	 * @param existingSampleSpecQuestions the existingSampleSpecQuestions to set
+	 */
+	public void setExistingSampleSpecQuestions(
+			Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
+	}//11104-End
+	
 }
 
 // ***25201

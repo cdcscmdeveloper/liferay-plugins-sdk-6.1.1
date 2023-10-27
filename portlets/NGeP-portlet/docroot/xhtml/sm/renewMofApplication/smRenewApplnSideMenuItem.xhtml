@@ -1372,8 +1372,7 @@
 				
 				<c:choose>
 					<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
-					<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showFacilityMachine}">
-						<p:menuitem>
+					<c:when test="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showFacilityMachine}">						<p:menuitem>
 							<ac:smApplMenuItem
 								disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
 								backingBean = "#{backingBean}"
