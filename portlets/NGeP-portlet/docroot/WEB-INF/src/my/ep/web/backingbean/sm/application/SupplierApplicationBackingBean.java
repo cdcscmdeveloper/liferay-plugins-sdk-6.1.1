@@ -2490,7 +2490,7 @@ public class SupplierApplicationBackingBean extends
 	public SmPersonnel getPersonnelInfoById(Long personnelId) {
 		try {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setPersonnelId(personnelId); //Sonarqube #G19
+			reqDTO.setPersonnelId(Long.valueOf(personnelId));
 			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 					.retrievePersonnelById(reqDTO);
 			return resDTO.getSmPersonnel();

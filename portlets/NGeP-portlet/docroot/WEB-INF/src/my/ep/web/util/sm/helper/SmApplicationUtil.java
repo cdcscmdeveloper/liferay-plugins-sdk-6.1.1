@@ -4313,9 +4313,9 @@ public class SmApplicationUtil {
 	 *            - int the current tab
 	 * @return true, if successful
 	 */
-	public static boolean checkSupportDocsValidity(boolean validateSave,
+	public static boolean checkSupportDocsValidity(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
-		boolean validSave = true; //Sonarqube #G19
+		validSave = true;
 		int i = 0;
 		StringBuilder sb = new StringBuilder();
 		for (SmApplSupportDoc doc : managedBean.getMandatoryDocs()) {
