@@ -72,7 +72,7 @@
 									value="1" />
 							</p:menuitem>
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-								update="@form">
+								actionListener="#{directLOABackingBean.searchSupplierItemByName}" update="@form"><!-- #29007 Added actionListener Vinod -->
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="2" />

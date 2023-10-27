@@ -248,9 +248,10 @@ public class TemplateSpecBackingBean extends
 							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
 							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
 							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+							//#25138(wip 4serangkai) bug -Start 8/6/2023
+							this.getManagedBean().setWipStatusMax(wipstatus);
 							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-									&& !templateSpecBean.getQt().isDemoRequired()) {
+							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 							evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 							evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
@@ -1087,6 +1088,7 @@ public class TemplateSpecBackingBean extends
 			}
 
 			specAnswer.setAnswerNumeric(totalPrice);
+			specAnswer.setComponentEmpty(false); //Enhancement #3657@Syazani 04/10/2023
 		}
 		calcGrandTotalAmount(templateSpecBean);
 	}
@@ -3267,7 +3269,9 @@ public class TemplateSpecBackingBean extends
 			while (iterator.hasNext()) {
 				TplSpecEstimation tplSpecEstimation = iterator.next();
 				// #21695 fix #32130 - start
-				if(tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
+				// #34656 add checking not null
+				if(tplSpecEstimation.getEstimatedCost() != null && 
+						tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
 					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
 				}
 				// #21695 fix #32130 - end
@@ -3801,18 +3805,6 @@ public class TemplateSpecBackingBean extends
 		
 	}
 	//Bug #32110 related to #21695 Farid Start 30/11/2021
-	
-	// 20220127@syazani - Enhancement #3657 - specific error message - Start
-	public String getErrorMessageFinancialPropUnitPrice(boolean isZone, String zone, String unitPriceLabel) {
-		String msg = "";
-		if (isZone) {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPriceLabel,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		} else {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760464, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		}
-		return msg;
-	}
-	// 20220127@syazani - Enhancement #3657 - specific error message - End
 
 	//#28784
 		public void displayDemozoneQtyPopupAction(TemplateSpecBean templateSpecBean) {
@@ -3986,14 +3978,19 @@ public class TemplateSpecBackingBean extends
 		}
 		public void onchangeCompliance(TplSpecAnswer ans){
 			for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-				if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
+				if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
 					&& ans.getCompliance()!=null
 					&& ans.getCompliance()==Boolean.FALSE){
-					answer.setCompliance(Boolean.FALSE);
-					answer.setUserScore(new BigDecimal(0));
-				}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())){
-					answer.setCompliance(Boolean.TRUE);
-					answer.setUserScore(null);
+						answer.setUserScore(BigDecimal.ZERO);
+				}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
+						&& ans.getCompliance()!=null
+						&& ans.getCompliance()==Boolean.TRUE
+						&& ans.getUserScore()!=null
+						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0){
+							answer.setUserScore(null);
+				}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
+						&& ans.getCompliance()==null){
+							answer.setUserScore(null);
 				}
 			}
 		}
