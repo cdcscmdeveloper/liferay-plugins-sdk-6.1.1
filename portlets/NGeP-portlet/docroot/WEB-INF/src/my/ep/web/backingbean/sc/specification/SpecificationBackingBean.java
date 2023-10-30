@@ -11342,7 +11342,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		if (techCheckList != null && !techCheckList.isEmpty()) {
 			boolean sample = false;
-			//boolean demo = false;
+			boolean demo = false;//#28784 WIP Idham 30/10/2023
 			for (ScQtCheckList checkList : techCheckList) {
 			
 				//Bug #33358 start
@@ -11358,6 +11358,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					if (null != scQt.getEvaluationType()
 							&& ParameterConst.EVALUATION_TYPES_TWO_TIER
 									.equalsIgnoreCase(scQt.getEvaluationType())) {
+						demo = true;//#28784 WIP Idham 30/10/2023
 						checkList.setScoringReq(true);
 					}
 
@@ -11386,6 +11387,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				 * }
 				 */
 			}
+			//#28784 WIP Idham 30/10/2023 - Start
+			if (!this.getManagedBean().isNewVersion()) {
+				scQt.setDemoRequired(demo);
+			}
+			//#28784 WIP Idham 30/10/2023 - End
 			//scQt.setSampleReq(sample);//#11104
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
