@@ -2841,7 +2841,13 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
 						}
 						//#25138(wip 4serangkai) bug -End 8/6/2023
+					}else{
+						//#35313 for WIP one item
+						if (wipstatus < ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
+							this.getManagedBean().setEvaluatioStageActiveIndex(1);
+						}
 					}
+				
 
 					evaluationSo.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -2856,6 +2862,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
 						}
 					//#25138(wip 4serangkai) bug -End 8/6/2023
+					}else{
+						//#35313 for WIP one item
+						if (wipstatus < ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
+							this.getManagedBean().setEvaluatioStageActiveIndex(1);
+						}
 					}
 					// #25138 - end
 					
@@ -8598,6 +8609,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 											outputTab = 2;
 										}else{
 											//remove Bug #34855 remove
+						
 											retriveSummaryEvaluationStage();
 											this.getManagedBean().setTabFinancialIndex(3);
 											outputTab = 2;
