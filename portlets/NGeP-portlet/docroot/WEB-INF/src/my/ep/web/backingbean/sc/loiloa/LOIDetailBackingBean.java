@@ -806,8 +806,8 @@ public class LOIDetailBackingBean extends
 								}
 							}
 							
-							if (!isZonal && (previousLois != null && (CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-									!previousLois.contains(scLoi)))) {
+							if (!isZonal && ((CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+									!previousLois.contains(scLoi)))) {//fixedNullpointerIssueSonarQube
 									if (supplierLoiLoaItemsMap == null) {
 										supplierLoiLoaItemsMap = new HashMap<>();
 									}
@@ -3282,6 +3282,7 @@ public class LOIDetailBackingBean extends
 					if (this.getManagedBean().getSelectedSupplier() == null) {
 						throw new EpException(MessageConst.ERROR_760293);
 					}
+					awardSelectedSupplierAction();//34905
 				}				
 			}
 			
