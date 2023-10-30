@@ -10922,7 +10922,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		if (techCheckList != null && !techCheckList.isEmpty()) {
 			boolean sample = false;
-			boolean demo = false;
+			boolean demo = false;//#28784 WIP Idham 30/10/2023
 			for (ScQtCheckList checkList : techCheckList) {
 				//Bug #33358 start
 				ScQtScoreWeightage weight = checkList.getQtScoreWeightage();
@@ -10935,7 +10935,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
 					if(null!=scQt.getEvaluationType() && ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(scQt.getEvaluationType())){
-					demo = true;
+					demo = true;//#28784 WIP Idham 30/10/2023
 					checkList.setScoringReq(true);
 					}
 
@@ -10949,6 +10949,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					scQt.setSampleReq(sample); //#11104
 				}
 			}
+			//#28784 WIP Idham 30/10/2023 - Start
+			if (!this.getManagedBean().isNewVersion()) {
+				scQt.setDemoRequired(demo);
+			}
+			//#28784 WIP Idham 30/10/2023 - End
 
 		
 			localChecklist.addAll(techCheckList);
