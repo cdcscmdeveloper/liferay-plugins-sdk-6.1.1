@@ -2600,7 +2600,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//#25037 START
 		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-		list = list == null ? new ArrayList<PmParameterDesc>() : list;
+		if (null == list)
+			list = new ArrayList<>();
 
 		if(filteredRoles!=null){
 			for(PmParameterDesc role: list){
