@@ -769,11 +769,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getDropdownValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			//Sonarqube issues #21695
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -1276,7 +1276,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				//33849-End
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBean", getUserIdSessionFromLoginId(), e);
+			//Sonarqube issues
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "",
+					SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1310,11 +1312,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			//Sonarqube issues #21695
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -4324,4 +4326,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//#21387 - End
+	
+	//#28175
+	/**
+	 * @param appl
+	 * @param catL3
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3){
+		if(catL3 == null){
+			return null;
+		}
+		SmAppl appl = getManagedBean().getSmAppl();
+		if(appl == null || appl.isActiveAppl() || EntityHelper.isCollectionEmpty(
+				appl.getSmSupplierCategories())){
+			return catL3.getCategoryName();
+		}
+		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
+				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
+		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
+	}
 }

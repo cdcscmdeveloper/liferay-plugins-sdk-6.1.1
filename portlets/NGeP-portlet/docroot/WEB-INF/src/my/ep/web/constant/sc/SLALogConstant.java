@@ -24,6 +24,10 @@ public class SLALogConstant {
 	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
 	//#29187 End Vinod
+	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
+	
+	
+	
 	/*
 	 * METHOD_NAME
 	 */
@@ -43,7 +47,8 @@ public class SLALogConstant {
 	public static final String QT_CHECK_SPEC_COMPLIANCE = "checkTechnicalSpecCompliance";
 	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
 	//#29187 End Vinod
-	
+	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
+	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";
 	private SLALogConstant(){
 		
 	}	
