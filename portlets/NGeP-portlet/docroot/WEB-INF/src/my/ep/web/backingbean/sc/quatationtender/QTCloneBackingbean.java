@@ -990,8 +990,8 @@ public class QTCloneBackingbean extends
 			}
 			this.getManagedBean().setRemoveDocReports(listDel);
 		}
-		if(null!=reportList)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-		reportList.removeAll(listDel);
+		if (null != reportList)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+			reportList.removeAll(listDel);//Sonarqube #83
 		
 		List<String> existedDocumets=new ArrayList<String>(); //additional docs;
 		ScQtDocReport templetDoc=null;
@@ -1066,7 +1066,7 @@ public class QTCloneBackingbean extends
 					boolean templateDoc=Boolean.FALSE;//33954
 					//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					if (reportList == null)
-						reportList = new ArrayList<ScQtDocReport>();
+						reportList = new ArrayList<>();//Sonarqube #83
 					
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
