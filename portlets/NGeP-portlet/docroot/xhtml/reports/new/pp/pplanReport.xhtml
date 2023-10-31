@@ -22,11 +22,17 @@
 	<ui:param name="isPPPerformanceReport"
 		value="#{PpReportConst.ppProcurementPerformanceRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
 	<!--//[#24976] - end  -->
+	
+	<!--//[#29484] - start  -->
+	<ui:param name="isPpPeTotal"
+		value="#{PpReportConst.ppTotalApprovedPpPeMinistryRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
+	<!--//[#29484] - end  -->
+	
 	<!--//[#24974,#27472] - start  -->
 	<ui:param name="isPPBudgetAllocationAmendmentReport"
 		value="#{PpReportConst.ppBudgetAllocationAmendmentRptVal eq ppReportsBackingBean.managedBean.reportCode}" />
 	<!--//[#24974,#27472] - end  -->
-	<c:if test="#{not isPPPerformanceReport}">	<!--[#24976]-->
+	<c:if test="#{not (isPPPerformanceReport or isPpPeTotal)}">	<!--[#24976]--> <!--//[#29484]-->
 	<table style="width: 100%;">
 		<tr>
 			<td width="20%">
@@ -207,7 +213,7 @@
 	</table>
 	</c:if>	<!--[#24976]-->
 	<!--[#24976] - start  -->
-	<c:if test="#{isPPPerformanceReport}">
+	<c:if test="#{isPPPerformanceReport or isPpPeTotal}"> <!--//[#29484]-->
 	<table style="width: 100%;">
 		<tr>
 			<!-- #27472 change width-->
@@ -220,7 +226,11 @@
 				<p:selectOneMenu id="ppYearPerformance"
 					label="#{lbl['lbl.rpt.yearone']}"
 					value="#{ppReportsBackingBean.managedBean.selectedYear}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+					<!--start #29484 remove select one for pp_008-->
+					<c:if test="#{isPPPerformanceReport}">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+					</c:if>
+					<!--end #29484-->
 					<f:selectItems value="#{ppReportsBackingBean.generateCommonYearList()}"></f:selectItems>
 				</p:selectOneMenu>
 				<!-- #27472 change id-->
@@ -230,7 +240,7 @@
 			<!-- #27472 start-->
 			<td width="20%">
 				<p:outputLabel value="#{lbl['lbl.rpt.documentType']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isPPPerformanceReport}"/> <!-- #29484 remove mandatory label for pp_008 -->
 			</td>
 			<td width="20%">
 				<p:selectOneMenu value="#{ppReportsBackingBean.managedBean.documentType}">

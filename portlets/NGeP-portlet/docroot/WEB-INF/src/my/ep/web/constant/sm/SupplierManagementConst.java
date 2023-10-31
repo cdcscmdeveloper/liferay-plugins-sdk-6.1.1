@@ -511,6 +511,8 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_FACTORY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY;
 	public static final String SM_APPL_PAGE_TYPE_EQUIP = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP;
 	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCS = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS;
+	//28767 14530
+	public static final String SM_APPL_PAGE_TYPE_ANNUALINFO = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO;
 	public static final String SM_APPL_PAGE_TYPE_VIRTUAL_CERT = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT;
 	public static final String SM_APPL_PAGE_TYPE_TRACKING_DIARY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY;
 	public static final String SM_APPL_PAGE_TYPE_PO_APPR_DEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC;
@@ -643,6 +645,8 @@ public class SupplierManagementConst {
 	public static final String SM_REASON_CODE_OTHER = "OTHER";
 
 	public static final String GST_FILE_PATH = "/SM/GST/";
+	// #29617
+	public static final String SME_FILE_PATH = "/SM/SME/";
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 	public static final String OFFLINE_DOC_CHECKLIST_PATH = "/SM/OFFLINE_DOC/CHECKLIST/";
 	public static final String SUPPORTING_DOC_TEMP_PATH = "/SM/SUPPORTING_TEMP_DOWNLOAD/";
@@ -677,6 +681,11 @@ public class SupplierManagementConst {
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
 	
+	//14530
+	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
+	public static final int NOTIFICATION_ID_401189 = 401189;
+	public static final int NOTIFICATION_ID_401190 = 401190;
+
 	//9569
 	public static final String EPROLE_DELETED = "Delete";
 	public static final String ROLE_CODE_SM_1 = "MOF_SUPPLIER_ADMIN";
@@ -1254,6 +1263,25 @@ public class SupplierManagementConst {
 		return STATUS_REVISE_BM;
 	}
 	// #12483 - END
+
+	public String getSM_APPL_PAGE_TYPE_ANNUALINFO() {
+		return SM_APPL_PAGE_TYPE_ANNUALINFO;
+	}
+	
+	//14530 - START
+	public String getPORTAL_URL() {
+		return PORTAL_URL;
+	}
+	
+	public int getNOTIFICATION_ID_401189() {
+		return NOTIFICATION_ID_401189;
+	}
+	
+	public int getNOTIFICATION_ID_401190() {
+		return NOTIFICATION_ID_401190;
+	}
+	
+	//14530 - END
 	//9569
 	public String getEPROLE_DELETED() {
 		return EPROLE_DELETED;

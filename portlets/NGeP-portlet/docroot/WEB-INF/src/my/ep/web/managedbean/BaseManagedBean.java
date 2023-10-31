@@ -4,8 +4,7 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,7 +29,6 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
 /**
@@ -95,7 +93,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private SmSupplier smSupplierSsm;
 	private SmPersonnel smPersonnelSsm;
 		
-	private List<SmPersonnel> personnelsRole  = new ArrayList();
+	private List<SmPersonnel> personnelsRole  = new ArrayList<SmPersonnel>();
 	
 	// For sub title displayed in screen.
 	private String title;
@@ -133,6 +131,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList<SmPersonnel>();
 	private SmAddress smAddress;
 	//27346-end
+	// 28767
+	private List<SmPersonnel> personnelDirectorManager = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelMembers = new ArrayList<SmPersonnel>();
+	private BigDecimal totalShare;
 
 	// #25638 - Start		
 	private boolean displayReviseInstrn;
@@ -936,5 +938,30 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setOutputPage(String outputPage) {
 		this.outputPage = outputPage;
+	}
+
+	// 28767
+	public List<SmPersonnel> getPersonnelDirectorManager() {
+		return personnelDirectorManager;
+	}
+
+	public void setPersonnelDirectorManager(List<SmPersonnel> personnelDirectorManager) {
+		this.personnelDirectorManager = personnelDirectorManager;
+	}
+
+	public List<SmPersonnel> getPersonnelMembers() {
+		return personnelMembers;
+	}
+
+	public void setPersonnelMembers(List<SmPersonnel> personnelMembers) {
+		this.personnelMembers = personnelMembers;
+	}
+
+	public BigDecimal getTotalShare() {
+		return totalShare;
+	}
+
+	public void setTotalShare(BigDecimal totalShare) {
+		this.totalShare = totalShare;
 	}
 }
