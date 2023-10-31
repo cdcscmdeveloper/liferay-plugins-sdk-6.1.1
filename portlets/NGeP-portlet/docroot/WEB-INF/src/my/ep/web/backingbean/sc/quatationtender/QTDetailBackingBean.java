@@ -5222,7 +5222,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtContactPerson> qtContactPerson = contactPersons
 						.getResultList();
 				if (qtContactPerson == null || qtContactPerson.isEmpty()) {
-					qtContactPerson = new ArrayList<ScQtContactPerson>();//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					qtContactPerson = new ArrayList<>();//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //Sonarqube #83 
 					ScQtContactPerson contactPerson = new ScQtContactPerson();
 					PmUser user = new FacesScopes().getUserSessionBean();
 					contactPerson.setPhoneNo(user.getPhoneNo());
