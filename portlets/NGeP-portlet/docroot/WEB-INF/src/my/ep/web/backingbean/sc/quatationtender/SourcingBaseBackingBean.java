@@ -1055,17 +1055,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-		HttpServletResponse res = null;
-		if(!isFromWebService){
-			PortletResponse portletResponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			 res = com.liferay.portal.util.PortalUtil
-					.getHttpServletResponse(portletResponse);
-		}else{
-			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		}
-		
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try{
