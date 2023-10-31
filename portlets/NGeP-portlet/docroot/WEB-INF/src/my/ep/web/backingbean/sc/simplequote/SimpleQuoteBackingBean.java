@@ -5854,8 +5854,8 @@ public class SimpleQuoteBackingBean extends
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
 						.spkiSignTransaction(originalText);
-			   if (pmDigiSign != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-				pmDigiSign.setSpkiSignedData(signedData);
+				if (pmDigiSign != null)// 20230712@asyrafhaziq- SQUBE Bug nullPointer#3
+					pmDigiSign.setSpkiSignedData(signedData);//Sonarqube #83
 			}
 
 			// tpl spec - service
@@ -8050,6 +8050,10 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		
+		/**
+		 * Evaluate flag for PID expiry
+		 * @return boolean - flag to represent if PID expires
+		 * */
 		public boolean checkStatusPidExpired(){
 			
 			Boolean valid = false;
@@ -8063,22 +8067,19 @@ public class SimpleQuoteBackingBean extends
 				}		
 				scPID = getManagedBean().getScQuote().getPurchaseInDefault();
 			}
-			
-			if(scPID != null){			
-			    if(currentStatusId != null && (currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
-			       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION))){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-		
-					Date today  = DateUtils.getCurrentDate();
-					Date ExpDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
-					
-					log.info("pID validity begin");
-					
-					if(today.after(ExpDate)){
-						valid = true;
-					}
-					log.info("pID validity end");
-				}				
-			}
+			//Sonarqube #83 - start
+			if(scPID != null && currentStatusId != null && (currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
+				       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION))){ 
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				Date today  = DateUtils.getCurrentDate();
+				Date expDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
+				log.info("pID validity begin");
+				if(today.after(expDate)){
+					valid = true;
+				}
+				log.info("pID validity end");
+			} 
+			//Sonarqube #83 - end
 			return valid;
 		}
 		//12183 - End
