@@ -6127,7 +6127,7 @@ return	remarksNotFound;
 		if(this.getManagedBean().isNoProposalSubmitted()){
 			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			if (excludedDecisionList == null) 
-				excludedDecisionList = new ArrayList<String>();
+				excludedDecisionList = new ArrayList<>();//Sonarqube #83
 			
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RE_EVALUATION);	
