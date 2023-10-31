@@ -20098,11 +20098,12 @@ if (null != checklist && !checklist.isEmpty()) {
 							tplSpecScoring.add(specScoring);
 							templateSpecBean.getSelectedSpecQuestion().setTplSpecScorings(tplSpecScoring);
 							
-							if(tplSpecScoring.size() == 1){
+							//Sonarqube #83 - 25633 - start
+							if (tplSpecScoring.size() == 1
+									|| (maxScore != null && maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0)) {
 								maxScore = new BigDecimal(scoreMark.get(i));
-							}else if(maxScore != null && maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-									maxScore = new BigDecimal(scoreMark.get(i));						
 							}
+							//Sonarqube #83 - 25633 - end
 							tpmQuest.setMaxScore(maxScore);
 						}
 						
