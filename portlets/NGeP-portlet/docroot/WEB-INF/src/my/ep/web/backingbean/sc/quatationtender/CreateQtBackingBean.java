@@ -3813,7 +3813,7 @@ public class CreateQtBackingBean extends
 								break;
 							}	
 						}
-						if (isInsert == true && rootTrees != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					if (isInsert && rootTrees != null) {//Sonarqube #83
 							if (getManagedBean().getIndex() == -1) {
 								rootTrees.add(node);		
 							}

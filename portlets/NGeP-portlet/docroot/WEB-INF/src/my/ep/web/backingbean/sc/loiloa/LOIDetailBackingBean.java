@@ -2254,9 +2254,8 @@ public class LOIDetailBackingBean extends
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
-        if (scLoi != null) //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-		// TODO
-		scLoi.setFileExtnNo("001");
+		if (scLoi != null) // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
+			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi

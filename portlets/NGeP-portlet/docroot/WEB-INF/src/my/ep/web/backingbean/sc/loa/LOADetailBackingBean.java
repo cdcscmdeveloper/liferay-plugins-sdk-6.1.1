@@ -1274,8 +1274,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		log.info(":::populateLOADetails() overallCtAmout (RM) = "+ overallCtAmout);
 		//end Enhancement #24259 #24269
 		getManagedBean().setOverallContractAmt(overallCtAmout);
-		if (scLoa != null ) //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
-		scLoa.setOverallContractAmt(overallCtAmout);
+		if (scLoa != null) // 20230706@asyrafhaziq- SQUBE Bug NullPointer#3
+			scLoa.setOverallContractAmt(overallCtAmout);// Sonarqube #83
 
 		// Procurement Type Category Id
 		if(scLoa != null && null == scLoa.getProcurementTypeCatId()){ //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -1372,10 +1372,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		getManagedBean().setApproverList(resDTO.getApproverList());
 
 		// Remarks
-		if (scLoa != null) //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
-		scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
-				scLoa.getCurrentStatus(),
-				scLoa.getScLoaRemarks(), ScLoaRemark.class));
+		if (scLoa != null) // 20230706@asyrafhaziq- SQUBE Bug NullPointer#3
+			scLoa.setScLoaRemarks(initializeRemarks(scLoa, scLoa.getCurrentStatus(), scLoa.getScLoaRemarks(),
+					ScLoaRemark.class));//Sonarqube #83
 		// #11134 - start
 		List<ScLoaRemark> supplierRemarks = filterSupplierRemarks(scLoa != null ?scLoa.getScLoaRemarks():null, false);//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 		getManagedBean().setSupplierRemarks(supplierRemarks);
@@ -3888,8 +3887,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				}
 				//#25726 end
-				if (scLoa != null)//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
-				scLoa.setScLoaWorkFlowStatuses(null);
+				if (scLoa != null)// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3
+					scLoa.setScLoaWorkFlowStatuses(null); //Sonarqube #83
 				// To avoid insert workflow status when direct submit without save.
 				if (scLoa != null && scLoa.isBrandNew()) {//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 					List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
