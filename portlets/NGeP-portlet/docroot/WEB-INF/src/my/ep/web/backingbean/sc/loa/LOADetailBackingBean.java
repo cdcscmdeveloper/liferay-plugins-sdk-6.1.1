@@ -3746,9 +3746,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					validateLOADetails(scLoa, outcome);
 					
 					// start - #26475 & #26474 - disable validation on save action
-					//validateContractDetails(scLoa);
-					if (scLoa != null ) //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
-					scLoa.setContractAdmin(pmUserNull);
+					if (scLoa != null) // 20230706@asyrafhaziq- SQUBE Bug NullPointer#3
+						scLoa.setContractAdmin(pmUserNull);//Sonarqube #83
 					// end - #26475 & #26474 
 					if (!supplier) {
 						updateContractDetails(scLoa);
