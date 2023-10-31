@@ -1267,7 +1267,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
-			if(!getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME)){
+			if(!getTaskByDocNoModule()){
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(MessageConst.INFO_700110 , 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
@@ -13356,7 +13356,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	// #21692 add Approval detail at EPV QT Maint - End
 	
 	//9019 - Start (Harun) WIP transaction (New method)
-	public boolean getTaskByDocNoModule(String docNo, String module) {
+	/**
+	 * getTask By Sc Workflow Status
+	 *
+	 * @return boolean
+	 */
+	public boolean getTaskByDocNoModule() {
 		ScQt scQt = this.getManagedBean().getQt();//9019
 		boolean bpmExistFlag = false;
 		IScWorkFlowStatusSO workFlowStatusSO;
