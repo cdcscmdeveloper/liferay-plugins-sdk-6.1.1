@@ -5222,7 +5222,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtContactPerson> qtContactPerson = contactPersons
 						.getResultList();
 				if (qtContactPerson == null || qtContactPerson.isEmpty()) {
-					qtContactPerson = new ArrayList<ScQtContactPerson>();//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					qtContactPerson = new ArrayList<>();//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //Sonarqube #83 
 					ScQtContactPerson contactPerson = new ScQtContactPerson();
 					PmUser user = new FacesScopes().getUserSessionBean();
 					contactPerson.setPhoneNo(user.getPhoneNo());
@@ -6033,7 +6033,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tenderReqDTO.setQtId(qtId);
 				tenderReqDTO.setBdgDtlsReq(true);
 				QuationTenderResDTO tenderResDTO = null;
-				ScQt scQt = this.getManagedBean().getQt();
+				ScQt scQt = this.getManagedBean().getQt();				
+				
 				if (null == scQt
 						|| (scQt.isZonal()
 						/* && !scQt.isPanel() */
@@ -6059,6 +6060,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						scQt = tenderResDTO.getQtDetail();						
 						getManagedBean().setQt(scQt);
+						
+						//#28784 - Demo WIP
+						boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+						this.getManagedBean().setNewVersion(isQtNewVersion);
+						
 						if(demoRequired && this.getManagedBean().isNewVersion()){//#28784 - Include Demo WIP
 							getManagedBean().getQt().setDemoRequired(demoRequired);
 							getManagedBean().getQt().setEvaluationType(evalType);
@@ -7183,8 +7189,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
 			this.getManagedBean().setCurrentStatusId(currentStatus);
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 //Sonarqube #83
 			break;
 		case 5:
 			if (isinvokeValidations(getManagedBean().getQt())) {
@@ -7208,8 +7214,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
 			this.getManagedBean().setCurrentStatusId(currentStatus);//#13344-End
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 //Sonarqube #83
 			break;
 		case 6:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
@@ -7222,8 +7228,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDeductionPaymentTabDtl();
 			}
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 //Sonarqube #83
 			break;
 		case 7://#29474 - start
 			detailSO.validateSCFulfillmentSchedules(reqDTO);
@@ -7263,8 +7269,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrievePublicationApprovalTabDtl();
 			}
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474 - end
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 - end //Sonarqube #83
 			break;
 		}
 		

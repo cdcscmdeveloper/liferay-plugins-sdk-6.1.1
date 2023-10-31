@@ -2248,14 +2248,17 @@ public void saveComplianceSample() {
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+			int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+
 			//#25138, #21695 - start 
 			List<String> evalstage = new ArrayList<String>();
 			//#28784 add demo condition - Start
 			String evalStageDemoOrTechnical = demoOrTechnicalEvaluation();
 			evalstage.add(evalStageDemoOrTechnical);
 			//#28784 add demo condition - End
-			evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-			reqDTO.setResultStages(evalstage);
+			if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+			}			reqDTO.setResultStages(evalstage);
 			reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 			//#25138, #21695 - end
 			evaluationSO.generateEvaluationSheet(reqDTO);
@@ -2650,7 +2653,7 @@ public void saveComplianceSample() {
 							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
 									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 											.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
-								evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
+								evalStageStr = StringUtils.join(Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
 							}
 							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
 							//34943 - end
@@ -2941,6 +2944,11 @@ public void saveComplianceSample() {
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
 						}
 						//#25138(wip 4serangkai) bug -End 8/6/2023
+					}else{
+						//#35313 for WIP one item
+						if (wipstatus < ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
+							this.getManagedBean().setEvaluatioStageActiveIndex(1);
+						}
 					}
 					//#25138 - end
 					evaluationSo
@@ -2957,6 +2965,11 @@ public void saveComplianceSample() {
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
 						}
 					//#25138(wip 4serangkai) bug -End 8/6/2023
+					}else{
+						//#35313 for WIP one item
+						if (wipstatus < ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
+							this.getManagedBean().setEvaluatioStageActiveIndex(1);
+						}
 					}
 					// #25138 - end
 					
@@ -7786,7 +7799,10 @@ public void saveComplianceSample() {
 					if(outputTab==7){
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
 							this.getManagedBean().setComplianceActiveIndex(
-									1);
+									QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);//35148-start
+							if(QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX==complianceIndex){
+			                 	throw new EpException(MessageConst.ERROR_760239);	
+								}//35148-End
 							//return outputTab=7;
 						} else {
 							if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){//35148-start
@@ -7794,6 +7810,9 @@ public void saveComplianceSample() {
 							}
 							else{
 							this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX);
+							if(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX==complianceIndex){//35148-start
+			                 	throw new EpException(MessageConst.ERROR_760239);	
+								}//35148-End
 							}//35148-End
 							//return outputTab=7;
 						}
@@ -8913,7 +8932,9 @@ public void saveComplianceSample() {
 			//6906 - end
 		}catch(Exception e){
 			 if(currentTab==1){
+				 int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
 				retriveComplianceTechnical();
+				this.getManagedBean().setComplianceActiveIndex(complianceIndex);//35148
 			}
 			else if(currentTab==2){
 				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -13851,8 +13872,7 @@ private void retriveCommitteeRemarksList(){
 		private Long checkListId;
 		private Boolean compliance;
 		private String evalStage;
-		private Boolean scoringReq;//32426
-
+		
 		/**
 		 * Constructor for Compliance Supplier Paging Data Model
 		 */
@@ -13872,7 +13892,6 @@ private void retriveCommitteeRemarksList(){
 				Long checkListId, Boolean compliance, Long qtId,
 				String evalStage, Boolean scoringReq) {
 			this(componentId, checkListId, compliance, qtId, evalStage);
-			this.scoringReq = scoringReq;
 		}
 		//32426 -end
 
@@ -17334,7 +17353,6 @@ private void retriveCommitteeRemarksList(){
 					}
 					this.getManagedBean().setQtProposalAmounts(checklistamount);
 				    //34528-uat 4serangkai - start
-					checklistamount = checklistamount==null ? new ArrayList<ScQtProposalAmount>(): checklistamount;
 					this.getManagedBean().setFinancialPackagePaginator(new Paginator(checklistamount, 10));//34528-uat 4serangkai
 				    //34528-uat 4serangkai - end
 					return "/xhtml/sc/evaluation/evaluationStage/financial/financialSpecWithOutzone.xhtml";
@@ -18395,7 +18413,7 @@ private void retriveCommitteeRemarksList(){
 								if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
 										&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 												.equalsIgnoreCase(proposalCheckList.getDefinationType().getParameterCode())) {
-									evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
+									evalStageStr = StringUtils.join(Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
 								}
 								localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList, evalStageStr));
 								//34943 - end
@@ -18933,10 +18951,13 @@ private void retriveCommitteeRemarksList(){
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
+				int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 				//#25138, #21695 - start 
 				List<String> evalstage = new ArrayList<String>();
 				evalstage.add(QTConstants.TECHNICAL_EVALUATION);
-				evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+				}
 				reqDTO.setResultStages(evalstage);
 				reqDTO.setPartial(this.getManagedBean().getScQt().isPartial());
 				
