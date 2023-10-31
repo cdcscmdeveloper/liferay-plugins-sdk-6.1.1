@@ -73,7 +73,10 @@
 					</td>
 					<td>
 					#if ($ques.smQuestion.smAnswerCategory.answerCategoryId == 2) 
-						$!ques.otherRemark
+						##34920
+						<p style="text-align: justify;padding: 10px;min-height: 100px;border:solid thin black;">
+							$!ques.otherRemark
+						</p>
 					#else 
 						#foreach($answerid  in $ques.smQuestion.smAnswerCategory.smAnswers) 
 							#if($ques.smQuestion.smAnswerCategory.answerCategoryId == 3) ##soalan no1,no4- no11 

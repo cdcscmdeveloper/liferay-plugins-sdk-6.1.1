@@ -11077,14 +11077,13 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getQt().getFulfilmentType()
 							.getParameterCode());
 		}
-		if (!this.getManagedBean().isReadOnly()) {
-			if (scQt != null && scQt.getObtainSpecialApproval() != null
-					&& scQt.getObtainSpecialApproval()) { //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				this.getManagedBean().setProcMethodDropdownPresent(
-						checkForProcumentMethodDropdown(scQt));
-			}
-		}
-		
+		//Sonarqube #83 - start
+		if (!this.getManagedBean().isReadOnly() && scQt != null && scQt.getObtainSpecialApproval() != null && scQt.getObtainSpecialApproval()) {
+			 //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			this.getManagedBean().setProcMethodDropdownPresent(
+					checkForProcumentMethodDropdown(scQt));
+		} 
+		//Sonarqube #83 - end
 		this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
 		this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
 		Long statusId = scQt != null ? scQt.getQtStatus().getStatusId():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
@@ -11369,7 +11368,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		if (techCheckList != null && !techCheckList.isEmpty()) {
 			boolean sample = false;
-			boolean demo = false;
+			boolean demo = false;//#28784 WIP Idham 30/10/2023
 			for (ScQtCheckList checkList : techCheckList) {
 			
 				//Bug #33358 start
@@ -11385,6 +11384,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					if (null != scQt.getEvaluationType()
 							&& ParameterConst.EVALUATION_TYPES_TWO_TIER
 									.equalsIgnoreCase(scQt.getEvaluationType())) {
+						demo = true;//#28784 WIP Idham 30/10/2023
 						checkList.setScoringReq(true);
 					}
 
@@ -11413,6 +11413,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				 * }
 				 */
 			}
+			//#28784 WIP Idham 30/10/2023 - Start
+			if (!this.getManagedBean().isNewVersion()) {
+				scQt.setDemoRequired(demo);
+			}
+			//#28784 WIP Idham 30/10/2023 - End
 			//scQt.setSampleReq(sample);//#11104
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
@@ -14116,7 +14121,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 						} else {
 							if(technicalCheckLists == null)
-							 technicalCheckLists = new ArrayList<ScQtCheckList>();
+								technicalCheckLists = new ArrayList<>();//Sonarqube #83
 							technicalCheckLists.add(checkList);
 						}
 
@@ -14149,8 +14154,8 @@ if (null != checklist && !checklist.isEmpty()) {
 								finanicialCheckLists.add(newTplSpecIndex,
 										checkList);
 							} else {
-								if(finanicialCheckLists == null)
-								 finanicialCheckLists =  new ArrayList<ScQtCheckList>();   //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+								if (finanicialCheckLists == null)
+									finanicialCheckLists = new ArrayList<>();  //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //Sonarqube #83
 								finanicialCheckLists.add(checkList);
 							}
 						} else {
@@ -14182,9 +14187,8 @@ if (null != checklist && !checklist.isEmpty()) {
 							}
 
 						} else {
-							if(finanicialCheckLists == null)
-								 finanicialCheckLists =  new ArrayList<ScQtCheckList>();   //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-								
+							if (finanicialCheckLists == null)
+								finanicialCheckLists = new ArrayList<>(); // 20230712@asyrafhaziq-SQUBE Bug NullPointer#3 //Sonarqube #83
 							finanicialCheckLists.add(checkList);
 						}
 					}
@@ -16936,10 +16940,8 @@ if (null != checklist && !checklist.isEmpty()) {
 					zoneLocal.add(tplSpecZoneDtl);
 				}
 				scQt.setZonal(true);
-				if (qtSupplierCriteria != null )//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
-						zoneLocal);
-
+				if (qtSupplierCriteria != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(zoneLocal);// Sonarqube #83
 			}
 			//20200214@asyrafhaziq_Bug #27381&#26694   - Start
 			else {
@@ -18894,11 +18896,15 @@ if (null != checklist && !checklist.isEmpty()) {
 			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 			// move this catch to end code
 			} catch (IOException e) {
+				//Sonarqube #83 - start
+				ScQt scQt = this.getManagedBean().getQt();
+				String docNo = scQt != null ? scQt.getQtNo() : "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				//e.printStackTrace();
-					SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "handleFileUploadExport", getUserIdSessionFromLoginId(), e);
-			
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, docNo, "handleFileUploadExport",
+						getUserIdSessionFromLoginId(), e);
+				//Sonarqube #83 - end
 			}
 
 		} else {
@@ -18913,11 +18919,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 			while (rowIterator.hasNext()) {
 
-				Row row = rowIterator.next();
-				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				//comment bcs never used
-				//hasDataFlag = (row != null);
-
+				Row row = rowIterator.next();	
 				if (row.getCell(0).toString() != "" || row.getCell(0).toString() != null) {
 					item.add(row.getCell(0).toString());
 				} else {
@@ -18972,11 +18974,15 @@ if (null != checklist && !checklist.isEmpty()) {
 				log.info("\n");
 			}
 			} catch (IOException e) {
+				//Sonarqube #83 - start
+				ScQt scQt = this.getManagedBean().getQt();
+				String qtNo = scQt != null ? scQt.getQtNo() : "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				//e.printStackTrace();
-				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "handleFileUploadExport", getUserIdSessionFromLoginId(), e);
-				
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, "handleFileUploadExport",
+						getUserIdSessionFromLoginId(), e);
+				//Sonarqube #83 - end
 			}
 
 		}
@@ -19874,36 +19880,30 @@ if (null != checklist && !checklist.isEmpty()) {
 			int index = -1;
 			String specType = "T";
 			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
-			try{
-				technicalChecklistReloadActionImport(item, specification, uom, priceType, quantity, tierQuantityFrom,
-						tierQuantityTo, score, scoreType, scoreSchemaFrom, scoreSchemaTo, scoreSchemaYes, scoreSchemaNo,
-						scoreMark, freqPerUom, uomPerDay, uomPerMonth,specificationWeightage, index, checkList, specType);
-				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_760502,
-										new String[] {},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}catch(Exception e){
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				//e.printStackTrace();
-				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "reloadFileImport", getUserIdSessionFromLoginId(), e);
-				
-			}
-		}
-		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-		// move this catch to end code
-		} catch (IOException e) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-			//e.printStackTrace();
-			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "reloadFileImport", getUserIdSessionFromLoginId(), e);
-			
-		}
+		//Sonarqube #83 - start
+			technicalChecklistReloadActionImport(item, specification, uom, priceType, quantity, tierQuantityFrom,
+					tierQuantityTo, score, scoreType, scoreSchemaFrom, scoreSchemaTo, scoreSchemaYes, scoreSchemaNo,
+					scoreMark, freqPerUom, uomPerDay, uomPerMonth,specificationWeightage, index, checkList, specType);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_760502,
+									new String[] {},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			} 
+		} catch (Exception e) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			FacesContext.getCurrentInstance().addMessage(null, 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage())); 
+			SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, "reloadFileImport",
+					getUserIdSessionFromLoginId(), e);
+
+		} 
+		//Sonarqube #83 - end
 		log.info("handleFileUploadExport - END");
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 	}
