@@ -11100,21 +11100,15 @@ private void retriveCommitteeRemarksList(){
 					evaluationMaintainPreviousNextTabIndex(0, 1);
 				} else if (currentActiveTab == 2) {
 					evaluationMaintainPreviousNextTabIndex(1, 2);
-					evaluationMaintainPreviousNextTabIndex(1, 2);
 				} else if (currentActiveTab == 3) {
 					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(2, 3);
 					evaluationMaintainPreviousNextTabIndex(2, 4);
-					evaluationMaintainPreviousNextTabIndex(2, 4);
+					
 				} else if (currentActiveTab == 4) {
 					evaluationMaintainPreviousNextTabIndex(1, 2);
-					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(2, 3);
-					evaluationMaintainPreviousNextTabIndex(2, 4);
-					evaluationMaintainPreviousNextTabIndex(2, 4);
-					evaluationMaintainPreviousNextTabIndex(3, 4);
-					evaluationMaintainPreviousNextTabIndex(3, 4);
 					evaluationMaintainPreviousNextTabIndex(3, 4);
 				} else {
 					evaluationMaintainPreviousNextTabIndex(currentActiveTab, currentActiveTab);
