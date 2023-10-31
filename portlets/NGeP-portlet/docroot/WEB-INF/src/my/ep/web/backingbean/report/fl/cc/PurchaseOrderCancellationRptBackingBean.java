@@ -119,7 +119,7 @@ public class PurchaseOrderCancellationRptBackingBean extends FlReportBackingBean
 			getManagedBean().setPtj(null);
 		}
 		getManagedBean().setItemName(null);
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 	
 	//29550 - start

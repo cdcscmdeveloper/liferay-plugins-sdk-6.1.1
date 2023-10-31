@@ -91,6 +91,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -123,6 +124,10 @@ import org.primefaces.event.SelectEvent;
 public class SupplierFinalizationMeetingBackingBean extends 
 						SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = EpLogger.getLogger(SupplierFinalizationMeetingBackingBean.class);
 
 	private void debugLogger(Object message) {
@@ -415,8 +420,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 					}
 				}
 			} else {
-				List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
-				if (CollectionUtils.isNotEmpty(commMembers)) {
+				List<ScCommitteeMember> commMembers = scCommittee != null ? scCommittee.getScCommitteeMembers():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (commMembers != null && CollectionUtils.isNotEmpty(commMembers)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (ScCommitteeMember member : commMembers) {
 						PmParameter memberRole = member.getMemberRole();
 						if (member.getRepresentativeType() == null && 
@@ -453,7 +458,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
 			if (null == meetingList) {
 				getManagedBean().setScQtMeetings(new ArrayList<ScQtMeeting>());
-			}
+			}else{//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			ScQtMeeting meeting = new ScQtMeeting();
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
@@ -463,6 +468,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			meeting.setRecordStatusFlg(1);
 			meetingList.add(meeting);
 			this.getManagedBean().setScQtMeetings(meetingList);
+			}//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 		} finally{
 			
@@ -1527,6 +1533,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	private void renewSessionAndRetrieve() {
 		ScQt scQt = getManagedBean().getScQt();
 		String taskId = this.getManagedBean().getTaskId();
+		String taskName = this.getManagedBean().getTaskName();//25037
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
@@ -1542,6 +1549,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		//25037 note 284 - end
 		this.prepareMemberUpdate();//#25027
 		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setTaskName(taskName);//25037
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
@@ -1896,7 +1904,11 @@ if (CollectionUtils.isNotEmpty(
 	// this method checking two meeting dates or equal or not.
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
-		if (null != meetingList && meetingList.size() >= 1) {
+		//Sonarqube #83 - start
+		if (null == meetingList)
+			throw new IllegalArgumentException("Meeting list should not be null.");
+		if (CollectionUtils.isNotEmpty(meetingList)) {
+		//Sonarqube #83 - end
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			boolean duplicateDate = false;
 			for (ScQtMeeting meeting : meetingList) {
@@ -1913,7 +1925,7 @@ if (CollectionUtils.isNotEmpty(
 				}
 
 			}
-			if (duplicateDate == true) {
+			if (duplicateDate) {//Sonarqube #83
 				throw new EpException(MessageConst.ERROR_760271);
 			} else {
 				meetingList.add(scqtMeeting);
@@ -1954,7 +1966,7 @@ if (CollectionUtils.isNotEmpty(
 				finalBB.saveSupplierFinalization(true);
 			}else if(finalBiddingBB!=null){
 				finalBiddingBB.saveOnlineEndorsement(true);
-			};
+			}
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){
@@ -2070,7 +2082,10 @@ if (CollectionUtils.isNotEmpty(
 			}
 			//25037 note 284 - end
 		}catch(IOException e){
-			e.printStackTrace();
+			ScQt scQt = this.getManagedBean().getScQt();
+			String qtNo = scQt == null ? "" : scQt.getQtNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					qtNo, "supplierFinalizationBackingBean.prepareMemberUpdate", getUserIdSessionFromLoginId(), e);
 		}
 		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));

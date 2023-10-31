@@ -14,14 +14,16 @@
 			</td>
 		
 			<td class="tdContent">
-				<ac:smReportZoneList bBean="#{compSuppTypeRegStatusRptBB}" showItemAll="true" />
+				<!-- #33783 -->
+				<ac:smReportZoneList bBean="#{compSuppTypeRegStatusRptBB}" required="true"/>
 			</td>
 			
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" />
 			</td>
 			<td class="tdContent">
-				<ac:smReportSupplierType bBean="#{compSuppTypeRegStatusRptBB}" allValue="" />
+				<!-- #33783 -->
+				<ac:smReportSupplierType bBean="#{compSuppTypeRegStatusRptBB}" selectOne="true" showAll="false"/>
 			</td>
 		</tr>
 		<tr>
@@ -51,6 +53,28 @@
 				</p:selectOneMenu>
 			</td>
 		</tr>
+		<!-- #33783 - start -->
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.sm.clbg']}" />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{compSuppTypeRegStatusRptBB.managedBean.isCLBG}">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"/>
+					<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true"/>
+					<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false"/>
+					<p:ajax event="change" partialSubmit="true" />
+				</p:selectOneMenu>
+			</td>
+			
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.state']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportState bBean="#{compSuppTypeRegStatusRptBB}" />
+			</td>
+		</tr>
+		<!-- #33783 - end -->
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" />
@@ -60,8 +84,16 @@
 				<ac:smReportCompanyNameLOV bBean="#{compSuppTypeRegStatusRptBB}" 
 				saveObj="compSuppTypeRegStatusRptBB.managedBean.selectedOrgProfile" />
 			</td>
-			<td colspan="2"></td>
+			<!-- #33783 - start -->
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.district']}" />
+			</td>
+			<td class="tdContent">
+				<ac:smReportDistrict bBean="#{compSuppTypeRegStatusRptBB}" />
+			</td>
+			<!-- #33783 - end -->
 		</tr>
+		<!-- #33783 --><!-- 
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}" />
@@ -89,6 +121,7 @@
 				</p:inputText>
 			</td>
 		</tr>
+		-->
 		<p:outputPanel rendered="#{not empty compSuppTypeRegStatusRptBB.managedBean.capitalLabel}">
 			<tr>
 				<td class="tdTitle">
