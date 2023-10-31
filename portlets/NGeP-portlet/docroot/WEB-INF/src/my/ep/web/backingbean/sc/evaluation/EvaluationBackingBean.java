@@ -18748,7 +18748,7 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			if (isCompliance) {
-				RequestContext.getCurrentInstance().execute("complianceConfirmPopUp.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
 			} else {
 				this.saveTempleateSpecDtls();
 			}
@@ -18786,11 +18786,11 @@ private void retriveCommitteeRemarksList(){
 		List<SelectItem> selectItems = new ArrayList<>();
 
 		try {
-			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage("lbl.txt.yes",
+			selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage("lbl.txt.no",
+			selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_NO,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
@@ -18817,7 +18817,7 @@ private void retriveCommitteeRemarksList(){
 			}
 
 			if (isCompliance) {
-				RequestContext.getCurrentInstance().execute("complianceSampleConfirmPopUp.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_SAMPLE_CONFIRMATION_POPUP);
 			} else {
 				this.saveProposalScoreDtls();
 			}

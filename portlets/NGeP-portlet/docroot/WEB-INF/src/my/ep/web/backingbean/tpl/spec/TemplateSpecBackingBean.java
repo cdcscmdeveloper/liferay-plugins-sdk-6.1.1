@@ -97,6 +97,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.tpl.spec.TemplateSpecManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -5756,23 +5757,23 @@ public class TemplateSpecBackingBean extends
 		try {
 
 			if (isCompliance) {
-				selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+				selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage("lbl.txt.yes",
+				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage("lbl.txt.no",
+				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_NO,
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			} else {
-				selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage("lbl.txt.select",
+				selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage("lbl.txt.yes",
+				selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			}
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean",
-					this.getManagedBean().getQt().getQtNo(), "getMandatorySpecDropdownValues",
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
+					this.getManagedBean().getQt().getQtNo(), SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
 					getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
@@ -5809,7 +5810,7 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void showUOMQuantityDetails() {
-		RequestContext.getCurrentInstance().execute("viewUOMQuantityDetails.show()");
+		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_UOM_QUANTITY_DETAILS);
 	}
 
 	/**
@@ -5819,7 +5820,7 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void zoneQuantityPopup() {
-		RequestContext.getCurrentInstance().execute("viewZoneQuantityPopup.show()");
+		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_ZONE_QUANTITY_POPUP);
 	}
 
 	/**
