@@ -5743,11 +5743,11 @@ public class TemplateSpecBackingBean extends
 		RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
 
 	}
-	//#29187 Start Vinod
+	// #29187 Start Vinod
 	/**
 	 * Gets the score Mandatory Spec Dropdown Values.display in dropdown.
 	 * 
-	 * @param boolean isCompliance
+	 * @param isCompliance
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getMandatorySpecAndComplianceDropdownValues(boolean isCompliance) {
@@ -5755,77 +5755,92 @@ public class TemplateSpecBackingBean extends
 
 		try {
 
-			if(isCompliance){
-				selectItems.add(new SelectItem(null, ResourceBundleUtils
-						   .getMessage("lbl.txt.select",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils
-						   .getMessage("lbl.txt.yes",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils
-						   .getMessage("lbl.txt.no",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-			}else{
-				selectItems.add(new SelectItem(false, ResourceBundleUtils
-						   .getMessage("lbl.txt.select",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(true, ResourceBundleUtils
-						   .getMessage("lbl.txt.yes",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
+			if (isCompliance) {
+				selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage("lbl.txt.yes",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage("lbl.txt.no",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			} else {
+				selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage("lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage("lbl.txt.yes",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			}
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
-			selectItems = null;
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
-					"getMandatorySpecDropdownValues", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean",
+					this.getManagedBean().getQt().getQtNo(), "getMandatorySpecDropdownValues",
+					getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
-	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean){
+
+	/**
+	 * checking for displaying mandatory specification column.
+	 * 
+	 * @param templateSpecBean
+	 * @return boolean
+	 */
+	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if(null!=this.getManagedBean().getScQt() 
-			&& null!=this.getManagedBean().getScQt().getQtStatus() 
-			&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
-			&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION){
-			for(TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()){
-				if(tplSpecAnswer.getTplSpecQuestion().getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-					&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()){
-					manSpec=true;
+		if (null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus()
+				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId()
+				&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
+			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
+				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
+						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+					manSpec = true;
 					break;
 				}
 			}
 		}
 		return manSpec;
 	}
-	public void showUOMQuantityDetails(){
+
+	/**
+	 * to show popup for UOM and quantity details.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void showUOMQuantityDetails() {
 		RequestContext.getCurrentInstance().execute("viewUOMQuantityDetails.show()");
 	}
-	public void zoneQuantityPopup(){
+
+	/**
+	 * to show popup for zone quantity details.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void zoneQuantityPopup() {
 		RequestContext.getCurrentInstance().execute("viewZoneQuantityPopup.show()");
 	}
-	public void onchangeCompliance(TplSpecAnswer ans){
-		for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
-				&& ans.getCompliance()!=null
-				&& ans.getCompliance()==Boolean.FALSE){
+
+	/**
+	 * update user score based on compliance.
+	 * 
+	 * @param ans
+	 * @return
+	 */
+	public void onchangeCompliance(TplSpecAnswer ans) {
+		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
+				if (ans.getCompliance() == Boolean.FALSE) {
 					answer.setUserScore(BigDecimal.ZERO);
-			}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
-					&& ans.getCompliance()!=null
-					&& ans.getCompliance()==Boolean.TRUE
-					&& ans.getUserScore()!=null
-					&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0){
-						answer.setUserScore(null);
-			}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
-					&& ans.getCompliance()==null){
-						answer.setUserScore(null);
+				} else if (ans.getCompliance() == Boolean.TRUE && ans.getUserScore() != null
+						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
+					answer.setUserScore(null);
+				}
+			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() == null) {
+				answer.setUserScore(null);
 			}
 		}
 	}
-	//#29187 End Vinod
+	// #29187 End Vinod
 }
