@@ -591,9 +591,10 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				styleClass="BtnSpacing"
-				rendered="#{deskOfficerAssistanceEditable}" partialSubmit="true"
+				rendered="#{!scheduleReadonly}"
+				process="@this, cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
-				update="quotationTndrMainDeskOfficerAdminAssistantPanel" />
+				update="cpersondetailsid" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" id="quotationTndrPersonContactDtlsDeleteBtnId"
 			disabled="#{empty qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
 				styleClass="BtnSpacing" process="@this, cpersondetailsid"
