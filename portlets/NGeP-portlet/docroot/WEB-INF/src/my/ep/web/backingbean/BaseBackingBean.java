@@ -3635,6 +3635,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return AddressUtils.getFullBranchAddress(smAddress);
 	}
 	//#34135 END
+	
+	// 33410 - START
+	public String setFixedLanguageDisplay(Boolean isFixedDisplay, String languageCode){
+		LanguageReqDTO reqDTO = new LanguageReqDTO();
+		reqDTO.setLanguageCode(languageCode);
+		ILanguageSO languageSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+		LanguageResDTO resDTO = languageSO.retrieveLanguageByLanguageCode(reqDTO);
+		if(isFixedDisplay){
+			return resDTO.getLanguage().getLanguageCode();
+		} else {
+			return new FacesScopes().getUserLocale().getLanguage();
+		}
+	}
+	// 33410 - END
 
 	// #29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt) {
