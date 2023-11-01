@@ -67,7 +67,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -89,7 +88,6 @@ import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -143,14 +141,12 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.logging.LogKey;
@@ -200,7 +196,6 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
-import weblogic.wsee.util.StringUtil;
 /**
  * Implementation for supplier finalization
  * 
@@ -4918,7 +4913,7 @@ return	remarksNotFound;
 				} else {
 					if (isZonal) {
 						if (zoneDetailsMap == null) {
-							zoneDetailsMap = new HashMap<TplSpecZoneDtl,FinalizationEndorsementReportDTO>();
+							zoneDetailsMap = new HashMap<>();//Sonarqube #83
 						}
 						Map<Long,List<ScQtRecommend>> scQtRecommendsByZone
 									= scQtFinalization.getScQtRecommendsByZone();
@@ -4943,7 +4938,7 @@ return	remarksNotFound;
 			if (isZonal) {
 				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				if (zoneDetailsMap == null) {
-					zoneDetailsMap = new HashMap<TplSpecZoneDtl,FinalizationEndorsementReportDTO>();
+					zoneDetailsMap = new HashMap<>();//Sonarqube #83
 				}
 				for (TplSpecZoneDtl specZone
 							: getManagedBean().getZoneMap().values()) {
@@ -6132,7 +6127,7 @@ return	remarksNotFound;
 		if(this.getManagedBean().isNoProposalSubmitted()){
 			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			if (excludedDecisionList == null) 
-				excludedDecisionList = new ArrayList<String>();
+				excludedDecisionList = new ArrayList<>();//Sonarqube #83
 			
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RE_EVALUATION);	
@@ -8868,8 +8863,11 @@ return	remarksNotFound;
 	// this method checking two meeting dates or equal or not.
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
-		log.info("compareMeetingDates");
-		if (null != meetingList && meetingList.size() >= 1) {
+		//Sonarqube #83 - start
+		if(null == meetingList)
+			throw new IllegalArgumentException("Meeting list cannot be null");
+		if (CollectionUtils.isNotEmpty(meetingList)) {
+		//Sonarqube #83 - end
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			boolean duplicateDate = false;
 			for (ScQtMeeting meeting : meetingList) {
@@ -8881,15 +8879,12 @@ return	remarksNotFound;
 					break;
 				}
 			}
-			if (duplicateDate == true) {
+			if (duplicateDate) {//Sonarqube #83
 				throw new EpException(MessageConst.ERROR_760271);
 			} else {
 				meetingList.add(scqtMeeting);
 			}
 		} else {
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (meetingList == null)
-				meetingList =  new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 
@@ -9845,51 +9840,47 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void handleKertasFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
-		
+	//Sonarqube #83 - refactor method - start
+	public void handleKertasFileUpload(FileUploadEvent event) throws IOException {
+		if (null == event.getFile())
+			return;
 		log.info("handleKertasFileUpload");
-		if (event.getFile() != null) {
-			ScAttachment scAttachment = null;
-			ScQtFinalizationReport scQtFinalizationReport 
-					= this.getManagedBean().getSelectedFinalizationReport();
-			if (scQtFinalizationReport == null) {
-				List<ScQtFinalizationReport> reports = this.getManagedBean().getDocumentList();
-				for (ScQtFinalizationReport report : reports) {
-					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-							.equals(report.getPmDocument().getDocDefinitionKey())) {
-						scQtFinalizationReport = report;
-					}
+		ScQtFinalizationReport scQtFinalizationReport 
+				= this.getManagedBean().getSelectedFinalizationReport();
+		if (scQtFinalizationReport == null) {
+			List<ScQtFinalizationReport> reports = this.getManagedBean().getDocumentList();
+			for (ScQtFinalizationReport report : reports) {
+				if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+						.equals(report.getPmDocument().getDocDefinitionKey())) {
+					scQtFinalizationReport = report;
 				}
 			}
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			ScQtFinalizationReportAttachment reportAttachment  = null;			
-			if (scQtFinalizationReport != null && scQtFinalizationReport.getScQtFinalizationReportAttachment() != null )
-				reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-			
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (scQtFinalizationReport == null )
-				scQtFinalizationReport = new ScQtFinalizationReport();
-			
-			if(reportAttachment == null ){
-				reportAttachment = new ScQtFinalizationReportAttachment();
-				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
-				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
-				reportAttachment.setFileName(event.getFile().getFileName());
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-				//setUserDetails(reportAttachment);
-				//populateAttachmentDetails(reportAttachment);
-			}
-			// set uploaded file name into actual attachment
-			reportAttachment.setFileName(event.getFile().getFileName());
-			populateAttachmentDetails(reportAttachment);
-			scAttachment = reportAttachment;
-			uploadAttachment(event.getFile(), scAttachment);
-			// again set to true after uploaded at finalization currently disabled
-			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
-			scQtFinalizationReport.setTempReportAttachment(reportAttachment);
 		}
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		ScQtFinalizationReportAttachment reportAttachment  = null;			
+		if (scQtFinalizationReport != null && scQtFinalizationReport.getScQtFinalizationReportAttachment() != null )
+			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+		
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if (scQtFinalizationReport == null )
+			scQtFinalizationReport = new ScQtFinalizationReport();
+		
+		if(reportAttachment == null ){
+			reportAttachment = new ScQtFinalizationReportAttachment();
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
+			reportAttachment.setFileName(event.getFile().getFileName());
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		}
+		reportAttachment.setFileName(event.getFile().getFileName());
+		populateAttachmentDetails(reportAttachment);
+		ScAttachment scAttachment = reportAttachment;
+		uploadAttachment(event.getFile(), scAttachment);
+		// again set to true after uploaded at finalization currently disabled
+		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
+		scQtFinalizationReport.setTempReportAttachment(reportAttachment);
 	}
+	//Sonarqube #83 - refactor method - end
 	
 	/**
 	 * Method to delete attached kertas taklimat attachment

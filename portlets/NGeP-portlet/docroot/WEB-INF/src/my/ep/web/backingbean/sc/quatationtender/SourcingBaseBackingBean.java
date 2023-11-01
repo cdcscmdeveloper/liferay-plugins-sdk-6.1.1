@@ -1055,17 +1055,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-		HttpServletResponse res = null;
-		if(!isFromWebService){
-			PortletResponse portletResponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			 res = com.liferay.portal.util.PortalUtil
-					.getHttpServletResponse(portletResponse);
-		}else{
-			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		}
-		
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try{
@@ -2600,7 +2593,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//#25037 START
 		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-		list = list == null ? new ArrayList<PmParameterDesc>() : list;
+		if (null == list)
+			list = new ArrayList<>();
 
 		if(filteredRoles!=null){
 			for(PmParameterDesc role: list){
@@ -6279,8 +6273,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<String> taskNames = new ArrayList<>();
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP));
 		taskNames.addAll(Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP));
-		taskNames.addAll(Arrays.asList(new String[] { SCProcessNameConst.FINALISE_FC_SELECTION,
-				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING }));
+		taskNames.addAll(Arrays.asList(SCProcessNameConst.FINALISE_FC_SELECTION,
+				SCProcessNameConst.COORDINATE_FC_MEETING, SCProcessNameConst.REVISE_EVALUATION_MEETING));
 		return taskNames.contains(taskName);
 	}
 	//25037 -end-

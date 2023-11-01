@@ -1094,12 +1094,23 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		*/
 		//Bug #31725 End
 		//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
-		if(CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())){
+		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
-				if(finProposalChecklist.getScQtCheckList().getTitle().equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
-						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)){
+				if (finProposalChecklist.getScQtCheckList().getTitle()
+						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+					//#34726 start - flag to define process from technical, 
+					//save technical spec proposal is sending financialproposalchecklist(preparefinancialaction)
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
+					//#34726 start
 					prepareFinancialAction(finProposalChecklist);
 					saveFinancialSpecificationAction(false, true);
+					//#34726 start
+					//need to setback to false, because at financial proposal prepare button is trigger prepare financialaction
+					// this flag is needed in prepareFinancialAction during save technical proposal spec or click prepare at financial proposal
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
+					//#34726 end
 					break;
 				}
 			}
@@ -3184,6 +3195,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		String pageUrl = null;
 		String definationType = scQtProposalChecklist.getScQtCheckList()
 				.getDefinationType().getParameterCode();
+		// #34726 start
+		for (ScQtProposalChecklist tecChecklistDetail : this.getManagedBean().getTecCheckDetailsList()) {
+			if (tecChecklistDetail.getScQtCheckList().getTitle()
+					.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+					&& !tecChecklistDetail.isSubmitted() && !tecChecklistDetail.isFromTechnicalProposal()) {
+				throw new EpException(MessageConst.WARN_7602692);
+			}
+
+		}
+		// #34726 end
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
 
