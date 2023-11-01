@@ -22,6 +22,7 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.order.IReliefOrderSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -263,7 +264,22 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					if(supplierIdList.size()>0) {
 						reqDTO.setSupplierIdList(supplierIdList);
 					}
-				} 
+				//29550 - start
+				} else if(isFactoringUser()){
+					FacesScopes facesScopes = new FacesScopes();
+					setPmUser(facesScopes.getUserSessionBean());
+					if (getPmUser().getUserId() == null) {
+						throw new IllegalArgumentException("userId cannot be null");
+					}
+					
+					IFinancialOrgSO finanOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+					List<Object[]> resultBean  = finanOrgSO.findFactoringOrgId(getPmUser().getLoginId());			
+					for (int i = 0; i < resultBean.size(); i++) {
+						Object[] objects = (Object[]) resultBean.get(i);				
+						reqDTO.setFactoryCompanyId(Long.parseLong(String.valueOf(objects[3])));
+					}					
+				}
+				//29550 - end
 				reqDTO.setUserRoleList(getUserRoles());
 				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				
