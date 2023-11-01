@@ -159,6 +159,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			Long qtId = Long.valueOf(dataType.getQtId());
+			
+			getCommitteeSO().initializedFCLegacyCommitteeHistory(qtId); // 25037
+			
 			String committeeType = String.valueOf(dataType.getCommitteeType());
 			if (StringUtils.isBlank(committeeType) && 
 					StringUtils.isNotBlank(dataType.getHigherCommitteeType())) {
@@ -1427,6 +1430,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	private void renewSessionAndRetrieve() {
 		ScQt scQt = getManagedBean().getScQt();
 		String taskId = this.getManagedBean().getTaskId();
+		String taskName = this.getManagedBean().getTaskName(); //25037
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
@@ -1443,6 +1447,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		this.prepareMemberUpdate();//#25037
 
 		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setTaskName(taskName); //25037
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
@@ -1986,16 +1991,7 @@ if (CollectionUtils.isNotEmpty(
 
 			if (CollectionUtils.isNotEmpty(histories)) {
 				ScCommitteeMemberHistory history = histories.get(0);
-				
-				if (histories.size() == 1) {
-					// 33908 for 25037- start
-					Long qtId = this.getManagedBean().getScQt().getQtId();
 
-					this.retriveQTDetails(qtId);
-					this.retriveMeetingDetails(qtId);
-					// 33908 for 25037- end
-				}
-				
 				@SuppressWarnings("unchecked")
 				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>) (Object) history
 						.deserializeList(history.getCommitteeMembers());
