@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import javax.ejb.TransactionAttribute; //#21387
+import javax.ejb.TransactionAttributeType;	//#21387								  										  
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -2344,7 +2346,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				bb.getManagedBean().setClaim(claim);
 				bb.getManagedBean().setTaskId(taskId);
-				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
+				//21387 - Start
+				bb.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
+				bb.getManagedBean().setDocNo(resDTO.getDocNumber());
+				//21387 - End				 
 				bb.getManagedBean().setGroupTask(true);
 			} else {
 				//log.info("====groupTask null===" + resDTO.isGroupTask());
@@ -3630,6 +3635,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return AddressUtils.getFullBranchAddress(smAddress);
 	}
 	//#34135 END
+	
+	// 33410 - START
+	public String setFixedLanguageDisplay(Boolean isFixedDisplay, String languageCode){
+		LanguageReqDTO reqDTO = new LanguageReqDTO();
+		reqDTO.setLanguageCode(languageCode);
+		ILanguageSO languageSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+		LanguageResDTO resDTO = languageSO.retrieveLanguageByLanguageCode(reqDTO);
+		if(isFixedDisplay){
+			return resDTO.getLanguage().getLanguageCode();
+		} else {
+			return new FacesScopes().getUserLocale().getLanguage();
+		}
+	}
+	// 33410 - END
 
 	// #29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt) {
@@ -3711,4 +3731,34 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
 	}
 	//29012 - end 34865,34866,34867 - 29021 WIP
+	
+	//#21387 - Start
+	/**
+	 * Claim bpm task group By Document Number And Module
+	 * @param reqDTO
+	 * @return resDTO 
+	 */
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
+		BpmResponseDTO resDTO = new BpmResponseDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		try {
+
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(reqDTO.getDocNumber());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			bpmReqDTO.setModule(BpmConstants.MODULE_CT);
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			resDTO = bpmSO.getTasksByDocNoandModule(bpmReqDTO);
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	//#21387 - End
 }
