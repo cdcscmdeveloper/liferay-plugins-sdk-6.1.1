@@ -22272,7 +22272,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public boolean checkTemplateRequiredSample(ScQtCheckList templateChecklist){//11104_newEndorsestart
 		if (null == templateChecklist.getSampleStatus()
 				|| QTStatusConst.TS_PENDING_SUBMISSION.equals(templateChecklist
-						.getSampleStatus().getStatusId())) {
+						.getSampleStatus().getStatusId()) || templateChecklist.isCloned()) {//11104-Reenorse
 			return Boolean.FALSE;
 		} else {
 			for (TplSpecQuestion specQuestion :  getTemplateSampleQuestions(templateChecklist)) {
@@ -22298,10 +22298,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				if (null == sampleSpecs.getSampleStatus()
 						|| QTStatusConst.TS_PENDING_SUBMISSION
 								.equals(sampleSpecs.getSampleStatus()
-										.getStatusId())) {
+										.getStatusId()) || sampleSpecs.isCloned()) {//11104-ReendorsenewStart
 					isTemplateSamplePending = Boolean.TRUE;
 				}
+				if(!sampleSpecs.isCloned()){//11104-ReendorsenewStart
 				sampleExist = validateSampleItems(getTemplateSampleQuestions(sampleSpecs), sampleExist);
+				}//11104-ReendorsenewEnd
 			}
 			if (sampleExist == 0) {
 				throw new EpException(MessageConst.ERROR_760516);
@@ -22335,6 +22337,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				break;
 			}
 		}
+		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();// 11104-ReendoseStart
+		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+			for (int i = 0; i < checklistRemoveList.size(); i++) {
+				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+					checklistRemoveList.remove(i);
+				} else {
+					checklistRemoveList.get(i).setDeleted(true);
+				}
+			}
+		}
+		specReqDTO.setTobeRemoveList(checklistRemoveList);// 11104-ReendoseEnd
 		SpecificationResDTO resDTO = getQtSpecSO().completeSampleChecklist(
 				specReqDTO);
 		if (resDTO.isSuccessful()) {
@@ -22418,8 +22431,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		boolean qtSample = this.getManagedBean().getQt().isSampleReq();
 		List<ScQtCheckList> technicalChecklist = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
-		if (qtSample
-				&& (isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())) {
+		if ((isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision())) {//11104-Reendorse
 			this.getManagedBean()
 					.getQt()
 					.setDemoNotificationCheck(
