@@ -1870,7 +1870,7 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void getPersonnelByPmUser(PmUser usr) {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
+		reqDTO.setUserId(usr.getUserId()); //Sonarqube #G19
 		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
 				.retrievePersonnelByUserId(reqDTO);
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
