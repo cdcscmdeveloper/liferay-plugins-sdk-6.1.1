@@ -63,5 +63,32 @@ public class SSTConstant {
 	public static String ZONE_ID = "zoneId";
 	public static String LANGUAGE_CODE_EN = "en";
 	//26226 - end
+	//25025 - start
+		public static final String HEADER_PEMBELIAN_TERUS = "Pembelian Terus";
+		public static final String EMPTY_STRING = "";
+		public static final String HEADER_TITLE = "headerTitle";
+		public static final String SUBJECT_TITLE = "subTitle";
+		public static final String SIGN_PERCENTAGE = "%";
+		public static final String SIGN_RINGGIT = "RM";
+		public static final String UNDERLINE = "........................................................";
+		public static final String BOND_PERCENTAGE_TEXT = "bondPercentageText";
+		public static final String BOND_PERCENTAGE = "bondPercentage";
+		public static final String BOND_AMOUNT = "bondAmt";
+		public static final String BOND_AMOUNT_TEXT = "bondAmtText";
+		public static final String CONTRACT_EFFECTIVE_DATE = "contractEffDate";
+		public static final String CONTRACT_EXPIRED_DATE = "contractExpDate";
+		public static final String OVERALL_CONTRACT_AMOUNT = "overallCtAmt";
+		public static final String OVERALL_CONTRACT_AMOUNT_WORDING = "overallCtAmtWording";
+		public static final String SST_AMOUNT = "sstAmt";
+		public static final String OFFER_PRICE = "offerPrice";
+		public static final String OFFER_PRICE_WORDING = "offerPriceWording";
+		public static final String GST_REG_NO = "gstRegNo";
+		public static final String SSM_EXPIRED = "ssmExpired";
+		public static final String REGISTRATION_NO = "regNo";
+		public static final String SEPARATOR = ",";
+		public static final String LINE_BREAK = "\n";
+		public static final String BUMIPUTERA = "Bumiputera";
+		public static final String BUKAN_BUMIPUTERA = "Bukan Bumiputera";
+		//25025 - end
 	
 }

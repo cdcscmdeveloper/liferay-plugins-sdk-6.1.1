@@ -429,7 +429,9 @@
 					<td>
 				<p:outputPanel id="divisionBankFormDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBank.smAddress.pmState.adoptDivision}">
+				<!-- #34159 - START -->
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.divisionId}"
 							id="smBankDivision"
@@ -441,6 +443,7 @@
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
 								update="smBankDist,smBankCity" />
 						</p:selectOneMenu> 
+				<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
@@ -599,9 +602,17 @@
 												itemLabel="#{br.branchName}" itemValue="#{br.supplierBranchId}" />
 											<!-- #34135 END -->
 										</p:selectManyMenu>
+										<!-- #35086 - start -->
 										<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
-											value="#{backingBean.getSelectedBranchBank()}" escape="false" 
+											value="#{backingBean.getSelectedBranchBank(backingBean.managedBean.selectedBank)}" escape="false" 
 											style="float:left;"/> 
+										<ac:smFieldChangeAlert 
+											isShow="#{backingBean.managedBean.showFieldChanges
+													and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+											oriValue="#{backingBean.getSelectedBranchBank(backingBean.managedBean.latestBank)}" 
+											currValue="#{backingBean.getSelectedBranchBank(backingBean.managedBean.selectedBank)}" 
+											alertValue="#{backingBean.getSelectedBranchBank(backingBean.managedBean.latestBank)}"/>
+										<!-- #35086 - end -->
 									</td>
 									<td style="vertical-align: baseline;">
 										&#160;
@@ -654,9 +665,17 @@
 								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
 								itemLabel="#{per.name}" itemValue="#{per.personnelId}" />
 						</p:selectManyMenu>
+						<!-- #35086 - start -->
 						<h:outputText rendered="#{backingBean.managedBean.upsCannotEdit}"
-								value="#{backingBean.getSelectedSignatoryBank()}" escape="false" 
-								style="float:left;"/> 
+								value="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.selectedBank)}" 
+								escape="false" style="float:left;"/>
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+									and not empty backingBean.managedBean.selectedBank.supplierBankId}"
+							oriValue="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.latestBank)}" 
+							currValue="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.selectedBank)}" 
+							alertValue="#{backingBean.getSelectedSignatoryBank(backingBean.managedBean.latestBank)}"/>
+						<!-- #35086 - end --> 
 						<p:message id="bankCheqSignIdMsg" for="bankCheqSignId"
 							showSummary="true" showDetail="false" display="icon" /></td>
 

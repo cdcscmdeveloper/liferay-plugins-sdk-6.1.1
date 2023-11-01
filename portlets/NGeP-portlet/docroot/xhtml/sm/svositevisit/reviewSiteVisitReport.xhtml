@@ -17,9 +17,20 @@
 	
 
 		<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
-			<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-			value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-			#{svTask.pmCategoryL3.categoryName}"/>
+			<!-- #28175 - start -->
+			<c:choose>
+			<c:when test="#{not svoSiteVisitBackingBean.managedBean.smAppl.activeAppl}">
+				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
+				value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
+				#{svoSiteVisitBackingBean.getSmCategoryL3(svTask.pmCategoryL3.categoryL3Id, svoSiteVisitBackingBean.managedBean.smAppl.applId)}"/>
+			</c:when>
+			<c:otherwise>
+				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
+				value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
+				#{svTask.pmCategoryL3.categoryName}"/>
+			</c:otherwise>
+			</c:choose>
+			<!-- #28175 - end -->
 		</p:column>
 		
 		<p:column headerText="#{lbl['lbl.sm.address']}" style="white-space: pre;" >
