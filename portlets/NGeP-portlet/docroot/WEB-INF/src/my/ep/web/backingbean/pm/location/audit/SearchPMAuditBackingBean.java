@@ -13,7 +13,6 @@ import my.ep.biz.service.pm.common.audittrail.IAuditLocationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.auditlocation.AuditLocationReqDTO;
-import my.ep.dto.pm.common.auditlocation.AuditLocationResDTO;
 import my.ep.dto.pm.common.auditlocation.VPmAuditLocationDTO;
 import my.ep.exception.EpException;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -141,21 +140,19 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 					locationReqDTO.setCreatedBy(lSearchBean.getUserIdOldVal().toString());
 				}
 
-				locationReqDTO.setLocationSearchBean(searchBean);
+				//locationReqDTO.setLocationSearchBean(searchBean);
 				locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
 
-				AuditLocationResDTO resDTO = locationSO.searchLocationMasterResultList(locationReqDTO);
+				ISearchResultBean<VPmAuditLocationDTO> resDTO ;
+				resDTO = locationSO.searchLocationMasterResultList(locationReqDTO,searchBean);
 
-				if (resDTO.isSuccessful()) {
-					return resDTO.getLocationResultBean();
-				}
+					return resDTO;
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(MessageConst.ERROR_770005);
 			}
-
-			return null;
 		}
 	}
 
@@ -208,21 +205,19 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManag
 					locationReqDTO.setPdateTo(lSearchBean.getPdateToOldVal());
 				}
 				
-				locationReqDTO.setLocationSearchBean(searchBean);
+				//locationReqDTO.setLocationSearchBean(searchBean);
 				locationSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
 
-				AuditLocationResDTO resDTO = locationSO.searchLocationDetailResultList(locationReqDTO);
+				ISearchResultBean<VPmAuditLocationDTO> resDTO ;
+				resDTO = locationSO.searchLocationDetailResultList(locationReqDTO,searchBean);
 
-				if (resDTO.isSuccessful()) {
-					return resDTO.getLocationResultBean();
-				}
+					return resDTO;
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(MessageConst.ERROR_770005);
 			}
-
-			return null;
 		}
 	}
 
