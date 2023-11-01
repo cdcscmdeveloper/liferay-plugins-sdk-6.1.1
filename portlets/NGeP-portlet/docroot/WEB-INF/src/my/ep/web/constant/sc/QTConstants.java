@@ -304,4 +304,30 @@ public interface QTConstants {
 	
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//#21692
 	
+	//#29007 Start Vinod
+	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
+	public static final String LAMPIRAN_A3_UPDATE = "Updated";
+	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
+	public static final String LAMPIRAN_A3_LATEST = "Latest";
+	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	//#29007 End Vinod
+	
+	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
+	
+	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
+	
+	// #25726 - reopen note 110
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	// #25726 end
+	
+	//#10542 Start Dayan
+	public static final String COMPLIANCE_DOCUMENT_SUPPLIER_NO = "Supplier ";
+	public static final String FINANCIAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Financial-BySupplier";
+	public static final String FINANCIAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Financial-ByTitleDocument";
+	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
+	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
+	//#10542 End Dayan
+	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148
+	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
+	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
 }

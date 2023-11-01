@@ -645,6 +645,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean checkBranch;
 	//32968 END
 	
+	//32008
+	private boolean upsCannotEdit;
+		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4559,5 +4562,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
 		this.poApproverAcedemicErr = poApproverAcedemicErr;
 	}//31130-end
+	//Start 32008
+		public boolean isUpsCannotEdit() {
+			return upsCannotEdit;
+		}
+
+		public void setUpsCannotEdit(boolean upsCannotEdit) {
+			this.upsCannotEdit = upsCannotEdit;
+		}
+		//end 32008
 
 }
