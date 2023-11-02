@@ -18627,90 +18627,114 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#28784 add remarks - end
-	//#29187 Start Vinod
+	// #29187 Start Vinod
 	/**
-	 * This method is to check whether to render UOM and Quantity details hyperlink.
-	 * @param 
+	 * This method is to check whether to render UOM and Quantity details
+	 * hyperlink.
+	 * 
+	 * @param
 	 * @return boolean
 	 */
-	public boolean checkUOMandQuantityRender(){
+	public boolean checkUOMandQuantityRender() {
 		boolean render = true;
-			
-				
-		if(null!=this.getManagedBean().getScQt() 
-			&& null!=this.getManagedBean().getScQt().getQtStatus() 
-			&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
-					this.getManagedBean().getScQt().getQtStatus().getStatusId())){
-			render=false;
+
+		if (null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus()
+				&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES)
+						.contains(
+								this.getManagedBean().getScQt().getQtStatus()
+										.getStatusId())) {
+			render = false;
 		}
 		return render;
 	}
+
 	/**
-	 * This method is to check whether to display Mandatory spec and compliance column.
-	 * @param templateSpecBean 
+	 * This method is to check whether to display Mandatory spec and compliance
+	 * column.
+	 * 
+	 * @param templateSpecBean
 	 * @return boolean
 	 */
-	public boolean displayMandatorySpecAndComplianceColumn(TemplateSpecBean templateSpecBean){
+	public boolean displayMandatorySpecAndComplianceColumn(
+			TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if(null!=this.getManagedBean().getScQt() 
-			&& null!=this.getManagedBean().getScQt().getQtStatus() 
-			&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
-					this.getManagedBean().getScQt().getQtStatus().getStatusId())){
-			for(TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()){
-				if(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(tplSpecAnswer.getTplSpecQuestion().getQuestionType())
-					&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()){
-					manSpec=true;
+		if (null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus()
+				&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES)
+						.contains(
+								this.getManagedBean().getScQt().getQtStatus()
+										.getStatusId())) {
+			for (TplSpecAnswer tplSpecAnswer : templateSpecBean
+					.getSpecAnswerList()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC
+						.equals(tplSpecAnswer.getTplSpecQuestion()
+								.getQuestionType())
+						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+					manSpec = true;
 					break;
 				}
 			}
 		}
 		return manSpec;
 	}
+
 	/**
 	 * This method is to show conformation popup.
-	 * @param 
-	 * @return 
+	 * 
+	 * @param
+	 * @return
 	 */
-	public void checkTechnicalSpecCompliance(){
+	public void checkTechnicalSpecCompliance() {
 		boolean isCompliance = false;
 		try {
-			for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-				if(answer.getCompliance()!=null 
-					&& Boolean.FALSE.equals(answer.getCompliance())){
-					isCompliance=true;
+			for (TplSpecAnswer answer : this.getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList()) {
+				if (answer.getCompliance() != null
+						&& Boolean.FALSE.equals(answer.getCompliance())) {
+					isCompliance = true;
 					break;
 				}
 			}
-				
-			if(isCompliance){
-				RequestContext.getCurrentInstance().execute("complianceConfirmPopUp.show()");
-			}else{
+
+			if (isCompliance) {
+				RequestContext.getCurrentInstance().execute(
+						QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
+			} else {
 				this.saveTempleateSpecDtls();
 			}
-				
+
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
-					SLALogConstant.QT_CHECK_SPEC_COMPLIANCE, getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_CHECK_SPEC_COMPLIANCE,
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
+
 	/**
 	 * This method is to check whether to display Zone.
-	 * @param 
+	 * 
+	 * @param
 	 * @return boolean
 	 */
-	public boolean renderZoneForFinancial(){
+	public boolean renderZoneForFinancial() {
 		boolean renderZone = true;
-			if(null!=this.getManagedBean().getScQt() 
-				&& null!=this.getManagedBean().getScQt().getQtStatus()
-				&& QTStatusConst.QT_EVALUATION_PROPOSAL.equals(this.getManagedBean().getScQt().getQtStatus().getStatusId()) 
-				&& !QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())){
-					renderZone=false;
-			}
+		if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(this.getManagedBean()
+				.getScQt().getQtStatus().getStatusId())
+				&& (QTConstants.FINANCIAL_EVALUATION
+						.equalsIgnoreCase(getManagedBean().getCheckListType()) || QTConstants.TECHNICAL_EVALUATION
+						.equalsIgnoreCase(getManagedBean().getCheckListType()))) {
+			renderZone = false;
+		}
 		return renderZone;
 	}
+
 	/**
 	 * This method is to get dropdown values for Compliance.
-	 * @param 
+	 * 
+	 * @param
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getComplianceDropdownValues() {
@@ -18718,163 +18742,197 @@ private void retriveCommitteeRemarksList(){
 
 		try {
 			selectItems.add(new SelectItem(null, ResourceBundleUtils
-					   .getMessage("lbl.txt.select",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
+					.getMessage(QTConstants.LBL_TXT_SELECT,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils
-					   .getMessage("lbl.txt.yes",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
+					.getMessage(QTConstants.LBL_TXT_YES,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils
-					   .getMessage("lbl.txt.no",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
+					.getMessage(QTConstants.LBL_TXT_NO,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
-					SLALogConstant.QT_CHECK_SAMPLE_COMPLIANCE, getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_CHECK_SAMPLE_COMPLIANCE,
+					getUserIdSessionFromLoginId(), e);
 		}
 		return selectItems;
 	}
+
 	/**
 	 * This method is to popup confirmation if the item compliance is false.
-	 * @param 
+	 * 
+	 * @param
 	 * @return
 	 */
-	public void checkSampleCompliance(){
+	public void checkSampleCompliance() {
 		boolean isCompliance = false;
 		try {
-			for(ScQtSampleItem sampleItem : this.getManagedBean().getSampleItemList()){
-				if(sampleItem.getCompliance()!=null 
-					&& Boolean.FALSE.equals(sampleItem.getCompliance())){
-					isCompliance=true;
+			for (ScQtSampleItem sampleItem : this.getManagedBean()
+					.getSampleItemList()) {
+				if (sampleItem.getCompliance() != null
+						&& Boolean.FALSE.equals(sampleItem.getCompliance())) {
+					isCompliance = true;
 					break;
 				}
 			}
-				
-			if(isCompliance){
-				RequestContext.getCurrentInstance().execute("complianceSampleConfirmPopUp.show()");
-			}else{
+
+			if (isCompliance) {
+				RequestContext.getCurrentInstance().execute(
+						QTConstants.COMPLIANCE_SAMPLE_CONFIRMATION_POPUP);
+			} else {
 				this.saveProposalScoreDtls();
 			}
-				
+
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
-					SLALogConstant.QT_GET_COMPLIANCE_DROPDOWN_VALUES, getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GET_COMPLIANCE_DROPDOWN_VALUES,
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
+
 	/**
 	 * This method is to check whether to render disqualified or not.
-	 * @param 
+	 * 
+	 * @param
 	 * @return boolean
 	 */
-	public boolean renderDisqialified(){
+	public boolean renderDisqialified() {
 		boolean renderDisqialifiedColumn = false;
-		if(null!=this.getManagedBean().getDisqualifiedSuppliersDM()
-			&& null!=this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
-			for(ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()){
-				if(null != disQualDtl.isCompliance() && !disQualDtl.isCompliance()){
-					renderDisqialifiedColumn=true;
+		if (null != this.getManagedBean().getDisqualifiedSuppliersDM()
+				&& null != this.getManagedBean().getDisqualifiedSuppliersDM()
+						.getList()) {
+			for (ScQtEvaluationResultDtl disQualDtl : this.getManagedBean()
+					.getDisqualifiedSuppliersDM().getList()) {
+				if (null != disQualDtl.isCompliance()
+						&& !disQualDtl.isCompliance()) {
+					renderDisqialifiedColumn = true;
 					break;
 				}
 			}
 		}
 		return renderDisqialifiedColumn;
 	}
+
 	/**
 	 * This method is to check whether to render diswualified column.
+	 * 
 	 * @param evalResultDtl
 	 * @return boolean
 	 */
-	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl){
+	public boolean isDisqialifiedByCompliance(
+			ScQtEvaluationResultDtl evalResultDtl) {
 		boolean renderDisqialifiedColumn = false;
-			if(null!=evalResultDtl 
-				&& null!=evalResultDtl.isCompliance() 
+		if (null != evalResultDtl.isCompliance()
+				&& null != evalResultDtl.getTotalScore()
 				&& !evalResultDtl.isCompliance()
-				&& null!=evalResultDtl.getTotalScore()
-				&& this.getManagedBean().getPassingScore() < evalResultDtl.getTotalScore().intValue()){
-				renderDisqialifiedColumn=true;
-			}
+				&& this.getManagedBean().getPassingScore() < evalResultDtl
+						.getTotalScore().intValue()) {
+			renderDisqialifiedColumn = true;
+		}
 		return renderDisqialifiedColumn;
 	}
+
 	/**
-	 * This method is to check whether to display mandatory spec and compliance columns for sample items.
-	 * @param 
+	 * This method is to check whether to display mandatory spec and compliance
+	 * columns for sample items.
+	 * 
+	 * @param
 	 * @return boolean
 	 */
-	public boolean displayMandatorySpecAndComplianceColumnSample(){
+	public boolean displayMandatorySpecAndComplianceColumnSample() {
 		boolean render = false;
-		for(ScQtSampleItem sample : this.getManagedBean().getSampleItemList()){
-			if(sample.getScRequestItem()!=null
-				&& sample.getScRequestItem().getTplSpecQuestion()!=null
-				&& sample.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()){
+		for (ScQtSampleItem sample : this.getManagedBean().getSampleItemList()) {
+			if (sample.getScRequestItem() != null
+					&& sample.getScRequestItem().getTplSpecQuestion() != null
+					&& sample.getScRequestItem().getTplSpecQuestion()
+							.isMandatorySpecForSample()) {
 				render = true;
 				break;
 			}
 		}
 		return render;
 	}
+
 	/**
 	 * This method is to get spec master details and checking for sample items.
+	 * 
 	 * @param templateChecklist
-	 * @return 
+	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(List<ScQtSampleItem> templateChecklist){
+	public void retriveSampleSpecmasterForMandatorySpecChecking(
+			List<ScQtSampleItem> templateChecklist) {
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-			
-		for(ScQtSampleItem item : templateChecklist){
+
+		for (ScQtSampleItem item : templateChecklist) {
 			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			specReqDTO.setItemName(item.getScRequestItem().getTplSpecQuestion().getClItem());
+			specReqDTO.setItemName(item.getScRequestItem().getTplSpecQuestion()
+					.getClItem());
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.retrieveTechSpecByItemNames(specReqDTO);
-				
+
 			checkMandatorySpecForSample(item, resDTO);
 			adjustUserScoreBasedOnCompliance(item);
 		}
 	}
-	private void checkMandatorySpecForSample(ScQtSampleItem item, TemplateSpecResDTO resDTO) {
-	    if (resDTO != null && resDTO.getSpecQuestionList() != null) {
-		    for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-		        if (question.isMandatorySpec()) {
-	                item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
-	            }
-	        }
-	    }
-	}
-	private void adjustUserScoreBasedOnCompliance(ScQtSampleItem item) {
-	    BigDecimal userScore = item.getUserScore();
-	    Boolean compliance = item.getCompliance();
 
-	    if (userScore != null && userScore.equals(BigDecimal.ZERO) && compliance != null && !compliance) {
-	        item.setUserScore(BigDecimal.ZERO);
-	    }
-	}
-	/**
-	 * This method is to disable and enable the UserScore in screen and also 
-	 * if disable this method will set default value for UserScore 0.
-	 * @param itm 
-	 * @return
-	 */
-	public void onchangeCompliance(ScQtSampleItem itm){
-		for(ScQtSampleItem item : this.getManagedBean().getSampleItemList()){
-			if(itm.getSampleItemId()==item.getSampleItemId()
-				&& itm.getCompliance()!=null){
-				if(itm.getCompliance()==Boolean.FALSE){
-					item.setUserScore(BigDecimal.ZERO);
-				}else if(itm.getCompliance()==Boolean.TRUE
-						&& itm.getUserScore()!=null
-						&& itm.getUserScore().compareTo(BigDecimal.ZERO) == 0){
-					item.setUserScore(null);
+	private void checkMandatorySpecForSample(ScQtSampleItem item,
+			TemplateSpecResDTO resDTO) {
+		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+			for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
+				if (question.isMandatorySpec()) {
+					item.getScRequestItem().getTplSpecQuestion()
+							.setMandatorySpecForSample(true);
 				}
-			}else if(itm.getSampleItemId()==item.getSampleItemId()
-					&& itm.getCompliance()==null){
-					item.setUserScore(null);
 			}
 		}
 	}
-	//#29187 End Vinod
+
+	private void adjustUserScoreBasedOnCompliance(ScQtSampleItem item) {
+		BigDecimal userScore = item.getUserScore();
+		Boolean compliance = item.getCompliance();
+
+		if (userScore != null && userScore.equals(BigDecimal.ZERO)
+				&& compliance != null && !compliance) {
+			item.setUserScore(BigDecimal.ZERO);
+		}
+	}
+
+	/**
+	 * This method is to disable and enable the UserScore in screen and also if
+	 * disable this method will set default value for UserScore 0.
+	 * 
+	 * @param itm
+	 * @return
+	 */
+	public void onchangeCompliance(ScQtSampleItem itm) {
+		for (ScQtSampleItem item : this.getManagedBean().getSampleItemList()) {
+			if (itm.getSampleItemId() == item.getSampleItemId()
+					&& itm.getCompliance() != null) {
+				if (itm.getCompliance() == Boolean.FALSE) {
+					item.setUserScore(BigDecimal.ZERO);
+				} else if (itm.getCompliance() == Boolean.TRUE
+						&& itm.getUserScore() != null
+						&& itm.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
+					item.setUserScore(null);
+				}
+			} else if (itm.getSampleItemId() == item.getSampleItemId()
+					&& itm.getCompliance() == null) {
+				item.setUserScore(null);
+			}
+		}
+	}
+
+	// #29187 End Vinod
 	//32373 - saperate for recalculate pref margin after done financial package -Start
 	private boolean generatePrefMargin() { 
 		IQTEvaluationSO evaluationSO = null;
