@@ -22696,11 +22696,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		try {
 			selectItems.add(new SelectItem(false, ResourceBundleUtils
-					.getMessage("lbl.txt.select",
+					.getMessage(QTConstants.LBL_TXT_SELECT,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(true, ResourceBundleUtils
-					.getMessage("lbl.txt.yes",
+					.getMessage(QTConstants.LBL_TXT_YES,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
@@ -22716,16 +22716,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @return boolean
 	 */
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
-		boolean render = false;
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
 			if (question.isMandatorySpecForSample()) {
-				render = true;
-				break;
+				return true;
 			}
 		}
 
-		return render;
+		return false;
 	}
 	
 	/**
