@@ -419,6 +419,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private PmParameter decision;
 	private String justification;
 	private String notReachAgreement;
+	private boolean negoDecisitionReadOnly;
 	
 	
     /**
@@ -2395,6 +2396,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setNotReachAgreement(String notReachAgreement) {
 		this.notReachAgreement = notReachAgreement;
+	}
+
+	public boolean isNegoDecisitionReadOnly() {
+		return negoDecisitionReadOnly;
+	}
+
+	public void setNegoDecisitionReadOnly(boolean negoDecisitionReadOnly) {
+		this.negoDecisitionReadOnly = negoDecisitionReadOnly;
 	}
 	
 }

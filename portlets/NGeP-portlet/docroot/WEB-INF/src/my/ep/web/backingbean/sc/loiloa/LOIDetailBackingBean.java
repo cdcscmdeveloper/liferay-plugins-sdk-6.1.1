@@ -1488,7 +1488,7 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setDecision(new PmParameter());
 			getManagedBean().setDecision(scLoi.getNegoDecision());
 			getManagedBean().setJustification(scLoi.getDecisionJustification());
-			getManagedBean().setReadOnly(true);			
+			getManagedBean().setNegoDecisitionReadOnly(true);			
 		}
 		
 		getManagedBean().setSelectedScQtDeduction(null);

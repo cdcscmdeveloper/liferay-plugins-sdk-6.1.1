@@ -16,7 +16,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.decision']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><c:choose>
-						<c:when test="#{!readOnlyTask}">
+						<c:when test="#{!isNotReachAgreement and !readOnlyTask}">
 							<p:selectOneMenu id="decisionId"
 								required="#{not empty param['skipsubmitvalidation']}"
 								style="margin-bottom:5px;width:210px;"
@@ -39,7 +39,7 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.justification']}" /></td>
 				<td colspan="3"><p:inputTextarea id="justificationId"
-						disabled="#{readOnlyTask}" label="#{lbl['lbl.sc.justification']}"
+						disabled="#{readOnlyTask or isNotReachAgreement}" label="#{lbl['lbl.sc.justification']}"
 						required="#{not empty param['skipvalidation']}"
 						value="#{lOIDetailBackingBean.managedBean.justification}"
 						cols="110" rows="3" onkeyup="limitTextArea(this,1000);"
