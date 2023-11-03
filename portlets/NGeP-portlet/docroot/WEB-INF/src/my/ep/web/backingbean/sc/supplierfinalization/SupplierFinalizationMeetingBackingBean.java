@@ -91,7 +91,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -1989,10 +1988,7 @@ if (CollectionUtils.isNotEmpty(
 			}
 			//25037 note 284 - end
 		}catch(IOException e){
-			ScQt scQt = this.getManagedBean().getScQt();
-			String qtNo = scQt == null ? "" : scQt.getQtNo();
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-					qtNo, "supplierFinalizationBackingBean.prepareMemberUpdate", getUserIdSessionFromLoginId(), e);
+			e.printStackTrace();
 		}
 		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
