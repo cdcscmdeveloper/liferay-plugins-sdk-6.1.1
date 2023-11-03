@@ -1053,10 +1053,13 @@ u.underline {
 					<td valign="top" class="text_family">YA <span class="text_family_small_black">(Berdasarkan nilai ambang yang ditetapkan dalam PP/PK1)</span></td>
 				</tr>
 				<tr>
-					<td valign="top" align="left" class="submenu_padding"><span
-						class="text_family">10.2 Bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW</span></td>
+					<td valign="top" align="left" class="submenu_padding">
+						<table class="text_family">
+							<td valign="top" align="center">10.2 </td>
+							<td valign="top">Bilangan minimum peserta Program PROT&Eacute;G&Eacute;-RTW</td>
+						</table>
+					</td>
 					<td valign="top" class="text_family">:</td>
-					<td>
 					<table width="100%" align="left" style="border-collapse: collapse;">
 						<tr>
 							<td>
