@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.simplequote;
 
@@ -2374,10 +2374,6 @@ public class SimpleQuoteBackingBean extends
 								String serviceOrProduct = catalogueSO.checkProductOrService(tplSpecQuestion.getCmItem()
 										.getExtensionCode());
 								if (serviceOrProduct.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
-									if(tplSpecQuestion.getClFulfilmentTypeCode()!=null){
-										log.info("Product Log Check Check "+"Name : " + tplSpecQuestion.getClItem() + " Type" + serviceOrProduct);
-										tplSpecQuestion.getClFulfilmentTypeCode().setParameterId(148L);
-										tplSpecQuestion.getClFulfilmentTypeCode().setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 									if ((tplSpecQuestion.getAnswerTypeCode() != null)
 											&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
 										if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
@@ -2391,7 +2387,7 @@ public class SimpleQuoteBackingBean extends
 
 										}
 									}
-								}}
+								}
 							}
 						}
 						// Bug #35298 - end
@@ -2419,7 +2415,6 @@ public class SimpleQuoteBackingBean extends
 						// Bug #35298 - start
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
-							//log.info("Service Check Check" + " Name : " + tplSpecQuestion.getClItem() + "Fulfilment : " + tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode());
 							if ((tplSpecQuestion.getAnswerTypeCode() != null)
 									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
 								if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
