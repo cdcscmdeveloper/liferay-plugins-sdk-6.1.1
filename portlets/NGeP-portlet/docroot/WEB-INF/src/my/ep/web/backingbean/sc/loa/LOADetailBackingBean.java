@@ -11406,8 +11406,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 					lampiranA3.setDefinationType(resDTO.getPmParameter());
 					lampiranA3.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); //AQ
-			} finally {
-					parameterSO = null;
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+						SLALogConstant.QT_LOA_DETAIL_BACKINGBEAN,
+						this.getManagedBean().getScQt().getQtNo(),
+						SLALogConstant.QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION,
+						getUserIdSessionFromLoginId(), e);
 			}
 					
 				getManagedBean().getScLoa().getScLoaReports().add(lampiranA3);
@@ -11424,14 +11428,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}else{
 			if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
 				for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
-					if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr) && null!=report.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(report.getDefinationType().getParameterCode())) {
-						report.setDeleted(true);
-						oldLampiranA3List.add(report);
-						recordCount++;
-					}else if (StringUtils.isNotBlank(report.getTitle()) 
-							&& report.getTitle().contains(lampiranA3SubStr) 
-							&& null!=report.getDefinationType() 
-							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(report.getDefinationType().getParameterCode())) {
+					String title = StringUtils.isNotBlank(report.getTitle()) ? report.getTitle() : null;
+					if (null!=title 
+							&& title.contains(lampiranA3SubStr)) {
 						report.setDeleted(true);
 						oldLampiranA3List.add(report);
 						recordCount++;
@@ -11456,21 +11455,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 				}//29007-End
 			}
-			//29007 note 503 start commented by Vinod as this changes are not required at this stage
-			/*if(CollectionUtils.isNotEmpty(this.getManagedBean().getTplSpecAnswerList())){
-				boolean updateLampiranA3 = false;
-				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
-					if (StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())
-							&& StringUtils.isNotBlank(this.getManagedBean().getNewSupplierJustification())) {
-						updateLampiranA3 = true;
-						break;
-					}
-				}
-				if (updateLampiranA3) {
-					createLampiranA3forQTVerification(true);
-				}
-			}*/
-			//29007 note 503 end
 		}
 		log.info("==============endcreateLampiranA3forQTVerification=============");
 	}//29007-End
