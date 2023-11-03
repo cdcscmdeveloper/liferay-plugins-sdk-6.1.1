@@ -1645,7 +1645,7 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	
+	/*
 	private List<ScQtContactPerson> generateDOAFromRequestContent(ScQtRequestContent requestContent, ScQt qt) throws IOException{
 		List<ScQtContactPerson> doaList = new ArrayList<ScQtContactPerson>();
 		Object content = requestContent.getRequestContent() == null ? new HashMap<Long, String>(): requestContent.getRequestContent();
@@ -1675,6 +1675,7 @@ public class QTCloneBackingbean extends
 		}
 		return doaList;
 	}
+	*/
 	
 	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
