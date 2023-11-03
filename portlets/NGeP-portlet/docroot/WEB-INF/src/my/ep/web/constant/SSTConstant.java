@@ -91,5 +91,6 @@ public class SSTConstant {
 	public static final String LINE_BREAK = "\n";
 	public static final String BUMIPUTERA = "Bumiputera";
 	public static final String BUKAN_BUMIPUTERA = "Bukan Bumiputera";
+	public static final String UNDERLINE_BOND_AMT = "...................................................";
 	//25025 - end
 }
