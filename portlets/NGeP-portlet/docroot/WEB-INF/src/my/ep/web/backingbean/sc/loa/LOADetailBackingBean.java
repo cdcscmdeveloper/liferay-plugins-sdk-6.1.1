@@ -2478,7 +2478,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("hasLoi", false);
 		context.put("bondReq", scLoa.isBondReq());
 		//25025 - start
-		String bondAmt = SSTConstant.UNDERLINE;
+		String bondAmt = SSTConstant.UNDERLINE_BOND_AMT;
 		String bondAmtText = SSTConstant.UNDERLINE;
 		if (scLoa.getBondAmt() != null) {
 			bondAmt = amountDF.format(scLoa.getBondAmt());
