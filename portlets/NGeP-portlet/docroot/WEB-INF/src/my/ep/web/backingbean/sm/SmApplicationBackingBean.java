@@ -17940,7 +17940,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getEntityBySinglePropertyFromList(cat.getCategoryL2Id(), 
 				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL2");
 		
-		return expCat != null ? expCat.getCategoryL1Name() : cat.getCategoryName();
+		return expCat != null ? expCat.getCategoryL2Name() : cat.getCategoryName();
 	}
 	
 	/**
@@ -17959,7 +17959,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getEntityBySinglePropertyFromList(cat.getCategoryL3Id(), 
 				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL3");
 		
-		return expCat != null ? expCat.getCategoryL1Name() : cat.getCategoryName();
+		return expCat != null ? expCat.getCategoryL3Name() : cat.getCategoryName();
 	}
 	
 	private void updateCategoryCodeNames(){
