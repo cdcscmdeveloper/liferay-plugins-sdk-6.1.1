@@ -4928,7 +4928,7 @@ public void saveComplianceSample() {
 							if (this.getManagedBean().getScQt().isTechEvaluationReq()) {
 								if (this.getManagedBean().getEvaluationCheckListType().equalsIgnoreCase("FS")
 										&& this.getManagedBean().getScQt().isPartial()) {
-									if (this.getManagedBean().getTabItemPackageIndex() == 1) {
+										//sonarQubeIssue 1 #91 # Vinod # Removed condition as it perform same
 										//wip status start
 										//#25138 farid - Start
 										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4942,20 +4942,6 @@ public void saveComplianceSample() {
 										}
 										//#25138 farid - End
 										//wip status end
-									} else {
-										// wip status start
-										evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-
-										int wipstatus = evaluationSO.checkWipScoreSetting(zoneReqDto);
-										
-										if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-										}else {
-											zoneReqDto.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-										}
-										// wip status end
-									}
 									
 								}else{
 									if (this.getManagedBean().getTabItemPackageIndex() == 1) {
