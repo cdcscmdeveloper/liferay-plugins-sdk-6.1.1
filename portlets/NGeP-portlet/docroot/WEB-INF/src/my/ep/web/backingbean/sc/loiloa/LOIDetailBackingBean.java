@@ -6681,7 +6681,7 @@ public class LOIDetailBackingBean extends
 				break;
 			}
 		}
-		if(alredyAdded == false){
+		if(!alredyAdded){//sonarQubeIssue7#84
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				negoTerm.setSelectedTerm(Boolean.FALSE);
 			} else{
@@ -6737,7 +6737,7 @@ public class LOIDetailBackingBean extends
 		
 		ScLoi scLoi =this. getManagedBean().getScLoi();
 
-		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())) {//sonarQubeIssue7#84
 			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
 				term.setSelectTerm(Boolean.FALSE);	
 			}

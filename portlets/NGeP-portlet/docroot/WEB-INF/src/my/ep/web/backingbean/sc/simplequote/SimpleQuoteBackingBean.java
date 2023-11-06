@@ -1880,13 +1880,11 @@ public class SimpleQuoteBackingBean extends
 			List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
 			List<ZonesBean> beans = getManagedBean().getBeans();
 
-			if (scQuote.getQuoteZone().getTplSpecZoneDtls() != null
-					&& scQuote.getQuoteZone().getTplSpecZoneDtls().size() > 0) {
+			if (CollectionUtils.isNotEmpty(scQuote.getQuoteZone().getTplSpecZoneDtls())) {//sonarQubeIssue13#84
 				for (TplSpecZoneDtl tplSpecZoneDtl : scQuote.getQuoteZone()
 						.getTplSpecZoneDtls()) {
 					ZonesBean zonesBean = new ZonesBean();
-					if (tplSpecZoneDtl.getTplSpecZoneLocs() != null
-							&& tplSpecZoneDtl.getTplSpecZoneLocs().size() > 0) {
+					if (CollectionUtils.isNotEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {//sonarQubeIssue14#84
 						zonesBean.setTplSpecZoneDtl(tplSpecZoneDtl);
 						zonesBean.setTplSpecZoneLocs(tplSpecZoneDtl
 								.getTplSpecZoneLocs());
@@ -1988,8 +1986,7 @@ public class SimpleQuoteBackingBean extends
 							getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
 		}
 
-		if (scQuote.getRequestNotes() != null
-				&& scQuote.getRequestNotes().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getRequestNotes())) {//sonarQubeIssue15#84
 			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
 		}
 		
@@ -2011,8 +2008,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// business nature details
-		if (scQuote.getBusinessNatureCriterias() != null
-				&& scQuote.getBusinessNatureCriterias().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getBusinessNatureCriterias())) {//sonarQubeIssue16#84
 			getManagedBean().setByBusinessNature(Boolean.TRUE);
 			getManagedBean().setBusinessNatureCriterias(
 					scQuote.getBusinessNatureCriterias());
@@ -2025,8 +2021,7 @@ public class SimpleQuoteBackingBean extends
 		} else{
 			quotePanelItem = scQuote.getPanelItem();
 		}
-		if (scQuote.getScQuoteSuppliers() != null
-				&& scQuote.getScQuoteSuppliers().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getScQuoteSuppliers())) {//sonarQubeIssue17#84
 			// panel supplier
 			if (scQuote.isPanel()) {
 				getManagedBean().setPanelSuppliers(
@@ -3391,13 +3386,12 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private List<ScLocationStateCriteria> getLocationStateCriterias(
 			List<TreeNode> treeNodes, ScQuote quote) {
-		List<ScLocationStateCriteria> results = new ArrayList<ScLocationStateCriteria>();
+		List<ScLocationStateCriteria> results = new ArrayList<>();//sonarQubeIssue18#84
 		List<PmState> states = getPmStates(treeNodes);
-		if (states != null && states.size() > 0) {
+		if (CollectionUtils.isNotEmpty(states)) {//sonarQubeIssue18#84
 			for (PmState state : states) {
 				boolean isState = false;
-				if (quote.getLocationStateCriterias() != null
-						&& quote.getLocationStateCriterias().size() > 0) {
+				if (CollectionUtils.isNotEmpty(quote.getLocationStateCriterias())) {//sonarQubeIssue18#84
 					for (ScLocationStateCriteria criteriaState : quote
 							.getLocationStateCriterias()) {
 						if (state.getStateId().equals(
@@ -3429,13 +3423,12 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private List<ScLocationDivisionCriteria> getLocationDivisionCriterias(
 			List<TreeNode> treeNodes, ScQuote quote) {
-		List<ScLocationDivisionCriteria> results = new ArrayList<ScLocationDivisionCriteria>();
+		List<ScLocationDivisionCriteria> results = new ArrayList<>();//sonarQubeIssue19#84
 		List<PmDivision> divisions = getPmDivisions(treeNodes);
-		if (divisions != null && divisions.size() > 0) {
+		if (CollectionUtils.isNotEmpty(divisions)) {//sonarQubeIssue19#84
 			for (PmDivision division : divisions) {
 				boolean isDivision = false;
-				if (quote.getLocationDivisionCriterias() != null
-						&& quote.getLocationDivisionCriterias().size() > 0) {
+				if (CollectionUtils.isNotEmpty(quote.getLocationDivisionCriterias())) {//sonarQubeIssue19#84
 					for (ScLocationDivisionCriteria criteriaDiv : quote
 							.getLocationDivisionCriterias()) {
 						if (division.getDivisionId().equals(
@@ -3467,14 +3460,13 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private List<ScLocationDistrictCriteria> getLocationDistrictCriterias(
 			List<TreeNode> treeNodes, ScQuote quote) {
-		List<ScLocationDistrictCriteria> results = new ArrayList<ScLocationDistrictCriteria>();
+		List<ScLocationDistrictCriteria> results = new ArrayList<>();//sonarQubeIssue20#84
 		for (TreeNode treeNode : treeNodes) {
 			List<PmDistrict> districts = getPmDistricts(treeNode.getChildren());
-			if (districts != null && districts.size() > 0) {
+			if (CollectionUtils.isNotEmpty(districts)) {//sonarQubeIssue20#84
 				for (PmDistrict district : districts) {
 					boolean isDistict = false;
-					if (quote.getLocationDistrictCriterias() != null
-							&& quote.getLocationDistrictCriterias().size() > 0) {
+					if (CollectionUtils.isNotEmpty(quote.getLocationDistrictCriterias())) {//sonarQubeIssue20#84
 						for (ScLocationDistrictCriteria criteriaDist : quote
 								.getLocationDistrictCriterias()) {
 							if (district.getDistrictId().equals(
@@ -3667,7 +3659,7 @@ public class SimpleQuoteBackingBean extends
 	 * @return the list
 	 */
 	private List<TreeNode> deleteChildTreeNodes(List<TreeNode> treeNodes) {
-		List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+		List<TreeNode> nodesToRemoved = new ArrayList<>();//sonarQubeIssue21#84
 		if (treeNodes != null) {
 
 			for (TreeNode treeNode : treeNodes) {
@@ -3679,18 +3671,17 @@ public class SimpleQuoteBackingBean extends
 																// not
 					nodesToRemoved.add(treeNode);
 				} else {
-					if (treeNode.getChildren() != null
-							&& treeNode.getChildren().size() > 0) {
+					if (CollectionUtils.isNotEmpty(treeNode.getChildren())) {//sonarQubeIssue21#84
 						deleteChildTreeNodes(treeNode.getChildren());
 
-						if (treeNode.getChildren().size() == 0) {
+						if (CollectionUtils.isEmpty(treeNode.getChildren())) {//sonarQubeIssue21#84
 							nodesToRemoved.add(treeNode);
 						}
 					}
 				}
 			}
 
-			if (nodesToRemoved.size() > 0) {
+			if (CollectionUtils.isNotEmpty(nodesToRemoved)) {//sonarQubeIssue21#84
 				treeNodes.removeAll(nodesToRemoved);
 			}
 		}
@@ -3746,8 +3737,7 @@ public class SimpleQuoteBackingBean extends
 		ScQuote quote = getManagedBean().getScQuote();
 		if (tplSpecZoneDtl != null) {
 			if (quote.getQuoteZone() != null
-					&& quote.getQuoteZone().getTplSpecZoneDtls() != null
-					&& quote.getQuoteZone().getTplSpecZoneDtls().size() > 0) {
+					&& CollectionUtils.isNotEmpty(quote.getQuoteZone().getTplSpecZoneDtls())) {//sonarQubeIssue22#84
 				quote.getQuoteZone().getTplSpecZoneDtls()
 						.remove(tplSpecZoneDtl);
 				quote.getQuoteZone().setModified(Boolean.TRUE);
@@ -5070,8 +5060,7 @@ public class SimpleQuoteBackingBean extends
 					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
 		}
 
-		if (scQuote.getRequestNotes() != null
-				&& scQuote.getRequestNotes().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getRequestNotes())) {//sonarQubeIssue23#84
 			getManagedBean().getRequestNote().setPmOrgProfile(
 					scQuote.getRequestNotes().get(0).getPmOrgProfile());
 		}
@@ -5094,8 +5083,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// business nature details
-		if (scQuote.getBusinessNatureCriterias() != null
-				&& scQuote.getBusinessNatureCriterias().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getBusinessNatureCriterias())) {//sonarQubeIssue24#84
 			getManagedBean().setByBusinessNature(Boolean.TRUE);
 			getManagedBean().setBusinessNatureCriterias(
 					scQuote.getBusinessNatureCriterias());
@@ -5208,8 +5196,7 @@ public class SimpleQuoteBackingBean extends
 				// clear session data.
 				renewSesionObject();
 
-				if (scQuote.getQuoteDocs() != null
-						&& scQuote.getQuoteDocs().size() > 0) {
+				if (CollectionUtils.isNotEmpty(scQuote.getQuoteDocs())) {//sonarQubeIssue25#84
 					for (ScQuoteDoc quoteDoc : scQuote.getQuoteDocs()) {
 						// adding selected product or service question only
 						if (quoteDoc.getSpecMaster().getItemTypeCode()
@@ -5685,8 +5672,7 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// update is submitted by supplier
-			if (quote.getScQuoteSuppliers() != null
-					&& quote.getScQuoteSuppliers().size() > 0) {
+			if (CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {//sonarQubeIssue26#84
 				for (ScQuoteSupplier scQuoteSupplier : quote
 						.getScQuoteSuppliers()) {
 					if (getManagedBean().getScQuoteSupplier() != null) {
@@ -5934,8 +5920,7 @@ public class SimpleQuoteBackingBean extends
 			}
 			// #30552 - end
 			// update is submitted by supplier
-			if (quote.getScQuoteSuppliers() != null
-					&& quote.getScQuoteSuppliers().size() > 0) {
+			if (CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {//sonarQubeIssue27#84
 				for (ScQuoteSupplier scQuoteSupplier : quote
 						.getScQuoteSuppliers()) {
 					if (getManagedBean().getScQuoteSupplier() != null) {
@@ -6690,8 +6675,7 @@ public class SimpleQuoteBackingBean extends
 		List<Long> divIds = null;
 		List<Long> distIds = null;
 
-		if (tplSpecZoneDtl.getTplSpecZoneLocs() != null
-				&& tplSpecZoneDtl.getTplSpecZoneLocs().size() > 0) {
+		if (CollectionUtils.isNotEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {//sonarQubeIssue28#84
 			List<TplSpecZoneLoc> currentTplSpecLocs = tplSpecZoneDtl
 					.getTplSpecZoneLocs();
 			stateIds = getPmStateIds(currentTplSpecLocs);
@@ -6701,15 +6685,14 @@ public class SimpleQuoteBackingBean extends
 
 		List<ZonesBean> list = getManagedBean().getBeans();
 
-		if (list != null && list.size() > 0) {
+		if (CollectionUtils.isNotEmpty(list)) {//sonarQubeIssue29#84
 
 			for (ZonesBean zonesBean : list) {
 				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
 
 				if (prevsZone != null) {
 
-					if (prevsZone.getTplSpecZoneLocs() != null
-							&& prevsZone.getTplSpecZoneLocs().size() > 0) {
+					if (CollectionUtils.isNotEmpty(prevsZone.getTplSpecZoneLocs())) {//sonarQubeIssue29#84
 						List<TplSpecZoneLoc> previousTplSpecLocs = prevsZone
 								.getTplSpecZoneLocs();
 						for (TplSpecZoneLoc TplSpecZoneLoc : previousTplSpecLocs) {

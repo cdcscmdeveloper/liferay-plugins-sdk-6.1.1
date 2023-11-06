@@ -2847,7 +2847,6 @@ public class SpecificationBackingBean extends
 									pkgOfferPrice.setScoreType(new BigDecimal(QTConstants.AUTO_SCORE));	
 									this.getManagedBean().setOfferScoreType(String.valueOf(pkgOfferPrice
 											.getScoreType().intValue()));
-									//scoreTypeN=QTConstants.AUTO_SCORE;
 								}//34852_End
 								
 								//#29168 - Bug - start
