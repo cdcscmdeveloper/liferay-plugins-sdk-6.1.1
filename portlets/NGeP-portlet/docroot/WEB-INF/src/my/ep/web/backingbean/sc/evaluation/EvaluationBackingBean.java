@@ -156,7 +156,6 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
@@ -189,6 +188,11 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class EvaluationBackingBean extends
 		SourcingBaseBackingBean<EvaluationManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The skip. */
 	private boolean skip;
@@ -1257,7 +1261,8 @@ public class EvaluationBackingBean extends
 				}
 
 				reqDTO.setComplianceList(technicalCompliance);
-			}
+			}			
+			
 			//#34493, #34427 - Start
 			//#28786 - start
 			/*

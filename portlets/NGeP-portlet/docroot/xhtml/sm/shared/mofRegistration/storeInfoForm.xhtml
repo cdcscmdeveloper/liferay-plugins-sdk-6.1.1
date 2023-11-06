@@ -265,11 +265,13 @@
 			</table>
 			<br />
 			<div align="right">
+			<!-- #34303 Start -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-					action="#{backingBean.addOrUpdateStoreToSmAppl}"
+					action="#{backingBean.addOrUpdateStoreToSmApplNew}"
 					partialSubmit="true" process="storeDialog"
 					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
 					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" />
+			<!-- #34303 End -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelStoreSaveorUpdate}"

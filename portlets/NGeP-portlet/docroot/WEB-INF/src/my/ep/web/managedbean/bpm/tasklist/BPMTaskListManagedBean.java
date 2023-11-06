@@ -746,7 +746,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					getGroupTaskCreatedDateTo().setMinutes(59);
 				}
 				
-				log.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
+				//log.info("date from = "+getGroupTaskCreatedDateFrom() + " date to = "+getGroupTaskCreatedDateTo());
 				
 				reqDTO.setCreatedDateFrom(getGroupTaskCreatedDateFrom());
 				reqDTO.setCreatedDateTo(getGroupTaskCreatedDateTo());
@@ -1898,7 +1898,23 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void setAscending(boolean ascending) {
 		this.ascending = ascending;
 	}
-	
+
+	public String getSort_byGroup() {
+		return sort_byGroup;
+	}
+
+	public void setSort_byGroup(String sort_byGroup) {
+		this.sort_byGroup = sort_byGroup;
+	}
+
+	public boolean isAscendingGroup() {
+		return ascendingGroup;
+	}
+
+	public void setAscendingGroup(boolean ascendingGroup) {
+		this.ascendingGroup = ascendingGroup;
+	}
+
 	public boolean isFromSearchBttn() {
 		return fromSearchBttn;
 	}
@@ -1937,22 +1953,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setGroupTaskCreatedDateTo(Date groupTaskCreatedDateTo) {
 		this.groupTaskCreatedDateTo = groupTaskCreatedDateTo;
-	}
-	
-	public String getSort_byGroup() {
-		return sort_byGroup;
-	}
-
-	public void setSort_byGroup(String sort_byGroup) {
-		this.sort_byGroup = sort_byGroup;
-	}
-
-	public boolean isAscendingGroup() {
-		return ascendingGroup;
-	}
-
-	public void setAscendingGroup(boolean ascendingGroup) {
-		this.ascendingGroup = ascendingGroup;
 	}
 	
 	public String getRoleType() {
