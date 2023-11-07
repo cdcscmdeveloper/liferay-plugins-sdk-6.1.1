@@ -72,6 +72,8 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_DECISION_TYPE = "PSTATUSID";//#21692
 	public static final String QUOTATION_TENDER_TITLE ="PQTTITLE";//#29580
 	public static final String PARAM_PROPOSAL_NO ="PPROPOSALNO";//#14306
+	public static final String PARAM_SUPPLIER_ID ="P_SUPP";//#14306
+
 	
 	// 29580 - Start (Harun) Add report status for mutiple option 
 	//Report status

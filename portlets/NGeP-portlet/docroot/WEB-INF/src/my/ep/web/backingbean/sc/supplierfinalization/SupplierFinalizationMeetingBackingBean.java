@@ -1904,7 +1904,11 @@ if (CollectionUtils.isNotEmpty(
 	// this method checking two meeting dates or equal or not.
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
-		if (null != meetingList && meetingList.size() >= 1) {
+		//Sonarqube #83 - start
+		if (null == meetingList)
+			throw new IllegalArgumentException("Meeting list should not be null.");
+		if (CollectionUtils.isNotEmpty(meetingList)) {
+		//Sonarqube #83 - end
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			boolean duplicateDate = false;
 			for (ScQtMeeting meeting : meetingList) {
@@ -1921,15 +1925,12 @@ if (CollectionUtils.isNotEmpty(
 				}
 
 			}
-			if (duplicateDate == true) {
+			if (duplicateDate) {//Sonarqube #83
 				throw new EpException(MessageConst.ERROR_760271);
 			} else {
 				meetingList.add(scqtMeeting);
 			}
 		} else {
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (meetingList == null)
-				meetingList = new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 
