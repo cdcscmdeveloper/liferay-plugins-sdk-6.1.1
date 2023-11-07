@@ -6002,14 +6002,12 @@ public class EvaluationBackingBean extends
 						
 						//#32089
 						/*#29187 Start Vinod*/
-						if (null != this.getManagedBean().getScQt()
-								&& this.getManagedBean().getScQt().isZonal()
-								&& null!=this.getManagedBean().getScQt().getQtStatus()) {
-							if(null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
-								&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_EVALUATION_PROPOSAL
-								&& !"T".equalsIgnoreCase(getManagedBean().getCheckListType())){
-								this.getManagedBean().setTplSpecZoneDtl(specAnswers.getTplSpecSuppAnswer().getTplSpecZoneDtl());
-							}
+						if (this.getManagedBean().getScQt().isZonal()
+								&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+										this.getManagedBean().getScQt().getQtStatus().getStatusId())
+								&& !"T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
+							this.getManagedBean().setTplSpecZoneDtl(
+									specAnswers.getTplSpecSuppAnswer().getTplSpecZoneDtl());
 						}
 						/*#29187 End Vinod*/
 					}
@@ -18720,15 +18718,14 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderZoneForFinancial() {
-		boolean renderZone = true;
-		if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(this.getManagedBean()
-				.getScQt().getQtStatus().getStatusId())
+		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+				this.getManagedBean().getScQt().getQtStatus().getStatusId())
 				&& (QTConstants.FINANCIAL_EVALUATION
 						.equalsIgnoreCase(getManagedBean().getCheckListType()) || QTConstants.TECHNICAL_EVALUATION
 						.equalsIgnoreCase(getManagedBean().getCheckListType()))) {
-			renderZone = false;
+			return false;
 		}
-		return renderZone;
+		return true;
 	}
 
 	/**
