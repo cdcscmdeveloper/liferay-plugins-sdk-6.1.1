@@ -2178,7 +2178,8 @@ public class EvaluationMeetingBackingBean extends
     	this.getManagedBean().getScQtApprovalRemarks().get(0).setRemark(remark);
     	//25037 #568 - end
 			}
-	private void prepareCommitteeHistory(ScQtCommittee qtCommittee){
+    
+	private void prepareCommitteeHistory(ScQtCommittee qtCommittee) {
 		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
 		try {
 			if (CollectionUtils.isNotEmpty(histories)) {
@@ -2188,7 +2189,6 @@ public class EvaluationMeetingBackingBean extends
 						.deserializeList(history.getCommitteeMembers());
 				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
 			}
-
 			this.getManagedBean().setCurrentCommitteeType(
 					this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 			this.getManagedBean().setHistoryPaginator(new Paginator(histories));
@@ -2200,6 +2200,7 @@ public class EvaluationMeetingBackingBean extends
 			List<ScQtApprovalRemark> remarkList = approval.getScQtApprovalRemarks();
 			if (CollectionUtils.isEmpty(remarkList)) {
 				remarkList = new ArrayList<ScQtApprovalRemark>();
+		
 			}
 			remarkList = initializeRemarks(qtCommittee, qtCommittee.getCurrentStatus(), remarkList,
 					ScQtApprovalRemark.class);

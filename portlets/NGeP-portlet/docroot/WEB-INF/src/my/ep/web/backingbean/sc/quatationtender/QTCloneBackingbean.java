@@ -1050,8 +1050,8 @@ public class QTCloneBackingbean extends
 								try {
 									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+											"retrieveDocs", getUserIdSessionFromLoginId(), e);//sqube_vulnerability_56
 								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 							}
@@ -1645,7 +1645,7 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	
+	/*
 	private List<ScQtContactPerson> generateDOAFromRequestContent(ScQtRequestContent requestContent, ScQt qt) throws IOException{
 		List<ScQtContactPerson> doaList = new ArrayList<ScQtContactPerson>();
 		Object content = requestContent.getRequestContent() == null ? new HashMap<Long, String>(): requestContent.getRequestContent();
@@ -1675,6 +1675,7 @@ public class QTCloneBackingbean extends
 		}
 		return doaList;
 	}
+	*/
 	
 	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
 		ScQtContactPerson contactPerson = new ScQtContactPerson();

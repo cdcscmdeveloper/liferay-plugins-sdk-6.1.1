@@ -5757,7 +5757,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						} catch (IOException e) {
 							String qtNo = qt == null ? "" : qt.getQtNo();
 							SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-									qtNo, "sourcingbaseBackingBean.assertSpecCommitteeMaintenanceInProgress", getUserIdSessionFromLoginId(), e);	
+									qtNo, "sourcingbaseBackingBean.assertSpecCommitteeMaintenanceInProgress", getUserIdSessionFromLoginId(), e);
 						} 
 					}else{
 					Collections.sort(members, new Comparator<ScCommitteeMember>() {
