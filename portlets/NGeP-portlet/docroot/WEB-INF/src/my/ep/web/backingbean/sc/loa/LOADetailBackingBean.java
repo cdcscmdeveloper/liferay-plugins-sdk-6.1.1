@@ -10879,6 +10879,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return 
 	 */
 	public void submitConformationForLampiranA3(){
+		log.info("submitConformationForLampiranA3");
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
 		int recordCount = 0;
@@ -10889,8 +10890,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		int zoneitemCount = 0;
 		ScLoiLoaItem zoneloiLoaItem = null;
 		boolean isZonal = this.getManagedBean().getScLoa().getScLoiLoa().isZonal();
-		List<Long> itemIds = new ArrayList<>();
-		HashMap<Long, Long> itemZoneMap = new HashMap<>();
 		
 		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
 			for(ScLoiLoaItem loiLoaItem : sortLoiLoaItems(this.getManagedBean().getScLoa().getScLoiLoaItems(), isZonal)){
@@ -10900,28 +10899,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				specReqDto.setSpecSearchForApp(true);
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 			
-				int newSupplierOffer = checkSupplierOffered(templateSpecResDTO);
+				int newSupplierOffer =0;
+				for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
+					if(StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())){
+						newSupplierOffer++;
+					}
+				}
 				if(null!=this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()){
 					loiLoaItem.setScLoa(this.getManagedBean().getScLoa());
 				}
-				boolean addItem = !loiLoaItem.isComplete()
-						&& (newSupplierOffer > 0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()));
-				if(addItem
-					&& !isZonal
-					&& (CollectionUtils.isEmpty(itemIds) || !itemIds.contains(loiLoaItem.getScRequestItem()
-							.getRequestNoteItemId()))){
-					itemIds.add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
+				if(!loiLoaItem.isComplete() 
+					&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+					&& !isZonal){
 					itemCount++;
 					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
-				}else if(addItem
-						&& isZonal
-						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
-								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
-					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
-							.getTplSpecZoneDtl().getSpecZoneId());
-					if (null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-									.getTplSpecZoneDtl().getSpecZoneId())) {
+				}else if(!loiLoaItem.isComplete() 
+						&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+						&& isZonal){
+					if(null==zoneloiLoaItem 
+						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
 						zoneloiLoaItem=loiLoaItem;
 						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
 						zoneitemCount=0;
@@ -10977,8 +10973,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		int zoneitemCount = 0;
 		ScLoiLoaItem zoneloiLoaItem = null;
 		boolean isZonal = this.getManagedBean().getScLoa().getScLoiLoa().isZonal();
-		List<Long> itemIds = new ArrayList<>();
-		HashMap<Long, Long> itemZoneMap = new HashMap<>();
 		
 		if(this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
 			for(ScLoiLoaItem loiLoaItem : sortLoiLoaItems(this.getManagedBean().getScLoa().getScLoiLoaItems(), isZonal)){
@@ -10988,21 +10982,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				specReqDto.setSpecSearchForApp(true);
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 			
-				int newSupplierOffer = checkSupplierOffered(templateSpecResDTO);
-				boolean addItemZonal = !loiLoaItem.isComplete()
-						&& (newSupplierOffer > 0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification())) && isZonal;
-				boolean addItemNonZonal = !loiLoaItem.isComplete()
-						&& (newSupplierOffer > 0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification())) && !isZonal;
-				if(addItemNonZonal
-					&& (CollectionUtils.isEmpty(itemIds) || !itemIds.contains(loiLoaItem.getScRequestItem()
-							.getRequestNoteItemId()))){
+				int newSupplierOffer =0;
+				for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
+					if(StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())){
+						newSupplierOffer++;
+					}
+				}
+				if(!loiLoaItem.isComplete() 
+					&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+					&& !isZonal){
 					itemCount++;
 					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
-				}else if(addItemZonal
-						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
-								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
-					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
-							.getTplSpecZoneDtl().getSpecZoneId());
+				}else if(!loiLoaItem.isComplete() 
+						&& (newSupplierOffer>0 || StringUtils.isNotBlank(loiLoaItem.getLoaSpecJustification()))
+						&& isZonal){
 					if(null==zoneloiLoaItem 
 						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
 						zoneloiLoaItem=loiLoaItem;
@@ -11054,25 +11047,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		
 		return loiLoaItems;
-	}
-	private int checkSupplierOffered(TemplateSpecResDTO templateSpecResDTO){
-		int newSupplierOffer=0;
-		for(TplSpecAnswer tplSpecAnswer: templateSpecResDTO.getSpecAnswerList()){
-			if(StringUtils.isNotBlank(tplSpecAnswer.getNewSupplierOffer())){
-				newSupplierOffer++;
-			}
-		}
-		return newSupplierOffer;
-	}
-	private boolean checkItemAndZoneAdded(HashMap<Long, Long> itemZoneMap,Long itemId,Long specZoneId){
-		for (Map.Entry<Long, Long> itemZone : itemZoneMap.entrySet()) {
-			Long eItemId = itemZone.getKey();
-			Long eZoneId = itemZone.getValue();
-			if(eItemId==itemId && eZoneId==specZoneId){
-				return false;
-			}
-		}
-		return true;
 	}
 	public boolean isQTMaintenanceScreen() {
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());//29007&31423
