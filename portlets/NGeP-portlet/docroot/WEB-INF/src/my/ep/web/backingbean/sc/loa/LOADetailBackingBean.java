@@ -11619,12 +11619,27 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		if (reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
 				|| reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+			//#34757 note-#34 - Start
+			for (ScLoiLoaItem item : this.getManagedBean().getLoiLoaItemsResult()) {
+				if (item.getScRequestItem().getRequestNoteItemId().equals(reqItem.getRequestNoteItemId()) &&
+						null != item.getTplSpecTierQty() && !item.getTplSpecTierQty().getFromQty().equals(BigDecimal.ONE)) {
+					item.getScRequestItem().setCmItem(reqItem.getCmItem());
+				}
+			}
+			//#34757 note-#34 - End
 			return getQtAwardSO().getCmItemExtensionCode(reqItem);
 		} else {
 			return reqItem.getCmItem().getExtensionCode();
 		}
 	}
 	
+	/**
+	 * decide whether to show 'Assign' button or not
+	 * show button if data is not tier qty
+	 * 
+	 * @param loiLoaItem
+	 * @return
+	 */
 	public boolean isShowAssignButton(ScLoiLoaItem loiLoaItem) {
 		//35284 - start
 		if (loiLoaItem == null) {
