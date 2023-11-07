@@ -27,7 +27,11 @@
 			
 			<td class="txtBold" width="15%">MOF No. </td>
 			<td width="5%">:</td>
-			<td width="20%"> $mof </td>
+			##34920
+			<td width="20%"> 
+				#if($mof != $null) $mof 
+				#else N/A
+				#end
 			<td width="5%"> </td>
 			<br/><br/>
 		</tr>
