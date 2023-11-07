@@ -32,6 +32,7 @@
 				#if($mof != $null) $mof 
 				#else N/A
 				#end
+			</td>
 			<td width="5%"> </td>
 			<br/><br/>
 		</tr>
