@@ -11633,6 +11633,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	
+	/**
+	 * decide whether to show 'Assign' button or not
+	 * show button if data is not tier qty
+	 * 
+	 * @param loiLoaItem
+	 * @return
+	 */
 	public boolean isShowAssignButton(ScLoiLoaItem loiLoaItem) {
 		//35284 - start
 		if (loiLoaItem == null) {
