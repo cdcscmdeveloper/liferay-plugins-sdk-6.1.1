@@ -11001,6 +11001,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}else if(addItemZonal
 						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
+					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
+							.getTplSpecZoneDtl().getSpecZoneId());
 					if(null==zoneloiLoaItem 
 						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
 						zoneloiLoaItem=loiLoaItem;
