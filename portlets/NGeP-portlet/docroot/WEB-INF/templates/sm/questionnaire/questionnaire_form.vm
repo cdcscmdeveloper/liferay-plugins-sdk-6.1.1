@@ -52,18 +52,9 @@
 		<tr>
 			##Loop Question 
 			<td> <br/><br/>
-			##START #34920
-			#set($i = 0)
 			#foreach($ques in $question)
 				<tr>
-					<td >
-						#if ($ques.smQuestion.smAnswerCategory.answerCategoryId != 2)
-							#set($i = $i+1)
-							$i.
-						#else
-					 	#end
-					</td>
-					##END #34920
+					<td >$velocityCount.</td>
 					<td >$!ques.smQuestion.questionValue</td>
 					
 				</tr>
@@ -73,10 +64,7 @@
 					</td>
 					<td>
 					#if ($ques.smQuestion.smAnswerCategory.answerCategoryId == 2) 
-						##34920
-						<p style="text-align: justify;padding: 10px;min-height: 100px;border:solid thin black;">
-							$!ques.otherRemark
-						</p>
+						$!ques.otherRemark
 					#else 
 						#foreach($answerid  in $ques.smQuestion.smAnswerCategory.smAnswers) 
 							#if($ques.smQuestion.smAnswerCategory.answerCategoryId == 3) ##soalan no1,no4- no11 
