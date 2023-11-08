@@ -773,7 +773,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			
 			//#15851 start
-			
 			if(ctBackingBean.getManagedBean().getDocTypeFromTaskList()!=null){
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setUpdateAction(false);
@@ -848,6 +847,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().setTaskNameFromTaskList(getManagedBean().getTaskName());
 				//Bug 34142, 15851 - shaqimi start 04/12/2022
 			}
+			//#15851 end
 			
 			/*Define boolean value to control gui details*/
 			getManagedBean().setSelectedItem(null);
@@ -1038,7 +1038,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					//if it goes scl link first, this will be fired as ViewSCLFromContract is false
 					if(!ctBackingBean.getManagedBean().isViewSCLFromContract()){
-						ctBackingBean.getManagedBean().setViewSclFromAgreement(false);
+						ctBackingBean.getManagedBean().setViewSclFromAgreement(false); //#15851
 					}
 					//this is back button from contract link > scl link > back button. if it goes contract link > scl link > back button, 
 					//this will be fired first before going on the scl page > back button.
