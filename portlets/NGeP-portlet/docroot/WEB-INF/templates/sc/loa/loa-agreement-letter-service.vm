@@ -344,8 +344,8 @@ u.underline {
 				#if($isSL1M == "true")
 					<p>
 						<span class="text_family_red">
-									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> 
-									(PROT&Eacute;G&Eacute;- RTW) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
+									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs- Ready To Work </i> 
+									(PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 									dengan bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW sebanyak ______________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 					</p>
@@ -457,15 +457,18 @@ u.underline {
 						#set ($numberCount = $numberCount+1)
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
 					</p>
-					<p>
+					<p style="padding-bottom:110px; margin-bottom:0px">
 					## 11
 						#set ($numberCount = $numberCount+1)
-						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori.</span>
-						<br/><span class="text_family_small">*(Perenggan #if ($isSL1M == "true")9 #else 8 #end hingga perenggan #if ($isSL1M == "true")12 #else 11 #end  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP</span>								
+					</p>
+					<span class="text_family_red">dan penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori.</span>
+					<br/><span class="text_family_small">(Perenggan #if ($isSL1M == "true")9 #else 8 #end hingga perenggan #if ($isSL1M == "true")12 #else 11 #end  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+					
 					<p>
 						#set ($numberCount = $numberCount+1)
 						## 12					
-						<span class="text_family">*$numberCount.&#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan Surat ini sekiranya:  </span>
+						<span class="text_family">$numberCount.&#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan Surat ini sekiranya:  </span>
 					</p>		
 					<div class="text_indent">
 						## 25025- start
@@ -1050,10 +1053,13 @@ u.underline {
 					<td valign="top" class="text_family">YA <span class="text_family_small_black">(Berdasarkan nilai ambang yang ditetapkan dalam PP/PK1)</span></td>
 				</tr>
 				<tr>
-					<td valign="top" align="left" class="submenu_padding"><span
-						class="text_family">10.2 Bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW</span></td>
+					<td valign="top" align="left" class="submenu_padding">
+						<table class="text_family">
+							<td valign="top" align="center">10.2 </td>
+							<td valign="top">Bilangan minimum peserta Program PROT&Eacute;G&Eacute;-RTW</td>
+						</table>
+					</td>
 					<td valign="top" class="text_family">:</td>
-					<td>
 					<table width="100%" align="left" style="border-collapse: collapse;">
 						<tr>
 							<td>
@@ -1265,34 +1271,34 @@ u.underline {
 	</tr>
 	
 	<tr align='left'>
-				<td><span style='font-size: 10px; font-family: Times New Roman;'>
-				<table width='100%' border="1">
+				<td><span>
+				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th>Zone</th> 
+							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-							<th>Nama Item</th>
-							<th>Kuantiti</th>
-							<th>Jenis Perkhidmatan</th>
+							<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
+							<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
+							<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach($productBean in $jadualHargaItemBean.productItemBeans)
 						<tr class="ui-content">
 							#if ($isZonal)
-								<td class="standard border-bottom left">
+								<td class="text_family">
 								#if($productBean.zonal) 
 									$productBean.zoneName
 								#end</td> 
 							#end
-							<td class="standard border-bottom left">$productBean.item</td>
-							<td class="standard border-bottom left alignRight">
+							<td class="text_family">$productBean.item</td>
+							<td class="text_family">
 								#if($productBean.tier)
 									$productBean.fromQty - $productBean.toQty
 								#else
 									$productBean.quantity 
 								#end
 							</td>
-							<td class="standard border-bottom left"></td>
+							<td class="text_family"></td>
 						</tr>
 					#end
 				</table>
@@ -1303,7 +1309,7 @@ u.underline {
 #end
 #if ($jadualHargaItemBean.serviceItemBeans.size() > 0)
 <div class="break-after"><br/></div>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="-1">
 	<tr>
 		<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
 					A2</i></b></span></td>
@@ -1318,29 +1324,29 @@ u.underline {
 	</tr>
 	##26770 - end
 	<tr align='left'>
-			<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
-				<table width='100%' border="1">
+			<td><span style='font-weight: bold; font-size: 10px; font-family: Arial;'>
+				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th>Zone</th> 
+							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-						<th>Nama Item</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
 						##26770 - start
 						<th>Kuantiti</th>
-						<th>Jenis Perkhidmatan</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 						##26770 - end
 					</tr>
 					#set($String = "formatter") 
 					#foreach( $serviceBean in $jadualHargaItemBean.serviceItemBeans)
 						<tr class="ui-content">
 							#if ($isZonal)
-								<td class="standard border-bottom left">
+								<td class="text_family">
 								#if($serviceBean.zonal) 
 									 $serviceBean.zoneName
 								#end</td> 
 							#end
-							<td class="standard border-bottom left">$serviceBean.item</td>
-							<td class="standard border-bottom left alignRight">
+							<td class="text_family">$serviceBean.item</td>
+							<td class="text_family">
 									#if($serviceBean.quantity)
 									 $serviceBean.quantity
 								#else
@@ -1349,7 +1355,7 @@ u.underline {
 							</td>
 							
 							
-								<td class="standard border-bottom left"></td>
+								<td class="text_family"></td>
 							
 						</tr>
 					#end
