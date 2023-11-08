@@ -10942,6 +10942,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if(addItemNonZonal
 					&& (CollectionUtils.isEmpty(itemIds) || !itemIds.contains(loiLoaItem.getScRequestItem()
 							.getRequestNoteItemId()))){
+					itemIds.add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
 					itemCount++;
 					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
 				}else if(addItemZonal
