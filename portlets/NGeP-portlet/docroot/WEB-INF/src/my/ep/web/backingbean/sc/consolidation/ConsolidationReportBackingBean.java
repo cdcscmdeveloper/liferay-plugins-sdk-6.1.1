@@ -2542,9 +2542,10 @@ public class ConsolidationReportBackingBean extends
 //-------------> HERE #31556 & #31555 related to #21695 Farid START				 
 					else {
 						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
-							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-									&& item.getRequestItem().getQuantity() != null 
-										&& item.getRequestItem().getQuantity().compareTo(BigDecimal.ZERO) > 0){
+							BigDecimal rpUOM=finditemOfferNonZonal!=null && finditemOfferNonZonal.getRatePerUom()!=null ? finditemOfferNonZonal.getRatePerUom() : BigDecimal.ZERO;//35329-start
+							BigDecimal quantity=item.getRequestItem()!=null && item.getRequestItem().getQuantity()!=null ? item.getRequestItem().getQuantity() : BigDecimal.ZERO;
+							if (rpUOM.compareTo(BigDecimal.ZERO) > 0
+									&& quantity.compareTo(BigDecimal.ZERO) > 0) {//35329-End
 								log.info("validate nonzonal offer");
 								validateRankingPO(qualifiedSupplierBeans, true, item,
 										specZoneDtl, totalQualifiedSuppliers);
