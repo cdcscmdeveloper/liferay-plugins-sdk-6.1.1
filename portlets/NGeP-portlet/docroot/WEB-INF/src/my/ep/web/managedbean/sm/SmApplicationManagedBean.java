@@ -662,6 +662,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//32008
 	private boolean upsCannotEdit;
 	
+	//#30762 -Start 021123
+	private boolean poApproverPersonnelRoleMsg;
+	private String personnelRoleMsg; 
+	//#30762 -End 
+	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4632,4 +4637,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.upsCannotEdit = upsCannotEdit;
 	}
 	//end 32008
+	
+	//#30762 -Start 021123
+	public boolean isPoApproverPersonnelRoleMsg() {
+		return poApproverPersonnelRoleMsg;
+	}
+
+	public void setPoApproverPersonnelRoleMsg(boolean poApproverPersonnelRoleMsg) {
+		this.poApproverPersonnelRoleMsg = poApproverPersonnelRoleMsg;
+	}
+
+	public String getPersonnelRoleMsg() {
+		return personnelRoleMsg;
+	}
+
+	public void setPersonnelRoleMsg(String personnelRoleMsg) {
+		this.personnelRoleMsg = personnelRoleMsg;
+	}
+	//#30762 -End 
 }

@@ -2858,12 +2858,12 @@ public class SupplierFinalizationBackingBean extends
 									RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
 								} else {
 									
-									RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+									RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 								}
 								
 							} else {
 								
-								RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+								RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 							}
 							
 						} else {
@@ -2871,7 +2871,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}
 				} else {
-					RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+					RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 				}
 				// #28834 - End.
 				// changeMeetingStatusBrief();
@@ -11467,27 +11467,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		// #28834 - Start.
 		if (CollectionUtils.isNotEmpty(meetingDetailsList)) {
 			for (ScQtMeeting meeting : meetingDetailsList) {
-				if (this.getManagedBean().isSecretaryUser()) {
-					if (null != meeting.getMeetingStatus()
-							&& null != meeting.getMeetingStatus().getStatusId()
-							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-									.getStatusId())
-									&& meeting.getRecordStatusFlg().equals(
-											DbValueConst.RECORD_STATUS_ACTIVE)
-											&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-						lessThanValidityEndDate = true;
-					}
+				//sonarQube Issue 3 #91 # Vinod #Start
+				boolean meetingStatusAndDate = null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+						&& meeting.getMeetingDate().before(proposalValidityEndDate);
+				if ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate && meeting.getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) || meetingStatusAndDate) {
+					lessThanValidityEndDate = true;
 				} else {
-					if (null != meeting.getMeetingStatus()
-							&& null != meeting.getMeetingStatus().getStatusId()
-							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-									.getStatusId())
-									&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-						lessThanValidityEndDate = true;
-					} else {
-						lessThanValidityEndDate = false;
-					}
+					lessThanValidityEndDate = false;
 				}
+				//sonarQube Issue 3 #91 # Vinod #End
 			}
 		}
 		// #28834 - End.
