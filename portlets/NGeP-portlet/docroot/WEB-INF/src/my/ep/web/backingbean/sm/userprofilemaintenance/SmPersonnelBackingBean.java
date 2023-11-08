@@ -1571,9 +1571,8 @@ public class SmPersonnelBackingBean extends
 		}
 		//End searching for user role history	
 		
-		if(!getManagedBean().isCheckingAfterSave()) {
-			this.getManagedBean().setBasicSmPersonnel(smPersonnel);
-		}
+		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
+		
 		setPersonnelViewOnlyMode(getManagedBean().getBasicSmPersonnel());
 		//9569 - Start
 		SmPersonnelAddress mail = new SmPersonnelAddress();
@@ -3292,6 +3291,7 @@ public class SmPersonnelBackingBean extends
 	}
 	//9569 - End
 	
+	//start - #34810
 	public void resetAllAddress(SmPersonnel smPersonnel){
 				
 		for (SmPersonnelAddress per : smPersonnel.getSmPersonnelAddresses()) {
@@ -3310,6 +3310,7 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 	}
+	//End - #34810
 
 	/**
 	 * Back to search page
@@ -3386,6 +3387,7 @@ public class SmPersonnelBackingBean extends
 			//to send status to SO
 			String status = null;
 
+			//start - #34810
 			if(!getManagedBean().isCheckingAfterSave()) {
 				// This is to save all the address
 				SmPersonnelAddress personnelAddressPer = getManagedBean().getBasicSmPersonnelPermanentAddress();
@@ -3404,6 +3406,7 @@ public class SmPersonnelBackingBean extends
 					setAddress(personnel.getSmPersonnelAddresses(), personnelAddress2);
 				}
 			}
+			//End - #34810
 
 			for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
 				if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
@@ -3425,6 +3428,7 @@ public class SmPersonnelBackingBean extends
 				recheckedSoftcert = personnel.getSoftcertFlg();
 			}
 			
+			//start - #34810
 			if(personnel.getContractSignerFlg() != getManagedBean().getBasicSmPersonnel().getContractSignerFlg()){
 				personnel.setContractSignerFlg(getManagedBean().getBasicSmPersonnel().getContractSignerFlg());
 			}
@@ -3432,6 +3436,7 @@ public class SmPersonnelBackingBean extends
 			if(personnel.getEmail() != getManagedBean().getBasicSmPersonnel().getEmail()){
 				personnel.setEmail(getManagedBean().getBasicSmPersonnel().getEmail());
 			}		
+			//end - #34810
 			
 			//The whole changing delete and changing role process start here
 			if (getManagedBean().getEpRoleTrans() != null
@@ -3635,7 +3640,6 @@ public class SmPersonnelBackingBean extends
 		SmPersonnel personnel = getManagedBean().getBasicSmPersonnel();
 		
 		saveUserMOFUpdate(personnel);
-		System.out.println("masuk sini" + personnel.getPersonnelId());
 
 		Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
 		String identificationNo = personnel.getIdentificationNo();
@@ -3649,11 +3653,8 @@ public class SmPersonnelBackingBean extends
 		
 		if (resDTO.getSmPersonnelList().size() > 0) {
 			for (SmPersonnel SmPersonnel : resDTO.getSmPersonnelList()) {
-				System.out.println("masuk sini" + SmPersonnel.getPersonnelId());
 				getManagedBean().setSmAppl(SmPersonnel.getSmAppl());
 				resetAllAddress(SmPersonnel);
-//				getPersonnelInfoById(SmPersonnel.getPersonnelId().toString());
-//				initializeLists();
 				saveUserMOFUpdate(SmPersonnel);
 			}
 		}
