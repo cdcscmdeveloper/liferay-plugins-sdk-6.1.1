@@ -3813,7 +3813,7 @@ public class CreateQtBackingBean extends
 								break;
 							}	
 						}
-						if (isInsert == true && rootTrees != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					if (isInsert && rootTrees != null) {//Sonarqube #83
 							if (getManagedBean().getIndex() == -1) {
 								rootTrees.add(node);		
 							}
@@ -4045,6 +4045,7 @@ public class CreateQtBackingBean extends
 		if(type){
 			this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
 		}else{
+			this.getManagedBean().getQt().setDemoNotificationCheck(null);//11104-Reendorse
 			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
 			if (deltechnicalproposalList == null) {
 				deltechnicalproposalList= new ArrayList<>();
@@ -4085,14 +4086,14 @@ public class CreateQtBackingBean extends
 
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
-	 * #28784
+	 * #28784 - Include Demo WIP
 	 * @param event
 	 *
 	 */
 	public void renderDemoRadioButton(AjaxBehaviorEvent event) {
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
-		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()) {
 			String type = (String) event.getComponent().getAttributes().get("value");
 //			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 //			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -4133,6 +4134,8 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().setDemoEvalDisabled(true);
 			}//#28784 - End
 
+		} else if(!this.getManagedBean().isNewVersion()) {
+			this.getManagedBean().setDemoType(false);
 		}
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		//#29521 - start
@@ -4217,13 +4220,6 @@ public class CreateQtBackingBean extends
 			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				//#28784 note-#634 - Start
-//				if (this.getManagedBean().getQt().isZonal()) {
-//					QTDetailBackingBean qtDetail = new QTDetailBackingBean();
-//					qtDetail.retrieveZonalDetailAfterDemoDeletion(this.getManagedBean().getQt().getQtId());
-//					this.getManagedBean().setDemoScoreSetting(null);
-//				}
-				//#28784 note-#634 - End
 				specificationBackingBean.resetDemoTechSpecListAfterDelete();
 			}
 

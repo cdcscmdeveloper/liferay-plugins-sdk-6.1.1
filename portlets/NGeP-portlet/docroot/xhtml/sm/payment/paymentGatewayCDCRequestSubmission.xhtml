@@ -32,15 +32,16 @@
 		</div>
 <!-- 	<form id="formReg" name="formReg" action="#{paymentBackingBean.paymentGatewayUrl}" method="post" target="DoSubmit" onsubmit="DoSubmit = window.open('about:blank','DoSubmit','width=400,height=350');"> -->
 		<form id="formReg" name="formReg" action="#{paymentBackingBean.cdcPaymentGatewayUrl}" method="post">
-		<input type="hidden" name="orderid" value="#{paymentBackingBean.managedBean.orderId}" /><br />
-		<input type="hidden" name="amount" value="#{paymentBackingBean.managedBean.totalAmount}" /><br />
-		<input type="hidden" name="bill_name" value="#{paymentBackingBean.managedBean.billName}" /><br />
-		<input type="hidden" name="bill_email" value="#{paymentBackingBean.managedBean.billEmail}" /><br />
-		<input type="hidden" name="bill_mobile" value="#{paymentBackingBean.managedBean.billMobile}" /><br />
-		<input type="hidden" name="bill_desc" value="#{paymentBackingBean.managedBean.billDesc}" /><br />
+		<input type="hidden" name="orderId" value="#{paymentBackingBean.managedBean.orderId}" /><br />
+		<input type="hidden" name="billAmt" value="#{paymentBackingBean.managedBean.totalAmount}" /><br />
+		<input type="hidden" name="billName" value="#{paymentBackingBean.managedBean.billName}" /><br />
+		<input type="hidden" name="billEmail" value="#{paymentBackingBean.managedBean.billEmail}" /><br />
+		<input type="hidden" name="billMobile" value="#{paymentBackingBean.managedBean.billMobile}" /><br />
+		<input type="hidden" name="billDesc" value="#{paymentBackingBean.managedBean.billDesc}" /><br />
 		<input type="hidden" name="country" value="#{paymentBackingBean.managedBean.country}" /><br />
 		<input type="hidden" name="vcode" value="#{paymentBackingBean.vCode}" /><br />
 		<input type="hidden" name="cancelurl" value="#{paymentBackingBean.cancelUrl}" /><br />
+		<input type="hidden" name="merchantCode" value="#{paymentBackingBean.managedBean.merchantCode}" />
 	</form>
 </body>
 

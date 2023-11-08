@@ -570,7 +570,8 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionUserDropdownPanelId">
-						<p:selectOneMenu id="cmbResDivision"
+					<!-- #34159 - START -->
+						<p:selectOneMenu id="cmbResDivision" required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{bb.managedBean.smResAdd.pmDivision.divisionId}"
 						style="width:80%"
@@ -584,6 +585,8 @@
 							listener="#{bb.onChangeDivision(bb.managedBean.smResAdd.pmDivision,'USER_RESIDENTIAL_ADDRESS')}"
 							update="cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu>
+					<p:message id="cmbResDivisionMsg" for="cmbResDivision" display="icon" />
+					<!-- #34159 - END -->
 					</h:panelGroup>
 				</td>
             </tr>
