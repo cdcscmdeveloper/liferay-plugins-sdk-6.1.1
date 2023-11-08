@@ -2500,7 +2500,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
-
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());//25037
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
