@@ -10923,7 +10923,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		for (Map.Entry<Long, Long> itemZone : itemZoneMap.entrySet()) {
 			Long eItemId = itemZone.getKey();
 			Long eZoneId = itemZone.getValue();
-			if (eItemId == itemId && eZoneId == specZoneId) {
+			if (eItemId.equals(itemId)  && eZoneId.equals(specZoneId)) {
 				return false;
 			}
 		}
