@@ -2397,6 +2397,34 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35298 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if (tplSpecQuestion.getCmItem() != null
+									&& tplSpecQuestion.getCmItem().getExtensionCode() != null) {
+								ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+								String serviceOrProduct = catalogueSO.checkProductOrService(tplSpecQuestion.getCmItem()
+										.getExtensionCode());
+								if (serviceOrProduct.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
+									if ((tplSpecQuestion.getAnswerTypeCode() != null)
+											&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+										if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+												.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+											if (tplSpecQuestion.getClUomFrequency() != null) {
+												tplSpecQuestion.setClUomFrequency(null);
+											}
+											if (tplSpecQuestion.getClDurationMonth() != null) {
+												tplSpecQuestion.setClDurationMonth(null);
+											}
+
+										}
+									}
+								}
+							}
+						}
+						// Bug #35298 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2417,6 +2445,29 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35298 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if ((tplSpecQuestion.getAnswerTypeCode() != null)
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+								if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+									if (tplSpecQuestion.getClFulfilmentTypeCode() != null
+											&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+													.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+										if (tplSpecQuestion.getClUomFrequency() != null) {
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if (tplSpecQuestion.getClDurationMonth() != null) {
+											tplSpecQuestion.setClDurationMonth(null);
+										}
+									}
+								}
+							}
+						}
+						// Bug #35298 - end
+						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -4394,7 +4445,12 @@ public class SimpleQuoteBackingBean extends
 				Long itemSpecQuestionId = null;
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
-
+				
+				//Bug #35298 - get value for fulfilment type one-off
+				PmParameter FTypeOneOff = getParameterByTypeAndCode(
+						ParameterTypeConst.FULFILMENT_TYPE,
+						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				
 				if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
 					for(TplSpecQuestion question: cloneSpecMaster.getTplSpecQuestions()) {
 						//if item already codified, check by extension code. 
@@ -4408,6 +4464,7 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
+											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35298 - Assigning value one-off to product
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;
