@@ -3017,7 +3017,7 @@ public class SpecificationBackingBean extends
 					for (ScQtCheckList o : oriFinancialScoring) {
 						for (ScQtCheckList l : newFinancialScoring)
 							if (null != l.getQtScoreWeightage().getQtScoreWeightageId()
-									&& l.getQtScoreWeightage().getQtScoreWeightageId().equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {
+									&& l.getQtScoreWeightage().getQtScoreWeightageId().equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {//bug #35211 related to #33525
 								l.getQtScoreWeightage().setWeightage(o.getQtScoreWeightage().getWeightage());
 							}
 					}
