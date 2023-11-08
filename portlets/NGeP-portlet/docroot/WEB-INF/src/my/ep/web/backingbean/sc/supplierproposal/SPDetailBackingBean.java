@@ -1140,8 +1140,11 @@ public class SPDetailBackingBean extends
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+					
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
 					prepareFinancialAction(finProposalChecklist);
 					saveFinancialSpecificationAction(false, true);
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
 					break;
 				}
 			}
@@ -3187,6 +3190,16 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		String pageUrl = null;
 		String definationType = scQtProposalChecklist.getScQtCheckList()
 				.getDefinationType().getParameterCode();
+		
+		for (ScQtProposalChecklist tecChecklistDetail : this.getManagedBean().getTecCheckDetailsList()) {
+			if (tecChecklistDetail.getScQtCheckList().getTitle()
+					.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+					&& !tecChecklistDetail.isSubmitted() && !tecChecklistDetail.isFromTechnicalProposal()) {
+				throw new EpException(MessageConst.WARN_7602692);
+			}
+
+		}
+		
 		this.getManagedBean().setDocDefinitionKey(definationType);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
 		this.getManagedBean().setFinancialQtChecklist(
