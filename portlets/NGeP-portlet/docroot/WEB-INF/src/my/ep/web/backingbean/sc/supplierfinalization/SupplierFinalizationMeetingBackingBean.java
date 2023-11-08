@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -1534,6 +1535,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		ScQt scQt = getManagedBean().getScQt();
 		String taskId = this.getManagedBean().getTaskId();
 		String taskName = this.getManagedBean().getTaskName();//25037
+		Calendar currentTaskCreatedDate = this.getManagedBean().getCurrentTaskCreatedDate();//25037
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
@@ -1550,6 +1552,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		this.prepareMemberUpdate();//#25027
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setTaskName(taskName);//25037
+		this.getManagedBean().setCurrentTaskCreatedDate(currentTaskCreatedDate);//25037
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
@@ -1589,7 +1592,17 @@ public class SupplierFinalizationMeetingBackingBean extends
 				sfReqDTO.setSkipMeetingValidation(true);
 				qtSuppFinalizationSO.validateCoordinateMeeting(sfReqDTO);
 			}
-			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());//#25037
+			//25037 - start
+			String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();
+			Paginator historyPaginator = this.getManagedBean().getHistoryPaginator();
+			if (null != historyPaginator && null != historyPaginator.getModel() && historyPaginator.getModel().size() > 1) {
+				ScCommitteeMemberHistory latestHistory = (ScCommitteeMemberHistory) historyPaginator.getModel().get(0);
+				Calendar historyCreatedDate = Calendar.getInstance();
+				historyCreatedDate.setTimeInMillis(latestHistory.getCreatedDate().getTime());
+				boolean isPrepareMeeting = taskName.equals(SCProcessNameConst.COORDINATE_FC_MEETING);
+				reqDTO.setCommitteeModified(isPrepareMeeting && historyCreatedDate.compareTo(this.getManagedBean().getCurrentTaskCreatedDate()) > 0);
+			}
+			//25037 - end
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -1606,7 +1619,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
-			String taskName = this.getManagedBean().getTaskName()==null ? "" : this.getManagedBean().getTaskName();
 			if (SCProcessNameConst.FINALISE_FC_SELECTION.equals(taskName) 
 					&& reqDTO.isCommitteeModified() 
 					&& StringUtils.isNotEmpty(navigateTo)) {
@@ -1904,7 +1916,11 @@ if (CollectionUtils.isNotEmpty(
 	// this method checking two meeting dates or equal or not.
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
-		if (null != meetingList && meetingList.size() >= 1) {
+		//Sonarqube #83 - start
+		if (null == meetingList)
+			throw new IllegalArgumentException("Meeting list should not be null.");
+		if (CollectionUtils.isNotEmpty(meetingList)) {
+		//Sonarqube #83 - end
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			boolean duplicateDate = false;
 			for (ScQtMeeting meeting : meetingList) {
@@ -1921,15 +1937,12 @@ if (CollectionUtils.isNotEmpty(
 				}
 
 			}
-			if (duplicateDate == true) {
+			if (duplicateDate) {//Sonarqube #83
 				throw new EpException(MessageConst.ERROR_760271);
 			} else {
 				meetingList.add(scqtMeeting);
 			}
 		} else {
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (meetingList == null)
-				meetingList = new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 

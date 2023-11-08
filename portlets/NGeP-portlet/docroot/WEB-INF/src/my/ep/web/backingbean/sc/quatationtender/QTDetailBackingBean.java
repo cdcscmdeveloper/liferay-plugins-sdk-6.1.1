@@ -1267,7 +1267,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
-			if(!getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME)){
+			if(!getTaskByDocNoModule()){
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(MessageConst.INFO_700110 , 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
@@ -5222,7 +5222,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<ScQtContactPerson> qtContactPerson = contactPersons
 						.getResultList();
 				if (qtContactPerson == null || qtContactPerson.isEmpty()) {
-					qtContactPerson = new ArrayList<ScQtContactPerson>();//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					qtContactPerson = new ArrayList<>();//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //Sonarqube #83 
 					ScQtContactPerson contactPerson = new ScQtContactPerson();
 					PmUser user = new FacesScopes().getUserSessionBean();
 					contactPerson.setPhoneNo(user.getPhoneNo());
@@ -7189,8 +7189,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
 			this.getManagedBean().setCurrentStatusId(currentStatus);
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 //Sonarqube #83
 			break;
 		case 5:
 			if (isinvokeValidations(getManagedBean().getQt())) {
@@ -7214,8 +7214,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 			}
 			this.getManagedBean().setCurrentStatusId(currentStatus);//#13344-End
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 //Sonarqube #83
 			break;
 		case 6:
 			if (isinvokeValidations(getManagedBean().getQt())||isMaintancePendingChklistStatus()) {
@@ -7228,8 +7228,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrieveDeductionPaymentTabDtl();
 			}
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 //Sonarqube #83
 			break;
 		case 7://#29474 - start
 			detailSO.validateSCFulfillmentSchedules(reqDTO);
@@ -7269,8 +7269,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				setAmmendMentBean(resDTO.getAmendMentBean());
 				retrievePublicationApprovalTabDtl();
 			}
-			if (resDTO != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-			getfulfilmentDtls(resDTO.getQtDetail());//#29474 - end
+			if (resDTO != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				getfulfilmentDtls(resDTO.getQtDetail());// #29474 - end //Sonarqube #83
 			break;
 		}
 		
@@ -12983,43 +12983,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 			debugLogger("end updateWIPTransaction");
 		}
 	}
-
-	public boolean getTaskByDocNoModule(String docNo, String module) {
-		ScQt scQt = this.getManagedBean().getQt();//9019
-		IBpmSO bpmSO =(IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		Object tokens = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		boolean bpmExistFlag = false;
-		reqDTO.setDocNumber(docNo);
-		reqDTO.setModule(module);
-		//reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-		reqDTO.setCtxToken(tokens);
-		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(reqDTO);
-		if(bpmResDTO.getWorklistVO().getWorklistItem().size() > 0){
-			bpmExistFlag = true;
-		}else{
-			//9019 - Start
-			//26072022 by (Harun) Add workflow checking for disable update button those previous QT 
-			//                    that CANCEL without BPM
-			IScWorkFlowStatusSO workFlowStatusSO;
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			
-			ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
-			scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			scWorkFlowreqDTO.setDocId(scQt.getQtId());
-			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
-			if(null != currentWorkFlowStatus){//9019 Add null checking that cause stopper #33672 unable to create QT
-				if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)){
-					bpmExistFlag = true;
-				}else{
-					bpmExistFlag = false;
-				}
-			}
-			//9019 - End
-		}
-		return bpmExistFlag;
-	}
 	//9019 - End (Harun)
 	// #29521 - start
 	
@@ -13391,4 +13354,32 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return ts;
 	}
 	// #21692 add Approval detail at EPV QT Maint - End
+	
+	//9019 - Start (Harun) WIP transaction (New method)
+	/**
+	 * getTask By Sc Workflow Status
+	 *
+	 * @return boolean
+	 */
+	public boolean getTaskByDocNoModule() {
+		ScQt scQt = this.getManagedBean().getQt();//9019
+		boolean bpmExistFlag = false;
+		IScWorkFlowStatusSO workFlowStatusSO;
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		
+		ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
+		scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		scWorkFlowreqDTO.setDocId(scQt.getQtId());
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
+		if(null != currentWorkFlowStatus){
+			if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)){
+				bpmExistFlag = false;
+			}else{
+				bpmExistFlag = true;
+			}
+		}
+		return bpmExistFlag;
+	}
+	//9019 - End (Harun)
 }

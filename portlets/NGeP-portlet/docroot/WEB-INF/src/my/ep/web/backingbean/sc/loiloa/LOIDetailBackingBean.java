@@ -1004,8 +1004,10 @@ public class LOIDetailBackingBean extends
                     && null != qtProposal.getScQtSupplier().getScQt()) {
                   qtId = qtProposal.getScQtSupplier().getScQt().getQtId();
                 }
-			  if (null != qtProposal)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier(), qtId));
+				if (null != qtProposal)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					qtProposal.getScQtSupplier().setSmSupplier(
+							qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier()
+									.getSmSupplier(), qtId));//Sonarqube #83
 				// #26247 - 32802 - End.
 			}
 		} finally {
@@ -2254,9 +2256,8 @@ public class LOIDetailBackingBean extends
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
-        if (scLoi != null) //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-		// TODO
-		scLoi.setFileExtnNo("001");
+		if (scLoi != null) // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
+			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
@@ -6680,7 +6681,7 @@ public class LOIDetailBackingBean extends
 				break;
 			}
 		}
-		if(alredyAdded == false){
+		if(!alredyAdded){//sonarQubeIssue7#84
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				negoTerm.setSelectedTerm(Boolean.FALSE);
 			} else{
@@ -6736,7 +6737,7 @@ public class LOIDetailBackingBean extends
 		
 		ScLoi scLoi =this. getManagedBean().getScLoi();
 
-		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())) {//sonarQubeIssue7#84
 			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
 				term.setSelectTerm(Boolean.FALSE);	
 			}
