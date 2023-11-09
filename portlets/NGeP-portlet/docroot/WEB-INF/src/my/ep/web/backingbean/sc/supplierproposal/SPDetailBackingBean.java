@@ -1361,17 +1361,19 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			Map<String, Integer> singleZoneAnswerSize = new HashMap<>();
 			Map<String, Integer> singleZoneQuestionSize = new HashMap<>();
 			for (TplSpecAnswer answer : answers) {
-				boolean isQtyMoreThanZero = answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
+				boolean isQtyMoreThanZero = false;
 				String zone = answer.getTplSpecZoneQty() != null
 						&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
 						&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
 						.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
 
-				singleZoneQuestionSize = countZoneSize(singleZoneQuestionSize, zone, isQtyMoreThanZero);
+				if (answer.getTplSpecZoneQty() != null) {
+					isQtyMoreThanZero = answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
+					singleZoneQuestionSize = countZoneSize(singleZoneQuestionSize, zone, isQtyMoreThanZero);
+				}
 				
 				if (isCompleted) {
-					boolean isZoneUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
-							&& isQtyMoreThanZero;
+					boolean isZoneUomNull = answer.getRatePerUom() == null && isQtyMoreThanZero;
 					boolean isNonZonalUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null;
 
 					// #21695 7/10/2021	START
