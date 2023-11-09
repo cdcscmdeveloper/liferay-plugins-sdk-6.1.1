@@ -8346,7 +8346,7 @@ public void saveComplianceSample() {
 							retriveNonScoringComplianceFinancial(true); //#28856, #25138
 							
 							// #30722, #25138 - start
-							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
+							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
 									.get(0).getDocCategory());
 							// #30722, #25138 - end
 
@@ -8500,10 +8500,9 @@ public void saveComplianceSample() {
 						retriveFinancialEvaluationStage();
 						retriveNonScoringComplianceFinancial(true); //#28856, #25138
 						
-						// #30722, #25138 - start
-						financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
+						financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
 								.get(0).getDocCategory());
-						// #30722, #25138 - end
+						
 						outputTab = 3;
 						
 						this.getManagedBean().setTabFinancialIndex(1);
@@ -8678,9 +8677,13 @@ public void saveComplianceSample() {
 							//#34588 start	
 							reqDTOwip.setScQt(this.getManagedBean().getScQt());
 							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
-							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
-									.get(0).getDocCategory());
-
+							if (null == this.getManagedBean().getEvaluationStgTechnicalCheckList()) {
+								financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+										.get(0).getDocCategory());
+							} else {
+								financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
+										.get(0).getDocCategory());
+							}
 							// #25138 - one item only - start
 							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && this.getManagedBean().getSingleSpecQuestion()) {
 								retriveFinancialEvaluationStagePackage();
@@ -14071,14 +14074,15 @@ private void retriveCommitteeRemarksList(){
 				if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
 					if (removesupplier.size() > 0) {
 						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
-						//#28784, #34091 - related - Start
-						if(getManagedBean().getScQt().isDemoRequired()){
-							if(resDTO.getComplianceResultBean().getResultList().size() == 0){
-								//Bug #33851 REMOVE Below related to #21695
-								resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
-							}
-								//Bug #33851 REMOVE related to #21695
-						}//#28784, #34091 - related - End
+						// #28784, #34091 - related - Start
+						if (getManagedBean().getScQt().isDemoRequired()
+								&& resDTO.getComplianceResultBean().getResultList().size() == 0) {
+							// Bug #33851 REMOVE Below related to #21695
+							resDTO.getComplianceResultBean().setTotalRecord(
+									resDTO.getComplianceResultBean().getResultList().size());
+
+							// Bug #33851 REMOVE related to #21695
+						}// #28784, #34091 - related - End
 					}else {
 						return resDTO.getComplianceResultBean();
 					}
