@@ -2581,7 +2581,7 @@ public class SupplierFinalizationBackingBean extends
 							debugLogger("Generating all reports...");
 							downloadAllReports();	
 						} catch(Exception e) {
-							e.printStackTrace();
+							  SLAUtils.getInstance().logSLAError("QT", "submitSuppFinalizationTask", "docNo", "submitSuppFinalization", getUserIdSessionFromLoginId(), e);//28834-sonarQubeIssue5#84
 						}
 				  }
 				  // #28834 - End.
@@ -3942,7 +3942,8 @@ return	remarksNotFound;
 							+ scQtFinalizationReport.getScQtFinalizationReportAttachment().getFilePath();
 					File file = new File(filePath);
 					if (null != file && file.exists()) {
-						file.delete();
+						 boolean deleteFile=file.delete();//#28834-sonarQubeIssue6#54
+						 log.info("======FileDeletedSucessFully======"+deleteFile);//#28834-sonarQubeIssue6#54
 					}
 					scQtFinalizationReport.setScQtFinalizationReportAttachment(null);
 				}
