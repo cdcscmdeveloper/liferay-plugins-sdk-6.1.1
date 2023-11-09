@@ -1600,8 +1600,9 @@ public class SupplierFinalizationMeetingBackingBean extends
 				Calendar historyCreatedDate = Calendar.getInstance();
 				historyCreatedDate.setTimeInMillis(latestHistory.getCreatedDate().getTime());
 				boolean isPrepareMeeting = taskName.equals(SCProcessNameConst.COORDINATE_FC_MEETING);
-				reqDTO.setCommitteeModified(isPrepareMeeting && historyCreatedDate.compareTo(this.getManagedBean().getCurrentTaskCreatedDate()) > 0);
+				reqDTO.setSendDONotification(isPrepareMeeting && historyCreatedDate.compareTo(this.getManagedBean().getCurrentTaskCreatedDate()) > 0);
 			}
+			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());
 			//25037 - end
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -1620,7 +1621,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
 			if (SCProcessNameConst.FINALISE_FC_SELECTION.equals(taskName) 
-					&& this.getManagedBean().isCommitteeModified() //25037
+					&& reqDTO.isCommitteeModified() 
 					&& StringUtils.isNotEmpty(navigateTo)) {
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if(this.getManagedBean().getFinalBB()!=null){
