@@ -4107,30 +4107,19 @@ public class CreateQtBackingBean extends
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()) {
 			String type = (String) event.getComponent().getAttributes().get("value");
-//			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-//			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//					IQTSpecSO.class);	
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
-			//reqDTO.setScQt(this.getManagedBean().getQt());
-			//reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			//SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
 			for (ScQtCheckList checklist : scQtTechChecklist) {
-				if (checklist.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired){
-//							&& checklist.getQtChecklistId() != null) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
+				boolean isDemoDoc = checklist.getDefinationType().getParameterCode()
+						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
+				if (isDemoDoc && ((type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired)
+						|| type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER))) {
+					RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
+					break;
 
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)){
-//							&& checklist.getQtChecklistId() != null) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-					}
 				}
-			} 
-			
+			} 			
 			
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				this.getManagedBean().setDemoType(true);
@@ -4139,9 +4128,8 @@ public class CreateQtBackingBean extends
 				this.getManagedBean().getQt().setDemoRequired(false);
 			}
 			//#28784 - Start
-			if (null != status
-					&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) && !this.getManagedBean().isQtSpecMaintanance() && !this
-							.getManagedBean().isMaintanceFlow()) && !demoRequired) {
+			if (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) && !this.getManagedBean().isQtSpecMaintanance() && 
+					!this.getManagedBean().isMaintanceFlow() && !demoRequired) {
 				this.getManagedBean().setDemoSpecialCase(true);
 				this.getManagedBean().setDemoEvalDisabled(true);
 			}//#28784 - End
@@ -4189,9 +4177,7 @@ public class CreateQtBackingBean extends
 				for (ScQtCheckList checklist : scQtTechChecklist) {
 					if (checklist.getDefinationType().getParameterCode()
 							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-						// if (checklist.getQtChecklistId() != null) {
 						RequestContext.getCurrentInstance().execute("demoDialogConfirm.show()");
-						// }
 					}
 				}
 			}
@@ -4204,7 +4190,7 @@ public class CreateQtBackingBean extends
 		detailBB.checkDemoPresentationByStatus();
 	}
 
-	/*
+	/**
 	 * #28784 - Delete Demo tech checklist if user change yes to no
 	 */
 	public void yesDeleteExistingDemoTechChecklist() {

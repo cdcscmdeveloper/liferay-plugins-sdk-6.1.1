@@ -1626,11 +1626,10 @@ public class SupplierFinalizationBackingBean extends
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
-				//#27502- Adding condition only
-				if (reqDTO.getScQtCommittee() != null) {
-					if (scQtCommittee == null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-						scQtCommittee = new ScQtCommittee();
-					 scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
+				// #27502- Adding condition only
+				if (scQtCommittee == null) {// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					scQtCommittee = new ScQtCommittee();
+					scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
 					reqDTO.setScQtCommittee(scQtCommittee);
 				}
 			}
