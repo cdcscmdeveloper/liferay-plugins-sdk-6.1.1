@@ -10919,10 +10919,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					boolean addZoneName = null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && (zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-							.getTplSpecZoneDtl().getSpecZoneId() || !zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
-							.equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())));
+					Long zoneIdAdded=null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					Long zoneIdNew=null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
 						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
@@ -11006,10 +11005,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					boolean addZoneName = null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && (zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-							.getTplSpecZoneDtl().getSpecZoneId() || !zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
-							.equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())));
+					Long zoneIdAdded=null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					Long zoneIdNew=null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
 						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
