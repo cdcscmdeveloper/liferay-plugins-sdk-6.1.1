@@ -94,6 +94,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -2177,40 +2178,48 @@ public class EvaluationMeetingBackingBean extends
     	this.getManagedBean().getScQtApprovalRemarks().get(0).setRemark(remark);
     	//25037 #568 - end
 			}
-	private void prepareCommitteeHistory(ScQtCommittee qtCommittee){
+    
+	private void prepareCommitteeHistory(ScQtCommittee qtCommittee) {
 		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
-		try{
-			if(CollectionUtils.isNotEmpty(histories)){
+		try {
+			if (CollectionUtils.isNotEmpty(histories)) {
 				ScCommitteeMemberHistory history = histories.get(0);
 				@SuppressWarnings("unchecked")
-				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
+				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>) (Object) history
+						.deserializeList(history.getCommitteeMembers());
 				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
-				//histories.remove(0);
 			}
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-	
-		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
-		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		reqDTO.setQtId(qtCommittee.getScQt().getQtId());
-		reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);		
-		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+			this.getManagedBean().setCurrentCommitteeType(
+					this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+			this.getManagedBean().setHistoryPaginator(new Paginator(histories));
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(qtCommittee.getScQt().getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+			ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+
+			List<ScQtApprovalRemark> remarkList = approval.getScQtApprovalRemarks();
+			if (CollectionUtils.isEmpty(remarkList)) {
+				remarkList = new ArrayList<ScQtApprovalRemark>();
 		
-		List<ScQtApprovalRemark> remarkList = approval.getScQtApprovalRemarks();
-		if(CollectionUtils.isEmpty(remarkList)){
-			remarkList = new ArrayList<ScQtApprovalRemark>();
-		}
-		remarkList = initializeRemarks(qtCommittee, qtCommittee.getCurrentStatus(), remarkList, ScQtApprovalRemark.class);
-		Collections.sort(remarkList, new Comparator<ScQtApprovalRemark>() {
-			public int compare(ScQtApprovalRemark o1, ScQtApprovalRemark o2) {
-				return o2.getCreatedDate().compareTo(o1.getCreatedDate());
 			}
-		});
-		this.getManagedBean().setScQtApprovalRemarks(remarkList);
-		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
-		this.getManagedBean().setValidFor25037(isValidFor25037);
+			remarkList = initializeRemarks(qtCommittee, qtCommittee.getCurrentStatus(), remarkList,
+					ScQtApprovalRemark.class);
+			Collections.sort(remarkList, new Comparator<ScQtApprovalRemark>() {
+				
+				public int compare(ScQtApprovalRemark o1, ScQtApprovalRemark o2) {
+					return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+				}
+			});
+			this.getManagedBean().setScQtApprovalRemarks(remarkList);
+			boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(),
+					QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
+			this.getManagedBean().setValidFor25037(isValidFor25037);
+		} catch (IOException e) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt == null ? "" : scQt.getQtNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					qtNo, "evaluationMeetingBackingBean.prepareCommitteeHistory", getUserIdSessionFromLoginId(), e);
+		}
 	}
 
 	public void validateCommitteeChanges(){

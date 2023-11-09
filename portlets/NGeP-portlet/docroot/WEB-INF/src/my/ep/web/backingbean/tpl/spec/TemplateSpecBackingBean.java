@@ -87,6 +87,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.tpl.spec.TemplateSpecManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -3910,89 +3911,128 @@ public class TemplateSpecBackingBean extends
 			RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
 
 		}
-		//#29187 Start Vinod
-		/**
-		 * Gets the score Mandatory Spec Dropdown Values.display in dropdown.
-		 * 
-		 * @param boolean isCompliance
-		 * @return List<SelectItem>
-		 */
-		public List<SelectItem> getMandatorySpecAndComplianceDropdownValues(boolean isCompliance) {
-			List<SelectItem> selectItems = new ArrayList<>();
+	// #29187 Start Vinod
+	/**
+	 * Gets the score Mandatory Spec Dropdown Values.display in dropdown.
+	 * 
+	 * @param isCompliance
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getMandatorySpecAndComplianceDropdownValues(
+			boolean isCompliance) {
+		List<SelectItem> selectItems = new ArrayList<>();
 
-			try {
+		try {
 
-				if(isCompliance){
-					selectItems.add(new SelectItem(null, ResourceBundleUtils
-							   .getMessage("lbl.txt.select",
+			if (isCompliance) {
+				selectItems.add(new SelectItem(null, ResourceBundleUtils
+						.getMessage(QTConstants.LBL_TXT_SELECT,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
-					selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils
-							   .getMessage("lbl.txt.yes",
+				selectItems.add(new SelectItem(Boolean.TRUE,
+						ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
-					selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils
-							   .getMessage("lbl.txt.no",
+				selectItems.add(new SelectItem(Boolean.FALSE,
+						ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_NO,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
-				}else{
-					selectItems.add(new SelectItem(false, ResourceBundleUtils
-							   .getMessage("lbl.txt.select",
+			} else {
+				selectItems.add(new SelectItem(false, ResourceBundleUtils
+						.getMessage(QTConstants.LBL_TXT_SELECT,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
-					selectItems.add(new SelectItem(true, ResourceBundleUtils
-							   .getMessage("lbl.txt.yes",
+				selectItems.add(new SelectItem(true, ResourceBundleUtils
+						.getMessage(QTConstants.LBL_TXT_YES,
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale())));
-				}
-
-				this.getManagedBean().setMandatorySpecList(selectItems);
-				selectItems = null;
-			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
-						"getMandatorySpecDropdownValues", getUserIdSessionFromLoginId(), e);
 			}
-			return this.getManagedBean().getMandatorySpecList();
+
+			this.getManagedBean().setMandatorySpecList(selectItems);
+		} catch (Exception e) {
+			SLAUtils.getInstance()
+					.logSLAError(
+							SLALogConstant.QT_MODULE,
+							SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
+							this.getManagedBean().getQt().getQtNo(),
+							SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
+							getUserIdSessionFromLoginId(), e);
 		}
-		public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean){
-			boolean manSpec = false;
-			if(null!=this.getManagedBean().getScQt() 
-				&& null!=this.getManagedBean().getScQt().getQtStatus() 
-				&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
-				&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION){
-				for(TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()){
-					if(tplSpecAnswer.getTplSpecQuestion().getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()){
-						manSpec=true;
-						break;
-					}
-				}
-			}
-			return manSpec;
-		}
-		public void showUOMQuantityDetails(){
-			RequestContext.getCurrentInstance().execute("viewUOMQuantityDetails.show()");
-		}
-		public void zoneQuantityPopup(){
-			RequestContext.getCurrentInstance().execute("viewZoneQuantityPopup.show()");
-		}
-		public void onchangeCompliance(TplSpecAnswer ans){
-			for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-				if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
-					&& ans.getCompliance()!=null
-					&& ans.getCompliance()==Boolean.FALSE){
-						answer.setUserScore(BigDecimal.ZERO);
-				}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
-						&& ans.getCompliance()!=null
-						&& ans.getCompliance()==Boolean.TRUE
-						&& ans.getUserScore()!=null
-						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0){
-							answer.setUserScore(null);
-				}else if(ans.getSpecAnswerId()==answer.getSpecAnswerId()
-						&& ans.getCompliance()==null){
-							answer.setUserScore(null);
+		return this.getManagedBean().getMandatorySpecList();
+	}
+
+	/**
+	 * checking for displaying mandatory specification column.
+	 * 
+	 * @param templateSpecBean
+	 * @return boolean
+	 */
+	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
+		boolean manSpec = false;
+		if (null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus()
+				&& null != this.getManagedBean().getScQt().getQtStatus()
+						.getStatusId()
+				&& this.getManagedBean().getScQt().getQtStatus().getStatusId()
+						.longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
+			for (TplSpecAnswer tplSpecAnswer : templateSpecBean
+					.getSpecAnswerList()) {
+				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
+						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+					manSpec = true;
+					break;
 				}
 			}
 		}
-		//#29187 End Vinod
+		return manSpec;
+	}
+
+	/**
+	 * to show popup for UOM and quantity details.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void showUOMQuantityDetails() {
+		RequestContext.getCurrentInstance().execute(
+				QTConstants.VIEW_UOM_QUANTITY_DETAILS);
+	}
+
+	/**
+	 * to show popup for zone quantity details.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void zoneQuantityPopup() {
+		RequestContext.getCurrentInstance().execute(
+				QTConstants.VIEW_ZONE_QUANTITY_POPUP);
+	}
+
+	/**
+	 * update user score based on compliance.
+	 * 
+	 * @param ans
+	 * @return
+	 */
+	public void onchangeCompliance(TplSpecAnswer ans) {
+		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean()
+				.getSpecAnswerList()) {
+			if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
+					&& ans.getCompliance() != null) {
+				if (ans.getCompliance() == Boolean.FALSE) {
+					answer.setUserScore(BigDecimal.ZERO);
+				} else if (ans.getCompliance() == Boolean.TRUE
+						&& ans.getUserScore() != null
+						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
+					answer.setUserScore(null);
+				}
+			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
+					&& ans.getCompliance() == null) {
+				answer.setUserScore(null);
+			}
+		}
+	}
+	// #29187 End Vinod
 }
