@@ -7506,8 +7506,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}//25635&34502-End
 				//#35285 & #25635 - Start
 				}else{
-					retrieveOthersApprovalTabDtl();
-					retrieveApprovalTabDtl();
+					if(!this.getManagedBean().getQt().isCloneEnabled()){
+						retrieveOthersApprovalTabDtl();
+						retrieveApprovalTabDtl();
+					}
 				}
 				//#35285 & #25635 - End
 				break;
