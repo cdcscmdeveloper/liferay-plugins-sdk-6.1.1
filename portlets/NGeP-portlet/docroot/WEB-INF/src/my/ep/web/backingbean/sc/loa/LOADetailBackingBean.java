@@ -11015,7 +11015,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		for (Map.Entry<Long, Long> itemZone : itemZoneMap.entrySet()) {
 			Long eItemId = itemZone.getKey();
 			Long eZoneId = itemZone.getValue();
-			if(eItemId==itemId && eZoneId==specZoneId){
+			boolean alreadyAdded=(eItemId.equals(itemId) || eItemId==itemId)
+					 && (eZoneId==specZoneId || eZoneId.equals(specZoneId));
+			if(alreadyAdded){
 				return false;
 			}
 		}
