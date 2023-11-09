@@ -14748,14 +14748,13 @@ if (null != checklist && !checklist.isEmpty()) {
 					resetDemoSpecStatus();// #28784
 
 					boolean isModified = false;
-					boolean isSpecNotExist = false;
-					SpecificationResDTO resDTO1 = new SpecificationResDTO();
+					boolean isSpecNotExist = false;					
 					SpecificationReqDTO reqDTO1 = new SpecificationReqDTO();
 					boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList
 							.getDefinationType().getParameterCode());
 					isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
 					isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
-					List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<ScQtCheckList>();
+					List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<>();
 					if (isModified || !isTemplateSpec || isSpecNotExist || isItemDeleted) {//#28784
 						List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
 						for (ScQtCheckList t : st2technicalproposalList) {
@@ -14771,12 +14770,11 @@ if (null != checklist && !checklist.isEmpty()) {
 								t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 								t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 								updatedCheckListsDemo.add(t);
-								// break;
 							}
 
 							if (updatedCheckListsDemo != null) {
 								reqDTO1.setCheckLists(updatedCheckListsDemo);
-								resDTO1 = specSO.completeDemoChecklist(reqDTO1);
+								SpecificationResDTO resDTO1 = specSO.completeDemoChecklist(reqDTO1);
 								
 								if (resDTO1.isSuccessful()) {
 									List<ScQtCheckList> savedCheckListsDemo = resDTO1.getSavedCheckLists();
@@ -21171,13 +21169,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public String demoTechnicalTemplatelist() {
 
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
-		List<ScQtCheckList> tempList = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> tempList = new ArrayList<>();
         
 		//#28784 - Enable back to handle record has been updated issue
 		for (ScQtCheckList l : st2technicalproposalList) {
 			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-				//throw new EpException(MessageConst.ERROR_760528);
 				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 				//#28784 record has been updated bug fix - Start
 				if (this.getManagedBean().getQt().isZonal()) {
@@ -21193,7 +21190,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						checkSpecMaintenanceOrNo(false);
 					}
 				}
-				//retriveTechnicalCheckList();
 			}
 		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
@@ -21225,9 +21221,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 				specReqDTO.setSpecMaster(st2technicalproposalList1.getScQtDoc().getTplSpecMaster());
-				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO templateresDTO = null;
-				templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);				
+				TemplateSpecResDTO templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
 				TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 				if (null != templateresDTO) {
 					st2technicalproposalList1.getScQtDoc().setTplSpecMaster(templateresDTO.getSpecMaster());
@@ -21431,8 +21426,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		// #28784 bug #34101 button turn evaluate at evaluation - End
 
-		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
-
 		List<TplSpecQuestion> list = null;
 		if (scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
 			list = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
@@ -21470,12 +21463,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		long startTime = System.currentTimeMillis();
 		SpecificationResDTO resDTO = specSO.saveOrUpdateDemoTemplateSpecs(reqDTO);
 		SLAUtils.getInstance().logSQLPerformanceInfo("QT", "DEMO INVITATION (SAVE)",
-				"SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime, "#29305");
+				"SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime, "");
 
-		if (resDTO.isSuccessful()) {
-			SpecificationResDTO resDTO1 = new SpecificationResDTO();
-			List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<ScQtCheckList>();
-			List<ScQtCheckList> updatedCheckListsOtherDemo = new ArrayList<ScQtCheckList>();
+		if (resDTO.isSuccessful()) {			
+			List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<>();
+			List<ScQtCheckList> updatedCheckListsOtherDemo = new ArrayList<>();
 			SpecificationReqDTO reqDTO1 = new SpecificationReqDTO();
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 
@@ -21498,7 +21490,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 
 			// #28784 - Start
-			st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+			List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 			if (updatedNewCheckLists.size() <= st2technicalproposalList.size()) {
 				for (ScQtCheckList st : st2technicalproposalList) {
 					if (!updatedNewCheckLists.contains(st)) {
@@ -21525,14 +21517,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
 					// #28784 sample become completed after demo save - end
 					if (null != this.getManagedBean().getDemoSampleChecklistStatusId()) {
-						//log.info("adsmnlkqwemlwqe: " + this.getManagedBean().getDemoSampleChecklistStatusId());
 						if (this.getManagedBean().getDemoSampleChecklistStatusId().equals(QTStatusConst.TS_COMPLETED)) {
 							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 						} else {
 							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 						}
 					}
-					//log.info("null brooooooooooooooooooooooo");
 					// #28784 sample become completed after demo save - end
 				} else if (t.getDefinationType().getParameterCode()
 						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
@@ -21548,9 +21538,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			 * updateDemoScoreWeightage Performance START
 			 */
 			startTime = System.currentTimeMillis();
-			resDTO1 = specSO.updateDemoScoreWeightage(reqDTO1);
+			SpecificationResDTO resDTO1 = specSO.updateDemoScoreWeightage(reqDTO1);
 			SLAUtils.getInstance().logSQLPerformanceInfo("QT", "DEMO WEIGHTAGE", "QTSpecSO.updateDemoScoreWeightage",
-					startTime, "#29305");
+					startTime, "");
 			/*
 			 * Development #29305, Added SLA log to check
 			 * updateDemoScoreWeightage Performance END
@@ -22111,9 +22101,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		for (ScQtCheckList e : existingTechChecklist) {
 			for (ScQtCheckList f : resDTO.getTechnicalCheckList()) {
-				if ((e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null)
-						&& (e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(
-								f.getQtChecklistId()))) {
+				boolean condition = e.getQtChecklistId() != null && e.getQtScoreWeightage() != null	
+						&& f.getQtScoreWeightage() != null;
+				if (condition && (e.getQtScoreWeightage().getWeightage() != null && 
+						e.getQtChecklistId().equals(f.getQtChecklistId()))) {
 					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
 				}
 			}			
@@ -22441,14 +22432,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	private ScQtScoreSetting checkScoreSetting(SpecificationReqDTO reqDTO){
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		ScQtScoreSetting demoScoreSet = null;
 		SpecificationResDTO resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
 		if(resDTO.getScoreSettingResultBean() != null){
 			for (ScQtScoreSetting demoScoreSetting : resDTO.getScoreSettingResultBean().getResultList()) {
-				return demoScoreSetting;
+				demoScoreSet = demoScoreSetting;
 			}
 			
 		}
-		return null;
+		return demoScoreSet;
 	}
 	
 	//#28784 bug note-#424 - start
