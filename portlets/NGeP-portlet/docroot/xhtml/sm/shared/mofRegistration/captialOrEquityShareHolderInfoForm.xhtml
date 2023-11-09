@@ -7,8 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="shrHolderPanGroup">
-		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
-			toggleable="true">
+		<!-- #33783 - start -->
+		<ui:param name="headerShrHolder" value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM 
+			== SupplierManagementConst.COMPANY_TYPE_CLBG ? lbl['lbl.sm.shrHldrInfo.panHdr.clbg'] : lbl['lbl.sm.shrHldrInfo.panHdr']}" />
+		<p:panel header="#{headerShrHolder}" toggleable="true">
+		<!-- #33783 - end -->
 			
 			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
 			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" 
@@ -187,9 +190,10 @@
 					<table style="width: 50%">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+							<!-- #33783 -->
 							<td><p:inputTextarea autoResize="false" cols="41"
 									maxlength="200" id="capShrHoldInfoPoRmrk" readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
-									validatorMessage="#{lbl['lbl.sm.shrHldrInfo.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
+									validatorMessage="#{headerShrHolder} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 									value="#{backingBean.managedBean.poSecReview.shareholderRemark}">
 									<f:validateLength maximum="200" />
 								</p:inputTextarea> <p:message id="capShrHoldInfoPoRmrkMsg"
@@ -206,9 +210,10 @@
 									disabled="true" cols="41" maxlength="200"
 									value="#{backingBean.managedBean.poSecReview.shareholderRemark}" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+							<!-- #33783 -->
 							<td><p:inputTextarea autoResize="false" cols="41"
 									maxlength="200" id="capShrHoldInfoApprvrRmrk"
-									validatorMessage="#{lbl['lbl.sm.shrHldrInfo.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+									validatorMessage="#{headerShrHolder} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 									value="#{backingBean.managedBean.apprvrSecReview.shareholderRemark}">
 									<f:validateLength maximum="200" />
 								</p:inputTextarea> <p:message id="capShrHoldInfoApprvrRmrkMsg"

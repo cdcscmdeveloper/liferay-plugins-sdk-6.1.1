@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright  2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.simplequote;
 
@@ -339,7 +339,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setByLocality(Boolean.FALSE);
 				}
 
-				if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){
+				if(scQuote.getRequestNotes() != null && !scQuote.getRequestNotes().isEmpty() && scRequestNote != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					getManagedBean().getRequestNote().setPmOrgProfile(scRequestNote.getPmOrgProfile());
 				}
 				
@@ -430,7 +430,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
-			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
+			getManagedBean().setCreatedBy(getUserById(scQuote != null ? scQuote.getCreatedBy():null).getUserName());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			//#25886 - start
 			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
@@ -876,7 +876,7 @@ public class SimpleQuoteBackingBean extends
 			if(scQuote.getSupplierId() == 0)	
 				scQuote.setSupplierId(supplierId);
 		}
-		else if(supplierId == 0){
+		else if(supplierId != null && supplierId == 0){ //#34994
 			if(scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())			
 				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
 		}			
@@ -1215,6 +1215,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// set user info
+		if (quoteDocs != null && CollectionUtils.isNotEmpty(quoteDocs)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		for (ScQuoteDoc quoteDoc : quoteDocs) {
 			if (ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc
 					.getSpecMaster().getItemTypeCode().getParameterCode())) {
@@ -1302,6 +1303,7 @@ public class SimpleQuoteBackingBean extends
 						productTemplateSpecBean);
 			}
 		}
+	  }
 	}
 
 	/**
@@ -1878,13 +1880,11 @@ public class SimpleQuoteBackingBean extends
 			List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
 			List<ZonesBean> beans = getManagedBean().getBeans();
 
-			if (scQuote.getQuoteZone().getTplSpecZoneDtls() != null
-					&& scQuote.getQuoteZone().getTplSpecZoneDtls().size() > 0) {
+			if (CollectionUtils.isNotEmpty(scQuote.getQuoteZone().getTplSpecZoneDtls())) {//sonarQubeIssue13#84
 				for (TplSpecZoneDtl tplSpecZoneDtl : scQuote.getQuoteZone()
 						.getTplSpecZoneDtls()) {
 					ZonesBean zonesBean = new ZonesBean();
-					if (tplSpecZoneDtl.getTplSpecZoneLocs() != null
-							&& tplSpecZoneDtl.getTplSpecZoneLocs().size() > 0) {
+					if (CollectionUtils.isNotEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {//sonarQubeIssue14#84
 						zonesBean.setTplSpecZoneDtl(tplSpecZoneDtl);
 						zonesBean.setTplSpecZoneLocs(tplSpecZoneDtl
 								.getTplSpecZoneLocs());
@@ -1986,8 +1986,7 @@ public class SimpleQuoteBackingBean extends
 							getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
 		}
 
-		if (scQuote.getRequestNotes() != null
-				&& scQuote.getRequestNotes().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getRequestNotes())) {//sonarQubeIssue15#84
 			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
 		}
 		
@@ -2009,8 +2008,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// business nature details
-		if (scQuote.getBusinessNatureCriterias() != null
-				&& scQuote.getBusinessNatureCriterias().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getBusinessNatureCriterias())) {//sonarQubeIssue16#84
 			getManagedBean().setByBusinessNature(Boolean.TRUE);
 			getManagedBean().setBusinessNatureCriterias(
 					scQuote.getBusinessNatureCriterias());
@@ -2023,8 +2021,7 @@ public class SimpleQuoteBackingBean extends
 		} else{
 			quotePanelItem = scQuote.getPanelItem();
 		}
-		if (scQuote.getScQuoteSuppliers() != null
-				&& scQuote.getScQuoteSuppliers().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getScQuoteSuppliers())) {//sonarQubeIssue17#84
 			// panel supplier
 			if (scQuote.isPanel()) {
 				getManagedBean().setPanelSuppliers(
@@ -2361,6 +2358,34 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35298 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if (tplSpecQuestion.getCmItem() != null
+									&& tplSpecQuestion.getCmItem().getExtensionCode() != null) {
+								ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+								String serviceOrProduct = catalogueSO.checkProductOrService(tplSpecQuestion.getCmItem()
+										.getExtensionCode());
+								if (serviceOrProduct.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
+									if ((tplSpecQuestion.getAnswerTypeCode() != null)
+											&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+										if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+												.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+											if (tplSpecQuestion.getClUomFrequency() != null) {
+												tplSpecQuestion.setClUomFrequency(null);
+											}
+											if (tplSpecQuestion.getClDurationMonth() != null) {
+												tplSpecQuestion.setClDurationMonth(null);
+											}
+
+										}
+									}
+								}
+							}
+						}
+						// Bug #35298 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2381,6 +2406,29 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35298 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if ((tplSpecQuestion.getAnswerTypeCode() != null)
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+								if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+									if (tplSpecQuestion.getClFulfilmentTypeCode() != null
+											&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+													.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+										if (tplSpecQuestion.getClUomFrequency() != null) {
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if (tplSpecQuestion.getClDurationMonth() != null) {
+											tplSpecQuestion.setClDurationMonth(null);
+										}
+									}
+								}
+							}
+						}
+						// Bug #35298 - end
+						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -3338,13 +3386,12 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private List<ScLocationStateCriteria> getLocationStateCriterias(
 			List<TreeNode> treeNodes, ScQuote quote) {
-		List<ScLocationStateCriteria> results = new ArrayList<ScLocationStateCriteria>();
+		List<ScLocationStateCriteria> results = new ArrayList<>();//sonarQubeIssue18#84
 		List<PmState> states = getPmStates(treeNodes);
-		if (states != null && states.size() > 0) {
+		if (CollectionUtils.isNotEmpty(states)) {//sonarQubeIssue18#84
 			for (PmState state : states) {
 				boolean isState = false;
-				if (quote.getLocationStateCriterias() != null
-						&& quote.getLocationStateCriterias().size() > 0) {
+				if (CollectionUtils.isNotEmpty(quote.getLocationStateCriterias())) {//sonarQubeIssue18#84
 					for (ScLocationStateCriteria criteriaState : quote
 							.getLocationStateCriterias()) {
 						if (state.getStateId().equals(
@@ -3376,13 +3423,12 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private List<ScLocationDivisionCriteria> getLocationDivisionCriterias(
 			List<TreeNode> treeNodes, ScQuote quote) {
-		List<ScLocationDivisionCriteria> results = new ArrayList<ScLocationDivisionCriteria>();
+		List<ScLocationDivisionCriteria> results = new ArrayList<>();//sonarQubeIssue19#84
 		List<PmDivision> divisions = getPmDivisions(treeNodes);
-		if (divisions != null && divisions.size() > 0) {
+		if (CollectionUtils.isNotEmpty(divisions)) {//sonarQubeIssue19#84
 			for (PmDivision division : divisions) {
 				boolean isDivision = false;
-				if (quote.getLocationDivisionCriterias() != null
-						&& quote.getLocationDivisionCriterias().size() > 0) {
+				if (CollectionUtils.isNotEmpty(quote.getLocationDivisionCriterias())) {//sonarQubeIssue19#84
 					for (ScLocationDivisionCriteria criteriaDiv : quote
 							.getLocationDivisionCriterias()) {
 						if (division.getDivisionId().equals(
@@ -3414,14 +3460,13 @@ public class SimpleQuoteBackingBean extends
 	 */
 	private List<ScLocationDistrictCriteria> getLocationDistrictCriterias(
 			List<TreeNode> treeNodes, ScQuote quote) {
-		List<ScLocationDistrictCriteria> results = new ArrayList<ScLocationDistrictCriteria>();
+		List<ScLocationDistrictCriteria> results = new ArrayList<>();//sonarQubeIssue20#84
 		for (TreeNode treeNode : treeNodes) {
 			List<PmDistrict> districts = getPmDistricts(treeNode.getChildren());
-			if (districts != null && districts.size() > 0) {
+			if (CollectionUtils.isNotEmpty(districts)) {//sonarQubeIssue20#84
 				for (PmDistrict district : districts) {
 					boolean isDistict = false;
-					if (quote.getLocationDistrictCriterias() != null
-							&& quote.getLocationDistrictCriterias().size() > 0) {
+					if (CollectionUtils.isNotEmpty(quote.getLocationDistrictCriterias())) {//sonarQubeIssue20#84
 						for (ScLocationDistrictCriteria criteriaDist : quote
 								.getLocationDistrictCriterias()) {
 							if (district.getDistrictId().equals(
@@ -3614,7 +3659,7 @@ public class SimpleQuoteBackingBean extends
 	 * @return the list
 	 */
 	private List<TreeNode> deleteChildTreeNodes(List<TreeNode> treeNodes) {
-		List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+		List<TreeNode> nodesToRemoved = new ArrayList<>();//sonarQubeIssue21#84
 		if (treeNodes != null) {
 
 			for (TreeNode treeNode : treeNodes) {
@@ -3626,18 +3671,17 @@ public class SimpleQuoteBackingBean extends
 																// not
 					nodesToRemoved.add(treeNode);
 				} else {
-					if (treeNode.getChildren() != null
-							&& treeNode.getChildren().size() > 0) {
+					if (CollectionUtils.isNotEmpty(treeNode.getChildren())) {//sonarQubeIssue21#84
 						deleteChildTreeNodes(treeNode.getChildren());
 
-						if (treeNode.getChildren().size() == 0) {
+						if (CollectionUtils.isEmpty(treeNode.getChildren())) {//sonarQubeIssue21#84
 							nodesToRemoved.add(treeNode);
 						}
 					}
 				}
 			}
 
-			if (nodesToRemoved.size() > 0) {
+			if (CollectionUtils.isNotEmpty(nodesToRemoved)) {//sonarQubeIssue21#84
 				treeNodes.removeAll(nodesToRemoved);
 			}
 		}
@@ -3693,8 +3737,7 @@ public class SimpleQuoteBackingBean extends
 		ScQuote quote = getManagedBean().getScQuote();
 		if (tplSpecZoneDtl != null) {
 			if (quote.getQuoteZone() != null
-					&& quote.getQuoteZone().getTplSpecZoneDtls() != null
-					&& quote.getQuoteZone().getTplSpecZoneDtls().size() > 0) {
+					&& CollectionUtils.isNotEmpty(quote.getQuoteZone().getTplSpecZoneDtls())) {//sonarQubeIssue22#84
 				quote.getQuoteZone().getTplSpecZoneDtls()
 						.remove(tplSpecZoneDtl);
 				quote.getQuoteZone().setModified(Boolean.TRUE);
@@ -4326,7 +4369,12 @@ public class SimpleQuoteBackingBean extends
 				Boolean isProduct = null;
 				Long itemSpecQuestionId = null;
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
-				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
+				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();				
+				
+				//Bug #35298 - get value for fulfilment type one-off
+				PmParameter FTypeOneOff = getParameterByTypeAndCode(
+						ParameterTypeConst.FULFILMENT_TYPE,
+						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 
 				if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
 					for(TplSpecQuestion question: cloneSpecMaster.getTplSpecQuestions()) {
@@ -4340,9 +4388,10 @@ public class SimpleQuoteBackingBean extends
 									if(extensionCode != null) {
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
-											isProduct = true;
-											prodItemQuestions.add(question);
-										} else {
+											isProduct = true;											
+											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35298 - Assigning value one-off to product									
+											prodItemQuestions.add(question);											
+										} else if (pOrS.equalsIgnoreCase(CommonConstants.SERVICE_INITIAL)) {
 											isProduct = false;
 											serviceItemQuestions.add(question);
 										}
@@ -4350,7 +4399,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							} else if(question != null && question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)){
 								if(question.getParentSpecQuestion().getSpecQuestionId().equals(itemSpecQuestionId)) {
-									if(isProduct) {
+									if(isProduct != null && isProduct.equals(true)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 										prodItemQuestions.add(question);
 									} else {
 										serviceItemQuestions.add(question);
@@ -4380,7 +4429,7 @@ public class SimpleQuoteBackingBean extends
 							&& productTplSpecBean.getSpecMaster()
 									.getTplSpecQuestions() != null) {
 						getManagedBean().setProdQuestions(
-								prodSpecMaster.getTplSpecQuestions());
+							productTplSpecBean.getSpecMaster().getTplSpecQuestions());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					}
 
 					if (getManagedBean().getProdQuestions() != null
@@ -4407,7 +4456,7 @@ public class SimpleQuoteBackingBean extends
 							questions.add(cloneQuestion);
 						}
 					}
-
+				  if (prodSpecMaster != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					prodSpecMaster.setTplSpecQuestions(questions);
 
 					if (getManagedBean().getScQuote().getMultipleQuote()) { // for
@@ -4417,7 +4466,7 @@ public class SimpleQuoteBackingBean extends
 					} else {
 						prodSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-
+				   }
 					productTplSpecBean.setSpecMaster(prodSpecMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
@@ -4432,7 +4481,8 @@ public class SimpleQuoteBackingBean extends
 					// non clone spec master - already selected list
 					if (serviceTplSpecBean.getSpecMaster() != null
 							&& serviceTplSpecBean.getSpecMaster()
-									.getTplSpecQuestions() != null) {
+									.getTplSpecQuestions() != null 
+							&& serviceSpecMaster != null ) {
 						getManagedBean().setServiceQuestions(
 								serviceSpecMaster.getTplSpecQuestions());
 					}
@@ -4462,6 +4512,7 @@ public class SimpleQuoteBackingBean extends
 							questions.add(cloneQuestion);
 						}
 					}
+				  if (serviceSpecMaster != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					serviceSpecMaster.setTplSpecQuestions(questions);
 
 					if (getManagedBean().getScQuote().getMultipleQuote()) { // for
@@ -4471,7 +4522,7 @@ public class SimpleQuoteBackingBean extends
 					} else {
 						serviceSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-
+				  }
 					serviceTplSpecBean.setSpecMaster(serviceSpecMaster);
 					getManagedBean().setServiceTemplateSpecBean(
 							serviceTplSpecBean);
@@ -5009,8 +5060,7 @@ public class SimpleQuoteBackingBean extends
 					getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
 		}
 
-		if (scQuote.getRequestNotes() != null
-				&& scQuote.getRequestNotes().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getRequestNotes())) {//sonarQubeIssue23#84
 			getManagedBean().getRequestNote().setPmOrgProfile(
 					scQuote.getRequestNotes().get(0).getPmOrgProfile());
 		}
@@ -5033,8 +5083,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// business nature details
-		if (scQuote.getBusinessNatureCriterias() != null
-				&& scQuote.getBusinessNatureCriterias().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scQuote.getBusinessNatureCriterias())) {//sonarQubeIssue24#84
 			getManagedBean().setByBusinessNature(Boolean.TRUE);
 			getManagedBean().setBusinessNatureCriterias(
 					scQuote.getBusinessNatureCriterias());
@@ -5147,8 +5196,7 @@ public class SimpleQuoteBackingBean extends
 				// clear session data.
 				renewSesionObject();
 
-				if (scQuote.getQuoteDocs() != null
-						&& scQuote.getQuoteDocs().size() > 0) {
+				if (CollectionUtils.isNotEmpty(scQuote.getQuoteDocs())) {//sonarQubeIssue25#84
 					for (ScQuoteDoc quoteDoc : scQuote.getQuoteDocs()) {
 						// adding selected product or service question only
 						if (quoteDoc.getSpecMaster().getItemTypeCode()
@@ -5624,8 +5672,7 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// update is submitted by supplier
-			if (quote.getScQuoteSuppliers() != null
-					&& quote.getScQuoteSuppliers().size() > 0) {
+			if (CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {//sonarQubeIssue26#84
 				for (ScQuoteSupplier scQuoteSupplier : quote
 						.getScQuoteSuppliers()) {
 					if (getManagedBean().getScQuoteSupplier() != null) {
@@ -5850,7 +5897,8 @@ public class SimpleQuoteBackingBean extends
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
 						.spkiSignTransaction(originalText);
-				pmDigiSign.setSpkiSignedData(signedData);
+				if (pmDigiSign != null)// 20230712@asyrafhaziq- SQUBE Bug nullPointer#3
+					pmDigiSign.setSpkiSignedData(signedData);//Sonarqube #83
 			}
 
 			// tpl spec - service
@@ -5872,8 +5920,7 @@ public class SimpleQuoteBackingBean extends
 			}
 			// #30552 - end
 			// update is submitted by supplier
-			if (quote.getScQuoteSuppliers() != null
-					&& quote.getScQuoteSuppliers().size() > 0) {
+			if (CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {//sonarQubeIssue27#84
 				for (ScQuoteSupplier scQuoteSupplier : quote
 						.getScQuoteSuppliers()) {
 					if (getManagedBean().getScQuoteSupplier() != null) {
@@ -6628,8 +6675,7 @@ public class SimpleQuoteBackingBean extends
 		List<Long> divIds = null;
 		List<Long> distIds = null;
 
-		if (tplSpecZoneDtl.getTplSpecZoneLocs() != null
-				&& tplSpecZoneDtl.getTplSpecZoneLocs().size() > 0) {
+		if (CollectionUtils.isNotEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {//sonarQubeIssue28#84
 			List<TplSpecZoneLoc> currentTplSpecLocs = tplSpecZoneDtl
 					.getTplSpecZoneLocs();
 			stateIds = getPmStateIds(currentTplSpecLocs);
@@ -6639,15 +6685,14 @@ public class SimpleQuoteBackingBean extends
 
 		List<ZonesBean> list = getManagedBean().getBeans();
 
-		if (list != null && list.size() > 0) {
+		if (CollectionUtils.isNotEmpty(list)) {//sonarQubeIssue29#84
 
 			for (ZonesBean zonesBean : list) {
 				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
 
 				if (prevsZone != null) {
 
-					if (prevsZone.getTplSpecZoneLocs() != null
-							&& prevsZone.getTplSpecZoneLocs().size() > 0) {
+					if (CollectionUtils.isNotEmpty(prevsZone.getTplSpecZoneLocs())) {//sonarQubeIssue29#84
 						List<TplSpecZoneLoc> previousTplSpecLocs = prevsZone
 								.getTplSpecZoneLocs();
 						for (TplSpecZoneLoc TplSpecZoneLoc : previousTplSpecLocs) {
@@ -8045,6 +8090,10 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		
+		/**
+		 * Evaluate flag for PID expiry
+		 * @return boolean - flag to represent if PID expires
+		 * */
 		public boolean checkStatusPidExpired(){
 			
 			Boolean valid = false;
@@ -8058,22 +8107,19 @@ public class SimpleQuoteBackingBean extends
 				}		
 				scPID = getManagedBean().getScQuote().getPurchaseInDefault();
 			}
-			
-			if(scPID != null){			
-			    if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
-			       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
-		
-					Date today  = DateUtils.getCurrentDate();
-					Date ExpDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
-					
-					log.info("pID validity begin");
-					
-					if(today.after(ExpDate)){
-						valid = true;
-					}
-					log.info("pID validity end");
-				}				
-			}
+			//Sonarqube #83 - start
+			if(scPID != null && currentStatusId != null && (currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
+				       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION))){ 
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				Date today  = DateUtils.getCurrentDate();
+				Date expDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
+				log.info("pID validity begin");
+				if(today.after(expDate)){
+					valid = true;
+				}
+				log.info("pID validity end");
+			} 
+			//Sonarqube #83 - end
 			return valid;
 		}
 		//12183 - End
@@ -8226,7 +8272,7 @@ public class SimpleQuoteBackingBean extends
 					minMinutes = ruleValue.getFromValue();
 					maxMinutes = ruleValue.getToValue();
 					minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-					maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+					maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
 				}
 				if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
 					maxiDays = maxiDays + maxDays.intValue();
@@ -8239,7 +8285,7 @@ public class SimpleQuoteBackingBean extends
 					}
 
 					BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
-					diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+					diff = diff.divide(BigDecimal.valueOf(60L*1000), 2, RoundingMode.HALF_UP);
 					/*
 					
 					BigDecimal twentyFour = BigDecimal.valueOf(24);
@@ -8280,7 +8326,7 @@ public class SimpleQuoteBackingBean extends
 				Date startDate = quote.getStartDate();
 				
 				maxMinutes = new BigDecimal(4320); // equals to 3 days
-				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
 				quote.setEndDate(DateUtils.addDays(startDate, maxDays.intValue()));
 			}			
 		}

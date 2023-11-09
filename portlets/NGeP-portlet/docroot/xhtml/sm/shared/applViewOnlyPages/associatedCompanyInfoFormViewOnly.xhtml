@@ -53,7 +53,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.companyName}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.companyName}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.companyName}"/></td>
@@ -74,7 +74,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address1}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address1}"/></td>
@@ -86,7 +86,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address2}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address2}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address2}"/></td>
@@ -97,7 +97,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address3}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address3}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address3}"/></td>
@@ -108,7 +108,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-							and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+							and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}" 
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
@@ -123,7 +123,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmState.stateId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}" 
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
@@ -143,7 +143,8 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDivision.divisionId}" 
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
@@ -160,7 +161,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDistrict.districtId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}" 
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
@@ -174,7 +175,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCity.cityId}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}" 
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
@@ -188,7 +189,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.postcode}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.postcode}"/></td>
@@ -199,7 +200,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.phoneNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneNo}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.phoneNo}"/></td>
@@ -210,7 +211,7 @@
 						<!-- #32008 -->
 						<ac:smFieldChangeAlertView 
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
-								and not empty viewSmApplBackingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.faxNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxNo}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.faxNo}"/></td>
