@@ -10835,9 +10835,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))) {
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					if (null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-									.getTplSpecZoneDtl().getSpecZoneId())) {
+					boolean addZoneName = null == zoneloiLoaItem
+							|| (null != zoneloiLoaItem && (zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
+							.getTplSpecZoneDtl().getSpecZoneId() || !zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
+							.equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())));
+					if (addZoneName) {
 						zoneloiLoaItem = loiLoaItem;
 						itemsList.append("\n" + loiLoaItem.getTplSpecZoneDtl().getZoneName() + " \n");
 						zoneitemCount = 0;
