@@ -19,6 +19,15 @@
 				      value="#{!isSecretaryUser or 
 										meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive
 										or suppFinalizationBackingBean.managedBean.readOnly}" />
+			
+			<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process
+			</ui:remove>							
+			<ui:param name="isBPKCentralContract"
+				      value="#{suppFinalizationBackingBean.managedBean.bpkCentralContract}" />
+			<ui:param name="disableMeetingStatus"
+				      value="#{disableMeeting or isBPKCentralContract}" />
+											
 			<p:column styleClass="td-check-box-spacing">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
@@ -87,8 +96,10 @@
 					</td></tr></table>
 			
 			</p:column>
-
-			<p:column style="width:20%">
+            <ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process
+			</ui:remove>
+			<p:column style="width:20%"  rendered="#{!isBPKCentralContract}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
 						styleClass="mandatory" />
@@ -114,7 +125,7 @@
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 				<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false"
-					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting}">
+					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeetingStatus}">
 					<f:selectItems
 						value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}" />
 						<!-- ***28834 start -->
@@ -134,8 +145,8 @@
 			<ui:remove>
 				Enhancement #21694
 			</ui:remove>
-			<p:column headerText="#{lbl['lbl.sc.meeting.previousCommittee']}" style="width:30%">
-				<h:panelGroup layout="block" rendered="#{disableMeeting}">
+			<p:column headerText="#{lbl['lbl.sc.meeting.previousCommittee']}" style="width:30%" rendered="#{!isBPKCentralContract}" > <ui:remove>#27502 - New DO MOF Role and Process</ui:remove>
+				<h:panelGroup layout="block" rendered="#{disableMeeting}"> 
 					<p:commandLink style="align: center" 
 			 			process="@this" partialSubmit="true" 
 						action="#{suppFinalMeetingBackingBean.viewMeetingDetailsViewFinalization(meetingDtl)}">

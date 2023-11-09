@@ -39,6 +39,8 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.approveauthority.IApproveAuthorityCommitteeSO;
+import my.ep.biz.service.pm.common.approveauthority.IApproveAuthoritySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -71,6 +73,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
+import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -103,6 +107,8 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmAuthority;
+import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -224,6 +230,8 @@ public class SupplierFinalizationBackingBean extends
 	
 	private static final int PREPARE_ACTIVE_INDEX_MEETING = 0;
 	private static final int PREPARE_ACTIVE_INDEX_COMMITTEE = 1;
+	//#27502 - New DO MOF Role and Process
+	private static final int PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE = 1;
 	private static final int PREPARE_ACTIVE_INDEX_JOIN_IN = 2;
 	
 	private static final Long DEFAULT_ITEM = 0L;
@@ -515,7 +523,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			// #27502 -- Start
 		} else if (isBpkCentralContract) {
-			getManagedBean().setPreparationTabIndex(-1);
+			getManagedBean().setPreparationTabIndex(tabIndex++);//#27502 - New DO MOF Role and Process
 			getManagedBean().setEvaluationReportIndex(-1);
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
@@ -1020,6 +1028,91 @@ public class SupplierFinalizationBackingBean extends
 		
 	}
 
+	//#27502 - New DO MOF Role and Process - Start
+	private void retrieveMeetingRecordDtls(Long qtId, String committeeType) {
+		//to retrieve Approval Authority
+		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
+		
+		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
+		
+		this.getManagedBean().setListApprovalAuthority(resultComittee);
+		
+	}
+	
+	/**
+	 * This loadCommitteeList method is to load data from pm_authority_committee
+	 * and display to user
+	 * @param eventTab the tab where the user has clicked
+	 */
+	public void changeApprovalAuth() {
+		log.info("start changeApprovalAuth");
+		
+		IApproveAuthorityCommitteeSO approveAuthorityCommitteeSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthorityCommitteeSO.class);
+		
+		PmAuthority authority = this.getManagedBean().getApprovalAuthority();
+		List<PmAuthorityCommittee> newComList = new ArrayList<>();
+		//this.getManagedBean().setAuthCodeDesc(tabAuth.getAuthCodeDesc());
+		//this.getManagedBean().setAuthority(tabAuth);
+		if (authority != null && authority.getAuthId() != null){
+		System.out.println("AuthCodeDesc 2 :"+authority.getAuthCodeDesc());
+		System.out.println("Authid 2 :"+authority.getAuthId());
+		AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
+		reqDTO.setAuthority(authority);
+		
+		 AuthorityCommitteeResDTO resDTO = approveAuthorityCommitteeSo.retrieveListApproveAuthority(reqDTO);
+			if (resDTO.getListAuthorityCommittee() != null && !resDTO.getListAuthorityCommittee().isEmpty()){	
+				for(PmAuthorityCommittee committee : resDTO.getListAuthorityCommittee()){
+					newComList.add(committee);
+				}
+
+				Collections.sort(newComList, new Comparator<PmAuthorityCommittee>(){
+					@Override
+					public int compare(PmAuthorityCommittee c1, PmAuthorityCommittee c2){
+							return c1.getAuthCommitteeId().compareTo(c2.getAuthCommitteeId());
+					}					
+				});
+		
+			}
+		}else{
+			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
+		}
+		
+		if(this.getManagedBean().getApprovalAuthCommittee() == null){
+			System.out.println("ApprovalAuthCommittee kosong");
+			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
+		}
+		
+		System.out.println("newComList size :"+newComList.size());
+		this.getManagedBean().setListApprovalAuthCommittee(newComList);
+	}
+	
+	public void changeCommApprovalAuth() {
+		log.info("start changeCommApprovalAuth");
+		
+	}
+			
+	private void getListApprovalAuthority() {
+		//to retrieve Approval Authority
+		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
+		
+		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
+		
+		if (this.getManagedBean().getApprovalAuthority() == null){
+			this.getManagedBean().setApprovalAuthority(new PmAuthority());
+			
+			System.out.println("AuthCodeDesc kosong :");
+		}else{
+			System.out.println("AuthCodeDesc :"+this.getManagedBean().getApprovalAuthority().getAuthCodeDesc());
+		}
+		
+		this.getManagedBean().setListApprovalAuthority(resultComittee);
+		
+	}
+	//#27502 - New DO MOF Role and Process - end
+	
 	private void retrievePreparationDtls(Long qtId, String committeeType) {
 		log.info("..In retrievePreparationDtls()..");
 		IQTMeetingSO meetingSO = null;
@@ -1164,7 +1257,16 @@ public class SupplierFinalizationBackingBean extends
 					PREPARE_ACTIVE_INDEX_MEETING);
 
 			// Meeting Details
-			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();	
+			 //20230727@asyrafhaziq #27502 - New DO MOF Role and Process
+			if (getManagedBean().isBpkCentralContract()){
+			 /* if (meetingList != null && ! meetingList.isEmpty()){
+				for (ScQtMeeting list : meetingList){
+					list.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));
+				}
+			  }*/
+				this.getManagedBean().setDisableBfButton(true);
+			}
 			getManagedBean().setMeetingList(meetingList);
 		} finally {
 		}
@@ -1185,7 +1287,14 @@ public class SupplierFinalizationBackingBean extends
 			// meeting.setPmStatus(new PmStatus());
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
-			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
+			 //20230727@asyrafhaziq #27502 - New DO MOF Role and Process
+			if (this.getManagedBean().isBpkCentralContract()){
+				meeting.setMeetingStatusStr(QTStatusConst.MS_DONE);
+			    meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));			    
+			}else{
+				meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
+			}
+			
 
 			meetingList.add(meeting);
 			this.getManagedBean().setMeetingList(meetingList);
@@ -1317,6 +1426,20 @@ public class SupplierFinalizationBackingBean extends
 		log.info("..In retrieveCommitteeDtls()..");
 		this.getManagedBean().setPrepareActiveIndex(
 				PREPARE_ACTIVE_INDEX_COMMITTEE);
+	}
+	
+	//20230727@asyrafhaziq #27502 - New DO MOF Role and Process
+	/**
+	 * To retrieve committee details
+	 */
+	public void retrieveCommitteeMOFDtls() {
+		log.info("..In retrieveCommitteeMOFDtls()..");
+		
+		System.out.println("..In retrieveCommitteeMOFDtls()..");
+		this.getManagedBean().setPrepareActiveIndex(
+				PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE);
+		
+		getListApprovalAuthority();
 	}
 
 	/**
@@ -2475,7 +2598,13 @@ public class SupplierFinalizationBackingBean extends
 	 * 
 	 */
 	public void navigateToSubmissionPopup() {
-		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		//@asyrafhaziq #27502 - New DO MOF Role and Process
+		if ( getManagedBean().isBpkCentralContract()) {
+			RequestContext.getCurrentInstance().execute("confirmBriefPopup2.show()");
+		  }else{
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		  }
+		
 	}
 	// #28834 - End.
 	
@@ -2883,8 +3012,12 @@ public class SupplierFinalizationBackingBean extends
 					RequestContext.getCurrentInstance().execute("confirmBriefPopup1.show()");
 				}
 				else
-				{
+				{ //@asyrafhaziq #27502 - New DO MOF Role and Process
+					if ( getManagedBean().isBpkCentralContract()) {
+					RequestContext.getCurrentInstance().execute("confirmBriefPopup2.show()");
+				  }else{
 					RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+				  }
 				}
 				
 			}
@@ -6061,7 +6194,8 @@ return	remarksNotFound;
 		}
 		//END - #26169
 		if (getManagedBean().isInitialDecisionFwdToBPK() || 
-				getManagedBean().isDisableFwdToHighAuthorityOption()) {
+				getManagedBean().isDisableFwdToHighAuthorityOption() ||
+				this.getManagedBean().isBpkCentralContract()) {//@asyrafhaziq #27502 - New DO MOF Role and Process	
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
 			}
@@ -6114,6 +6248,23 @@ return	remarksNotFound;
 		Comment for CR:#26169 , BUG:#28682 END  */
 		//#25729#142 End
 		
+		//6906 note 117 - start
+				if(this.getManagedBean().isNoProposalSubmitted()){
+					//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					if (excludedDecisionList == null) 
+						excludedDecisionList = new ArrayList<String>();
+					
+					excludedDecisionList.add(
+							ParameterConst.DECISION_RE_EVALUATION);	
+				}
+				//6906 note 117 - end
+				
+		//@asyrafhaziq #27502 - New DO MOF Role and Process		
+		/*if (this.getManagedBean().isBpkCentralContract()){
+			excludedDecisionList.add(
+					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
+		}*/
+				
 		if (excludedDecisionList != null && CollectionUtils.isNotEmpty( //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					excludedDecisionList)) {
 			searchBean = new SearchBean<PmParameterDesc>();
@@ -6908,7 +7059,21 @@ return	remarksNotFound;
       boolean isBpkCentralContract = false;
       isBpkCentralContract = isBpkCentralContract(scQt);
       if (isBpkCentralContract) {
-
+    	  
+    	  //20230727@asyrafhaziq #27502 - New DO MOF Role and Process
+    	  // Meeting Record 
+    	  menuItem = new MenuItem();
+          menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.preparation",
+                  ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+          menuItem.setStyle("width:15%;");
+          // menuItem.setDisabled(isQTMaintenanceScreen());
+          menuItem.setTransient(true);
+          menuItem.setPartialSubmit(true);
+          menuItem.setProcess("@form");
+          menuItem.setUpdate("@form");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (0) + "}]); ");
+          mainMenuModel.addMenuItem(menuItem);
+                
           // Briefing Paper Menu Item
           menuItem = new MenuItem();
           menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.briefing.paper.preparation",
@@ -6919,7 +7084,7 @@ return	remarksNotFound;
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
 //        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (2)) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (2)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           // Supplier Finalization Menu Item
@@ -6933,7 +7098,7 @@ return	remarksNotFound;
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
 //        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (3)) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (3)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           menuItem = new MenuItem();
@@ -6945,7 +7110,7 @@ return	remarksNotFound;
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");        
           //menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (5)) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 3 : (5)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
           
           navigateToSupplierFinalizationTab();

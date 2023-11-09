@@ -87,6 +87,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -2251,6 +2252,28 @@ public class LOIDetailBackingBean extends
 		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
 				scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
 						.getOrgProfileId():null).getOrgProfileId());
+		
+	//@asyrafhaziq #27502 - New DO MOF Role and Process
+		
+		//if (resDTO.getScQt().getContractType() == null) {
+			//QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			//System.out.println("qt_id no " + resDTO.getScQt().getQtId());
+			//qtBackingBean.retrieveQuationTenderDetails(resDTO.getScQt().getQtId());
+			//Long contractType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
+			Long contractType = resDTO.getScQt().getContractType().getParameterId();
+		//} else {
+		//	contractType = resDTO.getScQt().getContractType().getParameterId();
+		//}
+		//System.out.println("contractType " + contractType);
+		if (contractType != null && contractType.equals(SourcingConstants.CENTRAL_CONTRACT)){
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();		
+			if (zone != null) {
+				//System.out.println("zone code " + zone.getZoneCode());
+				userReqDTO.setZoneCode(zone.getZoneCode()) ;
+			}
+			userReqDTO.setBpk(true);
+		}
+		
 		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 

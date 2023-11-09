@@ -123,6 +123,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -9529,6 +9530,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
 			sb.append("^4");
 		}
+		
+		//@asyrafhaziq #27502 - New DO MOF Role and Process
+		if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			
+			sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
+			sb.append(true);
+			sb.append("^1");	
+			
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();		
+			if (zone != null) {
+
+				sb.append("|pmUserOrgs.pmOrgProfile.pmZone.zoneId^");
+				sb.append(zone.getZoneId()); 
+			}
+		 }
 		return sb.toString();
 	}
 
