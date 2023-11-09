@@ -2608,6 +2608,8 @@ u.underline {
 								</td>
 								
 								<td valign="top"  class="tableDataPR">
+									
+									#* 35295 - start
 									#set($maxQty = 0)
 									#set($minQty = 0)
 									#set($currentValue = 0)								
@@ -2650,7 +2652,19 @@ u.underline {
 									#else
 										<span>$maxQty</span>
 									#end
-										
+									35295 - end
+									*#
+									#set($currentValue = 0)	
+									#if($currentValue == 0)
+										   	#if($tplspecQuestion.clQuantity)
+												#set($currentValue = $tplspecQuestion.clQuantity)												
+									  	   	#else
+										   		#if($tplSpecZoneQtie.qty)
+										   			#set($currentValue = $tplSpecZoneQtie.qty) 
+												#end
+									  		#end									   
+									#end	
+									<span>$currentValue</span>
 								</td>
 
 								<td valign="top"  class="tableDataPR" rowspan="2">							
