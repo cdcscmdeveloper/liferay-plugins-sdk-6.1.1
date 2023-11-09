@@ -12111,7 +12111,15 @@ public class SmApplicationUtil {
 						PmDivision div = new PmDivision();
 						div.setDivisionId(addr.getSmAddress().getPmDivision()
 								.getDivisionId());
-						smAddress.setPmDivision(div);
+						//#34159 - START
+						IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										IDivisionSO.class);
+						DivisionReqDTO reqDTO = new DivisionReqDTO();
+						reqDTO.setDivisionId(div.getDivisionId());
+						DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
+						smAddress.setPmDivision(resDTO.getPmDivision());
+						//#34159 - END
 						smAddress.setDivisionId(div.getDivisionId());
 					}
 					//#13320 - added division - end
@@ -12127,7 +12135,15 @@ public class SmApplicationUtil {
 					if(addr.getSmAddress().getPmCity() != null){
 						PmCity city = new PmCity();
 						city.setCityId(addr.getSmAddress().getPmCity().getCityId());
-						smAddress.setPmCity(city);
+						//#34159 - START
+						ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										ICitySO.class);
+						CityReqDTO reqDTO = new CityReqDTO();
+						reqDTO.setCityId(city.getCityId());
+						CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
+						smAddress.setPmCity(resDTO.getPmCity());
+						//#34159 - END
 						smAddress.setCityId(city.getCityId());
 					}
 					//END 27879
@@ -14999,4 +15015,32 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
+	// 29616-start
+	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
+		log.info("******* Validate active softcert For cancel mof account******** ");
+		boolean validPersonnels = true;
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplier.getSupplierId());
+		List<SmPersonnel> latestActivePersonnels = SmServiceLookup
+				.getPersonnelSO().retrieveLatestPersonnelBySupplierId(reqDTO)
+				.getSmPersonnelList();
+
+		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
+			for (SmPersonnel per : latestActivePersonnels) {
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					sb.append(++i + ". ");
+					sb.append(per.getName());
+					sb.append(" ");
+					validPersonnels = false;
+				}
+			}
+		}
+		if (!validPersonnels) {
+			throw new EpException(MessageConst.ERROR_722707,
+					new String[] { sb.toString() });
+		}
+		return validPersonnels;
+	}// 29616-end
 }
