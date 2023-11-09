@@ -1620,7 +1620,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
 			if (SCProcessNameConst.FINALISE_FC_SELECTION.equals(taskName) 
-					&& reqDTO.isCommitteeModified() 
+					&& this.getManagedBean().isCommitteeModified() //25037
 					&& StringUtils.isNotEmpty(navigateTo)) {
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if(this.getManagedBean().getFinalBB()!=null){
