@@ -5419,7 +5419,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							  + finalizationReport.getScQtFinalizationReportAttachment().getFilePath();
 					  File file = new File(filePath);
 					  if (null != file && file.exists()) {
-						  file.delete();
+						  boolean deleteFile=file.delete();//#28215&18685-sonarQubeIssue4#54
+						  log.info("======FileDeletedSucessFully======"+deleteFile);//#28215&18685-sonarQubeIssue4#54
 					  }
 					  finalizationReport.setScQtFinalizationReportAttachment(null);
 				}

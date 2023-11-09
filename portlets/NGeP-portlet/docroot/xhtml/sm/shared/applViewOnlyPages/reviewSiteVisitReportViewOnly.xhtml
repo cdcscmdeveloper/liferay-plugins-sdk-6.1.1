@@ -77,11 +77,23 @@
 					onclick="blockWidget.show();"
 					action="#{svoSiteVisitBackingBean.selectReportTask(svTask)}">
 				</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.download']}"
+				<!-- #34166 - Start -->
+				<!-- <p:commandButton value="#{lbl['lbl.btn.download']}"
 					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}"
 				    ajax="false">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
+				</p:commandButton> -->
+				
+				<p:commandButton style="display:none;" id="buttonToClick"
+					binding="#{button3}" value="#{lbl['lbl.btn.download']}"
+					action="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(svTask)}"
+					ajax="true">
+					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.download']}"
+					action="#{svoSiteVisitBackingBean.validateBeforeDownloadSVReport(button3.clientId, svTask, true)}"
+					ajax="true" process="@this" update="buttonToClick" />
+				<!-- #34166 - End -->
 			</p:column>
 		</p:dataTable>
 
