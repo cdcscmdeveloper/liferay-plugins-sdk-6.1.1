@@ -10919,11 +10919,13 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 		return loiLoaItems;
 	}
-	private boolean checkItemAndZoneAdded(HashMap<Long, Long> itemZoneMap, Long itemId, Long specZoneId) {
+	private boolean checkItemAndZoneAdded(HashMap<Long, Long> itemZoneMap,Long itemId,Long specZoneId){
 		for (Map.Entry<Long, Long> itemZone : itemZoneMap.entrySet()) {
 			Long eItemId = itemZone.getKey();
 			Long eZoneId = itemZone.getValue();
-			if (eItemId == itemId && eZoneId == specZoneId) {
+			boolean alreadyAdded=(eItemId.equals(itemId) || eItemId==itemId)
+					 && (eZoneId==specZoneId || eZoneId.equals(specZoneId));
+			if(alreadyAdded){
 				return false;
 			}
 		}
