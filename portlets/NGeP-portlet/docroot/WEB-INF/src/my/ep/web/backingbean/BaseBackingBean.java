@@ -4301,25 +4301,34 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//#21387 - End
 	
-	//#28175
+	//#28175 - start
 	/**
-	 * @param appl
 	 * @param catL3
+	 * @param isSupplierProfile
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3){
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile){
 		if(catL3 == null){
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(appl == null || appl.isActiveAppl() || EntityHelper.isCollectionEmpty(
-				appl.getSmSupplierCategories())){
+		if(appl == null || appl.isActiveAppl() || isSupplierProfile
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
 			return catL3.getCategoryName();
 		}
 		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
 				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
 		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
 	}
+	
+	/**
+	 * @param catL3
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3){
+		return getSupplierCategoryName(catL3, false);
+	}
+	//#28175 - end
 	
 	//START #29956
 	public boolean popupDowngradeSSMOwner(Long applId,SmSupplier smSupplier, List<SmPersonnel> personnelsRole,

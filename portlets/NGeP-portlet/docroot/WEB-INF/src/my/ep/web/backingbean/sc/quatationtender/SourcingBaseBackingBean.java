@@ -6336,7 +6336,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param component the component
 	 * @param value the value
 	 */
-	public void isContentExistUnicode(UIComponent component,
+	public void isContentExistUnicode(FacesContext context, UIComponent component,
 			Object value) {
 		
 		String strContent = (String) value;
