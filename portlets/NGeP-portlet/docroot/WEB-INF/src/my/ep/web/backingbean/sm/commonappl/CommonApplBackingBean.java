@@ -1279,7 +1279,13 @@ public class CommonApplBackingBean extends
 		//10724 START
 		renewSesionObject();
 		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
+		log.info("[preRenderCommonSmOverviewInfo] fadhli supp: " + supp);
 		if (supp != null) {
+			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
+			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl(): " + supp.getSmAppl());
+			if (null != supp.getSmAppl()) {
+				log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl().getSupplierType(): " + supp.getSmAppl().getSupplierType());
+			}
 			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
 					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 			if (acc != null
