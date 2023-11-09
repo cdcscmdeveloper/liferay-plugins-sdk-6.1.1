@@ -10919,9 +10919,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					if (null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-									.getTplSpecZoneDtl().getSpecZoneId())) {
+					boolean addZoneName = null == zoneloiLoaItem
+							|| (null != zoneloiLoaItem && (zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
+							.getTplSpecZoneDtl().getSpecZoneId() || !zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
+							.equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())));
+					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
 						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
 						zoneitemCount=0;
@@ -11004,8 +11006,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					if(null==zoneloiLoaItem 
-						|| (null!=zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()!=loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())){
+					boolean addZoneName = null == zoneloiLoaItem
+							|| (null != zoneloiLoaItem && (zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
+							.getTplSpecZoneDtl().getSpecZoneId() || !zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
+							.equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())));
+					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
 						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
 						zoneitemCount=0;
