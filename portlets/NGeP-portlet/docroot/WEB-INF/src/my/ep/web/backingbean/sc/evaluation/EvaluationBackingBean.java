@@ -14074,14 +14074,15 @@ private void retriveCommitteeRemarksList(){
 				if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
 					if (removesupplier.size() > 0) {
 						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
-						//#28784, #34091 - related - Start
-						if(getManagedBean().getScQt().isDemoRequired()){
-							if(resDTO.getComplianceResultBean().getResultList().size() == 0){
-								//Bug #33851 REMOVE Below related to #21695
-								resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
-							}
-								//Bug #33851 REMOVE related to #21695
-						}//#28784, #34091 - related - End
+						// #28784, #34091 - related - Start
+						if (getManagedBean().getScQt().isDemoRequired()
+								&& resDTO.getComplianceResultBean().getResultList().size() == 0) {
+							// Bug #33851 REMOVE Below related to #21695
+							resDTO.getComplianceResultBean().setTotalRecord(
+									resDTO.getComplianceResultBean().getResultList().size());
+
+							// Bug #33851 REMOVE related to #21695
+						}// #28784, #34091 - related - End
 					}else {
 						return resDTO.getComplianceResultBean();
 					}
