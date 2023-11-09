@@ -1050,8 +1050,8 @@ public class QTCloneBackingbean extends
 								try {
 									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+											"retrieveDocs", getUserIdSessionFromLoginId(), e);//sqube_vulnerability_56
 								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 							}
@@ -1645,7 +1645,7 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	
+	/*
 	private List<ScQtContactPerson> generateDOAFromRequestContent(ScQtRequestContent requestContent, ScQt qt) throws IOException{
 		List<ScQtContactPerson> doaList = new ArrayList<ScQtContactPerson>();
 		Object content = requestContent.getRequestContent() == null ? new HashMap<Long, String>(): requestContent.getRequestContent();
@@ -1675,6 +1675,7 @@ public class QTCloneBackingbean extends
 		}
 		return doaList;
 	}
+	*/
 	
 	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
@@ -2087,7 +2088,8 @@ public class QTCloneBackingbean extends
 				
 			}else if(ParameterConst.APPROVAL_CATEGORY_OTHERS
 					.equalsIgnoreCase(approval.getApprovalCategory()
-							.getParameterCode())){//25635 & 34502
+							.getParameterCode())&& ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(scQt
+									.getPmProcurementCategory().getParameterCode())){//25635 & 34502&35282
 				if(CollectionUtils.isEmpty(otherapprovals)){//25635 & 34502 
 				otherapprovals.add(approval);
 				}//25635 & 34502
@@ -2322,6 +2324,22 @@ public class QTCloneBackingbean extends
 		    if(newOthersApproval.getApprovalCategory().getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_OTHERS)){
 		    	List<PmParameter> settings = null;
 				ParameterHelper parameterHelper = ParameterHelper.getInstance();
+				if(CollectionUtils.isEmpty(newOthersApproval.getScQtApprovalDtls())){//35282-start
+					List<ScQtApprovalRequest> approverRequest = new ArrayList<>();
+					ScQtApprovalRequest req = new ScQtApprovalRequest();
+					req.setBrandNew(true);
+					req.setApprovalType(getParameterByTypeAndCode(
+							ParameterTypeConst.APPROVAL_REQUEST_TYPES,
+							ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS));
+					req.setApproverAction(new PmParameter());
+					req.setApprovalRequestAttachement(null);
+					ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+					approvalRemark.setApprovalRequest(req);
+					req.setAppRequestRemark(approvalRemark);
+					req.setScQtApproval(newOthersApproval);
+					approverRequest.add(req);
+					newOthersApproval.setScQtApprovalDtls(approverRequest);
+				}//35282-End
 				
 				String approvalCategoryCode = newOthersApproval
 						.getApprovalCategory().getParameterCode();
