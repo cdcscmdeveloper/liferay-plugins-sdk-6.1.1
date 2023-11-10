@@ -8495,7 +8495,7 @@ public void saveComplianceSample() {
 					}
 					
 				}
-					if(currentTab == 0 && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
+					if((currentTab == 0 || currentTab == 4) && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType())){
 						retriveFinancialEvaluationStage();
 						retriveNonScoringComplianceFinancial(true); //#28856, #25138
@@ -8677,13 +8677,9 @@ public void saveComplianceSample() {
 							//#34588 start	
 							reqDTOwip.setScQt(this.getManagedBean().getScQt());
 							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
-							if (null == this.getManagedBean().getEvaluationStgTechnicalCheckList()) {
-								financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
-										.get(0).getDocCategory());
-							} else {
-								financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
-										.get(0).getDocCategory());
-							}
+							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+									.get(0).getDocCategory());
+
 							// #25138 - one item only - start
 							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && this.getManagedBean().getSingleSpecQuestion()) {
 								retriveFinancialEvaluationStagePackage();
@@ -8710,7 +8706,6 @@ public void saveComplianceSample() {
 
 										}else{
 											retriveFinancialEvaluationStagePackage();
-											
 											this.getManagedBean().setTabFinancialIndex(2);
 											outputTab = 3;
 										}
@@ -8755,6 +8750,8 @@ public void saveComplianceSample() {
 					//#10542 from task list to train based on last save from user -start
 					if(currentTab == 0 && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType())){
+						financialCheckListStatusCheck();
+						financialCheckListStatusCheckPackage();
 						retrieveReportTabDtl();									
 						outputTab = 4;
 					}
@@ -8902,8 +8899,17 @@ public void saveComplianceSample() {
 				 * 
 				 * }
 				 */
-				 
+				if(this.getManagedBean().getFecIndexPreRender()){
+					this.getManagedBean().setFecIndexPreRender(false);
+					retriveFinancialEvaluationStage();
+					outputTab = 3;
+					financialCheckListStatusCheck();
+					financialCheckListStatusCheckPackage();
+				}
 				retrieveReportTabDtl();
+				if (this.getManagedBean().getScQt().getEvaluationType().equals(ParameterConst.EVALUATION_TYPES_TWO_TIER)){
+					outputTab = 4;
+				}
 			} else if (outputTab == 5) {
 				retriveCommitteeEndorsment();
 				
@@ -11091,6 +11097,7 @@ private void retriveCommitteeRemarksList(){
 		//#10542 - start
 		if (this.getManagedBean().getScQt() != null && this.getManagedBean().getScQt().getCurrentActiveTab() != null) {
 			try {
+				this.getManagedBean().setFecIndexPreRender(false);
 				int currentActiveTab = this.getManagedBean().getScQt().getCurrentActiveTab().intValue();
 				this.getManagedBean().setTabActiveIndex(currentActiveTab);
 				this.getManagedBean().setTempTab(currentActiveTab);
@@ -11112,10 +11119,17 @@ private void retriveCommitteeRemarksList(){
 					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(2, 3);
+					if(ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType())){
+						this.getManagedBean().setFecIndexPreRender(true);
+					}
 					evaluationMaintainPreviousNextTabIndex(3, 4);
+					this.getManagedBean().setFecIndexPreRender(true);
 					evaluationMaintainPreviousNextTabIndex(3, 4);
 					if(ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType())){
+							.getManagedBean().getScQt().getEvaluationType()) && 
+								ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+										.getManagedBean().getScQt().getEvaluationType())){
 						evaluationMaintainPreviousNextTabIndex(0, 4);
 					}
 				} else {
