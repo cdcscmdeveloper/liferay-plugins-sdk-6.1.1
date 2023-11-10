@@ -166,6 +166,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -3252,7 +3253,10 @@ public class SupplierFinalizationBackingBean extends
 					debugLogger("Generating all reports...");
 					downloadAllReports();	
 				} catch(Exception e) {
-					e.printStackTrace();
+					//Sonarqube QT Vulnerability Minor Suresh [9/8/2023] START			 
+					SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SUPPLIER_FINALIZATION_BACKINGBEAN, reqDTO.getScQt().getQtNo(),
+							SLALogConstant.QT_UPDATE_BPM_TASKBRIEF, getUserIdSessionFromLoginId(), e);
+					//Sonarqube QT Vulnerability Minor Suresh [9/8/2023] END
 				}
 			}
 			

@@ -2998,8 +2998,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-		}catch(IOException e){
-			e.printStackTrace();
+		} catch (IOException e) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt == null ? "" : scQt.getQtNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					qtNo, "approvalBackingBean.updateGenericApprovalTask", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
