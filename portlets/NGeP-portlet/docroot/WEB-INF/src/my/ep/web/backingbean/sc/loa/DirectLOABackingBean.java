@@ -4698,7 +4698,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
                   
                   File pdfFile = new File(filePath);
                   if (pdfFile.exists()) {
-                    pdfFile.delete();
+                  boolean deleteFile=pdfFile.delete();//#26130-sonarQubeIssue1#54
+                  log.info("======FileDeletedSucessFully======"+deleteFile);//#26130-sonarQubeIssue1#54
                   }
                   Path path = FileSystems.getDefault().getPath(filePath); 
                   
@@ -4738,7 +4739,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
                   }
                   
                   if (file.exists()) {
-                    file.delete();
+                	  boolean deleteFile=file.delete();//#26130-sonarQubeIssue2#54
+                	  log.info("======FileDeletedSucessFully======"+deleteFile);//#26130-sonarQubeIssue2#54
                   }
                   if(!scLoaReportAttachment.getFilePath().endsWith(SSTConstant.fileTypeMergedPdfGz)){
                     String filepath = scLoaReportAttachment.getFilePath().replace(SSTConstant.fileTypePdfGz, SSTConstant.fileTypeMergedPdfGz);
@@ -4869,7 +4871,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
         sstDocument.save(filePath);  
         File tempFile = new File(tempFilePath);
         if (tempFile.exists()) {
-          tempFile.delete();
+        	 boolean deleteFile=tempFile.delete();//#26130-sonarQubeIssue3#54
+        	 log.info("======FileDeletedSucessFully======"+deleteFile);//#26130-sonarQubeIssue3#54
         }
       } catch (Exception e) {
     	  SLAUtils.getInstance().logSLAError("QT", "MergeSSTWithLampiranA3", "docNo", "mergePdf", getUserIdSessionFromLoginId(), e);
@@ -10858,9 +10861,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))) {
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					if (null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-									.getTplSpecZoneDtl().getSpecZoneId())) {
+					Long zoneIdAdded=null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					Long zoneIdNew=null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
+					if (addZoneName) {
 						zoneloiLoaItem = loiLoaItem;
 						itemsList.append("\n" + loiLoaItem.getTplSpecZoneDtl().getZoneName() + " \n");
 						zoneitemCount = 0;
@@ -10919,11 +10923,13 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 		return loiLoaItems;
 	}
-	private boolean checkItemAndZoneAdded(HashMap<Long, Long> itemZoneMap, Long itemId, Long specZoneId) {
+	private boolean checkItemAndZoneAdded(HashMap<Long, Long> itemZoneMap,Long itemId,Long specZoneId){
 		for (Map.Entry<Long, Long> itemZone : itemZoneMap.entrySet()) {
 			Long eItemId = itemZone.getKey();
 			Long eZoneId = itemZone.getValue();
-			if (eItemId == itemId && eZoneId == specZoneId) {
+			boolean alreadyAdded=(eItemId.equals(itemId) || eItemId==itemId)
+					 && (eZoneId==specZoneId || eZoneId.equals(specZoneId));
+			if(alreadyAdded){
 				return false;
 			}
 		}
