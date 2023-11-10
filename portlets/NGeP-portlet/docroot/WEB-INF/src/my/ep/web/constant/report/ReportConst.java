@@ -1128,6 +1128,11 @@ public class ReportConst implements Serializable{
 	public static final String SM_PROFILE_TRACKING_DIARY = "SM_PROFILE_TRACKING_DIARY.jsp";
 	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - END
 	
+	// Bug #34996@Syazani 16/08/2023 -- Start
+	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";
+	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
+	// Bug #34996@Syazani 16/08/2023 -- End
+	
 	public ReportConst(){}
 	
 	/**
