@@ -550,10 +550,9 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 
 		// 20997 - end
 		/*Return when not call from tasklist*/
-		if(taskId==null){
-			ctBB.renewSesionObject(); //#21387
+		if(taskId==null)
 			return;
-		} 
+
 			
 
 		getManagedBean().setViewOnly(false);
