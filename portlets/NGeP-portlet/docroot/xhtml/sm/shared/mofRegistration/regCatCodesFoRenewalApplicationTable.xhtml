@@ -335,10 +335,13 @@
 			</h:panelGroup>
 			
 			#{lbl['lbl.sm.download.categorycode']}
+			<!-- 32008 - START -->
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				partialSubmit="true" process="@this"
 				oncomplete="catCodePopup.show();">
 			</p:commandButton>
+			<!-- 32008 - END -->
 			
 			<!-- 30865 Start -->
 			<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"
