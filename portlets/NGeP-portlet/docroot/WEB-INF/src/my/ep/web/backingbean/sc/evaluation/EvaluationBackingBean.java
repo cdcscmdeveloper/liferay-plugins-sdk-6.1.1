@@ -7551,10 +7551,6 @@ public void saveComplianceSample() {
 				 */
 				resDTO = evaluationSo.checkDemoAndUploadChecklistStatus(reqDTO);
 				if (resDTO.getPendingCount() > 0) {
-					String checklistScoring = ResourceBundleUtils.getMessage(
-							"lbl.sc.checklist.scoring.completed", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
 					//34833 - start
 					String checkListValue =  ResourceBundleUtils.getMessage(
 							"lbl.sc.checklist.checklist.value.completed", 
