@@ -13,9 +13,9 @@
 		<ac:paginator for="catDtR" />
 		<p:columnGroup type="header">
 
-			<p:row> <!-- disable because 32008 ups cannot edit-->
+			<p:row>
 				<p:column selectionMode="multiple" style="width:2%" 
-					rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
+					rendered="#{!backingBean.managedBean.approverUser}"/>
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 					style="width : 2%;" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal" />
@@ -35,9 +35,8 @@
 				<!-- 30766 END - adjust width to be dynamic -->
 			</p:row>
 		</p:columnGroup>
-		<!-- disable because 32008 ups cannot edit-->
 		<p:column selectionMode="multiple" style="width:2%"
-			rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
+			rendered="#{!backingBean.managedBean.approverUser}"/>
 		<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 			style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
