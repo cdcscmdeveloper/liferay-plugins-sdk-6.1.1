@@ -806,8 +806,8 @@ public class LOIDetailBackingBean extends
 								}
 							}
 							
-							if (!isZonal && (previousLois != null && (CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-									!previousLois.contains(scLoi)))) {
+							if (!isZonal && ((CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+									!previousLois.contains(scLoi)))) {//fixedNullpointerIssueSonarQube
 									if (supplierLoiLoaItemsMap == null) {
 										supplierLoiLoaItemsMap = new HashMap<>();
 									}
@@ -922,6 +922,26 @@ public class LOIDetailBackingBean extends
 				
 				// Breifing paper
 				retrieveBriefingPaper();
+				Long statusId  = getManagedBean().getCurrentStatusId();//34905-start
+				if (QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION
+						.equals(statusId) && ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType) && !getManagedBean().isZonal()) {
+					List<Long> qualifiedSuppliers=new ArrayList<>();
+					Long awardedSupplierId=null;
+					ScQtRecommend scQtRecommend=scQtRecommendList.get(0);
+					for (ScQtRecommendDtl recommendDtl 
+							: scQtRecommend.getRecommendDtls()) {
+						awardedSupplierId = recommendDtl.getSupplier().getSupplierId();
+						if (recommendDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && !qualifiedSuppliers.contains(awardedSupplierId)) {
+							qualifiedSuppliers.add(awardedSupplierId);
+							if(qualifiedSuppliers.size()>=2){
+								getManagedBean().setSelectedSupplier(null);
+								break;
+							}
+							
+						}
+					}
+					
+				}//34905-End
 			}
 
 		} finally {
@@ -984,8 +1004,10 @@ public class LOIDetailBackingBean extends
                     && null != qtProposal.getScQtSupplier().getScQt()) {
                   qtId = qtProposal.getScQtSupplier().getScQt().getQtId();
                 }
-			  if (null != qtProposal)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier(), qtId));
+				if (null != qtProposal)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					qtProposal.getScQtSupplier().setSmSupplier(
+							qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier()
+									.getSmSupplier(), qtId));//Sonarqube #83
 				// #26247 - 32802 - End.
 			}
 		} finally {
@@ -2234,9 +2256,8 @@ public class LOIDetailBackingBean extends
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
-        if (scLoi != null) //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
-		// TODO
-		scLoi.setFileExtnNo("001");
+		if (scLoi != null) // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
+			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
@@ -3262,6 +3283,7 @@ public class LOIDetailBackingBean extends
 					if (this.getManagedBean().getSelectedSupplier() == null) {
 						throw new EpException(MessageConst.ERROR_760293);
 					}
+					awardSelectedSupplierAction();//34905
 				}				
 			}
 			
@@ -6659,7 +6681,7 @@ public class LOIDetailBackingBean extends
 				break;
 			}
 		}
-		if(alredyAdded == false){
+		if(!alredyAdded){//sonarQubeIssue7#84
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				negoTerm.setSelectedTerm(Boolean.FALSE);
 			} else{
@@ -6715,7 +6737,7 @@ public class LOIDetailBackingBean extends
 		
 		ScLoi scLoi =this. getManagedBean().getScLoi();
 
-		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())) {//sonarQubeIssue7#84
 			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
 				term.setSelectTerm(Boolean.FALSE);	
 			}

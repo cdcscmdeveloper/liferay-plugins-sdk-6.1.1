@@ -97,6 +97,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.tpl.spec.TemplateSpecManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -275,8 +276,7 @@ public class TemplateSpecBackingBean extends
 							//#25138(wip 4serangkai) bug -Start 8/6/2023
 							this.getManagedBean().setWipStatusMax(wipstatus);
 							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-									&& !templateSpecBean.getQt().isDemoRequired()) {
+							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
 									evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 									evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
@@ -1131,6 +1131,7 @@ public class TemplateSpecBackingBean extends
 				}
 
 				specAnswer.setAnswerNumeric(totalPrice);
+				specAnswer.setComponentEmpty(false); //Enhancement #3657@Syazani 04/10/2023
 			}
 			log.info("end===============================================calcTotalAmount");
 			calcGrandTotalAmount(templateSpecBean);
@@ -3316,7 +3317,7 @@ public class TemplateSpecBackingBean extends
 				// #34656 add checking not null
 				if(tplSpecEstimation.getEstimatedCost() != null && 
 						tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
-					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
+					tplSpecEstimation.setIndicativeUnitPrice(BigDecimal.valueOf(0.00));
 				}
 				// #21695 fix #32130 - end
 				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
@@ -5639,19 +5640,6 @@ public class TemplateSpecBackingBean extends
 	}
 	//Bug #32110 related to #21695 Farid Start 30/11/2021
 	
-	// 20220127@syazani - Enhancement #3657 - specific error message - Start
-	public String getErrorMessageFinancialPropUnitPrice(boolean isZone, String zone, String unitPriceLabel) {
-		String msg = "";
-		if (isZone) {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760538, new String[] {unitPriceLabel,zone}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		} else {
-			msg = MessageUtils.getMessage(MessageConst.ERROR_760464, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		}
-		return msg;
-	}
-	// 20220127@syazani - Enhancement #3657 - specific error message - End
-	
-	
 	//#28784
 	public void displayDemozoneQtyPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("zoneQtyPopupAction");
@@ -5756,11 +5744,11 @@ public class TemplateSpecBackingBean extends
 		RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
 
 	}
-	//#29187 Start Vinod
+	// #29187 Start Vinod
 	/**
 	 * Gets the score Mandatory Spec Dropdown Values.display in dropdown.
 	 * 
-	 * @param boolean isCompliance
+	 * @param isCompliance
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getMandatorySpecAndComplianceDropdownValues(boolean isCompliance) {
@@ -5768,77 +5756,92 @@ public class TemplateSpecBackingBean extends
 
 		try {
 
-			if(isCompliance){
-				selectItems.add(new SelectItem(null, ResourceBundleUtils
-						   .getMessage("lbl.txt.select",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils
-						   .getMessage("lbl.txt.yes",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils
-						   .getMessage("lbl.txt.no",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-			}else{
-				selectItems.add(new SelectItem(false, ResourceBundleUtils
-						   .getMessage("lbl.txt.select",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(true, ResourceBundleUtils
-						   .getMessage("lbl.txt.yes",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
+			if (isCompliance) {
+				selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_NO,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			} else {
+				selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			}
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
-			selectItems = null;
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", this.getManagedBean().getQt().getQtNo(),
-					"getMandatorySpecDropdownValues", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
+					this.getManagedBean().getQt().getQtNo(), SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
+					getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
-	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean){
+
+	/**
+	 * checking for displaying mandatory specification column.
+	 * 
+	 * @param templateSpecBean
+	 * @return boolean
+	 */
+	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if(null!=this.getManagedBean().getScQt() 
-			&& null!=this.getManagedBean().getScQt().getQtStatus() 
-			&& null!=this.getManagedBean().getScQt().getQtStatus().getStatusId() 
-			&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION){
-			for(TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()){
-				if(tplSpecAnswer.getTplSpecQuestion().getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-					&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()){
-					manSpec=true;
+		if (null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus()
+				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId()
+				&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
+			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
+				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
+						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+					manSpec = true;
 					break;
 				}
 			}
 		}
 		return manSpec;
 	}
-	public void showUOMQuantityDetails(){
-		RequestContext.getCurrentInstance().execute("viewUOMQuantityDetails.show()");
+
+	/**
+	 * to show popup for UOM and quantity details.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void showUOMQuantityDetails() {
+		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_UOM_QUANTITY_DETAILS);
 	}
-	public void zoneQuantityPopup(){
-		RequestContext.getCurrentInstance().execute("viewZoneQuantityPopup.show()");
+
+	/**
+	 * to show popup for zone quantity details.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void zoneQuantityPopup() {
+		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_ZONE_QUANTITY_POPUP);
 	}
-	public void onchangeCompliance(TplSpecAnswer ans){
-		for(TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-			if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
-				&& ans.getCompliance()!=null
-				&& ans.getCompliance()==Boolean.FALSE){
-				answer.setUserScore(new BigDecimal(0));
-			}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
-					&& ans.getCompliance()!=null
-					&& ans.getCompliance()==Boolean.TRUE
-					&& !ans.getUserScore().equals(null)
-					&& ans.getUserScore().equals(new BigDecimal(0))){
-				answer.setUserScore(null);
-			}else if(ans.getSpecAnswerId().equals(answer.getSpecAnswerId())
-					&& ans.getCompliance()==null){
+
+	/**
+	 * update user score based on compliance.
+	 * 
+	 * @param ans
+	 * @return
+	 */
+	public void onchangeCompliance(TplSpecAnswer ans) {
+		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
+				if (ans.getCompliance() == Boolean.FALSE) {
+					answer.setUserScore(BigDecimal.ZERO);
+				} else if (ans.getCompliance() == Boolean.TRUE && ans.getUserScore() != null
+						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
+					answer.setUserScore(null);
+				}
+			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() == null) {
 				answer.setUserScore(null);
 			}
 		}
 	}
-	//#29187 End Vinod
+	// #29187 End Vinod
 }
