@@ -2726,7 +2726,6 @@ public void saveComplianceSample() {
 						try {
 							technicalsummaryChange(null);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							SLAUtils.getInstance().logSLAError("QT", "Evaluationbackingbean", "docNo", "retriveSummaryEvaluationStage", getUserIdSessionFromLoginId(), e);
 						} //for wip we dont need dropdown
 
@@ -2768,7 +2767,6 @@ public void saveComplianceSample() {
 							try {
 								technicalsummaryChange(null);
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								SLAUtils.getInstance().logSLAError("QT", "Evaluationbackingbean", "docNo", "retriveSummaryEvaluationStage", getUserIdSessionFromLoginId(), e);
 							} //for wip we dont need dropdown
 							this.getManagedBean().setEvaluatioStageActiveIndex(1);
@@ -3277,55 +3275,25 @@ public void saveComplianceSample() {
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				if (// #25638 -Start.
-						(this.getManagedBean()
-						.getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-						|| this.getManagedBean()
-						.getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
-					// #25638 - End.
-						&& !this.getManagedBean().isReadOnly()
+				//sonarqube issue (#34)
+				if (!this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
-					/*
-					 * evaluationSo
-					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
-					 * );
-					 */
+
 					financialCheckListStatusCheck();//32426
 					/*
 					 * 32066 
 					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
 					 */
 					//#25138(wip 4serangkai) bug -Start 8/6/2023
-					if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (!this.getManagedBean().getSingleSpecQuestion()) {
+					//sonarqube fixing issue (#33)
+					if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							&& !this.getManagedBean().getSingleSpecQuestion()) {
 							financialCheckListStatusCheckPackage();
-						}
 					}
 					//#25138(wip 4serangkai) bug -End 8/6/2023
 					evaluationSo.prepareFinancialEvaluationSummary(summaryReqDTO);
 					
 					getManagedBean().setFinancialSummaryGenerated(true);
-				} else {
-					financialCheckListStatusCheck(); // 32426, #25138, #21695
-					/*
-					 * 32066, #25138 
-					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
-					 */
-					//#25138(wip 4serangkai) bug -Start 8/6/2023
-					if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (!this.getManagedBean().getSingleSpecQuestion()) {
-							financialCheckListStatusCheckPackage();
-						}
-					//#25138(wip 4serangkai) bug -End 8/6/2023
-					}
-					// #25138 -end-
-					
-					evaluationSo
-							.prepareFinancialEvaluationSummary(summaryReqDTO);
-					getManagedBean().setFinancialSummaryGenerated(true);
-					//#25138-end
 				}
 			}
 		} finally {
@@ -7855,7 +7823,6 @@ public void saveComplianceSample() {
 							if (this.getManagedBean()
 									.getComplianceActiveIndex() < 2) {
 								retriveComplianceSummary();
-								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 1;
 							}
 
@@ -8468,7 +8435,6 @@ public void saveComplianceSample() {
 //							retriveOneTierFinancialSupplierSummary();
 							this.getManagedBean().setTabFinancialIndex(3);	
 							reqDTOwip.setScQt(this.getManagedBean().getScQt());
-							// this.getManagedBean().setComplianceActiveIndex(2);
 							
 							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
 									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
@@ -8525,7 +8491,6 @@ public void saveComplianceSample() {
 							if (this.getManagedBean()
 									.getComplianceActiveIndex() < 2) {
 								retriveComplianceSummary();
-								// this.getManagedBean().setComplianceActiveIndex(2);
 								outputTab = 1;
 							}
 
@@ -8738,13 +8703,11 @@ public void saveComplianceSample() {
 							//#34588 end
 
 						}//#34741
-						else if(this.getManagedBean()
-								.getOneTierFinancialActiveIndex() == 2){
-							if (!this.getManagedBean().isReadOnly()) {
-								checkMeetingDetailsAndStatus(this.getManagedBean()
-										.getScQtMeetings());
-							}
-						}//#34741
+						//sonarqube issue (#35)
+						else if (this.getManagedBean().getOneTierFinancialActiveIndex() == 2
+								&& this.getManagedBean().isReadOnly()) {
+							checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
+						}// #34741
 						
 					}
 					//#10542 from task list to train based on last save from user -start
@@ -8862,7 +8825,6 @@ public void saveComplianceSample() {
 							this.getManagedBean().setTabFinancialIndex(3);	
 							reqDTOwip.setScQt(this.getManagedBean().getScQt());
 							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
-							// this.getManagedBean().setComplianceActiveIndex(2);
 							
 							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
 									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
@@ -8874,14 +8836,12 @@ public void saveComplianceSample() {
 								outputTab = 2;
 							}
 
-						}else if(this.getManagedBean()
-								.getEvaluatioStageActiveIndex() == 2){
-							//#34741
-								if (!this.getManagedBean().isReadOnly()) {
-									checkMeetingDetailsAndStatus(this.getManagedBean()
-											.getScQtMeetings());
-								}
-							//#34741
+						} else if (this.getManagedBean().getEvaluatioStageActiveIndex() == 2
+								&& !this.getManagedBean().isReadOnly()) {
+							//sonarqube issue (#37)
+							// #34741
+							checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
+							// #34741
 						}
 
 					}
@@ -11870,7 +11830,7 @@ private void retriveCommitteeRemarksList(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getScQt());
 		SpecificationResDTO resDTO = null;
-		List<Integer> settinglist = new ArrayList<Integer>();
+		List<Integer> settinglist = new ArrayList<>();
 		settinglist.add(1);
 		reqDTO.setSettingTypes(settinglist);
 
@@ -13116,8 +13076,7 @@ private void retriveCommitteeRemarksList(){
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			//#25138 farid - Start
-			IQTEvaluationSO evaluationSO = null;
-			//#25138 farid - End
+
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			ScQtProposalChecklist qtProposalChecklist = null;
@@ -14187,9 +14146,9 @@ private void retriveCommitteeRemarksList(){
 					}
 					//wip status start
 					//#25138 farid -start (if wip no need to remove)
-					if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
-						if (removesupplier.size() > 0) {
-							resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
+					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& removesupplier.size() > 0) {
+						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
 							// #28784,  - related - Start
 							if (getManagedBean().getScQt().isDemoRequired()) {
 								if (resDTO.getComplianceResultBean().getResultList().size() == 0) {
@@ -14198,7 +14157,6 @@ private void retriveCommitteeRemarksList(){
 									// Bug #33851 REMOVE related to #21695
 								}// 32453
 							}
-						}
 					}
 					//wip status end
 					//#25138 farid -end (if wip no need to remove)
@@ -14925,7 +14883,7 @@ private void retriveCommitteeRemarksList(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getScQt());
 		SpecificationResDTO resDTO = null;
-		List<Integer> settinglist = new ArrayList<Integer>();
+		List<Integer> settinglist = new ArrayList<>();
 		settinglist.add(1);
 		reqDTO.setSettingTypes(settinglist);
 
@@ -16855,24 +16813,22 @@ private void retriveCommitteeRemarksList(){
 			//#25138 farid - Start
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			//#25138 farid - End
+			int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 			//wip status end
 			//#25138 - add evalstage in compliance to filter qualified supplier in technical & financial - start
 			if(SourcingConstants.TECHINICAL_STAGE.equals(checkListType)){
 				reqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
 			}
 			if (SourcingConstants.FINANCIAL_STAGE.equals(checkListType)) {
-				//#21695 Farid Start #25138
-				//wip status start
-				if(this.getManagedBean().getScQt().isPartial()||!this.getManagedBean().getScQt().isPartial()){
-					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-					if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
-						reqDTO.setEvalStage(SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM);
-					}else{
-						reqDTO.setEvalStage(SourcingConstants.TECHINICAL_STAGE);
-					}
-					//wip status end
+				// #21695 Farid Start #25138
+				// wip status start
+				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+					reqDTO.setEvalStage(SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM);
+				} else {
+					reqDTO.setEvalStage(SourcingConstants.TECHINICAL_STAGE);
 				}
-				//END
+				// wip status end
+				// END
 			}
 			//#25138 -  add evalstage in compliance to filter qualified supplier in technical & financial - end
 		
@@ -17191,7 +17147,7 @@ private void retriveCommitteeRemarksList(){
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getScQt());
 		SpecificationResDTO resDTO = null;
-		List<Integer> settinglist = new ArrayList<Integer>();
+		List<Integer> settinglist = new ArrayList<>();
 		settinglist.add(1);
 		reqDTO.setSettingTypes(settinglist);
 
@@ -18344,14 +18300,12 @@ private void retriveCommitteeRemarksList(){
 						//* suspected below condition for else is for WIP*/
 					//wip status start
 					//#25138 farid - Start
-					if(this.getManagedBean().getScQt().isPartial()||!this.getManagedBean().getScQt().isPartial()){
-						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-							if(wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){
-								evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM); 
-							}else{
-								evalstage.add(QTConstants.TECHNICAL_EVALUATION);
-							}
-						}
+					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+					} else {
+						evalstage.add(QTConstants.TECHNICAL_EVALUATION);
+					}
 					//#25138 farid - End
 					//wip status end
 					//#25138 - 040621 - end

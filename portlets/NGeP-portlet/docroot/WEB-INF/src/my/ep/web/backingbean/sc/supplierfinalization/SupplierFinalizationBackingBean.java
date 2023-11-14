@@ -1439,10 +1439,10 @@ public class SupplierFinalizationBackingBean extends
 
 								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 								} else {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 									if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
 										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 									} else {
@@ -1454,7 +1454,7 @@ public class SupplierFinalizationBackingBean extends
 								//35087
 							}else{
 							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+							 evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 						 }
 					 }
 					 break;
