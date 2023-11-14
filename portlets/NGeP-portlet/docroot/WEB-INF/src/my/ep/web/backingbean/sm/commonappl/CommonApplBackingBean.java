@@ -1289,17 +1289,8 @@ public class CommonApplBackingBean extends
 			if (null != supp.getSmAppl()) {
 				log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl().getSupplierType(): " + supp.getSmAppl().getSupplierType());
 			}
-//			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
-//					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
-			// Temporary workaround to bypass issue
-			SmMofAccount acc = null;
-			try {
-				acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(supp.getSupplierId(), supp.getSmAppl().getSupplierType());
-			} catch (NullPointerException nullPointerException) {
-				log.error("[preRenderCommonSmOverviewInfo] NullPointerException", nullPointerException);
-			} catch (Exception exception) {
-				log.error("[preRenderCommonSmOverviewInfo] Unexpected exception", exception);
-			}
+			SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
+					supp.getSupplierId(), supp.getSmAppl().getSupplierType());
 			if (acc != null
 					&& acc.getExpDate() != null) {
 				Date currDate = new Date();
