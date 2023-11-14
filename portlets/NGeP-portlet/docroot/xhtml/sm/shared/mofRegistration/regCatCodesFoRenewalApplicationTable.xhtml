@@ -14,8 +14,8 @@
 		<p:columnGroup type="header">
 
 			<p:row> <!-- disable because 32008 ups cannot edit-->
-				<!-- p:column selectionMode="multiple" style="width:2%" 
-					rendered="#{!backingBean.managedBean.approverUser}" /-->
+				<p:column selectionMode="multiple" style="width:2%" 
+					rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 					style="width : 2%;" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal" />
@@ -36,8 +36,8 @@
 			</p:row>
 		</p:columnGroup>
 		<!-- disable because 32008 ups cannot edit-->
-		<!-- p:column selectionMode="multiple" style="width:2%"
-			rendered="#{!backingBean.managedBean.approverUser}" /-->
+		<p:column selectionMode="multiple" style="width:2%"
+			rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 		<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 			style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
@@ -335,10 +335,13 @@
 			</h:panelGroup>
 			
 			#{lbl['lbl.sm.download.categorycode']}
+			<!-- 32008 - START -->
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				partialSubmit="true" process="@this"
 				oncomplete="catCodePopup.show();">
 			</p:commandButton>
+			<!-- 32008 - END -->
 			
 			<!-- 30865 Start -->
 			<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"
