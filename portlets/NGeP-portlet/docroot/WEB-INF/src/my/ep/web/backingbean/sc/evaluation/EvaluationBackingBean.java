@@ -7550,7 +7550,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					if(outputTab==7){
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
 							this.getManagedBean().setComplianceActiveIndex(
-									1);
+									QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);//35148-start
+							if(QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX==complianceIndex){
+			                 	throw new EpException(MessageConst.ERROR_760239);	
+								}//35148-End
 							//return outputTab=7;
 						} else {
 							if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){//35148-start
@@ -7558,6 +7561,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							}
 							else{
 							this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX);
+							if(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX==complianceIndex){//35148-start
+			                 	throw new EpException(MessageConst.ERROR_760239);	
+								}//35148-End
 							}//35148-End
 							//return outputTab=7;
 						}
@@ -8701,7 +8707,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			//6906 - end
 		}catch(Exception e){
 			 if(currentTab==1){
+				 int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
 				retriveComplianceTechnical();
+				this.getManagedBean().setComplianceActiveIndex(complianceIndex);//35148-start
 			}
 			else if(currentTab==2){
 				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE

@@ -3170,6 +3170,7 @@ public class LOIDetailBackingBean extends
 					if (this.getManagedBean().getSelectedSupplier() == null) {
 						throw new EpException(MessageConst.ERROR_760293);
 					}
+					awardSelectedSupplierAction();//34905
 				}				
 			}
 			

@@ -1209,7 +1209,7 @@ public class QTDetailBackingBean extends
 			}
 
 			// 9019 - Start (Harun) WIP Transaction add information message
-			if (!getTaskByDocNoModule(this.getManagedBean().getQt().getQtNo(), QTConstants.SC_WFTASK_COMPOSITENAME)) {
+			if (!getTaskByDocNoModule()) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 								MessageConst.INFO_700110, MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -10774,7 +10774,8 @@ public class QTDetailBackingBean extends
 		String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();
 		
 		if (this.getManagedBean().isCommitteeAppointment()
-				&& !taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)) {
+				&& !taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)
+				&& !taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_COMMITTEE)) {//#34694 & #25077
 			flag = true;
 		}
 		
@@ -10944,52 +10945,6 @@ public class QTDetailBackingBean extends
 		}
 	}
 	// #9019 -end-
-
-	// #9019 -start-
-	public boolean getTaskByDocNoModule(String docNo, String module) {
-		ScQt scQt = this.getManagedBean().getQt();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		Object tokens = bpmSO
-				.authenticate(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.BPM_PRINCIPAL));
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		boolean bpmExistFlag = false;
-		
-		reqDTO.setDocNumber(docNo);
-		reqDTO.setModule(module);
-		// reqDTO.setState(BpmConstants.STATE_ASSIGNED);
-		reqDTO.setCtxToken(tokens);
-		
-		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNoandModule(reqDTO);
-		
-		if (bpmResDTO.getWorklistVO().getWorklistItem().size() > 0) {
-			bpmExistFlag = true;
-		} else {
-			//26072022 by (Harun) Add workflow checking for disable update button those previous QT 
-			//                    that CANCEL without BPM
-			IScWorkFlowStatusSO workFlowStatusSO;
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IScWorkFlowStatusSO.class);
-
-			ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
-			scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			scWorkFlowreqDTO.setDocId(scQt.getQtId());
-
-			ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO)
-					.getWorkFlowStatus();
-
-			// Add null checking that cause stopper #33672 unable to create QT
-			if (null != currentWorkFlowStatus) {
-				if (currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_CANCELLED)) {
-					bpmExistFlag = true;
-				} else {
-					bpmExistFlag = false;
-				}
-			}
-		}
-		
-		return bpmExistFlag;
-	}
-	// 9019 - End (Harun)
 	
 	// #9019 - Start
 	/**
@@ -11282,4 +11237,32 @@ public class QTDetailBackingBean extends
 		return 0;
 	}
 	// #29425 - end
+	
+	//9019 - Start (Harun) WIP transaction (New method)
+	/**
+	 * getTask By Sc Workflow Status
+	 *
+	 * @return boolean
+	 */
+	public boolean getTaskByDocNoModule() {
+		ScQt scQt = this.getManagedBean().getQt();//9019
+		boolean bpmExistFlag = false;
+		IScWorkFlowStatusSO workFlowStatusSO;
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		
+		ScWorkFlowStatusReqDTO scWorkFlowreqDTO = new ScWorkFlowStatusReqDTO();
+		scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		scWorkFlowreqDTO.setDocId(scQt.getQtId());
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
+		if(null != currentWorkFlowStatus){
+			if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)){
+				bpmExistFlag = false;
+			}else{
+				bpmExistFlag = true;
+			}
+		}
+		return bpmExistFlag;
+	}
+	//9019 - End (Harun)
 }
