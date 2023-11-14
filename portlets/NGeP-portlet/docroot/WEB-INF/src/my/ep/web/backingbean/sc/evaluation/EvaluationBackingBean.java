@@ -14149,14 +14149,14 @@ private void retriveCommitteeRemarksList(){
 					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
 							&& removesupplier.size() > 0) {
 						resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
-							// #28784,  - related - Start
-							if (getManagedBean().getScQt().isDemoRequired()) {
-								if (resDTO.getComplianceResultBean().getResultList().size() == 0) {
-									// Bug #33851 REMOVE Below related to #21695
-									resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());
-									// Bug #33851 REMOVE related to #21695
-								}// 32453
-							}
+						// #28784, - related - Start
+						if (getManagedBean().getScQt().isDemoRequired()
+								&& resDTO.getComplianceResultBean().getResultList().size() == 0) {
+							// Bug #33851 REMOVE Below related to #21695
+							resDTO.getComplianceResultBean().setTotalRecord(
+									resDTO.getComplianceResultBean().getResultList().size());
+							// Bug #33851 REMOVE related to #21695
+						}// 32453
 					}
 					//wip status end
 					//#25138 farid -end (if wip no need to remove)
