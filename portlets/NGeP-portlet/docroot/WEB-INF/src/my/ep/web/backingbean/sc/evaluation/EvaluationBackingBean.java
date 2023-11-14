@@ -2325,11 +2325,7 @@ public void saveComplianceSample() {
 			List<ScQtCheckList> localCheckList = new ArrayList<ScQtCheckList>();
 			this.getManagedBean().setCheckQualifiedSuppliers(
 					resDTO.isCheckQualifiedSuppliers());
-			if (null != resDTO
-					&& null != resDTO.getCheckListResultBean().getResultList()
-					&& !resDTO.getCheckListResultBean().getResultList()
-							.isEmpty()) {
-
+			if (CollectionUtils.isNotEmpty(resDTO.getCheckListResultBean().getResultList())) {
 				List<ScQtCheckList> proposalChecklistList = resDTO
 						.getCheckListResultBean().getResultList();
 				for (ScQtCheckList proposalCheckList : proposalChecklistList) {
@@ -8752,96 +8748,91 @@ public void saveComplianceSample() {
 							outputTab = 3;
 						}
 					}
-				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType())) {
-					if (currentTab == 2) {
-						//#25138(wip 4serangkai) bug -Start 8/6/2023
-						IQTEvaluationSO evaluationSO = null;
-						evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTEvaluationSO.class);
-						EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
-						//#25138(wip 4serangkai) bug -End 8/6/2023
-						if (this.getManagedBean()
-								.getEvaluatioStageActiveIndex() < 1) {
-							// #25138, #21695 -start-
-							if (this.getManagedBean().getTabFinancialIndex() >= 1) {
-								financialCheckListStatusCheck();
-								//#25138 - one item only - start
-								//#30722 - start
-								financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
-										.get(0).getDocCategory());
-								//#30722 - end
-								if(this.getManagedBean().getSingleSpecQuestion()){
+				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
+						.getManagedBean().getCommitteeType()) && currentTab == 2) {
+					//#25138(wip 4serangkai) bug -Start 8/6/2023
+					IQTEvaluationSO evaluationSO = null;
+					evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTEvaluationSO.class);
+					EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
+					//#25138(wip 4serangkai) bug -End 8/6/2023
+					if (this.getManagedBean()
+							.getEvaluatioStageActiveIndex() < 1) {
+						// #25138, #21695 -start-
+						if (this.getManagedBean().getTabFinancialIndex() >= 1) {
+							financialCheckListStatusCheck();
+							//#25138 - one item only - start
+							//#30722 - start
+							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+									.get(0).getDocCategory());
+							//#30722 - end
+							if(this.getManagedBean().getSingleSpecQuestion()){
+								retriveSummaryEvaluationStage();
+								this.getManagedBean().setTabFinancialIndex(3);	
+								outputTab = 2;
+							}else{
+								//#33187 Start - fix for 2tier next skip if disable financial
+								if(this.getManagedBean().getNoSupplierPackageExist() && ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+										.getManagedBean().getScQt().getEvaluationType())){
 									retriveSummaryEvaluationStage();
 									this.getManagedBean().setTabFinancialIndex(3);	
 									outputTab = 2;
-								}else{
-									//#33187 Start - fix for 2tier next skip if disable financial
-									if(this.getManagedBean().getNoSupplierPackageExist() && ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-											.getManagedBean().getScQt().getEvaluationType())){
-										retriveSummaryEvaluationStage();
-										this.getManagedBean().setTabFinancialIndex(3);	
-										outputTab = 2;
-										
-									}
-									//#33187, #25138, #21695 End - fix next skip if disable financial
-									else {
-										//#25138(wip 4serangkai) bug -Start 8/6/2023
-										reqDTOwip.setScQt(this.getManagedBean().getScQt());
-										int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
-										
-										if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-											retriveFinancialEvaluationStagePackage();
-											
-											this.getManagedBean().setTabFinancialIndex(2);
-											
-											outputTab = 2;
-										}else{
-											//remove Bug #34855 remove
-											retriveSummaryEvaluationStage();
-											this.getManagedBean().setTabFinancialIndex(3);
-											outputTab = 2;
-										}
-										//#25138(wip 4serangkai) bug -End 8/6/2023
-									}
+									
 								}
-								//#25138 - one item only - end
-							
+								//#33187, #25138, #21695 End - fix next skip if disable financial
+								else {
+									//#25138(wip 4serangkai) bug -Start 8/6/2023
+									reqDTOwip.setScQt(this.getManagedBean().getScQt());
+									int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
+									
+									if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+										retriveFinancialEvaluationStagePackage();
+										
+										this.getManagedBean().setTabFinancialIndex(2);
+										
+										outputTab = 2;
+									}else{
+										//remove Bug #34855 remove
+										retriveSummaryEvaluationStage();
+										this.getManagedBean().setTabFinancialIndex(3);
+										outputTab = 2;
+									}
+									//#25138(wip 4serangkai) bug -End 8/6/2023
+								}
 							}
-							
-						}else if (this.getManagedBean()
-								.getEvaluatioStageActiveIndex() == 1){
-							//32373 recalculate after done financial package -Start
-							//2 tier
-							generatePrefMargin();
-							//32373 recalculate after done financial package -end
-							retriveSummaryEvaluationStage();
-//							retriveOneTierFinancialSupplierSummary();
-							this.getManagedBean().setTabFinancialIndex(3);	
-							reqDTOwip.setScQt(this.getManagedBean().getScQt());
-							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
-							
-							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
-									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-											.getManagedBean().getScQt().getEvaluationType())) {
-								retrieveReportTabDtl();									
-								outputTab = 4;
+							//#25138 - one item only - end
+						
+						}
+						
+					}else if (this.getManagedBean()
+							.getEvaluatioStageActiveIndex() == 1){
+						//32373 recalculate after done financial package -Start
+						//2 tier
+						generatePrefMargin();
+						//32373 recalculate after done financial package -end
+						retriveSummaryEvaluationStage();
+//						retriveOneTierFinancialSupplierSummary();
+						this.getManagedBean().setTabFinancialIndex(3);	
+						reqDTOwip.setScQt(this.getManagedBean().getScQt());
+						int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
+						
+						if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+								&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+										.getManagedBean().getScQt().getEvaluationType())) {
+							retrieveReportTabDtl();									
+							outputTab = 4;
 
-							} else{
-								outputTab = 2;
-							}
-
-						} else if (this.getManagedBean().getEvaluatioStageActiveIndex() == 2
-								&& !this.getManagedBean().isReadOnly()) {
-							//sonarqube issue (#37)
-							// #34741
-							checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
-							// #34741
+						} else{
+							outputTab = 2;
 						}
 
+					} else if (this.getManagedBean().getEvaluatioStageActiveIndex() == 2
+							&& !this.getManagedBean().isReadOnly()) {
+						//sonarqube issue (#37)
+						// #34741
+						checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
+						// #34741
 					}
-
 				}
 				/*
 				 * if
