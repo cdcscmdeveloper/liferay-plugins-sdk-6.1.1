@@ -1279,8 +1279,10 @@ public class CommonApplBackingBean extends
 		//10724 START
 		renewSesionObject();
 		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
-		log.info("[preRenderCommonSmOverviewInfo] fadhli supp: " + supp);
-		if (supp != null && supp.getSupplierId() > 0) {
+		if (null != supp) {
+			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
+		}
+		if (supp != null && null != supp.getSupplierId() && supp.getSupplierId() > 0) {
 			log.info("10724 to TB issue liferay "+supp.getSupplierId());
 			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
 			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl(): " + supp.getSmAppl());
