@@ -10382,7 +10382,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							.getRequestNoteItemId()))){
 					itemIds.add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
 					itemCount++;
-					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
+					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <p></p> ");
 				}else if(addItem
 						&& isZonal
 						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
@@ -10394,11 +10394,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
-						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
+						itemsList.append(" <p></p> "+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <p></p> ");
 						zoneitemCount=0;
 					}
 					zoneitemCount++;
-					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
+					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <p></p> ");
 					itemCount++;
 				}else if(loiLoaItem.isComplete()){
 					completeItemCount++;
@@ -10408,6 +10408,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		
 		if (itemCount > 0) {
+			itemsList.append(" <p></p> ");
 			throw new EpException(MessageConst.ERROR_775175, new String[] { itemsList.toString() });
 		}
 		
@@ -10471,7 +10472,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							.getRequestNoteItemId()))){
 					itemIds.add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
 					itemCount++;
-					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+"\n");
+					itemsList.append(itemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <p></p> ");
 				}else if(addItemZonal
 						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
@@ -10482,17 +10483,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
-						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
+						itemsList.append(" <p></p> "+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <p></p> ");
 						zoneitemCount=0;
 					}
 					zoneitemCount++;
-					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <br/>");
+					itemsList.append(zoneitemCount+". "+loiLoaItem.getScRequestItem().getItemName()+" <p></p> ");
 					itemCount++;
 				}
 			}
 		}
 		
 		if (itemCount > 0) {
+			itemsList.append(" <p></p> ");
 			throw new EpException(MessageConst.ERROR_775176, new String[] { itemsList.toString() });
 		}
 		
