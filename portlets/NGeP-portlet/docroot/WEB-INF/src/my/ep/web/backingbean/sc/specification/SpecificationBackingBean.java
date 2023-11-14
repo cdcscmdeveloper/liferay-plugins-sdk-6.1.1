@@ -2274,13 +2274,12 @@ public class SpecificationBackingBean extends
 									recommnendationSetting);
 						}
 					}
-					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) { 
-							if (null == this.getManagedBean().getTechnicalItemScoreSetting()) { 
-								this.getManagedBean().setTechnicalItemScoreSetting(recommnendationSetting);
-							} 
-						} 
-					} 
+					//sonarqube issues
+					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							&& recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+						this.getManagedBean().setTechnicalItemScoreSetting(recommnendationSetting);
+					}
 				} 
 			} 
 
