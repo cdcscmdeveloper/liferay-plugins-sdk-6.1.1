@@ -1280,7 +1280,8 @@ public class CommonApplBackingBean extends
 		renewSesionObject();
 		SmSupplier supp = SmApplicationUtil.getCurrentSupplier();
 		log.info("[preRenderCommonSmOverviewInfo] fadhli supp: " + supp);
-		if (supp != null) {
+		if (supp != null && supp.getSupplierId() > 0) {
+			log.info("10724 to TB issue liferay "+supp.getSupplierId());
 			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSupplierId(): " + supp.getSupplierId());
 			log.info("[preRenderCommonSmOverviewInfo] fadhli supp.getSmAppl(): " + supp.getSmAppl());
 			if (null != supp.getSmAppl()) {
@@ -1347,6 +1348,8 @@ public class CommonApplBackingBean extends
 									"lbl.sm.MOF.alert.afterexpiry", new String[] {DateUtils.dateToString("dd/MM/yyyy", expDate), getManagedBean().getDays()}));
 				}
 			}
+		}else{
+			log.info("No Supplier");
 		}
 		//10724 END
 		log.info(getManagedBean().getMofBeforeExpiryMsg());
