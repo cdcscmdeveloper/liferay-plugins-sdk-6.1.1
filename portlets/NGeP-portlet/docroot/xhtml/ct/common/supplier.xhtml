@@ -180,7 +180,7 @@
                   <h:panelGrid columns="4">
                         <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 			                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
-			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress, contactPersonSupplier, phoneNoSupplier, contactEmailSupplier" /> <!--Fix #35358 -->
+			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress, contactPersonSupplier, faxNoSupplier, phoneNoSupplier, contactEmailSupplier" /> <!--Fix #35358 -->
 			                 </p:selectBooleanCheckbox>
 			                               <p:spacer width="2" />	
 			                               <p:outputLabel value="#{lbl['lbl.ct.update.address']}" style="width:120px;text-align:left;"/>
@@ -224,7 +224,8 @@
                                <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/>
                 </td>
                  <td>
-                <p:inputText  disabled="true" style="width:97px;"  
+                 <!--Fix -#35358  -->
+                <p:inputText id="faxNoSupplier"  disabled="true" style="width:97px;"  
                    value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNoFull}"/>  
                  </td>
                  </tr>
