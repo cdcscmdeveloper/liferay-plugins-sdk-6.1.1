@@ -10854,7 +10854,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 								.getRequestNoteItemId()))) {
 					itemIds.add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
 					itemCount++;
-					itemsList.append(itemCount + ". " + loiLoaItem.getScRequestItem().getItemName() + "\n");
+					itemsList.append(itemCount + ". " + loiLoaItem.getScRequestItem().getItemName() + " <p></p> ");
 				} else if (addItem
 						&& isZonal
 						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
@@ -10866,16 +10866,17 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem = loiLoaItem;
-						itemsList.append("\n" + loiLoaItem.getTplSpecZoneDtl().getZoneName() + " \n");
+						itemsList.append(" <p></p> " + loiLoaItem.getTplSpecZoneDtl().getZoneName() + " <p></p> ");
 						zoneitemCount = 0;
 					}
 					zoneitemCount++;
-					itemsList.append(zoneitemCount + ". " + loiLoaItem.getScRequestItem().getItemName() + " \n");
+					itemsList.append(zoneitemCount + ". " + loiLoaItem.getScRequestItem().getItemName() + " <p></p> ");
 					itemCount++;
 				}
 			}
 		}
 		if (itemCount > 0) {
+			itemsList.append(" <p></p> ");
 			throw new EpException(MessageConst.ERROR_776000, new String[] { itemsList.toString() });
 		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
