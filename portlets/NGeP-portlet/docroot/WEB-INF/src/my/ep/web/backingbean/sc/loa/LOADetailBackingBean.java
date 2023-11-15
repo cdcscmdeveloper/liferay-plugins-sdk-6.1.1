@@ -1927,9 +1927,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
 					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
 			// #29006 - end
-			//#25025 - start		
-			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName,18));
-			//#25025 - end
+			//#25025 & 29006 - start		
+			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName,18).trim());
+			//#25025 & 29006 - end
 		}
 		
 		//#29006 - start
@@ -9728,10 +9728,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
-		String defaultValue = "T/B";
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+		String defaultValue = SSTConstant.TB;
+		/*
+		 * 29006 - start
+		 * if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
 			defaultValue = "N/A";
-		}
+		} 29006 - end S*/
 		context.put("defaultValue", defaultValue);
 //		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
 //				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
@@ -10919,10 +10921,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					boolean addZoneName = null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && (zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-							.getTplSpecZoneDtl().getSpecZoneId() || !zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
-							.equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())));
+					Long zoneIdAdded=null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					Long zoneIdNew=null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
 						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
@@ -11006,10 +11007,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))){
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					boolean addZoneName = null == zoneloiLoaItem
-							|| (null != zoneloiLoaItem && (zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId() != loiLoaItem
-							.getTplSpecZoneDtl().getSpecZoneId() || !zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
-							.equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())));
+					Long zoneIdAdded=null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					Long zoneIdNew=null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem=loiLoaItem;
 						itemsList.append("<br/>"+loiLoaItem.getTplSpecZoneDtl().getZoneName()+" <br/>");
