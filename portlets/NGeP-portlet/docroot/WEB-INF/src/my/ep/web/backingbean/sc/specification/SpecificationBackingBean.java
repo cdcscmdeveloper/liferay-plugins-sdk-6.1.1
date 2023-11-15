@@ -3016,7 +3016,8 @@ public class SpecificationBackingBean extends
 				if (oriFinancialScoring != null) {
 					for (ScQtCheckList o : oriFinancialScoring) {
 						for (ScQtCheckList l : newFinancialScoring)
-							if (l.getQtScoreWeightage().getQtScoreWeightageId().equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {
+							if (null != l.getQtScoreWeightage().getQtScoreWeightageId()
+									&& l.getQtScoreWeightage().getQtScoreWeightageId().equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {//bug #35211 related to #33525
 								l.getQtScoreWeightage().setWeightage(o.getQtScoreWeightage().getWeightage());
 							}
 					}
@@ -4536,7 +4537,10 @@ public class SpecificationBackingBean extends
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 		String parameterCode = null;
 		for (PmParameterDesc paramDesc : localParamDesc) {
-			if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(list.getDefinationType().getParameterId()))) {
+			// Sqube QT SIT Bug Minor G15@Syazani 09/11/2023 - Start
+			if (paramDesc.getPmParameter() != null && list.getDefinationType() != null
+					&& paramDesc.getPmParameter().getParameterId().equals(list.getDefinationType().getParameterId())) {
+				// Sqube QT SIT Bug Minor G15@Syazani 09/11/2023 - End
 				parameterCode = paramDesc.getPmParameter().getParameterCode();
 				list.setDefinationType((PmParameter) paramDesc.getPmParameter().cloneEntity()); // Bug #34065@Syazani 01/11/2022
 				break;
@@ -21936,11 +21940,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		try {
 			selectItems.add(new SelectItem(false, ResourceBundleUtils
-					.getMessage("lbl.txt.select",
+					.getMessage(QTConstants.LBL_TXT_SELECT,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(true, ResourceBundleUtils
-					.getMessage("lbl.txt.yes",
+					.getMessage(QTConstants.LBL_TXT_YES,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
@@ -21956,16 +21960,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @return boolean
 	 */
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
-		boolean render = false;
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
 			if (question.isMandatorySpecForSample()) {
-				render = true;
-				break;
+				return true;
 			}
 		}
 
-		return render;
+		return false;
 	}
 	
 	/**
