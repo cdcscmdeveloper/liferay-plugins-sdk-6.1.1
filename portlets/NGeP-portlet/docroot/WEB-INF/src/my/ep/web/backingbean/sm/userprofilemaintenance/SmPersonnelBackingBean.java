@@ -2059,16 +2059,19 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		//32515 END
-		//Start 13320
-		if(getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().size() > 0){
+		//Start - 35178
+		if(!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().isEmpty()){
+			//Start 13320
 			for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
 				//#33592-start
 				if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
 					per.getSmAddress().setPmDivision(null);
 				}//#33592-end
-			}	
+			}
+			//End 13320
 		}
-		//End 13320
+		//End - 35178
+		
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			//#9569 - Start
 			getManagedBean().getBasicSmPersonnel().setFromBasicUserMaintenane(true);
@@ -3410,14 +3413,11 @@ public class SmPersonnelBackingBean extends
 			}
 			//End - #34810
 
-			if(personnel.getSmPersonnelAddresses().size() > 0){
-				for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
-					if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
-						per.getSmAddress().setPmDivision(null);
-					}
-				}	
+			for (SmPersonnelAddress per : personnel.getSmPersonnelAddresses()) {
+				if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
+					per.getSmAddress().setPmDivision(null);
+				}
 			}
-			
 			PersonnelReqDTO reqDTO2 = new PersonnelReqDTO();
 			reqDTO2.setSmPersonnel(personnel);
 
