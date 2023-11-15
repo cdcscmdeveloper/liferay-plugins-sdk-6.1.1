@@ -6729,18 +6729,29 @@ public class QTDetailBackingBean extends
 				retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 				break;
 			case 3:
-				// detailSO.validateApprovalDetails(reqDTO);
-				// 25635&34502-start
-				if (!this.getManagedBean().getQt().isCloneEnabled()) {
-					// #34694,#25077 - Start
-					if (!getManagedBean().isApproverTabLoaded()) {
-						retrieveOthersApprovalTabDtl();
-					}
-					// #34694,#25077 - End
+				// #35285 & #25635 - Start
+				if (this.isQTStatusGreaterThanOrEquals(this.getManagedBean().getQt().getQtStatus().getStatusId(),
+						QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
+					// #35285 & #25635 - End
+					// 25635&34502-start
+					if (!this.getManagedBean().getQt().isCloneEnabled()) {
+						// #34694,#25077 - Start
+						if (!getManagedBean().isApproverTabLoaded()) {
+							retrieveOthersApprovalTabDtl();
+						}
+						// #34694,#25077 - End
 
-					retrieveApprovalTabDtl();
+						retrieveApprovalTabDtl();
+					}
+					// 25635&34502-End
+					// #35285 & #25635 - Start
+				} else {
+					if (!this.getManagedBean().getQt().isCloneEnabled()) {
+						retrieveOthersApprovalTabDtl();
+						retrieveApprovalTabDtl();
+					}
 				}
-				// 25635&34502-End
+				// #35285 & #25635 - End
 				break;
 
 			case 4:
