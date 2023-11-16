@@ -3358,7 +3358,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&&(ctBackingBean.getManagedBean().getContractVer().getCtDeductions()!= null
 							&& ctBackingBean.getManagedBean().getContractVer().getCtDeductions().size() > 0)){
 							getManagedBean().setSelectedTabIndex(index + 2);					
-					}else{
+					}
+					//#35193 start
+					else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+						getManagedBean().setSelectedTabIndex(index + 2);
+					}
+					//#35193 end
+					else{
 							getManagedBean().setSelectedTabIndex(index + 1);
 					}
 				}
@@ -3370,7 +3376,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
 							getManagedBean().setSelectedTabIndex(index + 3);					
-					}else{
+					}
+					//#35193 start
+					else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()
+							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
+						getManagedBean().setSelectedTabIndex(index + 3);
+					}
+					//#35193 end
+					else{
 							getManagedBean().setSelectedTabIndex(index + 2);
 					}
 				}//#24333 - End
@@ -3400,20 +3414,29 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
 							getManagedBean().setSelectedTabIndex(6);
 						}
-						//#35193 end
+						/*
 						else if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 								||ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
 								&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
 										&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
 							getManagedBean().setSelectedTabIndex(5);
-						}else  if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+						}
+						else if((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 								||ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 								&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
-								&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-										&& ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
+								&& (!ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+										&& !ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted())){
 							getManagedBean().setSelectedTabIndex(5);
-						}else  if((!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+						}*/
+						
+						else if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+								||ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+								&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+							getManagedBean().setSelectedTabIndex(5);
+						}
+						//#35193 end
+						else  if((!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 							&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange())
 							&& (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
