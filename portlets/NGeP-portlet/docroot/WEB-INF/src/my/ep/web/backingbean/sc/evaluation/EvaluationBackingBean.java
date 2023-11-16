@@ -3165,7 +3165,6 @@ public void saveComplianceSample() {
 
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
-		this.getManagedBean().setTabTechnicalIndex(5);
 		evaluationStageStatusCheck();
 
 		try {
@@ -3175,7 +3174,7 @@ public void saveComplianceSample() {
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(3);
-				this.getManagedBean().setTabTechnicalIndex(5);
+				this.getManagedBean().setTabTechnicalIndex(4);//#10542
 			}
 			List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -8143,8 +8142,7 @@ public void saveComplianceSample() {
 								retrivePresentationDemo();
 								outputTab = 3;
 							}
-						} else if (this.getManagedBean().getScQt().isDemoRequired()
-								&& (currentTab == 0)) {
+						} else if (this.getManagedBean().getScQt().isDemoRequired()) {
 							String taskName = this.getManagedBean().getTaskName();
 							if (SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
 									|| SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
@@ -8293,11 +8291,6 @@ public void saveComplianceSample() {
 								//#34588 end
 							}
 
-						}if (currentTab == 3) {
-
-							evaluationStageStatusCheck();//#25138-Ahmaa
-							retriveOneTierFinancialSupplierSummary();
-							this.getManagedBean().setTabFinancialIndex(3);
 						}
 						// #25138, #21695 -end-
 						if (currentTab == 0) {
@@ -8849,8 +8842,6 @@ public void saveComplianceSample() {
 				if(this.getManagedBean().getFecIndexPreRender()){
 					this.getManagedBean().setFecIndexPreRender(false);
 					retriveFinancialEvaluationStage();
-					outputTab = 3;
-					this.getManagedBean().setTabFinancialIndex(2);
 					financialCheckListStatusCheck();
 					financialCheckListStatusCheckPackage();
 				}
@@ -8883,7 +8874,9 @@ public void saveComplianceSample() {
 		}catch(Exception e){
 		 
 			if (e instanceof EpException) {
-				if (e.getMessage().contains(MessageConst.ERROR_760547)) {
+				if (e.getMessage().contains(MessageConst.ERROR_760547) && outputTab == 4) {
+					outputTab = 3;
+					this.getManagedBean().setTabFinancialIndex(2);
 					String msgCode = MessageConst.ERROR_760547;
 					FacesContext.getCurrentInstance().addMessage(
 							null,
