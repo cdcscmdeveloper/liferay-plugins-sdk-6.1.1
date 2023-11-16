@@ -3165,7 +3165,7 @@ public void saveComplianceSample() {
 
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
-		this.getManagedBean().setTabTechnicalIndex(5);
+		this.getManagedBean().setTabTechnicalIndex(4);
 		evaluationStageStatusCheck();
 
 		try {
@@ -3175,7 +3175,7 @@ public void saveComplianceSample() {
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(3);
-				this.getManagedBean().setTabTechnicalIndex(5);
+				this.getManagedBean().setTabTechnicalIndex(4);
 			}
 			List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -6930,7 +6930,6 @@ public void saveComplianceSample() {
 
 		// this.getManagedBean().setQtProposalChecklist(checklist);
 		try {
-			this.getManagedBean().setTabTechnicalIndex(4);//#10542
 			this.getManagedBean().setPresentationDemoActiveIndex(0);
 			this.getManagedBean().setEvaluatioStageActiveIndex(3);//#28784
 			this.getManagedBean().setDemo(
