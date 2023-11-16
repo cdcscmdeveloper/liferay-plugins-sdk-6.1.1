@@ -165,7 +165,6 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			String committeeType = ((SCEvaluationDataType) evaluationDataType).getCommitteeType();
 			Long qtId = evaluationDataType.getQtId().longValue();
 			retrieveQuotationTenderDetails(qtId, committeeType);//remove long sqube G9
-			//retrieveDemoDetailsData();
 
 			this.getManagedBean().setReadOnly(false);
 			this.getManagedBean().setActiveIndex(0);
@@ -313,7 +312,6 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 								c.setDisableRowSelection(true);
 							}
 						}
-						// log.info("*****contact list = " + ct.size());
 						this.getManagedBean().setScQtDemoContactList(ct);
 						this.getManagedBean().setDemoRemark(scQtDemo.getDemoInvRemark());
 						this.getManagedBean().setScQtDemo(scQtDemo);
@@ -452,15 +450,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 						scQt = tenderResDTO.getQtDetail();
 						getManagedBean().setQt(scQt);
 						this.getManagedBean().setPanel(scQt.isPanel());
-						// #28784 - Start.
-						/*
-						 * Long currentStatus =
-						 * this.getManagedBean().getQt().getQtStatus
-						 * ().getStatusId();
-						 * this.getManagedBean().setCurrentStatusId
-						 * (currentStatus);
-						 */
-						// #28784 - End.
+						
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt().getExistingContractNo());
 
@@ -1147,9 +1137,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			resDTO.setOutcome(outcome);
 			resDTO.setScQt(this.getManagedBean().getQt());
 			resDTO = demoUpdateBpmTask(resDTO, outcome);
-//			resDTO.setSuccessful(true);
 			if (resDTO.isSuccessful()) {
-				resolveAcknowledgement(resDTO.getScQt(), resDTO);
+				resolveAcknowledgement(resDTO.getScQt());
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
@@ -1185,14 +1174,11 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		}
 	}
 
-	private void resolveAcknowledgement(ScQt scQt, DemoResDTO resDTO) {
-		String message = null;
+	private void resolveAcknowledgement(ScQt scQt) {
+		String message = MessageUtils.getMessage(getMessgeConstant("SUBMIT"), new String[] {
+				getMessageCommon("lbl.demo.presentation.submit"), scQt.getQtNo() },
+				MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
 
-		if (StringUtils.isEmpty(message)) {
-			message = MessageUtils.getMessage(getMessgeConstant("SUBMIT"), new String[] {
-					getMessageCommon("lbl.demo.presentation.submit"), scQt.getQtNo() },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-		}
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 
 	}

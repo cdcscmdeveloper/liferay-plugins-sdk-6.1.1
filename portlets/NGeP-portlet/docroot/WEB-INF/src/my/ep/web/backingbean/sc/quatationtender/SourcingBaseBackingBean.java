@@ -94,6 +94,7 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.constants.UnicodeCharacterConstant;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -1055,17 +1056,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		boolean isFromWebService = (null!=FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("hostUrl"));
-		HttpServletResponse res = null;
-		if(!isFromWebService){
-			PortletResponse portletResponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			 res = com.liferay.portal.util.PortalUtil
-					.getHttpServletResponse(portletResponse);
-		}else{
-			res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-		}
-		
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try{
@@ -3885,9 +3879,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			for (ScLoiLoaItem item : items) {
 				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-				if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+				/* #35295 - start change N/A to T/B
+				 * if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
 					dafaltValue = SSTConstant.NA;
 				}
+				#35295 - end
+				*/
 
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
 					TplSpecMaster master = null;
@@ -5422,7 +5419,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							  + finalizationReport.getScQtFinalizationReportAttachment().getFilePath();
 					  File file = new File(filePath);
 					  if (null != file && file.exists()) {
-						  file.delete();
+						  boolean deleteFile=file.delete();//#28215&18685-sonarQubeIssue4#54
+						  log.info("======FileDeletedSucessFully======"+deleteFile);//#28215&18685-sonarQubeIssue4#54
 					  }
 					  finalizationReport.setScQtFinalizationReportAttachment(null);
 				}
@@ -6351,71 +6349,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		boolean isExistUnicodeSymbol = Boolean.FALSE;
 		
 		if(strContent != null && !strContent.isEmpty()){
-			if(strContent.contains("\1")){//SOH
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\2")){//STX
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\3")){//ETX
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\4")){//EOT
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\5")){//ENQ
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\6")){//ACK
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\7")){//BEL
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\10")){
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\11")){//VT
-				isExistUnicodeSymbol = Boolean.TRUE;
-			/*}else if(strContent.contains("\14")){//SO
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\15")){//SI
-				isExistUnicodeSymbol = Boolean.TRUE;*/
-			}else if(strContent.contains("\16")){//DLE
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\17")){//DC1
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\18")){//DC2
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\19")){//DC3
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\20")){//DC4
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\21")){//NAK
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\22")){//SYN
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\23")){//ETB
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\24")){//CAN
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\25")){//EM
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\26")){//SUB
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\27")){//ESC
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\28")){//FS
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\29")){//GS
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\30")){//RS
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}else if(strContent.contains("\31")){//US
-				isExistUnicodeSymbol = Boolean.TRUE;
-			}
+			String [] arrChar = UnicodeCharacterConstant.getUnicodeCharacterList();
+	        
+	        for(int i=0;i<arrChar.length;i++) {
+	            if(strContent.contains(arrChar[i])){
+	            	isExistUnicodeSymbol = Boolean.TRUE;
+	            }
+	        }
 		}
 		
-		if(isExistUnicodeSymbol){
-			if(labelNameVal != null && !labelNameVal.isEmpty()){
-				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
-						.getMessage(MessageConst.ERROR_760543,
-								new String[] {labelNameVal },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}
+		if(isExistUnicodeSymbol && labelNameVal != null && !labelNameVal.isEmpty()){
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+					.getMessage(MessageConst.ERROR_760543,
+							new String[] {labelNameVal },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
 		}
 	}
 	/***

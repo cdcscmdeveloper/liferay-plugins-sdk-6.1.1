@@ -4158,6 +4158,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					
 					//#31130-start
 					SmApplicationUtil.validatePersonnelBeforeSave(true, -1,getManagedBean());
+					//#30762 -Start 021123
+					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
+						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
+					}//#30762 -End
 					if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
@@ -4225,6 +4229,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					
 					//#31130-start
 					SmApplicationUtil.validatePersonnelBeforeSave(true, -1,getManagedBean());
+					//#30762 -Start 021123
+					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
+						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
+					}//#30762 -End
 					if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
@@ -17932,7 +17940,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getEntityBySinglePropertyFromList(cat.getCategoryL2Id(), 
 				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL2");
 		
-		return expCat != null ? expCat.getCategoryL1Name() : cat.getCategoryName();
+		return expCat != null ? expCat.getCategoryL2Name() : cat.getCategoryName();
 	}
 	
 	/**
@@ -17951,7 +17959,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getEntityBySinglePropertyFromList(cat.getCategoryL3Id(), 
 				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL3");
 		
-		return expCat != null ? expCat.getCategoryL1Name() : cat.getCategoryName();
+		return expCat != null ? expCat.getCategoryL3Name() : cat.getCategoryName();
 	}
 	
 	private void updateCategoryCodeNames(){
