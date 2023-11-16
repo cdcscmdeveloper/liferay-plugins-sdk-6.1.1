@@ -8840,7 +8840,7 @@ public void saveComplianceSample() {
 				 * }
 				 */
 				if(this.getManagedBean().getFecIndexPreRender()){
-					this.getManagedBean().setFecIndexPreRender(false);
+					log.info("hello123");
 					retriveFinancialEvaluationStage();
 					financialCheckListStatusCheck();
 					financialCheckListStatusCheckPackage();
@@ -8874,7 +8874,9 @@ public void saveComplianceSample() {
 		}catch(Exception e){
 		 
 			if (e instanceof EpException) {
-				if (e.getMessage().contains(MessageConst.ERROR_760547) && outputTab == 4) {
+				if (e.getMessage().contains(MessageConst.ERROR_760547) && outputTab == 4
+						&& this.getManagedBean().getFecIndexPreRender()) {
+					this.getManagedBean().setFecIndexPreRender(false);
 					outputTab = 3;
 					this.getManagedBean().setTabFinancialIndex(2);
 					String msgCode = MessageConst.ERROR_760547;
@@ -8939,6 +8941,7 @@ public void saveComplianceSample() {
 			handleException(e);
 		}
 		finally {
+			this.getManagedBean().setFecIndexPreRender(false);
 			evaluationSo = null;
 		}
 	}
