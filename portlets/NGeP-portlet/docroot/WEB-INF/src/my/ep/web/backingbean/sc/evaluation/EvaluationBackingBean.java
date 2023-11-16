@@ -8840,7 +8840,6 @@ public void saveComplianceSample() {
 				 * }
 				 */
 				if(this.getManagedBean().getFecIndexPreRender()){
-					log.info("hello123");
 					retriveFinancialEvaluationStage();
 					financialCheckListStatusCheck();
 					financialCheckListStatusCheckPackage();
@@ -8941,7 +8940,7 @@ public void saveComplianceSample() {
 			handleException(e);
 		}
 		finally {
-			this.getManagedBean().setFecIndexPreRender(false);
+			this.getManagedBean().setFecIndexPreRender(false);//#10542
 			evaluationSo = null;
 		}
 	}
