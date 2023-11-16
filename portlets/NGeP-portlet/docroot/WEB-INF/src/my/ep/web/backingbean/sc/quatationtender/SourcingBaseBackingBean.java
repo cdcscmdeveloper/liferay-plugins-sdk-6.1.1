@@ -3879,9 +3879,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			for (ScLoiLoaItem item : items) {
 				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-				if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+				/* #35295 - start change N/A to T/B
+				 * if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
 					dafaltValue = SSTConstant.NA;
 				}
+				#35295 - end
+				*/
 
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
 					TplSpecMaster master = null;
@@ -5416,7 +5419,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							  + finalizationReport.getScQtFinalizationReportAttachment().getFilePath();
 					  File file = new File(filePath);
 					  if (null != file && file.exists()) {
-						  file.delete();
+						  boolean deleteFile=file.delete();//#28215&18685-sonarQubeIssue4#54
+						  log.info("======FileDeletedSucessFully======"+deleteFile);//#28215&18685-sonarQubeIssue4#54
 					  }
 					  finalizationReport.setScQtFinalizationReportAttachment(null);
 				}

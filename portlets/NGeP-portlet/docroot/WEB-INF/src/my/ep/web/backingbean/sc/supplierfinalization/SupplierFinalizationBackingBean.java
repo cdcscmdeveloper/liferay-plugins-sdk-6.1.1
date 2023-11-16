@@ -1562,10 +1562,10 @@ public class SupplierFinalizationBackingBean extends
 
 								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 								} else {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 									if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
 										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 									} else {
@@ -1577,7 +1577,7 @@ public class SupplierFinalizationBackingBean extends
 								//35087
 							}else{
 							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+							 evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 						 }
 					 }
 					 break;
@@ -1749,11 +1749,10 @@ public class SupplierFinalizationBackingBean extends
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
-				//#27502- Adding condition only
-				if (reqDTO.getScQtCommittee() != null) {
-					if (scQtCommittee == null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-						scQtCommittee = new ScQtCommittee();
-					 scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
+				// #27502- Adding condition only
+				if (scQtCommittee == null) {// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					scQtCommittee = new ScQtCommittee();
+					scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
 					reqDTO.setScQtCommittee(scQtCommittee);
 				}
 			}
@@ -2711,7 +2710,7 @@ public class SupplierFinalizationBackingBean extends
 							debugLogger("Generating all reports...");
 							downloadAllReports();	
 						} catch(Exception e) {
-							e.printStackTrace();
+							  SLAUtils.getInstance().logSLAError("QT", "submitSuppFinalizationTask", "docNo", "submitSuppFinalization", getUserIdSessionFromLoginId(), e);//28834-sonarQubeIssue5#84
 						}
 				  }
 				  // #28834 - End.
@@ -4076,7 +4075,8 @@ return	remarksNotFound;
 							+ scQtFinalizationReport.getScQtFinalizationReportAttachment().getFilePath();
 					File file = new File(filePath);
 					if (null != file && file.exists()) {
-						file.delete();
+						 boolean deleteFile=file.delete();//#28834-sonarQubeIssue6#54
+						 log.info("======FileDeletedSucessFully======"+deleteFile);//#28834-sonarQubeIssue6#54
 					}
 					scQtFinalizationReport.setScQtFinalizationReportAttachment(null);
 				}
