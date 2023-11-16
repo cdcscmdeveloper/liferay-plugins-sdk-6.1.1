@@ -8737,15 +8737,13 @@ public void saveComplianceSample() {
 						}
 						// #25138, #21695 -start-
 					} else if (this.getManagedBean().getScQt().isDemoRequired()) {
-						if (currentTab == 3) {//#10542
-							if (this.getManagedBean().getPresentationDemoActiveIndex() < 1) {
-								demoAttachmentChecking(); // #28784
-								retrivePresentationDemoSummary();
-								
-								checkDemoStatusForQtCheckList(); // #25138, #21695
-								
-								outputTab = 3;
-							}
+						if (this.getManagedBean().getPresentationDemoActiveIndex() < 1) {
+							demoAttachmentChecking(); // #28784
+							retrivePresentationDemoSummary();
+
+							checkDemoStatusForQtCheckList(); // #25138, #21695
+
+							outputTab = 3;
 						}
 					}
 				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
