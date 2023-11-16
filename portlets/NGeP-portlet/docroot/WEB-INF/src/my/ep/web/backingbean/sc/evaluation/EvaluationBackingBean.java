@@ -8850,13 +8850,12 @@ public void saveComplianceSample() {
 					this.getManagedBean().setFecIndexPreRender(false);
 					retriveFinancialEvaluationStage();
 					outputTab = 3;
+					this.getManagedBean().setTabFinancialIndex(2);
 					financialCheckListStatusCheck();
 					financialCheckListStatusCheckPackage();
 				}
 				retrieveReportTabDtl();
-				if (this.getManagedBean().getScQt().getEvaluationType().equals(ParameterConst.EVALUATION_TYPES_TWO_TIER)){
-					outputTab = 4;
-				}
+			
 			} else if (outputTab == 5) {
 				retriveCommitteeEndorsment();
 				
@@ -8882,6 +8881,19 @@ public void saveComplianceSample() {
 			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);
 			//6906 - end
 		}catch(Exception e){
+		 
+			if (e instanceof EpException) {
+				if (e.getMessage().contains(MessageConst.ERROR_760547)) {
+					String msgCode = MessageConst.ERROR_760547;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(msgCode, null,
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())
+									+ " ("
+									+ msgCode + ")"));
+					throw new EpException(MessageConst.ERROR_760547);
+				}
+			}
 			 if(currentTab==1){
 				 int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
 				retriveComplianceTechnical();
@@ -11067,14 +11079,16 @@ private void retriveCommitteeRemarksList(){
 					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(2, 3);
 					if(ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType())){
+							.getManagedBean().getScQt().getEvaluationType())
+							&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
+									.getManagedBean().getCommitteeType())){
 						this.getManagedBean().setFecIndexPreRender(true);
 					}
 					evaluationMaintainPreviousNextTabIndex(3, 4);
-					this.getManagedBean().setFecIndexPreRender(true);
+				
 					evaluationMaintainPreviousNextTabIndex(3, 4);
 					if(ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType()) && 
+							.getManagedBean().getScQt().getEvaluationType()) || 
 								ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 										.getManagedBean().getScQt().getEvaluationType())){
 						evaluationMaintainPreviousNextTabIndex(0, 4);
