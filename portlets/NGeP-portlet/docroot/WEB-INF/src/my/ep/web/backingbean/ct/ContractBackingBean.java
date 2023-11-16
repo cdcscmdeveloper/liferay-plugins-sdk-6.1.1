@@ -3361,47 +3361,45 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	@SuppressWarnings("unchecked")
 	private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
+		
 		try{
-			//set zoneName, fromQty and toQty into hashmap
-			Map<String, Map<BigDecimal, BigDecimal>> itemPriceZone = new HashMap<>();
+			//set zoneName, fromQty, toQty and unitPrice into hashmap
+			Map<String, BigDecimal> itemPriceZone = new HashMap<>();
 			
 			if (!ctContractItem.getCtItemPrices().isEmpty()) {
 				for(final CtItemPrice itemPrice : ctContractItem.getCtItemPrices()){
-
-					Map<BigDecimal, BigDecimal> fromToQuantity = new HashMap<>();
+					
 					Predicate conditionPredicate = null;
 					List<CtItemPrice> itemPriceSelect = null;
 					
-					//Checking whether the zone has been selected
-					if(!itemPriceZone.containsKey(itemPrice.getCtContractZone().getZoneName())){
-						if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+
+						String fromQty = itemPrice.getFromQty()!=null ? itemPrice.getFromQty().toString() : null;
+						String toQty = itemPrice.getToQty()!=null ? itemPrice.getToQty().toString() : null;
+						String zoneQty = itemPrice.getCtContractZone().getZoneName().trim() + fromQty + toQty;
+						
+						//checking whether zone and quantity has been select
+						if(!itemPriceZone.containsKey(zoneQty)){
 							
-							//checking whether zone and quantity same
-							if(itemPriceZone.get(itemPrice.getCtContractZone().getZoneName())!=null)
-							fromToQuantity = itemPriceZone.get(itemPrice.getCtContractZone().getZoneName());
-							
-							if(!fromToQuantity.containsKey(itemPrice.getFromQty()) &&
-									!fromToQuantity.containsValue(itemPrice.getToQty())){
-								
-								//selecting the same zone and quantity
-								conditionPredicate = new Predicate() {
-									@Override
-									   public boolean evaluate(final Object object) {
-										CtItemPrice itemPricePredicate = (CtItemPrice) object;
-										   return itemPricePredicate.getFromQty().equals(itemPrice.getFromQty()) &&
-												   itemPricePredicate.getToQty().equals(itemPrice.getToQty()) &&
-												   itemPricePredicate.getCtContractZone().getZoneName() != null &&
-												   itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
-									   }
-								};
-							}
-							fromToQuantity.put(itemPrice.getFromQty(), itemPrice.getFromQty());
-							
-						}else{
-							//selecting the same zone
+							//selecting the same zone and quantity
+							conditionPredicate = new Predicate() {
+								@Override
+								   public boolean evaluate(final Object object) {
+									CtItemPrice itemPricePredicate = (CtItemPrice) object;
+									   return itemPricePredicate.getFromQty().equals(itemPrice.getFromQty()) &&
+											   itemPricePredicate.getToQty().equals(itemPrice.getToQty()) &&
+											   itemPricePredicate.getCtContractZone().getZoneName() != null &&
+											   itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
+								   }
+							};
+							itemPriceZone.put(zoneQty, itemPrice.getUnitPrice());
+						}
+					}else{
+						//checking whether zone has been select
+						if(!itemPriceZone.containsKey(itemPrice.getCtContractZone().getZoneName())){
 							conditionPredicate = new Predicate() {
 								@Override
 								public boolean evaluate(final Object object) {
@@ -3410,13 +3408,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 											itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
 								}
 							};
-
-							fromToQuantity.put(null, null);
+							
+							itemPriceZone.put(itemPrice.getCtContractZone().getZoneName(), itemPrice.getUnitPrice());
 						}
-						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(ctContractItem.getCtItemPrices(), conditionPredicate);
-						itemPriceZone.put(itemPrice.getCtContractZone().getZoneName(), fromToQuantity);
 					}
 					
+					if(conditionPredicate!=null){
+						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(ctContractItem.getCtItemPrices(), conditionPredicate);
+					}
+				
 					//sorting the selection by date to get max date and set change label (only record more than 1) 
 					if(CollectionUtils.isNotEmpty(itemPriceSelect) && itemPriceSelect.size()>1){
 						Comparator<CtItemPrice> cip = new Comparator<CtItemPrice>() {
@@ -3425,14 +3425,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						    	return cip1.getExpDate().compareTo(cip2.getExpDate());
 						    }
 						};
-						Collections.max(itemPriceSelect, cip);
+						Collections.sort(itemPriceSelect, cip);
 						CtItemPrice priceOfItem = itemPriceSelect.get(itemPriceSelect.size()-1);
 						priceOfItem.setChangeZoneLabel(true);
 					}
 				}
 			}
 		}catch (Exception e) {
-			log.info(e.getCause());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
@@ -4861,4 +4860,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
 	}
 	//Enhancement 15851 - End
+	
+	/*
+	 * To identify user role based on user logged in return true if user has
+	 * role as supplier else return false
+	 */
+	// Start Fix - #35202
+	public boolean isSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	// End Fix - #35202
 }
