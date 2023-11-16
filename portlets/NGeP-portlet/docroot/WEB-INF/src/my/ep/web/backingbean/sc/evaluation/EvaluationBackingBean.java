@@ -8877,7 +8877,14 @@ public void saveComplianceSample() {
 				if (e.getMessage().contains(MessageConst.ERROR_760547) && outputTab == 4) {
 					outputTab = 3;
 					this.getManagedBean().setTabFinancialIndex(2);
-					
+					String msgCode = MessageConst.ERROR_760547;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(msgCode, null,
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())
+									+ " ("
+									+ msgCode + ")"));
+					throw new EpException(MessageConst.ERROR_760547);
 				}
 			}
 			 if(currentTab==1){
