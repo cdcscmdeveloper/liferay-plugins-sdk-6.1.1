@@ -8291,11 +8291,6 @@ public void saveComplianceSample() {
 								//#34588 end
 							}
 
-						}if (currentTab == 3) {
-
-							evaluationStageStatusCheck();//#25138-Ahmaa
-							retriveOneTierFinancialSupplierSummary();
-							this.getManagedBean().setTabFinancialIndex(3);
 						}
 						// #25138, #21695 -end-
 						if (currentTab == 0) {
