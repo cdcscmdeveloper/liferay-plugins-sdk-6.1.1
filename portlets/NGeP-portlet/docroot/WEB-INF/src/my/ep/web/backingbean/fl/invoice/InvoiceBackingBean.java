@@ -1826,8 +1826,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {		
 				
-						if (getManagedBean().getInvoice().getPaymentBank()!=null){
-							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId());
+						if (getManagedBean().getInvoice().getFlFulfilmentOrder()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finOrgReqDTO);
 							if (finOrgResDTO.getPmFinancialOrg()!=null && !finOrgResDTO.getPmFinancialOrg()
 									.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -1850,9 +1850,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					}
 				} else if (getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {
-						
-						if (getManagedBean().getInvoice().getPaymentBank()!=null){
-							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId());
+						if (getManagedBean().getInvoice().getFlFulfilmentOrder()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finOrgReqDTO);
 							if (finOrgResDTO.getPmFinancialOrg()!=null && !finOrgResDTO.getPmFinancialOrg()
 									.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
