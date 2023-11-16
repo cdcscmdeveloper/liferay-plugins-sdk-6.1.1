@@ -6930,6 +6930,7 @@ public void saveComplianceSample() {
 
 		// this.getManagedBean().setQtProposalChecklist(checklist);
 		try {
+			this.getManagedBean().setTabTechnicalIndex(4);//#10542
 			this.getManagedBean().setPresentationDemoActiveIndex(0);
 			this.getManagedBean().setEvaluatioStageActiveIndex(3);//#28784
 			this.getManagedBean().setDemo(
