@@ -20,64 +20,64 @@
 
 				<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('0')}"/>
 				
 				<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					rendered="#{viewApplType != ParameterConst.newSmApplnForBumi}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('1')}"/>
 				
 				<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('2')}"/>
 				
 				<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('3')}"/>
 				
 				<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					rendered="#{viewApplType != ParameterConst.newSmApplnForApplcatcodes}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('b')}"/>
 			
 				<p:menuitem value="#{lbl['lbl.sm.catCodeStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					rendered="#{viewApplType != ParameterConst.newSmApplnForUpdate
 							and viewApplType != ParameterConst.newSmApplnForBumi}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('5')}"/>
 		
 				<p:menuitem value="#{lbl['lbl.sm.factoryStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType == 'S'}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('f')}"/>
 					
 				<p:menuitem value="#{lbl['lbl.sm.equipmentStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType == 'S'}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('e')}"/>
 		
 				<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('6')}"/>
 					
 				<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					rendered="#{viewSmApplBackingBean.managedBean.previousApproved}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('7')}"/>
 			
 				<p:menuitem value="#{lbl['lbl.sm.aprvrDecisionLbl']}" 
 					update="viewRevPnl,viewMenuDlg"
-					onstart="blockWgt.show()" oncomplete="blockWgt.hide()"
+					onclick="blockWgt.show()" oncomplete="blockWgt.hide()"
 					rendered="#{viewSmApplBackingBean.managedBean.previousApproved}"
 					actionListener="#{viewSmApplBackingBean.setTabDialog('8')}"/>
 			</p:tabMenu>

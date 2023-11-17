@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 //#29481 - Start
 import java.util.List;
@@ -25,6 +24,9 @@ import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
+//#26307 start 
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
@@ -32,6 +34,7 @@ import my.ep.dto.sm.payment.PaymentResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.py.PyPayment;
@@ -56,16 +59,11 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.liferay.portal.util.PortalUtil;
-//#26307 start 
-import my.ep.constant.pm.ParameterConst; 
-import my.ep.constant.pm.ParameterTypeConst; 
-import my.ep.persistence.entity.pm.common.PmParameter; 
-import my.ep.web.util.pm.helper.ParameterHelper; 
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 //#26307 start 
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "paymentResponseBB")
 @RequestScoped
@@ -169,7 +167,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				orderId = paymentId.toString();
 				errorDesc = "";
 				errorCode = "";
-				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
+				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());
 				if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 					log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 					channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -360,7 +358,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						orderId = paymentId.toString();
 						errorDesc = "";
 						errorCode = "";
-						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());;
+						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());
 						if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 							log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 							channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -646,7 +644,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
-
+				//START 35182
+				if (pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {					
+					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);					
+				}
+				//END 35182
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setPyPayment(pyPayment);
 				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
@@ -969,7 +971,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 		} else if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) { //S
-	        generateReport(ReportConst.SM_TAX_INVOICE_JSP, paramMap);
+			//START 35182
+			generateReport(ReportConst.SM_TAX_INVOICE_SST, paramMap);
+			//END 35182
 		}		
 		//end of Enhancement #19056
 	}
