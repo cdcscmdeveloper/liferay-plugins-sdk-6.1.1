@@ -9009,84 +9009,43 @@ public class QTDetailBackingBean extends
 	
 	// #25077 - Start	
 	private boolean popUpBPKApprovalNeededOnceHaveRequestApproval(ScQt scQt) {
-		IQTDetailSO detailSO;
 
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class);
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		Long statusId = scQt.getQtStatus().getStatusId();
+		
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtdetail(scQt);
 
-			boolean bpkRequestFlag = false;
-			Long statusId = scQt.getQtStatus().getStatusId();
-			
-			if (this.getManagedBean().isMaintanceFlow() == false) {
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setQtdetail(scQt);
-				
-				QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
 
-				if (null != resDTO && null != resDTO.getApproval()) {
-					List<ScQtApproval> listOfApprovals = resDTO.getApproval();
+		if (null != resDTO && null != resDTO.getApproval()) {
+			for (ScQtApproval bpkApproval : resDTO.getApproval()) {
+				String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();
+
+				if (!bpkApproval.isDeleted() && ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
+
+					if (null != statusId
+							&& !this.getManagedBean().isMaintanceFlow()
+							&& (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+									|| statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION) || statusId
+										.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))) {
+
+						List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
 						
-						if (listOfApprovals != null) {
-							for (ScQtApproval bpkApproval : listOfApprovals) {
-								String approvalCategoryCode = bpkApproval.getApprovalCategory().getParameterCode();
-								
-							if (!bpkApproval.isDeleted()) {
-								if (ParameterConst.APPROVAL_CATEGORY_BPK.equals(approvalCategoryCode)) {
-
-									if (null != statusId
-											&& (statusId.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
-													|| statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
-													|| statusId.equals(QTStatusConst.QT_PENDING_BPK_APPROVAL))) {
-										List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
-										
-										if (CollectionUtils.isNotEmpty(bpkRequests)) {
-											for (ScQtApprovalRequest bpkRequest : bpkRequests) {
-												PmParameter approvalType = bpkRequest.getApprovalType();
-
-												if (null != approvalType) {
-													bpkRequestFlag = true;
-												}
-											}// end looping bpk request approval
-										}
-									}
-
-									if (null != statusId && statusId.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
-										List<ScQtApprovalRequest> bpkRequestHistorys = bpkApproval	.getHistoryApprovalRequests();
-
-										if (CollectionUtils.isNotEmpty(bpkRequestHistorys)) {
-											for (ScQtApprovalRequest bpkRequestHistory : bpkRequestHistorys) {
-												PmParameter approvalAction = bpkRequestHistory.getApproverAction();
-
-												if (null != approvalAction	&& approvalAction.getParameterCode().equals(
-																ParameterConst.APPROVAL_DECISION_TYPE_APPROVED)) {
-													List<ScQtApprovalRequest> bpkRequests = bpkApproval.getScQtApprovalDtls();
-						       							
-						       							if (CollectionUtils.isNotEmpty(bpkRequests)) {
-						       								for (ScQtApprovalRequest bpkRequest : bpkRequests) {
-						       									PmParameter approvalType = bpkRequest.getApprovalType();
-
-															if (null != approvalType) {
-																bpkRequestFlag = true;
-															}
-														}// end looping bpk request approval
-													}
-												}
-											}// end looping history bpk approval
-										}
-									}
-								}
+						for (ScQtApprovalRequest bpkRequest : bpkRequests) {
+							PmParameter approvalType = bpkRequest.getApprovalType();
+							
+							if (null != approvalType) {
+								return Boolean.TRUE;
 							}
-						} // end looping bpk approval
+						}// end looping bpk request approval
 					}
 				}
-			}
-			
-			return bpkRequestFlag;
-			
-		} finally {
-			detailSO = null;
+			} // end looping bpk approval
 		}
+
+		return Boolean.FALSE;
 	}
 	// #25077 - End	
 	
