@@ -3653,16 +3653,6 @@ public class QTDetailBackingBean extends
 
 										if (approvalRequest.get(i).getApprovalType().getParameterCode()
 												.equals(ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS)) {
-											// 34502&25635-start
-//											if (this.getManagedBean().getQt().isCloneEnabled()) {
-											approvalRequest.get(i).getAppRequestRemark()
-													.setRemark(getManagedBean().getScQtAppRequestRemarkICT());
-											approvalRequest.get(i).setApproverAction(new PmParameter());
-											approvalRequest.get(i).setApprovalRequestAttachement(null);
-
-//												this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
-//											}
-											// 34502&25635-end
 
 											if (this.getManagedBean().isFlagFileAttahmentDeletedICT()) {
 												if (null != getManagedBean().getScQtApprovalReqAttachementICT()) {
