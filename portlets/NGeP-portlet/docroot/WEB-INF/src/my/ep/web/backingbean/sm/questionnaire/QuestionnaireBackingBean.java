@@ -16,6 +16,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplierAnswer;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.questionnaire.QuestionnaireManagedBean;
@@ -25,6 +26,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
@@ -193,5 +195,38 @@ public class QuestionnaireBackingBean extends
 		}
 		return smAnswer;
 	}
+	
+	/**
+	 * get the VelocityContext
+	 * @return context
+	 */
+	public VelocityContext setDetail(){
+	
+		VelocityContext context = new VelocityContext();	
+		FacesScopes face = new FacesScopes();
+		
+		String lblApplType = getsupplierApplTypeDesc(this.getManagedBean().getSmAppl().getApplType());
 
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("title",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.answer.header",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("feedbacknote1",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note1",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("feedbacknote2",  ResourceBundleUtils.getMessage("lbl.sm.questionaire.feedback.note2",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+
+		context.put("companyName",  this.getManagedBean().getSmSupp().getCompanyName()); 
+		context.put("mof", this.getManagedBean().getMofAccountNo());
+		context.put("applNo",  this.getManagedBean().getRejectedAppl() == null ? this.getManagedBean().getSmAppl().getApplNo() : this.getManagedBean().getRejectedAppl().getApplNo()); //#34920
+		context.put("applType",ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
+		context.put("question", this.getManagedBean().getSmSuppAnswerLs());
+		
+		return context;
+	}
+	
+	/**
+	 * get the template logo path 
+	 * @return String
+	 */
+	private String getLogoHeaderPath(){
+		return SmCommonUtil.getBasePortalUrl();
+	}
+	//<-- END #12768 -->
 }
