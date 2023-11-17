@@ -2590,7 +2590,7 @@ public class CommitteBackingBean extends
 	//#31870 - END
 	//25037 - start	
 	/**
-	 * TODO revert to previous settings once all old QT's with not one to one FC committee ends.
+	 * Evaluate active flag for scCommittee
 	 * @return boolean isCommitteeRecordStatusActive
 	 */
 	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {
@@ -2598,11 +2598,9 @@ public class CommitteBackingBean extends
 			return false;
 		String committeeType = committee.getCommitteeType().getParameterCode();
 		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
-		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType)) {
-			if (qtCommittees != null && qtCommittees.size()<=1) {
-				return true; 
-			} 
-		} 
+		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees && qtCommittees.size()<=1)
+			return true; 
+
 		return committee.isRecordStatus();
 	}
 	//25037 - end	

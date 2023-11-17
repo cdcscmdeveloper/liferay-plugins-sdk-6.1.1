@@ -311,6 +311,15 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
 	//#29007 End Vinod
+	// #29007 Start Vinod
+	public static final String LBL_TXT_SELECT = "lbl.txt.select";
+	public static final String LBL_TXT_YES = "lbl.txt.yes";
+	public static final String LBL_TXT_NO = "lbl.txt.no";
+	public static final String COMPLIANCE_CONFIRMATION_POPUP = "complianceConfirmPopUp.show()";
+	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
+	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
+	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
+	// #29007 End Vinod
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
 	

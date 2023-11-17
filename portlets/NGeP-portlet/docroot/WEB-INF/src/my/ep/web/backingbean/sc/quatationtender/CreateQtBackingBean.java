@@ -1405,9 +1405,7 @@ public class CreateQtBackingBean extends
 
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
-				if (paramDesc.getPmParameter().getParameterId()
-						.equals(Long.valueOf(type))) {
-
+				if (paramDesc.getPmParameter().getParameterId() == type) {
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
 				}
@@ -1434,9 +1432,7 @@ public class CreateQtBackingBean extends
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
-					if (paramDesc.getPmParameter().getParameterId()
-							.equals(Long.valueOf(type))) {   
-                
+					if (paramDesc.getPmParameter().getParameterId() == type) {
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
 						this.getManagedBean().getQt()
@@ -3347,6 +3343,18 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().getQt().setPmProcurementCategory(
 					parameterResDTO.getPmParameter());
 		}
+		//#35285 & #25635 - Start
+		else{
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+		}
+		if(null != this.getManagedBean().getQt().getPmProcurementCategory()) {
+			if (!ParameterConst.PROCUREMENT_CATEGORY_ICT.equalsIgnoreCase(this.getManagedBean().getQt().getPmProcurementCategory().getParameterCode())) {
+				this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+			}
+		}else{
+			this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+		}
+		//#35285 & #25635 - End
 	}
 	
 	/**
@@ -4214,13 +4222,6 @@ public class CreateQtBackingBean extends
 			resDTO = specSo.deleteDemoSpecChecklist(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				//#28784 note-#634 - Start
-				// if (this.getManagedBean().getQt().isZonal()) {
-				//	QTDetailBackingBean qtDetail = new QTDetailBackingBean();
-				//	qtDetail.retrieveZonalDetailAfterDemoDeletion(this.getManagedBean().getQt().getQtId());
-				//	this.getManagedBean().setDemoScoreSetting(null);
-				//}
-				//#28784 note-#634 - End
 				specificationBackingBean.resetDemoTechSpecListAfterDelete();
 			}
 
