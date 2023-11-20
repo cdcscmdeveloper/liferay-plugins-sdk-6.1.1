@@ -113,6 +113,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
@@ -3635,7 +3636,9 @@ public class NoticeBoardBackingBean extends
 					this.getManagedBean().setAmendmentDateMap(null);
 				}
 			} catch(Exception e){
-				e.printStackTrace();
+				String exceptionQtNo = reqDTO.getScQt() == null ? "" : reqDTO.getScQt().getQtNo();
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+						exceptionQtNo, "NoticeBoardBackingBean.noticeBoardGfmas", null, e);
 			}
 
 			String pageUrl = QT_DETAILS_PAGE;
