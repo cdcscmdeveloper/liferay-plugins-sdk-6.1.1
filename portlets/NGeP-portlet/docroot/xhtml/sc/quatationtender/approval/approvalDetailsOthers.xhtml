@@ -39,7 +39,7 @@
 				</f:facet>
 				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.approverAction.parameterId}"
-					style="width: 178px;margin-bottom: 5px;" disabled="#{createQtBB.managedBean.readOnly}" rendered="#{ParameterConst.approvalRequestIctProjects eq otherrequestdetails.approvalType.parameterCode or ParameterConst.approvalRequestImportedGoods eq otherrequestdetails.approvalType.parameterCode}">
+					style="width: 178px;margin-bottom: 5px;" disabled="#{createQtBB.managedBean.readOnly}">
 					<ui:remove> #25077 Start </ui:remove>
 				    <c:choose>
 					    <c:when test="#{qTDetailBB.isQTStatusLessThan(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}">	
