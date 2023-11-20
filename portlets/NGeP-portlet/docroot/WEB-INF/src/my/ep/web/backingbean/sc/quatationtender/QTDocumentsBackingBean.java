@@ -2209,22 +2209,24 @@ public class QTDocumentsBackingBean extends
 						 String clSpecDetail = question.getClSpecDetail();
 						 String[] words = clSpecDetail.split(" ");
 						 StringBuilder sb = new StringBuilder();
-						 for(String word : words){
-							 int length = word.length();
-							 if ( length >= 20){
-								 StringBuilder subSb = new StringBuilder();
-								  String newWord = new String();	
-						    	  String subWord = new String();	
-						            for (int i = 0; i < length; i += 70) {
-						            	subWord = word.substring(i, Math.min(length, i + 70));
-						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-						            }
-						    		newWord = subSb.toString();	
-									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
-						    	}else{
-									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-							 }
-						 }
+						for (String word : words) {
+							int length = word.length();
+							if (length >= 20) {
+								StringBuilder subSb = new StringBuilder();
+								String newWord = new String();
+								String subWord = new String();
+								// Bug #34894@Syazani 11/07/2023 -- Start
+								for (int i = 0; i < length; i += 61) {
+									subWord = word.substring(i, Math.min(length, i + 61));
+									// Bug #34894@Syazani 11/07/2022 -- End
+									subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+								}
+								newWord = subSb.toString();
+								sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
+							} else {
+								sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+							}
+						}
 						 clSpecDetail=sb.toString();
 						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
 						 //end Bug #28274
@@ -2427,7 +2429,7 @@ public class QTDocumentsBackingBean extends
 		title=title.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-		context.put("title", StringUtil.upperCase(title));
+		context.put("title", title);//#32648 remove uppercase
 		context.put("qtNo", qt.getQtNo());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
