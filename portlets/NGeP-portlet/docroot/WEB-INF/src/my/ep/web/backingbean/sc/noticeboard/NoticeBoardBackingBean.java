@@ -125,6 +125,7 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.bean.tree.EpDefaultTreeNode;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
 import my.ep.web.util.DateUtils;
@@ -3637,8 +3638,8 @@ public class NoticeBoardBackingBean extends
 				}
 			} catch(Exception e){
 				String exceptionQtNo = reqDTO.getScQt() == null ? "" : reqDTO.getScQt().getQtNo();
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-						exceptionQtNo, "NoticeBoardBackingBean.noticeBoardGfmas", null, e);
+				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_NOTICE_BOARD_BACKINGBEAN ,
+						exceptionQtNo, SLALogConstant.QT_NOTICEBOARDGFMAS, null, e);
 			}
 
 			String pageUrl = QT_DETAILS_PAGE;
