@@ -123,6 +123,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -12347,4 +12348,33 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35078@Syazani -- End 14/09/2023
+	
+	//#12487 - start
+		public String retrieveDueDate(Integer days){
+			
+			List<PmConfigRuleValue> ruleValueList = new ArrayList<PmConfigRuleValue>();
+			
+			if (days != 0) {
+				getManagedBean().getScLoa().setRespPeriod(days);
+				IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+				RuleReqDTO ruleReqDTO = new RuleReqDTO();
+				ruleReqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+				ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
+						.getRuleValueList();
+			} else
+			getManagedBean().getScLoa().setRespPeriod(null);
+			
+			Date currentDate = DateUtils.getCurrentDateWithoutTime();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			String dateBefore = sdf.format(currentDate);
+			
+			Calendar cal = Calendar.getInstance();	    
+		    cal.add(Calendar.DAY_OF_MONTH, days);
+		    
+		    String date = sdf.format(cal.getTime());
+			
+			return date;
+		}
+		//#12487 - end
 }

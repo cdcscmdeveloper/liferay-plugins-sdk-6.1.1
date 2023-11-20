@@ -43,6 +43,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -74,6 +75,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
@@ -102,6 +104,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -3923,7 +3926,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 				reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
-	
+
+				//#29693 - START
+				if(!scLoa.getScLoiLoa().getLoiRequired() == true){
+					sendNotification(); 
+				}								
+				//#29693 - END
 				if (resDTO.isSuccessful()) {
 					scLoa = resDTO.getScLoa();
 					RenameTempLoaNoRepoDirByLoaNo(scLoa);
@@ -11752,5 +11760,90 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// Bug #35078@Syazani -- End 14/09/2023
 
+	// #29693 - start
+			public void sendNotification() {
+				FacesScopes facesScopes = new FacesScopes();
+				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();			
+				reqDTO.setScLoa(getManagedBean().getScLoa());
+				reqDTO.setUserLocale(facesScopes.getUserLocale());
+				ScLoa scLoa = getManagedBean().getScLoa();
+				
+				long applId = 12345678910L;
+				if(scLoa.getScLoiLoa()!=null){
+					if(scLoa.getScLoiLoa().getSmSupplier()!=null){
+						if(scLoa.getScLoiLoa().getSmSupplier().getSmAppl()!=null){
+							if(scLoa.getScLoiLoa().getSmSupplier().getSmAppl().getApplId()!=null)
+								applId = scLoa.getScLoiLoa().getSmSupplier().getSmAppl().getApplId();
+						}
+					}
+				}
+				
+				long assignUser = 12345678910L;
+				if (scLoa.getScLoiLoa() != null) {
+					if (scLoa.getScLoiLoa().getSmSupplier() != null) {
+						//if(scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getPmUser()!=null){
+							//assignUser = scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getPmUser().getUserId();
+							assignUser = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
+						//}
+					}
+				}
+				
+				String userEmail = "";
+				if (scLoa.getScLoiLoa() != null) {
+					if (scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel() != null) 			
+						userEmail = scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getEmail();	
+				}
+
+				//ScRequestNote scRequestNote = new ScRequestNote();
+				String ptjName = "";
+				String ministryName = "";
+				PmOrgProfile pmOrgProfile = new PmOrgProfile();
+				if (reqDTO != null) {
+					//scRequestNote = requestNoteReqDTO.getRequestNote();
+					Long profileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
+					Date createdDate = scLoa.getScLoiLoa().getCreatedDate();
+					ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+					pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+					ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+					log.info(ptjName);
+					log.info(ministryName);
+					// return;
+				}
+				
+				getQtAwardSO().sendDashboardNotification(reqDTO, assignUser, ptjName, ministryName);
+
+				// List<String> loginIdAssignees =
+				// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+//				getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
+//				getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, userEmail, ptjName, ministryName);
+			}
+			
+			public String retrieveDueDate(Integer days){
+				
+				List<PmConfigRuleValue> ruleValueList = new ArrayList<PmConfigRuleValue>();
+				
+				if (days != 0) {
+					getManagedBean().getScLoa().setRespPeriod(days);
+					IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+					RuleReqDTO ruleReqDTO = new RuleReqDTO();
+					ruleReqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+					ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
+							.getRuleValueList();
+				} else
+				getManagedBean().getScLoa().setRespPeriod(null);
+				
+				Date currentDate = DateUtils.getCurrentDateWithoutTime();
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				String dateBefore = sdf.format(currentDate);
+				
+				Calendar cal = Calendar.getInstance();	    
+			    cal.add(Calendar.DAY_OF_MONTH, days);
+			    
+			    String date = sdf.format(cal.getTime());
+				
+				return date;
+			}
+			// #29693 - end
 }
 

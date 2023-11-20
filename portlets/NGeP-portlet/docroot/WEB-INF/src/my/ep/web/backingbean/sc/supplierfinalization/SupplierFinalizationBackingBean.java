@@ -2656,6 +2656,17 @@ public class SupplierFinalizationBackingBean extends
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
+			
+			log.info("test Iskandar");
+			//#12487 - start Notification to prepare LOA (without LOI)
+			if (getManagedBean().getCurrentStatusId() != null
+					&& (getManagedBean().getCurrentStatusId().equals(QTStatusConst.SF_PENDING_SIGN_OFF) || getManagedBean()
+							.getCurrentStatusId().equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK))){				
+				prepareLOANotification();
+			}
+			log.info("Check");		
+			//#12487 - end
+			
 			// #25638 - Start.
 			if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && StringUtils.isNotBlank(committeeType) && 
 					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) && 
@@ -11648,5 +11659,52 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
 	}
 	//35157 - end
+	
+	//#12487 - start Prepare LOA Notification
+	public void prepareLOANotification(){
+		FacesScopes facesScopes = new FacesScopes();
+		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
+		suppFinalizationReqDTO.setScQt(this.getManagedBean().getScQt());
+		//requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		suppFinalizationReqDTO.setUserLocale(facesScopes.getUserLocale());
+		
+		String PTJCode = "";
+		String PTJName = "";
+		String ministryName = "";
+		long currentUser = new FacesScopes().getUserSessionBean().getUserId();
+		long assignUser = 12345678910L;
+		ScQt scqt = this.getManagedBean().getScQt();
+		String userEmail = "";
+		
+		if (getManagedBean().getScQtFinalization() != null) {
+			if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
+				assignUser = getManagedBean().getScQtFinalization().getLoiLoaById();				
+			}
+		}		
+		
+		if(suppFinalizationReqDTO!=null){
+			PmOrgProfile pmOrgProfile = new PmOrgProfile();
+			Long profileId = suppFinalizationReqDTO.getScQt().getPmOrgProfile().getOrgProfileId();
+			Date createdDate = this.getManagedBean().getScQtFinalization().getCreatedDate();
+			PTJName = retrievePTJByOrgProfileId(profileId, createdDate);
+			PTJCode = retrievePTJCodeByOrgProfileId(profileId, createdDate);
+			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+			log.info(PTJName);
+			log.info(PTJCode);
+			log.info(ministryName);
+		}
+			// return;
+
+
+		// List<String> loginIdAssignees =
+		// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+//		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
+//		getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
+		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser);
+		getQTSuppFinalizationSO().sendPrepareLOILOAEmailNotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser);
+		log.info("Test");
+	}
+	//#12487 - end
 }
 // ***19336

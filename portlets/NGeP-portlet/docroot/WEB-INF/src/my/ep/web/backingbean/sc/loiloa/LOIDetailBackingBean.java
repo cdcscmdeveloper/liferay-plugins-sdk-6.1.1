@@ -2694,6 +2694,29 @@ public class LOIDetailBackingBean extends
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
+			
+			//#12487 start
+			//LOIDetailManagedBean loiObj = new LOIDetailManagedBean();
+			Map loiObj = new HashMap<>();
+			loiObj.put("language", new FacesScopes().getUserLocale());
+			if (getManagedBean().getScQtFinalization() != null) {
+				if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
+					loiObj.put("assignUser", getManagedBean().getScQtFinalization().getLoiLoaById());									
+				}
+			}			
+			PmOrgProfile pmOrgProfile = new PmOrgProfile();
+			Long profileId = getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId();
+			Date createdDate = this.getManagedBean().getScQtFinalization().getCreatedDate();
+			loiObj.put("PTJName", retrievePTJByOrgProfileId(profileId, createdDate));
+			loiObj.put("PTJCode", retrievePTJCodeByOrgProfileId(profileId, createdDate));
+			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			if(null != pmOrgProfile){
+				if(null != pmOrgProfile.getPmOrgValidity()){
+					loiObj.put("ministryName", pmOrgProfile.getPmOrgValidity().getOrgName());
+				}
+			}			
+			getManagedBean().setLoiObj(loiObj);
+			//#12487 end
 
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
@@ -6597,6 +6620,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+		prepareLoiNotification(); //#12487 start
 	}
 	
 	/**
@@ -6812,4 +6836,61 @@ public class LOIDetailBackingBean extends
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#21692 - end
+	
+	//#12487 start
+	public void prepareLoiNotification(){		
+		//LOIDetailManagedBean loiObj = new LOIDetailManagedBean();
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			if ((null != this.getManagedBean().getScQt()) && (null != this.getManagedBean().getScQt().getQtId())) {
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			}
+			SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+			resDTO = qtSuppFinalizationSO.retrieveQtById(reqDTO);
+			
+			long profileId = 1234567890L;
+			if((null != resDTO) && (null != resDTO.getScQt())){
+				if(null != resDTO.getScQt().getPmOrgProfile()){
+					profileId = resDTO.getScQt().getPmOrgProfile().getOrgProfileId();
+				}
+			}
+			
+			log.info(profileId);
+			
+			resDTO = null;
+			//reqDTO = null;
+			
+			//reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO);
+			
+			
+			Map loiObj = new HashMap<>();
+			loiObj.put("language", new FacesScopes().getUserLocale());
+			if (getManagedBean().getScQtFinalization() != null) {
+				if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
+					loiObj.put("assignUser", getManagedBean().getScQtFinalization().getLoiLoaById());									
+				}
+			}			
+			PmOrgProfile pmOrgProfile = new PmOrgProfile();
+			Long profileId2 = getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId();
+			Date createdDate = this.getManagedBean().getScQtFinalization().getCreatedDate();
+			loiObj.put("PTJName", retrievePTJByOrgProfileId(profileId, createdDate));
+			loiObj.put("PTJCode", retrievePTJCodeByOrgProfileId(profileId, createdDate));
+			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			if(null != pmOrgProfile){
+				if(null != pmOrgProfile.getPmOrgValidity()){
+					loiObj.put("ministryName", pmOrgProfile.getPmOrgValidity().getOrgName());
+				}
+			}			
+			getManagedBean().setLoiObj(loiObj);
+		} finally {
+
+		}		
+		getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt());
+		getQtAwardSO().sendLoiEmailNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt());
+	}
+	//#12487 end
 }

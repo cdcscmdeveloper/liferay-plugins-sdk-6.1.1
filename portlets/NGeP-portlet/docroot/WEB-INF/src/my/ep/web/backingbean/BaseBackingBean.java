@@ -4362,4 +4362,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return getManagedBean().isDowngradeRole();
 	}
 	//END #29956
+	
+	//#12487 start
+	
+	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgCode();
+		} else {
+			log.info("PTJ not found : " + orgProfileId);
+			return "";
+		}
+	}
+	
+	//#12487 end
 }

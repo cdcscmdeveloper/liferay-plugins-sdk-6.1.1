@@ -414,6 +414,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	private String loiTaskId;
 	
+	//#12487 start
+    private Map loiObj;
+	//#12487 end
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2365,4 +2369,13 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#29007 End Vinod
 	
+	//#12487 start
+	public Map getLoiObj() {
+		return loiObj;
+	}
+
+	public void setLoiObj(Map loiObj) {
+		this.loiObj = loiObj;
+	}
+	//#12487 end
 }
