@@ -73,11 +73,12 @@
 						<c:choose>
 							<c:when
 								test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<ac:scSingleFileUploadButton id="otheruploadId"
-									popupWidgetVar="otherApprUploadDlg"
+								<ac:scSingleFileUploadButton id="otheruploadIdICT"
+									popupWidgetVar="otherApprUploadDlgICT"
 									attachment="#{otherrequestdetails.approvalRequestAttachement}"
+									rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"
 									readonly="#{createQtBB.managedBean.readOnly}"
-									deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFile"
+									deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFileICT"
 									rowIndex="#{index}">
 									<f:setPropertyActionListener for="actionEvent"
 										value="#{otherrequestdetails}"
