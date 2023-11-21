@@ -150,7 +150,6 @@ import org.primefaces.event.SelectEvent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class QTDocumentsBackingBean.
  * 
@@ -158,17 +157,19 @@ import com.liferay.portal.kernel.util.StringUtil;
  */
 @ManagedBean(name = "qTDocumentsBackingBean")
 @RequestScoped
-public class QTDocumentsBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDocumentsBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(QTDocumentsBackingBean.class);
 
 	/** The Constant DOCUMENT_PAGE. */
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
-	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
-				  SourcingConstants.MALAYSIA_COUNTRY_CODE);
+	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE, SourcingConstants.MALAYSIA_COUNTRY_CODE);
 	
 	
 	/**
@@ -186,10 +187,6 @@ public class QTDocumentsBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		} 
-		/*else {
-			log.info(message);
-		}*/
-		
 	}
 
 	/** The select all. */
@@ -223,8 +220,7 @@ public class QTDocumentsBackingBean extends
 		 * @param cloneDocumentSearchBean
 		 *            the clone document search bean
 		 */
-		public DocumentPagingDataModel(String componentId,
-				QtnTenderSearchBean cloneDocumentSearchBean) {
+		public DocumentPagingDataModel(String componentId, QtnTenderSearchBean cloneDocumentSearchBean) {
 			super(componentId, false);
 			this.cloneDocumentSearchBean = cloneDocumentSearchBean;
 		}
@@ -237,18 +233,15 @@ public class QTDocumentsBackingBean extends
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<ScQt> pageChangeListener(
-				ISearchBean<ScQt> searchBean) {
+		public ISearchResultBean<ScQt> pageChangeListener(ISearchBean<ScQt> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IQTDetailSO detailSO;
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				populateCloneQTSearchCriteria(cloneDocumentSearchBean,
-						searchBean);
+				populateCloneQTSearchCriteria(cloneDocumentSearchBean, searchBean);
 				reqDTO.setQtSearchBean(searchBean);
 				QuationTenderResDTO resDTO = detailSO.retriveQuationTenderDetailsBySearchCriteria(reqDTO);
 				return resDTO.getQtResultBean();
@@ -266,18 +259,13 @@ public class QTDocumentsBackingBean extends
 	 * @param qtSearchBean
 	 *            the qt search bean
 	 */
-	private void populateCloneQTSearchCriteria(
-			QtnTenderSearchBean cloneDocumentSearchBean,
-			ISearchBean<ScQt> qtSearchBean) {
+	private void populateCloneQTSearchCriteria(QtnTenderSearchBean cloneDocumentSearchBean, ISearchBean<ScQt> qtSearchBean) {
 		if (cloneDocumentSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 
 			String qtTitle = cloneDocumentSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.QT_TITILE,
-								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
-								true));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
 
 			String qtNumber = cloneDocumentSearchBean.getQtNo();
@@ -289,13 +277,9 @@ public class QTDocumentsBackingBean extends
 				searchFilterBean.add(bean);
 			}
 
-			String procurementMode = cloneDocumentSearchBean
-					.getProcurementMode();
+			String procurementMode = cloneDocumentSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean("procurementMode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								procurementMode));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
 			} else {
 				// Filter By - procurementMode
 				List<String> procurementModes = new ArrayList<String>();
@@ -1180,7 +1164,6 @@ public class QTDocumentsBackingBean extends
 						getManagedBean().getQt());
 			} else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE
 					.equals(docDefinitionKey)) {
-				// TODO put attachment in repository folder
 				generateSamplesamplesalinankontrakPdfFromVelocity(
 						(ScAttachment) scQtDocReportAttachment,
 						getManagedBean().getQt(),prefixFileName);
@@ -2215,9 +2198,11 @@ public class QTDocumentsBackingBean extends
 							 if ( length >= 20){
 								 StringBuilder subSb = new StringBuilder();
 								  String newWord = new String();	
-						    	  String subWord = new String();	
-						            for (int i = 0; i < length; i += 70) {
-						            	subWord = word.substring(i, Math.min(length, i + 70));
+						    	  String subWord = new String();
+						    	  // Bug #34894@Syazani 11/07/2023 -- Start
+						            for (int i = 0; i < length; i += 61) {
+						            	subWord = word.substring(i, Math.min(length, i + 61));
+						            	// Bug #34894@Syazani 11/07/2023 -- End
 						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
 						            }
 						    		newWord = subSb.toString();	

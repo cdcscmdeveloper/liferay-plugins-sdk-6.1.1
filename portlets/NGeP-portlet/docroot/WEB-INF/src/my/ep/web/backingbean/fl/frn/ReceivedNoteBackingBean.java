@@ -478,7 +478,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				checkLastTaxFRN();//Issuance of CoGSTR
 			}
 			getAcknowledgeOfficerDropdown();
-		    
+			
+			// Set evaluation
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				getManagedBean().setDisableEvaluation(Boolean.TRUE);
 			}
@@ -570,6 +571,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				reqDTO.setAmount(sumReceivedAmt);
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
+				//35024-Start - for performance bond checking
+				if(!resDTOInvoice.isBondComplete() && !resDTOInvoice.isCrComplete()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					
+				}
+				else //35024-End
 				if(!resDTOInvoice.isCrComplete()){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
@@ -618,7 +626,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		
 		if (rejectionRemarks.size() == 0 || !statusMatch) {
 			FlRemark remark = new FlRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());

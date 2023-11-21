@@ -14,8 +14,8 @@
 		<p:columnGroup type="header">
 
 			<p:row>
-				<p:column selectionMode="multiple" style="width:2%"
-					rendered="#{!backingBean.managedBean.approverUser}" />
+				<p:column selectionMode="multiple" style="width:2%" 
+					rendered="#{!backingBean.managedBean.approverUser}"/>
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 					style="width : 2%;" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal" />
@@ -34,7 +34,7 @@
 			</p:row>
 		</p:columnGroup>
 		<p:column selectionMode="multiple" style="width:2%"
-			rendered="#{!backingBean.managedBean.approverUser}" />
+			rendered="#{!backingBean.managedBean.approverUser}"/>
 		<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 			style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
@@ -54,7 +54,7 @@
 			<p:inputTextarea id="otherDescR" maxlength="100"
 				label="#{lbl['lbl.sm.catCodes.othDesc']}"
 				value="#{catBeanR.otherDesc}" style="width : auto;" rows="5"
-				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}">
+				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 				<p:ajax event="blur" process="@this" partialSubmit="true"
 					listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
 					update=":form:tt:catCodeInfPan" />
@@ -130,10 +130,12 @@
 					<tr>
 						<td
 							style="border: none !important; white-space: normal; word-wrap: break-word !important;">
+							<!-- 34549 Start -->
 							<p:scrollPanel mode="native" style="height:100px; width:auto;">
-								<h:outputText value="#{catBean.poRemarks}"
-									rendered="#{not empty catBean.poRemarks}" />
+								<h:outputText value="#{catBeanR.poRemarks}"
+									rendered="#{not empty catBeanR.poRemarks}" />
 							</p:scrollPanel>
+							<!-- 34549 End -->
 						</td>
 					</tr>
 				</table>
@@ -330,10 +332,13 @@
 			</h:panelGroup>
 			
 			#{lbl['lbl.sm.download.categorycode']}
+			<!-- 32008 - START -->
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				partialSubmit="true" process="@this"
 				oncomplete="catCodePopup.show();">
 			</p:commandButton>
+			<!-- 32008 - END -->
 			
 			<!-- 30865 Start -->
 			<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"

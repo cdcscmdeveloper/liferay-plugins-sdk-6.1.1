@@ -24,13 +24,10 @@ import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
-import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
-import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.constant.MessageConst;
@@ -48,7 +45,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -284,7 +280,6 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -296,7 +291,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestDtlSO.class);
 
 		if (restDtlDTO.getRptRequestDtl().getCreatedBy() == null) {
-			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		}
 
 		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
@@ -311,8 +306,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		List<SelectItem> approverNayakTarafList=retrieveApprovarNaikTarafSCS2();
 		List<String> authoriztionList = retriveUserrloeByUserId();
 		
-		if (approverNayakTarafList.size() > 0) {
+		// Bug #34996@Syazani 17/08/2023 -- Start
+		if (approverNayakTarafList.size() > 0
+				|| (authoriztionList.contains(ReportConst.AUDITOR_GENERAL) || authoriztionList
+						.contains(ReportConst.AUDITOR_INTERNAL))) {
 			userRoleLogin = ReportConst.APPROVERNT;
+			// Bug #34996@Syazani 17/08/2023 -- End
 		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
 				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
 				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 
@@ -363,27 +362,25 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		}
 
 	}
-
-	private ReportTempInfoResDTO toSaveDecryptedAmountWithQNoAndQId(
-			BigDecimal qtId, BigDecimal estimatedAmount) {
+	
+	/*
+	private ReportTempInfoResDTO toSaveDecryptedAmountWithQNoAndQId(BigDecimal qtId, BigDecimal estimatedAmount) {
 		IReportTempInfoSO reportTempSO;
-		reportTempSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ReportConst.RPT_MODULE_SER_OBJ, IReportTempInfoSO.class);
+		reportTempSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IReportTempInfoSO.class);
 
 		ReportTempInfo rptTmp = new ReportTempInfo();
 		rptTmp.setReportCode(this.getManagedBean().getReportCode());
 		rptTmp.setQtId(qtId.toString());
-		rptTmp.setEstimatedAmt(estimatedAmount != null ? estimatedAmount
-				.toString() : null);
+		rptTmp.setEstimatedAmt(estimatedAmount != null ? estimatedAmount.toString() : null);
 
 		ReportTempInfoReqDTO reqDTO = new ReportTempInfoReqDTO();
 		reqDTO.setReportTempInfo(rptTmp);
 
-		ReportTempInfoResDTO resDTO = reportTempSO
-				.saveDecryptedAmountWithQuotationNoAndQuotationId(reqDTO);
+		ReportTempInfoResDTO resDTO = reportTempSO.saveDecryptedAmountWithQuotationNoAndQuotationId(reqDTO);
 		reportTempSO = null;
 		return resDTO;
 	}
+	*/
 
 	public abstract void generateReport(LinkedHashMap<String, String> params);
 
