@@ -3640,6 +3640,7 @@ public class NoticeBoardBackingBean extends
 				String exceptionQtNo = reqDTO.getScQt() == null ? "" : reqDTO.getScQt().getQtNo();
 				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_NOTICE_BOARD_BACKINGBEAN ,
 						exceptionQtNo, SLALogConstant.QT_NOTICEBOARDGFMAS, null, e);
+				e.printStackTrace();
 			}
 
 			String pageUrl = QT_DETAILS_PAGE;
