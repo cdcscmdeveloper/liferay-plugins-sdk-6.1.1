@@ -2537,7 +2537,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							
 							// ====#31913 bug related to #25138==== start
 							//#34531, #34529 - start
-							Map<Long, TplSpecZoneDtl> tplSpecZoneDtlMap = new HashMap<Long, TplSpecZoneDtl>();
+							Map<Long, TplSpecZoneDtl> tplSpecZoneDtlMap = new HashMap<>();
 							if(CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls())){
 								for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getTemplateSpecZoneDtls()){
 									tplSpecZoneDtlMap.put(zoneDtl.getSpecZoneId(), zoneDtl);
@@ -16650,7 +16650,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// #1873 #34837 -start-
 		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
-		// #1873 #34837 -end-
+		//ï¿½#1873ï¿½#34837 -end-
 
 		FacesScopes facesScopes = new FacesScopes();
 
