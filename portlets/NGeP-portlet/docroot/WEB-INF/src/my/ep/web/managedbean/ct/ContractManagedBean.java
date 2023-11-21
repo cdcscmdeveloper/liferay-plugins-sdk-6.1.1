@@ -163,19 +163,19 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean isErr100034 = false;
 	private boolean minQtyCheck = false;
 	// End - 28479	
-	
-	private boolean hasAmendmentLoaNo = false; //15851
-	private boolean fromViewPage = false;//15851
-	private boolean amendFromViewPage = false;//15851
-	private boolean viewSCL = false;//15851
-	
-	private boolean viewSCLFromContract = false;//34142
-	private String[] outcomesFromContract = null;//34142, 15851 04/12/2022
-	
+		
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
 	private boolean amendFromTaskList = false;
+	private boolean amendFromViewPage = false;
+	private boolean hasAmendmentLoaNo = false;
 	private boolean viewContractFromAgreement = false;
+	private boolean viewSCL = false;
+	private boolean viewSCLFromContract = false;
+	private boolean viewSclFromAgreement;
 	private boolean backFromSCL = false;
+	private boolean backFromContract = false;
+	private boolean inPage = false;
+	private boolean fromViewPage = false;
 	private String docTypeFromTaskList = null;
 	private Long contractIdFromTaskList = null;
 	private Long contractVerIdFromTaskList = null;
@@ -187,9 +187,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long agreementIdFromAgreementTaskList = null;
 	private String taskIdFromAgreementTaskList = null;
 	private Long contractVerIdFromAgreementTaskList = null;
-	private boolean backFromContract = false;
 	private Long statusIdFromTaskList = null;
-	private boolean inPage = false;
+	private String[] outcomesFromContract = null;
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
 
 	//#28854 - start
@@ -1569,6 +1568,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	}
 	//Bug 34142 - shaqimi end 16112022
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
+	public boolean isViewSclFromAgreement() {
+		return viewSclFromAgreement;
+	}
+	
+	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
+		this.viewSclFromAgreement = viewSclFromAgreement;
+	}
+	
 	public String[] getOutcomesFromContract() {
 		return outcomesFromContract;
 	}
