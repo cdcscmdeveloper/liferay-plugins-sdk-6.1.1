@@ -23130,9 +23130,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String defType = defTypeNAction[0];
 		String action = defTypeNAction[1];
 		
-		qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
+		if (defType != null && action != null) {
+		    qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
 				defType));
-		qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, action));
+		    qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, action));
+		}
 	}
 	
 	private String[] docDefinitionKeyParameter(ScQtCheckList qtCheckList) {
