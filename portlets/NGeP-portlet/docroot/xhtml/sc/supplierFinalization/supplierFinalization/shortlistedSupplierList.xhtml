@@ -12,6 +12,16 @@
 			color:blue !important; 
 			text-decoration: underline;
 		}
+		.shortlistedTableClass > table{
+     		margin: 0 !important;
+		}
+		.shortlistedTableClass > div:first-child, .shortlistedTableClass > div:first-child td{
+    		background: none !important;
+    		border: none !important;
+    		padding-left: 0 !important;
+    		padding-right: 0 !important; 
+    		text-align: left;
+		}
 	</style>
 
 	<ui:param name="isRefinalizedAndBiddingAward" 
@@ -29,35 +39,6 @@
 		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 		</h:outputText>		
 		<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
-
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-			columnClasses="columnWidth20"
-			rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and 
-							!suppFinalizationBackingBean.managedBean.itemize and 
-								(suppFinalizationBackingBean.managedBean.recommendSupplier or
-						 			suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
-			
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.cancelled']}" />
-				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
-			</h:column>
-			<h:column>
-				<table>
-					<tr>
-						<td>
-							<p:selectOneMenu id="cancelItems" label="#{lbl['lbl.sc.cancelled']}" required="true"
-								value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
-								disabled="#{!(isSecretaryUser or 
-												isBPKTaskAndClaimed)}">
-								<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
-								<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
-										listener="#{suppFinalizationBackingBean.zonalPackageItemsCancellationEvent}" />
-				   			</p:selectOneMenu>
-						</td>
-					</tr>
-				</table>
-			</h:column>
-		</h:panelGrid>
 		
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 
@@ -79,13 +60,46 @@
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
 						 style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						 selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
-						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}">
+						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}" styleClass="shortlistedTableClass">
 				
 				<ac:paginator for="supplierListTblSingle" />
 				
 				<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true" 
 						update="@([id$=itemListTbl],[id$=supplierListTblSingle])" 
 						listener="#{suppFinalizationBackingBean.recommendSupplierByAwardEvent}" />	
+				<f:facet name="header">
+					<h:panelGrid border="0" cellpadding="0" cellspacing="0"
+						width="100%" columns="2" columnClasses="columnWidth20"
+						rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and 
+							!suppFinalizationBackingBean.managedBean.itemize and 
+								(suppFinalizationBackingBean.managedBean.recommendSupplier or
+						 			suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
+
+						<h:column>
+							<h:outputLabel value="#{lbl['lbl.sc.cancelled']}" />
+							<p:outputLabel value="#{lbl['lbl.txt.mandatory']}"
+								styleClass="mandatory" />
+						</h:column>
+						<h:column>
+							<table>
+								<tr>
+									<td><p:selectOneMenu id="cancelItems"
+											label="#{lbl['lbl.sc.cancelled']}" required="true"
+											value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
+											disabled="#{!(isSecretaryUser or 
+												isBPKTaskAndClaimed) 
+												or (suppFinalizationBackingBean.managedBean.disableSupplierSelection and suppFinalizationBackingBean.managedBean.recommendedSupplier ne null)}">
+											<f:selectItems
+												value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
+													<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
+										listener="#{suppFinalizationBackingBean.zonalPackageItemsCancellationEvent}" />
+				   			
+										</p:selectOneMenu></td>
+								</tr>
+							</table>
+						</h:column>
+					</h:panelGrid>
+				</f:facet>
 					
 				<p:columnGroup type="header">
 		        	<p:row>
@@ -311,9 +325,42 @@
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
 						 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSupp}" 
 						 style="width:100%;"  emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
+						 rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}" styleClass="shortlistedTableClass">
 				
 				<ac:paginator for="supplierListTblMultiple" />
+				<f:facet name="header">
+					<h:panelGrid border="0" cellpadding="0" cellspacing="0"
+						width="100%" columns="2" columnClasses="columnWidth20"
+						rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and 
+							!suppFinalizationBackingBean.managedBean.itemize and 
+								(suppFinalizationBackingBean.managedBean.recommendSupplier or
+						 			suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
+
+						<h:column>
+							<h:outputLabel value="#{lbl['lbl.sc.cancelled']}" />
+							<p:outputLabel value="#{lbl['lbl.txt.mandatory']}"
+								styleClass="mandatory" />
+						</h:column>
+						<h:column>
+							<table>
+								<tr>
+									<td><p:selectOneMenu id="cancelItems"
+											label="#{lbl['lbl.sc.cancelled']}" required="true"
+											value="#{suppFinalizationBackingBean.managedBean.itemCancelled}"
+											disabled="#{!(isSecretaryUser or 
+												isBPKTaskAndClaimed) 
+												or (suppFinalizationBackingBean.managedBean.disableSupplierSelection and suppFinalizationBackingBean.managedBean.recommendedSupplier ne null)}">
+											<f:selectItems
+												value="#{suppFinalizationBackingBean.getItemCancellationDropDown()}" />
+													<p:ajax event="change" process="@this" update="@([id$=cancelItems],[id$=supplierListTblPanel])" 
+										listener="#{suppFinalizationBackingBean.zonalPackageItemsCancellationEvent}" />
+				   			
+										</p:selectOneMenu></td>
+								</tr>
+							</table>
+						</h:column>
+					</h:panelGrid>
+				</f:facet>
 					
 				<p:columnGroup type="header">
 		        	<p:row>
