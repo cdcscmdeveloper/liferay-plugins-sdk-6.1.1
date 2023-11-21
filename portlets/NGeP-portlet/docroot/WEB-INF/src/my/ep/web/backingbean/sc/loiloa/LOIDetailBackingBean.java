@@ -6699,36 +6699,6 @@ public class LOIDetailBackingBean extends
 	}
 	// #29007	Vinod End
 	
-	//#28777 & #29729 - Start
-    /**
-	* Method to return true, if branch in supplier has been deleted (LOI)
-	* @param supplier id 
-	* @return	true or false
-	**/
-	public boolean displaySupplierBranchListDeletedForLOI(Long supplierId){
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		boolean isSupplierBranchDeleted = false;
-		ScQt scQt = this.getManagedBean().getScQt();
-		if(supplierId != null && scQt != null){
-			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
-				isSupplierBranchDeleted = true;
-		    }
-		}
-	    return isSupplierBranchDeleted;
-	}
-	
-	/**
-	* Method to display message info for supplier branch has been deleted (LOI)
-	**/
-	public void infoBranchSupplierListDeletedForLOI(){
-		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_760523, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-	}
-	//#28777 & #29729 - End
-	
 	/**
 	 * 29007-start
 	* Method to Reset NegotiationTerms
