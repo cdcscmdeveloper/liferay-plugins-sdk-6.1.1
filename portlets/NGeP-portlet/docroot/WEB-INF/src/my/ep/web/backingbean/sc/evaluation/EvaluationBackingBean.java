@@ -2553,7 +2553,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
 									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 											.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
-								evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
+								evalStageStr = StringUtils.join(Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
 							}
 							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
 							//34943 - end
@@ -13647,7 +13647,6 @@ private void retriveCommitteeRemarksList(){
 		private Long checkListId;
 		private Boolean compliance;
 		private String evalStage;
-		//private Boolean scoringReq; //32426, #25138, #21695
 
 		/**
 		 * Constructor for Compliance Supplier Paging Data Model
@@ -13668,7 +13667,6 @@ private void retriveCommitteeRemarksList(){
 		public ComplianceSupplierPagingDataModel(String componentId, Long checkListId, Boolean compliance, Long qtId,
 				String evalStage, Boolean scoringReq) {
 			this(componentId, checkListId, compliance, qtId, evalStage);
-			//this.scoringReq = scoringReq;
 		}
 		// 32426, #25138, #21695 -end
 
@@ -16958,7 +16956,6 @@ private void retriveCommitteeRemarksList(){
 					
 					this.getManagedBean().setQtProposalAmounts(checklistamount);
 					 //34528-uat 4serangkai - start, used by #28784
-					checklistamount = checklistamount==null ? new ArrayList<ScQtProposalAmount>(): checklistamount;
 					this.getManagedBean().setFinancialPackagePaginator(new Paginator(checklistamount, 10));
 				    //34528-uat 4serangkai - end
 					
@@ -17160,8 +17157,7 @@ private void retriveCommitteeRemarksList(){
 							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
 								&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 										.equalsIgnoreCase(proposalCheckList.getDefinationType().getParameterCode())) {
-								evalStageStr = StringUtils.join(Arrays.asList(new String[]{evalStageStr, QTConstants.TECHNICAL_EVALUATION}), ",");
-							}
+								evalStageStr = StringUtils.join(Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");							}
 							localCheckList.add(checkStausForUploadNoActionCheckLists(proposalCheckList, evalStageStr));
 							//34943 - end
 						}
