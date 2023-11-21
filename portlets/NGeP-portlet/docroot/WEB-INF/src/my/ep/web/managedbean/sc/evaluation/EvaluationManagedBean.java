@@ -612,6 +612,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
 	//#28784 - end
+	private boolean fecIndexPreRender;//#10542
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -4374,5 +4375,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setDemoWip(boolean demoWip) {
 		this.demoWip = demoWip;
+	}
+	//#10542
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
 	}
 }
