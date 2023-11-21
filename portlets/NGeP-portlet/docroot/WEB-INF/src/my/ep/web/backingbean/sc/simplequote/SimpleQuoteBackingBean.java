@@ -775,7 +775,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 		
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		
 		// zone location level by default - district
@@ -875,7 +875,7 @@ public class SimpleQuoteBackingBean extends
 		if (supplierId != null && supplierId != 0) {
 			if (scQuote.getSupplierId() == 0)
 				scQuote.setSupplierId(supplierId);
-		} else if (supplierId == 0) {
+		} else if (supplierId != null && supplierId == 0){ //#34994
 			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
 				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
 		}
@@ -2361,6 +2361,34 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35298 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if (tplSpecQuestion.getCmItem() != null
+									&& tplSpecQuestion.getCmItem().getExtensionCode() != null) {
+								ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+								String serviceOrProduct = catalogueSO.checkProductOrService(tplSpecQuestion.getCmItem()
+										.getExtensionCode());
+								if (serviceOrProduct.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
+									if ((tplSpecQuestion.getAnswerTypeCode() != null)
+											&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+										if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+												.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+											if (tplSpecQuestion.getClUomFrequency() != null) {
+												tplSpecQuestion.setClUomFrequency(null);
+											}
+											if (tplSpecQuestion.getClDurationMonth() != null) {
+												tplSpecQuestion.setClDurationMonth(null);
+											}
+
+										}
+									}
+								}
+							}
+						}
+						// Bug #35298 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2381,6 +2409,29 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35298 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if ((tplSpecQuestion.getAnswerTypeCode() != null)
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+								if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+									if (tplSpecQuestion.getClFulfilmentTypeCode() != null
+											&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+													.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+										if (tplSpecQuestion.getClUomFrequency() != null) {
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if (tplSpecQuestion.getClDurationMonth() != null) {
+											tplSpecQuestion.setClDurationMonth(null);
+										}
+									}
+								}
+							}
+						}
+						// Bug #35298 - end
+						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -4310,7 +4361,12 @@ public class SimpleQuoteBackingBean extends
 				Long itemSpecQuestionId = null;
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
-
+				
+				//Bug #35298 - get value for fulfilment type one-off
+				PmParameter FTypeOneOff = getParameterByTypeAndCode(
+						ParameterTypeConst.FULFILMENT_TYPE,
+						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+								
 				if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
 					for(TplSpecQuestion question: cloneSpecMaster.getTplSpecQuestions()) {
 						//if item already codified, check by extension code. 
@@ -4324,6 +4380,7 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
+											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35298 - Assigning value one-off to product
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;
@@ -4357,7 +4414,7 @@ public class SimpleQuoteBackingBean extends
 						.equals(productOrService) || (prodItemQuestions.size() > 0)) {
 					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
 					List<TplSpecQuestion> cloneQuestions = new ArrayList<TplSpecQuestion>();
-
+					
 					// non clone spec master
 					if (productTplSpecBean.getSpecMaster() != null
 							&& productTplSpecBean.getSpecMaster()
@@ -6210,7 +6267,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// zone location level by default - district
 		if (getManagedBean().getLocationLevel() == null) {

@@ -107,7 +107,7 @@ public class QuestionnaireBackingBean extends
 
 		context.put("companyName",  this.getManagedBean().getSmSupp().getCompanyName()); 
 		context.put("mof", this.getManagedBean().getMofAccountNo());
-		context.put("applNo",  this.getManagedBean().getSmAppl().getApplNo());
+		context.put("applNo",  this.getManagedBean().getRejectedAppl() == null ? this.getManagedBean().getSmAppl().getApplNo() : this.getManagedBean().getRejectedAppl().getApplNo()); //#34920
 		context.put("applType",ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("question", this.getManagedBean().getSmSuppAnswerLs());
 		
