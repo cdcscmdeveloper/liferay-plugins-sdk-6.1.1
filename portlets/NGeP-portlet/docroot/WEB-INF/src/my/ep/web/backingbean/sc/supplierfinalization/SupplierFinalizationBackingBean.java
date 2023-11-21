@@ -11027,7 +11027,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			
 			boolean isSupplierBranchDeleted = false;
 			if(supplierId != null && scQt != null){
-				if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
+				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
 					isSupplierBranchDeleted = true;
 			    }
 			}
