@@ -13299,8 +13299,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @return boolean
 	 */
 	public boolean isApprovalTypeEpv(PmParameter approvalType) {
-		return approvalType == null ? false : approvalType.getParameterCode().equals(
-				ParameterConst.DOCTYPE_EXTENSION_PROPOSAL_VALIDITY);
+		if (approvalType != null) {
+			return approvalType.getParameterCode().equals(
+					ParameterConst.DOCTYPE_EXTENSION_PROPOSAL_VALIDITY);
+		}
+		return false;
 	}
 
 	/**
