@@ -590,6 +590,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setPhoneCountry(getManagedBean().getCtAddress().getContactPhoneCountry());
 			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setPhoneArea(getManagedBean().getCtAddress().getContactPhoneArea());
 			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setPhoneNo(getManagedBean().getCtAddress().getContactPhoneNo());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setFaxCountry(getManagedBean().getCtAddress().getContactFaxCountry());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setFaxArea(getManagedBean().getCtAddress().getContactFaxArea());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setFaxNo(getManagedBean().getCtAddress().getContactFaxNo());
 			//End Fix - #35358
 		}
 		else {
