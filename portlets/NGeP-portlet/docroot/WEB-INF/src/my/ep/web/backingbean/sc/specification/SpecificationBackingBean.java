@@ -16650,7 +16650,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// #1873 #34837 -start-
 		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
-		//�#1873�#34837 -end-
+		//#1873#34837 -end-
 
 		FacesScopes facesScopes = new FacesScopes();
 
