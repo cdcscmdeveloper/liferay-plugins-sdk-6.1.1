@@ -857,6 +857,8 @@ public class SpecificationBackingBean extends
 			technicalCheckList = this.getManagedBean().getScQtCheckSt2techProposal();//#28784
 		}
 		boolean demoChecklistAvail = false;//#28784
+		boolean throwErorrMechaMistmatch = false; // Bug #34065@Syazani 01/11/2022
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE); // Bug #34065@Syazani 01/11/2022
 		
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
@@ -885,6 +887,34 @@ public class SpecificationBackingBean extends
 							throw new EpException(MessageConst.ERROR_760542);
 						}
 					}
+				
+				// Bug #34065@Syazani 01/11/2022 -- Start
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterId()
+							.equals(checkList.getDefinationType().getParameterId())) {
+						if (!paramDesc.getPmParameter().getParameterCode()
+								.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+							if (checkList.getPmDocument() == null) {
+								if (paramDesc.getPmParameter().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList),
+											technicalCheckList);
+									throwErorrMechaMistmatch = true;
+								} else if (paramDesc.getPmParameter().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
+									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList),
+											technicalCheckList);
+								}
+							} else {
+								setDefTypeAndActionValues(checkList);
+								technicalCheckListTypeChange(technicalCheckList.indexOf(checkList), technicalCheckList);
+							}
+						}
+						break;
+					}
+				}
+				// Bug #34065@Syazani 01/11/2022 -- End
+				
 				}			
 		}
 		
@@ -936,6 +966,28 @@ public class SpecificationBackingBean extends
 						totalGroupId.put(groupId, total);
 					}
 				}
+				
+				// Bug #34065@Syazani 01/11/2022 -- Start
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
+						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+							if (checkList.getPmDocument() == null) {
+								if (paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+									financialCheckListTypeChange(financialCheckList.indexOf(checkList), financialCheckList);
+									throwErorrMechaMistmatch = true;
+								} else if (paramDesc.getPmParameter().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
+									financialCheckListTypeChange(financialCheckList.indexOf(checkList), financialCheckList);
+								}
+							} else {
+								setDefTypeAndActionValues(checkList);
+								financialCheckListTypeChange(financialCheckList.indexOf(checkList), financialCheckList);
+							}
+						}
+						break;
+					}
+				}
+				// Bug #34065@Syazani 01/11/2022 -- End
 			}
 			
 			for (Map.Entry<Integer, Integer> entry : totalGroupId.entrySet()) {
@@ -1049,6 +1101,14 @@ public class SpecificationBackingBean extends
 				}
 		//20210914@haziq - 31658 - End
 		}
+		
+		// Bug #35219@Syazani 07/11/2023 -- Start
+		if (throwErorrMechaMistmatch) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		// Bug #35219@Syazani 07/11/2023 -- End
 
 	}
 
@@ -23063,6 +23123,49 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return Boolean.FALSE;
 	}//11104_newEndorseEnd
-
-
+	
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	private void setDefTypeAndActionValues(ScQtCheckList qtCheckList) {
+		String[] defTypeNAction = docDefinitionKeyParameter(qtCheckList);
+		String defType = defTypeNAction[0];
+		String action = defTypeNAction[1];
+		
+		if (defType != null && action != null) {
+		    qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
+				defType));
+		    qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, action));
+		}
+	}
+	
+	private String[] docDefinitionKeyParameter(ScQtCheckList qtCheckList) {
+		String docDefinitionKey = qtCheckList.getPmDocument().getDocDefinitionKey();
+		String defType;
+		String action;
+		
+		if (Arrays.asList(SourcingConstants.IS_DOCUMENT_DEFINITION_TYPE_WEB_FORM_AND_CHECKLIST_ACTION_INPUT).contains(docDefinitionKey)) {
+			defType = ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM;
+			action = ParameterConst.CHECKLIST_ACTION_INPUT;
+		} else if ((Arrays.asList(SourcingConstants.IS_DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED_AND_CHECKLIST_ACTION_VIEW)
+				.contains(docDefinitionKey))) {
+			defType = ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED;
+			action = ParameterConst.CHECKLIST_ACTION_VIEW;
+		} else if (null != qtCheckList.getDefinationType()
+				&& ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION.equalsIgnoreCase(qtCheckList.getDefinationType()
+						.getParameterCode())) { 
+			defType = ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION;
+			action = ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD;
+		} else {
+			defType = null;
+			action = null;
+		}
+		
+		return new String[]{defType, action};
+	}
+	
+	private PmParameter retriveParammeterByTypeAndCode(String parameterType, String parameterCode) {
+		return ParameterHelper.getInstance().getParameterByTypeAndCode(parameterType, parameterCode);
+	}
+	
+	// Bug #35219@Syazani 07/11/2023 -- End
+	
 }
