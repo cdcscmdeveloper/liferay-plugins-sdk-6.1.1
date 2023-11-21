@@ -2500,7 +2500,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//#25037 START
 		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-		list = list == null ? new ArrayList<PmParameterDesc>() : list;
+		if (null == list)
+			list = new ArrayList<>();
 
 		if(filteredRoles!=null){
 			for(PmParameterDesc role: list){
@@ -6041,7 +6042,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							});
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
+						String qtNo = qt == null ? "" : qt.getQtNo();
+						SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+								qtNo, "sourcingbaseBackingBean.assertSpecCommitteeMaintenanceInProgress", getUserIdSessionFromLoginId(), e);
 					}
 				} else {
 					Collections.sort(members, new Comparator<ScCommitteeMember>() {
