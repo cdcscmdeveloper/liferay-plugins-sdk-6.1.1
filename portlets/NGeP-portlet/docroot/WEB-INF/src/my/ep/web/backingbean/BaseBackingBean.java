@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import javax.ejb.TransactionAttribute; //#21387
+import javax.ejb.TransactionAttributeType;	//#21387								  										  
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -57,8 +59,9 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;//#31849 #32682
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -80,8 +83,10 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;//#31849 #32682
 import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.language.LanguageReqDTO;
+import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
@@ -122,7 +127,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.logging.LogKey;
+import my.ep.persistence.logging.LogKey;//#31849 #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -188,9 +193,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final String UTF = "UTF-8";
 	//27346 - start
 	String fileInitName;
-	private String tmpPath = null;
-	private String tmpFolder = "SsmInfoTemplate" + "/";
-	private StreamedContent file;
+	//private String tmpPath = null;
+	//private String tmpFolder = "SsmInfoTemplate" + "/";
+	//private StreamedContent file;
 	//27346 -  end
 	@SuppressWarnings("unchecked")
 	public BaseBackingBean() {
@@ -330,16 +335,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String imagePath = "";
 		if (userId != null) {
 			User user = null;
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest()
-					.getAttribute(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY);
 			try {
-				user = UserLocalServiceUtil.getUserByScreenName(
-						themeDisplay.getCompanyId(), userId);
+				user = UserLocalServiceUtil.getUserByScreenName(themeDisplay.getCompanyId(), userId);
 				if (user != null) {
-					imagePath = "/.."
-							+ user.getPortraitURL((ThemeDisplay) facesScopes
-									.getRequest().getAttribute(
-											WebKeys.THEME_DISPLAY));
+					imagePath = "/.." + user.getPortraitURL((ThemeDisplay) facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY));
 				}
 			} catch (Exception ex) {
 				log.error(ex.getMessage(), ex);
@@ -358,8 +358,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public boolean compareUserName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
-		if (username != null
-				&& username.equals(facesScopes.getUserScreenName())) {
+		if (username != null && username.equals(facesScopes.getUserScreenName())) {
 			return true;
 		} else {
 			return false;
@@ -371,9 +370,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public void claimBpmTask() {
 
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
-		
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+
 		claimTaskByTaskId(taskId);
 
 	}
@@ -389,8 +387,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * Release bpm task.
 	 */
 	public void releaseBpmTask() {
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		releaseTaskByTaskId(taskId);
 	}
 
@@ -401,8 +398,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            taskId
 	 */
 	public void claimTaskByTaskId(String taskId) {
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 
@@ -419,8 +415,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            taskId
 	 */
 	public void releaseTaskByTaskId(String taskId) {
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 
@@ -430,43 +425,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		bpmSO.releaseTask(reqDTO);
 	}
 
-	/*
-	 * protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS>
-	 * toEntityBeans(List<? extends ValueBean<RETURN_CLASS>> valueBeans) {
-	 * List<RETURN_CLASS> list = new ArrayList<RETURN_CLASS>();
-	 * 
-	 * for (ValueBean<RETURN_CLASS> valueBean : valueBeans) {
-	 * list.add(valueBean.getEntity()); }
-	 * 
-	 * return list; }
-	 * 
-	 * public <ENTITY_CLASS extends BaseEntity> void
-	 * addListBySelectedList(List<ENTITY_CLASS> list, List<ENTITY_CLASS>
-	 * selectedList) { for (ENTITY_CLASS entity : selectedList) { if
-	 * (entity.isSelected()) { entity.setSelected(false);
-	 * 
-	 * list.add(entity); } } }
-	 * 
-	 * public <ENTITY_CLASS extends BaseEntity> void
-	 * deleteRowsAction(DataValueBean<ENTITY_CLASS> dataValueBean) {
-	 * List<ENTITY_CLASS> displayedList = dataValueBean.getDisplayedList();
-	 * List<ENTITY_CLASS> removedList = dataValueBean.getRemovedList();
-	 * List<ENTITY_CLASS> listToBeRemoved = new ArrayList<ENTITY_CLASS>();
-	 * 
-	 * for (ENTITY_CLASS entity : displayedList) { if (entity.isSelected()) {
-	 * entity.setDeleted(true);
-	 * 
-	 * listToBeRemoved.add(entity); } }
-	 * 
-	 * // remove from display list. displayedList.removeAll(listToBeRemoved);
-	 * 
-	 * // added into removed list. removedList.addAll(listToBeRemoved); }
-	 * 
-	 * public <ENTITY_CLASS extends BaseEntity> void selectAllAction(boolean
-	 * selectAll, List<ENTITY_CLASS> list) { for (ENTITY_CLASS valueBean : list)
-	 * { valueBean.setSelected(selectAll); } }
-	 */
-
 	/**
 	 * Select all.
 	 *
@@ -474,8 +432,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param selected the selected
 	 * @param list the list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected,
-			List<ENTITY_CLASS> list) {
+	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected, List<ENTITY_CLASS> list) {
 		if (list != null) {
 			for (ENTITY_CLASS entity : list) {
 				entity.setSelected(selected);
@@ -489,8 +446,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param <ENTITY_CLASS> the generic type
 	 * @param list the list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(
-			List<ENTITY_CLASS> list) {
+	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(List<ENTITY_CLASS> list) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteSelectedRowsAction");
 		}
@@ -523,8 +479,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param toBeRemoved the to be removed
 	 */
-	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list,
-			ENTITY_CLASS toBeRemoved) {
+	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, ENTITY_CLASS toBeRemoved) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
@@ -541,8 +496,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param toBeRemovedList the to be removed list
 	 */
-	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list,
-			List<ENTITY_CLASS> toBeRemovedList) {
+	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
@@ -559,8 +513,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param markDeletedList the mark deleted list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(
-			List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("markDeleteSelectedRowsAction");
 		}
@@ -598,11 +551,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the component id.
 	 * @return ISearchBean instance.
 	 */
-	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(
-			Class<RETURN_CLASS> classz, String componentId) {
-		return new SearchBean<RETURN_CLASS>(
-				EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
-				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
+	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {
+		return new SearchBean<RETURN_CLASS>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()), SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
 	}
 
 	/**
@@ -626,29 +576,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType,
-			ISearchBean<Object[]> searchBean) {
+	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType, ISearchBean<Object[]> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<Object[]> objects = ParameterHelper
-					.getInstance().getParameterDescListDDBySearchBean(
-							parameterType, searchBean);
+			List<Object[]> objects = ParameterHelper.getInstance().getParameterDescListDDBySearchBean(parameterType, searchBean);
 
 			items = new SelectItem[objects.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (Object[] object : objects) {
-				items[i++] = new SelectItem((Long)object[1],(String)object[0]);
+				items[i++] = new SelectItem((Long) object[1], (String) object[0]);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -2217,62 +2159,41 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param component the component
 	 * @param value the value
 	 */
-	public void validateCaptcha(FacesContext context, UIComponent component,
-			Object value) {
-		String skipValidator = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("skipValidator");
-		//START 31758
+	public void validateCaptcha(FacesContext context, UIComponent component, Object value) {
+		String skipValidator = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("skipValidator");
+		// START 31758
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
 		String captchaEnable = prop.getProperty("captcha.enabled");
-		if(captchaEnable != null && "false".equalsIgnoreCase(captchaEnable)){
+		if (captchaEnable != null && "false".equalsIgnoreCase(captchaEnable)) {
 			skipValidator = "true";
-		}		
-		//END 31758
+		}
+		// END 31758
 		if (skipValidator == null) {
 			String captchaAnswer = (String) value;
 			if (captchaAnswer == null || captchaAnswer.length() == 0) {
 				log.error("Captcha is null");
-				throw new ValidatorException(new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getOutputMsgBundle(
-								MessageConst.ERROR_721046, null)));
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721046, null)));
 
 			}
 
 			if (captchaAnswer != null && captchaAnswer.length() > 0) {
-				if (!captchaAnswer.equals(this.getManagedBean()
-						.getCaptchaText())) {
+				if (!captchaAnswer.equals(this.getManagedBean().getCaptchaText())) {
 					log.error("Captcha is wrong");
-					throw new ValidatorException(new FacesMessage(
-							FacesMessage.SEVERITY_ERROR, null,
-							SmCommonUtil.getOutputMsgBundle(
-									MessageConst.ERROR_721047, null)));
+					throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_721047, null)));
 				}
 			}
 		}
 	}
 
 	// #17376#37 - start
-	/**
-	 * original default
-	 * To get BpmTask Details.
-	 * 
-	 * @param clazz
-	 * @return Object payLoadInstance
-	 */
-	@SuppressWarnings("unchecked")
-	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
-			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
 		// 17376#37 -start-
 		return getBpmTaskDetails(clazz, additionalButtons, null, null);
 		// 17376#37 -end-
 	}
 	
 	// 17376#37 -start-
-	@SuppressWarnings("unchecked")
-	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
-			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
 		return getBpmTaskDetails(clazz, additionalButtons, theTaskId, null);
 	}
 	// 17376#37 -end-
@@ -2294,13 +2215,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		FacesScopes facesScopes = new FacesScopes();
 
 		if (StringUtils.isBlank(theTaskId)) {
-			HttpServletRequest servletRequest = PortalUtil
-					.getHttpServletRequest(facesScopes.getRequest());
-			HttpServletRequest originalServletRequest = PortalUtil
-					.getOriginalServletRequest(servletRequest);
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(facesScopes.getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 
 			taskId = originalServletRequest.getParameter("taskId");
-			taskIdPair = originalServletRequest.getParameter("taskIdPair");	// #31422-basri 190821
+			taskIdPair = originalServletRequest.getParameter("taskIdPair"); // #31422-basri 190821
 		} else {
 			taskId = theTaskId;
 		}
@@ -2344,7 +2263,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				bb.getManagedBean().setClaim(claim);
 				bb.getManagedBean().setTaskId(taskId);
-				bb.getManagedBean().setTaskIdPair(taskIdPair); //#31422-basri 190821
+				//21387 - Start
+				bb.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
+				bb.getManagedBean().setDocNo(resDTO.getDocNumber());
+				//21387 - End				 
 				bb.getManagedBean().setGroupTask(true);
 			} else {
 				//log.info("====groupTask null===" + resDTO.isGroupTask());
@@ -2380,6 +2302,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType()); // #25037
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());// 25037
 
 			return (BPM_DATA_TYPE) payLoad;
 
@@ -3077,7 +3000,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//25792 - end
 	
 	//27346 - start 
-	//FIXME : 16052019 - SSM INTEGRATION CR - start
 	public void redirectToViewSSMInfo(String regNo,String businesstype) {
 		log.info("redirectToViewSSMInfo---------------------------------------------------Start");
 		clearPersonnelList();
@@ -3209,18 +3131,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setSupplierId(supplier.getSupplierId());
 			reqDTO.setParamMonths(6);
-			int count = SmServiceLookup
-					.getMofRegistrationSO()
-					.countMofAccEffDatePassedCurrDateByMonthsAndSupplierId(
-							reqDTO).getCount();
+			int count = SmServiceLookup.getMofRegistrationSO().countMofAccEffDatePassedCurrDateByMonthsAndSupplierId(reqDTO).getCount();
 			if (count > 0) {
 				retVal = true;
 			}
 		}
 		return retVal;
 	}	
-	public static void checkEquityOwnerUpdateAllowance(
-			BaseManagedBean managedBean) {
+
+	public static void checkEquityOwnerUpdateAllowance(BaseManagedBean managedBean) {
 		//#27165
 		 managedBean.setDisAllowOwnerEdit(false);
 		if (isMofAccEffDatePassedCurrDate(managedBean.getSmSupplier())) {
@@ -3270,7 +3189,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("smVmUtil", VmUtil.getInstance());
 		context.put("establishdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getEstablishDate()));
 		if(this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_SOLE_PROPRIETORSHIP)|| this.getManagedBean().getSmSupplierSsm().getBusinessType().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_ROB_PARTNERSHIP)){
-		context.put("robexpdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getRobExpiryDate()));
+			context.put("robexpdate", sdf.format(this.getManagedBean().getSmCompanyBasicSsm().getRobExpiryDate()));
 		}
 		return context;
 	}
@@ -3630,23 +3549,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return AddressUtils.getFullBranchAddress(smAddress);
 	}
 	//#34135 END
+	
+	// 33410 - START
+	public String setFixedLanguageDisplay(Boolean isFixedDisplay, String languageCode){
+		LanguageReqDTO reqDTO = new LanguageReqDTO();
+		reqDTO.setLanguageCode(languageCode);
+		ILanguageSO languageSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+		LanguageResDTO resDTO = languageSO.retrieveLanguageByLanguageCode(reqDTO);
+		if(isFixedDisplay){
+			return resDTO.getLanguage().getLanguageCode();
+		} else {
+			return new FacesScopes().getUserLocale().getLanguage();
+		}
+	}
+	// 33410 - END
 
 	// #29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt) {
 		boolean manufacturer = false;
-		
+
 		if (null != scQt && !scQt.isPanel()) {
 			List<ScQtCategory> qtCategories = null;
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			
+
 			reqDTO.setQtId(scQt.getQtId());
-			
+
 			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();
-			
+
 			if (null != qtCategories && CollectionUtils.isNotEmpty(qtCategories)) {
 				for (ScQtCategory category : qtCategories) {
-					if (SourcingConstants.MANUFACTURER_CATEGORY_CODE.equals(category.getPmCategoryL3()
-							.getCategoryL3Code())) {
+					if (SourcingConstants.MANUFACTURER_CATEGORY_CODE.equals(category.getPmCategoryL3().getCategoryL3Code())) {
 						manufacturer = true;
 						break;
 					}
@@ -3655,7 +3588,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		} else {
 			manufacturer = false;
 		}
-		
+
 		return manufacturer;
 	}
 	// #29466 -end-
@@ -3666,29 +3599,30 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #29466 - END
 	
-	//#31849, #34090, #32682 start 
+	//#31849, #34090, #32682 start
   	/**
 	 * Method to return current session userId from user screenName(loginId)
 	 * @return userId
 	 */
-	public Long getUserIdSessionFromLoginId(){
+	public Long getUserIdSessionFromLoginId() {
 		FacesScopes facesScopes = new FacesScopes();
 		Long userIdSession = 1L;
-		
+
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		
+
 		if (pmUser == null) {
 			userIdSession = facesScopes.getUserSessionBean().getUserId();
 		} else {
 			userIdSession = pmUser.getUserId();
 		}
-		
+
 		new LogKey(userIdSession);
 		return userIdSession;
 	}
+  	//#31849, #34090, #32682 end
 	
 	//29021 - start 34865,34866,34867 - 29021 WIP
 	/**
@@ -3697,17 +3631,45 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param scQt
 	 * @return wip flag 
 	 */
-	public boolean evaluateWIP(ScQt scQt){
+	public boolean evaluateWIP(ScQt scQt) {
 		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
-		if(maxScoreSetting == null){
+		if (maxScoreSetting == null) {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			maxScoreSetting = evaluationSO.checkWipScoreSettingMax(reqDTO);
 			this.getManagedBean().setWipStatusMax(maxScoreSetting);
 		}
 		return maxScoreSetting < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM;
 	}
 	//29012 - end 34865,34866,34867 - 29021 WIP
+	
+	//#21387 - Start
+	/**
+	 * Claim bpm task group By Document Number And Module
+	 * @param reqDTO
+	 * @return resDTO 
+	 */
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
+		BpmResponseDTO resDTO = new BpmResponseDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		try {
+
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(reqDTO.getDocNumber());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			bpmReqDTO.setModule(BpmConstants.MODULE_CT);
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			resDTO = bpmSO.getTasksByDocNoandModule(bpmReqDTO);
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	//#21387 - End
 }

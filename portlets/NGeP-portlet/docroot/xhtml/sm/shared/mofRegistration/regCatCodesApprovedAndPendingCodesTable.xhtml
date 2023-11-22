@@ -394,10 +394,13 @@
 				</h:panelGroup>
 
 				#{lbl['lbl.sm.download.categorycode']}
+				<!-- Disable for UPS 32008 - START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCategoryOtherDescription}"
 					partialSubmit="true" process="@this"
 					>
+				<!-- Disable for UPS 32008 - END -->
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"

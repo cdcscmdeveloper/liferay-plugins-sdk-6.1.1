@@ -44,6 +44,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.comparator.sc.MemberRoleComparator;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -699,7 +700,7 @@ public class CommitteBackingBean extends
 		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		committeReqDTO.setRoleCode(getCommitteeRoleCode());
 		// #25037 - start-
-		committeReqDTO.setMaintanceFlow(true);
+		committeReqDTO.setMaintanceFlow(StringUtils.isEmpty(this.getManagedBean().getTaskName()));
 		// #25037 -end
 
 		ScQt scQt = getManagedBean().getQt();
@@ -727,8 +728,9 @@ public class CommitteBackingBean extends
 				if (CollectionUtils.isNotEmpty(committeReqDTO.getToBeDeletedMembers())){
 					getManagedBean().setToBeDelCommitteMemebers(null);
 				}
-				//201123@asyrafhaziq_29316 - End				
-				if (StringUtils.isNotBlank(outCome)) {
+				//201123@asyrafhaziq_29316 - End
+				
+				if (StringUtils.equals(BpmOutcomeConst.BPM_SUBMIT, committeReqDTO.getOutcome())) { // 25037
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -990,6 +992,9 @@ public class CommitteBackingBean extends
 				parameterSO = BusinessDelegate.getInstance().getServiceObject(
 			            ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);
 				//#26189 -end-
+				
+				committeSO.initializedFCLegacyCommitteeHistory(qtId); // 25037
+				
 				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 				qtCommitte = resDTO.getScQtCommittee();
 				if (null == qtCommitte) {
@@ -2522,5 +2527,25 @@ public class CommitteBackingBean extends
 		history.setScCommittee(resDTO.getCommittee());
 	}
 	// #25037-end
+	
+	// 25037 - start	
+	/**
+	 * Evaluate active flag for scCommittee
+	 * @return boolean isCommitteeRecordStatusActive
+	 */
+	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {
+		if (committee == null)
+			return false;
+		
+		String committeeType = committee.getCommitteeType().getParameterCode();
+		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
+		
+		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees
+				&& qtCommittees.size() <= 1)
+			return true;
+		
+		return committee.isRecordStatus();
+	}
+	// 25037 - end
 
 }

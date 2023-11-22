@@ -111,7 +111,7 @@
 			<ui:remove> ***25692 - end </ui:remove>
 				
 			<ui:remove>9019 Start (Harun) WIP transaction Pending QT Submission</ui:remove>
-			<c:if test="#{!qTDetailBB.getTaskByDocNoModule(qTDetailBB.managedBean.qt.qtNo, QTStatusConst.SC_WFTASK_COMPOSITENAME) and qTDetailBB.managedBean.maintanceFlow}">
+			<c:if test="#{!qTDetailBB.getTaskByDocNoModule() and qTDetailBB.managedBean.maintanceFlow}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.update.sc.wip']}" partialSubmit="true" process="@this"
 					action="#{qTDetailBB.updateWIPTransaction()}">
@@ -129,7 +129,7 @@
 						title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
 					<p:commandButton value="#{lbl['lbl.sc.clone.qt.documents']}"
 						style="float:right;" id="cloneButton2"
-						rendered="#{isClone2 and !isCommitteeApprovalReviseTask}"
+						rendered="#{isClone2 and !isCommitteeApprovalReviseTask and !qTDetailBB.managedBean.maintanceFlow}"
 						process="@this" partialSubmit="true" update="pnlid2"
 						action="#{qTCloneBackingbean.cloneCommitteePopupAction}"
 						title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" />
@@ -428,9 +428,10 @@
 		</p:dialog>
 		<!-- 15391 End  -->
 
-	<!-- 25077, 32376 - Start -->
+	<!-- 25077, 32376, 34694 - Start -->
 	<c:if
-		test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL}">
+		test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || isCommitteeApprovalTask}">
+		<!-- #34694 -end- -->
 		<p:dialog id="reviceApprovalDlgTemp" widgetVar="reviceApprovalDlgTemp"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 			resizable="false" width="360" height="90" modal="true"
