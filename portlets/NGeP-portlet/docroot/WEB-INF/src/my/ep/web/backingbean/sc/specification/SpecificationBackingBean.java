@@ -11605,7 +11605,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 			ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster().getSpecName());
-			scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			Integer index = null; // 1873 - note 97
 
@@ -11650,6 +11649,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
 
 				if (isModified || !isTemplateSpec || isSpecNotExist) {
+					scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT); //Bug #35233
 					// #34048 - End
 					scQtCheckList.setPmStatus(pendingStatus);
 					scQtCheckList.setPmEvalStatus(pendingStatus);

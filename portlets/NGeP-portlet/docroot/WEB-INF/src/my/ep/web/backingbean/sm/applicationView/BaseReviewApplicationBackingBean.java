@@ -69,7 +69,6 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -479,6 +478,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmAppl
 	 *            smAppl
 	 */
+	@SuppressWarnings("deprecation")
 	public void initApplication(SmAppl smAppl) {
 
 		try {
@@ -508,20 +508,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (!getManagedBean().isReviewApplicationExist()) {
 			// if failed to load ser file, then load using db (previous and
 			// original application)
-			if (getManagedBean().isOriginal()
-					|| getManagedBean().isPreviousApproved()) {
+			if (getManagedBean().isOriginal() || getManagedBean().isPreviousApproved()) {
 				MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
-				mofRegistrationReqDTO.setApplNo(getManagedBean()
-						.getApplicationNoParam());
-				getManagedBean().setSmAppl(
-						SmServiceLookup
-								.getMofRegistrationSO()
-								.retrieveSmApplWithChildByApplNo(
-										mofRegistrationReqDTO).getSmAppl());
+				mofRegistrationReqDTO.setApplNo(getManagedBean().getApplicationNoParam());
+				getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(mofRegistrationReqDTO).getSmAppl());
 			} else {
-				SmCommonUtil.redirectToPage(
-						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721212, null);
+				SmCommonUtil.redirectToPage(SmApplicationUtil.getApplicationErrorPage(), MessageConst.INFO_721212, null);
 			}
 		}
 
@@ -569,7 +561,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finalFilePath = null;
@@ -898,7 +889,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
@@ -1653,7 +1645,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			// TODO reset few values that could have been already submit by
 			// partial submit on ajax functions
 			SmPersonnel per = getManagedBean().getSelectedPersonnel();
 			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
@@ -1855,7 +1846,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new PmParameter());
 		}
 		getManagedBean().setRedirectToPersonPage(true);
-		// TODO use this object to reset some values on back button click
 		SmPersonnel per = new SmPersonnel();
 		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
 		per.setIdentificationType(shareHolderBean.getIdentificationType());
@@ -2581,6 +2571,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	/**
 	 * View Supplier Profile from Application List
 	 */
+	@SuppressWarnings({ "deprecation" })
 	public void viewApplication(SmAppl selectedSmAppl) {
 		String baseUrl = "";
 		String baseUrlLabel = "";
@@ -4019,46 +4010,35 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		SmBulkApplicationVO vo = new SmBulkApplicationVO();
 		SmOverlapCategoryVO overlapCategoryVO = getOverlapCategoryVO(smAppl);
 		if (overlapCategoryVO != null) {
-			vo.setOverlappedCategory(overlapCategoryVO
-					.isOverLappedCategoryExist());
+			vo.setOverlappedCategory(overlapCategoryVO.isOverLappedCategoryExist());
 			vo.setOverlapMsg(overlapCategoryVO.getOverLappedCategoryMsg());
-			vo.setOverlapCategoryVOList(overlapCategoryVO
-					.getOverlapCategoryVOList());
+			vo.setOverlapCategoryVOList(overlapCategoryVO.getOverlapCategoryVOList());
 		}
-		getManagedBean()
-				.setOverlapCategoryVOList(vo.getOverlapCategoryVOList());
-		RequestContext.getCurrentInstance().execute(
-				"overlapCategoryDialog.show();");
+		getManagedBean().setOverlapCategoryVOList(vo.getOverlapCategoryVOList());
+		RequestContext.getCurrentInstance().execute("overlapCategoryDialog.show();");
 	}
+
 	private SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
 		SmOverlapCategoryVO retVal = null;
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
 		reqDTO.setApplId(smAppl.getApplId());
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
-		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
-				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
-		if (!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0) {
+		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO().retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+		if (!EntityHelper.isCollectionEmpty(resultList) && resultList.size() > 0) {
 			retVal = new SmOverlapCategoryVO();
 			retVal.setOverLappedCategoryExist(true);
-			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage(
-					"lbl.sm.category.overlappingMsg", null) + "<br />");
+			retVal.setOverLappedCategoryMsg(SmCommonUtil.getMessage("lbl.sm.category.overlappingMsg", null) + "<br />");
 			Locale loc = new Locale("ms", "MY");
-			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg",
-					null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-			retVal.setOverLappedCategoryRemarks(ResourceBundleUtils.getMessage(
-					"lbl.sm.category.overlappingMsg", null,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc)
-					+ System.lineSeparator() + System.lineSeparator());
-			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-					resultList, smAppl.getSupplierType()));
+			ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg", null, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
+			retVal.setOverLappedCategoryRemarks(ResourceBundleUtils.getMessage("lbl.sm.category.overlappingMsg", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc) + System.lineSeparator() + System.lineSeparator());
+			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(resultList, smAppl.getSupplierType()));
 		}
 		return retVal;
 	}
 	
-	private static List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList(
-			List<Object[]> resultList, String suppType) {
+	private static List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList(List<Object[]> resultList, String suppType) {
 		List<SmBulkApplOverlapCatVO> retVal = new ArrayList<SmBulkApplOverlapCatVO>();
 
 		if (!EntityHelper.isCollectionEmpty(resultList)) {
@@ -4074,29 +4054,19 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			for (Object[] arr : resultList) {
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
-				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
-						.getEntityBySinglePropertyFromList(catCode, retVal,
-								"categoryCode");
+				voTmp = (SmBulkApplOverlapCatVO) EntityHelper.getEntityBySinglePropertyFromList(catCode, retVal, "categoryCode");
 				if (voTmp == null) {
 					voTmp = new SmBulkApplOverlapCatVO();
 					voTmp.setCategoryCode(catCode);
-					voTmp.setCategoryName("(" + arr[17] + "/" + arr[18] + "/"
-							+ arr[19] + ")");
+					voTmp.setCategoryName("(" + arr[17] + "/" + arr[18] + "/" + arr[19] + ")");
 					isAdd = true;
 				}
 
 				if (isActiveAppl.equals("1")) {
-					SmWorkflowStatus workflow = SmCommonUtil
-							.getCurrentActiveWokFlowStatus(Long
-									.parseLong(arr[22] + ""));
-					if (workflow != null
-							&& workflow.getPmStatus() != null
-							&& !EntityHelper.isCollectionEmpty(workflow
-									.getPmStatus().getPmStatusDescs())) {
-						for (PmStatusDesc desc : workflow.getPmStatus()
-								.getPmStatusDescs()) {
-							if (!StringUtils.isBlank(desc.getLanguageCode())
-									&& desc.getLanguageCode().equals(language)) {
+					SmWorkflowStatus workflow = SmCommonUtil.getCurrentActiveWokFlowStatus(Long.parseLong(arr[22] + ""));
+					if (workflow != null && workflow.getPmStatus() != null && !EntityHelper.isCollectionEmpty(workflow.getPmStatus().getPmStatusDescs())) {
+						for (PmStatusDesc desc : workflow.getPmStatus().getPmStatusDescs()) {
+							if (!StringUtils.isBlank(desc.getLanguageCode()) && desc.getLanguageCode().equals(language)) {
 								applStatus = desc.getStatusName();
 							}
 						}
@@ -4107,8 +4077,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					voTmp.setOverlapInfoList(new ArrayList<SmBulkApplOverlapCatVO>());
 				}
 
-				voSubTmp = getOverlapVOByRegNoAndIdNo(arr[7] + "",
-						arr[16] + "", voTmp.getOverlapInfoList());
+				voSubTmp = getOverlapVOByRegNoAndIdNo(arr[7] + "", arr[16] + "", voTmp.getOverlapInfoList());
 
 				if (voSubTmp == null) {
 					isSubAdd = true;
@@ -4121,29 +4090,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 				if (isSubAdd) {
 					voSubTmp = new SmBulkApplOverlapCatVO();
-					voSubTmp.setActiveAppl(isActiveAppl.equals("1") ? true
-							: false);
+					voSubTmp.setActiveAppl(isActiveAppl.equals("1") ? true : false);
 					voSubTmp.setPersonnelName(arr[3] + "");
 					voSubTmp.setIdentificationNo(arr[16] + "");
-					voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "",
-							arr[11] + "", arr[15] + "", arr[12] + "", arr[13]
-									+ "", arr[14] + "", suppType));
+					voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "", arr[11] + "", arr[15] + "", arr[12] + "", arr[13] + "", arr[14] + "", suppType));
 					voSubTmp.setCompanyName(arr[4] + "");
 					voSubTmp.setMofNo(arr[5] + "");
 					if (StringUtils.isBlank(voSubTmp.getMofNo())) {
-						voSubTmp.setMofNo(SmCommonUtil.getMessage("lbl.txt.na",
-								null));
+						voSubTmp.setMofNo(SmCommonUtil.getMessage("lbl.txt.na", null));
 					}
 					voSubTmp.setExpDate(arr[6] + "");
 					if (StringUtils.isBlank(voSubTmp.getExpDate())) {
-						voSubTmp.setExpDate(SmCommonUtil.getMessage(
-								"lbl.txt.na", null));
+						voSubTmp.setExpDate(SmCommonUtil.getMessage("lbl.txt.na", null));
 					}
 					voSubTmp.setRegNo(arr[7] + "");
 					voSubTmp.setApplNo(arr[8] + "");
-					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21]
-							+ ""
-							: applStatus);
+					voSubTmp.setApplStatus(StringUtils.isBlank(applStatus) ? arr[21] + "" : applStatus);
 					voTmp.getOverlapInfoList().add(voSubTmp);
 					isSubAdd = false;
 				}
@@ -4162,14 +4124,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 	
-	private static SmBulkApplOverlapCatVO getOverlapVOByRegNoAndIdNo(
-			String regNo, String idNo, List<SmBulkApplOverlapCatVO> overlapLists) {
+	private static SmBulkApplOverlapCatVO getOverlapVOByRegNoAndIdNo(String regNo, String idNo, List<SmBulkApplOverlapCatVO> overlapLists) {
 		SmBulkApplOverlapCatVO retVal = null;
 		if (!EntityHelper.isCollectionEmpty(overlapLists)) {
 			for (SmBulkApplOverlapCatVO vo : overlapLists) {
-				if (vo.getRegNo() != null && regNo != null
-						&& vo.getRegNo().equals(regNo)
-						&& vo.getIdentificationNo() != null && idNo != null
+				if (vo.getRegNo() != null && regNo != null && vo.getRegNo().equals(regNo) && vo.getIdentificationNo() != null && idNo != null
 						&& vo.getIdentificationNo().equals(idNo)) {
 					retVal = vo;
 					break;
@@ -4179,66 +4138,35 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 	
-	private static String getRoleName(String equityOwner, String director,
-			String higherManagement, String clerical, String management,
-			String prof, String semiProf, String suppType) {
+	private static String getRoleName(String equityOwner, String director, String higherManagement, String clerical, String management, String prof,
+			String semiProf, String suppType) {
 		StringBuilder sb = new StringBuilder();
 		if (equityOwner.equals("1")) {
-			sb.append(
-					SmCommonUtil.getMessage(
-							SupplierManagementConst.PERSONNEL_EQUI_OWNER, null))
-					.append(",");
+			sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_EQUI_OWNER, null)).append(",");
 		}
 		if (director.equals("1")) {
-			sb.append(
-					SmCommonUtil.getMessage(
-							SupplierManagementConst.PERSONNEL_DIR_ROLENAME,
-							null)).append(",");
+			sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_DIR_ROLENAME, null)).append(",");
 		}
 		if (higherManagement.equals("1")) {
-			sb.append(
-					SmCommonUtil.getMessage(
-							SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
-							null)).append(",");
+			sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_HGHR_ROLENAME, null)).append(",");
 		}
 		if (management.equals("1")) {
-			sb.append(
-					SmCommonUtil
-							.getMessage(
-									SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
-									null)).append(",");
+			sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME, null)).append(",");
 		}
 		if (clerical.equals("1")) {
 			if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
-				sb.append(
-						SmCommonUtil
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
-										null)).append(",");
+				sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME, null)).append(",");
 			} else {
-				sb.append(
-						SmCommonUtil
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
-										null)).append(",");
+				sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_STAFF_ROLENAME, null)).append(",");
 			}
 		}
 		if (prof.equals("1")) {
-			sb.append(
-					SmCommonUtil
-							.getMessage(
-									SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
-									null)).append(",");
+			sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME, null)).append(",");
 		}
 		if (semiProf.equals("1")) {
-			sb.append(
-					SmCommonUtil
-							.getMessage(
-									SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
-									null)).append(",");
+			sb.append(SmCommonUtil.getMessage(SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME, null)).append(",");
 		}
-		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",")
-				: StringUtils.EMPTY;
+		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",") : StringUtils.EMPTY;
 	}
 	//END 31111
 	
@@ -4253,6 +4181,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSmeSupplier(smeSupplier);
 	}
 	// #29617 end
+	
 	//#12483 - START
 	public void sortApplicationRevises(){
 		Collections.sort(this.getManagedBean().getSmAppl().getSmApplRevises(), new Comparator<SmApplRevise>(){
@@ -4263,10 +4192,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		});
 	}
 	//#12483 - END
+	
 	//3460 - Start
-		/**
-		 * To displaying the SDO remarks when viewing the applications
-		 */
+	/**
+	 * To displaying the SDO remarks when viewing the applications
+	 */
 	private void initSDORemarkInfo() {
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
 		reqDTO.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SDOR);
@@ -4279,6 +4209,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().setSdoRemark(remark.getRemark());
 		}
 	}
-		//3460 - End
+	//3460 - End
 	
 }
