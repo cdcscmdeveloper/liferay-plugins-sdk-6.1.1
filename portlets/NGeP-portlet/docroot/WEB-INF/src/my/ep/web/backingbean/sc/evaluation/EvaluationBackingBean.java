@@ -176,6 +176,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -13937,11 +13938,10 @@ private void retriveCommitteeRemarksList(){
 				log.debug("pageChangeListener");
 			}
 
-			IQTEvaluationSO evaluationSO = null;
-			try {
-				evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTEvaluationSO.class);
+			EvaluationResDTO resDTO = new EvaluationResDTO();
+			try { 
+				IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 				reqDTO.setCheckListId(checkListId);
@@ -13957,42 +13957,36 @@ private void retriveCommitteeRemarksList(){
 					reqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
 				} 
 				// #25138, #21695 -start-
-				EvaluationResDTO resDTO = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO);
-			
-				if (null != speZoneId) {
-					List<ScQtProposalChecklist> removesupplier = new ArrayList<ScQtProposalChecklist>();
-					
-					for (int i = 0; i < resDTO.getComplianceResultBean().getResultList().size(); i++) {
-						getManagedBean().setSupplierItemExist(Boolean.FALSE);
-					
-						calculateItemScores(resDTO.getComplianceResultBean().getResultList().get(i));
-						
-						if (!getManagedBean().isSupplierItemExist()) {
-							removesupplier.add(resDTO.getComplianceResultBean().getResultList().get(i));
-						}
-					}
-
-					// #25138 wip status -start (if wip no need to remove)
-					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-						if (removesupplier.size() > 0) {
-							resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
-							
-							if (getManagedBean().getScQt().isDemoRequired()) { // #28784
-								if (resDTO.getComplianceResultBean().getResultList().size() == 0) {								
-									resDTO.getComplianceResultBean().setTotalRecord(resDTO.getComplianceResultBean().getResultList().size());								
-								} // 32453
-							} // #28784
-						}
-					}
-					// #25138 wip status -end (if wip no need to remove)
-				}
-
-				return resDTO.getComplianceResultBean();
-				// #25138, #21695 -end-
-
-			} finally {
-				evaluationSO = null;
-			}
+				resDTO = evaluationSO.retrievProposalCheckListByCheckListNZone(reqDTO);
+				if (null == speZoneId)
+					return resDTO.getComplianceResultBean();
+				List<ScQtProposalChecklist> removesupplier = new ArrayList<>();// 32453
+				for (int i = 0; i < resDTO.getComplianceResultBean().getResultList().size(); i++) {
+					getManagedBean().setSupplierItemExist(Boolean.FALSE);// 32453
+					calculateItemScores(resDTO.getComplianceResultBean().getResultList().get(i));
+					if (!getManagedBean().isSupplierItemExist()) {// 32453
+						removesupplier.add(resDTO.getComplianceResultBean().getResultList().get(i));
+					}// 32453
+				} 
+				// wip status start
+				// #25138 farid -start (if wip no need to remove)
+				if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+					resDTO.getComplianceResultBean().getResultList().removeAll(removesupplier);
+				} 
+				// wip status end
+				// #25138 farid -end (if wip no need to remove)
+				// #28784, - related - Start
+				if (resDTO.getComplianceResultBean().getResultList().isEmpty()) {
+					resDTO.getComplianceResultBean().setTotalRecord(0);
+				} 
+				// #28784, - related - end
+			} catch (Exception e) {
+				ScQt scQt = getManagedBean().getScQt();
+				String qtNo = null == scQt ? "" : scQt.getQtNo();
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, SLALogConstant.QT_MODULE, qtNo,
+						SLALogConstant.QT_EVALUATION_BACKINGBEAN + ".FinancialSpecSupplierWithZonePagingDataModel.pageChangeListener", getUserIdSessionFromLoginId(), e);
+			} 
+			return resDTO.getComplianceResultBean();
 		}
 	}
 
