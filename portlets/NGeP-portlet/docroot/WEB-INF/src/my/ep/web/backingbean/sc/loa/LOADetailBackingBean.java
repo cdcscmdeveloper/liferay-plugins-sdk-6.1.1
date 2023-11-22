@@ -10980,7 +10980,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		
-		totalPrice.setScale(2, BigDecimal.ROUND_UP);
+		totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_UP);
 
 		return totalPrice;
 	}
