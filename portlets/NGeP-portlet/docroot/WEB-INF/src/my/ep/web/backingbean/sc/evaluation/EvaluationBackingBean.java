@@ -7356,11 +7356,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				 */
 				resDTO = evaluationSo.checkDemoAndUploadChecklistStatus(reqDTO);
 				if (resDTO.getPendingCount() > 0) {
-					//String checklistScoring = ResourceBundleUtils.getMessage("lbl.sc.checklist.scoring.completed", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					this.getManagedBean().setEvaluatioStageActiveIndex(0);
-					//34833 - start
-					String checkListValue =  ResourceBundleUtils.getMessage("lbl.sc.checklist.checklist.value.completed", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					String addColon = ": ";
 					this.getManagedBean().setEvaluatioStageActiveIndex(0);
 					//34833 - start
 					String checkListValue =  ResourceBundleUtils.getMessage(
