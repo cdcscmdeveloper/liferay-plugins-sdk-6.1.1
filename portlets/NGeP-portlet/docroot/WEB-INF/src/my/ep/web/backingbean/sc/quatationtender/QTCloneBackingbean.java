@@ -552,8 +552,6 @@ public class QTCloneBackingbean extends
 	 * @return Long[] statuses
 	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
-		assert fromStatusId!=null:"";
-		assert toStatusId!=null:"";
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 	    int startIndex = orderedStatuses.indexOf(fromStatusId);
 	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
