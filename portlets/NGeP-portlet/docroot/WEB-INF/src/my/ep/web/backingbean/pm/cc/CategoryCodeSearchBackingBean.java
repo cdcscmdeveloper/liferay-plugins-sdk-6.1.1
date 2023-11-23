@@ -579,7 +579,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
-			bumiPerc = bumiPercentage.intValue();
+			//SONARQUBE PM BUG MINOR AZZA G51
+			bumiPerc = Integer.valueOf(bumiPercentage);
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
@@ -643,7 +644,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
-			bumiPerc = bumiPercentage.intValue();
+			//SONARQUBE PM BUG MINOR AZZA G51
+			bumiPerc = Integer.valueOf(bumiPercentage);
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
@@ -708,7 +710,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
-			bumiPerc = bumiPercentage.intValue();
+			//SONARQUBE PM BUG MINOR AZZA G51
+			bumiPerc = Integer.valueOf(bumiPercentage);
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
