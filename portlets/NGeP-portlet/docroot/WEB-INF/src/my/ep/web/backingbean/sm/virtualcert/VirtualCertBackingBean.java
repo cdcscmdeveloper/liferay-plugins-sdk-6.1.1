@@ -237,24 +237,26 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		for (SmSupplierCategory catCode : supResDTO.getSmSupplierCategoryList()){
 			catReqDTO.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
 			catResDTO = categoryCodeSO.retrieveCategoryL1DtlById(catReqDTO);
-			if(!catCode.getCategoryL1Name().equalsIgnoreCase(catResDTO.getCategoryL1().getCategoryName())){
+			//#31910 - START
+			if(catCode.getPmCategoryL1().getCategoryL1Id() != catResDTO.getCategoryL1().getCategoryL1Id()){
 				check = false;
 				break;
 			}else{
 				catReqDTO.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
 				catResDTO = categoryCodeSO.retrieveCategoryL2DtlById(catReqDTO);
-				if(!catCode.getCategoryL2Name().equalsIgnoreCase(catResDTO.getCategoryL2().getCategoryName())){
+				if(catCode.getPmCategoryL2().getCategoryL2Id() != catResDTO.getCategoryL2().getCategoryL2Id()){
 					check = false;
 					break;
 				}else{
 					catReqDTO.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
 					catResDTO = categoryCodeSO.retrieveCategoryL3DtlById(catReqDTO);
-					if(!catCode.getCategoryL3Name().equalsIgnoreCase(catResDTO.getCategoryL3().getCategoryName())){
+					if(catCode.getPmCategoryL3().getCategoryL3Id() != catResDTO.getCategoryL3().getCategoryL3Id()){
 						check = false;
 						break;
 					}
 				}	
 			}
+			//#31910 - END
 		}
 		return check;
 	}
