@@ -315,13 +315,16 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		List<SelectItem> approverNayakTarafList=retrieveApprovarNaikTarafSCS2();
 		List<String> authoriztionList = retriveUserrloeByUserId();
-		
-		if (approverNayakTarafList.size() > 0) {
+		//Bug #34996@Syazani 17/08/2023 -- Start
+		if (approverNayakTarafList.size() > 0
+				|| (authoriztionList.contains(ReportConst.AUDITOR_GENERAL) || authoriztionList
+						.contains(ReportConst.AUDITOR_INTERNAL))) {
 			userRoleLogin = ReportConst.APPROVERNT;
+			// Bug #34996@Syazani 17/08/2023 -- End
 		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
 				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
 				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 
-				|| authoriztionList .contains(ReportConst.PUBLICATION_APPROVER)) {
+				|| authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)) {
 			userRoleLogin = ReportConst.APPROVER;
 		} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)) {
 			userRoleLogin = ReportConst.DESKOFFR;
@@ -850,16 +853,19 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
 				scDescOfficerList.add(selectItem);
 			} else {
-				Long orgProfileId = findScQtByQuotationNumber().getOrgProfileId();
+				ScQt qt = findScQtByQuotationNumber();
 				
-				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
-						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
-				if (CollectionUtils.isNotEmpty(reqLst)) {
-					for (Object[] object : reqLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						scDescOfficerList.add(selectItem);
+				if (qt != null) {
+					Long orgProfileId = findScQtByQuotationNumber().getOrgProfileId();
+					List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+							new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+					if (CollectionUtils.isNotEmpty(reqLst)) {
+						for (Object[] object : reqLst) {
+							SelectItem selectItem = new SelectItem();
+							selectItem.setLabel(object[0].toString());
+							selectItem.setValue(object[1]);
+							scDescOfficerList.add(selectItem);
+						}
 					}
 				}
 			}
@@ -1227,8 +1233,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToYear 
 	 */
 	public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		
-		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScPropSubmitFromYear());
+		reportSearchbean.setScCreatedToYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitFromYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScCreatedFromYear());
 	}
 
 	/**
@@ -1239,7 +1246,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToMonth
 	 */
 	public void propSubmitToMonthUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScPropSubmitFromMonth());
+		reportSearchbean.setScCreatedToMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitFromMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScCreatedFromMonth());
 	}
 	//#14306 - End
 }

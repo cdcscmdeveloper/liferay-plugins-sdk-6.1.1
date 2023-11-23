@@ -71,6 +71,9 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_LOGIN = "LOGIN";
 	public static final String PARAM_DECISION_TYPE = "PSTATUSID";//#21692
 	public static final String QUOTATION_TENDER_TITLE ="PQTTITLE";//#29580
+	public static final String PARAM_PROPOSAL_NO ="PPROPOSALNO";//#14306
+	public static final String PARAM_SUPPLIER_ID ="P_SUPP";//#14306
+
 	
 	// 29580 - Start (Harun) Add report status for mutiple option 
 	//Report status
@@ -89,6 +92,23 @@ public class QtReportConst implements Serializable {
 	public static final String STATUS_PENDING_PROPOSAL_SUBMISSION = "9";
 	public static final String STATUS_PROPOSAL_SUBMITTED = "10";
 	// 14306 - End (Harun)
+	
+	// 29580 - Report status label constant
+	public static final String LABEL_ALL = "lbl.rpt.all";
+	public static final String LABEL_PREPARATION = "lbl.rpt.preparation";
+	public static final String LABEL_PUBLISHING = "lbl.rpt.publishing";
+	public static final String LABEL_PENDING_EVALUATION = "lbl.rpt.pendingEvaluation";
+	public static final String LABEL_PENDING_SUPPLIER_FINALIZATION = "lbl.rpt.pendingSupplierFinalization";
+	public static final String LABEL_PENDING_LOILOA = "lbl.rpt.pendingLOInLOA";
+	public static final String LABEL_LOA_COMPLETED = "lbl.rpt.loaCompleted";
+	public static final String LABEL_CANCELLED = "lbl.rpt.drpdown.cancelledLabel"; 
+	// 29580 - End (Harun)
+	
+	// 14306 - Report status label constant
+	public static final String LABEL_PENDING_PROPOSAL_SUBMISSION = "lbl.rpt.pending.proposal.submission";
+	public static final String LABEL_PROPOSAL_SUBMITTED  = "lbl.rpt.proposal.submitted";
+	// 14306 - End (Harun)
+	
 	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
@@ -198,7 +218,7 @@ public class QtReportConst implements Serializable {
 	//#21692 - end
 	
 	//#29580_14306 - start
-	public String getSC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL() {
+	public String getScQuotTenderProposalOfferSubmRptBySupplierVal() {
 		return SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL;
 	}
 	//#29580_14306 - end
