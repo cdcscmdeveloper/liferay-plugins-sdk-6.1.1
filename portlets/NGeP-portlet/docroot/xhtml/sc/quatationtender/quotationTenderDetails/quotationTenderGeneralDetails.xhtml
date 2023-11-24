@@ -44,6 +44,9 @@
 		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />			
 	<ac:lovPopup /><!-- END #28784 -->
 	
+	<!-- 20231122@asyrafhaziq_25726 - Issue 15 -->
+	<ui:param name="isGenInfo" value="#{specificationBackingBean.managedBean.genInfo}" />
+	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
