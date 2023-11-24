@@ -7,17 +7,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import org.apache.log4j.Logger;
-
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.log4j.Logger;
 
 @Path("/sm")
 public class DowngradeExpMofPersonnelRest {
@@ -40,6 +38,7 @@ public class DowngradeExpMofPersonnelRest {
 			return Response.status(406).entity(ex.getMessage()).build();
 		}
 	}
+	
 	//33628 START
 	private void downgradeMOFToBasic(){
 		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();

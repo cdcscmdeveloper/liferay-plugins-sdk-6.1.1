@@ -1439,10 +1439,10 @@ public class SupplierFinalizationBackingBean extends
 
 								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 								} else {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 									if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
 										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 									} else {
@@ -1454,7 +1454,7 @@ public class SupplierFinalizationBackingBean extends
 								//35087
 							}else{
 							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+							 evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 						 }
 					 }
 					 break;
@@ -1626,11 +1626,10 @@ public class SupplierFinalizationBackingBean extends
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
-				//#27502- Adding condition only
-				if (reqDTO.getScQtCommittee() != null) {
-					if (scQtCommittee == null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-						scQtCommittee = new ScQtCommittee();
-					 scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
+				// #27502- Adding condition only
+				if (scQtCommittee == null) {// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					scQtCommittee = new ScQtCommittee();
+					scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
 					reqDTO.setScQtCommittee(scQtCommittee);
 				}
 			}
@@ -2582,7 +2581,7 @@ public class SupplierFinalizationBackingBean extends
 							debugLogger("Generating all reports...");
 							downloadAllReports();	
 						} catch(Exception e) {
-							e.printStackTrace();
+							  SLAUtils.getInstance().logSLAError("QT", "submitSuppFinalizationTask", "docNo", "submitSuppFinalization", getUserIdSessionFromLoginId(), e);//28834-sonarQubeIssue5#84
 						}
 				  }
 				  // #28834 - End.
@@ -2858,12 +2857,12 @@ public class SupplierFinalizationBackingBean extends
 									RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
 								} else {
 									
-									RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+									RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 								}
 								
 							} else {
 								
-								RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+								RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 							}
 							
 						} else {
@@ -2871,7 +2870,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}
 				} else {
-					RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+					RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 				}
 				// #28834 - End.
 				// changeMeetingStatusBrief();
@@ -3943,7 +3942,8 @@ return	remarksNotFound;
 							+ scQtFinalizationReport.getScQtFinalizationReportAttachment().getFilePath();
 					File file = new File(filePath);
 					if (null != file && file.exists()) {
-						file.delete();
+						 boolean deleteFile=file.delete();//#28834-sonarQubeIssue6#54
+						 log.info("======FileDeletedSucessFully======"+deleteFile);//#28834-sonarQubeIssue6#54
 					}
 					scQtFinalizationReport.setScQtFinalizationReportAttachment(null);
 				}
@@ -11027,7 +11027,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			
 			boolean isSupplierBranchDeleted = false;
 			if(supplierId != null && scQt != null){
-				if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
+				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
 					isSupplierBranchDeleted = true;
 			    }
 			}
@@ -11467,27 +11467,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		// #28834 - Start.
 		if (CollectionUtils.isNotEmpty(meetingDetailsList)) {
 			for (ScQtMeeting meeting : meetingDetailsList) {
-				if (this.getManagedBean().isSecretaryUser()) {
-					if (null != meeting.getMeetingStatus()
-							&& null != meeting.getMeetingStatus().getStatusId()
-							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-									.getStatusId())
-									&& meeting.getRecordStatusFlg().equals(
-											DbValueConst.RECORD_STATUS_ACTIVE)
-											&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-						lessThanValidityEndDate = true;
-					}
+				//sonarQube Issue 3 #91 # Vinod #Start
+				boolean meetingStatusAndDate = null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+						&& meeting.getMeetingDate().before(proposalValidityEndDate);
+				if ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate && meeting.getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) || meetingStatusAndDate) {
+					lessThanValidityEndDate = true;
 				} else {
-					if (null != meeting.getMeetingStatus()
-							&& null != meeting.getMeetingStatus().getStatusId()
-							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-									.getStatusId())
-									&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-						lessThanValidityEndDate = true;
-					} else {
-						lessThanValidityEndDate = false;
-					}
+					lessThanValidityEndDate = false;
 				}
+				//sonarQube Issue 3 #91 # Vinod #End
 			}
 		}
 		// #28834 - End.
