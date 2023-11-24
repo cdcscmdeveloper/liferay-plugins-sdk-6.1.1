@@ -3165,7 +3165,6 @@ public void saveComplianceSample() {
 
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
-		this.getManagedBean().setTabTechnicalIndex(5);
 		evaluationStageStatusCheck();
 
 		try {
@@ -3175,7 +3174,7 @@ public void saveComplianceSample() {
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(3);
-				this.getManagedBean().setTabTechnicalIndex(5);
+				this.getManagedBean().setTabTechnicalIndex(4);//#10542
 			}
 			List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -8143,8 +8142,7 @@ public void saveComplianceSample() {
 								retrivePresentationDemo();
 								outputTab = 3;
 							}
-						} else if (this.getManagedBean().getScQt().isDemoRequired()
-								&& (currentTab == 0)) {
+						} else if (this.getManagedBean().getScQt().isDemoRequired()) {
 							String taskName = this.getManagedBean().getTaskName();
 							if (SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
 									|| SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
@@ -8293,11 +8291,6 @@ public void saveComplianceSample() {
 								//#34588 end
 							}
 
-						}if (currentTab == 3) {
-
-							evaluationStageStatusCheck();//#25138-Ahmaa
-							retriveOneTierFinancialSupplierSummary();
-							this.getManagedBean().setTabFinancialIndex(3);
 						}
 						// #25138, #21695 -end-
 						if (currentTab == 0) {
@@ -8847,16 +8840,12 @@ public void saveComplianceSample() {
 				 * }
 				 */
 				if(this.getManagedBean().getFecIndexPreRender()){
-					this.getManagedBean().setFecIndexPreRender(false);
 					retriveFinancialEvaluationStage();
-					outputTab = 3;
 					financialCheckListStatusCheck();
 					financialCheckListStatusCheckPackage();
 				}
 				retrieveReportTabDtl();
-				if (this.getManagedBean().getScQt().getEvaluationType().equals(ParameterConst.EVALUATION_TYPES_TWO_TIER)){
-					outputTab = 4;
-				}
+			
 			} else if (outputTab == 5) {
 				retriveCommitteeEndorsment();
 				
@@ -8882,6 +8871,23 @@ public void saveComplianceSample() {
 			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);
 			//6906 - end
 		}catch(Exception e){
+		 
+			if (e instanceof EpException) {
+				if (e.getMessage().contains(MessageConst.ERROR_760547) && outputTab == 4
+						&& this.getManagedBean().getFecIndexPreRender()) {
+					this.getManagedBean().setFecIndexPreRender(false);
+					outputTab = 3;
+					this.getManagedBean().setTabFinancialIndex(2);
+					String msgCode = MessageConst.ERROR_760547;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(msgCode, null,
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())
+									+ " ("
+									+ msgCode + ")"));
+					throw new EpException(MessageConst.ERROR_760547);
+				}
+			}
 			 if(currentTab==1){
 				 int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
 				retriveComplianceTechnical();
@@ -8934,6 +8940,7 @@ public void saveComplianceSample() {
 			handleException(e);
 		}
 		finally {
+			this.getManagedBean().setFecIndexPreRender(false);//#10542
 			evaluationSo = null;
 		}
 	}
@@ -11067,14 +11074,16 @@ private void retriveCommitteeRemarksList(){
 					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(2, 3);
 					if(ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType())){
+							.getManagedBean().getScQt().getEvaluationType())
+							&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
+									.getManagedBean().getCommitteeType())){
 						this.getManagedBean().setFecIndexPreRender(true);
 					}
 					evaluationMaintainPreviousNextTabIndex(3, 4);
-					this.getManagedBean().setFecIndexPreRender(true);
+				
 					evaluationMaintainPreviousNextTabIndex(3, 4);
 					if(ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType()) && 
+							.getManagedBean().getScQt().getEvaluationType()) || 
 								ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 										.getManagedBean().getScQt().getEvaluationType())){
 						evaluationMaintainPreviousNextTabIndex(0, 4);

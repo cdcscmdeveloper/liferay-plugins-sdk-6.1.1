@@ -1600,7 +1600,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			if (checklist.getRemark() != null
 					&& (checklist.getRemark().contains("<") || checklist.getRemark().contains(">"))) {
 				fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter()
-						.getParameterCode());
+						.getParameterCode()) + " remarks";
+
 				throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
 						new String[] { fieldsName.toLowerCase() }));
 			}

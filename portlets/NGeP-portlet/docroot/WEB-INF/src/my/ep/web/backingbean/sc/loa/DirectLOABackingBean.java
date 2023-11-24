@@ -2492,6 +2492,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void supplierListener(SmSupplier suSmSupplier) {
 		debugLogger("supplierListener");
 
+		//Bug #35107 - start
+		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
+		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
+
+		DirectAwardResDTO resDTO = getQtDirectAwardSO()
+				.retrieveSmPersonnelDtlsBySupplierId(reqDTO);
+		
+		if(resDTO.getMofNo() == null){
+			throw new EpException(MessageConst.ERROR_760552);
+		}
+		//Bug #35107 - end
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.getScLoiLoa().setSmSupplier(suSmSupplier);
 		scLoa.getScLoiLoa()
@@ -2503,11 +2514,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				.setSupplier(suSmSupplier);
 		this.getManagedBean().getSpecTemplateSpecBean()
 				.setSupplier(suSmSupplier);
-		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
-		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
-
-		DirectAwardResDTO resDTO = getQtDirectAwardSO()
-				.retrieveSmPersonnelDtlsBySupplierId(reqDTO);
 
 		scLoa.getScLoiLoa()
 				.setSmSupplier(resDTO.getSmSupplier());
@@ -10854,7 +10860,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 								.getRequestNoteItemId()))) {
 					itemIds.add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
 					itemCount++;
-					itemsList.append(itemCount + ". " + loiLoaItem.getScRequestItem().getItemName() + "\n");
+					itemsList.append(itemCount).append(". ").append(loiLoaItem.getScRequestItem().getItemName()).append(" <p></p> ");
 				} else if (addItem
 						&& isZonal
 						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
@@ -10866,16 +10872,17 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem = loiLoaItem;
-						itemsList.append("\n" + loiLoaItem.getTplSpecZoneDtl().getZoneName() + " \n");
+						itemsList.append(" <p></p> ").append(loiLoaItem.getTplSpecZoneDtl().getZoneName()).append(" <p></p> ");
 						zoneitemCount = 0;
 					}
 					zoneitemCount++;
-					itemsList.append(zoneitemCount + ". " + loiLoaItem.getScRequestItem().getItemName() + " \n");
+					itemsList.append(zoneitemCount).append(". ").append(loiLoaItem.getScRequestItem().getItemName()).append(" <p></p> ");
 					itemCount++;
 				}
 			}
 		}
 		if (itemCount > 0) {
+			itemsList.append(" <p></p> ");
 			throw new EpException(MessageConst.ERROR_776000, new String[] { itemsList.toString() });
 		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
