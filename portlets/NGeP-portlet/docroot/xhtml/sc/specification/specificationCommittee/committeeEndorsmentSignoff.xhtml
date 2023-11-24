@@ -62,13 +62,17 @@
 
 		</p:dataTable>
 	</p:panel>
-	
-	<c:if test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT 
+
+	<!-- 33819 -start- -->
+	<c:if
+		test="#{specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT 
 			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION 
 			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF 
 			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.QT_PENDING_MSC_APPROVAL 
 			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.SE_PENDING_ENDORSMENT 
+			or specificationBackingBean.managedBean.currentStatusId eq QTStatusConst.SE_PENDING_SIGNOFF 
 			or !specificationBackingBean.managedBean.readOnly}">
+		<!-- 33819 -end- -->
 		<!-- 25638 start -->
 		<ac:scRemarkAndAttachment
 			remarkList="#{specificationBackingBean.managedBean.specificationRemarks}"
