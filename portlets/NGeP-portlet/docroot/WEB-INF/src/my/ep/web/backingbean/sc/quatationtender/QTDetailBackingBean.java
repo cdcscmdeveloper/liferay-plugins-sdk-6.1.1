@@ -1834,22 +1834,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	/**
-	 * Gets the qt award so.
-	 * 
-	 * @return the qt award so
-	 */
-	/*
-	private IQTAwardSO getQtAwardSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-	}
-	*/
-	
-	/*
-	 * Enhancement #21694 END
-	 */
-	
-	/**
 	 * Find Document Id by document type
 	 * 
 	 * @param qtId

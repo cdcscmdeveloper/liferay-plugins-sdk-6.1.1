@@ -4476,6 +4476,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				&& getManagedBean().getApprvrSecReview()
 						.getApplSectionReviewId() != null) {
 			log.info("**** Existing Apprvr remarks *******");
+			//#34892
+			getManagedBean().getApprvrSecReview().setChangedBy(
+					new FacesScopes().getUserSessionBean().getUserId());
 			for (SmApplSectionReview revs : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
 				if (revs.getApplSectionReviewId().equals(
