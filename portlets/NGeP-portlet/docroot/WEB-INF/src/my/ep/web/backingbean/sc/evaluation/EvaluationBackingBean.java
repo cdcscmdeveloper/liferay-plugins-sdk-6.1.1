@@ -13928,11 +13928,7 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setQtId(qtId);
 				reqDTO.setEvalStage(evalStage);
 				reqDTO.setProposalChecklistSearchBean(searchBean);
-	//Bug #31551 Farid start 23/9/2021
 				reqDTO.setCheckZonal(getManagedBean().getScQt().isZonal());
-	//Bug #31551 Farid end 23/9/2021
-				//32426-start
-				//#34497 related to #32453 fixing(#25138,#21695) - start
 				//34523 - start
 				if (reqDTO.getProposalChecklistSearchBean() == null) {
 					reqDTO.setProposalChecklistSearchBean(new SearchBean<ScQtProposalChecklist>());
@@ -16252,8 +16248,6 @@ private void retriveCommitteeRemarksList(){
 		}//32453-End
 		for(TplSpecAnswer specAnswer:specresDTO1
 				.getSpecAnswerList()){
-			log.info("===========speanswerUserScore======"+specAnswer.getUserScore());
-			log.info("===========speanswerAutoScore======"+specAnswer.getAutoScore());
 			//fix Bug #31623 related to 25138 === farid START
 			if(null!=specAnswer.getUserScore() && specAnswer.getTplSpecZoneQty() !=null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
 				totalUserScore=totalUserScore.add(specAnswer.getUserScore());	
@@ -16268,18 +16262,12 @@ private void retriveCommitteeRemarksList(){
 				totalAutoScore=totalAutoScore.add(specAnswer.getAutoScore());	
 			}
 			//fix Bug #31623 related to 25138 === farid END
-			log.info("===========totalUserScore======"+totalUserScore);
-			log.info("===========totalAutoScore======"+totalAutoScore);
 		}
 		totalScore=totalAutoScore.add(totalUserScore);
 		qtProposalChecklist.setSpecUserScore(totalUserScore);
 		qtProposalChecklist.setSpecAutoScore(totalAutoScore);
 		qtProposalChecklist.setSpecTotalScore(totalScore);
-		log.info("===========totalUserScore======"+qtProposalChecklist.getSpecUserScore());
-		log.info("===========totalAutoScore======"+qtProposalChecklist.getSpecAutoScore());
-		log.info("===========totalScore======"+qtProposalChecklist.getSpecTotalScore());
-		log.info("===========endcalculateItemScores======"+specresDTO1
-				.getSpecAnswerList().size());
+
 		if(CollectionUtils.isNotEmpty(specresDTO1
 				.getSpecAnswerList())){//32453-start
 			this.getManagedBean().setSupplierItemExist(Boolean.TRUE);	
