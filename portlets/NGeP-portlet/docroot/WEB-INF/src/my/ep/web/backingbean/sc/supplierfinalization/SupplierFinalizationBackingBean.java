@@ -1515,6 +1515,7 @@ public class SupplierFinalizationBackingBean extends
 			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));//35381 - Related 6906
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			
 			//6906 - note 117 - start
@@ -1715,6 +1716,9 @@ public class SupplierFinalizationBackingBean extends
 		//Bug #29707
 		//finalizationReports.addAll(this.getManagedBean()
 		//		.getEndorsementReports());
+		//35381 - Related 6906 - start
+		finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));
+		//35381 - Related 6906 - end
 		List<ScQtFinalizationReport> toBeRemovedReports 
 					= new ArrayList<ScQtFinalizationReport>();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
