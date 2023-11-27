@@ -361,7 +361,7 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />
@@ -486,7 +486,8 @@
 						<tr>
 							<td>
 								<c:choose>
-									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
+								<!-- 20231122@asyrafhaziq_25726 - Issue 17 -->
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral}">
 									<p:selectOneMenu id="fulfilId"
 										required="true"
 										label="#{lbl['lbl.sc.fullfillent.type']}"
@@ -640,7 +641,7 @@
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 															<c:choose>
-															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+															<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 																<p:inputText 
 																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 																size="28" disabled="true" />
@@ -668,7 +669,7 @@
 												</c:when>
 												<c:otherwise>
 													<c:choose>
-													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+													<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 														<p:inputText 
 														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 														size="28" disabled="true" />

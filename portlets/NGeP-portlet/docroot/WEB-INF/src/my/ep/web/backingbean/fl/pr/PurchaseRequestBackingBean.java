@@ -1111,6 +1111,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
+			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}	
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
@@ -5194,10 +5195,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			updateSupplierHqAddress(supplierDtl,supplier);
 		}
 		//29728 -end
-		
-		private void foo(int bar) {
-			// This is a dummy method
-		}
 		
 		//34555-start
 		/**
