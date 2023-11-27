@@ -234,6 +234,9 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "directLOABackingBean")
 @RequestScoped
 public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBean> {
+	
+	//20231122@asyrafhaziq_25726 - Issue 18
+	private static final String CONTRACT_DURATION_MID_VALUE = "5";
 
 	private static final long serialVersionUID = 1L;
 
@@ -5396,6 +5399,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
         			// #26770 - Start.
         			validateReportAttachment();
         			// #26770 - End.
+        			//20231122@asyrafhaziq_25726 - Issue 18
+        			validateDuration(this.getManagedBean().getScLoa());
+        			
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 			}
 			else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
@@ -8703,13 +8709,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			// Set to default value if there is changes in qt type
 			if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() && !isPK7) {
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+				//20231122@asyrafhaziq_25726 - Issue 16
+				//getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 				getManagedBean().getScLoa().setAgreementReq(false);
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
 				RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
 			} else {
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+				// 20231122@asyrafhaziq_25726 - Issue 16
+				//getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 				getManagedBean().getScLoa().setAgreementReq(true);
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
@@ -11402,15 +11410,16 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					|| (this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
 							.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));
 			BigDecimal contractDuration = this.getManagedBean().getScLoa().getContractDuration();
-			BigDecimal val = new BigDecimal ("5");
-			int result = 0;
-			
-			result = contractDuration.compareTo(val);
-			
-			if((isPeriodic && (result<0 && result != 0)) || (isNonPeriodic && (result>0 || result == 0	))){
+			//20231122@asyrafhaziq_25726 - Issue 18
+			BigDecimal val = new BigDecimal(CONTRACT_DURATION_MID_VALUE);
+		   if (contractDuration != null && contractDuration.compareTo(BigDecimal.ZERO) > 0 ){	
+		    int result = contractDuration.compareTo(val);
+			if((isPeriodic && result < 0) || (isNonPeriodic && result >= 0 )){
 				throw new EpException(MessageConst.ERROR_770272);
 			}
-			
+		   }else{
+			   throw new EpException(MessageConst.ERROR_770272);
+		   }
 		}
 		
 		public void fileUpload(FileUploadEvent event)
