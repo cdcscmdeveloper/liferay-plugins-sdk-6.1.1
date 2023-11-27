@@ -317,11 +317,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	//#25725 start
 	private boolean disabledButton = true;
-	public BigDecimal limit = new BigDecimal(500000);
-	public boolean above500K = true;
-	public boolean AgreementReqChange = false;
-	public String docStatus;
-	public String procurementType;
+	private BigDecimal limit = new BigDecimal(500000); //#Sqube Vulnerability Minor G47 start
+	private boolean above500K = true;
+	private boolean AgreementReqChange = false;
+	private String docStatus;
+	private String procurementType; //#Sqube Vulnerability Minor G47 end
 	private boolean showApprovalLetter = false;//# note 146
 	//#25725 end
 	
@@ -366,6 +366,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
+	
+	private String firstZone;//Bug #34757
 	
 	private int retainPageNumber = 0;//#34242
 	
@@ -2168,6 +2170,14 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setReadOnlyLOADownload(Boolean readOnlyLOADownload) {
 		this.readOnlyLOADownload = readOnlyLOADownload;
+	}
+
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
 	}
 
 	// Bug #35078@Syazani -- 22/09/2023 -- End

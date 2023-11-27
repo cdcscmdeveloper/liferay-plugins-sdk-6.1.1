@@ -73,6 +73,7 @@ import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -127,6 +128,8 @@ import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -2528,7 +2531,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//#25037 START
 		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-		list = list == null ? new ArrayList<PmParameterDesc>() : list;
+		if (null == list)
+			list = new ArrayList<>();
 
 		if(filteredRoles!=null){
 			for(PmParameterDesc role: list){
@@ -3827,9 +3831,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			for (ScLoiLoaItem item : items) {
 				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-				if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+				/* #35295 - start change N/A to T/B
+				 * if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
 					dafaltValue = SSTConstant.NA;
 				}
+				#35295 - end
+				*/
 
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
 					TplSpecMaster master = null;
@@ -4766,25 +4773,43 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType)
 			throws Exception {
 		log.debug(this.getClass().getName() + ".generateEvaluationPdf()");
+		//#35367 download all report, separate wip and new version
+		IQTEvaluationSO evaluationSO;
 		populateAttachmentDetails(attachment);
-		
+		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qtId);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
 		String reportName = StringUtils.EMPTY;
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_OC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_TEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_FEC_RPT_JSP;
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_EC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_OC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_TEC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_FEC_RPT_JSP;
+			}
 		}
-		
+		//#35367 end
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
 		try {
@@ -5752,7 +5777,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								});
 							}
 						} catch (IOException e) {
-							e.printStackTrace();
+							String qtNo = qt == null ? "" : qt.getQtNo();
+							SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+									qtNo, "sourcingbaseBackingBean.assertSpecCommitteeMaintenanceInProgress", getUserIdSessionFromLoginId(), e);
 						} 
 					}else{
 					Collections.sort(members, new Comparator<ScCommitteeMember>() {
@@ -6356,4 +6383,81 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 		}
+	/***
+	 * 11104_newEndorseStart
+	 * get TemplatespecQuestion based on Checklist.
+	 * @param sampleSpecs
+	 * @return  List<TplSpecQuestion>
+	 */
+	protected List<TplSpecQuestion> getTemplateSampleQuestions(ScQtCheckList sampleSpecs){//11104_newEndorseStart
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		specReqDTO.setSpecMaster(sampleSpecs.getScQtDoc()
+				.getTplSpecMaster());
+		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+		specReqDTO.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);
+		TemplateSpecResDTO tmpresDTO = templateSpecSO
+				.getTemplateMaster(specReqDTO);
+		 return tmpresDTO.getSpecMaster()
+		.getTplSpecQuestions();
+	}//11104_newEndorseStart
+	/***
+	 * 11104_newEndorseStart
+	 * check Sample Item exist in the questions for work in progress qt.
+	 * @param scQt
+	 * @return  boolean
+	 */
+	public boolean  checkISSampleExistWIPChecklist(ScQt scQt){//11104_newEndorseStart
+		boolean qtSample = scQt.isSampleReq();
+		 if (qtSample
+				&& !isQTStatusPublished(scQt
+						.getQtStatus().getStatusId())
+				&& SourcingConstants.SAMPLE_WIP_CHECK.equals(scQt.getDemoNotificationCheck())) {
+			return Boolean.TRUE;
+		} else if (qtSample
+				&& !isQTStatusPublished(scQt
+						.getQtStatus().getStatusId())
+				&& null == scQt
+						.getDemoNotificationCheck()) {
+			
+			return Boolean.FALSE;
+		} else if(qtSample) {
+			IQTSpecSO qtSpecSO=BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+			specificationReqDTO.setScQt(scQt);
+			specificationReqDTO
+					.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			SpecificationResDTO specificationResDTO = qtSpecSO
+					.retrieveTechnicalService(specificationReqDTO);
+			List<ScQtCheckList> sampleTemplateSpecChecklist = new ArrayList<>();
+			for (ScQtCheckList sampleCheckList : specificationResDTO
+					.getTechnicalCheckList()) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(sampleCheckList.getDefinationType()
+								.getParameterCode())
+						&& QTStatusConst.TS_COMPLETED.equals(sampleCheckList
+								.getPmStatus().getStatusId())) {
+					sampleTemplateSpecChecklist.add(sampleCheckList);
+				}
+			}
+			return checkWiPSampleQuestionExist(sampleTemplateSpecChecklist);
+			
+		}
+		return Boolean.FALSE;
+	}//11104_newEndorseEnd
+	private boolean checkWiPSampleQuestionExist(List<ScQtCheckList> sampleTemplateSpecChecklist){//11104_newEndorseStart
+		for (ScQtCheckList sampleSpecs : sampleTemplateSpecChecklist) {	
+			for (TplSpecQuestion specQuestion : getTemplateSampleQuestions(sampleSpecs)) {
+				if (BooleanUtils.isTrue(specQuestion.isSampleReq())) {
+					return Boolean.TRUE;
+				}
+			}
+
+		}
+		return Boolean.FALSE;
+	}//11104_newEndorseEnd
 }

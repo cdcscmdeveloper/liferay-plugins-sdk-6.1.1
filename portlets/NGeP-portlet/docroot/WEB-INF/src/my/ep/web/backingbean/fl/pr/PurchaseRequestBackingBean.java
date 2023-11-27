@@ -1109,6 +1109,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
+			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}	
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
