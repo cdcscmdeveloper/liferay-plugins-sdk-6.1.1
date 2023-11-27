@@ -16,7 +16,7 @@ public class SLALogConstant {
 	 * CLASS_NAME
 	 */
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean"; // #29007
-
+	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
 	/*
 	 * METHOD_NAME
 	 */
