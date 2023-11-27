@@ -340,23 +340,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					}
 					log.info("pageNavigate------------"+path1);
 					checkSSMValid(supplier,this.getManagedBean());
-					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
-					//start #29956
-					if(!this.getManagedBean().getPersonnelsRole().isEmpty()){
-						String epRole = getEpRoleDowngradePopupByPersonnel(this.getManagedBean().getPersonnelsRole());
-						this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
-						
-						this.getManagedBean().setTermAndConditionCheckOwner(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
-						this.getManagedBean().setTermAndConditionCheckOwnerA(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a",new String[]{epRole}));
-						this.getManagedBean().setTermAndConditionCheckOwnerC(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c",new String[]{epRole}));					
-					}
-					//end #29956
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
-					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
+					if(!getManagedBean().getPersonnelsRole().isEmpty()){
 						proceed =false;
 						//Start 27951
 						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
@@ -365,8 +350,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							this.getManagedBean().setPreRegistration(false);
 						}
 						//End 27951
-						RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 						SmCommonUtil.redirectToPage(
 								CONTENT_PAGE,
 								"",new String[] {""});
@@ -1295,6 +1278,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		//32627 START
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY);
+		//33778 - add new status 20400
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT);
 		//32627 END
 		reqDTO.setSupplierId(supplierId);
 		

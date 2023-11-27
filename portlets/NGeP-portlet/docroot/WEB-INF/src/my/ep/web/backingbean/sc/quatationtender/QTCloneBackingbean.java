@@ -132,6 +132,7 @@ import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -554,18 +555,23 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
+	/**
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START REFRACTORING DANIAL CODES
+	 * Purpose : To Get List Of status based on Constant QT_ORDERED_STATUSES
+	 * @param fromStatusId
+	 * @param toStatusId
+	 * @return Long[] statuses
+	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
-		orderedStatuses = orderedStatuses.subList(
-				orderedStatuses.indexOf(fromStatusId), 
-				orderedStatuses.indexOf(toStatusId)+1);
-		Long[] ret = new Long[orderedStatuses.size()];
-	    for (int i=0; i < ret.length; i++)
-	    {
-	        ret[i] = orderedStatuses.get(i).longValue();
-	    }
-	    return ret;
+		int startIndex = orderedStatuses.indexOf(fromStatusId);
+	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
+	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
+	    return subList.toArray(new Long[subList.size()]);
 	}
+	/*
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
+	 */
 
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
@@ -1050,8 +1056,8 @@ public class QTCloneBackingbean extends
 								try {
 									uploadAttachment(qtDocReportAttachment,docReport.getScQtDocReportAttachment());
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+											"retrieveDocs", getUserIdSessionFromLoginId(), e);//sqube_vulnerability_56
 								}//33954
 								qtDocReport.setScQtDocReportAttachment(qtDocReportAttachment);
 							}
@@ -1645,7 +1651,7 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	
+	/*
 	private List<ScQtContactPerson> generateDOAFromRequestContent(ScQtRequestContent requestContent, ScQt qt) throws IOException{
 		List<ScQtContactPerson> doaList = new ArrayList<ScQtContactPerson>();
 		Object content = requestContent.getRequestContent() == null ? new HashMap<Long, String>(): requestContent.getRequestContent();
@@ -1675,6 +1681,7 @@ public class QTCloneBackingbean extends
 		}
 		return doaList;
 	}
+	*/
 	
 	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
@@ -2016,8 +2023,10 @@ public class QTCloneBackingbean extends
 						try {
 							uploadAttachment(att,attachment);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+							SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN, scQt.getQtNo(),
+									SLALogConstant.QT_RETRIEVE_PUBLICATION_APPROVAL_TAB_DTL, getUserIdSessionFromLoginId(), e);
+							//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 						}
 						approverAttachments.add(att);
 					}
@@ -2072,7 +2081,7 @@ public class QTCloneBackingbean extends
 		List<TabBean> tabBeans = new ArrayList<TabBean>();
 		List<ScQtApproval> otherapprovals=new ArrayList<>();//25635 & 34502 
 		this.getManagedBean().setScQtApprovalReqAttachementICT(null);//34502&25635-start
-		this.getManagedBean().setScQtAppRequestRemark(StringUtils.EMPTY);
+		this.getManagedBean().setScQtAppRequestRemarkICT(StringUtils.EMPTY); //#25077
 		this. getManagedBean().setPmParam(null);
 		scQt.setCloneEnabled(Boolean.FALSE);//34502&25635-End
 		//25635 & 34502 - End
@@ -2087,7 +2096,8 @@ public class QTCloneBackingbean extends
 				
 			}else if(ParameterConst.APPROVAL_CATEGORY_OTHERS
 					.equalsIgnoreCase(approval.getApprovalCategory()
-							.getParameterCode())){//25635 & 34502
+							.getParameterCode())&& ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(scQt
+									.getPmProcurementCategory().getParameterCode())){//25635 & 34502&35282
 				if(CollectionUtils.isEmpty(otherapprovals)){//25635 & 34502 
 				otherapprovals.add(approval);
 				}//25635 & 34502
@@ -2150,8 +2160,10 @@ public class QTCloneBackingbean extends
 					try {
 						uploadAttachment(att,attachment);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] START			 
+						SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN, scQt.getQtNo(),
+								SLALogConstant.QT_RETRIEVE_APPROVAL, getUserIdSessionFromLoginId(), e);
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 					}
 					approverAttachments.add(att);
 				}
@@ -2294,7 +2306,7 @@ public class QTCloneBackingbean extends
 							req.setAppRequestRemark(approvalRemark);
 							if(null!=approvalRequest.getAppRequestRemark()){//34502&25635&43-start
 							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());//25635 & 34502
-							this.getManagedBean().setScQtAppRequestRemark(req.getAppRequestRemark().getRemark());//34502&25635
+							this.getManagedBean().setScQtAppRequestRemarkICT(req.getAppRequestRemark().getRemark());//34502&25635 & //#25077
 							}//34502&25635&43-End
 							req.setScQtApproval(newOthersApproval);
 							approverRequest.add(req);
@@ -2322,6 +2334,22 @@ public class QTCloneBackingbean extends
 		    if(newOthersApproval.getApprovalCategory().getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_OTHERS)){
 		    	List<PmParameter> settings = null;
 				ParameterHelper parameterHelper = ParameterHelper.getInstance();
+				if(CollectionUtils.isEmpty(newOthersApproval.getScQtApprovalDtls())){//35282-start
+					List<ScQtApprovalRequest> approverRequest = new ArrayList<>();
+					ScQtApprovalRequest req = new ScQtApprovalRequest();
+					req.setBrandNew(true);
+					req.setApprovalType(getParameterByTypeAndCode(
+							ParameterTypeConst.APPROVAL_REQUEST_TYPES,
+							ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS));
+					req.setApproverAction(new PmParameter());
+					req.setApprovalRequestAttachement(null);
+					ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+					approvalRemark.setApprovalRequest(req);
+					req.setAppRequestRemark(approvalRemark);
+					req.setScQtApproval(newOthersApproval);
+					approverRequest.add(req);
+					newOthersApproval.setScQtApprovalDtls(approverRequest);
+				}//35282-End
 				
 				String approvalCategoryCode = newOthersApproval
 						.getApprovalCategory().getParameterCode();
@@ -2438,11 +2466,10 @@ public class QTCloneBackingbean extends
 	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 			
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				IQTDetailSO detailSO2 = detailSO; //Sonarqube QT Bug Minor Danial #8
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(copyScqt.getQtId());
-				QuationTenderResDTO resDTO = detailSO
+				QuationTenderResDTO resDTO = detailSO2
 						.retriveQTDeductionPaymentDetails(reqDTO);
 				List<ScQtDeduction> copyList = resDTO
 						.getDeductionResultBean().getResultList();
@@ -2476,8 +2503,7 @@ public class QTCloneBackingbean extends
 				
 				
 				reqDTO.setQtId(scQt.getQtId());
-				resDTO = detailSO
-						.retriveQTDeductionPaymentDetails(reqDTO);
+				resDTO = detailSO2.retriveQTDeductionPaymentDetails(reqDTO); //Sonarqube QT Bug Minor Danial #8
 				List<ScQtDeduction> toDelete =resDTO
 				.getDeductionResultBean().getResultList();
 				if(toDelete!=null && !toDelete.isEmpty()){
@@ -2490,18 +2516,10 @@ public class QTCloneBackingbean extends
 				this.getManagedBean().setScQtDeductionList(deductionList);
 				this.getManagedBean().getQt().setScQtDeductions(deductionList);
 				getManagedBean().setSelectedScQtDeduction(null);
-				/*
-				 * if (null != deductionList && !deductionList.isEmpty()) {
-				 * this.
-				 * getManagedBean().setSelectedScQtDeduction(deductionList.get
-				 * (0)); this.getManagedBean().getSelectedScQtDeduction().
-				 * setScQtDeductionClauses
-				 * (deductionList.get(0).getScQtDeductionClauses()); }
-				 */
-			} finally {
-				detailSO = null;
+			} catch(Exception e){ //@13/7/2023 : Shafful Sonarqube Bug Minor Danial #8 Remove finally and change to catch
+				SLAUtils.getInstance().logSLAError("QT", "QTCloneBackingBean", scQt.getQtNo(),
+						"retrieveDeductionPaymentTabDtl", getUserIdSessionFromLoginId(), e);
 			}
-		//}
 	}
 	
 	private void uploadAttachment(ScAttachment copy, ScAttachment origin)
@@ -2790,7 +2808,10 @@ public class QTCloneBackingbean extends
 										.cloneBean(source);
 							} catch (IllegalAccessException | InstantiationException
 									| InvocationTargetException | NoSuchMethodException e) {
-								e.printStackTrace();
+								//Sonarqube QT Vulnerability Minor Danial [3/8/2023] START			 
+								SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN,scQt.getQtNo(),
+										SLALogConstant.QT_RETRIEVE_COMMITTEE_MEMBERS, getUserIdSessionFromLoginId(), e);
+								//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 							}
 							if(null!=cloned){
 								cloned.setBrandNew(true);
@@ -2913,8 +2934,53 @@ public class QTCloneBackingbean extends
 			String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
-			ScQtCommittee mofCommitte = cloneComitteee(scQt,copyScqt,tabType);			
+			ScQtCommittee mofCommitte = cloneComitteee(scQt,copyScqt,tabType);
+			if(null!=mofCommitte && null!=mofCommitte.getScCommittee() && null!=mofCommitte.getScCommittee().getCommitteeType()){//35041&25635-start
 			committeTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+	        }else{//35041&25635-start
+	        	//FC Tabs
+				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
+				tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
+				StringBuilder fcTitleLabel1 = new StringBuilder(
+						"lbl.sc.finalization.committee.secretary.");
+				String fcTitleName1 = ResourceBundleUtils
+						.getMessage(fcTitleLabel1.toString()
+									+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale());
+				if (fcSecretaryCode == null
+						|| fcSecretaryCode.getParameterId() == null) {
+					SelectItem[] fcSecretaries = retrieveFinalizationCommitteeType();
+					if (fcSecretaries != null && fcSecretaries.length > 0) {
+						fcSecretaryCode = retrieveParameterById(Long
+								.valueOf(fcSecretaries[0].getValue().toString()));
+					} else {
+						fcSecretaryCode = null;
+					}
+				}
+				
+				// Displaying the Secretary Details
+				if (fcSecretaryCode != null) {
+					
+					String fcSecretary = fcSecretaryCode.getParameterCode();
+
+					if (fcSecretary != null) {
+						if (fcSecretary
+								.indexOf(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE) >= 0) {
+							fcTitleLabel1
+									.append(SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE);
+						} else {
+							fcTitleLabel1
+									.append(SourcingConstants.FC_COMMITTEE_TYPE_PROCUREMENT_BOARD);
+						}
+						fcTitleName1 = ResourceBundleUtils.getMessage(
+								fcTitleLabel1.toString().toLowerCase(),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale());
+					}
+				}
+				committeTabs.add(new TabBean(fcTitleName1, tabType, null));
+	        }//35041&25635-End
 
 		}else{
 			//FC Tabs
@@ -3034,7 +3100,10 @@ public class QTCloneBackingbean extends
 								.cloneBean(source);
 					} catch (IllegalAccessException | InstantiationException
 							| InvocationTargetException | NoSuchMethodException e) {
-						e.printStackTrace();
+						//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+						SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_CLONE_BACKINGBEAN, scQt.getQtNo(),
+								SLALogConstant.QT_CLONE_COMMITTEE, getUserIdSessionFromLoginId(), e);
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 					}
 					if(null!=cloned){
 						cloned.setBrandNew(true);

@@ -645,6 +645,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean checkBranch;
 	//32968 END
 	
+	//32008
+	private boolean upsCannotEdit;
+	
+	//#30762-Start 141123
+	private boolean poApproverPersonnelRoleMsg;
+	private String personnelRoleMsg; 
+	//#30762-end 	
+		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4559,5 +4567,31 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
 		this.poApproverAcedemicErr = poApproverAcedemicErr;
 	}//31130-end
+	//Start 32008
+		public boolean isUpsCannotEdit() {
+			return upsCannotEdit;
+		}
+
+		public void setUpsCannotEdit(boolean upsCannotEdit) {
+			this.upsCannotEdit = upsCannotEdit;
+		}
+		//end 32008
+   //30762-Start 141123
+	public boolean isPoApproverPersonnelRoleMsg() {
+		return poApproverPersonnelRoleMsg;
+		}
+	
+	public void setPoApproverPersonnelRoleMsg(boolean poApproverPersonnelRoleMsg) {
+		this.poApproverPersonnelRoleMsg = poApproverPersonnelRoleMsg;
+		}
+	
+	public String getPersonnelRoleMsg() {
+		return personnelRoleMsg;
+		}
+	
+	public void setPersonnelRoleMsg(String personnelRoleMsg) {
+		this.personnelRoleMsg = personnelRoleMsg;
+		}
+	//30762-End 
 
 }
