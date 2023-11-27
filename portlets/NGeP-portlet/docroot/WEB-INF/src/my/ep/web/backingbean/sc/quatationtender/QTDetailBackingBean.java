@@ -9208,18 +9208,20 @@ public class QTDetailBackingBean extends
 
 	// #25077 -start-
 	public List<ScQtApprovalRequest> getListOthersApprovalRequest() {
+		
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		
 		List<ScQtApprovalRequest> approvalDtls = new ArrayList<>();
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
 		
 		reqDTO.setQtId(scQt.getQtId());
 		reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_OTHERS);
+		QuationTenderResDTO resDTO = detailSO.retrieveApprovalReqICTByQtId(reqDTO);
+		approvalDtls  = resDTO.getApprovalRequests();
 		
-		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
-		
-		if (approval != null && approval.getScQtApprovalDtls() != null) {
-			approvalDtls = approval.getScQtApprovalDtls();
-			
+		if (resDTO.getApprovalRequests() != null && approvalDtls != null) {
 			for (ScQtApprovalRequest oth : approvalDtls) {
 
 				if (oth.getApproverAction() == null) {
@@ -9233,10 +9235,9 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-		
 		return approvalDtls;
 	}
-	// 25077 - End
+	// #25077 -end-
 
 	// 11104 -start-
   	/**
