@@ -170,7 +170,7 @@ public class TemplateSpecBackingBean extends
 
 		try {
 			templateSpecSO = BusinessDelegate.getInstance()
-					.getServiceObject("cc", ITemplateSpecSO.class);
+					.getServiceObject(QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecMaster(specMaster);
