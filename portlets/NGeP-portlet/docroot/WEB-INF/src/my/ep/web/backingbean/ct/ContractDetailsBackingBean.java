@@ -2042,6 +2042,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setSettingIndex(11);		
 		getManagedBean().setPaymentTracking(11);
 		getManagedBean().setBondIndex(11);
+		getManagedBean().setNotificationIndex(111); //#35187
 		ctBB.getManagedBean().setSelectAll(false);
 
 		boolean typeZonalPrice = false;
@@ -2253,6 +2254,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setSettingIndex(11);
 		getManagedBean().setAgencyIndex(111);
 		getManagedBean().setBondIndex(113);
+		getManagedBean().setNotificationIndex(111); //#35187
 		ctBB.getManagedBean().setSelectAll(false);
 
 		boolean typeZonalPrice = false;
@@ -2374,15 +2376,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (typeFactoring && bondRequired) {
 						getManagedBean().setSelectedTabIndex(10);
 					}else if(bondRequired || typeFactoring){
-						getManagedBean().setSelectedTabIndex(7);
+						getManagedBean().setSelectedTabIndex(9); //#35187
 					}
 				}else if(typeFactoring){
-					getManagedBean().setSelectedTabIndex(6);
+					getManagedBean().setSelectedTabIndex(8); //#35187
 					if(bondRequired){
-						getManagedBean().setSelectedTabIndex(7);
+						getManagedBean().setSelectedTabIndex(9); //#35187
 					}
 				} else if(bondRequired){
-					getManagedBean().setSelectedTabIndex(6);
+					getManagedBean().setSelectedTabIndex(8); //#35187
 				}
 				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
 			}

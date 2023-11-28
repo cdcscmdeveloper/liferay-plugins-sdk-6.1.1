@@ -317,11 +317,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	//#25725 start
 	private boolean disabledButton = true;
-	public BigDecimal limit = new BigDecimal(500000);
-	public boolean above500K = true;
-	public boolean AgreementReqChange = false;
-	public String docStatus;
-	public String procurementType;
+	private BigDecimal limit = new BigDecimal(500000); //#Sqube Vulnerability Minor G47 start
+	private boolean above500K = true;
+	private boolean AgreementReqChange = false;
+	private String docStatus;
+	private String procurementType; //#Sqube Vulnerability Minor G47 end
 	private boolean showApprovalLetter = false;//# note 146
 	//#25725 end
 	
