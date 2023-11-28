@@ -1923,6 +1923,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void checkExistingBusinessRegNo(){
 		
+		// #32713 - Start
+		// to validate if there is same reg_no that has inProgress status
+		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())) {
+
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setRegNo(getManagedBean().getSmSupp().getRegNo());
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+					"sm", ISupplierSearchSO.class);
+
+			if (supplierSearchSO.checkIsSupplierRegNoAlreadyExistAndInProgress(reqDTO).isRegNoInProgress()) {
+				throw new EpException(MessageConst.ERROR_722634);
+			}
+		}
+		// #32713 - End
+		
 		if (!StringUtils
 				.isBlank(getManagedBean().getSmSupp().getBusinessType())
 				&& SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
