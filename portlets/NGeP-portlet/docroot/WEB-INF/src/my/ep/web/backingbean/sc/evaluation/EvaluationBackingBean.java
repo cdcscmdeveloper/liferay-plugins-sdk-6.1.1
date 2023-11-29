@@ -8206,14 +8206,11 @@ public void saveComplianceSample() {
 
 									this.getManagedBean().setTabTechnicalIndex(2);
 									
-									//#33187, #25138, #21695 Start - fix next skip if disable Technical
-									if (this.getManagedBean().getNoSupplierPackageExist()) {
-										this.getManagedBean().setEvaluatioStageActiveIndex(2);
-									}
 								// #33187, #25138, #21695 Start - fix next skip
-								// if disable Technical
+								// if disable Technical , skip package Bug #35394
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
+									retriveSummaryEvaluationStage();
 								}
 								// #33187 End - fix next skip if disable
 								// Technical
