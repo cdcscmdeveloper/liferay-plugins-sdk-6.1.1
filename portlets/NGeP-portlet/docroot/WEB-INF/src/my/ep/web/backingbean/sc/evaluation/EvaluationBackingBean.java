@@ -18795,17 +18795,15 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderDisqialified() {
-		boolean renderDisqialifiedColumn = false;
 		if (null != this.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
 			for (ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
 				if (null != disQualDtl.isCompliance() && !disQualDtl.isCompliance()) {
-					renderDisqialifiedColumn = true;
-					break;
+					return true;
 				}
 			}
 		}
-		return renderDisqialifiedColumn;
+		return false;
 	}
 
 	/**
@@ -18815,13 +18813,11 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl) {
-		boolean renderDisqialifiedColumn = false;
-		if (null != evalResultDtl.isCompliance() && null != evalResultDtl.getTotalScore()
-				&& !evalResultDtl.isCompliance()
-				&& this.getManagedBean().getPassingScore() < evalResultDtl.getTotalScore().intValue()) {
-			renderDisqialifiedColumn = true;
+		if (null != evalResultDtl.isCompliance()
+				&& !evalResultDtl.isCompliance()) {
+			return true;
 		}
-		return renderDisqialifiedColumn;
+		return false;
 	}
 
 	/**
@@ -18832,15 +18828,13 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecAndComplianceColumnSample() {
-		boolean render = false;
 		for (ScQtSampleItem sample : this.getManagedBean().getSampleItemList()) {
 			if (sample.getScRequestItem() != null && sample.getScRequestItem().getTplSpecQuestion() != null
 					&& sample.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()) {
-				render = true;
-				break;
+				return true;
 			}
 		}
-		return render;
+		return false;
 	}
 
 	/**
@@ -18892,16 +18886,11 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void onchangeCompliance(ScQtSampleItem itm) {
 		for (ScQtSampleItem item : this.getManagedBean().getSampleItemList()) {
-			if (itm.getSampleItemId() == item.getSampleItemId() && itm.getCompliance() != null) {
+			if (itm.getSampleItemId().compareTo(item.getSampleItemId()) == 0 && itm.getCompliance() != null) {
 				if (itm.getCompliance() == Boolean.FALSE) {
 					item.setUserScore(BigDecimal.ZERO);
-				} else if (itm.getCompliance() == Boolean.TRUE && itm.getUserScore() != null
-						&& itm.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
-					item.setUserScore(null);
-				}
-			} else if (itm.getSampleItemId() == item.getSampleItemId() && itm.getCompliance() == null) {
-				item.setUserScore(null);
-			}
+				} 
+			} 
 		}
 	}
 

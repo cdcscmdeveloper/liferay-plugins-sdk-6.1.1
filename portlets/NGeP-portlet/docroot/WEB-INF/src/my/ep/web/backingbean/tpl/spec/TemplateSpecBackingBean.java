@@ -5787,10 +5787,7 @@ public class TemplateSpecBackingBean extends
 			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
 				if (ans.getCompliance() == Boolean.FALSE) {
 					answer.setUserScore(BigDecimal.ZERO);
-				} else if (ans.getCompliance() == Boolean.TRUE && ans.getUserScore() != null
-						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
-					answer.setUserScore(null);
-				}
+				} 
 			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() == null) {
 				answer.setUserScore(null);
 			}
