@@ -8381,6 +8381,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							} else { //#34588 end
 								//#33187, #25138, #21695 Start - fix next skip if disable financial
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
+									retriveOneTierFinancialSupplierSummary();
 									this.getManagedBean().setOneTierFinancialActiveIndex(2);
 								}
 								//#33187, #25138, #21695 End - fix next skip if disable financial
