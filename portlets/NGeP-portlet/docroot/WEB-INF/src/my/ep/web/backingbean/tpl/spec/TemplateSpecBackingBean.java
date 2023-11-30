@@ -196,54 +196,14 @@ public class TemplateSpecBackingBean extends
 		TplSpecZoneDtl speczoneDtl = templateSpecBean.getTplSpecZoneDtl();
 
 		try {
-			templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
-					.getServiceObject("cc", ITemplateSpecSO.class);
+			templateSpecSO = BusinessDelegate.getInstance()
+					.getServiceObject(QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecMaster(specMaster);
 			reqDTO.setContentType(contentType);
 			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)) {
 				SmSupplier smSupplier = templateSpecBean.getSupplier();
-
-				// if (smSupplier == null) {
-				// IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				// .getServiceObject(
-				// ModuleCodeConst.PROFILE_MANAGEMENT,
-				// IOrgProfileSO.class);
-				// OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-				// profileReqDTO.setUserId(/*new FacesScopes()
-				// .getUserSessionBean().getUserId()*/81569L);
-				// profileReqDTO.setOrgType(OrganizationType.SUPPLIER.value());
-				// OrgProfileResDTO profileResDTO = orgProfileSO
-				// .retrieveOrgProfileListByOrgType(profileReqDTO);
-				//
-				// if (profileResDTO.getOrgProfileList().size() > 0) {
-				// IRegistrationSO registrationSO = BusinessDelegate
-				// .getInstance().getServiceObject(
-				// ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				// IRegistrationSO.class);
-				// RegistrationReqDTO registrationReqDTO = new
-				// RegistrationReqDTO();
-				// registrationReqDTO.setSupplierId(profileResDTO
-				// .getOrgProfileList().get(0).getOrgProfileId());
-				// RegistrationResDTO registrationResDTO = registrationSO
-				// .retrieveSuppOnlineAcc(registrationReqDTO);
-				// smSupplier = registrationResDTO.getSmSupp();
-				// } else {
-				// IRegistrationSO registrationSO = BusinessDelegate
-				// .getInstance().getServiceObject(
-				// ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				// IRegistrationSO.class);
-				// RegistrationReqDTO registrationReqDTO = new
-				// RegistrationReqDTO();
-				// registrationReqDTO.setSupplierId(27L);
-				// RegistrationResDTO registrationResDTO = registrationSO
-				// .retrieveSuppOnlineAcc(registrationReqDTO);
-				// smSupplier = registrationResDTO.getSmSupp();
-				// }
-				//
-				// templateSpecBean.setSupplier(smSupplier);
-				// }
 
 				reqDTO.setSupplier(smSupplier);
 			}
@@ -262,38 +222,31 @@ public class TemplateSpecBackingBean extends
 				}
 
 				templateSpecBean.setSpecMaster(specMaster);
-				if(QTConstants.FINANCIAL_ITEM_SPEC_ANSWER.equalsIgnoreCase(templateSpecBean.getAnswerRemove())){//32453-start
-					
-					if(CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())){
-						//for(TplSpecAnswer specAnswer: resDTO.getSpecAnswerList()){
-						
-							IQTEvaluationSO	evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-							EvaluationReqDTO evalReqDTO=new EvaluationReqDTO();
-							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
-							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
-							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
-							//#25138(wip 4serangkai) bug -Start 8/6/2023
-							this.getManagedBean().setWipStatusMax(wipstatus);
-							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
-									evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-									evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
-									EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
-									templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
-									templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
-									}					
-								}//#25138 add start
-							else{
-								templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-							}
-							//#25138 add end
+				if (QTConstants.FINANCIAL_ITEM_SPEC_ANSWER.equalsIgnoreCase(templateSpecBean.getAnswerRemove())
+						&& CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {// 32453-start
+
+					IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+					EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+					evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
+					evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
+					int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+					// #25138(wip 4serangkai) bug -Start 8/6/2023
+					this.getManagedBean().setWipStatusMax(wipstatus);
+					// #25138 for demo
+					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
+						evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
+						EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+						templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
+						templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
+					} else {
+						templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 					}
-					//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());	
-				}else{//32453-End
-					
-				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+					//#25138 add end
+				} else {// 32453-End
+					templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				}//32453-End
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
@@ -5834,10 +5787,7 @@ public class TemplateSpecBackingBean extends
 			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
 				if (ans.getCompliance() == Boolean.FALSE) {
 					answer.setUserScore(BigDecimal.ZERO);
-				} else if (ans.getCompliance() == Boolean.TRUE && ans.getUserScore() != null
-						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
-					answer.setUserScore(null);
-				}
+				} 
 			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() == null) {
 				answer.setUserScore(null);
 			}

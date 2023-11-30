@@ -46,6 +46,7 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 //#30504 start
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 //#30504 end
@@ -2173,18 +2174,43 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				//#32304 - start
-				String[] user = getPoApproverLogin();
-				((SMMOFRegDataType) getManagedBean().getBpmPojo()).setPoUsers(user[0]);
-				reqDTO.setPoName(user[1]);
+				// #30504 start #34795 start
+				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
+				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
+				log.info("---Curent PO: "+currPo.getUserName());
+
+				if (currPo.getPmUserOrgs().get(0).getRecordStatusFlg() == 0) {
+					IZoneSO zoneReqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+					ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+					zoneReqDTO.setStateId(svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+							.getSmAddress().getPmState().getStateId());
+					PmUser newPo = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(
+							svTask.getSmAppl().getSupplierType(), svTask.getSmAppl().getApplType(),
+							svTask.getSmAppl().getApplCategoryType(),
+							zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());  
+					//#30504 Re-open start
+					currPo = newPo;
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(newPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
+
+				} else {
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(currPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
+				}
+				log.info("---Curent PO Latest: "+currPo.getUserName());
 				
+				// #30504 end
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
 				reqDTO.setToken(token);
 				reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-				//#30504 Re-open end, #32304 - end
+				reqDTO.setPoName(currPo.getUserName());
+				//#30504 Re-open end #34795 end
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - start
 			if(svTask.getPmCategoryL3() != null){
