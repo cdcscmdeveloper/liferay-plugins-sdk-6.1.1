@@ -8099,6 +8099,7 @@ public class EvaluationBackingBean extends
 								
 								//#33187 Start - fix next skip if disable Technical
 								if(this.getManagedBean().getNoSupplierPackageExist()){
+									retriveSummaryEvaluationStage();
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
 								}
 								//#33187 End - fix next skip if disable Technical
@@ -8655,6 +8656,7 @@ public class EvaluationBackingBean extends
 								retriveOneTierFinancialSupplierSummary();
 							} else { //#34588 end
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
+									retriveOneTierFinancialSupplierSummary();
 									this.getManagedBean().setOneTierFinancialActiveIndex(2);
 								}
 								else{
