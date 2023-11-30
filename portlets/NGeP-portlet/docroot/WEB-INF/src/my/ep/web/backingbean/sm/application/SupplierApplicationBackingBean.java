@@ -506,6 +506,7 @@ public class SupplierApplicationBackingBean extends
 
 						if (getManagedBean().isValidResubmit()) {
 							getManagedBean().setSmAppl(latestResubmitAppl);
+							//Demo Request
 							getManagedBean().setSmSupplier(
 									latestResubmitAppl.getSmSupplier());
 
