@@ -8268,9 +8268,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// #29006 - start - reendorsed (comment 528)
 			
 //29006-916 - comment start 		
-//			//note 901
-//			String selectSuppOffer = getSelectedSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
-//			selectSuppOffer = selectSuppOffer.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);		
 			getManagedBean().setSelectedSupplierOffer(getSelectedSupplierOffer());
 //29006-916 - comment end
 			getManagedBean().setItemNamePopup(scLoiLoaItem.getScRequestItem().getItemName());
@@ -9205,9 +9202,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		VelocityContext context = new VelocityContext();
 		// #29006 start
 		String defaultValue = SSTConstant.TB;
-		/*if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			defaultValue = "N/A";
-		}*/
 		// #29006 end
 		
 		context.put("defaultValue", defaultValue);
