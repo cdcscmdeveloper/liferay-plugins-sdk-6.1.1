@@ -173,7 +173,7 @@ public class TemplateSpecBackingBean extends
 
 		try {
 			templateSpecSO = BusinessDelegate.getInstance()
-					.getServiceObject("cc", ITemplateSpecSO.class);
+					.getServiceObject(QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecMaster(specMaster);
@@ -3871,45 +3871,30 @@ public class TemplateSpecBackingBean extends
 	 * @param isCompliance
 	 * @return List<SelectItem>
 	 */
-	public List<SelectItem> getMandatorySpecAndComplianceDropdownValues(
-			boolean isCompliance) {
+	public List<SelectItem> getMandatorySpecAndComplianceDropdownValues(boolean isCompliance) {
 		List<SelectItem> selectItems = new ArrayList<>();
 
 		try {
 
 			if (isCompliance) {
-				selectItems.add(new SelectItem(null, ResourceBundleUtils
-						.getMessage(QTConstants.LBL_TXT_SELECT,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.TRUE,
-						ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(Boolean.FALSE,
-						ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_NO,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_NO,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			} else {
-				selectItems.add(new SelectItem(false, ResourceBundleUtils
-						.getMessage(QTConstants.LBL_TXT_SELECT,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
-				selectItems.add(new SelectItem(true, ResourceBundleUtils
-						.getMessage(QTConstants.LBL_TXT_YES,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			}
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
 		} catch (Exception e) {
-			SLAUtils.getInstance()
-					.logSLAError(
-							SLALogConstant.QT_MODULE,
-							SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
-							this.getManagedBean().getQt().getQtNo(),
-							SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
-							getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
+					this.getManagedBean().getQt().getQtNo(), SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
+					getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
@@ -3924,12 +3909,9 @@ public class TemplateSpecBackingBean extends
 		boolean manSpec = false;
 		if (null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
-				&& null != this.getManagedBean().getScQt().getQtStatus()
-						.getStatusId()
-				&& this.getManagedBean().getScQt().getQtStatus().getStatusId()
-						.longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
-			for (TplSpecAnswer tplSpecAnswer : templateSpecBean
-					.getSpecAnswerList()) {
+				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId()
+				&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
+			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
 				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
 						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
@@ -3948,8 +3930,7 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void showUOMQuantityDetails() {
-		RequestContext.getCurrentInstance().execute(
-				QTConstants.VIEW_UOM_QUANTITY_DETAILS);
+		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_UOM_QUANTITY_DETAILS);
 	}
 
 	/**
@@ -3959,8 +3940,7 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void zoneQuantityPopup() {
-		RequestContext.getCurrentInstance().execute(
-				QTConstants.VIEW_ZONE_QUANTITY_POPUP);
+		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_ZONE_QUANTITY_POPUP);
 	}
 
 	/**
@@ -3970,19 +3950,12 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void onchangeCompliance(TplSpecAnswer ans) {
-		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean()
-				.getSpecAnswerList()) {
-			if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() != null) {
+		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
 				if (ans.getCompliance() == Boolean.FALSE) {
 					answer.setUserScore(BigDecimal.ZERO);
-				} else if (ans.getCompliance() == Boolean.TRUE
-						&& ans.getUserScore() != null
-						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
-					answer.setUserScore(null);
-				}
-			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() == null) {
+				} 
+			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() == null) {
 				answer.setUserScore(null);
 			}
 		}
