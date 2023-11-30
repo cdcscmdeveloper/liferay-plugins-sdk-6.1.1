@@ -8658,6 +8658,7 @@ public class EvaluationBackingBean extends
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
 									retriveOneTierFinancialSupplierSummary();
 									this.getManagedBean().setOneTierFinancialActiveIndex(2);
+									outputTab = 3;
 								}
 								else{
 									//#34588 start
