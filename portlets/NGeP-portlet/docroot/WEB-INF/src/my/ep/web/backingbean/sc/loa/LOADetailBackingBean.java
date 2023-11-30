@@ -8031,7 +8031,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	private List<ItemBean> convertSpecQuestionToSpecAnswer(
 			TplSpecMaster specMaster) {
-		TreeMap<Integer, ItemBean> questionSpecMap = new TreeMap<Integer, ItemBean>(); //Bug #34882@Syazani 26/06/2023
+		TreeMap<Integer, ItemBean> questionSpecMap = new TreeMap<>(); //Bug #34882@Syazani 26/06/2023	// Sqube QT Master Bug G85 - Issues 14@Syazani 29/11/2023
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
 			for (TplSpecQuestion specQuestion : specMaster
