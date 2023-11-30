@@ -107,7 +107,7 @@
 					</p:column>
 				</c:when>
 				<!-- #28175 Reopen #94 Start -->
-				<c:when test="#{not viewSmApplBackingBean.managedBean.smAppl.activeAppl}">
+				<c:when test="#{!viewSmApplBackingBean.isLatestCatCodeDesc(false)}">
 		        <!-- #28175 Reopen #94 End -->
 			    	<p:column style="width :350px;white-space : normal">
 						<h:outputText
