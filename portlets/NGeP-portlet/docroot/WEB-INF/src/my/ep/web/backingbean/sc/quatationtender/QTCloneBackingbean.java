@@ -544,16 +544,19 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	/*
-	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START	 * 
+	/**
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START REFRACTORING DANIAL CODES
+	 * Purpose : To Get List Of status based on Constant QT_ORDERED_STATUSES
+	 * @param fromStatusId
+	 * @param toStatusId
+	 * @return Long[] statuses
 	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 	    int startIndex = orderedStatuses.indexOf(fromStatusId);
 	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
 	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
-	    Long[] ret = subList.toArray(new Long[subList.size()]);
-	    return ret;
+	    return subList.toArray(new Long[subList.size()]);
 	}
 	/*
 	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
@@ -5198,11 +5201,4 @@ public class QTCloneBackingbean extends
 		}
 		return startMonth;
 	}//33916
-	
-	/*
-	private void foo() {
-		// This is a dummy method
-	}
-	*/
-	
 }
