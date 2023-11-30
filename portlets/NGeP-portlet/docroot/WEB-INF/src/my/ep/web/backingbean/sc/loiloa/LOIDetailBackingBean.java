@@ -788,15 +788,14 @@ public class LOIDetailBackingBean extends
 								}
 							}
 							
-							if (!isZonal) { 
-								if (CollectionUtils.isEmpty(previousLois) || 
-										!previousLois.contains(scLoi)) {
+							if (!isZonal && (previousLois != null && (CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+									!previousLois.contains(scLoi)))) {
 									if (supplierLoiLoaItemsMap == null) {
-										supplierLoiLoaItemsMap = new HashMap<Long,List<ScLoiLoaItem>>();
+										supplierLoiLoaItemsMap = new HashMap<>();
 									}
 									Long supplierId = scLoi.getScLoiLoa().getSmSupplier().getSupplierId();
 									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());								
-								}
+								
 							}
 						}
 					}
@@ -988,7 +987,8 @@ public class LOIDetailBackingBean extends
                     && null != qtProposal.getScQtSupplier().getScQt()) {
                   qtId = qtProposal.getScQtSupplier().getScQt().getQtId();
                 }
-				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier(), qtId));
+				if (null != qtProposal)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				   qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier(), qtId));
 				// #26247 - 32802 - End.
 			}
 		} finally {
@@ -1278,7 +1278,11 @@ public class LOIDetailBackingBean extends
 		if(event != null){			
 			debugLogger(" onRowRecSupplierAction : " + event.toString() + "    class : " + event.getClass());
 		}
-		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		ScLoiLoa scLoiLoa = null;
+		if(event != null)			
+			scLoiLoa = (ScLoiLoa) event.getObject();
+
 		// #32757- Start.
 		if (null != scLoiLoa) {
 			try {
@@ -1980,12 +1984,13 @@ public class LOIDetailBackingBean extends
 		}
 		// #26247 - #33073 - End.
 		getManagedBean().setScLoi(scLoi);
-		ScWorkFlowStatus currentStatus = scLoi.getScWorkFlowStatus();
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		ScWorkFlowStatus currentStatus = scLoi != null ?scLoi.getScWorkFlowStatus():null;
 		Long statusId = currentStatus.getPmStatus().getStatusId()
 				.longValue();
 
 		// online bidding
-		if (scLoi.getRecommendBy() != null) {
+		if (scLoi != null && scLoi.getRecommendBy() != null) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			PmParameter recommendedBy = scLoi.getRecommendBy();
 			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(recommendedBy.getParameterCode())) {
@@ -2020,7 +2025,7 @@ public class LOIDetailBackingBean extends
 		}
 
 		// calc total items in award details
-		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
+		if (scLoi != null && scLoi.getScLoiLoaItems() != null && !scLoi.getScLoiLoaItems().isEmpty()) { //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			BigDecimal offerPrice = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
@@ -2105,40 +2110,41 @@ public class LOIDetailBackingBean extends
 		}
 
 		// Supplier Branch
-		getManagedBean().setBranchName(scLoi.getSupplierBranch());
+		getManagedBean().setBranchName(scLoi != null ? scLoi.getSupplierBranch():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 		getManagedBean()
 				.setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
 		getManagedBean().setScQt(resDTO.getScQt());
 
-		if (scLoi.isBrandNew()) {
+		if (scLoi != null && scLoi.isBrandNew()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 			setUserDetails(scLoi);
 			handleBranchDetailsChanged();
 		}
 			
 		Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
-		// Issue & Acknowledge Date
-		if(scLoi.getIssueDate() == null){
+		if (scLoi != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+		 // Issue & Acknowledge Date
+		 if(scLoi.getIssueDate() == null){
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-		}
-		if(scLoi.getAckDueDate() != scLoi.getIssueDate() && scLoi.getAckDueDate() != null){
+		 }
+		 if(scLoi.getAckDueDate() != scLoi.getIssueDate() && scLoi.getAckDueDate() != null){
 			long days = DateUtils.getDaysDifference(scLoi.getIssueDate(), scLoi.getAckDueDate());
 			scLoi.setLoiResponseDate((int) days);
 		}
 		else{
 			scLoi.setLoiResponseDate(loaRespPeriod);
-		}
+	    }
 		
-		scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), scLoi.getLoiResponseDate()));
-		
+		 scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), scLoi.getLoiResponseDate()));
+	   }
 		// approvers
-		ScLoiApproval scLoiApproval = scLoi.getScLoiApproval();
+		ScLoiApproval scLoiApproval = scLoi != null ? scLoi.getScLoiApproval():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		PmUser approverUser = null;
 		if (scLoiApproval != null) {
 			approverUser = scLoiApproval.getApprover();
 
-			if (!QTStatusConst.LOI_PENDING_SUBMISSION.equals(scLoi
-					.getScWorkFlowStatus().getPmStatus().getStatusId()
-					.longValue())) {
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (scLoi != null && !QTStatusConst.LOI_PENDING_SUBMISSION.equals(scLoi
+					.getScWorkFlowStatus().getPmStatus().getStatusId())) {
 				getManagedBean().setScLoiApproval(scLoi.getScLoiApproval());
 			}
 		}
@@ -2168,11 +2174,11 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSupplierRemarks(supplierRemarks);
 		}
 		// status
-		getCurrentStatus(currentStatus.getPmStatus()
-				.getStatusId());
+		getCurrentStatus(currentStatus != null ?currentStatus.getPmStatus() 
+				.getStatusId():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 
 		// Contract Signer
-		PmUser contractSignerUser = scLoi.getContractSigner();
+		PmUser contractSignerUser = scLoi != null ?scLoi.getContractSigner():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		if (contractSignerUser == null) {
 			contractSignerUser = new PmUser();
 		}
@@ -2189,15 +2195,16 @@ public class LOIDetailBackingBean extends
 		//userReqDTO.setOrgProfileId(scLoi.getScLoiLoa().getPmOrgProfile()
 		//	.getOrgProfileId());
 		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
-											scLoi.getScLoiLoa().getPmOrgProfile()
-						.getOrgProfileId()).getOrgProfileId());
+											scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
+											.getOrgProfileId():null).getOrgProfileId()); //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+
 		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
-
-		scLoi.setFileExtnNo("001");
+		if (scLoi != null) //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+		  scLoi.setFileExtnNo("001");
 		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
@@ -2478,8 +2485,8 @@ public class LOIDetailBackingBean extends
 					}
 				}
 				// #33325 - End.
-				
-				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization != null ?scQtFinalization.getScQt().getQtNo():null, Boolean.FALSE);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
@@ -4856,7 +4863,7 @@ public class LOIDetailBackingBean extends
 		if (getManagedBean().isZonal()) {
 			for (TplSpecZoneDtl specZone
 						: getManagedBean().getZoneMap().values()) {
-				if (!zoneDetailsMap.containsKey(
+				if (zoneDetailsMap != null && !zoneDetailsMap.containsKey( //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 						specZone)) {
 					NegotiationRecommendationReportDTO tempDTO
 							= new NegotiationRecommendationReportDTO();
@@ -6436,7 +6443,7 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().setAction(outcome);
 		
 		String loi = getMessage("lbl.sc.loiloa.loi.letter", null);
-		String procurementMode = null; 
+		String procurementMode = ""; //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		String mode = this.getManagedBean().getScQt().getProcurementMode().getParameterCode();
 		
 		if (mode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {

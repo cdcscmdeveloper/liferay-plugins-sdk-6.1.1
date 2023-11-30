@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -2725,6 +2724,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 					meetingList.add(scqtMeeting);
 				}
 			} else {
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (meetingList == null)
+					meetingList = new ArrayList<ScQtMeeting>();
+
 				meetingList.add(scqtMeeting);
 			}
 

@@ -840,8 +840,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			FacesScopes facesScopes = new FacesScopes();
 			if (scRemarks.size() == 0
-					|| !compareUserName(prevRemark.getCreatedUser()
-							.getLoginId())
+					|| !compareUserName(prevRemark != null ?prevRemark.getCreatedUser()
+							.getLoginId():null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 					|| isDiffWithPrevWorkFlowStatus(workFlowStatus, prevRemark)
 					|| isSameScreen) {//25037 note 284 
 
@@ -1033,7 +1033,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				fos.write(bytes);
 				fos.flush();
 			}
-			if (!isDirectDownload) {
+			if (!isDirectDownload && out != null ) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				out.flush();
 				
 			}
@@ -2531,7 +2531,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//#25037 START
 		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-		list = list == null ? new ArrayList<PmParameterDesc>() : list;
+		if (null == list)
+			list = new ArrayList<>();
 
 		if(filteredRoles!=null){
 			for(PmParameterDesc role: list){
@@ -2841,7 +2842,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public void validateDeductionPaymentDtls(List<ScQtDeduction> deductions) {
 
-		if (CollectionUtils.isNotEmpty(deductions)) {
+		if (deductions != null && CollectionUtils.isNotEmpty(deductions)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 			for (ScQtDeduction deduction : deductions) {
 				PmParameter deductionType = deduction.getDeductionType();
 				if (null != deductionType
@@ -2849,7 +2850,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					throw new EpException(MessageConst.ERROR_740035);
 				} else {
 					if (CollectionUtils.isEmpty(deduction
-							.getScQtDeductionClauses())) {
+							.getScQtDeductionClauses())&& deductionType != null) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 						throw new EpException(MessageConst.ERROR_760324,
 								new String[] { getParameterDesc(
 										deductionType.getParameterType(),
@@ -2868,8 +2869,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// allow multiple Fixed deduction And Others only
 				if (deductions.size() > 1) {
 					for (ScQtDeduction scQtDeduction : deductions) {
-						if (!deduction.equals(scQtDeduction)) {
-							if (!(deductionType.getParameterCode().equals(
+						//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+						if (!deduction.equals(scQtDeduction) && 
+							 deductionType != null && !(deductionType.getParameterCode().equals(
 									ParameterConst.DEDUCTION_TYPE_FIXED)
 									|| deductionType
 											.getParameterCode()
@@ -2894,7 +2896,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 				}
 			}
-		}
+		
 	}
 	
 	/**
@@ -3668,20 +3670,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			question.setSpecList(specList);
 			// #26130 - Start
-			if (CollectionUtils.isNotEmpty(specList)) {
+			if (specList != null && CollectionUtils.isNotEmpty(specList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 				if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
 					for (int i=0; i < question.getTplSpecZoneQties().size(); i++) {
-						if (CollectionUtils.isNotEmpty(feedbackList)) {
+						if (feedbackList != null && CollectionUtils.isNotEmpty(feedbackList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 							feedbackList.add(i, "&nbsp;");
 						}
-						if (CollectionUtils.isNotEmpty(answerRemarkList) && answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {
+						if (answerRemarkList != null && CollectionUtils.isNotEmpty(answerRemarkList) && answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 							answerRemarkList.add(i, "&nbsp;");
 						}
 					}
-				} else {
-					if (CollectionUtils.isNotEmpty(feedbackList)) {
-						feedbackList.add(0, "&nbsp;");
-					}
+				} else if (feedbackList != null && CollectionUtils.isNotEmpty(feedbackList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					feedbackList.add(0, SSTConstant.whiteSpace);
+
 					// #26130 - Start
 					/*if (CollectionUtils.isNotEmpty(answerRemarkList)) {
 						answerRemarkList.add(0, "&nbsp;");
@@ -3714,7 +3715,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for(String tempSpecVal: specList){
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("specVal", tempSpecVal);
-				
+				if (feedbackList != null &&  CollectionUtils.isNotEmpty(feedbackList) ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3	
 					for(String tempFeedback: feedbackList){
 						if (tempSpecZoneQty > 0){
 							if (tempFeedbackIndex >= tempSpecZoneQty){
@@ -3742,7 +3743,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						
 						
 					}
-					
+				}
+				if (answerRemarkList != null && CollectionUtils.isNotEmpty(answerRemarkList) ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 					for (String tempRemark: answerRemarkList){
 						
 						if (tempRemark == null){
@@ -3772,9 +3774,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 						}
 						
+					}		
 						
-						
-					}
+				 }
 					tempFeedbackIndex = 0;
 					tempRemarkIndex = 0;
 				listCombine.add(map);	
@@ -5738,7 +5740,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						//25037 note 629 end
 					}
 				}
-				if(CollectionUtils.isNotEmpty(scCommittee.getScCommitteeMembers())){
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if(scCommittee != null && CollectionUtils.isNotEmpty(scCommittee.getScCommitteeMembers())){
 					List<ScCommitteeMember> members = scCommittee.getScCommitteeMembers();
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
