@@ -5081,7 +5081,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		BigDecimal subTotalAmount = BigDecimal.ZERO;
 
 		if (orderQuantity != null && requestSupplierItem != null && priceType != null) {
-			if(!fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+			if(fulfilmentType!= null && !fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 				BigDecimal zonalSubTotalAmount = orderQuantity;
 				TplSpecQuestion specQuestion = requestItem.getTplSpecQuestion();
 				if(specQuestion != null) {
