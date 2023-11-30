@@ -4712,7 +4712,7 @@ public class TemplateSpecBackingBean extends
 					if(tplSpecScoring.size() == 1){
 						maxScore = new BigDecimal(scoreMark.get(i));
 					}else{
-						if(maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0){
+						if(maxScore != null && maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0){
 							maxScore = new BigDecimal(scoreMark.get(i));
 						}
 					}
