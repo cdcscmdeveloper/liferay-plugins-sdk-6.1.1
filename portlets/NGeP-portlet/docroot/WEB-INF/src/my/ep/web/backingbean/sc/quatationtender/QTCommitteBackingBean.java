@@ -613,6 +613,7 @@ public class QTCommitteBackingBean extends
 						member1.setCommitteeMemberId(null);
 						setUserDetails(member1);
 						setCommitteeMemberOrgProfile(member1);
+						resetUserDetail(member1);//Bug #35176 
 						member1.setChangedDate(null);
 						if (member1.isConsolidate()) {
 							this.getManagedBean().setSelectScCommitteMember(
@@ -634,6 +635,7 @@ public class QTCommitteBackingBean extends
 						} else {
 							committeeMember.setCommitteeMemberId(null);
 							setUserDetails(committeeMember);
+							resetUserDetail(committeeMember);//Bug #35176 
 							committeeMember.setChangedDate(null);
 							committeeMember.setScCommittee(scCommittee);
 							memberList.add(committeeMember);
@@ -653,6 +655,26 @@ public class QTCommitteBackingBean extends
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
 		this.getManagedBean().setAutoUpdate(true);
 	}
+	
+	// Bug #35176 - start
+	/**
+	 * Reset Clone Committee Member Detail - get latest user info from PM
+	 * 
+	 * @param scMember
+	 */
+	public void resetUserDetail(ScCommitteeMember scMember){
+		if(scMember.getPmUser() != null) {
+			Long userId = scMember.getPmUser().getUserId();
+			PmUser user = retrieveUserDtlById(userId);
+			if (user != null){
+				scMember.setEmail(user.getEmail());
+				scMember.setGrade(user.getGrade());
+				scMember.setDesignation(user.getDesignation());
+				scMember.setPNP(user.isPMP());
+			}
+		}
+	}
+	// Bug #35176 - end
 
 	/**
 	 * On row clone action.
@@ -841,6 +863,7 @@ public class QTCommitteBackingBean extends
 								setUserDetails(member1);
 								member1.setChangedDate(null);
 								setCommitteeMemberOrgProfile(member1);
+								resetUserDetail(member1);//Bug #35176 
 								member1.setScCommittee(cloneCommitte);
 								// tabs.get(beanCount).getMembers().add(member1);
 								memberList.add(member1);
