@@ -8708,26 +8708,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			// Set to default value if there is changes in qt type
-		 if ( !isPK7 ){//20231122@asyrafhaziq_25726 - Issue 16
-			if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() ) {
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+			if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() && !isPK7) {
+				//20231122@asyrafhaziq_25726 - Issue 16
+				//getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 				getManagedBean().getScLoa().setAgreementReq(false);
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
 				RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
 			} else {
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+				// 20231122@asyrafhaziq_25726 - Issue 16
+				//getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 				getManagedBean().getScLoa().setAgreementReq(true);
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
 				RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
 			}
-		 //20231122@asyrafhaziq_25726 - Issue 16
-		 }else{
-			 getManagedBean().setAgreementReqChange(false);
-			 getManagedBean().getScLoa().setScLoaAttachment(null);
-			 RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-		 }
+
 			// #25726 END
 		} finally {
 			parameterSO = null;
