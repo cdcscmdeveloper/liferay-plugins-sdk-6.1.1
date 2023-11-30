@@ -8099,6 +8099,7 @@ public class EvaluationBackingBean extends
 								
 								//#33187 Start - fix next skip if disable Technical
 								if(this.getManagedBean().getNoSupplierPackageExist()){
+									retriveSummaryEvaluationStage();
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
 								}
 								//#33187 End - fix next skip if disable Technical
