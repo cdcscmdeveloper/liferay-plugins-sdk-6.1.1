@@ -85,6 +85,7 @@ public class PoJobWeightBackingBean extends
 	}
 
 	private void validateJobWeight() {
+		//Start #11992
 		Integer moderate = null;
 		Integer high = null;
 		Integer extraHigh = null;
@@ -108,7 +109,7 @@ public class PoJobWeightBackingBean extends
 		if (moderate > 9) {
 			throw new EpException("Cannot more than 9");
 		}
-			
+		//End #11992 
 		if (high > 9) {
 			throw new EpException("Cannot more than 9");
 		}
