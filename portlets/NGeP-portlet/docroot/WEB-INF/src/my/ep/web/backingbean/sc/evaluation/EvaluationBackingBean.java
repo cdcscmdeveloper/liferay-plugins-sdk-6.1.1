@@ -8333,7 +8333,18 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
-
+					// #25138, #21695 -start-
+//							// #25638 -start-
+//							&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this
+//									.getManagedBean().getCurrentStatusId())
+//							|| QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION.equals(this
+//									.getManagedBean().getCurrentStatusId()))
+//							// #25638 -end-								
+//						&& !this.getManagedBean().isReadOnly()) {
+					// #25138, #21695 -end-
+					
+					// evaluationStageCheck();
+					//Bug #34748 - Start
 					if (currentTab == 2) {
 						// this here , for 1 tier if click train station from tec to report
 						//#34588 start
