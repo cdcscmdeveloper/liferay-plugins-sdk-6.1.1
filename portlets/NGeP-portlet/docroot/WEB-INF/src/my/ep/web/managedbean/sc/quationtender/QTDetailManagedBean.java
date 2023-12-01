@@ -134,8 +134,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDetailManagedBean.class);
+	private static final Logger log = EpLogger.getLogger(QTDetailManagedBean.class);
 	
 	/** The qt. */
 	private ScQt qt;

@@ -261,7 +261,6 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class QTDetailBackingBean.
  * 
@@ -271,6 +270,12 @@ import org.primefaces.util.Constants;
 @RequestScoped
 public class QTDetailBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -5189,7 +5194,6 @@ public class QTDetailBackingBean extends
 					.getTemplateSpecZoneDtls();
 
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
-				// TODO Code needs to be remove
 				// setUserDetails(qtSupplierCriteria.getQtZoneCriterias());
 
 				for (TplSpecZoneDtl tplSpecZoneDtl : businessOwnerZone) {
@@ -7992,10 +7996,9 @@ public class QTDetailBackingBean extends
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void handleFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		log.debug("qtDetailhandleFileUpload - START");
-		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
+		//List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			log.debug("qtDetailhandleFileUpload - START");
 			ScAttachment scAttachment = null;
@@ -8022,7 +8025,7 @@ public class QTDetailBackingBean extends
 			//attachments.add(attachment);
 			//getManagedBean().setAttachments(attachments);
 		}
-		attachments=null;
+		//attachments=null;
 		log.debug("qtDetailhandleFileUpload - END");
 	}
 	
@@ -8847,7 +8850,7 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public void saveQtCAApproval() {
-		IQTDetailSO detailSO;
+		//IQTDetailSO detailSO;
 		
 		try {
 			if (((getUserTaskIsCommitteeAppointmentApproval() && this.getManagedBean().getActiveIndex() == 5) 
@@ -8924,7 +8927,7 @@ public class QTDetailBackingBean extends
 						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
 			}
 		} finally {
-			detailSO = null;
+			//detailSO = null;
 		}
 	}
 	//#13344 - End
