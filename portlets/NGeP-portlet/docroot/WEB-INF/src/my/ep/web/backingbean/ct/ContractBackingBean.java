@@ -1772,32 +1772,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							SearchOperator.OPERATOR_NOT_IN.value(),
 							orgProfileIdList);
 					searchBean.getDataFilterBeans().add(filterBean);
-			}else {
-				//#25406 - End Fixing 
-				List<List<Long>> subOrgProfileIdList = new ArrayList<List<Long>>();
-				int count = orgProfileIdList.size();
-				for (int i = 0; i < count; i += 1000) {
-					subOrgProfileIdList.add(new ArrayList<Long>(
-							orgProfileIdList.subList(i, Math.min(count, i + 1000)))
-							);
-				}
-				SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
-						SearchOperator.OPERATOR_NOT_IN.value(),
-						subOrgProfileIdList.get(0));
-				SearchMultiFilterBean multi = null;
-
-				for (int i = 1; i < subOrgProfileIdList.size(); i++) {
-					SearchFilterBean subOrgProfileBean = new SearchFilterBean("orgProfileId",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							subOrgProfileIdList.get(i));
-					if (i == 1) {
-						multi = new SearchMultiFilterBean(filterBean, subOrgProfileBean);
-					} else {
-						multi = new SearchMultiFilterBean(multi, subOrgProfileBean);
+				}else {
+					//#25406 - End Fixing 
+					List<List<Long>> subOrgProfileIdList = new ArrayList<List<Long>>();
+					int count = orgProfileIdList.size();
+					for (int i = 0; i < count; i += 1000) {
+						subOrgProfileIdList.add(new ArrayList<Long>(orgProfileIdList.subList(i, Math.min(count, i + 1000))));
 					}
+					SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							subOrgProfileIdList.get(0));
+					SearchMultiFilterBean multi = null;
+
+					for (int i = 1; i < subOrgProfileIdList.size(); i++) {
+						SearchFilterBean subOrgProfileBean = new SearchFilterBean("orgProfileId",
+								SearchOperator.OPERATOR_NOT_IN.value(),
+								subOrgProfileIdList.get(i));
+						if (i == 1) {
+							multi = new SearchMultiFilterBean(filterBean, subOrgProfileBean);
+						} else {
+							multi = new SearchMultiFilterBean(multi, subOrgProfileBean);
+						}
+					}
+					searchBean.getDataFilterBeans().add(multi);
 				}
-				searchBean.getDataFilterBeans().add(multi);
-			}
 			} //#25406
 		}
 		return searchBean;
@@ -3199,28 +3197,28 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}			
 			//Bug #28479 - End				
-	if (ctContractItem.getMinimumOrderQty() > 0) {
-		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-		   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-			if (!item.getCtItemMaxQties().isEmpty()) {
-				Double maxValue = new Double(0);							
-				for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-					if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-						maxValue = maxQty.getMaxQuantity().doubleValue();				
-				}
-				if (item.getMinimumOrderQty() > maxValue) {
-					throw new EpException(MessageConst.ERROR_100034,
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-//					throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
-				}
+			if (ctContractItem.getMinimumOrderQty() > 0) {
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+					if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+		   				item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+						if (!item.getCtItemMaxQties().isEmpty()) {
+							Double maxValue = new Double(0);							
+							for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+								if(maxQty.getMaxQuantity().doubleValue() > maxValue)
+									maxValue = maxQty.getMaxQuantity().doubleValue();				
+								}
+								if (item.getMinimumOrderQty() > maxValue) {
+									throw new EpException(MessageConst.ERROR_100034,
+										new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//										throwExceptions(MessageConst.ERROR_100034, "lbl.ct.min.order.qty");						
+								}
 				
+							}
+						}//#28479 - End Putra
+					}
+				}
 			}
-		}//#28479 - End Putra
-	}
-}
-		}
 		// End - 28292
 		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
 		
@@ -4259,6 +4257,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	}	
 	// End Fix - #33491
+	
+	/*
+	 * To identify user role based on user logged in
+	 * return true if user has role as supplier
+	 * else return false
+	 */
+	//Start Fix - #35202
+	public boolean isSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	//End Fix - #35202
 			
 	//Enhancement 15851 - Start
 	/**
