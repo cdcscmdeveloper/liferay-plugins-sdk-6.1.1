@@ -4042,8 +4042,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile){
 		SmAppl appl = getManagedBean().getSmAppl();
-		return isSupplierProfile || appl.isActiveAppl() && !appl.getPmStatus().getStatusId()
-				.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT);
+		Long status = appl.getPmStatus().getStatusId();
+		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
+				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
+		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
 	}
 	//#28175 - end
 	
