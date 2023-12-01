@@ -8240,7 +8240,14 @@ public void saveComplianceSample() {
 									int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 									
 									if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+										retriveFinancialEvaluationStage();
+										retriveNonScoringComplianceFinancial(true); //#28856, #25138
 										
+										// #30722, #25138 - start
+										financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+												.get(0).getDocCategory());
+										
+										this.getManagedBean().setTabFinancialIndex(1);
 										outputTab = 3;
 
 									} else{
@@ -8631,8 +8638,9 @@ public void saveComplianceSample() {
 
 							// #25138 - one item only - start
 							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && this.getManagedBean().getSingleSpecQuestion()) {
-								retriveFinancialEvaluationStagePackage();
 								retriveOneTierFinancialSupplierSummary();
+								this.getManagedBean().setOneTierFinancialActiveIndex(2);
+								outputTab = 3;
 							} else { //#34588 end
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
 									retriveOneTierFinancialSupplierSummary();
