@@ -86,7 +86,7 @@ public class PoJobWeightBackingBean extends
 
 	private void validateJobWeight() {
 		//Start #11992
-		Integer moderate = null;
+		Integer moderate = 0;
 		Integer high = null;
 		Integer extraHigh = null;
 		for (PmPoJobWeight weight : getManagedBean().getJobWeightList()) {
