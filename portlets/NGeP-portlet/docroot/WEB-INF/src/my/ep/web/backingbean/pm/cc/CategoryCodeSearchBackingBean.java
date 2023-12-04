@@ -54,7 +54,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -579,7 +578,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
-			bumiPerc = bumiPercentage.intValue();
+			//SONARQUBE PM BUG MINOR AZZA G51
+			bumiPerc = bumiPercentage;
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
@@ -643,7 +643,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
-			bumiPerc = bumiPercentage.intValue();
+			//SONARQUBE PM BUG MINOR AZZA G51
+			bumiPerc = bumiPercentage;
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
@@ -708,7 +709,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		}
 		Integer bumiPerc = new Integer(0);
 		if (bumiPercentage != null) {
-			bumiPerc = bumiPercentage.intValue();
+			//SONARQUBE PM BUG MINOR AZZA G51
+			bumiPerc = bumiPercentage;
 			if (bumiPerc.compareTo(51) >= 0 && bumiPerc.compareTo(100) < 0) {
 				bumiPerc = 99;
 			}
@@ -919,13 +921,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				int checkBasic = 0; 
 
 				List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
-				for (SmSupplierCategory cat : currSupp.getSmAppl()
-						.getSmSupplierCategories()) {
-					 if (cat.getRecordStatusFlg().compareTo(
-								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(
-										SupplierManagementConst.PENDING_ACT_STATUS) == 0)  {
-						cat.setEntryMode(cat.getOtherDesc()); 
-						
+				for (SmSupplierCategory cat : currSupp.getSmAppl().getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						cat.setEntryMode(cat.getOtherDesc());
+
 						// 28327: Disciplinary Action - start - <28327>
 						apprvList.add(cat);
 						// 28327: Disciplinary Action - start - <28327>
@@ -935,30 +934,20 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				getManagedBean().setApprovedCategoryList(apprvList); 
 				
 				//check approved basic category 
-				for(SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()){ 
-					log.info("getCategoryL1Id() ="+categ.getPmCategoryL1().getCategoryL1Code()); 
-					log.info("getCategoryL2Id() ="+categ.getPmCategoryL2().getCategoryL2Code()); 
-					log.info("getCategoryL3Id() ="+categ.getPmCategoryL3().getCategoryL3Code()); 
-					if(categ.getPmCategoryL1() != null
-							&& categ.getPmCategoryL1().getCategoryL1Code()
-							.equalsIgnoreCase("22")){
-						if(categ.getPmCategoryL2() != null
-								&& categ.getPmCategoryL2().getCategoryL2Code()
-								.equalsIgnoreCase("17")){
-							if(categ.getPmCategoryL3() != null){
-								if(categ.getPmCategoryL3().getCategoryL3Code() != null
-										&& categ.getPmCategoryL3().getCategoryL3Code()
-										.equalsIgnoreCase("04")){ 
+				for (SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()) {
+					log.info("getCategoryL1Id() =" + categ.getPmCategoryL1().getCategoryL1Code());
+					log.info("getCategoryL2Id() =" + categ.getPmCategoryL2().getCategoryL2Code());
+					log.info("getCategoryL3Id() =" + categ.getPmCategoryL3().getCategoryL3Code());
+					if (categ.getPmCategoryL1() != null && categ.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")) {
+						if (categ.getPmCategoryL2() != null && categ.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")) {
+							if (categ.getPmCategoryL3() != null) {
+								if (categ.getPmCategoryL3().getCategoryL3Code() != null && categ.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04")) {
 									checkBasic = checkBasic + 1;
-								}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
-										&& categ.getPmCategoryL3().getCategoryL3Code()
-										.equalsIgnoreCase("05")){ 
+								} else if (categ.getPmCategoryL3().getCategoryL3Code() != null && categ.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05")) {
 									checkBasic = checkBasic + 1;
-								}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
-										&& categ.getPmCategoryL3().getCategoryL3Code()
-										.equalsIgnoreCase("06")){ 
+								} else if (categ.getPmCategoryL3().getCategoryL3Code() != null && categ.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")) {
 									checkBasic = checkBasic + 1;
-								} 
+								}
 							}
 						}
 					}
@@ -966,18 +955,15 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				 
 				
 				for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-					item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
-							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
-							
-					if(pmCategoryL3.getCategoryL3Code() != null
-							&& pmCategoryL3.getCategoryL3Id()== 347){
-						log.info("MTO Code exist"); 
-						if( checkBasic != 3 ){
+					item = new SelectItem(pmCategoryL3.getCategoryL3Id(), pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
 
+					if (pmCategoryL3.getCategoryL3Code() != null && pmCategoryL3.getCategoryL3Id() == 347) {
+						log.info("MTO Code exist");
+						if (checkBasic != 3) {
 							item.setDisabled(true);
 							log.info("Disciplinary Action - disabled by basic category");
 						}
-					} 
+					}
 					selectItems.add(item);
 				} 
 				checkBasic = 0;
@@ -986,65 +972,62 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		} else { 
 			//27859,30720 Start - 3rd level category didnot appear
 			SupplierDataMaintenanceResDTO updateDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplierId(supplierId);
-			if(updateDAList != null && updateDAList.getSmDisciplinaryActions().size() > 0){
+			if (updateDAList != null && updateDAList.getSmDisciplinaryActions().size() > 0) {
 
-				for(SmDisciplinaryAction disc: updateDAList.getSmDisciplinaryActions()){
+				for (SmDisciplinaryAction disc : updateDAList.getSmDisciplinaryActions()) {
 
 					List<Object[]> cancelDA = SmApplicationUtil.retrieveCancelCategoryBySupplier(disc.getSmSupplier());
 					for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-						item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
-								pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
-						
-						if(disc.isCancelCategory() || disc.isManufacturerCancel()){								
-							if(cancelDA != null
-									&& cancelDA.size() > 0){
-								for(Object[] arr : cancelDA){
-									if(arr[7].toString().equalsIgnoreCase(disc.getDisciplinaryActionId().toString())){
-										if(item.getValue().toString().equalsIgnoreCase(arr[2].toString())){
+						item = new SelectItem(pmCategoryL3.getCategoryL3Id(), pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+
+						if (disc.isCancelCategory() || disc.isManufacturerCancel()) {
+							if (cancelDA != null && cancelDA.size() > 0) {
+								for (Object[] arr : cancelDA) {
+									if (arr[7].toString().equalsIgnoreCase(disc.getDisciplinaryActionId().toString())) {
+										if (item.getValue().toString().equalsIgnoreCase(arr[2].toString())) {
 											item.setDisabled(true);
 											log.info("Disciplinary Action - disabled cancel category");
 										}
-									}										
+									}
 								}
-							}  
-						} else if(disc.isBumiputeraCancel()){
-							//30841 - All Bumiputera category code did not display in the system when supplier want to add new Bumiputera category code - start
-							if (pmCategoryL3.getBumiPercentage() > 50 ){ 
+							}
+						} else if (disc.isBumiputeraCancel()) {
+							// 30841 - All Bumiputera category code did not display in the system when supplier want to add new Bumiputera category code - start
+							if (pmCategoryL3.getBumiPercentage() > 50) {
 								item.setDisabled(true);
-								log.info("Disciplinary Action - disabled by bumiputera"); 
-							//30841 - All Bumiputera category code did not display in the system when supplier want to add new Bumiputera category code - end
+								log.info("Disciplinary Action - disabled by bumiputera");
+								// 30841 - All Bumiputera category code did not display in the system when supplier want to add new Bumiputera category code - end
+							}
 						}
-					}  
 						selectItems.add(item);
 					}
 				}
 			} else {
-				//#33387 - START
-				int checkBasic = 0; 
+				// #33387 - START
+				int checkBasic = 0;
 				List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
-				
+
 				getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(supplierId));
-				ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
-				
+				ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+
 				SupplierCategoryReqDTO suppCatReqDTO = new SupplierCategoryReqDTO();
 				SupplierCategoryResDTO suppCatResDTO = new SupplierCategoryResDTO();
 				suppCatReqDTO.setSupplierId(supplierId);
 				suppCatResDTO = supplierCategorySO.retrieveCategoryBySupplierId(suppCatReqDTO);
-				
-			     List<Object[]> catList = null;
-			        
-		        if (null != suppCatResDTO) {
-		          catList = suppCatResDTO.getResultList();
-		        }
-		        
-		        for(Object[] arr : catList){
+
+				List<Object[]> catList = null;
+
+				if (null != suppCatResDTO) {
+					catList = suppCatResDTO.getResultList();
+				}
+
+				for (Object[] arr : catList) {
 					SmSupplierCategory cat = new SmSupplierCategory();
-					
+
 					PmCategoryL1 pmCategoryL1 = new PmCategoryL1();
 					PmCategoryL2 pmCategoryL2 = new PmCategoryL2();
 					PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
-					
+
 					pmCategoryL1.setCategoryL1Code((String) arr[3]);
 					pmCategoryL2.setCategoryL2Code((String) arr[4]);
 					pmCategoryL3.setCategoryL3Code((String) arr[5]);
@@ -1052,69 +1035,60 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 					cat.setPmCategoryL1(pmCategoryL1);
 					cat.setPmCategoryL2(pmCategoryL2);
 					cat.setPmCategoryL3(pmCategoryL3);
-					
+
 					BigDecimal recordStatus = (BigDecimal) arr[7];
-					if(recordStatus.compareTo(BigDecimal.ONE) == 0){
+					if (recordStatus.compareTo(BigDecimal.ONE) == 0) {
 						cat.setRecordStatus(true);
-					} else if(recordStatus.compareTo(BigDecimal.ZERO) == 0){
+					} else if (recordStatus.compareTo(BigDecimal.ZERO) == 0) {
 						cat.setRecordStatus(false);
 					}
-					
-					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.APPROVED_RECORD_STATUS) == 0
-							|| cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+
+					if (cat.getRecordStatusFlg().compareTo(SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 						// 28327: Disciplinary Action - start - <28327>
 						apprvList.add(cat);
 						// 28327: Disciplinary Action - start - <28327>
 					}
 				}
-		        
-		        apprvList.addAll(activeCategoryList);
-				SmApplicationUtil.sortSupplierCategory(apprvList);
-				getManagedBean().setApprovedCategoryList(apprvList); 
-				
-				//check approved basic category for MTO code
-				for(SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()){ 
-					log.info("getCategoryL1Id() ="+categ.getPmCategoryL1().getCategoryL1Code()); 
-					log.info("getCategoryL2Id() ="+categ.getPmCategoryL2().getCategoryL2Code()); 
-					log.info("getCategoryL3Id() ="+categ.getPmCategoryL3().getCategoryL3Code()); 
-					if(categ.getPmCategoryL1() != null
-							&& categ.getPmCategoryL1().getCategoryL1Code()
-							.equalsIgnoreCase("22")){
-						if(categ.getPmCategoryL2() != null
-								&& categ.getPmCategoryL2().getCategoryL2Code()
-								.equalsIgnoreCase("17")){
-							if(categ.getPmCategoryL3() != null){
-								if(categ.getPmCategoryL3().getCategoryL3Code() != null
-										&& categ.getPmCategoryL3().getCategoryL3Code()
-										.equalsIgnoreCase("04")){ 
-									checkBasic = checkBasic + 1;
-								}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
-										&& categ.getPmCategoryL3().getCategoryL3Code()
-										.equalsIgnoreCase("05")){ 
-									checkBasic = checkBasic + 1;
-								}else if(categ.getPmCategoryL3().getCategoryL3Code() != null
-										&& categ.getPmCategoryL3().getCategoryL3Code()
-										.equalsIgnoreCase("06")){ 
-									checkBasic = checkBasic + 1;
-								} 
+
+				// #33387 - Add null checking
+				if (activeCategoryList != null) {
+					apprvList.addAll(activeCategoryList);
+					SmApplicationUtil.sortSupplierCategory(apprvList);
+					getManagedBean().setApprovedCategoryList(apprvList);
+
+					// check approved basic category for MTO code
+					for (SmSupplierCategory categ : getManagedBean().getApprovedCategoryList()) {
+						log.info("getCategoryL1Id() =" + categ.getPmCategoryL1().getCategoryL1Code());
+						log.info("getCategoryL2Id() =" + categ.getPmCategoryL2().getCategoryL2Code());
+						log.info("getCategoryL3Id() =" + categ.getPmCategoryL3().getCategoryL3Code());
+						if (categ.getPmCategoryL1() != null && categ.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase("22")) {
+							if (categ.getPmCategoryL2() != null && categ.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase("17")) {
+								if (categ.getPmCategoryL3() != null) {
+									if (categ.getPmCategoryL3().getCategoryL3Code() != null && categ.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("04")) {
+										checkBasic = checkBasic + 1;
+									} else if (categ.getPmCategoryL3().getCategoryL3Code() != null && categ.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("05")) {
+										checkBasic = checkBasic + 1;
+									} else if (categ.getPmCategoryL3().getCategoryL3Code() != null && categ.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase("06")) {
+										checkBasic = checkBasic + 1;
+									}
+								}
 							}
 						}
 					}
+					// #33387 - Add null checking
 				}
-				
-				for(PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
-					item = new SelectItem(pmCategoryL3.getCategoryL3Id(),
-							pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
-							
-					if(pmCategoryL3.getCategoryL3Code() != null
-							&& pmCategoryL3.getCategoryL3Id()== 347){
-						log.info("MTO Code exist"); 
-						if( checkBasic != 3 ){
+
+				for (PmCategoryL3 pmCategoryL3 : resDTO.getCategoryL3List()) {
+					item = new SelectItem(pmCategoryL3.getCategoryL3Id(), pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName());
+
+					if (pmCategoryL3.getCategoryL3Code() != null && pmCategoryL3.getCategoryL3Id() == 347) {
+						log.info("MTO Code exist");
+						if (checkBasic != 3) {
 							item.setDisabled(true);
 							log.info("Disciplinary Action - disabled by basic category");
 						}
-					} 
-					
+					}
+
 					log.info("out pmCategoryL3.getCategoryName(): " + pmCategoryL3.getCategoryName());
 					selectItems.add(item);
 				}

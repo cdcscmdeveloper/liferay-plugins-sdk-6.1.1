@@ -89,8 +89,10 @@ public class SupplierManagementConst {
 	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
 	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
-	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 7;
-	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 12;
+	//#31043 start
+	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
+	//#31043 end
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
@@ -137,6 +139,12 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_STORE = "S";
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
+	
+	//#34711 - START
+	// Facility Ownership
+	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
+	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
+	//#34711 - END
 
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
@@ -734,6 +742,14 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
+	
+	//33783 - start
+	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
+	
+	public String getCOMPANY_TYPE_CLBG() {
+		return COMPANY_TYPE_CLBG;
+	}
+	//33783 - end
 
 	public String getCATEGORY_CODE_L3_99() {
 		return CATEGORY_CODE_L3_99;
@@ -1420,4 +1436,34 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
+	// #28175 Reopen Start
+	public long getPmStatusRegistrationStatusBumiputera() {
+		return PM_STATUS_REGISTRATION_STATUS_BUMIPUTERA;
+	}
+
+	public long getPmStatusRegistrationStatusRegistered() {
+		return PM_STATUS_REGISTRATION_STATUS_REGISTERED;
+	}
+
+	public long getPmStatusRegistrationStatusBumiFromHome() {
+		return PM_STATUS_REGISTRATION_STATUS_BUMI_FROM_HOME;
+	}
+
+	public long getPmStatusRegistrationStatusNonBumiFromHome() {
+		return PM_STATUS_REGISTRATION_STATUS_NON_BUMI_FROM_HOME;
+	} 
+
+	public long getPmStatusRegistrationStatusForeign() {
+		return PM_STATUS_REGISTRATION_STATUS_FOREIGN;
+	}
+	// #28175 Reopen End
+	
+	//#34711 - START
+	public String getSM_FACILITY_OWNERSHIP_OWN(){
+		return SM_FACILITY_OWNERSHIP_OWN;
+	}
+	public String getSM_FACILITY_OWNERSHIP_RENTED(){
+		return SM_FACILITY_OWNERSHIP_RENTED;
+	}
+	//#34711 - END
 }
