@@ -53,7 +53,9 @@ public class PaymentAcknowledgeBackingBean extends BaseBackingBean<PaymentAcknow
 			generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 		} else if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) { //S
-	        generateReport(ReportConst.SM_TAX_INVOICE_JSP, paramMap);
+			//START 35182
+			generateReport(ReportConst.SM_TAX_INVOICE_SST, paramMap);
+			//END 35182
 		}		
 		//end of Enhancement #19056
 	}

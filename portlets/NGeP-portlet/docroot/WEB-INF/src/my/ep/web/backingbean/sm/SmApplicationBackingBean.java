@@ -3881,6 +3881,9 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getApprvrSecReview()
 						.getApplSectionReviewId() != null) {
 			log.info("**** Existing Apprvr remarks *******");
+			//#34892
+			getManagedBean().getApprvrSecReview().setChangedBy(
+					new FacesScopes().getUserSessionBean().getUserId());
 			for (SmApplSectionReview revs : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
 				if (revs.getApplSectionReviewId().equals(
@@ -12784,7 +12787,7 @@ public class SmApplicationBackingBean extends
 	 * @throws Exception
 	 */
 	public void printDeclarationForm() throws Exception {
-		String language = setFixedLanguageDisplay(true, "ms");
+		String language = setFixedLanguageDisplay(true,"ms"); // 33410 set only malay language
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
