@@ -343,4 +343,6 @@ public interface QTConstants {
 	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
 	public static final String FINALIZATION_COMMITTEE_SECRETARY="lbl.sc.finalization.committee.secretary.";//25635&sonarQubeIssue12#84
+	
+	public static final String SERVICE_OBJECT_CC = "cc";
 }

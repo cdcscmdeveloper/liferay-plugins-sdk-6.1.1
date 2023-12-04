@@ -10996,15 +10996,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 			
 			if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
-	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId,scQt));
+	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
 	    	}else{
-	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId,scQt));
+	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
 	    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 	    	}
 			
 		}
 		
-		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId,ScQt scQt){
+		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
 			
 			List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
 
@@ -11030,10 +11030,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
-			if(supplierId != null && scQt != null){
-				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
-					isSupplierBranchDeleted = true;
-			    }
+			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+				isSupplierBranchDeleted = true;
 			}
 		    return isSupplierBranchDeleted;
 		}
@@ -11083,7 +11081,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 				//List<String> localTitle=new ArrayList<String>();
-				List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #34720@Syazani 07/06/2022
+				List<ScQtFinalizationReport> titleList = new ArrayList<>(); // Bug #34720@Syazani 07/06/2022	//Sqube QT Master Bug G85 - Issues 21@Syazani 30/11/2023
 				while(iterator.hasNext()){
 					ScQtFinalizationReport finalizationReport = iterator.next();
 					// Bug #34720@Syazani 07/06/2022 -- Start
@@ -11586,7 +11584,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			List<ScQtFinalizationReport> titleList) {
 		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
 				.getDocDefinitionKey() : "";
-		if (titleList != null && titleList.size() > 0) {
+		if (titleList != null && !titleList.isEmpty()) {	// Sqube QT Master Bug G85 - Issues 22@Syazani 30/11/2023
 			for (ScQtFinalizationReport sfReportTemp : titleList) {
 				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
 						.getDocDefinitionKey() : "";
