@@ -72,8 +72,13 @@
 							disabled="#{isTrackingDairyView}"
 							value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
 							style="width:800px; margin-bottom:5px;" maxlength="1000" rows="5"
+							validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+							onkeyup="limitTextArea(this,1000);"
+							onkeydown="limitTextArea(this,1000);"
+							onmouseout="limitTextArea(this,1000);"
 							autoResize="false">
-							<p:ajax event="change" process="@this" update="@this"></p:ajax>
+							<p:ajax event="change" process="@this" update="@this" />
+							<f:validateLength for="justification" maximum="1000" />
 						</p:inputTextarea> <ac:iconTooltip value="#{lbl['lbl.sc.supplier.proposal.justification.tooltip']}" />
 						<p:message id="justificationMsg" for="justification"
 							display="icon" /></td>
@@ -168,6 +173,7 @@
 									value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
 									disabled="#{isTrackingDairyView}" maxlength="1000"
 									onkeyup="limitTextArea(this,1000);"
+									validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
 									onkeydown="limitTextArea(this,1000);"
 									onmouseout="limitTextArea(this,1000);">
 									<p:ajax event="change" process="@this" update="@this" />
