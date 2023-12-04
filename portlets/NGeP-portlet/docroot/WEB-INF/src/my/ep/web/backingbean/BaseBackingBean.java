@@ -166,12 +166,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * @author siew mei
@@ -3631,19 +3625,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#34135 END
 	
 	// 33410 - START
-		public String setFixedLanguageDisplay(Boolean isFixedDisplay, String languageCode){
-			LanguageReqDTO reqDTO = new LanguageReqDTO();
-			reqDTO.setLanguageCode(languageCode);
-			ILanguageSO languageSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
-			LanguageResDTO resDTO = languageSO.retrieveLanguageByLanguageCode(reqDTO);
-			if(isFixedDisplay){
-				return resDTO.getLanguage().getLanguageCode();
-			} else {
-				return new FacesScopes().getUserLocale().getLanguage();
-			}
+	public String setFixedLanguageDisplay(Boolean isFixedDisplay, String languageCode){
+		LanguageReqDTO reqDTO = new LanguageReqDTO();
+		reqDTO.setLanguageCode(languageCode);
+		ILanguageSO languageSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+		LanguageResDTO resDTO = languageSO.retrieveLanguageByLanguageCode(reqDTO);
+		if(isFixedDisplay){
+			return resDTO.getLanguage().getLanguageCode();
+		} else {
+			return new FacesScopes().getUserLocale().getLanguage();
 		}
-		// 33410 - END
+	}
+	// 33410 - END
 	
 	//START #29956
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
