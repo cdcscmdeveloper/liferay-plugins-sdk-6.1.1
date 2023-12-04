@@ -4216,6 +4216,9 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getApprvrSecReview()
 						.getApplSectionReviewId() != null) {
 			//log.info("**** Existing Apprvr remarks *******");
+			//#34892
+			getManagedBean().getApprvrSecReview().setChangedBy(
+					new FacesScopes().getUserSessionBean().getUserId());
 			for (SmApplSectionReview revs : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
 				if (revs.getApplSectionReviewId().equals(
@@ -10342,12 +10345,16 @@ public class SmApplicationBackingBean extends
 		if (dialog.equalsIgnoreCase("approverAppDialog")) {
 			Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
 			List<SmSupplierBranch> supplierList = new ArrayList<SmSupplierBranch>();
-			for (SmSupplierBranch suppBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
-				if (suppBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
-					continue;
+			//#28777 - START
+			if(getManagedBean().getSelectedBranches() != null){
+				for (SmSupplierBranch suppBranch : getManagedBean().getSelectedBranches()) {
+					if (suppBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+						continue;
+					}
+					supplierList.add(suppBranch);
 				}
-				supplierList.add(suppBranch);
 			}
+			//#28777 - END
 
 			StringBuilder deletedBranch = checkingDeletedBranchPendingFL(supplierId, supplierList);
 			if (deletedBranch.length() > 0) {
