@@ -2233,7 +2233,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				// #30504 start
+				// #30504 start #34795 start
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
 				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
 				log.info("---Curent PO: "+currPo.getUserName());
@@ -2254,6 +2254,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					smObj.setPoUsers(newPo.getLoginId());
 					this.getManagedBean().setBpmPojo(smObj);
 
+				} else {
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(currPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
 				}
 				log.info("---Curent PO Latest: "+currPo.getUserName());
 				
@@ -2290,7 +2294,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				reqDTO.setPoName(currPo.getUserName());
-				//#30504 Re-open end
+				//#30504 Re-open end #34795 end
 			}
 
 			reqDTO.setSmSvTask(svTask);
