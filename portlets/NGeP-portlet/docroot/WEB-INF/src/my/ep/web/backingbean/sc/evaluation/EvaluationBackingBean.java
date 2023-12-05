@@ -17791,11 +17791,11 @@ private void retriveCommitteeRemarksList(){
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
 	
-		selectItems.add(new SelectItem("Document", ResourceBundleUtils
+		selectItems.add(new SelectItem(SourcingConstants.DOWNLOADBY_DOCUMENT, ResourceBundleUtils
 				.getMessage("lbl.sc.eva.compliance.download.by.document",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())));
-		selectItems.add(new SelectItem("Supplier", ResourceBundleUtils
+		selectItems.add(new SelectItem(SourcingConstants.DOWNLOADBY_SUPPLIER, ResourceBundleUtils
 				.getMessage("lbl.sc.eva.compliance.download.by.supplier",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale())));
