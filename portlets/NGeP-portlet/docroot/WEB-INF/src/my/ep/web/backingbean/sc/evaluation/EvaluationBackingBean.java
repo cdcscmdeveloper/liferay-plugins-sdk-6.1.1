@@ -12,6 +12,8 @@ package my.ep.web.backingbean.sc.evaluation;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -164,6 +166,7 @@ import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.common.ScRemarkAndAttachmentBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -184,6 +187,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -1742,6 +1746,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		this.getManagedBean().setEvaluationCheckListIndex(-1);
 		this.getManagedBean().setComplianceCheckListIndex(-1);
 		this.getManagedBean().setCheckListType("");
+		
+		//#10542 - start
+		this.getManagedBean().setDownloadBy(null);
+		//#10542 - end
 		
 		//#32007 - checking view/evaluate button if not save package score - start
 		if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
@@ -9614,6 +9622,22 @@ private void retriveCommitteeRemarksList(){
 				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
 						Boolean.FALSE);
 				// #26544, #25638 -end-
+				
+				//#10542 - start
+				EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
+				EvaluationResDTO qtResDTO = new EvaluationResDTO();
+
+				qtReqDTO.setQtId(qtId);
+				qtResDTO = evaluationSO.retriveQtDtlsById(qtReqDTO);
+				ScQt scQt = qtResDTO.getScQt();
+
+				if (scQt != null) {
+					if (scQt.getCurrentActiveTab() == null || scQt.getCurrentActiveTab() < tabindex) {
+						evaluationSO.updateScQtCurrentActiveTab(scQt, tabindex);
+					}
+				}
+				//#10542 - end
+				
 			}
 		} finally {
 			evaluationSO=null;
@@ -10347,9 +10371,13 @@ private void retriveCommitteeRemarksList(){
 		
 		if (resDTO.isSuccessful()) {
 			ScQtCommittee qtCommittee = resDTO.getQtCommittee();
-			
 			successMessage(MessageConst.INFO_776043,
 					getMessageCommon("lbl.sc.quotation.tender"), qtCommittee.getScQt().getQtNo(), Boolean.TRUE);
+			
+			// #10542 - start
+			// reset station
+				resetCurrentStationQt();
+			// #10542 - end
 		}
 		// #25638 - End.
    
@@ -10438,6 +10466,11 @@ private void retriveCommitteeRemarksList(){
 					} else {
 						messageCode = getMessgeConstant(outCome);
 					}
+					
+					// #10542 - start
+					// reset station
+					resetCurrentStationQt();
+					// #10542 - end
 					
 					successMessage(messageCode, getMessageCommon("lbl.sc.prepare.secretary.evaluation"), qtCommittee
 							.getScQt().getQtNo(), Boolean.TRUE);
@@ -10836,6 +10869,40 @@ private void retriveCommitteeRemarksList(){
 		// 28834 ends
 
 		this.getManagedBean().setPrepareActiveIndex(0);
+		//#10542 - start
+		if (this.getManagedBean().getScQt() != null && this.getManagedBean().getScQt().getCurrentActiveTab() != null) {
+			try {
+				int currentActiveTab = this.getManagedBean().getScQt().getCurrentActiveTab().intValue();
+				this.getManagedBean().setTabActiveIndex(currentActiveTab);
+				this.getManagedBean().setTempTab(currentActiveTab);
+				if (currentActiveTab == 1) {
+					evaluationMaintainPreviousNextTabIndex(0, 1);
+				} else if (currentActiveTab == 2) {
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+				} else if (currentActiveTab == 3) {
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(2, 3);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+				} else if (currentActiveTab == 4) {
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(1, 2);
+					evaluationMaintainPreviousNextTabIndex(2, 3);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+					evaluationMaintainPreviousNextTabIndex(2, 4);
+					evaluationMaintainPreviousNextTabIndex(3, 4);
+					evaluationMaintainPreviousNextTabIndex(3, 4);
+					evaluationMaintainPreviousNextTabIndex(3, 4);
+				} else {
+					evaluationMaintainPreviousNextTabIndex(currentActiveTab, currentActiveTab);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		//#10542 - end
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
@@ -17704,6 +17771,322 @@ private void retriveCommitteeRemarksList(){
 				Boolean.FALSE);
 	}
 	// #28784 - end
+	
+	// #10542 - start
+	public String complianceTechnicalDownload() {
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			return "/xhtml/sc/evaluation/compliance/complianceTechnicalDownload.xhtml";
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+			return "/xhtml/sc/evaluation/compliance/complianceFinancialDownload.xhtml";
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * this method is used to get the download by dropdown values.
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> downloadByDropDownValues(){
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
+	
+		selectItems.add(new SelectItem("Document", ResourceBundleUtils
+				.getMessage("lbl.sc.eva.compliance.download.by.document",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		selectItems.add(new SelectItem("Supplier", ResourceBundleUtils
+				.getMessage("lbl.sc.eva.compliance.download.by.supplier",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
+		return selectItems;
+	}
+	
+	public void onSelectDownloadByValue() throws NullPointerException {
+		String downloadBy = this.getManagedBean().getDownloadBy();
+		try {
+			if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+				if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE);
+				} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE);
+				}
+			} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+				if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.FINANCIAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE);
+				} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)) {
+					this.getManagedBean().setMainDocumentTitle(QTConstants.FINANCIAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE);
+				}
+			}
+		} catch (NullPointerException e) {
+			this.getManagedBean().setMainDocumentTitle(null);
+		}
+	}
+	
+	public void generateAllDocumentComplianceZip() throws Exception {
+		List<ScQtCheckList> list = null;
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			list = this.getManagedBean().getComplianceTechnicalCheckList();
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+			list = this.getManagedBean().getCompliancefinancialCheckList();
+		}
+	
+		IQTEvaluationSO evaluationSO = null;
+		
+		prepareDocumentComplianceAttachments(evaluationSO, list);
+	}
+	
+	private void prepareDocumentComplianceAttachments(IQTEvaluationSO evaluationSO, List<ScQtCheckList> list) throws Exception {
+		EvaluationResDTO resDTO = new EvaluationResDTO();
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+
+		List<EvaluationReqDTO> listScAttachment = new ArrayList<EvaluationReqDTO>();
+
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTEvaluationSO.class);
+
+			for (int i = 0; i < list.size(); i++) {
+				ScQtCheckList scQtCheckList = list.get(i);
+
+				reqDTO.setCheckListId(scQtCheckList.getQtChecklistId());
+				reqDTO.setCompliance(null);
+				reqDTO.setQtId(scQtCheckList.getScQt().getQtId());
+				reqDTO.setEvalStage(null);
+				reqDTO.setProposalChecklistSearchBean(null);
+
+				resDTO = evaluationSO.retrieveComplianceDtlsByCheckList(reqDTO);
+				List<ScQtProposalChecklist> listFinancial = resDTO.getComplianceResultBean().getResultList();
+				for (int j = 0; j < listFinancial.size(); j++) {
+					EvaluationReqDTO attachmentToDownload = new EvaluationReqDTO();
+					ScQtProposalChecklist scQtProposalChecklist = listFinancial.get(j);
+
+					// 10542-#61 dayan bug fix - start
+					attachmentToDownload.setScAttachment(scQtProposalChecklist.getScQtProposalChecklistAttachment());
+					attachmentToDownload.setSupplierNo(scQtProposalChecklist.getScQtProposal().getSupplierNo());
+					attachmentToDownload.setScQtChecklistName(scQtCheckList.getTitle());
+					// 10542-#61 dayan bug fix - end
+
+					listScAttachment.add(attachmentToDownload);
+
+				}
+			}
+
+			downloadAllFilesAsZipFileWithSpecificFolder(listScAttachment);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			evaluationSO = null;
+		}	
+	}
+
+	public void downloadZippedFile() throws IOException {
+		String downloadBy = this.getManagedBean().getDownloadBy();
+		byte[] zipFileContent = null;
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				zipFileContent = this.getManagedBean().getTechnicalZipFileDownloadByDocument();
+			} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				zipFileContent = this.getManagedBean().getTechnicalZipFileDownloadBySupplier();
+			}
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				zipFileContent = this.getManagedBean().getFinancialZipFileDownloadByDocument();
+			} else if (downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				zipFileContent = this.getManagedBean().getFinancialZipFileDownloadBySupplier();
+			}
+		}
+		
+		downloadAllFilesWithSpecificFolder(zipFileContent);
+	}
+
+	private void downloadAllFilesWithSpecificFolder(byte[] zipFileContent) throws IOException {
+		
+		String zipFileName = this.getManagedBean().getMainDocumentTitle();
+
+		try {
+			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			log.info(portalresponse);
+			HttpServletResponse response = PortalUtil.getHttpServletResponse(portalresponse);
+			log.info(response.getStatus());
+			response.setContentType("application/zip");
+			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
+			
+            OutputStream out = response.getOutputStream();
+            ByteArrayInputStream bis = new ByteArrayInputStream(zipFileContent);
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = bis.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            
+            out.flush();
+            out.close();
+            response.flushBuffer();
+            FacesContext.getCurrentInstance().responseComplete();
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	private void downloadAllFilesAsZipFileWithSpecificFolder(List<EvaluationReqDTO> listScAttachment) throws IOException{
+		
+		String downloadBy = this.getManagedBean().getDownloadBy();
+		String encryptionKey = getEncryptionKey();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ZipOutputStream zos = null;
+		
+		try {
+			
+			zos = new ZipOutputStream(baos);
+	        
+			for (EvaluationReqDTO scAttachmentReq : listScAttachment) {
+				// Get the file
+				FileInputStream fis = null;
+				BufferedInputStream fif = null;
+				ScAttachment scAttachment = scAttachmentReq.getScAttachment();
+				
+				String supplierNo = QTConstants.COMPLIANCE_DOCUMENT_SUPPLIER_NO + scAttachmentReq.getSupplierNo();
+				
+				try{
+					if (null != scAttachment
+							&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
+						File file = new File(getActualFilePath(scAttachment));
+						// 10542-#61 dayan bug fix - start
+						String checkListTitle = scAttachmentReq.getScQtChecklistName().replaceAll("/","_");
+						String extension = FilenameUtils.getExtension(scAttachment.getFileName());
+						
+						String attachmentFileName = (StringUtils.isNotBlank(scAttachment.getTempFileName()) 
+							? scAttachment.getTempFileName() + "." + extension 
+							: scAttachment.getFileName());
+						
+						String downloadByZipStructure = "";
+						if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+							downloadByZipStructure = supplierNo+"/"+checkListTitle+"/"+attachmentFileName;
+						}else if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+							downloadByZipStructure = checkListTitle+"/"+supplierNo+"/"+attachmentFileName;
+						}
+						
+						zos.putNextEntry(new ZipEntry(downloadByZipStructure));
+						
+						try {
+							fis = new FileInputStream(file);
+						} catch (FileNotFoundException fnfe) {
+							zos.write((MessageConst.ERR_761001 + file.getName()).getBytes());
+							continue;
+						}
+						fif = new BufferedInputStream(fis);
+						
+						// Write the contents of the file
+						BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC(encryptionKey);
+						bc.InitDecryptCipher();
+						bc.CBCDecryptFileZip(fif, zos);
+						
+						// Write data to zos
+		                // Write the content of the entry (file content) here
+		                byte[] buffer = new byte[1024];
+		                int length;
+		                // Read from the file and write to zos
+		                while ((length = readFileContent(downloadByZipStructure, buffer)) != -1) {
+		                    zos.write(buffer, 0, length);
+		                }
+
+					}
+				}
+				finally{
+					if(fis != null){
+						fis.close();
+					}
+					if(fif != null){
+						fif.close();
+					}
+					zos.closeEntry();
+				}
+			}
+		} 
+		finally {
+			if(zos != null){
+				zos.close();
+			}
+			
+			assignZipFileByteArray(downloadBy, baos.toByteArray());
+		}
+	}
+	
+	private void assignZipFileByteArray(String downloadBy, byte[] baos){
+		if (this.getManagedBean().getComplianceActiveIndex() < 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				this.getManagedBean().setTechnicalZipFileDownloadByDocument(baos);
+			}else if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				this.getManagedBean().setTechnicalZipFileDownloadBySupplier(baos);
+			}
+		} else if (this.getManagedBean().getComplianceActiveIndex() >= 1) {
+			if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_DOCUMENT)){
+				this.getManagedBean().setFinancialZipFileDownloadByDocument(baos);
+			}else if(downloadBy.equalsIgnoreCase(SourcingConstants.DOWNLOADBY_SUPPLIER)){
+				this.getManagedBean().setFinancialZipFileDownloadBySupplier(baos);
+			}
+		}
+	}
+	
+	private int readFileContent(String entryName, byte[] buffer) throws IOException {
+	    FileInputStream fis = null;
+	    try {
+
+	        fis = new FileInputStream(entryName);
+
+	        int bytesRead;
+	        int totalBytesRead = 0;
+
+	        while ((bytesRead = fis.read(buffer)) != -1) {
+	            totalBytesRead += bytesRead;
+	        }
+
+	        return totalBytesRead;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return -1; // Return -1 to indicate an error
+	    } finally {
+	        try {
+	            if (fis != null) {
+	                fis.close();
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+	
+	private void resetCurrentStationQt(){
+		// #10542 - start
+		// reset station
+		IQTEvaluationSO evaluationSO = null;
+		try{
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+			EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
+			EvaluationResDTO qtResDTO = new EvaluationResDTO();
+
+			qtReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			qtResDTO = evaluationSO.retriveQtDtlsById(qtReqDTO);
+			ScQt scQt = qtResDTO.getScQt();
+
+			if (scQt != null) {
+				evaluationSO.updateScQtCurrentActiveTab(scQt, null);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			evaluationSO = null;
+		}
+		// #10542 - end
+	}
+	// #10542 - end
 	
 	// #28784 add remarks - start
 	private void retrieveDemoRemarks() {
