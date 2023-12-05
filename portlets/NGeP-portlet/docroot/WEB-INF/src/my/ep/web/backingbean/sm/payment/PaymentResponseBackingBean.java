@@ -620,7 +620,11 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
-
+				//START 35182
+				if (pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {					
+					pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);					
+				}
+				//END 35182
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setPyPayment(pyPayment);
 				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
@@ -861,7 +865,9 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			generateReport(ReportConst.SM_PAYMENT_RECEIPT_JSP, paramMap);
 		} else if (billType.equalsIgnoreCase(
 						my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) { //S
-	        generateReport(ReportConst.SM_TAX_INVOICE_JSP, paramMap);
+			//START 35182
+			generateReport(ReportConst.SM_TAX_INVOICE_SST, paramMap);
+			//END 35182
 		}		
 		//end of Enhancement #19056
 	}
