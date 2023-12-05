@@ -212,8 +212,8 @@
 									<ac:paginator for="consExpCatDt" />
 									<!-- #28175 - start -->
 									<c:choose>
-									<c:when test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')
-												or viewSmApplBackingBean.managedBean.smAppl.activeAppl}">
+									<c:when test="#{viewSmApplBackingBean.isLatestCatCodeDesc(
+												fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile'))}">
 										<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 											<h:outputText value="#{consExpCat.pmCategoryL1.categoryL1Code} - #{consExpCat.pmCategoryL1.categoryName}" style="float: left;white-space: normal;"/>
 										</p:column>

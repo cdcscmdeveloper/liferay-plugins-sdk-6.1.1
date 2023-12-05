@@ -3190,7 +3190,7 @@ public class EvaluationBackingBean extends
 
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
-		this.getManagedBean().setTabTechnicalIndex(5);
+		this.getManagedBean().setTabTechnicalIndex(4);
 		evaluationStageStatusCheck();
 
 		try {
@@ -3200,7 +3200,7 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(3);
-				this.getManagedBean().setTabTechnicalIndex(5);
+				this.getManagedBean().setTabTechnicalIndex(4);
 			}
 			List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -8262,7 +8262,14 @@ public class EvaluationBackingBean extends
 									int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 									
 									if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+										retriveFinancialEvaluationStage();
+										retriveNonScoringComplianceFinancial(true); //#28856, #25138
 										
+										// #30722, #25138 - start
+										financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+												.get(0).getDocCategory());
+										
+										this.getManagedBean().setTabFinancialIndex(1);
 										outputTab = 3;
 
 									} else{
@@ -8652,12 +8659,14 @@ public class EvaluationBackingBean extends
 
 							// #25138 - one item only - start
 							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && this.getManagedBean().getSingleSpecQuestion()) {
-								retriveFinancialEvaluationStagePackage();
 								retriveOneTierFinancialSupplierSummary();
+								this.getManagedBean().setOneTierFinancialActiveIndex(2);
+								outputTab = 3;
 							} else { //#34588 end
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
 									retriveOneTierFinancialSupplierSummary();
 									this.getManagedBean().setOneTierFinancialActiveIndex(2);
+									outputTab = 3;
 								}
 								else{
 									//#34588 start
