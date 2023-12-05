@@ -11557,12 +11557,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							}
 						}
 						//#31386 - START
-						List<SmAppl> allAppl = reqSO.getApplWithActiveBumiAppl(getManagedBean().getSmAppl());
+						List<SmAppl> allAppl = reqSO.getActiveApplForSVAP(getManagedBean().getSmAppl());
 						if(!EntityHelper.isCollectionEmpty(allAppl)){
-							for(SmAppl pendingKb: allAppl){
-								log.info("Appl No: "+pendingKb.getApplNo());
-//								reqSO.removeKBAppl(pendingSite);
-								reqDTO.setPendingKBAppl(pendingKb);
+							reqDTO.setPendingAppls(allAppl);
 							}
 						}
 						//#31386 - END
