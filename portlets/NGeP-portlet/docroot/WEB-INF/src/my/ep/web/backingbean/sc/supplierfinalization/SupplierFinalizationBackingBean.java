@@ -8206,16 +8206,16 @@ public class SupplierFinalizationBackingBean extends
 			int count=0;
 			List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-			List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #34720@Syazani 07/06/2022
+			List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #35379 = #34720@Syazani 07/06/2022
 			while (iterator.hasNext()) {
 				ScQtFinalizationReport finalizationReport = iterator.next();
-				// Bug #34720@Syazani 07/06/2022 -- Start
+				// Bug #35379 = #34720@Syazani 07/06/2022 -- Start
 				if (duplicateCheckFinalizationReportList(finalizationReport, titleList)) {
 					iterator.remove();
 					continue;
 				}
 				titleList.add(finalizationReport);
-				// Bug #34720@Syazani 07/06/2022 -- End
+				// Bug #35379 = #34720@Syazani 07/06/2022 -- End
 				
 				if (null != finalizationReport.getPmDocument()) {
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocCategoryCode().getParameterCode())) {
@@ -8724,8 +8724,8 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	//Bug #32682 end
-	
-	// Bug #34720@Syazani 07/06/2022 -- Start
+
+	// Bug #35379 = #34720@Syazani 07/06/2022 -- Start
 	/**
 	 * Check for duplicate report related to UUM Definiation Key Report This
 	 * issue occur in production Bug #34720
@@ -8747,6 +8747,5 @@ public class SupplierFinalizationBackingBean extends
 		}
 		return false;
 	}
-	// Bug #34720@Syazani 07/06/2022 -- End
-
+	// Bug #35379 = #34720@Syazani 07/06/2022 -- End	
 }
