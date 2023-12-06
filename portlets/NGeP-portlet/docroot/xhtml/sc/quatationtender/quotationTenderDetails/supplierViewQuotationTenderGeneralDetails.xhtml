@@ -37,6 +37,9 @@
 		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
 	<ac:lovPopup />
 	<!-- START #28784 -->
+	<!-- 20231122@asyrafhaziq_25726 - Issue 15 -->
+	<ui:param name="isGenInfo" value="#{specificationBackingBean.managedBean.genInfo}" />
+	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI><!-- END #28784 -->
@@ -431,6 +434,22 @@
 								value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
 <!-- START #21695 farid -->
 								</tr>
+					</table>
+				</td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<!-- #21695 farid --> 
+								<p:inputText id="partialTxt"
+									value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
+									style="width:195px;" disabled="true" />
+
+							</td>
+							<td><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
+						</tr>
 					</table>
 				</td>
 			</tr>
@@ -874,9 +893,10 @@
  </ui:remove>
  
  <!-- #25729 #174 START -->	
+ <!-- Bug#35061 - change message value -->
  	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
  		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		message="#{qTDetailBB.managedBean.msgConfirmBelowIndi}"
 		resizable="false" closable="false">
 		<div align="right">
 			<p:commandButton id="conf20k" 

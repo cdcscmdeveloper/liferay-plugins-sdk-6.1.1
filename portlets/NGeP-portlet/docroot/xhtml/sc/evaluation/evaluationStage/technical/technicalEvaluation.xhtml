@@ -14,8 +14,6 @@
 			toggleable="true">
 			
 			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.stage.instruction']}" escape="false" />
-			
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.proposal.evaluation.supplier.instruction.technical']}" escape="false" /><ui:remove>#21692</ui:remove>
 
 			<p:dataTable var="technicalEvaluate" id="technicalEvaluation"
 				editable="true" rowIndexVar="index"
@@ -87,65 +85,71 @@
 
 		</p:panel>
 		<p:spacer height="15"></p:spacer>
-		<p:panel id="technicalComplianceChecklistmainPageProposalIds" header="#{lbl['lbl.sc.eva.non.scoring.compliance']}"
-		toggleable="true">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
+		<!-- #34588 start(wip doesnt need to show below)-->
+		<c:if test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+			<p:panel id="technicalComplianceChecklistmainPageProposalIds"
+				header="#{lbl['lbl.sc.eva.non.scoring.compliance']}"
+				toggleable="true">
 
-		<p:dataTable var="complianceTech" id="complianceTechnicalProposal"
-			editable="true" rowIndexVar="index"
-			value="#{evaluationBackingBean.managedBean.complianceTechnicalCheckList}"
-			first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"
-			rowKey="#{complianceTech}">
-			<!-- 	<ac:paginator for="complianceTechnicalProposal" /> -->
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}"
+					escape="false" />
 
-
-			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
-				style="width:55%;white-space: normal;">
-
-				<h:outputText value="#{complianceTech.title}"></h:outputText>
-
-
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.type']}"
-				style="width:20%">
+				<p:dataTable var="complianceTech" id="complianceTechnicalProposal"
+					editable="true" rowIndexVar="index"
+					value="#{evaluationBackingBean.managedBean.complianceTechnicalCheckList}"
+					first="#{evaluationBackingBean.managedBean.evaluationtechnicalTableRow}"
+					rowKey="#{complianceTech}">
+					<!-- 	<ac:paginator for="complianceTechnicalProposal" /> -->
 
 
-				<h:outputText
-					value="#{evaluationBackingBean.getParameterDesc(complianceTech.definationType)}"></h:outputText>
+					<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+						style="width:55%;white-space: normal;">
 
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
-				style="width:15%;white-space: normal;">
+						<h:outputText value="#{complianceTech.title}"></h:outputText>
 
 
-				<h:outputText
-					value="#{evaluationBackingBean.getStatusDescById(complianceTech.pmEvalStatus.statusId)}"></h:outputText>
-
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:10%;text-align: center;">
-					
-				<p:commandButton value="#{lbl['lbl.btn.view']}"
-					rendered="#{(complianceTech.definationType.parameterCode eq 'UP' or complianceTech.definationType.parameterCode eq 'NA') and (null ne complianceTech.pmEvalStatus and complianceTech.pmEvalStatus.statusId eq '60451')}"
-					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.complianceUploadCheckListNonScoring(complianceTech,index,'T')}" />
-				
-				<p:commandButton value="#{lbl['lbl.btn.view']}"
-						rendered="#{(complianceTech.definationType.parameterCode ne 'UP' and complianceTech.definationType.parameterCode ne 'NA') and complianceTech.scoringReq eq 'false' and  (null ne complianceTech.pmEvalStatus and complianceTech.pmEvalStatus.statusId eq '60451')}"
-						action="#{evaluationBackingBean.evaluateTechnicalEvaluation(complianceTech,index,'ET')}"
-						process="@this" partialSubmit="true" />
-				
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.type']}" style="width:20%">
 
 
-			</p:column>
+						<h:outputText
+							value="#{evaluationBackingBean.getParameterDesc(complianceTech.definationType)}"></h:outputText>
 
-		</p:dataTable>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
+						style="width:15%;white-space: normal;">
 
 
-	</p:panel>
+						<h:outputText
+							value="#{evaluationBackingBean.getStatusDescById(complianceTech.pmEvalStatus.statusId)}"></h:outputText>
+
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.action']}"
+						style="width:10%;text-align: center;">
+
+						<p:commandButton value="#{lbl['lbl.btn.view']}"
+							rendered="#{(complianceTech.definationType.parameterCode eq 'UP' or complianceTech.definationType.parameterCode eq 'NA') and (null ne complianceTech.pmEvalStatus and complianceTech.pmEvalStatus.statusId eq '60451')}"
+							process="@this" partialSubmit="true"
+							action="#{evaluationBackingBean.complianceUploadCheckListNonScoring(complianceTech,index,'T')}" />
+
+						<p:commandButton value="#{lbl['lbl.btn.view']}"
+							rendered="#{(complianceTech.definationType.parameterCode ne 'UP' and complianceTech.definationType.parameterCode ne 'NA') and complianceTech.scoringReq eq 'false' and  (null ne complianceTech.pmEvalStatus and complianceTech.pmEvalStatus.statusId eq '60451')}"
+							action="#{evaluationBackingBean.evaluateTechnicalEvaluation(complianceTech,index,'ET')}"
+							process="@this" partialSubmit="true" />
+
+
+
+					</p:column>
+
+				</p:dataTable>
+
+
+			</p:panel>
+		</c:if>
+		<!-- #34588 end-->
 	
 	</h:panelGroup>
 

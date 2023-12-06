@@ -546,8 +546,9 @@ public class QTBriefingSiteVisitBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			reqDTO.setSupplierId(briefingRegistration.getSupplier()
-					.getSupplierId());
+			SmSupplier supplier = briefingRegistration.getSupplier();
+			if (supplier != null)
+				reqDTO.setSupplierId(supplier.getSupplierId());//Sonarqube #83
 			BriefingResDTO resDTO = briefingSO
 					.retrieveAuthriozesPersonalBySupplierId(reqDTO);
 			List<SmPersonnel> personals = resDTO.getPersonals();

@@ -10,7 +10,7 @@
 		toggleable="true">
 
 		<p:dataTable var="branchBean" id="dt"
-			value="#{backingBean.managedBean.smSupplierBranchSsm}"
+			value="#{cc.attrs.bBean.managedBean.smSupplierBranchSsm}"
 			rowKey="#{branchBean}" rowIndexVar="index"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			sortBy="#{branchBean.branchName}">

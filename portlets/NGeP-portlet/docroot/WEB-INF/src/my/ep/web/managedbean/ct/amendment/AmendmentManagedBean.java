@@ -190,9 +190,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private Map<String, Integer> indexing;
 	
-	private boolean viewSclFromAgreement;
 	//Enhancement 15851 - shaqimi end
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
+	
+//	private boolean isFromViewPage = false; // Fix - #34110
 	
 	public void reassignValue(boolean value) 
 	{
@@ -260,6 +261,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 				}
+//				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 				//if contract from tasklist taskid != null
 				if(getTaskId()!= null){
 					
@@ -415,6 +417,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 			}
+//			isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 			// End - #29507 Fixing
 			  if(contractVerId!=null ){					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
@@ -1620,13 +1623,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	public void setIndexing(Map<String, Integer> indexing) {
 		this.indexing = indexing;
-	}
-
-	public boolean isViewSclFromAgreement() {
-		return viewSclFromAgreement;
-	}
-	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
-		this.viewSclFromAgreement = viewSclFromAgreement;
 	}
 
 	//Bug 34142, 15851 - shaqimi 04/12/2022 removed unnecessary code
