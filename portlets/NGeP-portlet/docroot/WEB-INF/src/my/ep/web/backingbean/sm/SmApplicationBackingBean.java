@@ -11560,7 +11560,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						List<SmAppl> allAppl = reqSO.getActiveApplForSVAP(getManagedBean().getSmAppl());
 						if(!EntityHelper.isCollectionEmpty(allAppl)){
 							reqDTO.setPendingAppls(allAppl);
-							}
 						}
 						//#31386 - END
 					}
