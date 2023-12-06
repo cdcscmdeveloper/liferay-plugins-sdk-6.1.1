@@ -8077,6 +8077,7 @@ public void saveComplianceSample() {
 								
 								//#33187 Start - fix next skip if disable Technical
 								if(this.getManagedBean().getNoSupplierPackageExist()){
+									retriveSummaryEvaluationStage();
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
 								}
 								//#33187 End - fix next skip if disable Technical
@@ -8209,8 +8210,8 @@ public void saveComplianceSample() {
 								// #33187, #25138, #21695 Start - fix next skip
 								// if disable Technical , skip package Bug #35394
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
-									this.getManagedBean().setEvaluatioStageActiveIndex(2);
 									retriveSummaryEvaluationStage();
+									this.getManagedBean().setEvaluatioStageActiveIndex(2);	
 								}
 								// #33187 End - fix next skip if disable
 								// Technical
@@ -8239,7 +8240,14 @@ public void saveComplianceSample() {
 									int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 									
 									if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+										retriveFinancialEvaluationStage();
+										retriveNonScoringComplianceFinancial(true); //#28856, #25138
 										
+										// #30722, #25138 - start
+										financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+												.get(0).getDocCategory());
+										
+										this.getManagedBean().setTabFinancialIndex(1);
 										outputTab = 3;
 
 									} else{
@@ -8601,6 +8609,7 @@ public void saveComplianceSample() {
 									
 									//#33187, #25138, #21695 Start - fix next skip if disable Technical
 									if (this.getManagedBean().getNoSupplierPackageExist()) {
+										retriveSummaryEvaluationStage();
 										this.getManagedBean().setEvaluatioStageActiveIndex(2);
 									}
 									//#33187 End - fix next skip if disable Technical
@@ -8629,11 +8638,14 @@ public void saveComplianceSample() {
 
 							// #25138 - one item only - start
 							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && this.getManagedBean().getSingleSpecQuestion()) {
-								retriveFinancialEvaluationStagePackage();
 								retriveOneTierFinancialSupplierSummary();
+								this.getManagedBean().setOneTierFinancialActiveIndex(2);
+								outputTab = 3;
 							} else { //#34588 end
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
+									retriveOneTierFinancialSupplierSummary();
 									this.getManagedBean().setOneTierFinancialActiveIndex(2);
+									outputTab = 3;
 								}
 								else{
 									//#34588 start
