@@ -6534,7 +6534,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	 */
 	private void checkFinancialProposalAttachmentsForStatusCompliance(){
 		List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
-		if(null!=financialChecklist && CollectionUtils.isNotEmpty(financialChecklist)){
+		if(CollectionUtils.isNotEmpty(financialChecklist)){
 			for (ScQtProposalChecklist checklist : financialChecklist) {
 
 				PmDocument document = checklist.getScQtCheckList().getPmDocument();
@@ -6544,13 +6544,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							getManagedBean().getFinanceCheckDetailsList(),
 							QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
 					
-						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
-							boolean assetLiabilityUpload=assetLiabilitiesUpload(finProposalChecklist);
-							if(assetLiabilityUpload){
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						    }else{
-						    	checklist.setCompliance(null);
-						    }
+						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted() && assetLiabilitiesUpload(finProposalChecklist)){
+						   checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						}else{
+						   checklist.setCompliance(null);
 						}
 	
 					
@@ -6560,13 +6557,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							getManagedBean().getFinanceCheckDetailsList(),
 							QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
 					
-					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
-							boolean creditfacilityUpload=creditFacilityUpload(finProposalChecklist);
-							if(creditfacilityUpload){
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-							}else{
-								checklist.setCompliance(null);
-							}
+					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted() && creditFacilityUpload(finProposalChecklist)){
+						   checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						}else{
+						   checklist.setCompliance(null);
 				        }
 			    }
 	
