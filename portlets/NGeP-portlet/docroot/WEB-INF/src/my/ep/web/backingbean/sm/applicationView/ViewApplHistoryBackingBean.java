@@ -399,9 +399,11 @@ public class ViewApplHistoryBackingBean extends
 		this.getManagedBean().setPreRegistration(true);
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
-			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			//start #29956
-			proceed = popupDowngradeSSMOwner(this.getManagedBean().getSmAppl().getApplId(),this.getManagedBean().getSmSupplier(), personnelsRole, this.getManagedBean().isDowngradeRole(), proceed,this.getManagedBean().getSsmResDTO());
+			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
+			if(displayPopupDowngradeSSMOwner){
+				proceed = false;
+			}
 			//end #29956
 		}
 		if(proceed){
@@ -618,9 +620,15 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	public void printVirtualCert(SmMofCert cert) {
 		try {
+			//#28175 - START
+			RequestContext.getCurrentInstance().execute("blockWidget.show();");
 			getVirtualCertInstance().printVirtualCert(cert);
 		} catch (IOException e) {
 			throw new EpException(e.getMessage());
+		} finally {
+			log.info("COMPLETE TXN");
+			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+			//#28175 - END
 		}
 	}
 

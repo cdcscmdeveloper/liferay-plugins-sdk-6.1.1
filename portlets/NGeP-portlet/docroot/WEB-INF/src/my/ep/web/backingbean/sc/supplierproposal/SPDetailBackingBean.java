@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
@@ -1361,17 +1362,19 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			Map<String, Integer> singleZoneAnswerSize = new HashMap<>();
 			Map<String, Integer> singleZoneQuestionSize = new HashMap<>();
 			for (TplSpecAnswer answer : answers) {
-				boolean isQtyMoreThanZero = answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
+				boolean isQtyMoreThanZero = false;
 				String zone = answer.getTplSpecZoneQty() != null
 						&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
 						&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
 						.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
 
-				singleZoneQuestionSize = countZoneSize(singleZoneQuestionSize, zone, isQtyMoreThanZero);
+				if (answer.getTplSpecZoneQty() != null) {
+					isQtyMoreThanZero = answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
+					singleZoneQuestionSize = countZoneSize(singleZoneQuestionSize, zone, isQtyMoreThanZero);
+				}
 				
 				if (isCompleted) {
-					boolean isZoneUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
-							&& isQtyMoreThanZero;
+					boolean isZoneUomNull = answer.getRatePerUom() == null && isQtyMoreThanZero;
 					boolean isNonZonalUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null;
 
 					// #21695 7/10/2021	START
@@ -6286,23 +6289,23 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-		//29729 - start	
+        //#28777 & #29729 - Start
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTProposalSO sproposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
 			Long supplierId = this.getManagedBean().getSupplierId();
 			ScQt scQt = this.getManagedBean().getQt();
 			if(supplierId != null && scQt != null){
-				if(sproposalSO.isCheckPrepareProposalCurrentSupplierBranchDeleted(supplierId, scQt)){
+				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			    }
 			}
 		    return isSupplierBranchDeleted;
 		}
-		//29729 - end
+		//#28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
@@ -6531,7 +6534,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	 */
 	private void checkFinancialProposalAttachmentsForStatusCompliance(){
 		List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
-		if(null!=financialChecklist && CollectionUtils.isNotEmpty(financialChecklist)){
+		if(CollectionUtils.isNotEmpty(financialChecklist)){
 			for (ScQtProposalChecklist checklist : financialChecklist) {
 
 				PmDocument document = checklist.getScQtCheckList().getPmDocument();
@@ -6541,13 +6544,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							getManagedBean().getFinanceCheckDetailsList(),
 							QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
 					
-						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
-							boolean assetLiabilityUpload=assetLiabilitiesUpload(finProposalChecklist);
-							if(assetLiabilityUpload){
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						    }else{
-						    	checklist.setCompliance(null);
-						    }
+						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted() && assetLiabilitiesUpload(finProposalChecklist)){
+						   checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						}else{
+						   checklist.setCompliance(null);
 						}
 	
 					
@@ -6557,13 +6557,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							getManagedBean().getFinanceCheckDetailsList(),
 							QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
 					
-					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
-							boolean creditfacilityUpload=creditFacilityUpload(finProposalChecklist);
-							if(creditfacilityUpload){
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-							}else{
-								checklist.setCompliance(null);
-							}
+					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted() && creditFacilityUpload(finProposalChecklist)){
+						   checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						}else{
+						   checklist.setCompliance(null);
 				        }
 			    }
 	
