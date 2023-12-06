@@ -3333,6 +3333,12 @@ public class SpecificationBackingBean extends
 
 					}
 				}
+				//20231122@asyrafhaziq_25726 - Issue 10
+				if (this.getManagedBean().getToBeRemoveSchedules() != null && !this.getManagedBean().getToBeRemoveSchedules().isEmpty()) {
+					EntityHelper.compareAndRemoveEntityFromList(this.getManagedBean().getToBeRemoveSchedules(),
+							scheduleList, "scheduleNo");
+				}
+				
 				this.getManagedBean().setScheduleList(scheduleList);
 			}
 
@@ -3374,6 +3380,13 @@ public class SpecificationBackingBean extends
 					}
 
 				}
+				
+				//20231122@asyrafhaziq_25726 - Issue 10
+				if (this.getManagedBean().getToBeRemoveProgPayments() != null && !this.getManagedBean().getToBeRemoveProgPayments().isEmpty()) {
+					EntityHelper.compareAndRemoveEntityFromList(this.getManagedBean().getToBeRemoveProgPayments(),
+							paymentList, "phaseNo");
+				}
+				
 				this.getManagedBean().setProgressivePaymentList(paymentList);
 			}
 
