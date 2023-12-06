@@ -1387,18 +1387,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return null;
 	}
 	
-	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
+	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException {
 		log.info("START TO DOWNLOAD FILE");
-		PortletResponse resp = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
+		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
 
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
-//		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + displayFileName + "\"");
+		// response.setContentType("application/octet-stream");
 		response.setContentType(getMimeType(displayFileName));
 		response.flushBuffer();
 
@@ -1406,20 +1405,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {
 			URLConnection uc = new URL(filePath).openConnection();
 			docInputStream = new BufferedInputStream(uc.getInputStream());
-			log.info("ZAIM getURL "+uc.getURL().toString());
-			log.info("filePath----"+filePath);
+			log.info("ZAIM getURL " + uc.getURL().toString());
+			log.info("filePath----" + filePath);
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
-			log.info("docInputStream==="+docInputStream);
-			log.info("Error found while downloading file "+filePath+" : "+e);
+			log.info("docInputStream===" + docInputStream);
+			log.info("Error found while downloading file " + filePath + " : " + e);
 			log.error(e);
 			e.printStackTrace();
-			
+
 		}
 
 		OutputStream out = null;
-		try {		
+		try {
 
 			out = response.getOutputStream();
 			byte[] buffer = new byte[4096];
@@ -1428,14 +1427,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				out.write(buffer, 0, bytesRead);
 				buffer = new byte[4096];
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			log.error(e);
 		} finally {
 			if (out != null) {
 				out.close();
 			}
 			if (docInputStream != null) {
-				docInputStream.close();	
+				docInputStream.close();
 			}
 		}
 		log.info("END TO DOWNLOAD FILE");
@@ -1555,14 +1554,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			dir.mkdirs();
 			log.info("after make directory");
 		}
+		String finalFileName = StringUtils.replace(file.getFileName(), " ", "-");
 
-		try {
-			String finalFileName = StringUtils.replace(file.getFileName(), " ",
-					"-");
+		try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(uploadDir + "/" + finalFileName))) {
+			
 			log.info("finalFileName: " + finalFileName);
 
-			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-					new FileOutputStream(uploadDir + "/" + finalFileName));
+			//BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(uploadDir + "/" + finalFileName));
 
 			bufferedOutputStream.write(file.getContents());
 
