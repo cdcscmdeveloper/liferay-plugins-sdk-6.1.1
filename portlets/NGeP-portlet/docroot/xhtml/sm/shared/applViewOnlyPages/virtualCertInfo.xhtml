@@ -39,7 +39,7 @@
 					ajax="false">
 					<p:fileDownload value="#{viewSmApplBackingBean.printVirtualCertUI(buttonDownloadWidget.clientId, mofCert)}" />
 				</p:commandButton>
-				<p:commandButton id="btnDownloadWidget" ajax="true" oncomplete="blockWidget.hide();" binding="#{buttonDownloadWidget}" process="@this" update="btnDownload"/>
+				<p:commandButton id="btnDownloadWidget" ajax="true" style="display:none;" oncomplete="blockWidget.hide();" binding="#{buttonDownloadWidget}" process="@this" update="btnDownload"/>
 				<!-- 28175 - END -->
 				</div>
 			</p:column>
