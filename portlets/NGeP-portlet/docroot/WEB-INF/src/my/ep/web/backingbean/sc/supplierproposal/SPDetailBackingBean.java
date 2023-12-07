@@ -40,6 +40,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -2273,6 +2274,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				}else{
 					//start Bug #28887
 					//34493 - start
+				if (null != assetProposalChecklist) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
 						assetProposalChecklist.setSubmitted(false);
 						assetProposalChecklist.setCompliance(null);
@@ -2280,6 +2282,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						assetProposalChecklist.setSubmitted(true);
 						assetProposalChecklist.setCompliance(null);
 					} 
+				}
 					//34493 - end
 					//end Bug #28887
 				}
@@ -3975,7 +3978,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			MathContext mc = new MathContext(4);
 
 			//Start Bug #26498
-			if (totalCredit.compareTo(BigDecimal.ZERO) == 1){
+			if (totalCredit != null && totalCredit.compareTo(BigDecimal.ZERO) == 1){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				percentagePaid = totalPaid.divide(totalCredit, mc).multiply(
 						BigDecimal.valueOf(100));
 			}
@@ -4197,7 +4200,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				scQtPRPExperience.setBrandNew(false);
 			}
 
-			prpExperience.setScQtProposal(proposalChecklist.getScQtProposal());
+			prpExperience.setScQtProposal(proposalChecklist != null ?proposalChecklist.getScQtProposal():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -5954,7 +5957,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							}
 						}
 						
-						if (CollectionUtils.isNotEmpty(catCodeList)) {
+						if (catCodeList != null && CollectionUtils.isNotEmpty(catCodeList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 							IQTDetailSO QtDetailsSO;
 							QuationTenderResDTO tenderResDTO;
 							
@@ -6061,7 +6064,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					zoneGeneralTrees.clear();	
 				}
 				
-				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+				if (specZoneDtls != null && CollectionUtils.isNotEmpty(specZoneDtls)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (TplSpecZoneDtl zone : specZoneDtls) {
 					
 						if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
@@ -6273,23 +6276,23 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-		//29729 - start	
+        //#28777 & #29729 - Start
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTProposalSO sproposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
 			Long supplierId = this.getManagedBean().getSupplierId();
 			ScQt scQt = this.getManagedBean().getQt();
 			if(supplierId != null && scQt != null){
-				if(sproposalSO.isCheckPrepareProposalCurrentSupplierBranchDeleted(supplierId, scQt)){
+				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			    }
 			}
 		    return isSupplierBranchDeleted;
 		}
-		//29729 - end
+		//#28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
@@ -6477,7 +6480,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					}
 				}
 			}
-			if (retrieveAns.isDisableRow()) {
+			if (retrieveAns != null && retrieveAns.isDisableRow()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				retrieveAns.setOffer(false);
 			}
 		}

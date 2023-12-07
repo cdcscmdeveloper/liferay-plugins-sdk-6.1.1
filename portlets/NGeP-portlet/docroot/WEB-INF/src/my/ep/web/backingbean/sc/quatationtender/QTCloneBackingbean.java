@@ -556,15 +556,18 @@ public class QTCloneBackingbean extends
 	}
 	
 	/**
-	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START	 * 
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START REFRACTORING DANIAL CODES
+	 * Purpose : To Get List Of status based on Constant QT_ORDERED_STATUSES
+	 * @param fromStatusId
+	 * @param toStatusId
+	 * @return Long[] statuses
 	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 		int startIndex = orderedStatuses.indexOf(fromStatusId);
 	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
 	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
-	    Long[] ret = subList.toArray(new Long[subList.size()]);
-	    return ret;
+	    return subList.toArray(new Long[subList.size()]);
 	}
 	/*
 	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
@@ -1001,7 +1004,7 @@ public class QTCloneBackingbean extends
 		
 		List<String> existedDocumets=new ArrayList<String>(); //additional docs;
 		ScQtDocReport templetDoc=null;
-		if(CollectionUtils.isNotEmpty(reportList)){
+		if(reportList != null && CollectionUtils.isNotEmpty(reportList)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			for(ScQtDocReport docReport:reportList){
 				if(null==docReport.getPmDocument()){
 				existedDocumets.add(docReport.getTitle());
@@ -1070,6 +1073,11 @@ public class QTCloneBackingbean extends
 						docDefinitionKey=docReport.getPmDocument().getDocDefinitionKey();
 					}
 					boolean templateDoc=Boolean.FALSE;//33954
+					
+					//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					if (reportList == null)
+						reportList = new ArrayList<ScQtDocReport>();
+
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
 						IQTTemplateSO qtTemplateSO = null;
@@ -3078,7 +3086,7 @@ public class QTCloneBackingbean extends
 				//this.getManagedBean().setToBeDelCommitteMemebers(toDeleteMember);
 				this.getManagedBean().getToBeDelCommitteMemebers().addAll(toDeleteMember);
 			}
-		}
+		 //}//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 		
 		committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 		committee.setCommitteStatus(getPmStatusByStatusId(QTStatusConst.CMT_PENDING_SUBMISSION));
@@ -3122,7 +3130,7 @@ public class QTCloneBackingbean extends
 				
 			}
 		}
-		
+	   }//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		clonedScQtCommittee.setScCommittee(committee);
 		
 		
@@ -3514,7 +3522,8 @@ public class QTCloneBackingbean extends
 			}//34466&25635-end
 			//to Delete
 			List<ScQtCategory> tobeRemoveCategoryCodes=new ArrayList<ScQtCategory>();
-			if(CollectionUtils.isNotEmpty(currentExistingCategory)){//34466&25635-start
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if(currentExistingCategory != null && CollectionUtils.isNotEmpty(currentExistingCategory)){//34466&25635-start
 				for(ScQtCategory toDel:currentExistingCategory){//34466&25635-end
 					toDel.setDeleted(true);
 					tobeRemoveCategoryCodes.add(toDel);

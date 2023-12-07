@@ -339,24 +339,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						this.getManagedBean().setResubmitAppl(true);
 					}
 					log.info("pageNavigate------------"+path1);
-					checkSSMValid(supplier,this.getManagedBean());
-					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
-					//start #29956
-					if(!this.getManagedBean().getPersonnelsRole().isEmpty()){
-						String epRole = getEpRoleDowngradePopupByPersonnel(this.getManagedBean().getPersonnelsRole());
-						this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
-						
-						this.getManagedBean().setTermAndConditionCheckOwner(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
-						this.getManagedBean().setTermAndConditionCheckOwnerA(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a",new String[]{epRole}));
-						this.getManagedBean().setTermAndConditionCheckOwnerC(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c",new String[]{epRole}));					
+					//#35115 - START
+					if(MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION)){
+						checkSSMValid(supplier,this.getManagedBean());
 					}
-					//end #29956
+					//#35115 - END
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
-					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
+					if(!getManagedBean().getPersonnelsRole().isEmpty()){
 						proceed =false;
 						//Start 27951
 						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
@@ -365,8 +354,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							this.getManagedBean().setPreRegistration(false);
 						}
 						//End 27951
-						RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 						SmCommonUtil.redirectToPage(
 								CONTENT_PAGE,
 								"",new String[] {""});
