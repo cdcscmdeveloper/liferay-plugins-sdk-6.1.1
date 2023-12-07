@@ -10796,15 +10796,15 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
-	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId,scQt));
+	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
 	    	}else{
-	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId,scQt));
+	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
 	    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 	    	}
 			
 		}
 		
-		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId,ScQt scQt){
+		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
 			
 			List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
 
@@ -10830,10 +10830,8 @@ public class SupplierFinalizationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
-			if(supplierId != null && scQt != null){
-				if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-					isSupplierBranchDeleted = true;
-			    }
+			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+				isSupplierBranchDeleted = true;
 			}
 		    return isSupplierBranchDeleted;
 		}

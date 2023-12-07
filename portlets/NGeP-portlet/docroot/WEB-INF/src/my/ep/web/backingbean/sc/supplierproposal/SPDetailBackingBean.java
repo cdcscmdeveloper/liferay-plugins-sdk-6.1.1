@@ -40,6 +40,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -6275,23 +6276,23 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-		//29729 - start	
+        //#28777 & #29729 - Start
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTProposalSO sproposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
 			Long supplierId = this.getManagedBean().getSupplierId();
 			ScQt scQt = this.getManagedBean().getQt();
 			if(supplierId != null && scQt != null){
-				if(sproposalSO.isCheckPrepareProposalCurrentSupplierBranchDeleted(supplierId, scQt)){
+				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			    }
 			}
 		    return isSupplierBranchDeleted;
 		}
-		//29729 - end
+		//#28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
