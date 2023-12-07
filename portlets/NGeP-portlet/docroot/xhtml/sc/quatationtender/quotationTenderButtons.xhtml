@@ -114,7 +114,7 @@
 			<!-- ***25692 - end -->
 				
 			<ui:remove>9019 Start (Harun) WIP transaction Pending QT Submission</ui:remove>
-			<c:if test="#{!qTDetailBB.getTaskByDocNoModule(qTDetailBB.managedBean.qt.qtNo, QTStatusConst.SC_WFTASK_COMPOSITENAME) and qTDetailBB.managedBean.maintanceFlow}">
+			<c:if test="#{!qTDetailBB.getTaskByDocNoModule() and qTDetailBB.managedBean.maintanceFlow}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.update.sc.wip']}" partialSubmit="true" process="@this"
 					action="#{qTDetailBB.updateWIPTransaction()}">

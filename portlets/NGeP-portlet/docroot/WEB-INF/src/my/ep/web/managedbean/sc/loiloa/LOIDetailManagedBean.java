@@ -428,6 +428,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	// #12471 End
 	
+	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2378,6 +2380,16 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.renderInstruction = renderInstruction;
 	}
 	//#29007 End Vinod
+	
+	//#28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+	//#28777 & #29729 - End
 	// #12471 Start
 	/**
 	 * Gets the member name.

@@ -1439,10 +1439,10 @@ public class SupplierFinalizationBackingBean extends
 
 								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 								} else {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 									if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
 										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 									} else {
@@ -1454,7 +1454,7 @@ public class SupplierFinalizationBackingBean extends
 								//35087
 							}else{
 							 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-							 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+							 evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE;
 						 }
 					 }
 					 break;
@@ -1515,6 +1515,7 @@ public class SupplierFinalizationBackingBean extends
 			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));//35381 - Related 6906
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			
 			//6906 - note 117 - start
@@ -1626,11 +1627,10 @@ public class SupplierFinalizationBackingBean extends
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(this.getManagedBean().getDeletedMeetingList());
-				//#27502- Adding condition only
-				if (reqDTO.getScQtCommittee() != null) {
-					if (scQtCommittee == null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-						scQtCommittee = new ScQtCommittee();
-					 scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
+				// #27502- Adding condition only
+				if (scQtCommittee == null) {// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					scQtCommittee = new ScQtCommittee();
+					scQtCommittee.setQtCommitteRemarks(reqDTO.getScQtCommittee().getQtCommitteRemarks());
 					reqDTO.setScQtCommittee(scQtCommittee);
 				}
 			}
@@ -1716,6 +1716,9 @@ public class SupplierFinalizationBackingBean extends
 		//Bug #29707
 		//finalizationReports.addAll(this.getManagedBean()
 		//		.getEndorsementReports());
+		//35381 - Related 6906 - start
+		finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));
+		//35381 - Related 6906 - end
 		List<ScQtFinalizationReport> toBeRemovedReports 
 					= new ArrayList<ScQtFinalizationReport>();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
@@ -2582,7 +2585,7 @@ public class SupplierFinalizationBackingBean extends
 							debugLogger("Generating all reports...");
 							downloadAllReports();	
 						} catch(Exception e) {
-							e.printStackTrace();
+							  SLAUtils.getInstance().logSLAError("QT", "submitSuppFinalizationTask", "docNo", "submitSuppFinalization", getUserIdSessionFromLoginId(), e);//28834-sonarQubeIssue5#84
 						}
 				  }
 				  // #28834 - End.
@@ -2858,12 +2861,12 @@ public class SupplierFinalizationBackingBean extends
 									RequestContext.getCurrentInstance().execute("ReamrksBriefPopup.show()");
 								} else {
 									
-									RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+									RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 								}
 								
 							} else {
 								
-								RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+								RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 							}
 							
 						} else {
@@ -2871,7 +2874,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}
 				} else {
-					RequestContext.getCurrentInstance().execute("confirmBriefPopup.show()");
+					RequestContext.getCurrentInstance().execute(QTConstants.CONFIRM_BRIEF_POPUP);//sonarQube Issue 2 #91 # Vinod #updated constants
 				}
 				// #28834 - End.
 				// changeMeetingStatusBrief();
@@ -3943,7 +3946,8 @@ return	remarksNotFound;
 							+ scQtFinalizationReport.getScQtFinalizationReportAttachment().getFilePath();
 					File file = new File(filePath);
 					if (null != file && file.exists()) {
-						file.delete();
+						 boolean deleteFile=file.delete();//#28834-sonarQubeIssue6#54
+						 log.info("======FileDeletedSucessFully======"+deleteFile);//#28834-sonarQubeIssue6#54
 					}
 					scQtFinalizationReport.setScQtFinalizationReportAttachment(null);
 				}
@@ -4913,7 +4917,7 @@ return	remarksNotFound;
 				} else {
 					if (isZonal) {
 						if (zoneDetailsMap == null) {
-							zoneDetailsMap = new HashMap<TplSpecZoneDtl,FinalizationEndorsementReportDTO>();
+							zoneDetailsMap = new HashMap<>();//Sonarqube #83
 						}
 						Map<Long,List<ScQtRecommend>> scQtRecommendsByZone
 									= scQtFinalization.getScQtRecommendsByZone();
@@ -4938,7 +4942,7 @@ return	remarksNotFound;
 			if (isZonal) {
 				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				if (zoneDetailsMap == null) {
-					zoneDetailsMap = new HashMap<TplSpecZoneDtl,FinalizationEndorsementReportDTO>();
+					zoneDetailsMap = new HashMap<>();//Sonarqube #83
 				}
 				for (TplSpecZoneDtl specZone
 							: getManagedBean().getZoneMap().values()) {
@@ -6127,7 +6131,7 @@ return	remarksNotFound;
 		if(this.getManagedBean().isNoProposalSubmitted()){
 			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			if (excludedDecisionList == null) 
-				excludedDecisionList = new ArrayList<String>();
+				excludedDecisionList = new ArrayList<>();//Sonarqube #83
 			
 			excludedDecisionList.add(
 					ParameterConst.DECISION_RE_EVALUATION);	
@@ -8863,8 +8867,11 @@ return	remarksNotFound;
 	// this method checking two meeting dates or equal or not.
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
 			List<ScQtMeeting> meetingList) {
-		log.info("compareMeetingDates");
-		if (null != meetingList && meetingList.size() >= 1) {
+		//Sonarqube #83 - start
+		if(null == meetingList)
+			throw new IllegalArgumentException("Meeting list cannot be null");
+		if (CollectionUtils.isNotEmpty(meetingList)) {
+		//Sonarqube #83 - end
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 			boolean duplicateDate = false;
 			for (ScQtMeeting meeting : meetingList) {
@@ -8876,15 +8883,12 @@ return	remarksNotFound;
 					break;
 				}
 			}
-			if (duplicateDate == true) {
+			if (duplicateDate) {//Sonarqube #83
 				throw new EpException(MessageConst.ERROR_760271);
 			} else {
 				meetingList.add(scqtMeeting);
 			}
 		} else {
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (meetingList == null)
-				meetingList =  new ArrayList<ScQtMeeting>();
 			meetingList.add(scqtMeeting);
 		}
 
@@ -9762,29 +9766,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @param reports
 	 */
 	private void sortEndorsementReports(List<ScQtFinalizationReport> reports){
-		log.info("sortEndorsementReports");
-		Collections.sort(reports, 
-				new Comparator<ScQtFinalizationReport>() {
-					public int compare(ScQtFinalizationReport report1, 
-							ScQtFinalizationReport report2) {
-						if (report1.getChangedDate() != null && 
-								report2.getChangedDate() != null) {
-							
-							// Ascending order
-							if (report1.getChangedDate().getTime() == 
-									report2.getChangedDate().getTime()) {
-								return 0;
-							} else if (report1.getChangedDate().getTime() >
-									report2.getChangedDate().getTime()) {
-								return -1; //Bug #29707
-							} else {
-								return 1; //Bug #29707
-							}
-						}
-						return -1;
-					}
-				});
-			}
+		// 35381 - related to 6906 - start
+		Collections.sort(reports, new Comparator<ScQtFinalizationReport>() {
+			@Override
+			public int compare(ScQtFinalizationReport report1, ScQtFinalizationReport report2) {
+				if (report1.getChangedDate() == null || report2.getChangedDate() == null) {
+					return -1;
+				}
+				return report2.getChangedDate().compareTo(report1.getChangedDate());
+			} 
+		});
+		// 35381 - related to 6906 - end
+	}
 	
 	/**
 	 * Method to handle endoresement report upload event
@@ -9840,51 +9833,47 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void handleKertasFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
-		
+	//Sonarqube #83 - refactor method - start
+	public void handleKertasFileUpload(FileUploadEvent event) throws IOException {
+		if (null == event.getFile())
+			return;
 		log.info("handleKertasFileUpload");
-		if (event.getFile() != null) {
-			ScAttachment scAttachment = null;
-			ScQtFinalizationReport scQtFinalizationReport 
-					= this.getManagedBean().getSelectedFinalizationReport();
-			if (scQtFinalizationReport == null) {
-				List<ScQtFinalizationReport> reports = this.getManagedBean().getDocumentList();
-				for (ScQtFinalizationReport report : reports) {
-					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-							.equals(report.getPmDocument().getDocDefinitionKey())) {
-						scQtFinalizationReport = report;
-					}
+		ScQtFinalizationReport scQtFinalizationReport 
+				= this.getManagedBean().getSelectedFinalizationReport();
+		if (scQtFinalizationReport == null) {
+			List<ScQtFinalizationReport> reports = this.getManagedBean().getDocumentList();
+			for (ScQtFinalizationReport report : reports) {
+				if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+						.equals(report.getPmDocument().getDocDefinitionKey())) {
+					scQtFinalizationReport = report;
 				}
 			}
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			ScQtFinalizationReportAttachment reportAttachment  = null;			
-			if (scQtFinalizationReport != null && scQtFinalizationReport.getScQtFinalizationReportAttachment() != null )
-				reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-			
-			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-			if (scQtFinalizationReport == null )
-				scQtFinalizationReport = new ScQtFinalizationReport();
-			
-			if(reportAttachment == null ){
-				reportAttachment = new ScQtFinalizationReportAttachment();
-				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
-				reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
-				reportAttachment.setFileName(event.getFile().getFileName());
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-				//setUserDetails(reportAttachment);
-				//populateAttachmentDetails(reportAttachment);
-			}
-			// set uploaded file name into actual attachment
-			reportAttachment.setFileName(event.getFile().getFileName());
-			populateAttachmentDetails(reportAttachment);
-			scAttachment = reportAttachment;
-			uploadAttachment(event.getFile(), scAttachment);
-			// again set to true after uploaded at finalization currently disabled
-			this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
-			scQtFinalizationReport.setTempReportAttachment(reportAttachment);
 		}
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		ScQtFinalizationReportAttachment reportAttachment  = null;			
+		if (scQtFinalizationReport != null && scQtFinalizationReport.getScQtFinalizationReportAttachment() != null )
+			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+		
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		if (scQtFinalizationReport == null )
+			scQtFinalizationReport = new ScQtFinalizationReport();
+		
+		if(reportAttachment == null ){
+			reportAttachment = new ScQtFinalizationReportAttachment();
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			reportAttachment.setDocNo(getManagedBean().getScQt().getQtNo());
+			reportAttachment.setFileName(event.getFile().getFileName());
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		}
+		reportAttachment.setFileName(event.getFile().getFileName());
+		populateAttachmentDetails(reportAttachment);
+		ScAttachment scAttachment = reportAttachment;
+		uploadAttachment(event.getFile(), scAttachment);
+		// again set to true after uploaded at finalization currently disabled
+		this.getManagedBean().getScQtFinalization().setBriefingPaperUploaded(true);
+		scQtFinalizationReport.setTempReportAttachment(reportAttachment);
 	}
+	//Sonarqube #83 - refactor method - end
 	
 	/**
 	 * Method to delete attached kertas taklimat attachment
@@ -10996,15 +10985,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 			
 			if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
-	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId,scQt));
+	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
 	    	}else{
-	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId,scQt));
+	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
 	    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 	    	}
 			
 		}
 		
-		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId,ScQt scQt){
+		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
 			
 			List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
 
@@ -11030,10 +11019,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
-			if(supplierId != null && scQt != null){
-				if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-					isSupplierBranchDeleted = true;
-			    }
+			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+				isSupplierBranchDeleted = true;
 			}
 		    return isSupplierBranchDeleted;
 		}
@@ -11083,7 +11070,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 				//List<String> localTitle=new ArrayList<String>();
-				List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #34720@Syazani 07/06/2022
+				List<ScQtFinalizationReport> titleList = new ArrayList<>(); // Bug #34720@Syazani 07/06/2022	//Sqube QT Master Bug G85 - Issues 21@Syazani 30/11/2023
 				while(iterator.hasNext()){
 					ScQtFinalizationReport finalizationReport = iterator.next();
 					// Bug #34720@Syazani 07/06/2022 -- Start
@@ -11471,27 +11458,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		// #28834 - Start.
 		if (CollectionUtils.isNotEmpty(meetingDetailsList)) {
 			for (ScQtMeeting meeting : meetingDetailsList) {
-				if (this.getManagedBean().isSecretaryUser()) {
-					if (null != meeting.getMeetingStatus()
-							&& null != meeting.getMeetingStatus().getStatusId()
-							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-									.getStatusId())
-									&& meeting.getRecordStatusFlg().equals(
-											DbValueConst.RECORD_STATUS_ACTIVE)
-											&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-						lessThanValidityEndDate = true;
-					}
+				//sonarQube Issue 3 #91 # Vinod #Start
+				boolean meetingStatusAndDate = null != meeting.getMeetingStatus()
+						&& null != meeting.getMeetingStatus().getStatusId()
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+						&& meeting.getMeetingDate().before(proposalValidityEndDate);
+				if ((this.getManagedBean().isSecretaryUser() && meetingStatusAndDate && meeting.getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) || meetingStatusAndDate) {
+					lessThanValidityEndDate = true;
 				} else {
-					if (null != meeting.getMeetingStatus()
-							&& null != meeting.getMeetingStatus().getStatusId()
-							&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus()
-									.getStatusId())
-									&& meeting.getMeetingDate().before(proposalValidityEndDate)) {
-						lessThanValidityEndDate = true;
-					} else {
-						lessThanValidityEndDate = false;
-					}
+					lessThanValidityEndDate = false;
 				}
+				//sonarQube Issue 3 #91 # Vinod #End
 			}
 		}
 		// #28834 - End.
@@ -11595,7 +11573,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			List<ScQtFinalizationReport> titleList) {
 		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
 				.getDocDefinitionKey() : "";
-		if (titleList != null && titleList.size() > 0) {
+		if (titleList != null && !titleList.isEmpty()) {	// Sqube QT Master Bug G85 - Issues 22@Syazani 30/11/2023
 			for (ScQtFinalizationReport sfReportTemp : titleList) {
 				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
 						.getDocDefinitionKey() : "";

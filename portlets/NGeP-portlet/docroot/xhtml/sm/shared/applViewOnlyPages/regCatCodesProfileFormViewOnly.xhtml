@@ -38,27 +38,6 @@
 			
 			<!-- #28175 start -->
 			<c:choose>
-				<!-- #28175 Reopen #94 Start -->
-				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or
-				    fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and 
-				    (viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiputera or
-			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusRegistered or
-			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusBumiFromHome or
-			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusNonBumiFromHome or
-			        viewSmApplBackingBean.managedBean.smAppl.pmRegStatus.pmStatus.statusId eq SupplierManagementConst.pmStatusRegistrationStatusForeign or 
-			        not viewSmApplBackingBean.managedBean.smAppl.activeAppl)}">
-		        <!-- #28175 Reopen #94 End -->
-			    	<p:column style="width :350px;white-space : normal">
-						<h:outputText
-							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
-						<br />
-						<h:outputText
-							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.categoryL2Name}" />
-						<br />
-						<h:outputText
-							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.categoryL3Name}" />
-					</p:column>
-				</c:when>
 				<c:when
 					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}">
 					<p:column style="width :350px;white-space : normal">
@@ -125,6 +104,20 @@
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.third']}" />
 							</span>
 						</p:outputPanel>
+					</p:column>
+				</c:when>
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{!viewSmApplBackingBean.isLatestCatCodeDesc(false)}">
+		        <!-- #28175 Reopen #94 End -->
+			    	<p:column style="width :350px;white-space : normal">
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.categoryL2Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.categoryL3Name}" />
 					</p:column>
 				</c:when>
 				<c:otherwise>

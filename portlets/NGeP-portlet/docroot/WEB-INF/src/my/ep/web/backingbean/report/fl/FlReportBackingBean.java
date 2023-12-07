@@ -475,8 +475,8 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
 			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())
 			//Enhancement 29550 - start
-			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) 
-			|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+			|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
 			|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
 			//Enhancement 29550 - end 
 			) {
@@ -533,13 +533,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	  *         false, if login user is not User/internal auditor
 	*/	
 	public boolean disableMinistryLov() {
-		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
-				//Enhancement 29550 - start
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				//Enhancement 29550 - end
-				);
+		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
 	}
 	
 	/**
@@ -552,13 +546,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	*/	
 	
 	public boolean disablePtjLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null 
-				//Enhancement 29550 - start
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				//Enhancement 29550 - end
-				);
+		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null);
 	}
 	
 	/**
@@ -571,13 +559,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	*/	
 	
 	public boolean disablePtjGroupLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null 
-				//Enhancement 29550 - start
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				//Enhancement 29550 - end
-				);
+		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null);
 	}
 	
 	/**
@@ -1705,6 +1687,78 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	
 	//Enhancement 29550 - start
 	/**
+	  * The method used to disable ptj group lov by report code.
+	*/	
+	public boolean disablePtjGroupLovByReportCode() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getManagedBean().getMinistry() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	  * The method used to disable ptj lov by report code.
+	*/	
+	public boolean disablePtjLovByReportCode() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getManagedBean().getPtjGroup() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Gets the default ptj group and ptj search values for certain 
+	 * reports based on role auditor internal and fl approver.
+	 */
+	@SuppressWarnings("null")
+	public void defaultPtjGrpAndPtjValues(){
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		
+		if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		
+		if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
+			
+			if(ministryOrgProfile != null){
+				this.getManagedBean().setMinistry(ministryOrgProfile);
+				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setPtj(orgProfile);
+			}else{
+				this.getManagedBean().setMinistry(orgProfile);
+			}
+			
+		}else{
+			this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+			this.getManagedBean().setPtjGroup(null);
+			this.getManagedBean().setPtj(null);
+		}
+	}
+	
+	/**
 	 * To validate duration of contract which exceed 1 year or not
 	 */
 	public void getContractDuration(Date fromDate, Date toDate){
@@ -1754,7 +1808,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	/**
-	 * To retrieve supplier data by company name
+	 * To retrieve supplier data by company name and registration number
 	 */
 	public void retrieveSuppDataByCompName(String compName, String regNo){
 		log.info("ReportBackingBean-retrieveSuppDataByCompName");
