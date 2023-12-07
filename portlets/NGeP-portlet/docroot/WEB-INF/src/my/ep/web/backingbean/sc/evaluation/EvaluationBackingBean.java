@@ -8723,12 +8723,19 @@ public class EvaluationBackingBean extends
 						
 					}
 					//#10542 from task list to train based on last save from user -start
-					if(currentTab == 0 && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
+					if((currentTab == 0 || currentTab == 1) && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType())){
-						if (this.getManagedBean().getNoSupplierPackageExist()) {
-							financialCheckListStatusCheck();
+						financialCheckListStatusCheck();
+						//#10542 use when have 4serangkai - Start
+						if( this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
+							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+									.get(0).getDocCategory());
+						}
+						if (!this.getManagedBean().getSingleSpecQuestion()) {
 							financialCheckListStatusCheckPackage();
 						}
+						//#10542 use when have 4serangkai - End
+						//financialCheckListStatusCheckPackage(); -use this if dont have 4serangkai
 						retrieveReportTabDtl();									
 						outputTab = 4;
 					}
