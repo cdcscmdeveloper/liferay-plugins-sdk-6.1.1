@@ -8678,6 +8678,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 				retrieveReportTabDtl();
 			} else if (outputTab == 5) {
+				retrieveReportTabDtl(); //Bug #35420
 				retriveCommitteeEndorsment();
 				
 				// RequestContext.getCurrentInstance().update("@form");
