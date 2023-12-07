@@ -11765,42 +11765,43 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.suppResp = suppResp;
 	}
 	//#21692 - End
-
-	public String getEpvAttachmentValue() {
-		return epvAttachmentValue;
-	}
-
-	public void setEpvAttachmentValue(String epvAttachmentValue) {
-		this.epvAttachmentValue = epvAttachmentValue;
-	}
 	// #10141 - start
 	public String getInActiveChecklistNotificationText() {
 		return inActiveChecklistNotificationText;
 	}
+
 	public void setInActiveChecklistNotificationText(String inActiveChecklistNotificationText) {
 		this.inActiveChecklistNotificationText = inActiveChecklistNotificationText;
 	}
+
 	public List<ScQtCheckList> getInActiveChecklist() {
 		return inActiveChecklist;
 	}
+
 	public void setInActiveChecklist(List<ScQtCheckList> inActiveChecklist) {
 		this.inActiveChecklist = inActiveChecklist;
 	}
+
 	public int getInActiveChecklistCount() {
 		return inActiveChecklistCount;
 	}
+
 	public void setInActiveChecklistCount(int inActiveChecklistCount) {
 		this.inActiveChecklistCount = inActiveChecklistCount;
 	}
+
 	public boolean isDisableButtonForInactiveChecklist() {
 		return disableButtonForInactiveChecklist;
 	}
+
 	public void setDisableButtonForInactiveChecklist(boolean disableButtonForInactiveChecklist) {
 		this.disableButtonForInactiveChecklist = disableButtonForInactiveChecklist;
 	}
+
 	public boolean isShowInactiveChecklistPopup() {
 		return showInactiveChecklistPopup;
 	}
+
 	public void setShowInactiveChecklistPopup(boolean showInactiveChecklistPopup) {
 		this.showInactiveChecklistPopup = showInactiveChecklistPopup;
 	}
@@ -11836,7 +11837,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinancialPreviewTableRow(int financialPreviewTableRow) {
 		this.financialPreviewTableRow = financialPreviewTableRow;
 	}
-	
+
 	public List<ScQtCheckList> getTechChecklistPreview() {
 		return techChecklistPreview;
 	}
@@ -11852,7 +11853,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinChecklistPreview(List<ScQtCheckList> finChecklistPreview) {
 		this.finChecklistPreview = finChecklistPreview;
 	}
+
 	// #10141 - end
+
+	public String getEpvAttachmentValue() {
+		return epvAttachmentValue;
+	}
+
+	public void setEpvAttachmentValue(String epvAttachmentValue) {
+		this.epvAttachmentValue = epvAttachmentValue;
+	}
 
 	//#9019 - Start
 	/**

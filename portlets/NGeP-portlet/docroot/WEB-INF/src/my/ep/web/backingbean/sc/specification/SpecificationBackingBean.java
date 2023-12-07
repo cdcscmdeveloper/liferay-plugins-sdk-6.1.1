@@ -23117,6 +23117,224 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			this.getManagedBean().setScQtCheckSt2techProposal(newScQtChecklist);
 		}
 	}
+
+	// #10141 Start Vinod
+	public void initiateInactiveChecklistProcess(String action) {
+		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
+		for (ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()) {
+			if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus())
+				inActiveChecklist.add(tech);
+		}
+		for (ScQtCheckList fin : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+			if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus())
+				inActiveChecklist.add(fin);
+		}
+
+		if (!inActiveChecklist.isEmpty() && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			StringBuffer confirmationMsg = new StringBuffer();
+			String nextline = getMessageCommon("lbl.sc.spec.confirm.nextline");
+			String techCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.tech.checklist");
+			String finCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.fin.checklist");
+			int tecCLcount = 0;
+			int finCLcount = 0;
+			for (ScQtCheckList inactive : inActiveChecklist) {
+				if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
+					tecCLcount++;
+					confirmationMsg.append(tecCLcount + ". " + techCheckList + " " + inactive.getTitle() + nextline);
+				} else {
+					if (tecCLcount != 0) {
+						confirmationMsg.append(nextline);
+						tecCLcount = 0;
+					}
+					finCLcount++;
+					confirmationMsg.append(finCLcount + ". " + finCheckList + " " + inactive.getTitle() + nextline);
+				}
+			}
+			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
+			this.getManagedBean().setInActiveChecklistNotificationText(
+					getMessage("lbl.sc.spec.confirm.inactive.techfin.checklist",
+							new String[] { confirmationMsg.toString() }));
+
+			RequestContext.getCurrentInstance().execute("inActiveChecklistNotification.show()");
+		} else {
+			if (!this.getManagedBean().getInActiveChecklist().isEmpty()) {
+				this.getManagedBean().setInActiveChecklist(null);
+			}
+			this.specCommitteBpmTask(action);
+		}
+	}
+
+	public boolean disableButtonForInactiveChecklist(String outcome) {
+		if (this.getManagedBean().isDisableButtonForInactiveChecklist()
+				&& (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE) || outcome
+						.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF))) {
+			return true;
+		}
+		return false;
+	}
+
+	public void technicalCheckListPreview() {
+		List<ScQtCheckList> techCheckListforPreview = new ArrayList<>();
+		if (!this.getManagedBean().getScQtCheckSt2techProposal().isEmpty()) {
+			for (ScQtCheckList techChecklist : this.getManagedBean().getScQtCheckSt2techProposal()) {
+				if (techChecklist.isScoringReq()) {
+					techCheckListforPreview.add(techChecklist);
+				}
+			}
+			this.getManagedBean().setTechChecklistPreview(techCheckListforPreview);
+		}
+		RequestContext.getCurrentInstance().execute("technicalChecklistPreview.show()");
+	}
+
+	public void financialCheckListPreview() {
+		List<ScQtCheckList> finCheckListforPreview = new ArrayList<>();
+		if (!this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()) {
+			for (ScQtCheckList finChecklist : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+				if (finChecklist.isScoringReq()) {
+					finCheckListforPreview.add(finChecklist);
+				}
+			}
+			this.getManagedBean().setFinChecklistPreview(finCheckListforPreview);
+		}
+		RequestContext.getCurrentInstance().execute("financialChecklistPreview.show()");
+	}
+
+	public void downloadTechnicalChecklistPreview(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception {
+		ScQtCheckListAttachment attachment = generateTechnicalChecklistPreviewPdfFromVelocity(scQtCheckSt2techProposal);
+		try {
+			downloadFile(attachment);
+		} catch (IOException ex) {
+			if (ex instanceof FileNotFoundException) {
+				handleException(new EpException(MessageConst.ERROR_760411, new String[] { this.getManagedBean().getQt()
+						.getQtNo() }));
+			}
+
+		} catch (EpException ex) {
+			handleException(ex);
+		}
+	}
+
+	private ScQtCheckListAttachment generateTechnicalChecklistPreviewPdfFromVelocity(
+			List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception {
+		VelocityContext context = new VelocityContext();
+		StringBuilder filename = new StringBuilder();
+		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+
+		String name = getMessageCommon("lbl.sc.spec.technical.checklist.preview.printing").replaceAll("\\s", "");
+		filename.append(name + ".pdf");
+		attachment.setFileName(filename.toString());
+		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
+
+		populateAttachmentDetails(attachment);
+
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("scQtCheckSt2techProposal", scQtCheckSt2techProposal);
+		context.put("bean", this);
+
+		FileOutputStream fos = null;
+
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.TECHNICAL_CHECKLIST_PREVIEW,
+					context, fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return attachment;
+	}
+
+	public void downloadFinancialChecklistPreview(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception {
+		ScQtCheckListAttachment attachment = generateFinancialChecklistPreviewPdfFromVelocity(scQtCheckSt2financeProposalList);
+		try {
+			downloadFile(attachment);
+		} catch (IOException ex) {
+			if (ex instanceof FileNotFoundException) {
+				handleException(new EpException(MessageConst.ERROR_760411, new String[] { this.getManagedBean().getQt()
+						.getQtNo() }));
+			}
+
+		} catch (EpException ex) {
+			handleException(ex);
+		}
+	}
+
+	public ScQtCheckListAttachment generateFinancialChecklistPreviewPdfFromVelocity(
+			List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception {
+		VelocityContext context = new VelocityContext();
+		StringBuilder filename = new StringBuilder();
+		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+
+		String name = getMessageCommon("lbl.sc.spec.financial.checklist.preview.printing").replaceAll("\\s", "");
+		filename.append(name + ".pdf");
+		attachment.setFileName(filename.toString());
+		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
+
+		populateAttachmentDetails(attachment);
+
+		context.put("hostUrl", getLogoHeaderPath());
+		context.put("scQtCheckSt2financeProposalList", scQtCheckSt2financeProposalList);
+		context.put("bean", this);
+
+		FileOutputStream fos = null;
+
+		try {
+			fos = new FileOutputStream(getActualFilePath(attachment));
+			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.FINANCIAL_CHECKLIST_PREVIEW,
+					context, fos);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return attachment;
+	}
+
+	/**
+	 * get the template logo path
+	 * 
+	 * @return String
+	 */
+	private String getLogoHeaderPath() {
+		return SmCommonUtil.getBasePortalUrl();
+	}
+
+	/**
+	 * This method is to check to render print button
+	 * 
+	 * @return boolean
+	 */
+	public boolean renderPtintButtonForSpecConnittee() {
+		if (this.getManagedBean().getActiveIndex() == 4 || this.getManagedBean().getActiveIndex() == 5
+				|| this.getManagedBean().getActiveIndex() == 6) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// #10141 Start Vinod
 	
 	// Bug #33661@Syazani 12/04/2023 -- Start
 	private void commonMessageAcknowledgementErrorPage(String messageId, String[] parameters) {
@@ -23131,211 +23349,4 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 	}
 	// Bug #33661@Syazani 12/04/2023 -- End
-	//#10141 Start Vinod
-	public void initiateInactiveChecklistProcess(String action){
-		List<ScQtCheckList> inActiveChecklist= new ArrayList<>();
-		for(ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()){
-			if(null!=tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()) inActiveChecklist.add(tech);
-		}
-		for(ScQtCheckList fin : this.getManagedBean().getScQtCheckSt2financeProposalList()){
-			if(null!=fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()) inActiveChecklist.add(fin);
-		}
-			
-		if(!inActiveChecklist.isEmpty()
-			&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
-			StringBuffer confirmationMsg = new StringBuffer();
-			String nextline=getMessageCommon("lbl.sc.spec.confirm.nextline");
-			String techCheckList=getMessageCommon("lbl.sc.spec.confirm.inactive.tech.checklist");
-			String finCheckList=getMessageCommon("lbl.sc.spec.confirm.inactive.fin.checklist");
-			int tecCLcount=0;
-			int finCLcount=0;
-			for(ScQtCheckList inactive : inActiveChecklist){
-				if(SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())){
-					tecCLcount++;
-					confirmationMsg.append(tecCLcount+". "+techCheckList+" "+inactive.getTitle()+nextline);
-				}else{
-					if(tecCLcount!=0){
-						confirmationMsg.append(nextline);
-						tecCLcount=0;
-					}
-					finCLcount++;
-					confirmationMsg.append(finCLcount+". "+finCheckList+" "+inactive.getTitle()+nextline);
-				}
-			}
-			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
-			this.getManagedBean().setInActiveChecklistNotificationText(
-					getMessage("lbl.sc.spec.confirm.inactive.techfin.checklist", 
-					new String[] {confirmationMsg.toString()}));
-			
-			RequestContext.getCurrentInstance().execute("inActiveChecklistNotification.show()");
-		}else{
-			if(!this.getManagedBean().getInActiveChecklist().isEmpty()){
-				this.getManagedBean().setInActiveChecklist(null);
-			}
-			this.specCommitteBpmTask(action);
-		}
-	}
-	public boolean disableButtonForInactiveChecklist(String outcome){
-		if(this.getManagedBean().isDisableButtonForInactiveChecklist()
-			&& (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
-			|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF))){
-			return true;
-		}
-		return false;
-	}
-	public void technicalCheckListPreview(){
-		List<ScQtCheckList> techCheckListforPreview= new ArrayList<>();
-		if(!this.getManagedBean().getScQtCheckSt2techProposal().isEmpty()){
-			for(ScQtCheckList techChecklist : this.getManagedBean().getScQtCheckSt2techProposal()){
-				if(techChecklist.isScoringReq()){
-					techCheckListforPreview.add(techChecklist);
-				}
-			}
-			this.getManagedBean().setTechChecklistPreview(techCheckListforPreview);
-		}
-		RequestContext.getCurrentInstance().execute("technicalChecklistPreview.show()");
-	}
-	public void financialCheckListPreview(){
-		List<ScQtCheckList> finCheckListforPreview= new ArrayList<>();
-		if(!this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()){
-			for(ScQtCheckList finChecklist : this.getManagedBean().getScQtCheckSt2financeProposalList()){
-				if(finChecklist.isScoringReq()){
-					finCheckListforPreview.add(finChecklist);
-				}
-			}
-			this.getManagedBean().setFinChecklistPreview(finCheckListforPreview);
-		}
-		RequestContext.getCurrentInstance().execute("financialChecklistPreview.show()");
-	}
-	public void downloadTechnicalChecklistPreview(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception{
-		ScQtCheckListAttachment attachment=generateTechnicalChecklistPreviewPdfFromVelocity(scQtCheckSt2techProposal);
-		try{
-			downloadFile(attachment);			
-		}
-		catch(IOException ex){
-			if(ex instanceof FileNotFoundException){
-				handleException(new EpException(MessageConst.ERROR_760411, new String[]{this.getManagedBean().getQt().getQtNo()}));
-			}
-			
-		}
-		catch(EpException ex){
-			handleException(ex);
-		}
-	}
-	private ScQtCheckListAttachment generateTechnicalChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception{
-		VelocityContext context = new VelocityContext();
-		StringBuilder filename = new StringBuilder();
-		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
-		
-		String name=getMessageCommon("lbl.sc.spec.technical.checklist.preview.printing").replaceAll("\\s","");
-		filename.append(name+".pdf");
-		attachment.setFileName(filename.toString());
-		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
-		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
-		
-		populateAttachmentDetails(attachment);
-		
-		context.put("hostUrl", getLogoHeaderPath());
-		context.put("scQtCheckSt2techProposal", scQtCheckSt2techProposal); 
-		context.put("bean", this);
-		
-		FileOutputStream fos = null;
-
-		try {
-			fos = new FileOutputStream(getActualFilePath(attachment));
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-					SourcingConstants.TECHNICAL_CHECKLIST_PREVIEW, context, 
-					fos);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return attachment;
-	}
-	public void downloadFinancialChecklistPreview(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception{
-		ScQtCheckListAttachment attachment=generateFinancialChecklistPreviewPdfFromVelocity(scQtCheckSt2financeProposalList);
-		try{
-			downloadFile(attachment);			
-		}
-		catch(IOException ex){
-			if(ex instanceof FileNotFoundException){
-				handleException(new EpException(MessageConst.ERROR_760411, new String[]{this.getManagedBean().getQt().getQtNo()}));
-			}
-			
-		}
-		catch(EpException ex){
-			handleException(ex);
-		}
-	}
-	public ScQtCheckListAttachment generateFinancialChecklistPreviewPdfFromVelocity(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception{
-		VelocityContext context = new VelocityContext();
-		StringBuilder filename = new StringBuilder();
-		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
-		
-		String name=getMessageCommon("lbl.sc.spec.financial.checklist.preview.printing").replaceAll("\\s","");
-		filename.append(name+".pdf");
-		attachment.setFileName(filename.toString());
-		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
-		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
-		
-		populateAttachmentDetails(attachment);
-		
-		context.put("hostUrl", getLogoHeaderPath());
-		context.put("scQtCheckSt2financeProposalList", scQtCheckSt2financeProposalList); 
-		context.put("bean", this);
-		
-		FileOutputStream fos = null;
-
-		try {
-			fos = new FileOutputStream(getActualFilePath(attachment));
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-					SourcingConstants.FINANCIAL_CHECKLIST_PREVIEW, context, 
-					fos);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return attachment;
-	}
-	/**
-	 * get the template logo path 
-	 * @return String
-	 */
-	private String getLogoHeaderPath(){
-		return SmCommonUtil.getBasePortalUrl();
-	}
-	/**
-	 * This method is to check to render print button 
-	 * @return boolean
-	 */
-	public boolean renderPtintButtonForSpecConnittee(){
-		if(this.getManagedBean().getActiveIndex()==4
-				|| this.getManagedBean().getActiveIndex()==5
-				|| this.getManagedBean().getActiveIndex()==6){
-			return true;
-		}
-		
-		return false;
-	}
-	//#10141 Start Vinod
 }
