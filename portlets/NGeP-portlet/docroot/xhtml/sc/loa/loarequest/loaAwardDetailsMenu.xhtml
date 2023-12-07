@@ -93,8 +93,8 @@
 		<br />
 		<!-- #29006 - end -->
 		
-		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}"
-			value="#{lbl['lbl.sc.item.codification.instruction']}" />
+		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}" escape="false"
+			value="#{lbl['lbl.sc.qt.pending.qt.loa.submission.zone.item.instruction']}" /><ui:remove>#34757</ui:remove>
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -162,6 +162,7 @@
 				<c:if
 					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 					<p:commandLink id="itemName"
+						rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}"
 						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
@@ -253,8 +254,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
-					rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
-								lOADetailBackingBean.isShowAssignButton(scLoiLoaItem))}" /><ui:remove>Bug #34757</ui:remove>
+					rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
 			</p:column>
 			<p:ajax event="page" listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this" update="@this" /><ui:remove>#34242</ui:remove>
 		</p:dataTable>
@@ -452,8 +452,7 @@
 								value="#{lbl['lbl.btn.assign']}"
 								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
 								action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
-								rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1 and
-											lOADetailBackingBean.isShowAssignButton(scLoiLoaItem))}" /><ui:remove>Bug #34757</ui:remove>
+								rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
 							</td>
 						</c:if>
 					<!-- #32280 - end -->
@@ -484,7 +483,7 @@
 	<p:dialog id="specAndSupplierOfferDlg"
 		widgetVar="specAndSupplierOfferDlgVar"
 		header="#{lbl['lbl.sc.spec.and.supplier.offer']}"
-		styleClass="pop_up_top" modal="true" width="500" resizable="false">
+		styleClass="pop_up_top" modal="true" width="630" resizable="false">
 		<p:spacer height="20" />
 		<table>
 			<tr valign="top">

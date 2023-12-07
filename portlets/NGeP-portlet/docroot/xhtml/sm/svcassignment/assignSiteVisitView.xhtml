@@ -111,12 +111,21 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
 				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start-->
-					<!-- #{catCode} -->
-					<h:outputText value="#{catCode} - #{catApp.categoryL1Name} / #{catApp.categoryL2Name} / #{catApp.categoryL3Name}"></h:outputText>
+					#{catCode} 
+					<!-- <h:outputText value="#{catCode} - #{catApp.categoryL1Name} / #{catApp.categoryL2Name} / #{catApp.categoryL3Name}"></h:outputText> -->
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.category.description']}">
-					<!-- #{catApp.pmCategoryL3.categoryName} -->
+					<!-- #28175 - start -->
+					<c:choose>
+						<c:when test="#{not svcSiteAssignBackingBean.managedBean.smAppl.activeAppl}">
+							#{catApp.categoryL3Name}
+						</c:when>
+						<c:otherwise>
+							#{catApp.pmCategoryL3.categoryName}
+						</c:otherwise>
+					</c:choose>
+					<!-- #28175 - start -->
 					<h:outputText value="#{catApp.otherDesc}" rendered="#{catApp.otherDesc != null}" />
 				</p:column>
 			</p:dataTable>

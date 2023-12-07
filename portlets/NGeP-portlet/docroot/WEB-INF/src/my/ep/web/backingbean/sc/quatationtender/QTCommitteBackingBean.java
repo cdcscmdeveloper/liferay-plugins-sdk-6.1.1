@@ -613,6 +613,7 @@ public class QTCommitteBackingBean extends
 						member1.setCommitteeMemberId(null);
 						setUserDetails(member1);
 						setCommitteeMemberOrgProfile(member1);
+						resetUserDetail(member1);//Bug #35176 
 						member1.setChangedDate(null);
 						if (member1.isConsolidate()) {
 							this.getManagedBean().setSelectScCommitteMember(
@@ -634,6 +635,7 @@ public class QTCommitteBackingBean extends
 						} else {
 							committeeMember.setCommitteeMemberId(null);
 							setUserDetails(committeeMember);
+							resetUserDetail(committeeMember);//Bug #35176 
 							committeeMember.setChangedDate(null);
 							committeeMember.setScCommittee(scCommittee);
 							memberList.add(committeeMember);
@@ -653,6 +655,26 @@ public class QTCommitteBackingBean extends
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
 		this.getManagedBean().setAutoUpdate(true);
 	}
+	
+	// Bug #35176 - start
+	/**
+	 * Reset Clone Committee Member Detail - get latest user info from PM
+	 * 
+	 * @param scMember
+	 */
+	public void resetUserDetail(ScCommitteeMember scMember){
+		if(scMember.getPmUser() != null) {
+			Long userId = scMember.getPmUser().getUserId();
+			PmUser user = retrieveUserDtlById(userId);
+			if (user != null){
+				scMember.setEmail(user.getEmail());
+				scMember.setGrade(user.getGrade());
+				scMember.setDesignation(user.getDesignation());
+				scMember.setPNP(user.isPMP());
+			}
+		}
+	}
+	// Bug #35176 - end
 
 	/**
 	 * On row clone action.
@@ -841,6 +863,7 @@ public class QTCommitteBackingBean extends
 								setUserDetails(member1);
 								member1.setChangedDate(null);
 								setCommitteeMemberOrgProfile(member1);
+								resetUserDetail(member1);//Bug #35176 
 								member1.setScCommittee(cloneCommitte);
 								// tabs.get(beanCount).getMembers().add(member1);
 								memberList.add(member1);
@@ -1905,16 +1928,20 @@ public class QTCommitteBackingBean extends
 		} else {
 			currentStatusId = getManagedBean().getCurrentStatusId();
 		}
-				
+		
+		//25037 - start
+		Long currentCmtStatus = 0L;
+		if(this.getManagedBean().getCurrentCMTStatus()==null){
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
+			currentCmtStatus = wfStatus==null? currentCmtStatus: wfStatus.getPmStatus().getStatusId();
+			this.getManagedBean().setCurrentCMTStatus(currentCmtStatus);
+		}else{
+			currentCmtStatus = this.getManagedBean().getCurrentCMTStatus();
+		}
+		//25037 - end
+
 		if (this.getManagedBean().isMaintanceFlow()) {
 			//#25037-start
-			Long currentCmtStatus = 0L;
-			if(this.getManagedBean().getCurrentCMTStatus()==null){
-				ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
-				currentCmtStatus = wfStatus==null? currentCmtStatus: wfStatus.getPmStatus().getStatusId();
-			}else{
-				currentCmtStatus = this.getManagedBean().getCurrentCMTStatus();
-			}
 			if (Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(currentCmtStatus)
 					|| Arrays.asList(QTStatusConst.CMT_REVISION_APPROVAL_GROUP).contains(currentCmtStatus)
 						|| Arrays.asList(QTStatusConst.CMT_REVISION_GROUP).contains(currentCmtStatus)) {
@@ -2069,6 +2096,12 @@ public class QTCommitteBackingBean extends
 							}
 						}	
 					}
+					//25037 - start
+					if (QTStatusConst.CMT_PENDING_REVISION.equals(currentCmtStatus)
+							&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType)) {
+						return false;
+					}
+					//25037 - end
 				} else {
 					return false;
 				}
@@ -2083,10 +2116,6 @@ public class QTCommitteBackingBean extends
 		if (scQt != null && Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(currentStatusId)
 				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType)) { 
 			//specification maintenance cannot be concurrent to spec committee maintenance
-			String taskName = this.getManagedBean().getTaskName();//31954-start
-			if (null!=taskName && SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName) ) {
-				return Boolean.FALSE;	
-			}//31954-end
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId());
 			wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
 			Long specStatusId = wfStatus.getPmStatus()==null ? 0L:wfStatus.getPmStatus().getStatusId();
