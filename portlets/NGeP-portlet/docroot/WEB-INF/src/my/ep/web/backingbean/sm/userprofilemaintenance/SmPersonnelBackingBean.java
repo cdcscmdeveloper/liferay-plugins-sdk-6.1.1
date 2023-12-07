@@ -2059,18 +2059,19 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		//32515 END
-		//Start - 35178
-		if(!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().isEmpty()){
-			//Start 13320
+		// Start - 35178
+		if (!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().isEmpty()) {
+			// Start 13320
 			for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
-				//#33592-start
-				if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+				// #33592-start
+				if (per.getSmAddress().getPmState().getStateCode() != null
+						&& !per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
 					per.getSmAddress().setPmDivision(null);
-				}//#33592-end
+				}// #33592-end
 			}
-			//End 13320
+			// End 13320
 		}
-		//End - 35178
+		// End - 35178
 		
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			//#9569 - Start

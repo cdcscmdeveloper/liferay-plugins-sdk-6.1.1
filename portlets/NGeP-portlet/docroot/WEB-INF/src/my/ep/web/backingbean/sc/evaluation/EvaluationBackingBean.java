@@ -3165,7 +3165,6 @@ public void saveComplianceSample() {
 
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
-		this.getManagedBean().setTabTechnicalIndex(5);
 		evaluationStageStatusCheck();
 
 		try {
@@ -3175,7 +3174,7 @@ public void saveComplianceSample() {
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())) {
 				this.getManagedBean().setEvaluatioStageActiveIndex(3);
-				this.getManagedBean().setTabTechnicalIndex(5);
+				this.getManagedBean().setTabTechnicalIndex(4);//#10542
 			}
 			List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -8078,6 +8077,7 @@ public void saveComplianceSample() {
 								
 								//#33187 Start - fix next skip if disable Technical
 								if(this.getManagedBean().getNoSupplierPackageExist()){
+									retriveSummaryEvaluationStage();
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
 								}
 								//#33187 End - fix next skip if disable Technical
@@ -8143,8 +8143,7 @@ public void saveComplianceSample() {
 								retrivePresentationDemo();
 								outputTab = 3;
 							}
-						} else if (this.getManagedBean().getScQt().isDemoRequired()
-								&& (currentTab == 0)) {
+						} else if (this.getManagedBean().getScQt().isDemoRequired()) {
 							String taskName = this.getManagedBean().getTaskName();
 							if (SCProcessNameConst.VIEW_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
 									|| SCProcessNameConst.ENDORSE_DEMO_TEC_EVALUATION.equalsIgnoreCase(taskName)
@@ -8208,14 +8207,11 @@ public void saveComplianceSample() {
 
 									this.getManagedBean().setTabTechnicalIndex(2);
 									
-									//#33187, #25138, #21695 Start - fix next skip if disable Technical
-									if (this.getManagedBean().getNoSupplierPackageExist()) {
-										this.getManagedBean().setEvaluatioStageActiveIndex(2);
-									}
 								// #33187, #25138, #21695 Start - fix next skip
-								// if disable Technical
+								// if disable Technical , skip package Bug #35394
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
-									this.getManagedBean().setEvaluatioStageActiveIndex(2);
+									retriveSummaryEvaluationStage();
+									this.getManagedBean().setEvaluatioStageActiveIndex(2);	
 								}
 								// #33187 End - fix next skip if disable
 								// Technical
@@ -8244,7 +8240,14 @@ public void saveComplianceSample() {
 									int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
 									
 									if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+										retriveFinancialEvaluationStage();
+										retriveNonScoringComplianceFinancial(true); //#28856, #25138
 										
+										// #30722, #25138 - start
+										financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+												.get(0).getDocCategory());
+										
+										this.getManagedBean().setTabFinancialIndex(1);
 										outputTab = 3;
 
 									} else{
@@ -8293,11 +8296,6 @@ public void saveComplianceSample() {
 								//#34588 end
 							}
 
-						}if (currentTab == 3) {
-
-							evaluationStageStatusCheck();//#25138-Ahmaa
-							retriveOneTierFinancialSupplierSummary();
-							this.getManagedBean().setTabFinancialIndex(3);
 						}
 						// #25138, #21695 -end-
 						if (currentTab == 0) {
@@ -8611,6 +8609,7 @@ public void saveComplianceSample() {
 									
 									//#33187, #25138, #21695 Start - fix next skip if disable Technical
 									if (this.getManagedBean().getNoSupplierPackageExist()) {
+										retriveSummaryEvaluationStage();
 										this.getManagedBean().setEvaluatioStageActiveIndex(2);
 									}
 									//#33187 End - fix next skip if disable Technical
@@ -8639,11 +8638,14 @@ public void saveComplianceSample() {
 
 							// #25138 - one item only - start
 							if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && this.getManagedBean().getSingleSpecQuestion()) {
-								retriveFinancialEvaluationStagePackage();
 								retriveOneTierFinancialSupplierSummary();
+								this.getManagedBean().setOneTierFinancialActiveIndex(2);
+								outputTab = 3;
 							} else { //#34588 end
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
+									retriveOneTierFinancialSupplierSummary();
 									this.getManagedBean().setOneTierFinancialActiveIndex(2);
+									outputTab = 3;
 								}
 								else{
 									//#34588 start
@@ -8847,16 +8849,12 @@ public void saveComplianceSample() {
 				 * }
 				 */
 				if(this.getManagedBean().getFecIndexPreRender()){
-					this.getManagedBean().setFecIndexPreRender(false);
 					retriveFinancialEvaluationStage();
-					outputTab = 3;
 					financialCheckListStatusCheck();
 					financialCheckListStatusCheckPackage();
 				}
 				retrieveReportTabDtl();
-				if (this.getManagedBean().getScQt().getEvaluationType().equals(ParameterConst.EVALUATION_TYPES_TWO_TIER)){
-					outputTab = 4;
-				}
+			
 			} else if (outputTab == 5) {
 				retriveCommitteeEndorsment();
 				
@@ -8882,6 +8880,23 @@ public void saveComplianceSample() {
 			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);
 			//6906 - end
 		}catch(Exception e){
+		 
+			if (e instanceof EpException) {
+				if (e.getMessage().contains(MessageConst.ERROR_760547) && outputTab == 4
+						&& this.getManagedBean().getFecIndexPreRender()) {
+					this.getManagedBean().setFecIndexPreRender(false);
+					outputTab = 3;
+					this.getManagedBean().setTabFinancialIndex(2);
+					String msgCode = MessageConst.ERROR_760547;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(msgCode, null,
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())
+									+ " ("
+									+ msgCode + ")"));
+					throw new EpException(MessageConst.ERROR_760547);
+				}
+			}
 			 if(currentTab==1){
 				 int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
 				retriveComplianceTechnical();
@@ -8934,6 +8949,7 @@ public void saveComplianceSample() {
 			handleException(e);
 		}
 		finally {
+			this.getManagedBean().setFecIndexPreRender(false);//#10542
 			evaluationSo = null;
 		}
 	}
@@ -11067,14 +11083,16 @@ private void retriveCommitteeRemarksList(){
 					evaluationMaintainPreviousNextTabIndex(1, 2);
 					evaluationMaintainPreviousNextTabIndex(2, 3);
 					if(ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType())){
+							.getManagedBean().getScQt().getEvaluationType())
+							&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
+									.getManagedBean().getCommitteeType())){
 						this.getManagedBean().setFecIndexPreRender(true);
 					}
 					evaluationMaintainPreviousNextTabIndex(3, 4);
-					this.getManagedBean().setFecIndexPreRender(true);
+				
 					evaluationMaintainPreviousNextTabIndex(3, 4);
 					if(ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
-							.getManagedBean().getScQt().getEvaluationType()) && 
+							.getManagedBean().getScQt().getEvaluationType()) || 
 								ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 										.getManagedBean().getScQt().getEvaluationType())){
 						evaluationMaintainPreviousNextTabIndex(0, 4);
@@ -13883,11 +13901,7 @@ private void retriveCommitteeRemarksList(){
 				reqDTO.setQtId(qtId);
 				reqDTO.setEvalStage(evalStage);
 				reqDTO.setProposalChecklistSearchBean(searchBean);
-	//Bug #31551 Farid start 23/9/2021
 				reqDTO.setCheckZonal(getManagedBean().getScQt().isZonal());
-	//Bug #31551 Farid end 23/9/2021
-				//32426-start
-				//#34497 related to #32453 fixing(#25138,#21695) - start
 				//34523 - start
 				if (reqDTO.getProposalChecklistSearchBean() == null) {
 					reqDTO.setProposalChecklistSearchBean(new SearchBean<ScQtProposalChecklist>());
@@ -16199,8 +16213,6 @@ private void retriveCommitteeRemarksList(){
 		}//32453-End
 		for(TplSpecAnswer specAnswer:specresDTO1
 				.getSpecAnswerList()){
-			log.info("===========speanswerUserScore======"+specAnswer.getUserScore());
-			log.info("===========speanswerAutoScore======"+specAnswer.getAutoScore());
 			//fix Bug #31623 related to 25138 === farid START
 			if(null!=specAnswer.getUserScore() && specAnswer.getTplSpecZoneQty() !=null && !specAnswer.getTplSpecZoneQty().getQty().equals(new BigDecimal(0))){
 				totalUserScore=totalUserScore.add(specAnswer.getUserScore());	
@@ -16215,18 +16227,12 @@ private void retriveCommitteeRemarksList(){
 				totalAutoScore=totalAutoScore.add(specAnswer.getAutoScore());	
 			}
 			//fix Bug #31623 related to 25138 === farid END
-			log.info("===========totalUserScore======"+totalUserScore);
-			log.info("===========totalAutoScore======"+totalAutoScore);
 		}
 		totalScore=totalAutoScore.add(totalUserScore);
 		qtProposalChecklist.setSpecUserScore(totalUserScore);
 		qtProposalChecklist.setSpecAutoScore(totalAutoScore);
 		qtProposalChecklist.setSpecTotalScore(totalScore);
-		log.info("===========totalUserScore======"+qtProposalChecklist.getSpecUserScore());
-		log.info("===========totalAutoScore======"+qtProposalChecklist.getSpecAutoScore());
-		log.info("===========totalScore======"+qtProposalChecklist.getSpecTotalScore());
-		log.info("===========endcalculateItemScores======"+specresDTO1
-				.getSpecAnswerList().size());
+
 		if(CollectionUtils.isNotEmpty(specresDTO1
 				.getSpecAnswerList())){//32453-start
 			this.getManagedBean().setSupplierItemExist(Boolean.TRUE);	
@@ -18798,17 +18804,15 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderDisqialified() {
-		boolean renderDisqialifiedColumn = false;
 		if (null != this.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
 			for (ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
 				if (null != disQualDtl.isCompliance() && !disQualDtl.isCompliance()) {
-					renderDisqialifiedColumn = true;
-					break;
+					return true;
 				}
 			}
 		}
-		return renderDisqialifiedColumn;
+		return false;
 	}
 
 	/**
@@ -18818,13 +18822,11 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl) {
-		boolean renderDisqialifiedColumn = false;
-		if (null != evalResultDtl.isCompliance() && null != evalResultDtl.getTotalScore()
-				&& !evalResultDtl.isCompliance()
-				&& this.getManagedBean().getPassingScore() < evalResultDtl.getTotalScore().intValue()) {
-			renderDisqialifiedColumn = true;
+		if (null != evalResultDtl.isCompliance()
+				&& !evalResultDtl.isCompliance()) {
+			return true;
 		}
-		return renderDisqialifiedColumn;
+		return false;
 	}
 
 	/**
@@ -18835,15 +18837,13 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecAndComplianceColumnSample() {
-		boolean render = false;
 		for (ScQtSampleItem sample : this.getManagedBean().getSampleItemList()) {
 			if (sample.getScRequestItem() != null && sample.getScRequestItem().getTplSpecQuestion() != null
 					&& sample.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()) {
-				render = true;
-				break;
+				return true;
 			}
 		}
-		return render;
+		return false;
 	}
 
 	/**
@@ -18895,16 +18895,11 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void onchangeCompliance(ScQtSampleItem itm) {
 		for (ScQtSampleItem item : this.getManagedBean().getSampleItemList()) {
-			if (itm.getSampleItemId() == item.getSampleItemId() && itm.getCompliance() != null) {
+			if (itm.getSampleItemId().compareTo(item.getSampleItemId()) == 0 && itm.getCompliance() != null) {
 				if (itm.getCompliance() == Boolean.FALSE) {
 					item.setUserScore(BigDecimal.ZERO);
-				} else if (itm.getCompliance() == Boolean.TRUE && itm.getUserScore() != null
-						&& itm.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
-					item.setUserScore(null);
-				}
-			} else if (itm.getSampleItemId() == item.getSampleItemId() && itm.getCompliance() == null) {
-				item.setUserScore(null);
-			}
+				} 
+			} 
 		}
 	}
 

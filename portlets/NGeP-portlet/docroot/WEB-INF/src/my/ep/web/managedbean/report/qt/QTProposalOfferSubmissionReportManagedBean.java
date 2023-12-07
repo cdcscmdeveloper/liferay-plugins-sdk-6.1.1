@@ -14,7 +14,6 @@ package my.ep.web.managedbean.report.qt;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 

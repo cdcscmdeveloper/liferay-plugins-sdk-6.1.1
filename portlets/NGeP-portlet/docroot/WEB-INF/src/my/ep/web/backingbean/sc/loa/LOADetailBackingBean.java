@@ -2469,10 +2469,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		//title=title.replaceAll("&", "&#38;");
-		title = title.replaceAll("<", "&#60;");
-		title = title.replaceAll(">", "&#62;");
-		title = title.replaceAll("\r\n", "<br />");
+		//25025 - note 436 start
+		title=title.replaceAll("&", SSTConstant.AND_SYMBOL);
+		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
+		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
+		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
+		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		//25025 - note 436- end
 		context.put("loaTitle", title);
 
 		context.put("hasLoi", false);
@@ -8031,7 +8035,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	private List<ItemBean> convertSpecQuestionToSpecAnswer(
 			TplSpecMaster specMaster) {
-		TreeMap<Integer, ItemBean> questionSpecMap = new TreeMap<Integer, ItemBean>(); //Bug #34882@Syazani 26/06/2023
+		TreeMap<Integer, ItemBean> questionSpecMap = new TreeMap<>(); //Bug #34882@Syazani 26/06/2023	// Sqube QT Master Bug G85 - Issues 14@Syazani 29/11/2023
 
 		if (specMaster != null && specMaster.getTplSpecQuestions() != null) {
 			for (TplSpecQuestion specQuestion : specMaster
@@ -11651,11 +11655,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		statusList.add(QTStatusConst.LOA_PENDING_REVISION);
 		statusList.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
 		
-		boolean isAble = null != currentWorkFlowStatus && (
+		return null != currentWorkFlowStatus && (
 				statusList.contains(currentWorkFlowStatus.getPmStatus().getStatusId())
-				)? true : false;
-		
-		return isAble;
+				);
 	}
 	//#21692 - end
 	
@@ -11696,16 +11698,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public String getLatestItemCode(ScRequestItem reqItem) {
 
+		//#34757 note-#41 - Start
+		for (ScLoiLoaItem item : this.getManagedBean().getLoiLoaItemsResult()) {
+			if (item.getScRequestItem().getRequestNoteItemId().equals(reqItem.getRequestNoteItemId())) {
+				item.getScRequestItem().setCmItem(reqItem.getCmItem());
+			}
+		}
+		//#34757 note-#41 - End
 		if (reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
 				|| reqItem.getTplSpecQuestion().getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
-			//#34757 note-#34 - Start
-			for (ScLoiLoaItem item : this.getManagedBean().getLoiLoaItemsResult()) {
-				if (item.getScRequestItem().getRequestNoteItemId().equals(reqItem.getRequestNoteItemId()) &&
-						null != item.getTplSpecTierQty() && !item.getTplSpecTierQty().getFromQty().equals(BigDecimal.ONE)) {
-					item.getScRequestItem().setCmItem(reqItem.getCmItem());
-				}
-			}
-			//#34757 note-#34 - End
 			return getQtAwardSO().getCmItemExtensionCode(reqItem);
 		} else {
 			return reqItem.getCmItem().getExtensionCode();

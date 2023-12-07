@@ -1834,22 +1834,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 	
 	/**
-	 * Gets the qt award so.
-	 * 
-	 * @return the qt award so
-	 */
-	/*
-	private IQTAwardSO getQtAwardSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-	}
-	*/
-	
-	/*
-	 * Enhancement #21694 END
-	 */
-	
-	/**
 	 * Find Document Id by document type
 	 * 
 	 * @param qtId
@@ -13299,8 +13283,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @return boolean
 	 */
 	public boolean isApprovalTypeEpv(PmParameter approvalType) {
-		return approvalType == null ? false : approvalType.getParameterCode().equals(
-				ParameterConst.DOCTYPE_EXTENSION_PROPOSAL_VALIDITY);
+		if (approvalType != null) {
+			return approvalType.getParameterCode().equals(
+					ParameterConst.DOCTYPE_EXTENSION_PROPOSAL_VALIDITY);
+		}
+		return false;
 	}
 
 	/**
