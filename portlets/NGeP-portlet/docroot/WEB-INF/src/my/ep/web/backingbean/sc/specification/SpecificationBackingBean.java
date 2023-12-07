@@ -21353,7 +21353,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 				debugLogger("put into list: " + statusDesc);
 			} catch (Exception e) {
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "getDemoStatusDescById", getUserIdSessionFromLoginId(), e);
 				throw new EpException(e.getMessage());
 			} finally {
 			}
