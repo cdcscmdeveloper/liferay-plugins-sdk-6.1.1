@@ -8707,8 +8707,10 @@ public void saveComplianceSample() {
 					//#10542 from task list to train based on last save from user -start
 					if(currentTab == 0 && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType())){
-						financialCheckListStatusCheck();
-						financialCheckListStatusCheckPackage();
+						if (this.getManagedBean().getNoSupplierPackageExist()) {
+							financialCheckListStatusCheck();
+							financialCheckListStatusCheckPackage();
+						}
 						retrieveReportTabDtl();									
 						outputTab = 4;
 					}
