@@ -8347,41 +8347,21 @@ public class EvaluationBackingBean extends
 							evalResDTO = evaluationSo.saveReportDtls(reqDTO);
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
 						}
+						
+						//#34588 start
+						if (this.getManagedBean().getWipStatusMax() <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+							//#35011 start
+							retriveSummaryEvaluationStage();
+							//#35011 end
+						} 
+						//#34588 end
+
 					}
-				//2tier enter below
-					if(outputTab == 3 && this.getManagedBean().getEvaluatioStageActiveIndex() == 0
-							&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-									.getManagedBean().getScQt().getEvaluationType())){
-						retriveFinancialEvaluationStage();
-						retriveNonScoringComplianceFinancial(true);//#25138
-						this.getManagedBean().setTabFinancialIndex(1);
-	
-					}
-					//#34588 start
-					IQTEvaluationSO evaluationSO = null;
-					evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTEvaluationSO.class);
-					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-					reqDTO.setScQt(this.getManagedBean().getScQt());
-					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-					
-					if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						//#35011 start
-						retriveSummaryEvaluationStage();
-						//#35011 end
-					} 
-					//#34588 end
 					
 				else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 					if (currentTab == 2) {
-						//#25138(wip 4serangkai) bug -Start 8/6/2023
-						evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTEvaluationSO.class);
-						EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
-						//#25138(wip 4serangkai) bug -End 8/6/2023
 						if (this.getManagedBean()
 								.getEvaluatioStageActiveIndex() < 1) {
 							
@@ -8414,9 +8394,8 @@ public class EvaluationBackingBean extends
 											this.getManagedBean().setTabFinancialIndex(3);
 											outputTab = 2;
 										}
-										reqDTOwip.setScQt(this.getManagedBean().getScQt());
 										
-										if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+										if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 											retriveFinancialEvaluationStagePackage();
 											
 											this.getManagedBean().setTabFinancialIndex(2);
@@ -8444,9 +8423,8 @@ public class EvaluationBackingBean extends
 							retriveSummaryEvaluationStage();
 //							retriveOneTierFinancialSupplierSummary();
 							this.getManagedBean().setTabFinancialIndex(3);	
-							reqDTOwip.setScQt(this.getManagedBean().getScQt());
 							
-							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							if (this.getManagedBean().getWipStatusMax() <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
 									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 											.getManagedBean().getScQt().getEvaluationType())) {
 								retrieveReportTabDtl();									
