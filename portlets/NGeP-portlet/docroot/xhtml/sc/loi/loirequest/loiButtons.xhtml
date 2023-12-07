@@ -50,10 +50,17 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					process="@form" update="@form" />
 
+				<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>
+<!-- 				<p:commandButton value="#{lbl['lbl.btn.submit']}" -->
+<!-- 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}" -->
+<!-- 					action="#{lOIDetailBackingBean.submitAction}" process="@form" -->
+<!-- 					update="@form" /><ui:remove>#21692</ui:remove> -->
+					
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
-					action="#{lOIDetailBackingBean.submitAction}" process="@form"
-					update="@form" /><ui:remove>#21692</ui:remove>
+					action="#{lOIDetailBackingBean.validateNegoDecisionitAction}" process="@form"
+					update="@form" />
+				<ui:remove>#30008 - End</ui:remove>
 					
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					oncomplete="cancelPopup.show();"
@@ -68,13 +75,23 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								rendered="#{validityDaysExpiredQt}"
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								styleClass="ui-button"
-								action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
-								partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-								update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
+							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>
+					<!--		<p:commandButton value="#{lbl[buttonLabel]}"-->
+					<!--			rendered="#{validityDaysExpiredQt}"-->
+					<!--			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"-->
+					<!--			styleClass="ui-button"-->
+					<!--			action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"-->
+					<!--			partialSubmit="true" process="#{isReject ? '@this' : '@form'}"-->
+					<!--			update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>-->								
+								
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									rendered="#{validityDaysExpiredQt}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									styleClass="ui-button"
+									action="#{lOIDetailBackingBean.validateNegoDecisionAction(bpmAction)}"
+									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+									update="#{isReject ? '@this' : '@form'}" /><ui:remove>#30008 - End</ui:remove>
+								
 						</ui:repeat>
 					</c:when>
 				</c:choose>
