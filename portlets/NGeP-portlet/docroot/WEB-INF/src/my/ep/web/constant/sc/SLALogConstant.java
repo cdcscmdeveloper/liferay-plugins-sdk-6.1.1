@@ -48,6 +48,12 @@ public class SLALogConstant {
 	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
 	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
 	//#29187 End Vinod
+	//#10141 Start Vinod
+	public static final String QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY = "generateTechnicalChecklistPreviewPdfFromVelocity";
+	public static final String QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY = "generateFinancialChecklistPreviewPdfFromVelocity";
+	public static final String QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW = "downloadTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW = "downloadFinancialChecklistPreview";
+	//#10141 End Vinod
 	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
 	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";
 	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION= "createLampiranA3forQTVerification";

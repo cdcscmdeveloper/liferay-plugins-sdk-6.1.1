@@ -23128,14 +23128,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		ScQtCheckListAttachment attachment = generateTechnicalChecklistPreviewPdfFromVelocity(scQtCheckSt2techProposal);
 		try {
 			downloadFile(attachment);
-		} catch (IOException ex) {
-			if (ex instanceof FileNotFoundException) {
-				handleException(new EpException(MessageConst.ERROR_760411, new String[] { this.getManagedBean().getQt()
-						.getQtNo() }));
-			}
+		} catch (IOException ie) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ie);
 
 		} catch (EpException ex) {
-			handleException(ex);
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ex);
 		}
 	}
 
@@ -23163,18 +23166,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			fos = new FileOutputStream(getActualFilePath(attachment));
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.TECHNICAL_CHECKLIST_PREVIEW,
 					context, fos);
-		} catch (FileNotFoundException fe) {
-			fe.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException ie) {
-				ie.printStackTrace();
-			}
+		} catch (FileNotFoundException e) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+		} catch (Exception ex) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), ex);
 		}
 
 		return attachment;
@@ -23190,14 +23191,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		ScQtCheckListAttachment attachment = generateFinancialChecklistPreviewPdfFromVelocity(scQtCheckSt2financeProposalList);
 		try {
 			downloadFile(attachment);
-		} catch (IOException ex) {
-			if (ex instanceof FileNotFoundException) {
-				handleException(new EpException(MessageConst.ERROR_760411, new String[] { this.getManagedBean().getQt()
-						.getQtNo() }));
-			}
+		} catch (IOException ie) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ie);
 
 		} catch (EpException ex) {
-			handleException(ex);
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ex);
 		}
 	}
 
@@ -23225,19 +23229,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			fos = new FileOutputStream(getActualFilePath(attachment));
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.FINANCIAL_CHECKLIST_PREVIEW,
 					context, fos);
-		} catch (FileNotFoundException fe) {
-			fe.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException ie) {
-				ie.printStackTrace();
-			}
+		} catch (FileNotFoundException e) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
+		} catch (Exception ex) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), ex);
 		}
+
 
 		return attachment;
 	}
