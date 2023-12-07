@@ -23007,6 +23007,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10141 Start Vinod
+	/**
+	* this method will check inactive checklist and show the confirmation to remove those checklist.
+	* 
+	* @param action.
+	* @return 
+	*/
 	public void initiateInactiveChecklistProcess(String action) {
 		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
 		for (ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()) {
@@ -23019,29 +23025,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 
 		if (!inActiveChecklist.isEmpty() && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			StringBuffer confirmationMsg = new StringBuffer();
-			String nextline = getMessageCommon("lbl.sc.spec.confirm.nextline");
-			String techCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.tech.checklist");
-			String finCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.fin.checklist");
-			int tecCLcount = 0;
-			int finCLcount = 0;
-			for (ScQtCheckList inactive : inActiveChecklist) {
-				if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
-					tecCLcount++;
-					confirmationMsg.append(tecCLcount + ". " + techCheckList + " " + inactive.getTitle() + nextline);
-				} else {
-					if (tecCLcount != 0) {
-						confirmationMsg.append(nextline);
-						tecCLcount = 0;
-					}
-					finCLcount++;
-					confirmationMsg.append(finCLcount + ". " + finCheckList + " " + inactive.getTitle() + nextline);
-				}
-			}
+			
+			String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
+			
 			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
 			this.getManagedBean().setInActiveChecklistNotificationText(
 					getMessage("lbl.sc.spec.confirm.inactive.techfin.checklist",
-							new String[] { confirmationMsg.toString() }));
+							new String[] { confirmationMsg }));
 
 			RequestContext.getCurrentInstance().execute("inActiveChecklistNotification.show()");
 		} else {
@@ -23051,7 +23041,36 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			this.specCommitteBpmTask(action);
 		}
 	}
+	private String inactiveChecklistChecking(List<ScQtCheckList> inActiveChecklist){
+		StringBuilder confirmationMsg = new StringBuilder();
+		String nextline = QTConstants.HTML_NEW_LINE_CHARACTER;
+		String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
+		String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
+		int tecCLcount = 0;
+		int finCLcount = 0;
+		for (ScQtCheckList inactive : inActiveChecklist) {
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
+				tecCLcount++;
+				confirmationMsg.append(tecCLcount + ". " + techCheckList + " " + inactive.getTitle() + nextline);
+			} else {
+				if (tecCLcount != 0) {
+					confirmationMsg.append(nextline);
+					tecCLcount = 0;
+				}
+				finCLcount++;
+				confirmationMsg.append(finCLcount + ". " + finCheckList + " " + inactive.getTitle() + nextline);
+			}
+		}
+		
+		return confirmationMsg.toString();
+	}
 
+	/**
+	* this method will check to disable Button For Inactive Checklist.
+	* 
+	* @param outcome.
+	* @return boolean
+	*/
 	public boolean disableButtonForInactiveChecklist(String outcome) {
 		if (this.getManagedBean().isDisableButtonForInactiveChecklist()
 				&& (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE) || outcome
@@ -23061,6 +23080,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		return false;
 	}
 
+	/**
+	* this method will show the popup to show technical checklist.
+	* 
+	* @param 
+	* @return 
+	*/
 	public void technicalCheckListPreview() {
 		List<ScQtCheckList> techCheckListforPreview = new ArrayList<>();
 		if (!this.getManagedBean().getScQtCheckSt2techProposal().isEmpty()) {
@@ -23071,9 +23096,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 			this.getManagedBean().setTechChecklistPreview(techCheckListforPreview);
 		}
-		RequestContext.getCurrentInstance().execute("technicalChecklistPreview.show()");
+		RequestContext.getCurrentInstance().execute(QTConstants.TECHNICAL_CHECKLIST_PREVIEW_POPUP);
 	}
 
+	/**
+	* this method will show the popup to show financial checklist.
+	* 
+	* @param 
+	* @return 
+	*/
 	public void financialCheckListPreview() {
 		List<ScQtCheckList> finCheckListforPreview = new ArrayList<>();
 		if (!this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()) {
@@ -23084,9 +23115,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 			this.getManagedBean().setFinChecklistPreview(finCheckListforPreview);
 		}
-		RequestContext.getCurrentInstance().execute("financialChecklistPreview.show()");
+		RequestContext.getCurrentInstance().execute(QTConstants.FINANCIAL_CHECKLIST_PREVIEW_POPUP);
 	}
 
+	/**
+	* this method will download technical checklist preview.
+	* 
+	* @param scQtCheckSt2techProposal.
+	* @return 
+	*/
 	public void downloadTechnicalChecklistPreview(List<ScQtCheckList> scQtCheckSt2techProposal) throws Exception {
 		ScQtCheckListAttachment attachment = generateTechnicalChecklistPreviewPdfFromVelocity(scQtCheckSt2techProposal);
 		try {
@@ -23108,17 +23145,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
 
-		String name = getMessageCommon("lbl.sc.spec.technical.checklist.preview.printing").replaceAll("\\s", "");
-		filename.append(name + ".pdf");
+		String name = getMessageCommon(QTConstants.LBL_TECHNICAL_CHECKLIST_PREVIEW_PRINTING).replaceAll("\\s", "");
+		filename.append(name + QTConstants.PDF_EXTENSION);
 		attachment.setFileName(filename.toString());
 		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 
 		populateAttachmentDetails(attachment);
 
-		context.put("hostUrl", getLogoHeaderPath());
-		context.put("scQtCheckSt2techProposal", scQtCheckSt2techProposal);
-		context.put("bean", this);
+		context.put(QTConstants.HOST_URL, getLogoHeaderPath());
+		context.put(QTConstants.SC_QT_CHECK_ST2TECH_PROPOSAL_LIST, scQtCheckSt2techProposal);
+		context.put(QTConstants.STRING_BEAN, this);
 
 		FileOutputStream fos = null;
 
@@ -23126,8 +23163,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			fos = new FileOutputStream(getActualFilePath(attachment));
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.TECHNICAL_CHECKLIST_PREVIEW,
 					context, fos);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException fe) {
+			fe.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -23135,14 +23172,20 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				if (fos != null) {
 					fos.close();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ie) {
+				ie.printStackTrace();
 			}
 		}
 
 		return attachment;
 	}
 
+	/**
+	* this method will download financial checklist preview.
+	* 
+	* @param scQtCheckSt2financeProposalList.
+	* @return 
+	*/
 	public void downloadFinancialChecklistPreview(List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception {
 		ScQtCheckListAttachment attachment = generateFinancialChecklistPreviewPdfFromVelocity(scQtCheckSt2financeProposalList);
 		try {
@@ -23158,23 +23201,23 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 
-	public ScQtCheckListAttachment generateFinancialChecklistPreviewPdfFromVelocity(
+	private ScQtCheckListAttachment generateFinancialChecklistPreviewPdfFromVelocity(
 			List<ScQtCheckList> scQtCheckSt2financeProposalList) throws Exception {
 		VelocityContext context = new VelocityContext();
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
 
-		String name = getMessageCommon("lbl.sc.spec.financial.checklist.preview.printing").replaceAll("\\s", "");
-		filename.append(name + ".pdf");
+		String name = getMessageCommon(QTConstants.LBL_FINANCIAL_CHECKLIST_PREVIEW_PRINTING).replaceAll("\\s", "");
+		filename.append(name + QTConstants.PDF_EXTENSION);
 		attachment.setFileName(filename.toString());
 		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 
 		populateAttachmentDetails(attachment);
 
-		context.put("hostUrl", getLogoHeaderPath());
-		context.put("scQtCheckSt2financeProposalList", scQtCheckSt2financeProposalList);
-		context.put("bean", this);
+		context.put(QTConstants.HOST_URL, getLogoHeaderPath());
+		context.put(QTConstants.SC_QT_CHECK_ST2FINANCE_PROPOSAL_LIST, scQtCheckSt2financeProposalList);
+		context.put(QTConstants.STRING_BEAN, this);
 
 		FileOutputStream fos = null;
 
@@ -23182,8 +23225,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			fos = new FileOutputStream(getActualFilePath(attachment));
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.FINANCIAL_CHECKLIST_PREVIEW,
 					context, fos);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException fe) {
+			fe.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -23191,8 +23234,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				if (fos != null) {
 					fos.close();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ie) {
+				ie.printStackTrace();
 			}
 		}
 
@@ -23214,8 +23257,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @return boolean
 	 */
 	public boolean renderPtintButtonForSpecConnittee() {
-		if (this.getManagedBean().getActiveIndex() == 4 || this.getManagedBean().getActiveIndex() == 5
-				|| this.getManagedBean().getActiveIndex() == 6) {
+		if (this.getManagedBean().getActiveIndex() == QTConstants.ACTIVE_INDEX_4 || this.getManagedBean().getActiveIndex() == QTConstants.ACTIVE_INDEX_5
+				|| this.getManagedBean().getActiveIndex() == QTConstants.ACTIVE_INDEX_6) {
 			return true;
 		}
 

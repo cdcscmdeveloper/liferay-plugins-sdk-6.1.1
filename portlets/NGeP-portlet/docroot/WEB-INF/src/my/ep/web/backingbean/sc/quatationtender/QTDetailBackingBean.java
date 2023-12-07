@@ -12905,9 +12905,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 		if (!inActiveChecklist.isEmpty()) {
 			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
 			StringBuffer confirmationMsg = new StringBuffer();
-			String nextline = getMessageCommon("lbl.sc.spec.confirm.nextline");
-			String techCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.tech.checklist");
-			String finCheckList = getMessageCommon("lbl.sc.spec.confirm.inactive.fin.checklist");
+			String nextline = QTConstants.HTML_NEW_LINE_CHARACTER;
+			String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
+			String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
 			int tecCLcount = 0;
 			int finCLcount = 0;
 			for (ScQtCheckList inactive : inActiveChecklist) {
