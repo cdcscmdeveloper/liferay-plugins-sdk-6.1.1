@@ -618,17 +618,14 @@ public class ViewApplHistoryBackingBean extends
 	 * @param SmMofCert
 	 *            cert
 	 */
-	public void printVirtualCert(SmMofCert cert) {
+	public void printVirtualCert(String clientId, SmMofCert cert) {
 		try {
 			//#28175 - START
-			RequestContext.getCurrentInstance().execute("blockWidget.show();");
 			getVirtualCertInstance().printVirtualCert(cert);
+			RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click();");
+			//#28175 - END
 		} catch (IOException e) {
 			throw new EpException(e.getMessage());
-		} finally {
-			log.info("COMPLETE TXN");
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-			//#28175 - END
 		}
 	}
 
