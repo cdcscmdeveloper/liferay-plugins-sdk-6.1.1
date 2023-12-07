@@ -8884,6 +8884,7 @@ public class EvaluationBackingBean extends
 				}
 				retrieveReportTabDtl();
 			} else if (outputTab == 5) {
+				retrieveReportTabDtl();
 				retriveCommitteeEndorsment();
 				
 				// RequestContext.getCurrentInstance().update("@form");
