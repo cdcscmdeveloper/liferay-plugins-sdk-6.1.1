@@ -642,7 +642,7 @@ u.underline {
 		<tr>
 			<td align="left" width="30%">
 				<span style="text-align:center;" class="text_family_medium">Tandatangan Syarikat</span><br/>
-				_____________________________<br/>
+				.......................................................<br/>
 				<span class="text_family">Nama Penuh</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
@@ -657,7 +657,7 @@ u.underline {
 			</td>
 			<td align="left" width="30%">
 				<span style="text-align:center;" class="text_family_medium">Tandatangan Saksi Syarikat</span><br/>
-				_____________________________<br/>
+				.......................................................<br/>
 				<span class="text_family">Nama Penuh Saksi</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
@@ -1039,7 +1039,7 @@ u.underline {
 					<td class="text_family_red">
 					    <table>
 					      <tr style="margin-bottom:1px;" align="bottom"> 
-					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;"><br/>Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan.</span></td>	
+					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;"><br/>Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>	
 					      </tr>
 					    </table>
 					</td>
