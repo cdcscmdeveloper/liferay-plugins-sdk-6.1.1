@@ -6546,6 +6546,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private void setSstInfoForAgreementLetter(VelocityContext context,
 			ScLoa scLoa, DecimalFormat amountDF, Locale myLocale) {
 
+		//26770 start 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo()
 				: SSTConstant.UNDERLINE;
 		context.put(SSTConstant.GST_REG_NO, gstRegNo);
@@ -6561,7 +6562,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String offerPrice = SSTConstant.UNDERLINE;
 		String offerPriceWording = "______________";
 		BigDecimal loaAmount = scLoa.getLoaAmt();
-		
+		//26770 - end
 		if (loaAmount != null) {
 			offerPrice = amountDF.format(loaAmount);
 			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil
