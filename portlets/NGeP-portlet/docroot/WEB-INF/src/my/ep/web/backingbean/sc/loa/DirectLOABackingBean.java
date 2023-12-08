@@ -6509,19 +6509,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private void setSstInfoForAgreementLetter(VelocityContext context,
 			ScLoa scLoa, DecimalFormat amountDF, Locale myLocale) {
 
+		//26770 start 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo()
-				: "______________";
-		context.put("gstRegNo", gstRegNo);
+				: SSTConstant.UNDERLINE;
+		context.put(SSTConstant.GST_REG_NO, gstRegNo);
 
 		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
-				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "______________";
+				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : SSTConstant.UNDERLINE;
 		context.put("gstEffectiveDate", gstEffectiveDate);
 
 		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
 				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
 		context.put("gstDeclaredDate", gstDeclaredDate);
 
-		String offerPrice = "______________";
+		String offerPrice = SSTConstant.UNDERLINE;
 		String offerPriceWording = "______________";
 		BigDecimal loaAmount = scLoa.getLoaAmt();
 		
@@ -9104,32 +9105,39 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
 		//title=title.replaceAll("&", "&#38;");
-		title=title.replaceAll("<", "&#60;");
-		title=title.replaceAll(">", "&#62;");
-		title = title.replaceAll("\r\n", "<br />");
+		// 26770 - start
+		title = title.replaceAll("&", SSTConstant.AND_SYMBOL);
+		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
+		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
+		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
+		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		// 26770 - end
 		context.put("loaTitle", title);
 		
 		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
-
-		String bondAmt = "______________";
-		String bondAmtText = "______________";
+		//26770 - start
+		String bondAmt = SSTConstant.UNDERLINE_BOND_AMT;
+		String bondAmtText = SSTConstant.UNDERLINE;
+		//26770 - end
 		if (scLoa.getBondAmt() != null) {
 			bondAmt = amountDF.format(scLoa.getBondAmt());
 			bondAmtText = NumberWordUtil.convert(scLoa.getBondAmt().toString());
 		}
-		context.put("bondAmt", bondAmt);
-		context.put("bondAmtText", bondAmtText);
+		//26770 - start
+		context.put(SSTConstant.BOND_AMOUNT, bondAmt);
+		context.put(SSTConstant.BOND_AMOUNT_TEXT, bondAmtText);
 
-		String bondPercentage = "______________";
-		String bondPercentageText = "______________";
+		String bondPercentage = SSTConstant.UNDERLINE;
+		String bondPercentageText = SSTConstant.UNDERLINE;
 		if (scLoa.getBondPercentage() != null) {
-			bondPercentage = percentageDF.format(scLoa.getBondPercentage());
-			bondPercentageText  = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
+			bondPercentage = percentageDF.format(scLoa.getBondPercentage())+SSTConstant.SIGN_PERCENTAGE;
+			bondPercentageText = NumberWordUtil.convert(scLoa.getBondPercentage().toString());
 		}
-		context.put("bondPercentageText", bondPercentageText); 
-		context.put("bondPercentage", bondPercentage+SSTConstant.SIGN_PERCENTAGE);
-		
+		context.put(SSTConstant.BOND_PERCENTAGE_TEXT, bondPercentageText); 
+		context.put(SSTConstant.BOND_PERCENTAGE, bondPercentage);
+		//26770 - end
 		String bondExpDate = "______________";
 		//bond exp date should be one year after the end of the contract period
 		if(scLoa.getContractExpDate() != null){
@@ -9208,7 +9216,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				if (null != supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()){
 					context.put("ssmExpired",new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()));
 				}else{
-					context.put("ssmExpired","______________"); 
+					context.put("ssmExpired",SSTConstant.UNDERLINE); //26770
 				}
 				
 			}
