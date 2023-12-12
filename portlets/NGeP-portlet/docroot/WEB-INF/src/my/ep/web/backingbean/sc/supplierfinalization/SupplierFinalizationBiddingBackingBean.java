@@ -3122,10 +3122,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 		
-		if(supplierId != null && scQt != null){
-		    if(qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
-			    return Boolean.TRUE;
-	        }
+		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
+			 return Boolean.TRUE;
 	    }
 		return Boolean.FALSE;
 	}
