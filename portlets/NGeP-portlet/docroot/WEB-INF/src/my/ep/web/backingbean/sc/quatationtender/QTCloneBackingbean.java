@@ -544,16 +544,19 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	/*
-	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START	 * 
+	/**
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START REFRACTORING DANIAL CODES
+	 * Purpose : To Get List Of status based on Constant QT_ORDERED_STATUSES
+	 * @param fromStatusId
+	 * @param toStatusId
+	 * @return Long[] statuses
 	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 	    int startIndex = orderedStatuses.indexOf(fromStatusId);
 	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
 	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
-	    Long[] ret = subList.toArray(new Long[subList.size()]);
-	    return ret;
+	    return subList.toArray(new Long[subList.size()]);
 	}
 	/*
 	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
@@ -2247,14 +2250,12 @@ public class QTCloneBackingbean extends
 			ScQtApproval newOthersApproval= null;
 			scQt.setCloneEnabled(Boolean.TRUE);//34502&25635-end
 			this.getManagedBean().setApproverTabLoaded(Boolean.TRUE);//34502&25635-end
-			 if(!scQt.isBrandNew()){
-				if(null!=scQt.getScQtApprovals() && CollectionUtils.isNotEmpty(scQt.getScQtApprovals())){
-					for(ScQtApproval approval:scQt.getScQtApprovals()){
-						if (!approval.isBrandNew() && ParameterConst.APPROVAL_CATEGORY_OTHERS
-								.equalsIgnoreCase(approval.getApprovalCategory()
-										.getParameterCode())) {
-							newOthersApproval=approval;
-						}
+			 if(!scQt.isBrandNew() && null!=scQt.getScQtApprovals() && CollectionUtils.isNotEmpty(scQt.getScQtApprovals())){
+				for(ScQtApproval approval:scQt.getScQtApprovals()){
+					if (!approval.isBrandNew() && ParameterConst.APPROVAL_CATEGORY_OTHERS
+							.equalsIgnoreCase(approval.getApprovalCategory()
+									.getParameterCode())) {
+						newOthersApproval=approval;
 					}
 				}
 			 }
@@ -2268,7 +2269,7 @@ public class QTCloneBackingbean extends
 			 }
 			
 			 if(copyOthersApproval.getScQtApprovalDtls()!=null && !copyOthersApproval.getScQtApprovalDtls().isEmpty()){//25635 & 34502
-				List<ScQtApprovalRequest> approverRequest=new ArrayList<ScQtApprovalRequest>();
+				List<ScQtApprovalRequest> approverRequest=new ArrayList<>();
 				for(ScQtApprovalRequest approvalRequest:copyOthersApproval.getScQtApprovalDtls()){
 						
 					if(null!=approvalRequest.getApprovalType() && null!=approvalRequest.getApprovalType().getParameterId() &&
