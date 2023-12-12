@@ -40,6 +40,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -1234,7 +1235,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getFinancialQtProposalChecklist();
 		// Enhancement #3657@Syazani 12/10/2023 -- Start
-		int clItemSize = 0;
 		boolean isZonal = getManagedBean().getQt().isZonal();
 		// Enhancement #3657@Syazani 12/10/2023 -- End
 				
@@ -1274,11 +1274,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						.getZoneTplSpecBeanMap().values());
 				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
-					// Enhancement #3657@Syazani 12/10/2023 -- Start
-					clItemSize = templateSpecBeans.get(0).getSpecAnswerList() != null
-							&& !templateSpecBeans.get(0).getSpecAnswerList().isEmpty() ? templateSpecBeans.get(0)
-							.getSpecAnswerList().size() : 0;
-					// Enhancement #3657@Syazani 12/10/2023 -- End
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
 						if (templateSpecBean.getSpecAnswerList() != null
@@ -1360,15 +1355,22 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			boolean isTender = ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
 					.getProcurementMode().getParameterCode()) ? true : false;
 			Map<String, Integer> singleZoneAnswerSize = new HashMap<>();
+			Map<String, Integer> singleZoneQuestionSize = new HashMap<>();
 			for (TplSpecAnswer answer : answers) {
+				boolean isQtyMoreThanZero = false;
+				String zone = answer.getTplSpecZoneQty() != null
+						&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
+						&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
+						.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
+
+				if (answer.getTplSpecZoneQty() != null) {
+					isQtyMoreThanZero = answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
+					singleZoneQuestionSize = countZoneSize(singleZoneQuestionSize, zone, isQtyMoreThanZero);
+				}
+				
 				if (isCompleted) {
-					boolean isZoneUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() != null
-							&& answer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0;
+					boolean isZoneUomNull = answer.getRatePerUom() == null && isQtyMoreThanZero;
 					boolean isNonZonalUomNull = answer.getRatePerUom() == null && answer.getTplSpecZoneQty() == null;
-					String zone = answer.getTplSpecZoneQty() != null
-							&& answer.getTplSpecZoneQty().getTplSpecZoneDtl() != null
-							&& answer.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() != null ? answer
-							.getTplSpecZoneQty().getTplSpecZoneDtl().getZoneName() : "";
 
 					// #21695 7/10/2021	START
 					// farid start #21695 to allow item has 0 qty and 0 price
@@ -1385,12 +1387,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						}
 					} else {
 						answer.setComponentEmpty(false);
-						Integer zoneVal = singleZoneAnswerSize.get(zone);
-						if (zoneVal == null) {
-							singleZoneAnswerSize.put(zone, 1);
-						} else {
-							singleZoneAnswerSize.put(zone, zoneVal + 1);
-						}
+						singleZoneAnswerSize = countZoneSize(singleZoneAnswerSize, zone, isQtyMoreThanZero);
 					}
 					// bug #31733 add condition 5/11/2021
 					// farid end #21695 7/10/2021
@@ -1425,15 +1422,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			}
 			
 			if (isTender && isZonal && singleZoneAnswerSize.size() > 0) {
-				for (Map.Entry<String, Integer> entry : singleZoneAnswerSize.entrySet()) {
-					int eachZonVal = entry.getValue();
-					if (eachZonVal != 0 && eachZonVal == clItemSize) {
-						isThrow = false;
-					} else if (eachZonVal != 0 && eachZonVal != clItemSize) {
-						isThrow = true;
-						break;
-					}
-				}
+				isThrow = zonalTenderAnswerChecking(singleZoneAnswerSize, singleZoneQuestionSize, isThrow);
 			}
 
 			if (isThrow && errorLst != null && !errorLst.isEmpty()) {
@@ -2285,6 +2274,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				}else{
 					//start Bug #28887
 					//34493 - start
+				if (null != assetProposalChecklist) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
 						assetProposalChecklist.setSubmitted(false);
 						assetProposalChecklist.setCompliance(null);
@@ -2292,6 +2282,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						assetProposalChecklist.setSubmitted(true);
 						assetProposalChecklist.setCompliance(null);
 					} 
+				}
 					//34493 - end
 					//end Bug #28887
 				}
@@ -3987,7 +3978,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			MathContext mc = new MathContext(4);
 
 			//Start Bug #26498
-			if (totalCredit.compareTo(BigDecimal.ZERO) == 1){
+			if (totalCredit != null && totalCredit.compareTo(BigDecimal.ZERO) == 1){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				percentagePaid = totalPaid.divide(totalCredit, mc).multiply(
 						BigDecimal.valueOf(100));
 			}
@@ -4209,7 +4200,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				scQtPRPExperience.setBrandNew(false);
 			}
 
-			prpExperience.setScQtProposal(proposalChecklist.getScQtProposal());
+			prpExperience.setScQtProposal(proposalChecklist != null ?proposalChecklist.getScQtProposal():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			prpExperience.setContractAmt(new BigDecimal(0));
 			experienceList.add(prpExperience);
 			this.getManagedBean().setScQtPRPExperiences(experienceList);
@@ -5966,7 +5957,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							}
 						}
 						
-						if (CollectionUtils.isNotEmpty(catCodeList)) {
+						if (catCodeList != null && CollectionUtils.isNotEmpty(catCodeList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 							IQTDetailSO QtDetailsSO;
 							QuationTenderResDTO tenderResDTO;
 							
@@ -6073,7 +6064,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					zoneGeneralTrees.clear();	
 				}
 				
-				if (CollectionUtils.isNotEmpty(specZoneDtls)) {
+				if (specZoneDtls != null && CollectionUtils.isNotEmpty(specZoneDtls)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (TplSpecZoneDtl zone : specZoneDtls) {
 					
 						if (CollectionUtils.isNotEmpty(zone.getTplSpecZoneLocs())) {
@@ -6285,23 +6276,23 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-		//29729 - start	
+        //#28777 & #29729 - Start
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTProposalSO sproposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
 			Long supplierId = this.getManagedBean().getSupplierId();
 			ScQt scQt = this.getManagedBean().getQt();
 			if(supplierId != null && scQt != null){
-				if(sproposalSO.isCheckPrepareProposalCurrentSupplierBranchDeleted(supplierId, scQt)){
+				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			    }
 			}
 		    return isSupplierBranchDeleted;
 		}
-		//29729 - end
+		//#28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
@@ -6489,7 +6480,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					}
 				}
 			}
-			if (retrieveAns.isDisableRow()) {
+			if (retrieveAns != null && retrieveAns.isDisableRow()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				retrieveAns.setOffer(false);
 			}
 		}
@@ -6543,5 +6534,42 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	    }
 	}
 	//#34204 - End
+	
+	// Enhancement #3657@Syazani 12/10/2023 -- Start
+	private boolean zonalTenderAnswerChecking(Map<String, Integer> singleZoneAnswerSize,
+			Map<String, Integer> singleZoneQuestionSize, boolean isThrow) {
+		boolean flag = isThrow;
+		for (Map.Entry<String, Integer> entryQ : singleZoneQuestionSize.entrySet()) {
+			int clItemSize = entryQ.getValue();
+			for (Map.Entry<String, Integer> entryA : singleZoneAnswerSize.entrySet()) {
+				int eachZonValA = entryA.getValue();
+				boolean isSameZone = entryQ.getKey().equalsIgnoreCase(entryA.getKey());
+				if (isSameZone && eachZonValA != 0 && eachZonValA == clItemSize) {
+					flag = false;
+				} else if (isSameZone && eachZonValA != 0 && eachZonValA != clItemSize) {
+					return true;
+				}
+			}
+		}
+		return flag;
+	}
+
+	private Map<String, Integer> countZoneSize(Map<String, Integer> singleZoneMap, String zone, boolean qtyMoreThanZero) {
+		Map<String, Integer> zoneMap = singleZoneMap;
+		Integer zoneValQuest = zoneMap.get(zone);
+		if (qtyMoreThanZero) {
+			if (zoneValQuest == null) {
+				zoneMap.put(zone, 1);
+			} else {
+				zoneMap.put(zone, zoneValQuest + 1);
+			}
+		} else {
+			if (zoneValQuest == null) {
+				zoneMap.put(zone, 0);
+			}
+		}
+		return zoneMap;
+	}
+	// Enhancement #3657@Syazani 12/10/2023 -- End
 	
 }
