@@ -94,6 +94,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -2055,10 +2056,10 @@ public class EvaluationMeetingBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		EvaluationBackingBean evalBB = this.getManagedBean().getEvalBB();
 		String mainPage = evalBB!=null ? "/xhtml/sc/evaluation/evaluationMain.xhtml?faces-redirect=true" :  "/xhtml/sc/confirmMeeting/confirmMeetingView.xhtml?faces-redirect=true";
-		if(action.equalsIgnoreCase("back")){
+		if("back".equalsIgnoreCase(action)){
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
-		}else if(action.equalsIgnoreCase("update")){
+		}else if("update".equalsIgnoreCase(action)){
 			 //25037 #568 -start
 			this.getManagedBean().setTempCommitteeMembers(new ArrayList<ScCommitteeMember>());
 	    	if(CollectionUtils.isNotEmpty(this.getManagedBean().getCommitteeMemberActivity())){
@@ -2071,11 +2072,11 @@ public class EvaluationMeetingBackingBean extends
 	    		this.getManagedBean().setTempScQtApprovalRemark(SerializationUtils.clone(this.getManagedBean().getScQtApprovalRemarks().get(0)));
 	    	}
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/confirmMeeting/memberUpdate.xhtml");
-		}else if(action.equalsIgnoreCase("confirm")){
+		}else if("confirm".equalsIgnoreCase(action)){
 			this.getManagedBean().setCommitteeModified(true);
     		if(evalBB!=null){
     			evalBB.getManagedBean().setCommitteModified(true);
-    			evalBB.getManagedBean().setRemoveCommitteeList(new ArrayList<ScCommitteeMember>());
+    			
     			List<ScQtCommitteeActivity> activityRemoveList = new ArrayList<ScQtCommitteeActivity>();
     			List<ScQtCommitteeActivity> activityList  = evalBB.getManagedBean().getCommitteeMemberList();
     			Map<Object, Object> activityMap = CustomUtils.listToMap(activityList, "getScCommitteeMember.getIcPassport");
@@ -2083,6 +2084,12 @@ public class EvaluationMeetingBackingBean extends
     			List<ScCommitteeMember> evalMembers = evalBB.getManagedBean().getCommitteeMemberActivity();
     			Map<Object, Object> evalMemberMap = CustomUtils.listToMap(evalMembers, "getIcPassport");
     		
+       			if(null == evalBB.getManagedBean().getRemoveCommitteeList()){
+        			evalBB.getManagedBean().setRemoveCommitteeList(new ArrayList<ScCommitteeMember>());
+    			}
+    			List<ScCommitteeMember> removeCommitteeList = evalBB.getManagedBean().getRemoveCommitteeList();
+    			Map<Object, Object> removeCommitteeMap = CustomUtils.listToMap(removeCommitteeList, "getIcPassport");
+
     			for(ScCommitteeMember m: this.getManagedBean().getRemoveCommitteeList()){
     				ScQtCommitteeActivity act = (ScQtCommitteeActivity)activityMap.get(m.getIcPassport());
     				if(act!=null){
@@ -2105,6 +2112,10 @@ public class EvaluationMeetingBackingBean extends
     				}else{
     					ScCommitteeMember em = act.getScCommitteeMember();
     					em.setMemberRole(m.getMemberRole());
+    				}
+     				ScCommitteeMember removedMember = (ScCommitteeMember) removeCommitteeMap.get(m.getIcPassport());
+    				if(removedMember!=null){
+        				removeCommitteeList.remove(removedMember);
     				}
     			}
     			 activityList.removeAll(activityRemoveList);
@@ -2167,54 +2178,50 @@ public class EvaluationMeetingBackingBean extends
     	this.getManagedBean().getScQtApprovalRemarks().get(0).setRemark(remark);
     	//25037 #568 - end
 			}
-	private void prepareCommitteeHistory(ScQtCommittee qtCommittee){
+    
+	private void prepareCommitteeHistory(ScQtCommittee qtCommittee) {
 		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(qtCommittee, false);
-		try{
-			if(CollectionUtils.isNotEmpty(histories)){
+		try {
+			if (CollectionUtils.isNotEmpty(histories)) {
 				ScCommitteeMemberHistory history = histories.get(0);
 				@SuppressWarnings("unchecked")
-				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
+				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>) (Object) history
+						.deserializeList(history.getCommitteeMembers());
 				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
-				//histories.remove(0);
 			}
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-	
-		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
-		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		reqDTO.setQtId(qtCommittee.getScQt().getQtId());
-		reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);		
-		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+			this.getManagedBean().setCurrentCommitteeType(
+					this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
+			this.getManagedBean().setHistoryPaginator(new Paginator(histories));
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(qtCommittee.getScQt().getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+			ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+
+			List<ScQtApprovalRemark> remarkList = approval.getScQtApprovalRemarks();
+			if (CollectionUtils.isEmpty(remarkList)) {
+				remarkList = new ArrayList<ScQtApprovalRemark>();
 		
-		List<ScQtApprovalRemark> remarkList = approval.getScQtApprovalRemarks();
-		if(CollectionUtils.isEmpty(remarkList)){
-			remarkList = new ArrayList<ScQtApprovalRemark>();
-		}
-		remarkList = initializeRemarks(qtCommittee, qtCommittee.getCurrentStatus(), remarkList, ScQtApprovalRemark.class);
-		Collections.sort(remarkList, new Comparator<ScQtApprovalRemark>() {
-			public int compare(ScQtApprovalRemark o1, ScQtApprovalRemark o2) {
-				return o2.getCreatedDate().compareTo(o1.getCreatedDate());
 			}
-		});
-		this.getManagedBean().setScQtApprovalRemarks(remarkList);
-		boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
-		this.getManagedBean().setValidFor25037(isValidFor25037);
-	}
-	
-	public boolean isCommitteeEditable(String taskName){
-		boolean allow = false;
-		if(StringUtils.isNotEmpty(taskName)){
-			if(Arrays.asList(SCProcessNameConst.EVAL_COMM_PREPARATION_GROUP).contains(taskName)
-					|| Arrays.asList(SCProcessNameConst.EVAL_COMM_FINALIZE_GROUP).contains(taskName)
-					|| taskName.equalsIgnoreCase(SCProcessNameConst.REVISE_EVALUATION_MEETING)){
-				allow = true;
-			}
+			remarkList = initializeRemarks(qtCommittee, qtCommittee.getCurrentStatus(), remarkList,
+					ScQtApprovalRemark.class);
+			Collections.sort(remarkList, new Comparator<ScQtApprovalRemark>() {
+				
+				public int compare(ScQtApprovalRemark o1, ScQtApprovalRemark o2) {
+					return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+				}
+			});
+			this.getManagedBean().setScQtApprovalRemarks(remarkList);
+			boolean isValidFor25037 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(),
+					QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
+			this.getManagedBean().setValidFor25037(isValidFor25037);
+		} catch (IOException e) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt == null ? "" : scQt.getQtNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					qtNo, "evaluationMeetingBackingBean.prepareCommitteeHistory", getUserIdSessionFromLoginId(), e);
 		}
-		return allow;
 	}
-	
+
 	public void validateCommitteeChanges(){
 		MeetingReqDTO reqDTO = new MeetingReqDTO();
 		ScQtCommittee qtCommittee= this.getManagedBean().getScQtCommittee();
