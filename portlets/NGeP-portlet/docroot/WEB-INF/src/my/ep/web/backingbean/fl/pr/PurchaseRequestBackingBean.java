@@ -3290,7 +3290,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Page navigation to FLDoc search page in PR.
 	 *
 	 * @return the string
-	 * @throws IOException 
+	 * 
 	 */
 	public String backToPervious(){
 		if(getManagedBean().getBackToDocument() !=null){
