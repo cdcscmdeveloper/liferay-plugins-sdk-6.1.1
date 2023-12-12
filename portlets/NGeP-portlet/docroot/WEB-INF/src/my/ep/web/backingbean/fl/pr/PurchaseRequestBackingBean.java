@@ -3306,7 +3306,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				FacesContext.getCurrentInstance().getExternalContext().redirect(
 						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
 			} catch (IOException e) {
-				log.error("File:ContractRequestBackingBean Method:backToPervious", e);
+				log.error("File:purchaseRequestBackingBean Method:backToPervious", e);
 			}
 			return null;
 		}
