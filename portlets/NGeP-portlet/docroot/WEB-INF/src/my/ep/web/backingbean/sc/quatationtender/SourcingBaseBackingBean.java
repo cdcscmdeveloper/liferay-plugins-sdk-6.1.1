@@ -2500,7 +2500,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//#25037 START
 		List<PmParameterDesc> list = retrieveParametersBySearchBean(
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-		list = list == null ? new ArrayList<PmParameterDesc>() : list;
+		if (null == list)
+			list = new ArrayList<>();
 
 		if(filteredRoles!=null){
 			for(PmParameterDesc role: list){
@@ -3850,25 +3851,43 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType)
 			throws Exception {
+		//#35367 download all report, separate wip and new version
+		IQTEvaluationSO evaluationSO;
 		populateAttachmentDetails(attachment);
-		
+		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qtId);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
 		String reportName = StringUtils.EMPTY;
-		
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_OC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_TEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equals(committeeType)) {
-			reportName = ReportConst.SC_FEC_RPT_JSP;
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_EC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_OC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_TEC_RPT_JSP;
+			}
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType)) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
+			} else {
+				reportName = ReportConst.SC_FEC_RPT_JSP;
+			}
 		}
+		//#35367 end
 		
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
@@ -4830,9 +4849,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			for (ScLoiLoaItem item : items) {
 				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
-				if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+				/* #35295 - start change N/A to T/B
+				 * if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
 					dafaltValue = SSTConstant.NA;
 				}
+				#35295 - end
+				*/
 
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
 					TplSpecMaster master = null;
@@ -4872,6 +4894,179 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							List<String> specList = null;
 							boolean addSpecList = false;
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getServiceAnswersTpl()) {
+								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
+										.getSpecQuestionId()) {
+									addSpecList = true;
+									continue;
+								}
+								if (addSpecList) {
+									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
+										if (specList == null) {
+											specList = new ArrayList<>();
+										}
+										//start #29006 - note 850,852,856
+										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+									
+										specValue = specValue.replace("<", "#60;");
+										specValue = specValue.replace(">", "#62;");
+										specValue = specValue.replace("&", "#and;");
+										
+										specList.add(specValue);
+										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+										//end #29006 - note 850,852,856
+									} else {
+										break;
+									}
+								}
+							}
+							answer.getTplSpecQuestion().setSpecList(specList);
+							// #25025 - End.
+
+							/** This code is for LOA with Single Item Details **/
+
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * Details
+								 **/
+								if (days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							}
+						} else if (isSpecificationEnable && answer.getTplSpecQuestion().getClSpecDetail() != null) {
+							/**
+							 * This code is for LOA with Single Item
+							 * specification
+							 **/
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * specification
+								 **/
+								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									// #25025 - Start.
+									isSpecificationEnable = true;
+									// #25025 - End.
+								}
+							}
+						}
+					}
+					if (master != null) {
+						if (masters.size() == 0) {
+							masters.add(master);
+						} else {
+							boolean itemFound = false;
+							for (TplSpecMaster tplSpecMaster : masters) {
+								if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
+									itemFound = true;
+									break;
+								}
+							}
+							if (!itemFound) {
+								masters.add(master);
+							}
+						}
+					}
+				}
+				//start - #29006 note 794
+				if (CollectionUtils.isNotEmpty(quoteResDTO.getProductAnswersTpl())) {
+
+					TplSpecMaster master = null;
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
+					for (TplSpecAnswer answer : quoteResDTO.getProductAnswersTpl()) {
+						if (answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone() != null) {
+							zoneId = answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId();
+						} else {
+							zoneId = 0l; // Long Object initialization
+						}
+
+						if (answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null) {
+							answer.getTplSpecQuestion().setClFulfilmentTypeCode(
+									scLoa.getScLoiLoa().getFulfilmentTypeCode());
+						}
+						if (days == null) {
+							days = answer.getTplSpecQuestion().getClDeliveryTerm();
+						} else {
+							if (!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())
+									&& (answer.getTplSpecQuestion().getClDeliveryTerm() != null)) {
+								days = answer.getTplSpecQuestion().getClDeliveryTerm();
+							}
+						}
+						
+						if (answer.getAnswerRemark() != null) {
+							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
+						} else {
+							answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
+						}
+
+						isWipData = answer.getIsWip();// #29006
+
+						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
+								&& (answer.getTplSpecQuestion().getClItem() != null)) {
+							// #25025 - Start.
+							List<String> specList = null;
+							boolean addSpecList = false;
+							for (TplSpecAnswer tplSpecAns : quoteResDTO.getProductAnswersTpl()) {
 								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
 										.getSpecQuestionId()) {
 									addSpecList = true;
@@ -4995,7 +5190,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 						}
 					}
+				
 				}
+				//end - #29006 note 794
 			}
 			context.put(SSTConstant.serviceScope, dafaltValue);
 			context.put(SSTConstant.SUPPLIER_NAME, supplierName);
@@ -5004,6 +5201,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put(SSTConstant.bean, this);
 			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
 			context.put("isWipData", isWipData); // #29006
+			context.put("supplierId", scLoa.getScLoiLoa().getSmSupplier().getSupplierId()); // #29006
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
 					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
@@ -6023,7 +6221,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							});
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
+						String qtNo = qt == null ? "" : qt.getQtNo();
+						SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+								qtNo, "sourcingbaseBackingBean.assertSpecCommitteeMaintenanceInProgress", getUserIdSessionFromLoginId(), e);
 					}
 				} else {
 					Collections.sort(members, new Comparator<ScCommitteeMember>() {

@@ -65,7 +65,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -1353,6 +1352,7 @@ public class SupplierFinalizationBackingBean extends
 			List<ScQtFinalizationReport> finalizationReports = new ArrayList<ScQtFinalizationReport>();
 			finalizationReports.addAll(this.getManagedBean().getDocumentList());
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));//35381 - Related 6906
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
 			//6906 - note 117 - start
 			String desicion = scQtFinalization.getDecision() ==null ? null: scQtFinalization.getDecision().getParameterCode();
@@ -1506,8 +1506,10 @@ public class SupplierFinalizationBackingBean extends
 		boolean isSubmit = this.getManagedBean().isSubmit(); // #35205, #28834
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
-		finalizationReports.addAll(this.getManagedBean()
-				.getEndorsementReports());
+		//35381 - Related 6906 - start
+		finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
+		finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));
+		//35381 - Related 6906 - end
 		List<ScQtFinalizationReport> toBeRemovedReports 
 					= new ArrayList<ScQtFinalizationReport>();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
@@ -5744,6 +5746,7 @@ public class SupplierFinalizationBackingBean extends
 					
 					setSelectionMode(finalizationMethod.getParameterCode());
 				}
+				createShortlistedSuppliersDataModel();//35140
 			} 
 			
 			//#28834 - Start

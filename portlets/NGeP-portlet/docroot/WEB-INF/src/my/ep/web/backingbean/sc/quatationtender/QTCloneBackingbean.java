@@ -1645,7 +1645,7 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	
+	/*	
 	private List<ScQtContactPerson> generateDOAFromRequestContent(ScQtRequestContent requestContent, ScQt qt) throws IOException{
 		List<ScQtContactPerson> doaList = new ArrayList<ScQtContactPerson>();
 		Object content = requestContent.getRequestContent() == null ? new HashMap<Long, String>(): requestContent.getRequestContent();
@@ -1675,7 +1675,7 @@ public class QTCloneBackingbean extends
 		}
 		return doaList;
 	}
-	
+	*/
 	private ScQtContactPerson populateContact(ScQtContactPerson origin,String type){
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
 		//PmUser user = new FacesScopes().getUserSessionBean();
@@ -2072,7 +2072,7 @@ public class QTCloneBackingbean extends
 		List<TabBean> tabBeans = new ArrayList<TabBean>();
 		List<ScQtApproval> otherapprovals=new ArrayList<>();//25635 & 34502 
 		this.getManagedBean().setScQtApprovalReqAttachementICT(null);//34502&25635-start
-		this.getManagedBean().setScQtAppRequestRemark(StringUtils.EMPTY);
+		this.getManagedBean().setScQtAppRequestRemarkICT(StringUtils.EMPTY); // #34694,#25077
 		this. getManagedBean().setPmParam(null);
 		scQt.setCloneEnabled(Boolean.FALSE);//34502&25635-End
 		//25635 & 34502 - End
@@ -2085,14 +2085,20 @@ public class QTCloneBackingbean extends
 				
 				approvals.add(approval);
 				
-			}else if(ParameterConst.APPROVAL_CATEGORY_OTHERS
-					.equalsIgnoreCase(approval.getApprovalCategory()
-							.getParameterCode())){//25635 & 34502
-				if(CollectionUtils.isEmpty(otherapprovals)){//25635 & 34502 
-				otherapprovals.add(approval);
-				}//25635 & 34502
-				
-			}//25635 & 34502 
+				} 
+				// 25635 & 34502&35282 -start-
+				else if (ParameterConst.APPROVAL_CATEGORY_OTHERS.equalsIgnoreCase(approval.getApprovalCategory()
+						.getParameterCode())
+						&& ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(scQt.getPmProcurementCategory()
+								.getParameterCode()))
+				// 25635 & 34502&35282 -end-
+				{
+					// 25635 & 34502 -start-
+					if (CollectionUtils.isEmpty(otherapprovals)) {
+						otherapprovals.add(approval);
+					}
+					// 25635 & 34502 -end-
+				} //25635 & 34502 
 		}
 		}//25635-End
 		
@@ -2295,10 +2301,17 @@ public class QTCloneBackingbean extends
 							ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
 							approvalRemark.setApprovalRequest(req);//25635 & 34502
 							req.setAppRequestRemark(approvalRemark);
-							if(null!=approvalRequest.getAppRequestRemark()){//34502&25635&43-start
-							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());//25635 & 34502
-							this.getManagedBean().setScQtAppRequestRemark(req.getAppRequestRemark().getRemark());//34502&25635
-							}//34502&25635&43-End
+
+						// 34502&25635&43-start
+						if (null != approvalRequest.getAppRequestRemark()) {
+							req.getAppRequestRemark().setRemark(approvalRequest.getAppRequestRemark().getRemark());
+
+							// #34694,#25077 -start-
+							this.getManagedBean().setScQtAppRequestRemarkICT(req.getAppRequestRemark().getRemark());
+							// #34694,#25077 -end-
+						}
+						// 34502&25635&43-End
+
 							req.setScQtApproval(newOthersApproval);
 							approverRequest.add(req);
 									
@@ -2324,6 +2337,29 @@ public class QTCloneBackingbean extends
 		    if(newOthersApproval.getApprovalCategory().getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_OTHERS)){
 		    	List<PmParameter> settings = null;
 				ParameterHelper parameterHelper = ParameterHelper.getInstance();
+				
+				// 35282-start
+				if (CollectionUtils.isEmpty(newOthersApproval.getScQtApprovalDtls())) {
+					List<ScQtApprovalRequest> approverRequest = new ArrayList<>();
+
+					ScQtApprovalRequest req = new ScQtApprovalRequest();
+					req.setBrandNew(true);
+					req.setApprovalType(getParameterByTypeAndCode(ParameterTypeConst.APPROVAL_REQUEST_TYPES,
+							ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS));
+					req.setApproverAction(new PmParameter());
+					req.setApprovalRequestAttachement(null);
+
+					ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+					approvalRemark.setApprovalRequest(req);
+
+					req.setAppRequestRemark(approvalRemark);
+					req.setScQtApproval(newOthersApproval);
+
+					approverRequest.add(req);
+
+					newOthersApproval.setScQtApprovalDtls(approverRequest);
+				}
+				// 35282-End
 				
 				String approvalCategoryCode = newOthersApproval
 						.getApprovalCategory().getParameterCode();
