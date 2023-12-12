@@ -8420,6 +8420,13 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 									//#33187 End - fix next skip if disable Technical
 									 
 								}//32453-End
+								//#34748 - Start
+								else {
+									retriveSummaryEvaluationStage();
+									outputTab = 2;
+									this.getManagedBean().setTabTechnicalIndex(2);
+								}
+								//#34748 - End
 							}
 							
 						}
