@@ -3200,7 +3200,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
-				if (getManagedBean().isDecisionPbQcLOA() || ctBackingBean.getManagedBean().isViewSCL()) { //33096
+				if (getManagedBean().isDecisionPbQcLOA()) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
 				}
 			}
