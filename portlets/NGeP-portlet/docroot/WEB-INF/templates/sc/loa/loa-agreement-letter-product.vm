@@ -152,7 +152,7 @@ u.underline {
 	color: #333333;
 }
 .dottedBorderRed{
-	border-bottom: red 2px dotted;
+	border-bottom: 1px solid red;
 }
 
 ## #25025-end
@@ -185,6 +185,19 @@ u.underline {
 	text-decoration: none;
 	text-decoration:underline;
 	color:red;
+}
+
+.tableHeaderPR{
+	text-align: left; 
+	padding-left: 5px;
+	padding-right: 5px;	
+	font-size:10px;
+}
+.tableDataPR{
+	text-align: left; 
+	padding-left: 5px;
+	padding-right: 5px;	
+	font-size:12px;
 }
 </style>
 </head>
@@ -282,7 +295,7 @@ u.underline {
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan
-					Kerajaan sebanyak ..............................% cukai jualan memandangkan barangan ini dikenakan
+					Kerajaan sebanyak ______________% cukai jualan memandangkan barangan ini dikenakan
 					cukai dan syarikat tuan telah berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM).
 					Pembayaran cukai jualan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
 					kuasa pendaftaran syarikat tuan dengan JKDM. </span>
@@ -295,7 +308,7 @@ u.underline {
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan
-					sebanyak ..............................% cukai jualan memandangkan syarikat tuan tidak berdaftar dengan Jabatan
+					sebanyak ______________% cukai jualan memandangkan syarikat tuan tidak berdaftar dengan Jabatan
 					Kastam Diraja Malaysia (JKDM). Sekiranya syarikat tuan telah berdaftar dengan JKDM, tuan adalah
 					dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk
 					pelarasan harga kontrak dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran
@@ -327,7 +340,7 @@ u.underline {
 									#else
 									<span class="text_family_red">______________ (RM______________);</span><br/>
 									#end
-									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja.</span>
+									<span class="text_family_small">Bon Pelaksanaan hanya dikenakan kepada perolehan yang bernilai RM200,000 dan ke atas sahaja</span>
 									
 								</tr>
 								<tr class="text_family_red">
@@ -490,31 +503,31 @@ u.underline {
 					<div class="text_indent">
 					## 25025- start
 						<table class="text_family" style="text-align:justify;">
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(a)</td>
 								<td>syarikat tuan gagal mematuhi mana-mana terma di perenggan 4 dalam tempoh masa yang ditetapkan;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(b)</td>
 								<td>syarikat tuan gagal mematuhi mana-mana terma yang dinyatakan  dalam Surat Akuan Pembida Berjaya;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(c)</td>
 								<td>syarikat tuan telah membuat salah nyataan (<i>misrepresentation</i>) atau mengemukakan maklumat palsu semasa berurusan dengan Kerajaan bagi perolehan ini atau  melakukan apa-apa perbuatan lain, seperti memalsukan maklumat dalam Sijil Akuan Pendaftaran Syarikat, mengemukakan bon pelaksanaan atau dokumen lain yang palsu atau yang telah diubah suai;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(d)</td>
 								<td>syarikat tuan membenarkan Sijil Akuan Pendaftaran Syarikat disalahgunakan oleh individu/syarikat lain;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(e)</td>
 								<td>syarikat tuan terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $subTitle sehingga dokumen kontrak ditandatangani; </td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(f)</td>
 								<td>syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang tanpa kelulusan Kerajaan terlebih dahulu;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(g)</td>
 								#if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
 									<td>syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
@@ -523,31 +536,31 @@ u.underline {
 								#end
 								
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(h)</td>
 								<td>syarikat tuan gagal mematuhi mana-mana terma/arahan di dalam dokumen $subTitle; </td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(i)</td>
 								<td>syarikat tuan/pemilik/rakan kongsi/pengarah telah disabitkan atas kesalahan jenayah di dalam atau luar Malaysia;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(j)</td>
 								<td>syarikat tuan digulungkan;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(k)</td>
 								<td>syarikat tuan membekal barang-barang yang tidak tulen, bukan baharu atau yang terpakai;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(l)</td>
 								<td>syarikat tuan gagal mematuhi spesifikasi pembekalan yang ditetapkan;</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(m)</td>
 								<td>syarikat tuan tidak mendapat kelulusan daripada Kerajaan terlebih dahulu bagi apa-apa penjualan atau pemindahan ekuiti sepanjang tempoh kontrak ini berkuat kuasa; atau</td>
 							</tr>
-							<tr>
+							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(n)</td>
 								<td>terdapat perkara yang melibatkan kepentingan awam atau keselamatan dan kepentingan negara.</td>
 							</tr>
@@ -636,7 +649,7 @@ u.underline {
 				<span class="text_family">Tarikh</span><br/>
 			</td>
 			<td align="left" width="20%">
-				<br/>
+				<br/><br/>
 				<span class="text_family">:</span><br/>
 				<span class="text_family">:</span><br/>
 				<span class="text_family">:</span><br/>
@@ -651,7 +664,7 @@ u.underline {
 				<span class="text_family">Tarikh</span><br/>
 			</td>
 			<td align="left" width="20%">
-				<br/>
+				<br/><br/>
 				<span class="text_family">:</span><br/>
 				<span class="text_family">:</span><br/>
 				<span class="text_family">:</span><br/>
@@ -731,10 +744,10 @@ u.underline {
 					<td class="text_family">$!mofValidityDuration</td>
 				</tr>
 				<tr>
-					<td align="left" class="submenu_padding"><span
+					<td valign="top" align="left" class="submenu_padding"><span
 						class="text_family">2.3 Kod Bidang </span></td>
-					<td class="text_family">:</td>
-					<td class="text_family">$!kodBidang</td>
+					<td valign="top" class="text_family">:</td>
+					<td valign="top" class="text_family">$!kodBidang</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -783,7 +796,7 @@ u.underline {
 						</table>
 					</td>
 				</tr>
-				<tr>
+				<tr style="page-break-inside: avoid;">
 					<td align="left" class="submenu_padding" valign="top">
 					## #25025-start
 						<table class="text_family" >
@@ -798,16 +811,16 @@ u.underline {
 					</td>
 				</tr>
 				<tr>
-					<td align="left" class="submenu_padding">
-					## #25025-start
+					<td align="left" class="submenu_padding" valign="top">
+						## #25025-start
 						<table class="text_family">
 								<td align="center" style="vertical-align: top;">4.2 </td>
-								<td>Peruntukan Cukai Jualan (sekiranya berkaitan)</td>
+								<td style="vertical-align: top;">Peruntukan Cukai Jualan (sekiranya berkaitan)</td>
 						</table>
-					## #25025-end		
+						## #25025-end
 					</td>
-					<td class="text_family">:</td>
-					<td class="text_family">RM $sstAmt</td>
+					<td valign="top" class="text_family">:</td>
+					<td valign="top" class="text_family">RM $sstAmt</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding">
@@ -917,19 +930,16 @@ u.underline {
 					<td class="text_family_red">:</td>
 					<td class="text_family_red">RM $!bondAmt</td>
 				</tr>
-				<tr valign="top">
-					<td valign="top" align="left" class="submenu_padding"><span
-						class="text_family_red">7.4 Bentuk Bon Pelaksanaan </span></td>
+				<tr>
+					<td valign="top" align="left" class="submenu_padding"><span class="text_family_red">7.4 Bentuk Bon Pelaksanaan</span></td>
 					<td valign="top" class="text_family_red">:</td>
-					<td valign="top" style="white-space: normal; text-align:justify;"><span
-						class="text_family_red">Jaminan Bank/Bank Islam/Bank Pembangunan Malaysia Berhad; 
-						atau Jaminan Syarikat Kewangan; atau Jaminan Insurans/Takaful</span></td>
+					<td class="text_family_red" style="text-align:justify;">Jaminan Bank/Bank Islam/Bank Pembangunan Malaysia Berhad; atau Jaminan Syarikat Kewangan; atau Jaminan Insurans/Takaful</td>
 				</tr>
 				<tr valign="top">
 					<td align="left" class="submenu_padding"><span
 						class="text_family_red">7.5 Tempoh Sah Laku</span></td>
 					<td class="text_family_red">:</td>
-					<td class="text_family_red">Dari tarikh kuat kuasa kontrak
+					<td class="text_family_red" style="white-space: normal; text-align:justify;">Dari tarikh kuat kuasa kontrak
 						sehingga 12 bulan selepas tarikh tamat kontrak atau tarikh
 						obligasi terakhir mengikut mana yang terkemudian.</td>
 				</tr>
@@ -962,10 +972,10 @@ u.underline {
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
-								<td class="text_family" style="margin-bottom:1px;">.......................................................</td>
+								<td class="text_family" style="margin-bottom:1px;">______________________________</td>
 							 </tr
 						      <tr> 
-						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
+						      	<td align="center"><span class="text_family_small">(Diisi oleh syarikat)</span></td>
 						      </tr>
 						</table>
 					</td>
@@ -979,10 +989,10 @@ u.underline {
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
-								 <td class="text_family" style="margin-bottom:1px;">.......................................................</td>
+								 <td class="text_family" style="margin-bottom:1px;">______________________________</td>
 							 </tr
 						      <tr> 
-						      	<td align="center"><span class="text_family_small">(Diisi Oleh Syarikat)</span></td>
+						      	<td align="center"><span class="text_family_small">(Diisi oleh syarikat)</span></td>
 						      </tr>
 						</table>
 					</td>
@@ -994,7 +1004,7 @@ u.underline {
 						<table>
 							<tr style="margin-bottom:1px;" align="bottom">
 								<td><span class="text_family_red">RM </span></td>
-								<td align="bottom"><span class="text_family_red">...............................................</span></td>
+								<td align="bottom"><span class="text_family_red">__________________________</span></td>
 							</tr>
 						</table>
 					</td>
@@ -1029,24 +1039,22 @@ u.underline {
 					<td class="text_family_red">
 					    <table>
 					      <tr style="margin-bottom:1px;" align="bottom"> 
-					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan.</span></td>	
+					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;"><br/>Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>	
 					      </tr>
 					    </table>
 					</td>
 				</tr>
-				<tr>
-					<td align="left" class="submenu_padding"><span
-						class="text_family_red">9.2 Kadar Sehari</span></td>
+				<tr valign="top">
+					<td align="left" class="submenu_padding"><span class="text_family_red">9.2 Kadar Sehari</span></td>
 					<td class="text_family_red">:</td>
 					<td>
 						<table>
 							<tr style="margin-bottom:1px;" align="bottom">
 								<td><span class="text_family_red">RM </span></td>
-								<td align="bottom"><span class="text_family_red">...............................................</span></td>
+								<td align="bottom"><span class="text_family_red">___________________________</span></td>
 							</tr>
 						</table>
 					<td>
-					
 				</tr>
 			 #if ($isSL1M == "true")
 				<tr>
@@ -1063,7 +1071,7 @@ u.underline {
 					</table>
 					</td>
 				</tr>
-				<tr>
+				<tr style="page-break-inside: avoid;">
 					<td align="left" class="submenu_padding">
 						## #25025-start
 						<table class="text_family">
@@ -1087,7 +1095,7 @@ u.underline {
 					<table width="100%" align="left" style="border-collapse: collapse;">
 						<tr>
 							<td>
-								<span class="text_family">........... peserta</span>
+								<span class="text_family">_____________ peserta</span>
 							</td>
 						</tr>
 						<tr>
@@ -1142,13 +1150,13 @@ u.underline {
 										<td valign="top" align="left" class="submenu_padding"><span
 											class="text_family_red">11.1 Nilai Bon Pelaksanaan</span></td>
 										<td valign="top" class="text_family_red">:</td>
-										<td class="text_family_red">. .......................................................</td>
+										<td class="text_family_red">_______________________________</td>
 									</tr>
 									<tr>
 										<td valign="top" align="left" class="submenu_padding"><span
 											class="text_family_red">11.2 Kadar Bon Pelaksanaan</span></td>
 										<td valign="top" class="text_family_red">:</td>
-										<td class="text_family_red">. .......................................................</td>
+										<td class="text_family_red">_______________________________</td>
 									</tr>
 									<tr>
 										<td valign="top" align="left" class="submenu_padding"><span
@@ -1177,25 +1185,25 @@ u.underline {
 						</td>	
 				</tr>
 				<tr>	
-									<tr>
+									<tr style="page-break-inside: avoid;">
 										<td valign="top" align="left" class="submenu_padding"><span
 											class="text_family_red">10.1 Nilai Bon Pelaksanaan</span></td>
 										<td valign="top" class="text_family_red">:</td>
-										<td class="text_family_red">........................................................</td>
+										<td class="text_family_red">_______________________________</td>
 									</tr>
-									<tr>
+									<tr style="page-break-inside: avoid;">
 										<td valign="top" align="left" class="submenu_padding"><span
 											class="text_family_red">10.2 Kadar Bon Pelaksanaan</span></td>
 										<td valign="top" class="text_family_red">:</td>
-										<td class="text_family_red">........................................................</td>
+										<td class="text_family_red">_______________________________</td>
 									</tr>
-									<tr>
+									<tr style="page-break-inside: avoid;">
 										<td valign="top" align="left" class="submenu_padding"><span
 											class="text_family_red">10.3 Bentuk Bon Pelaksanaan</span></td>
 										<td valign="top" class="text_family_red">:</td>
 										<td class="text_family_red" style="text-align:justify;">Jaminan Bank/Bank Islam/Bank Pembangunan Malaysia Berhad; atau Jaminan Syarikat Kewangan; atau Jaminan Insurans/Takaful</td>
 									</tr>
-									<tr>
+									<tr style="page-break-inside: avoid;">
 										<td valign="top" align="left" class="submenu_padding"><span
 											class="text_family_red">10.4 Tempoh Sah Laku</span></td>
 										<td valign="top" class="text_family_red">:</td>
@@ -2498,44 +2506,44 @@ u.underline {
 					#if ($itemType == "Perkhidmatan" || $itemType == "Service" || $itemType == "Produk" || $itemType == "Product")
 			      
 			       
-						<table width="100%" border="1" cellpadding="0" cellspacing="0">
+						<table width="100%" border="1" cellpadding="0" cellspacing="-1">
 							<tbody>
 					        #if ($isZonal)
 							   <tr>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Item</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">UOM</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Zon</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kuantiti</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Zon</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
 									#* -- comment out for 31552 <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th> *#
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>	
-									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
+									<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="8" style="text-align: center;">Spesifikasi</th>
 								</tr>
 							
 							#else
 									<tr>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Item</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">UOM</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; font-size:10px;">Kuantiti</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-									<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>	
-									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="7" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
+									<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="7" style="text-align: center;">Spesifikasi</th>
 								</tr>
 								
 							  #end
@@ -2555,12 +2563,8 @@ u.underline {
 							 
 							<tr>							 
 								
-								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
-									
-										$tplspecQuestion.clItem
-									
-								</td>
-								<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td valign="top" class="tableDataPR" rowspan="2">$tplspecQuestion.clItem</td>
+								<td valign="top" class="tableDataPR">
 								
 									#if($tplspecQuestion.clFulfilmentTypeCode)
 										$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2569,33 +2573,33 @@ u.underline {
 								</td>
 							
 									
-								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="tableDataPR">
 								
 								#if($tplspecQuestion.clUom)
 								$tplspecQuestion.clUom.uomName
 								#end
 								
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="tableDataPR">
 									#if ($tplspecQuestion.clUomFrequency)
 										$tplspecQuestion.clUomFrequency
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR">
 									#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 									$serviceScope 
 									#else
 									 $tplspecQuestion.clUomPerDay
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR">
 									#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 									$serviceScope 
 									#else	
 									$tplspecQuestion.clUomPerMonth 
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR">
 									#if($tplspecQuestion.clDurationMonth)
 										$tplspecQuestion.clDurationMonth
 									#else	
@@ -2613,19 +2617,18 @@ u.underline {
 														#if ($countZoneList == $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls.size())
 															<td
 																valign="top" rowspan="$tplSpecZoneDtls.specCount"
-																class="standard border-bottom left-right"
-																style="text-align: left; padding-left: 5px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+																class="tableDataPR">$tplSpecZoneDtls.zoneName</td>
 														#else
 															<td
 																valign="top" rowspan="$tplSpecZoneDtls.specCount"
-																class="standard border-bottom left-right"
-																style="text-align: left; padding-left: 5px; font-size:12px;border-bottom:1px ridge #FAFAFA;">$tplSpecZoneDtls.zoneName</td>
+																class="tableDataPR"
+																style="border-bottom:1px solid black; height: 80px;">$tplSpecZoneDtls.zoneName</td>
 														#end
 													#else
 															<td
 																valign="top" rowspan="$tplSpecZoneDtls.specCount"
-																class="standard border-bottom left-right"
-																style="text-align: left; padding-left: 5px; font-size:12px;border-bottom:1px ridge #FAFAFA;">$serviceScope</td>
+																class="tableDataPR"
+																style="border-bottom:1px solid black; height: 80px;">$serviceScope</td>
 													#end
 												</tr>
 											</tbody>
@@ -2634,7 +2637,8 @@ u.underline {
 									#end
 								</td>
 								
-								<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="tableDataPR">
+									#* 35295 - start
 									#set($maxQty = 0)
 									#set($minQty = 0)
 									#set($currentValue = 0)								
@@ -2678,10 +2682,24 @@ u.underline {
 									#else
 										<span>$maxQty</span>
 									#end
+									
+									35295 - end *#
+									
+									#set($currentValue = 0)	
+									#if($currentValue == 0)
+										   	#if($tplspecQuestion.clQuantity)
+												#set($currentValue = $tplspecQuestion.clQuantity)												
+									  	   	#else
+										   		#if($tplSpecZoneQtie.qty)
+										   			#set($currentValue = $tplSpecZoneQtie.qty) 
+												#end
+									  		#end									   
+									#end	
+									<span>$currentValue</span>
 										
 								</td>
 
-								<td valign="top"  class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;">							
+								<td valign="top" rowspan="2" class="tableDataPR">							
 										#set($rowCount = 0)							
 										#if ($isWipData)											
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
@@ -2690,9 +2708,9 @@ u.underline {
 													<tbody>
 													<tr>
 														#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-															<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
+															<td valign="top" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
 														#else
-															<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
+															<td valign="top" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
 														#end
 													</tr>
 													</tbody>
@@ -2728,7 +2746,7 @@ u.underline {
 										#end
 								</td> *#
 								
-								<td valign="top" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR" rowspan="2">
 								#if($serviceScope)
 								 $serviceScope 
 								 #end
@@ -2769,9 +2787,9 @@ u.underline {
 													<tbody>
 													<tr>
 														#if ($countSpecList == $specList.size())
-															<td valign="top" class="title border left"   style="text-align: justify; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR"  style="text-align: justify;">$specVal</td>
 														#else
-															<td valign="top" class="title border left"   style="text-align: justify; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR"  style="text-align: justify; border-bottom: 1px solid black;">$specVal</td>
 														#end
 														
 													</tr>
@@ -2793,10 +2811,8 @@ u.underline {
 								<tr>
 								
 								
-								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
-										$tplspecQuestion.clItem
-								</td>
-								 <td valign="top" class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td valign="top" class="tableDataPR" rowspan="2">$tplspecQuestion.clItem</td>
+								 <td valign="top" class="tableDataPR">
 									
 										#if($tplspecQuestion.clFulfilmentTypeCode)
 											$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2805,40 +2821,40 @@ u.underline {
 									</td>
 							
 									
-									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 									
 									#if($tplspecQuestion.clUom)
 									$tplspecQuestion.clUom.uomName
 									#end
 									
 									</td>
-									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
 									</td>
-									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 										$serviceScope 
 										#else
 										 $tplspecQuestion.clUomPerDay
 										#end
 									</td>
-									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 										$serviceScope 
 										#else	
 										$tplspecQuestion.clUomPerMonth 
 										#end
 									</td>
-									<td valign="top"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if($tplspecQuestion.clDurationMonth)
 											$tplspecQuestion.clDurationMonth
 										#else	
 											$serviceScope 
 										#end
 									</td>
-									<td valign="top" class="title border left"  style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#set($currentValue = 0)										
 										#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
 												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
@@ -2859,7 +2875,7 @@ u.underline {
 										$currentValue
 									</td>
 									
-									<td valign="top" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" rowspan="2" class="tableDataPR">
 										#if(($tplspecQuestion.answerRemarks == "" ))
 										 $serviceScope 
 										#else
@@ -2870,7 +2886,7 @@ u.underline {
 											$tplspecQuestion.answerRemarks							
 										#end
 									</td>
-									<td valign="top" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR" rowspan="2">
 										#if($serviceScope)
 										 $serviceScope 
 										 #end
@@ -2890,9 +2906,9 @@ u.underline {
 													<tbody>
 													<tr>
 														#if ($countSpecList == $tplspecQuestion.specList.size())
-															<td valign="top" class="title border left"   style="text-align: justify; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR"   style="text-align: justify;">$specVal</td>
 														#else
-															<td valign="top" class="title border left"   style="text-align: justify; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR"   style="text-align: justify; border-bottom: 1px solid black;">$specVal</td>
 														#end
 													</tr>
 													</tbody>
