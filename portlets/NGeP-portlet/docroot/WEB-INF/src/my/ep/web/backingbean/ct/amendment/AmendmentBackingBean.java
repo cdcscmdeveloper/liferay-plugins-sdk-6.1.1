@@ -619,6 +619,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctReqDTO.setUpdateAction(false);
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
+				getManagedBean().setBackToNtf("notifications"); //25956
 
 				getManagedBean().setViewOnly(true);
 				getManagedBean().setTaskId(taskId);
@@ -957,8 +958,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to navigate to contract maintenance screen.
 	 * 
 	 * @return the navigate URL 
+	 * @throws IOException 
+	 * //#25956
 	 */
-	public String backAction() {
+	public String backAction() throws IOException {
 		//Enhancement 15851 - shaqimi start
 		ContractDetailsBackingBean ctDT =  new ContractDetailsBackingBean();
 		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
@@ -1044,6 +1047,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setViewSCL(false);
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
+			
+		}else if(getManagedBean().getBackToNtf() != null){ //#25956
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			return null;
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		this.getManagedBean().setSecretaryList(null);
