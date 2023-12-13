@@ -367,8 +367,13 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 	}
 	
 	//#32304 - start
-	public void downloadCancelledBumiAppl(){
-		SmCommonUtil.downloadCancelledBumiAppl();
+	/**
+	 * Download report of cancelled Bumi applications (status: 20210)
+	 * @throws IOException
+	 */
+	public void downloadCancelledBumiAppl() throws IOException{
+		generateReport(my.ep.web.constant.report.ReportConst.SM_BUMI_APPL_CANCELLED_SVC, 
+				SmCommonUtil.downloadCancelledBumiAppl(true));
 	}
 	//#32304 - end
 }

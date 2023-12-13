@@ -203,6 +203,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.constant.PagingConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
@@ -6467,10 +6468,15 @@ public class SmCommonUtil {
 	
 	/**
 	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
+	 * @param isSVC
+	 * @return report parameters
 	 */
-	public static void downloadCancelledBumiAppl(){
-		//report
-		log.info("32304 dload btn test");
+	public static Map<String, String> downloadCancelledBumiAppl(boolean isSVC){
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
+		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes().getUserSessionBean().getUserId().toString());
+		paramMap.put("PLANGUANGE", "ms");
+		return paramMap;
 	}
 	
 	/**
