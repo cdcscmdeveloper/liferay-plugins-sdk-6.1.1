@@ -677,7 +677,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 						flReqDTO.setSectionId(FulfilmentConst.REMARK_SECTION_INVOICE_REVISION);
 						flresDTO = paymentMatchSO.retrieveRemarkAndAttachmentSection(flReqDTO);
-						List remarklist = flresDTO.getRemarkList();
+						List<FlRemark> remarklist = flresDTO.getRemarkList();
 						initializeRemarkRevision(null, remarklist,false);
 
 					}
@@ -1410,7 +1410,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		if(finOrgResDTO.isSuccessful()) {
 			if(finOrgResDTO.getPmAddressType()!=null){
-				//TODO NEW
 				getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType()));
 			}
 			
@@ -1979,6 +1978,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				//#34686 start
+				orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+				//#34686 end
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 					return NAV_PO;
@@ -2503,18 +2505,17 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * @param flWorkflowStatus the fl workflow status
 	 * @param remarkList the remark list
 	 */
-	public void initializeRemarkRevision(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList, boolean isHideRemarks) {
-		FacesScopes facesScopes = new FacesScopes();
+	public void initializeRemarkRevision(FlWorkflowStatus flWorkflowStatus, List<FlRemark> remarkList, boolean isHideRemarks) {
+		//FacesScopes facesScopes = new FacesScopes();
 
 		boolean flWorkflowStatusMatch = false;
-		
-		if(remarkList.size()>0  ) {
-				
-				flWorkflowStatusMatch = true;
+
+		if (remarkList.size() > 0) {
+
+			flWorkflowStatusMatch = true;
 		}
-				
-	
-		if (flWorkflowStatusMatch) {			
+
+		if (flWorkflowStatusMatch) {
 			getManagedBean().setRemarkRevise(remarkList);
 		}
 	}
