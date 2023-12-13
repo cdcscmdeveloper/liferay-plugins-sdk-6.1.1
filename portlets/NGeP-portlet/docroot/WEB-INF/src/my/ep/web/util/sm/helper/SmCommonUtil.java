@@ -203,6 +203,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.constant.PagingConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
@@ -6463,14 +6464,6 @@ public class SmCommonUtil {
 				smAppl.setChangedDate(wf.getCreatedDate());
 		}
 		return list;
-	}
-	
-	/**
-	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
-	 */
-	public static void downloadCancelledBumiAppl(){
-		//report
-		log.info("32304 dload btn test");
 	}
 	
 	/**

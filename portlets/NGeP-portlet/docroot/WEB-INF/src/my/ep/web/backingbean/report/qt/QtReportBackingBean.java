@@ -856,7 +856,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				ScQt qt = findScQtByQuotationNumber();
 				
 				if (qt != null) {
-					Long orgProfileId = findScQtByQuotationNumber().getOrgProfileId();
+					Long orgProfileId = qt.getOrgProfileId();
 					List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
 							new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
 					if (CollectionUtils.isNotEmpty(reqLst)) {
