@@ -11,7 +11,6 @@
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="applList" required="true" />
 		<cc:attribute name="isSvc" default="false"/>
-		<!-- <cc:attribute name="file" required="true" /> -->
 	</cc:interface>
 	
 	<cc:implementation>
@@ -23,6 +22,10 @@
 		<h:outputText value="#{lbl['lbl.sm.bumi.cancel.notif.svc']}" rendered="#{cc.attrs.isSvc}"/>
 		<h:outputText value="#{lbl['lbl.sm.bumi.cancel.notif.svo']}" rendered="#{!cc.attrs.isSvc}"/>
 	</p:outputPanel>
+	
+	<p:blockUI block="bumiApplCancelledDlg" widgetVar="bumiApplCancelledBlock">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
 	
 	<p:dialog id="bumiApplCancelledDlg" header="#{lbl['lbl.sm.bumi.cancel.header']}" closable="true"
 		widgetVar="bumiApplCancelledDlg" modal="true" width="1100px" height="auto" style="display: block;">		
@@ -53,9 +56,9 @@
 		</p:dataTable>
 		
 		<p:commandButton value="#{lbl['lbl.btn.download']}" style="float:right;"
-			 	immediate="true" ajax="false">
-			<!-- <p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl()}" /> -->
-			<!-- <f:ajax execute="@this" render="@form" /> -->
+			 	immediate="true" ajax="false"
+			 	onstart="bumiApplCancelledBlock.show()" oncomplete="bumiApplCancelledBlock.hide()">
+			<p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl(isSvc)}" />
 		</p:commandButton>
 	</p:dialog>
 	</cc:implementation>
