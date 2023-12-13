@@ -6467,19 +6467,6 @@ public class SmCommonUtil {
 	}
 	
 	/**
-	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
-	 * @param isSVC
-	 * @return report parameters
-	 */
-	public static Map<String, String> downloadCancelledBumiAppl(boolean isSVC){
-		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
-		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes().getUserSessionBean().getUserId().toString());
-		paramMap.put("PLANGUANGE", "ms");
-		return paramMap;
-	}
-	
-	/**
 	 * Cancel Bumi application if supplier has other active application
 	 * @param smAppl bumi Appl
 	 * @return true if bumi Appl is cancelled

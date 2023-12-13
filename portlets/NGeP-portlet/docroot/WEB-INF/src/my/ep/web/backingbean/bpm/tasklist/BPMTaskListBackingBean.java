@@ -1870,16 +1870,5 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 
 	// 29810 - end
-	
-	//#32304 - start
-	/**
-	 * Download report of cancelled Bumi applications (status: 20210)
-	 * @throws IOException
-	 */
-	public void downloadCancelledBumiAppl() throws IOException{
-		generateReport(my.ep.web.constant.report.ReportConst.SM_BUMI_APPL_CANCELLED, 
-				SmCommonUtil.downloadCancelledBumiAppl(false));
-	}
-	//#32304 - end
 }
 
