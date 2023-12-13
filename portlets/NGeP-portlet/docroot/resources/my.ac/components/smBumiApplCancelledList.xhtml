@@ -24,6 +24,10 @@
 		<h:outputText value="#{lbl['lbl.sm.bumi.cancel.notif.svo']}" rendered="#{!cc.attrs.isSvc}"/>
 	</p:outputPanel>
 	
+	<p:blockUI block="bumiApplCancelledDlg" widgetVar="bumiApplCancelledBlock">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
+	
 	<p:dialog id="bumiApplCancelledDlg" header="#{lbl['lbl.sm.bumi.cancel.header']}" closable="true"
 		widgetVar="bumiApplCancelledDlg" modal="true" width="1100px" height="auto" style="display: block;">		
 		
@@ -53,8 +57,9 @@
 		</p:dataTable>
 		
 		<p:commandButton value="#{lbl['lbl.btn.download']}" style="float:right;"
-			 	immediate="true" ajax="false">
-			<!-- <p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl()}" /> -->
+			 	immediate="true" ajax="false"
+			 	onstart="bumiApplCancelledBlock.show()" oncomplete="bumiApplCancelledBlock.hide()">
+			<p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl()}" />
 			<!-- <f:ajax execute="@this" render="@form" /> -->
 		</p:commandButton>
 	</p:dialog>
