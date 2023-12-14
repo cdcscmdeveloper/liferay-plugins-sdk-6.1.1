@@ -20,11 +20,8 @@
 				</c:when>
 				<c:otherwise>
 					<td style="vertical-align: top;">
-						<!-- #12483 - START -->
-						<c:if test="#{backingBean.renderRevisedReason()}"> 
-							<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
-							<br/> 
-						</c:if>
+						<!-- #12483 - START, #34892 -->
+						<ac:smReviseReason bBean="#{backingBean}"/><br/>
 						<!-- #12483 - END -->
 						<p:outputPanel
 								id="renewStep1OnlySuppPan"

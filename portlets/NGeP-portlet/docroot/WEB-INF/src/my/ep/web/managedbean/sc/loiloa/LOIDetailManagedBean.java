@@ -417,6 +417,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#12487 start
     private Map loiObj;
 	//#12487 end
+	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+
 	
     /**
      * Gets the spki backing bean.
@@ -2368,6 +2370,16 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.renderInstruction = renderInstruction;
 	}
 	//#29007 End Vinod
+
+	//#28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+	//#28777 & #29729 - End
 	
 	//#12487 start
 	public Map getLoiObj() {

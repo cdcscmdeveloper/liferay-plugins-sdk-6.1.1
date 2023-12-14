@@ -42,6 +42,7 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -77,6 +78,8 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -113,6 +116,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -6723,36 +6727,6 @@ public class LOIDetailBackingBean extends
 	}
 	// #29007	Vinod End
 	
-	//#28777 & #29729 - Start
-    /**
-	* Method to return true, if branch in supplier has been deleted (LOI)
-	* @param supplier id 
-	* @return	true or false
-	**/
-	public boolean displaySupplierBranchListDeletedForLOI(Long supplierId){
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		boolean isSupplierBranchDeleted = false;
-		ScQt scQt = this.getManagedBean().getScQt();
-		if(supplierId != null && scQt != null){
-			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
-				isSupplierBranchDeleted = true;
-		    }
-		}
-	    return isSupplierBranchDeleted;
-	}
-	
-	/**
-	* Method to display message info for supplier branch has been deleted (LOI)
-	**/
-	public void infoBranchSupplierListDeletedForLOI(){
-		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_760523, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-	}
-	//#28777 & #29729 - End
-	
 	/**
 	 * 29007-start
 	* Method to Reset NegotiationTerms
@@ -6893,4 +6867,73 @@ public class LOIDetailBackingBean extends
 		getQtAwardSO().sendLoiEmailNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt());
 	}
 	//#12487 end
+
+	//#28777 & #29729 - Start
+	/**
+	* Method to display list of supplier branch had deleted or not with related current QT
+	**/
+	public void showSupplierBranchList(Long supplierId) {
+		
+		List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+	
+	    SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
+	    suppSearchDeletedReqDTO.setSupplierId(supplierId);
+    	SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
+		supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
+
+		for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+			int statusFlag = supplierBranch.getRecordStatusFlg();
+			if(statusFlag == DbValueConst.RECORD_STATUS_DELETED){
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+			}else{
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+			}
+		}
+		
+		if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
+    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
+    	}else{
+    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
+    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+    	}
+		
+	}
+	
+	private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
+		
+		List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
+
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		
+		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+		suppSearchReqDTO.setSupplierId(supplierId);
+    	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
+    	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
+    	  
+    	return supplierBranchList;
+	}
+	
+	/**
+	* Method to return true, if branch in supplier has been deleted
+	* @param supplier id 
+	* @return true or false
+	**/
+	public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(ScQtEvaluationResult qtEvaluationResult){
+	
+		Long supplierId = qtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
+		ScQt scQt = this.getManagedBean().getScQt();
+	
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
+		
+		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
+		    return Boolean.TRUE;
+	    }
+		return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
+
 }
