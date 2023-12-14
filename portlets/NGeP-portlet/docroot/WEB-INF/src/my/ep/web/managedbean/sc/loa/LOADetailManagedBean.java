@@ -317,11 +317,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	//#25725 start
 	private boolean disabledButton = true;
-	public BigDecimal limit = new BigDecimal(500000);
-	public boolean above500K = true;
-	public boolean AgreementReqChange = false;
-	public String docStatus;
-	public String procurementType;
+	private BigDecimal limit = new BigDecimal(500000); //#Sqube Vulnerability Minor G47 start
+	private boolean above500K = true;
+	private boolean AgreementReqChange = false;
+	private String docStatus;
+	private String procurementType; //#Sqube Vulnerability Minor G47 end
 	private boolean showApprovalLetter = false;//# note 146
 	//#25725 end
 	
@@ -341,6 +341,8 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private ScLoiLoaItem scLoiLoaItem;
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	private List<ScLoiLoaItem> loiLoaItemsResult;//29007 - fix issue 2 search action note 347
+	private boolean resetAll = false;
+	private boolean resetAllforNoReport = false;
 	/*#29007 End Vinod*/
 	
 	//#27797 - start
@@ -365,7 +367,15 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
 	
+	private String firstZone;//Bug #34757
+	
 	private int retainPageNumber = 0;//#34242
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	private Boolean downloadLOADisabled = true;
+
+	private Boolean readOnlyLOADownload = true;
+	// Bug #35078@Syazani -- 22/09/2023 -- End
 	
     /**
      * Gets the spki backing bean.
@@ -1927,6 +1937,19 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setUploadA3Templet(boolean uploadA3Templet) {
 		this.uploadA3Templet = uploadA3Templet;
 	}
+	public boolean isResetAll() {
+		return resetAll;
+	}
+
+	public void setResetAll(boolean resetAll) {
+		this.resetAll = resetAll;
+	}
+	public boolean isResetAllforNoReport() {
+		return resetAllforNoReport;
+	}
+	public void setResetAllforNoReport(boolean resetAllforNoReport) {
+		this.resetAllforNoReport = resetAllforNoReport;
+	}
 	/*#29007 End Vinod*/
 
 	//#25725 start
@@ -2131,6 +2154,33 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.showApprovalLetter = showApprovalLetter;
 	}
 	// #25725 - note 146 - end
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	public Boolean getDownloadLOADisabled() {
+		return downloadLOADisabled;
+	}
+
+	public void setDownloadLOADisabled(Boolean downloadLOADisabled) {
+		this.downloadLOADisabled = downloadLOADisabled;
+	}
+
+	public Boolean getReadOnlyLOADownload() {
+		return readOnlyLOADownload;
+	}
+
+	public void setReadOnlyLOADownload(Boolean readOnlyLOADownload) {
+		this.readOnlyLOADownload = readOnlyLOADownload;
+	}
+
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
+	}
+
+	// Bug #35078@Syazani -- 22/09/2023 -- End
 	
 }
 

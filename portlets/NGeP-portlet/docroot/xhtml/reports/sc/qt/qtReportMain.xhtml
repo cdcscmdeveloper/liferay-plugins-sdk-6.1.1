@@ -97,8 +97,18 @@
 				</c:if>
 
 				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.scBriefingPaperRptValWip}">
+					<ui:include src="SC_081_Briefing_Paper_WIP.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL}">
 					<ui:include src="SC_049_Evaluation_Committee.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.scEvaluationCommitteeRptValWip}">
+					<ui:include src="SC_082_Evaluation_Committee_WIP.xhtml"></ui:include>
 				</c:if>
 				
 				<c:if
@@ -113,15 +123,30 @@
 				</c:if>
 
 				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.scOpeningCommitteeRptValWip}">
+					<ui:include src="SC_084_Opening_Committee_WIP.xhtml"></ui:include>
+				</c:if>
+				
+				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL}">
 					<ui:include src="SC_072_Technical_Evaluation.xhtml"></ui:include>
 				</c:if>
-
+				
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.scTechinicalEvaluationCommitteeRptValWip}">
+					<ui:include src="SC_085_Technical_Evaluation_WIP.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL}">
 					<ui:include src="SC_073_Financial_Evaluation_Committee.xhtml"></ui:include>
 				</c:if>
-
+				
+				<c:if
+					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.scFinancialEvaluationCommitteeRptValWip}">
+					<ui:include src="SC_083_Financial_Evaluation_Committee_WIP.xhtml"></ui:include>
+				</c:if>
+				
 				<c:if
 					test="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL}">
 					<ui:include src="SC_076_Prop_Valid_Period_Ext.xhtml"></ui:include>

@@ -117,13 +117,13 @@
 										<c:choose>
 										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
 										<!-- 27691 Start -->
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />												
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />												
 										</c:when>
 										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />																						
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />																						
 										</c:otherwise>
 										</c:choose>
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />
+										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
 										<!-- 27691 End -->
 									</td>
 									<td style="width:20%" >
@@ -135,14 +135,14 @@
 										<c:choose>
 										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
 										<!-- 27691 Start -->
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" value="#{varOwner.ownerIsDirector}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" />
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" value="#{varOwner.ownerIsDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
 										</c:when>
 										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" value="#{varOwner.ownerIsDirector}"/>
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{varOwner.ownerIsDirector}"/>
 										</c:otherwise>
 										</c:choose>
 										
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole or registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" value="#{varOwner.ownerIsDirector}"/>
+										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{varOwner.ownerIsDirector}"/>
 										<!-- 27691 End -->
 									</td>
 									<td style="width:20%" >

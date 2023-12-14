@@ -26,6 +26,9 @@
 	<ui:param name="above500K" value="#{(directLOABackingBean.managedBean.above500K)}"/>
 	<ui:param name="StatusLOASubmission" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"></ui:param>
 	<!-- #25726 END -->
+	<ui:remove>Reopen #25726 note 110</ui:remove>
+	<ui:param name="StatusLOARevision" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
+	<ui:remove>#25726 end</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -356,7 +359,7 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />
@@ -481,7 +484,8 @@
 						<tr>
 							<td>
 								<c:choose>
-									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
+									<!-- 20231122@asyrafhaziq_25726 - Issue 17 -->
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral}">
 									<p:selectOneMenu id="fulfilId"
 										required="true"
 										label="#{lbl['lbl.sc.fullfillent.type']}"
@@ -635,7 +639,7 @@
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 															<c:choose>
-															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+															<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 																<p:inputText 
 																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 																size="28" disabled="true" />
@@ -663,7 +667,7 @@
 												</c:when>
 												<c:otherwise>
 													<c:choose>
-													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+													<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 														<p:inputText 
 														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 														size="28" disabled="true" />
@@ -1029,7 +1033,7 @@
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
 						<!-- #25726 START -->													
-						<h:panelGroup  rendered="#{StatusLOASubmission and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision) and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
 						required="true">
 						<!-- #25726 END -->
 							<table>
@@ -1058,12 +1062,12 @@
 			 	 						</p:outputPanel> 
 			 	 					</td>
 			 	 					<td style="margin-top: -3px">
-										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" />
 									</td>
 			 	 				</tr>
 			 	 			</table>			 	 				
 			 	 		</h:panelGroup>
-			 	 		<h:panelGroup  rendered="#{!StatusLOASubmission and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+			 	 		<h:panelGroup  rendered="#{!(StatusLOASubmission or StatusLOARevision) and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
 							<table>
 								<tr>
 									<td width="300">
@@ -1081,7 +1085,7 @@
 			 	 						</p:outputPanel> 
 			 	 					</td>
 			 	 					<td style="margin-top: -3px">
-										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+										<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" />
 									</td>
 			 	 				</tr>
 			 	 			</table>			 	 				
