@@ -3424,7 +3424,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 			}
 			if (isApproverSetting() && !getManagedBean().isPrepareLOA()) {
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuApprover); //#35132
 			}
 
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) { //24333
@@ -3435,6 +3435,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 			}
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
+		}
+		
+		for(String sidemenu : getManagedBean().getFinalListOfSideMenu()){ //#35132
+			getManagedBean().getIndexing().put(sidemenu, ++indexing);
 		}
 		log.info("Check getFinalListOfSideMenu Size"+getManagedBean().getFinalListOfSideMenu().size());
 		log.info("Check getFinalListOfSideMenu "+getManagedBean().getFinalListOfSideMenu().toString());
