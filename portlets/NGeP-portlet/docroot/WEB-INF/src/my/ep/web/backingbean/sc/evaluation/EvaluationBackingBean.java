@@ -14930,9 +14930,11 @@ private void retriveCommitteeRemarksList(){
 		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt()
 				.getEvaluateBy())) {
 			if (maxSet == ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
-				selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
-						.getMessage("lbl.sc.evaluation.view.by.tech.package.score",// #25138-Ahmaa
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				if(!this.getManagedBean().getNoSupplierPackageExist()){ //do not merge to previous if.. remeain below maxset flag, if supplier exist need to enter
+					selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
+							.getMessage("lbl.sc.evaluation.view.by.tech.package.score",// #25138-Ahmaa
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}			
 			} else {
 
 				selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
