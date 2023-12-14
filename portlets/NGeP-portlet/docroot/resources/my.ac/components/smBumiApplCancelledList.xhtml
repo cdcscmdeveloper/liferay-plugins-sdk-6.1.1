@@ -53,7 +53,7 @@
 		
 		<p:commandButton value="#{lbl['lbl.btn.download']}" style="float:right;"
 			 	immediate="true" ajax="false">
-			<p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl(isSvc)}" />
+			<p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl(cc.attrs.isSvc)}" />
 		</p:commandButton>
 	</p:dialog>
 	</cc:implementation>
