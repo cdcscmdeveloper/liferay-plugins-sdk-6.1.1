@@ -354,16 +354,15 @@ public class EvaluationMeetingBackingBean extends
 					List<ScQtCommitteRemarks> qtRemarkList = this
 							.getManagedBean().getQtCommitteeRemarks();
 					if (qtRemarkList == null) {
-						qtRemarkList = new ArrayList<ScQtCommitteRemarks>();
+						qtRemarkList = new ArrayList<>();//sonarrQubeIssue6#84
 					}
 
 					List<ScQtCommitteRemarks> remarks = qtCommittee.getQtCommitteRemarks();
 
-					if (null != remarks && !remarks.isEmpty()) {
-						for (ScRemark remark : remarks) {
-							ScQtCommitteRemarks qtRemark = (ScQtCommitteRemarks) remark;
-							qtRemarkList.add(qtRemark);
-						}
+					if (CollectionUtils.isNotEmpty(remarks)) {//sonarrQubeIssue6#84
+						for (ScQtCommitteRemarks remark : remarks) {
+							qtRemarkList.add(remark);
+						}//sonarrQubeIssue6#84
 						this.getManagedBean().setQtCommitteeRemarks(
 								qtRemarkList);
 					}
@@ -371,7 +370,6 @@ public class EvaluationMeetingBackingBean extends
 							qtCommittee.getCurrentStatus(),
 							qtRemarkList, 
 							ScQtCommitteRemarks.class);
-					// qtRemarkList.addAll(remark);
 					this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
 					prepareCommitteeHistory(qtCommittee);//#25037
 				}

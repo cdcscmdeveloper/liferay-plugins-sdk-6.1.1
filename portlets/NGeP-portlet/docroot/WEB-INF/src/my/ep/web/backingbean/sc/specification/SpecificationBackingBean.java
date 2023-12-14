@@ -289,6 +289,7 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
+import com.bea.common.security.xacml.CollectionUtil;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.util.PortalUtil;
 //#25138
@@ -315,7 +316,6 @@ public class SpecificationBackingBean extends
 	private static List<SpecInfo> specInfo;
 	private static Map<Long, PmUom> uomMap = new HashMap<Long, PmUom>();
 	private static Map<Long, PmParameter> PmParameterMap = new HashMap<Long, PmParameter>();
-	private static Map<String, PmParameter> pmParameterMapStringKey = new HashMap<String, PmParameter>(); //Bug #34065@Syazani 30/11/2022
 	
 	/**
 	 * The scoreType String
@@ -358,6 +358,10 @@ public class SpecificationBackingBean extends
 	public static final String  TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW="/xhtml/sc/specification/specificationCommittee/technicalCheckListSampleItemView.xhtml?faces-redirect=true";
 	public static final String SPECIFICATION_CHECKLIST_MAIN_PAGE="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";//11104
 
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	/** Temporary ID for a new checklist row */
+	private int tempNewChecklistIndex = 0;
+	// Bug #35219@Syazani 07/11/2023 -- End
 
 	/**
 	 * Instantiates a new specification backing bean.
@@ -855,6 +859,7 @@ public class SpecificationBackingBean extends
 		boolean demoChecklistAvail = false;//#28784
 		boolean throwErorrMechaMistmatch = false; // Bug #34065@Syazani 01/11/2022
 		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE); // Bug #34065@Syazani 01/11/2022
+		
 		if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : technicalCheckList) {
 				if (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD
@@ -885,15 +890,20 @@ public class SpecificationBackingBean extends
 				
 				// Bug #34065@Syazani 01/11/2022 -- Start
 				for (PmParameterDesc paramDesc : localParamDesc) {
-					if (paramDesc.getPmParameter().getParameterId().equals(checkList.getDefinationType().getParameterId())) {
-						if (!paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+					if (paramDesc.getPmParameter().getParameterId()
+							.equals(checkList.getDefinationType().getParameterId())) {
+						if (!paramDesc.getPmParameter().getParameterCode()
+								.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
 							if (checkList.getPmDocument() == null) {
-								if (paramDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
-									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList), technicalCheckList);
+								if (paramDesc.getPmParameter().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList),
+											technicalCheckList);
 									throwErorrMechaMistmatch = true;
 								} else if (paramDesc.getPmParameter().getParameterCode()
 										.equalsIgnoreCase(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
-									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList), technicalCheckList);
+									technicalCheckListTypeChange(technicalCheckList.indexOf(checkList),
+											technicalCheckList);
 								}
 							} else {
 								setDefTypeAndActionValues(checkList);
@@ -904,6 +914,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				// Bug #34065@Syazani 01/11/2022 -- End
+				
 				}			
 		}
 		
@@ -978,14 +989,6 @@ public class SpecificationBackingBean extends
 				}
 				// Bug #34065@Syazani 01/11/2022 -- End
 			}
-			
-			// Bug #34065@Syazani 01/11/2022 -- Start
-			if (throwErorrMechaMistmatch) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-						"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()) });
-			}
-			// Bug #34065@Syazani 01/11/2022 -- End
 			
 			for (Map.Entry<Integer, Integer> entry : totalGroupId.entrySet()) {
 				boolean isInsertPair = false ;	
@@ -1098,6 +1101,14 @@ public class SpecificationBackingBean extends
 				}
 		//20210914@haziq - 31658 - End
 		}
+		
+		// Bug #35219@Syazani 07/11/2023 -- Start
+		if (throwErorrMechaMistmatch) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.spec.supplier.action", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		// Bug #35219@Syazani 07/11/2023 -- End
 
 	}
 
@@ -2092,14 +2103,16 @@ public class SpecificationBackingBean extends
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2techProposal());
 				}
-				
-				this.getManagedBean().setScQtCheckSt2financeProposalList(
+				// 20231122@asyrafhaziq_25726 - Issue 14 
+				// comment this because it will reset session value for financial checkList where is not null
+				// and this method should not in this function .
+				/*this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 				if (CollectionUtils.isNotEmpty(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList())) {
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2financeProposalList());
-				}
+				}*/
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
@@ -2324,13 +2337,12 @@ public class SpecificationBackingBean extends
 									recommnendationSetting);
 						}
 					}
-					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) { 
-							if (null == this.getManagedBean().getTechnicalItemScoreSetting()) { 
-								this.getManagedBean().setTechnicalItemScoreSetting(recommnendationSetting);
-							} 
-						} 
-					} 
+					//sonarqube issues
+					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							&& recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+						this.getManagedBean().setTechnicalItemScoreSetting(recommnendationSetting);
+					}
 				} 
 			} 
 
@@ -2847,7 +2859,6 @@ public class SpecificationBackingBean extends
 									pkgOfferPrice.setScoreType(new BigDecimal(QTConstants.AUTO_SCORE));	
 									this.getManagedBean().setOfferScoreType(String.valueOf(pkgOfferPrice
 											.getScoreType().intValue()));
-									//scoreTypeN=QTConstants.AUTO_SCORE;
 								}//34852_End
 								
 								//#29168 - Bug - start
@@ -3033,7 +3044,8 @@ public class SpecificationBackingBean extends
 				if (oriFinancialScoring != null) {
 					for (ScQtCheckList o : oriFinancialScoring) {
 						for (ScQtCheckList l : newFinancialScoring)
-							if (l.getQtScoreWeightage().getQtScoreWeightageId().equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {
+							if (null != l.getQtScoreWeightage().getQtScoreWeightageId()
+									&& l.getQtScoreWeightage().getQtScoreWeightageId().equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {//bug #35211 related to #33525
 								l.getQtScoreWeightage().setWeightage(o.getQtScoreWeightage().getWeightage());
 							}
 					}
@@ -3321,6 +3333,12 @@ public class SpecificationBackingBean extends
 
 					}
 				}
+				//20231122@asyrafhaziq_25726 - Issue 10
+				if (this.getManagedBean().getToBeRemoveSchedules() != null && !this.getManagedBean().getToBeRemoveSchedules().isEmpty()) {
+					EntityHelper.compareAndRemoveEntityFromList(this.getManagedBean().getToBeRemoveSchedules(),
+							scheduleList, "scheduleNo");
+				}
+				
 				this.getManagedBean().setScheduleList(scheduleList);
 			}
 
@@ -3362,6 +3380,13 @@ public class SpecificationBackingBean extends
 					}
 
 				}
+				
+				//20231122@asyrafhaziq_25726 - Issue 10
+				if (this.getManagedBean().getToBeRemoveProgPayments() != null && !this.getManagedBean().getToBeRemoveProgPayments().isEmpty()) {
+					EntityHelper.compareAndRemoveEntityFromList(this.getManagedBean().getToBeRemoveProgPayments(),
+							paymentList, "phaseNo");
+				}
+				
 				this.getManagedBean().setProgressivePaymentList(paymentList);
 			}
 
@@ -4520,12 +4545,15 @@ public class SpecificationBackingBean extends
 				list.setScQtCheckListAttachment(null);
 
 			}
+			// Bug #35219@Syazani 07/11/2023 -- Start
+			selectOneItemActionAndDefinationBugRepair(checkList, this.getManagedBean()
+					.getScQtCheckSt2techProposalLstClone(), index);
+			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), this
+					.getManagedBean().getScQtCheckSt2financeProposalLstClone(), null);
+			// Bug #35219@Syazani 07/11/2023 -- End
+
 			checkList.set(index, list);
 			this.getManagedBean().setScQtCheckSt2techProposal(checkList);
-			// Bug #34065@Syazani 01/11/2022 -- Start
-			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), index, false);
-			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), null, false);
-			// Bug #34065@Syazani 01/11/2022 -- End
 			searchBean = null;
 			
 		} finally {
@@ -4603,12 +4631,15 @@ public class SpecificationBackingBean extends
 				list.setAction(docDefTypeResDTO.getPmParameter());
 				list.setScQtCheckListAttachment(null);
 			}
+			// Bug #35219@Syazani 07/11/2023 -- Start
+			selectOneItemActionAndDefinationBugRepair(checkList, this.getManagedBean()
+					.getScQtCheckSt2financeProposalLstClone(), index);
+			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), this
+					.getManagedBean().getScQtCheckSt2techProposalLstClone(), null);
+			// Bug #35219@Syazani 07/11/2023 -- End
+
 			checkList.set(index, list);
 			this.getManagedBean().setScQtCheckSt2financeProposalList(checkList);
-			// Bug #34065@Syazani 01/11/2022 -- Start
-			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), index, false);
-			selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), null, false);
-			// Bug #34065@Syazani 01/11/2022 -- End
 			searchBean = null;		
 		} finally {
 			parameterSo = null;
@@ -4829,12 +4860,15 @@ public class SpecificationBackingBean extends
 			}
 		}
 
-		this.getManagedBean().getScQtCheckSt2techProposal().set(index, list);
-		// Bug #34065@Syazani 01/11/2022 -- Start
-		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), index, true);
-		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), null, true);
-		// Bug #34065@Syazani 01/11/2022 -- End
+		// Bug #35219@Syazani 07/11/2023 -- Start
+		selectOneItemActionAndDefinationBugRepair(checklist, this.getManagedBean()
+				.getScQtCheckSt2techProposalLstClone(), index);
+		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), this
+				.getManagedBean().getScQtCheckSt2financeProposalLstClone(), null);
 
+		checklist.set(index, list);
+		this.getManagedBean().setScQtCheckSt2techProposal(checklist);
+		// Bug #35219@Syazani 07/11/2023 -- End
 	}
 
 	/**
@@ -4875,12 +4909,15 @@ public class SpecificationBackingBean extends
 			}
 		}
 
-		this.getManagedBean().getScQtCheckSt2financeProposalList()
-				.set(index, list);
-		// Bug #34065@Syazani 01/11/2022 -- Start
-		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2financeProposalList(), index, true);
-		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), null, true);
-		// Bug #34065@Syazani 01/11/2022 -- End
+		// Bug #35219@Syazani 07/11/2023 -- Start
+		selectOneItemActionAndDefinationBugRepair(checklist, this.getManagedBean()
+				.getScQtCheckSt2financeProposalLstClone(), index);
+		selectOneItemActionAndDefinationBugRepair(this.getManagedBean().getScQtCheckSt2techProposal(), this
+				.getManagedBean().getScQtCheckSt2techProposalLstClone(), null);
+
+		checklist.set(index, list);
+		this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
+		// Bug #35219@Syazani 07/11/2023 -- End
 	}
 
 	/**
@@ -7215,6 +7252,7 @@ public class SpecificationBackingBean extends
 			// st2financeproposalList2.setEvaluationStage("2");
 			st2financeproposalList2
 					.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			st2financeproposalList2.setIndex(tempNewChecklistIndex++);	// Bug #35219@Syazani 07/11/2023
 			st2financeproposalList.add(st2financeproposalList2);
 
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
@@ -7359,7 +7397,7 @@ public class SpecificationBackingBean extends
 					.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 			st2technicalproposalList1
 					.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-
+			st2technicalproposalList1.setIndex(tempNewChecklistIndex++);	// Bug #35219@Syazani 07/11/2023 -- Start
 			st2technicalproposalList.add(st2technicalproposalList1);
 
 			this.getManagedBean().setScQtCheckSt2techProposal(
@@ -11077,14 +11115,13 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getQt().getFulfilmentType()
 							.getParameterCode());
 		}
-		if (!this.getManagedBean().isReadOnly()) {
-			if (scQt != null && scQt.getObtainSpecialApproval() != null
-					&& scQt.getObtainSpecialApproval()) { //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				this.getManagedBean().setProcMethodDropdownPresent(
-						checkForProcumentMethodDropdown(scQt));
-			}
-		}
-		
+		//Sonarqube #83 - start
+		if (!this.getManagedBean().isReadOnly() && scQt != null && scQt.getObtainSpecialApproval() != null && scQt.getObtainSpecialApproval()) {
+			 //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			this.getManagedBean().setProcMethodDropdownPresent(
+					checkForProcumentMethodDropdown(scQt));
+		} 
+		//Sonarqube #83 - end
 		this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
 		this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
 		Long statusId = scQt != null ? scQt.getQtStatus().getStatusId():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
@@ -11145,9 +11182,8 @@ if (null != checklist && !checklist.isEmpty()) {
 	}//11104-End
 		
 		// #29732 @idham 25/07/2023 - Start
-		if (Arrays.asList(
-				new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
-						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION }).contains(statusId)
+		if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION).contains(statusId)
 				|| (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
 						.equals(statusId))) {
 			String changedCatCodeList = checkCatCodeChange();
@@ -13186,260 +13222,252 @@ if (null != checklist && !checklist.isEmpty()) {
 		PmStatus qtStatus = null;
 		Long statusId = 0L;
 
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class);
-			
-			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(),
-					ParameterConst.DOCTYPE_QUOTATION);
-			if (qtStatus != null)
-				statusId = qtStatus.getStatusId();
+		// Sqube QT Master Bug G85 - Issues 17@Syazani 30/11/2023
+		detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		
+		qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(),
+				ParameterConst.DOCTYPE_QUOTATION);
+		if (qtStatus != null)
+			statusId = qtStatus.getStatusId();
 
-			if (Arrays.asList(
-					new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
-							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
-							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF }).contains(statusId)) {
-				commonMessageAcknowledgementErrorPage(MessageConst.ERROR_775189, new String[] { this.getManagedBean()
-						.getQt().getQtNo() });
-				return null;
+		if (Arrays.asList(QTStatusConst.QT_SPECIFICATION_STATUS_IS_SUBMITTED).contains(statusId)) {	// Sqube QT Master Bug G85 - Issues 18@Syazani 30/11/2023
+			commonMessageAcknowledgementErrorPage(MessageConst.ERROR_775189, new String[] { this.getManagedBean()
+					.getQt().getQtNo() });
+			return null;
+		}
+
+		// Bug #33661@Syazani 24/05/2023 -- End
+					
+		if (null != checkList.getQtChecklistId()) {
+			// checkList.setDeleted(true);
+			List<ScQtCheckList> toBeRemoveCheckLists = new ArrayList<ScQtCheckList>();
+			// toBeRemoveCheckLists.add(checkList);
+			List<ScQtCheckList> technicalCheckLIsts = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			for (int i = 0; i < technicalCheckLIsts.size(); i++) {
+				if (checkList.getQtChecklistId().equals(
+						technicalCheckLIsts.get(i).getQtChecklistId())) {
+					ScQtCheckList technicalCheckList = technicalCheckLIsts
+							.get(i);
+					technicalCheckList.setDeleted(true);
+					toBeRemoveCheckLists.add(technicalCheckList);
+					technicalCheckLIsts.remove(technicalCheckList);
+					break;
+				}
 			}
 
-			// Bug #33661@Syazani 24/05/2023 -- End
-						
-			if (null != checkList.getQtChecklistId()) {
-				// checkList.setDeleted(true);
-				List<ScQtCheckList> toBeRemoveCheckLists = new ArrayList<ScQtCheckList>();
-				// toBeRemoveCheckLists.add(checkList);
-				List<ScQtCheckList> technicalCheckLIsts = this.getManagedBean()
-						.getScQtCheckSt2techProposal();
-				for (int i = 0; i < technicalCheckLIsts.size(); i++) {
-					if (checkList.getQtChecklistId().equals(
-							technicalCheckLIsts.get(i).getQtChecklistId())) {
-						ScQtCheckList technicalCheckList = technicalCheckLIsts
-								.get(i);
-						technicalCheckList.setDeleted(true);
-						toBeRemoveCheckLists.add(technicalCheckList);
-						technicalCheckLIsts.remove(technicalCheckList);
-						break;
-					}
-				}
+			List<ScQtCheckList> financialCheckLIsts = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
 
-				List<ScQtCheckList> financialCheckLIsts = this.getManagedBean()
-						.getScQtCheckSt2financeProposalList();
+			if (null != financialCheckLIsts && !financialCheckLIsts.isEmpty()) {
+				if (null != this.getManagedBean().getCheckListTitle()
+						&& !"".equals(this.getManagedBean().getCheckListTitle())) {
+					SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+					reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+					reqDTO.setPrepareSpec(false);
 
-				if (null != financialCheckLIsts && !financialCheckLIsts.isEmpty()) {
-					if (null != this.getManagedBean().getCheckListTitle()
-							&& !"".equals(this.getManagedBean().getCheckListTitle())) {
-						SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-						reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-						reqDTO.setPrepareSpec(false);
+					specSo = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTSpecSO.class);
+					SpecificationResDTO resDto = specSo
+							.retrieveSpecDetails(reqDTO);
 
-						specSo = BusinessDelegate.getInstance()
-								.getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION,
-										IQTSpecSO.class);
-						SpecificationResDTO resDto = specSo
-								.retrieveSpecDetails(reqDTO);
-
-						if (null != resDto
-								&& null != resDto.getFinSpecResultBean()
-										.getResultList()
-								&& !resDto.getFinSpecResultBean().getResultList()
-										.isEmpty()) {
-							boolean isFinancialChecklistFound = false;
-							for (ScQtCheckList financialspec : resDto
-									.getFinSpecResultBean().getResultList()) {
-								if (financialspec
-										.getTitle()
-										.trim()
-										.replaceAll("\\s", "")
-										.equalsIgnoreCase(
-												this.getManagedBean()
-														.getCheckListTitle().trim()
-														.replaceAll("\\s", ""))) {
-									isFinancialChecklistFound = true;
-									financialspec.setDeleted(true);
-									toBeRemoveCheckLists.add(financialspec);
-									log.info("BothTitlesareEqualForDelete"
-											+ this.getManagedBean().getQt()
-													.getQtId());
-									break;
-									/*
-									 * throw new
-									 * EpException(MessageConst.ERROR_760310, new
-									 * String[] { financialSpecs.getTitle() });
-									 */
-								}
+					if (null != resDto
+							&& null != resDto.getFinSpecResultBean()
+									.getResultList()
+							&& !resDto.getFinSpecResultBean().getResultList()
+									.isEmpty()) {
+						boolean isFinancialChecklistFound = false;
+						for (ScQtCheckList financialspec : resDto
+								.getFinSpecResultBean().getResultList()) {
+							if (financialspec
+									.getTitle()
+									.trim()
+									.replaceAll("\\s", "")
+									.equalsIgnoreCase(
+											this.getManagedBean()
+													.getCheckListTitle().trim()
+													.replaceAll("\\s", ""))) {
+								isFinancialChecklistFound = true;
+								financialspec.setDeleted(true);
+								toBeRemoveCheckLists.add(financialspec);
+								log.info("BothTitlesareEqualForDelete"
+										+ this.getManagedBean().getQt()
+												.getQtId());
+								break;
+								/*
+								 * throw new
+								 * EpException(MessageConst.ERROR_760310, new
+								 * String[] { financialSpecs.getTitle() });
+								 */
 							}
-							if (!isFinancialChecklistFound) {
-								if (!checkSequenceMorethanOne(resDto
-										.getFinSpecResultBean().getResultList(),
-										checkList)) {
-									log.info("CancelSpecSequenceFalse");
-									for (ScQtCheckList financialspec : resDto
-											.getFinSpecResultBean().getResultList()) {
-										if (financialspec.getChecklistSeq().equals(
-												checkList.getChecklistSeq())) {
-											isFinancialChecklistFound = true;
-											financialspec.setDeleted(true);
-											toBeRemoveCheckLists.add(financialspec);
-											log.info("BothSequencesAreEqualForDelete"
-													+ this.getManagedBean().getQt()
-															.getQtId());
-											break;
-											/*
-											 * throw new
-											 * EpException(MessageConst.ERROR_760310
-											 * , new String[] {
-											 * financialSpecs.getTitle() });
-											 */
-										}
-									}
-								}
-
-							}
-							if (!isFinancialChecklistFound) {
+						}
+						if (!isFinancialChecklistFound) {
+							if (!checkSequenceMorethanOne(resDto
+									.getFinSpecResultBean().getResultList(),
+									checkList)) {
+								log.info("CancelSpecSequenceFalse");
 								for (ScQtCheckList financialspec : resDto
 										.getFinSpecResultBean().getResultList()) {
-									if (financialspec.getRecordStatusFlg().equals(
-											DbValueConst.RECORD_STATUS_DELETED)) {
+									if (financialspec.getChecklistSeq().equals(
+											checkList.getChecklistSeq())) {
+										isFinancialChecklistFound = true;
 										financialspec.setDeleted(true);
 										toBeRemoveCheckLists.add(financialspec);
-										log.info("BothTitlesareNotEqualForDelete"
+										log.info("BothSequencesAreEqualForDelete"
 												+ this.getManagedBean().getQt()
 														.getQtId());
 										break;
 										/*
 										 * throw new
-										 * EpException(MessageConst.ERROR_760310,
-										 * new String[] { financialSpecs.getTitle()
-										 * });
+										 * EpException(MessageConst.ERROR_760310
+										 * , new String[] {
+										 * financialSpecs.getTitle() });
 										 */
 									}
 								}
-
 							}
 
+						}
+						if (!isFinancialChecklistFound) {
+							for (ScQtCheckList financialspec : resDto
+									.getFinSpecResultBean().getResultList()) {
+								if (financialspec.getRecordStatusFlg().equals(
+										DbValueConst.RECORD_STATUS_DELETED)) {
+									financialspec.setDeleted(true);
+									toBeRemoveCheckLists.add(financialspec);
+									log.info("BothTitlesareNotEqualForDelete"
+											+ this.getManagedBean().getQt()
+													.getQtId());
+									break;
+									/*
+									 * throw new
+									 * EpException(MessageConst.ERROR_760310,
+									 * new String[] { financialSpecs.getTitle()
+									 * });
+									 */
+								}
+							}
+
+						}
+
+					}
+				}
+			}
+
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setScQt(this.getManagedBean().getQt());
+			specReqDTO.setCheckLists(toBeRemoveCheckLists);
+			SpecificationResDTO resDTO = specSo.deleteChecklists(specReqDTO);
+
+			if (resDTO.isSuccessful()) {
+				//1873 note 182 start
+				ISearchResultBean<ScQtCheckList> checklistResultBean = specSo.retrieveTemplateSpecChecklist(specReqDTO).getSpecResultBean();
+				Map<Long, ScQtCheckList> tecChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
+				Map<Long, ScQtCheckList> finChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
+				if(CollectionUtils.isNotEmpty(checklistResultBean.getResultList())){
+					for(ScQtCheckList checklist: checklistResultBean.getResultList()){
+						if(SourcingConstants.TECHNICAL_DOCTYPE.equals(checklist.getDocCategory())){
+							tecChecklistMap.put(checklist.getQtChecklistId(), checklist);
+						}else if(SourcingConstants.FINANCIAL_DOCTYPE.equals(checklist.getDocCategory())){
+							finChecklistMap.put(checklist.getQtChecklistId(), checklist);
+						}
+					}
+				}
+				if(CollectionUtils.isNotEmpty(technicalCheckLIsts)){
+					ListIterator<ScQtCheckList> tecChecklistIter = technicalCheckLIsts.listIterator();
+					while(tecChecklistIter.hasNext()) {
+						ScQtCheckList checklist = tecChecklistIter.next();
+						if(finChecklistMap.get(checklist.getQtChecklistId())!=null){
+							tecChecklistIter.set(tecChecklistMap.get(checklist.getQtChecklistId()));
 						}
 					}
 				}
 
-				SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
-				specReqDTO.setScQt(this.getManagedBean().getQt());
-				specReqDTO.setCheckLists(toBeRemoveCheckLists);
-				SpecificationResDTO resDTO = specSo.deleteChecklists(specReqDTO);
-
-				if (resDTO.isSuccessful()) {
-					//1873 note 182 start
-					ISearchResultBean<ScQtCheckList> checklistResultBean = specSo.retrieveTemplateSpecChecklist(specReqDTO).getSpecResultBean();
-					Map<Long, ScQtCheckList> tecChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
-					Map<Long, ScQtCheckList> finChecklistMap = new LinkedHashMap<Long, ScQtCheckList>();
-					if(CollectionUtils.isNotEmpty(checklistResultBean.getResultList())){
-						for(ScQtCheckList checklist: checklistResultBean.getResultList()){
-							if(SourcingConstants.TECHNICAL_DOCTYPE.equals(checklist.getDocCategory())){
-								tecChecklistMap.put(checklist.getQtChecklistId(), checklist);
-							}else if(SourcingConstants.FINANCIAL_DOCTYPE.equals(checklist.getDocCategory())){
-								finChecklistMap.put(checklist.getQtChecklistId(), checklist);
+				if(financialCheckLIsts != null && CollectionUtils.isNotEmpty(financialCheckLIsts)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					ListIterator<ScQtCheckList> finChecklistIter = financialCheckLIsts.listIterator();
+					while(finChecklistIter.hasNext()) {
+						ScQtCheckList checklist = finChecklistIter.next();
+						if(finChecklistMap.get(checklist.getQtChecklistId())!=null){
+							finChecklistIter.set(finChecklistMap.get(checklist.getQtChecklistId()));
+						}else if(toBeRemoveCheckLists!=null && toBeRemoveCheckLists.size()>1){
+							ScQtCheckList finChecklist = toBeRemoveCheckLists.get(1);
+							Long qtChecklistId = checklist.getQtChecklistId()==null ? 0L: checklist.getQtChecklistId();
+							if(qtChecklistId.equals(finChecklist.getQtChecklistId())){
+								finChecklistIter.remove();
 							}
 						}
 					}
-					if(CollectionUtils.isNotEmpty(technicalCheckLIsts)){
-						ListIterator<ScQtCheckList> tecChecklistIter = technicalCheckLIsts.listIterator();
-						while(tecChecklistIter.hasNext()) {
-							ScQtCheckList checklist = tecChecklistIter.next();
-							if(finChecklistMap.get(checklist.getQtChecklistId())!=null){
-								tecChecklistIter.set(tecChecklistMap.get(checklist.getQtChecklistId()));
-							}
-						}
-					}
-
-					if(financialCheckLIsts != null && CollectionUtils.isNotEmpty(financialCheckLIsts)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-						ListIterator<ScQtCheckList> finChecklistIter = financialCheckLIsts.listIterator();
-						while(finChecklistIter.hasNext()) {
-							ScQtCheckList checklist = finChecklistIter.next();
-							if(finChecklistMap.get(checklist.getQtChecklistId())!=null){
-								finChecklistIter.set(finChecklistMap.get(checklist.getQtChecklistId()));
-							}else if(toBeRemoveCheckLists!=null && toBeRemoveCheckLists.size()>1){
-								ScQtCheckList finChecklist = toBeRemoveCheckLists.get(1);
-								Long qtChecklistId = checklist.getQtChecklistId()==null ? 0L: checklist.getQtChecklistId();
-								if(qtChecklistId.equals(finChecklist.getQtChecklistId())){
-									finChecklistIter.remove();
-								}
-							}
-						}
-					}
-					//1873 note 182 start
-					String title=" ";//11104-start
-					if(this.getManagedBean().getQt().isSampleReq() && CollectionUtils.isNotEmpty(technicalCheckLIsts)){
-						for(ScQtCheckList checklist:technicalCheckLIsts){
-							if (checklist.getDefinationType().getParameterCode()
-									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
-								title=checklist.getTitle();
-								break;
-							}
-						}
-					}//11104-End
-					
-					//#28784 - Start
-					if(this.getManagedBean().getQt().isDemoRequired() && CollectionUtils.isNotEmpty(technicalCheckLIsts)){
-						for(ScQtCheckList checklist:technicalCheckLIsts){
-							if (checklist.getDefinationType().getParameterCode()
-									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-								title=checklist.getTitle();
-								break;
-							}
-						}
-					}
-					this.getManagedBean().setFinancialScoring(null);
-					this.getManagedBean().setOfferPricePackage(null);
-					this.getManagedBean().setQt(resDTO.getScQt());
-					if(this.getManagedBean().getQt().isSampleReq() && CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){//11104-start
-						for(ScQtCheckList checklist:this.getManagedBean().getScQtCheckSt2techProposal()){
-							if (checklist.getDefinationType().getParameterCode()
-									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
-								if(null==checklist.getTitle() || StringUtils.isBlank(checklist.getTitle()) || StringUtils.isEmpty(checklist.getTitle())){
-									checklist.setTitle(title);
-								}
-								break;
-							}
-						}
-					}//11104-End				
-					
-					addDemoTechnicalCheckList();//#28784
-					if(this.getManagedBean().getQt().isDemoRequired() && CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){//11104-start
-						for(ScQtCheckList checklist:this.getManagedBean().getScQtCheckSt2techProposal()){
-							if (checklist.getDefinationType().getParameterCode()
-									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-								if(null==checklist.getTitle() || StringUtils.isBlank(checklist.getTitle()) || StringUtils.isEmpty(checklist.getTitle())){
-									checklist.setTitle(title);
-								}
-								break;
-							}
-						}
-					}//#28784 - End
-					if (this.getManagedBean().getQt().isDemoRequired()) {
-						resetDemoSpecStatus();// #28784
-					}
-					this.getManagedBean().setCheckListTitle("");
-					this.getManagedBean().setIndex(-1);
-					return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 				}
-			} else {
+				//1873 note 182 start
+				String title=" ";//11104-start
+				if(this.getManagedBean().getQt().isSampleReq() && CollectionUtils.isNotEmpty(technicalCheckLIsts)){
+					for(ScQtCheckList checklist:technicalCheckLIsts){
+						if (checklist.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
+							title=checklist.getTitle();
+							break;
+						}
+					}
+				}//11104-End
+				
+				//#28784 - Start
+				if(this.getManagedBean().getQt().isDemoRequired() && CollectionUtils.isNotEmpty(technicalCheckLIsts)){
+					for(ScQtCheckList checklist:technicalCheckLIsts){
+						if (checklist.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+							title=checklist.getTitle();
+							break;
+						}
+					}
+				}
+				this.getManagedBean().setFinancialScoring(null);
+				this.getManagedBean().setOfferPricePackage(null);
+				this.getManagedBean().setQt(resDTO.getScQt());
+				if(this.getManagedBean().getQt().isSampleReq() && CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){//11104-start
+					for(ScQtCheckList checklist:this.getManagedBean().getScQtCheckSt2techProposal()){
+						if (checklist.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
+							if(null==checklist.getTitle() || StringUtils.isBlank(checklist.getTitle()) || StringUtils.isEmpty(checklist.getTitle())){
+								checklist.setTitle(title);
+							}
+							break;
+						}
+					}
+				}//11104-End				
+				
+				addDemoTechnicalCheckList();//#28784
+				if(this.getManagedBean().getQt().isDemoRequired() && CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){//11104-start
+					for(ScQtCheckList checklist:this.getManagedBean().getScQtCheckSt2techProposal()){
+						if (checklist.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+							if(null==checklist.getTitle() || StringUtils.isBlank(checklist.getTitle()) || StringUtils.isEmpty(checklist.getTitle())){
+								checklist.setTitle(title);
+							}
+							break;
+						}
+					}
+				}//#28784 - End
+				if (this.getManagedBean().getQt().isDemoRequired()) {
+					resetDemoSpecStatus();// #28784
+				}
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setIndex(-1);
-				this.getManagedBean().getScQtCheckSt2techProposal();
-				checkPanelSpecs();
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
-
 			}
-			specSo = null;
-			return null;
-			// Bug #33661@Syazani 24/05/2023 -- Start
-		} finally {
-			detailSO = null;
-		}
-		// Bug #33661@Syazani 24/05/2023 -- End
+		} else {
+			this.getManagedBean().setCheckListTitle("");
+			this.getManagedBean().setIndex(-1);
+			this.getManagedBean().getScQtCheckSt2techProposal();
+			checkPanelSpecs();
+			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 
+		}
+		specSo = null;
+		return null;
+		// Sqube QT Master Bug G85 - Issues 17@Syazani 30/11/2023
 	}
 
 	/**
@@ -13469,8 +13497,6 @@ if (null != checklist && !checklist.isEmpty()) {
 			ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.getSpecName());
-			scQtCheckList.getScQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			Integer index = null;//1873 - note 97
 			
@@ -13487,11 +13513,9 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (qtStatus != null)
 				statusId = qtStatus.getStatusId();
 			
-			if (Arrays.asList(
-					new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT, QTStatusConst.SE_PENDING_SIGNOFF,
-							QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT, QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF }).contains(
-					statusId)) {
-				commonMessageAcknowledgementErrorPage(MessageConst.ERROR_775189, new String[] { this.getManagedBean().getQt().getQtNo() });
+			if (Arrays.asList(QTStatusConst.QT_SPECIFICATION_STATUS_IS_SUBMITTED).contains(statusId)) {	// Sqube QT Master Bug G85 - Issues 19 @Syazani 30/11/2023
+				commonMessageAcknowledgementErrorPage(MessageConst.ERROR_775189, new String[] { this.getManagedBean()
+						.getQt().getQtNo() });
 				return;
 			}
 			// Bug #33661@Syazani 12/04/2023 -- End
@@ -13535,6 +13559,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);//1873 - start - note 97
 				isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
 				if(isModified || !isTemplateSpec || isSpecNotExist){//#34048 - End
+					scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT); //Bug #35233
 					scQtCheckList.setPmStatus(pendingStatus);
 					scQtCheckList.setPmEvalStatus(pendingStatus);
 					scQtCheckList.setSampleStatus(pendingStatus);//#11140-End
@@ -14122,7 +14147,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 						} else {
 							if(technicalCheckLists == null)
-							 technicalCheckLists = new ArrayList<ScQtCheckList>();
+								technicalCheckLists = new ArrayList<>();//Sonarqube #83
 							technicalCheckLists.add(checkList);
 						}
 
@@ -14155,8 +14180,8 @@ if (null != checklist && !checklist.isEmpty()) {
 								finanicialCheckLists.add(newTplSpecIndex,
 										checkList);
 							} else {
-								if(finanicialCheckLists == null)
-								 finanicialCheckLists =  new ArrayList<ScQtCheckList>();   //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+								if (finanicialCheckLists == null)
+									finanicialCheckLists = new ArrayList<>();  //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 //Sonarqube #83
 								finanicialCheckLists.add(checkList);
 							}
 						} else {
@@ -14188,9 +14213,8 @@ if (null != checklist && !checklist.isEmpty()) {
 							}
 
 						} else {
-							if(finanicialCheckLists == null)
-								 finanicialCheckLists =  new ArrayList<ScQtCheckList>();   //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-								
+							if (finanicialCheckLists == null)
+								finanicialCheckLists = new ArrayList<>(); // 20230712@asyrafhaziq-SQUBE Bug NullPointer#3 //Sonarqube #83
 							finanicialCheckLists.add(checkList);
 						}
 					}
@@ -14230,42 +14254,42 @@ if (null != checklist && !checklist.isEmpty()) {
 		Long statusId = 0L;
 		boolean isItemDeleted = false;//#28784
 
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class);
-			// Bug #33661@Syazani 12/04/2023 -- End
-			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-				ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean()
-						.getQt().getScQtSupplierCriteria();
-				if (((null != zoneSupplierCriteria && zoneSupplierCriteria
-						.isBrandNew() == true)
-						|| (getManagedBean().getQt().isZonal()
-								&& null != zoneSupplierCriteria
-								&& null != zoneSupplierCriteria
-										.getQtZoneCriterias() && null == zoneSupplierCriteria
-								.getQtZoneCriterias().getSpecZoneId()) || (getManagedBean()
-						.getQt().isPanel() && this.getManagedBean()
-						.isPanelSpecExistedOrNot()))) {
-					scQt = saveZonesBeforeTemplateSpec(getManagedBean().getQt());//1873 - note 97
-					// SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-					// SpecificationResDTO resDTO = new SpecificationResDTO();
-					// reqDTO.setScQt(scQt);
-					// resDTO = specSO.saveQTDtl(reqDTO);
-					// resDTO = specSO.saveTemplateSpecZoneDtls(reqDTO);
-					reqDTO.setZonesQt(true);
-					this.getManagedBean().setQtCategoryList(
-							new ArrayList<ScQtCategory>());
-					// this.getManagedBean().setZoneGeneralTrees(
-					// new ArrayList<TreeNode>());
-					// this.getManagedBean().setQt(resDTO.getScQt());
-					// retriveSpecdetails(resDTO.getScQt().getQtId());
-					// retriveSupplierQualificationCriteria("SC");
-					// validateBusinessOwner(true);
-				}
-	
+		// Sqube QT Master Bug G85 - Issues 20@Syazani 30/11/2023
+		detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		// Bug #33661@Syazani 12/04/2023 -- End
+		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+			ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean()
+					.getQt().getScQtSupplierCriteria();
+			if (((null != zoneSupplierCriteria && zoneSupplierCriteria
+					.isBrandNew() == true)
+					|| (getManagedBean().getQt().isZonal()
+							&& null != zoneSupplierCriteria
+							&& null != zoneSupplierCriteria
+									.getQtZoneCriterias() && null == zoneSupplierCriteria
+							.getQtZoneCriterias().getSpecZoneId()) || (getManagedBean()
+					.getQt().isPanel() && this.getManagedBean()
+					.isPanelSpecExistedOrNot()))) {
+				scQt = saveZonesBeforeTemplateSpec(getManagedBean().getQt());//1873 - note 97
+				// SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				// SpecificationResDTO resDTO = new SpecificationResDTO();
+				// reqDTO.setScQt(scQt);
+				// resDTO = specSO.saveQTDtl(reqDTO);
+				// resDTO = specSO.saveTemplateSpecZoneDtls(reqDTO);
+				reqDTO.setZonesQt(true);
+				this.getManagedBean().setQtCategoryList(
+						new ArrayList<ScQtCategory>());
+				// this.getManagedBean().setZoneGeneralTrees(
+				// new ArrayList<TreeNode>());
+				// this.getManagedBean().setQt(resDTO.getScQt());
+				// retriveSpecdetails(resDTO.getScQt().getQtId());
+				// retriveSupplierQualificationCriteria("SC");
+				// validateBusinessOwner(true);
 			}
-			
-			// Bug #33661@Syazani 12/04/2023 -- Start
+
+		}
+		
+		// Bug #33661@Syazani 12/04/2023 -- Start
 			qtStatus = detailSO.retrieveActiveStatusByDoctype(this.getManagedBean().getQt().getQtId(),
 					ParameterConst.DOCTYPE_QUOTATION);
 			if (qtStatus != null)
@@ -14281,523 +14305,517 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
    
 			// Bug #33661@Syazani 12/04/2023 -- End
-			
-			// retriveSpecdetails(this.getManagedBean().getQt().getQtId());
-			// retriveBusinessOwnerQualificationCriteri();
-			reqDTO.setScQt(scQt);//1873 - note 97
-			boolean buildFinancialTemplate = false; //1873 note 86
-			ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
-			List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
-	
-			// #29187 Start Vinod
-			for (TplSpecQuestion question : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-				if (question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
-					question.setMandatorySpec(false);
-				}
+		
+		// retriveSpecdetails(this.getManagedBean().getQt().getQtId());
+		// retriveBusinessOwnerQualificationCriteri();
+		reqDTO.setScQt(scQt);//1873 - note 97
+		boolean buildFinancialTemplate = false; //1873 note 86
+		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
+		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
+
+		// #29187 Start Vinod
+		for (TplSpecQuestion question : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
+			if (question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+				question.setMandatorySpec(false);
 			}
-			// #29187 End Vinod
-	
-			Integer index = null;//1873 - note 97
-			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-				if (null == scQtCheckList.getTitle()
-						|| "".equalsIgnoreCase(scQtCheckList.getTitle())) {
-					scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
-							.getTplSpecMaster().getSpecName());
-				}
-				List<ScQtCheckList> technicalCheckList = this.getManagedBean()
-						.getScQtCheckSt2techProposal();
-				List<ScQtCheckList> finanicalAllCheckList = this.getManagedBean()
-						.getScQtCheckSt2financeProposalList();
-				// Bug #33249@Syazani 24/11/2022 -- Start
-				String scQtCheckListTitle = scQtCheckList.getTitle() + "_"
-						+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
-				// Bug #33249@Syazani 24/11/2022 -- End
-				if (this.getManagedBean().getIndex() == -1
-						&& null == scQtCheckList.getQtChecklistId()) {
-					if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
-						Integer localChecckListseq = SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC;
-						int technicalSpecCount = 0;
-						// Bug #33249@Syazani 24/11/2022
-						
-						for (ScQtCheckList techlist : technicalCheckList) {
-							if (QTConstants.TEMPLETE_SPEC_CODE
-									.equalsIgnoreCase(techlist.getDefinationType()
-											.getParameterCode())) {
-								technicalSpecCount++;
-								localChecckListseq = localChecckListseq < techlist
-										.getChecklistSeq() ? techlist
-										.getChecklistSeq() : localChecckListseq;
-	
-							}
-							
-							// Bug #33249@Syazani 27/07/2022 -- Start
-							String techlistTitle = techlist.getTitle() + "_"
-									+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
-							if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))) { // Bug #33249@Syazani 24/11/2022
-								// Bug #33249@Syazani 27/07/2022 -- End
-								throw new EpException(MessageConst.ERROR_760207,
-										new String[] { scQtCheckList.getTitle() });
-							}
-						}
-						log.info("QTID:" + getManagedBean().getQt().getQtId()
-								+ "localChecckListseq" + localChecckListseq);
-						if (technicalSpecCount > 0) {
-							scQtCheckList.setChecklistSeq(localChecckListseq + 1);
-						}
-					}
-					if (null != finanicalAllCheckList
-							&& !finanicalAllCheckList.isEmpty()) {
-						// Bug #33249@Syazani 27/07/2022 -- Start
-						// Bug #33249@Syazani 24/11/2022
-						for (ScQtCheckList financiallist : finanicalAllCheckList) {
-							String financiallistTitle = financiallist.getTitle() + "_"
-									+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
-							if (null != financiallist.getDefinationType()
-									&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
-									&& financiallistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))) { // Bug #33249@Syazani 24/11/2022
-								// Bug #33249@Syazani 27/07/2022 -- End
-								throw new EpException(MessageConst.ERROR_760207,
-										new String[] { scQtCheckList.getTitle() });
-							}
-						}
-					}
-					// Bug #33249@Syazani 24/11/2022 -- Start
-				} else {
-					if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
-						for (ScQtCheckList techlist : technicalCheckList) {
-							Long qtChecklistId = techlist.getQtChecklistId() != null ? techlist.getQtChecklistId() : 0;
-							String techlistTitle = techlist.getTitle() + "_"
-									+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
-							if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))
-									&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
-								throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
-							}
-						}
-					}
-					if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
-						for (ScQtCheckList financiallist : finanicalAllCheckList) {
-							Long qtChecklistId = financiallist.getQtChecklistId() != null ? financiallist.getQtChecklistId() : 0;
-							String financiallistTitle = financiallist.getTitle() + "_"
-									+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
-							if (null != financiallist.getDefinationType()
-									&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
-									&& financiallistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))
-									&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
-								throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
-							}
-						}
-					}
-				}
-				// Bug #33249@Syazani 24/11/2022 -- End
+		}
+		// #29187 End Vinod
+
+		Integer index = null;//1873 - note 97
+		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+			if (null == scQtCheckList.getTitle()
+					|| "".equalsIgnoreCase(scQtCheckList.getTitle())) {
 				scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
 						.getTplSpecMaster().getSpecName());
-				scQtCheckList
-						.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
-				scQtCheckList.getScQtDoc().getTplSpecMaster()
-						.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-				scQtCheckList.setSampleStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#11104
-				//#28784 - Start
-				if (null == scQtCheckList.getPmDemoStatus()) {
-					scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
-				}
-				//#28784 - End
-				// Code to construct financial checklist..
-	
-				if (scQt.isZonal()) {
-					ScQtSupplierCriteria supplierCriteria = scQt
-							.getScQtSupplierCriteria();
-					if (null != supplierCriteria
-							&& null != supplierCriteria.getQtZoneCriterias()) {
-						scQtCheckList
-								.getScQtDoc()
-								.getTplSpecMaster()
-								.setTplSpecZone(
-										supplierCriteria.getQtZoneCriterias());
-					} else {
-						throw new EpException(
-								"Please choose the zones before proceed.");
+			}
+			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			List<ScQtCheckList> finanicalAllCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			// Bug #33249@Syazani 24/11/2022 -- Start
+			String scQtCheckListTitle = scQtCheckList.getTitle() + "_"
+					+ (scQtCheckList.getDefinationType() != null ? scQtCheckList.getDefinationType().getParameterId() : "");
+			// Bug #33249@Syazani 24/11/2022 -- End
+			if (this.getManagedBean().getIndex() == -1
+					&& null == scQtCheckList.getQtChecklistId()) {
+				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+					Integer localChecckListseq = SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC;
+					int technicalSpecCount = 0;
+					// Bug #33249@Syazani 24/11/2022
+					
+					for (ScQtCheckList techlist : technicalCheckList) {
+						if (QTConstants.TEMPLETE_SPEC_CODE
+								.equalsIgnoreCase(techlist.getDefinationType()
+										.getParameterCode())) {
+							technicalSpecCount++;
+							localChecckListseq = localChecckListseq < techlist
+									.getChecklistSeq() ? techlist
+									.getChecklistSeq() : localChecckListseq;
+
+						}
+						
+						// Bug #33249@Syazani 27/07/2022 -- Start
+						String techlistTitle = techlist.getTitle() + "_"
+								+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+						if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))) { // Bug #33249@Syazani 24/11/2022
+							// Bug #33249@Syazani 27/07/2022 -- End
+							throw new EpException(MessageConst.ERROR_760207,
+									new String[] { scQtCheckList.getTitle() });
+						}
+					}
+					log.info("QTID:" + getManagedBean().getQt().getQtId()
+							+ "localChecckListseq" + localChecckListseq);
+					if (technicalSpecCount > 0) {
+						scQtCheckList.setChecklistSeq(localChecckListseq + 1);
 					}
 				}
-	
-				TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
-						.cloneTplSpecMaster(
-								scQtCheckList.getScQtDoc().getTplSpecMaster(),
-								false, true, true, false);//#28784
-				specMaster
-						.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
-	
-				if (scQt.isZonal()) {
-					ScQtSupplierCriteria supplierCriteria = scQt
-							.getScQtSupplierCriteria();
-					if (null != supplierCriteria
-							&& null != supplierCriteria.getQtZoneCriterias()) {
-						specMaster.setTplSpecZone(supplierCriteria
-								.getQtZoneCriterias());
-					} else {
-						throw new EpException(
-								"Please choose the zones before proceed.");
+				if (null != finanicalAllCheckList
+						&& !finanicalAllCheckList.isEmpty()) {
+					// Bug #33249@Syazani 27/07/2022 -- Start
+					// Bug #33249@Syazani 24/11/2022
+					for (ScQtCheckList financiallist : finanicalAllCheckList) {
+						String financiallistTitle = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
+						if (null != financiallist.getDefinationType()
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financiallistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))) { // Bug #33249@Syazani 24/11/2022
+							// Bug #33249@Syazani 27/07/2022 -- End
+							throw new EpException(MessageConst.ERROR_760207,
+									new String[] { scQtCheckList.getTitle() });
+						}
 					}
 				}
-	
-				buildFinancialTemplate = isSpecQuestionsModified(scQtCheckList);//1873 note 86
-				isItemDeleted = isSpecItemNotExist(scQtCheckList);
+				// Bug #33249@Syazani 24/11/2022 -- Start
+			} else {
+				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+					for (ScQtCheckList techlist : technicalCheckList) {
+						Long qtChecklistId = techlist.getQtChecklistId() != null ? techlist.getQtChecklistId() : 0;
+						String techlistTitle = techlist.getTitle() + "_"
+								+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
+						if (techlistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))
+								&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
+							throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
+						}
+					}
+				}
+				if (null != finanicalAllCheckList && !finanicalAllCheckList.isEmpty()) {
+					for (ScQtCheckList financiallist : finanicalAllCheckList) {
+						Long qtChecklistId = financiallist.getQtChecklistId() != null ? financiallist.getQtChecklistId() : 0;
+						String financiallistTitle = financiallist.getTitle() + "_"
+								+ (financiallist.getDefinationType() != null ? financiallist.getDefinationType().getParameterId() : "");
+						if (null != financiallist.getDefinationType()
+								&& !QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(financiallist.getDefinationType().getParameterCode())
+								&& financiallistTitle.trim().replaceAll("\\s", "").equalsIgnoreCase(scQtCheckListTitle.trim().replaceAll("\\s", ""))
+								&& !scQtCheckList.getQtChecklistId().equals(qtChecklistId)) {
+							throw new EpException(MessageConst.ERROR_760207, new String[] { scQtCheckList.getTitle() });
+						}
+					}
+				}
+			}
+			// Bug #33249@Syazani 24/11/2022 -- End
+			scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
+					.getTplSpecMaster().getSpecName());
+			scQtCheckList
+					.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+			scQtCheckList.getScQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			scQtCheckList.setSampleStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#11104
+			//#28784 - Start
+			if (null == scQtCheckList.getPmDemoStatus()) {
+				scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
+			}
+			//#28784 - End
+			// Code to construct financial checklist..
+
+			if (scQt.isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = scQt
+						.getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+					scQtCheckList
+							.getScQtDoc()
+							.getTplSpecMaster()
+							.setTplSpecZone(
+									supplierCriteria.getQtZoneCriterias());
+				} else {
+					throw new EpException(
+							"Please choose the zones before proceed.");
+				}
+			}
+
+			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
+					.cloneTplSpecMaster(
+							scQtCheckList.getScQtDoc().getTplSpecMaster(),
+							false, true, true, false);//#28784
+			specMaster
+					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+
+			if (scQt.isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = scQt
+						.getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+					specMaster.setTplSpecZone(supplierCriteria
+							.getQtZoneCriterias());
+				} else {
+					throw new EpException(
+							"Please choose the zones before proceed.");
+				}
+			}
+
+			buildFinancialTemplate = isSpecQuestionsModified(scQtCheckList);//1873 note 86
+			isItemDeleted = isSpecItemNotExist(scQtCheckList);
+			boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList
+					.getDefinationType().getParameterCode());
+			boolean isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
+			if(isItemDeleted || isModified){//#28784
+				scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			}
+			
+			if(buildFinancialTemplate){//1873 - note 97
+			IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IParameterSO.class);
+			ParameterReqDTO finSpecType = new ParameterReqDTO();
+			finSpecType.setParameterType(ParameterTypeConst.SPECIFICATION_TYPE);
+			finSpecType
+					.setParameterCode(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
+			ParameterResDTO finSpecresDTO = parameterSO
+					.retrieveParameterByTypeAndCode(finSpecType);
+			specMaster.setSpecTypeCode(finSpecresDTO.getPmParameter());
+			specMaster.setScoringReq(true);
+			TemplateSpecHelper.getInstance().cloneTplSpecQuestions(
+					specMaster,
+					scQtCheckList.getScQtDoc().getTplSpecMaster()
+							.getTplSpecQuestions());
+			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
+					SourcingConstants.FINANCIAL_DOCTYPE);
+			qtCheckList
+					.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION)); //1873 - note 97
+			qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
+					.getSpecName());
+			qtCheckList.setScoringReq(true);
+			qtCheckList.getScQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT); //1873 - note 97
+			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
+			qtCheckList.setChecklistSeq(scQtCheckList.getChecklistSeq());
+			TemplateSpecHelper.getInstance().updateItemWeightageReq(
+					qtCheckList.getScQtDoc().getTplSpecMaster(),
+					qtCheckList.getScQtDoc().getTplSpecMaster()
+							.getTplSpecQuestions());
+
+			// copy scoring and estimated cost
+			List<ScQtCheckList> toBeRemovedList = validateDuplicateFinancialSpecs(
+					qtCheckList, flowType, scQtCheckList);
+			if (toBeRemovedList != null && toBeRemovedList.size() > 0) {
+				TplSpecMaster oldSpecMaster = toBeRemovedList.get(0)
+						.getScQtDoc().getTplSpecMaster();
+				ITemplateSpecSO templateSpecSO;
+
+				try {
+					templateSpecSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+									ITemplateSpecSO.class);
+					TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+					specReqDTO.setSpecMaster(oldSpecMaster);
+					specReqDTO
+							.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+					oldSpecMaster = templateSpecSO
+							.getTemplateMaster(specReqDTO).getSpecMaster();
+
+					TemplateSpecHelper.getInstance().copySpecDetails(
+							specMaster, oldSpecMaster);
+
+				} finally {
+					templateSpecSO = null;
+				}
+
+			}
+			checkTechnicalFinancialItemCount(scQtCheckList, qtCheckList);
+			updatedCheckLists.add(scQtCheckList);
+			updatedCheckLists.add(qtCheckList);
+			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			//1873 - start - note 97
+			if(CollectionUtils.isNotEmpty(finanicalCheckList)){
+				index = index == null ? 0: index;
+				for(ScQtCheckList finChecklist: finanicalCheckList){
+					if(StringUtils.isNotEmpty(finChecklist.getTitle()) 
+							&& StringUtils.isNotEmpty(this.getManagedBean().getCheckListTitle())
+							&& finChecklist.getTitle().trim().replaceAll("\\s", "").equalsIgnoreCase(this.getManagedBean().getCheckListTitle().trim().replaceAll("\\s", ""))
+							&& QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(finChecklist.getDefinationType().getParameterCode())){
+						this.getManagedBean().setFinTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(finChecklist));
+						finanicalCheckList.remove(finChecklist);
+						break;
+					}
+					index++;
+				}
+			}
+			reqDTO.setTobeRemoveList(toBeRemovedList);
+		}else{
+			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+			if(CollectionUtils.isNotEmpty(finanicalCheckList)){
+				index = index == null ? 0: index;
+				for(ScQtCheckList finChecklist: finanicalCheckList){
+					if(StringUtils.isNotEmpty(finChecklist.getTitle()) 
+							&& finChecklist.getTitle().trim().replaceAll("\\s", "").equalsIgnoreCase(this.getManagedBean().getCheckListTitle().trim().replaceAll("\\s", ""))
+							&& QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(finChecklist.getDefinationType().getParameterCode())){
+						finChecklist.setCurrentlySelected(true);
+						setTemplateSpecMaster(finChecklist);//1873 - note 97
+						this.getManagedBean().setFinTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(finChecklist));
+						TplSpecMaster finSpecMaster = finChecklist.getScQtDoc().getTplSpecMaster();
+						TplSpecMaster tecSpecMaster = scQtCheckList.getScQtDoc().getTplSpecMaster();
+						finChecklist.setTitle(tecSpecMaster.getSpecName());
+						finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
+						finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
+						finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+						scQtCheckList.setEdited(false);
+						//1873 - start - note 97
+						updatedCheckLists.add(finChecklist); 
+						updatedCheckLists.add(scQtCheckList); 
+						if(CollectionUtils.isNotEmpty(finSpecMaster.getTplSpecQuestions())){
+							List<Long> idList = new ArrayList<Long>();
+							if(CollectionUtils.isNotEmpty(tecSpecMaster.getFinSpecQuestionsToDelete())){
+								for(TplSpecQuestion question: tecSpecMaster.getFinSpecQuestionsToDelete()){
+									idList.add(question.getSpecQuestionId());
+								}
+							}
+						    Iterator<TplSpecQuestion> questionIt = finSpecMaster.getTplSpecQuestions().iterator();
+						    while (questionIt.hasNext()) {
+						    	TplSpecQuestion question = (TplSpecQuestion) questionIt.next();
+						    	if(question.getSpecQuestionId()!=null && idList.contains(question.getSpecQuestionId())){
+							    	questionIt.remove();
+						    	}
+						    }
+						}
+						//1873 - end - note 97
+						break;
+					} 
+					index++;
+				} 
+			} 
+		}
+			//1873 - end - note 97
+		} else {
+			if (this.getManagedBean().getSpecMaintenanceScreen()
+					.equalsIgnoreCase("SC")) {
+				checkFinancialSpecEstimations(this.getManagedBean()
+						.getScQtCheckSt2financeProposalList(), scQtCheckList,
+						scQt,false);//20210205@haziq- Bug #30046
+				checkFinancialparentSpecQuestion(scQtCheckList);
+			}else if(this.getManagedBean().getSpecMaintenanceScreen()
+					.equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {//32134-start
+				checkFinancialSpecEstimations(this.getManagedBean()
+						.getScQtCheckSt2financeProposalList(), scQtCheckList,
+						scQt,false);
+			}//32134-End
+			// Bug #33249@Syazani 27/07/2022 -- Start
+			// 1873 - start - note 52
+			String finChecklistTitle = (scQtCheckList.getTitle() + "_" + (scQtCheckList.getDefinationType() != null ? scQtCheckList
+					.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");// 1873 - note 97
+			// 1873 note 86 - start
+			if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())) {
+				for (ScQtCheckList checklist : this.getManagedBean().getScQtCheckSt2techProposal()) {
+					boolean edited = checklist.isEdited() == null ? false : checklist.isEdited();
+					String checklistTitle = (checklist.getTitle() + "_" + (checklist.getDefinationType() != null ? checklist.getDefinationType()
+							.getParameterId() : "")).trim().replaceAll("\\s", "");
+					if (finChecklistTitle.equals(checklistTitle) && edited) {// 1873 - note 97
+						// Bug #33249@Syazani 27/07/2022 -- End
+						checklist.setEdited(false);
+						updatedCheckLists.add(checklist);	
+						break;
+					}
+			//1873 note 86 - end
+				}
+			}
+			//1873 - end - note 52
+			scQtCheckList
+					.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+			scQtCheckList
+					.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			scQtCheckList.getScQtDoc().getTplSpecMaster()
+					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			updatedCheckLists.add(scQtCheckList);
+
+			reqDTO.setScQt(scQt);
+
+		}
+
+		reqDTO.setCheckLists(updatedCheckLists);
+		reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		resetCommitteeActivity(reqDTO);
+		reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
+				this.getManagedBean().getSpecMaintenanceScreen()));
+		// code if alredy checklist exist need to remove existing finalcialspec
+
+		/*
+		 * IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
+		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+		 * IQTSpecSO.class);
+		 */
+// #29732 Start - reOpen Fix
+		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
+				.getTobeRemoveCategoryCodes();
+		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
+			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
+				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
+					deleteCategoryCodesList.remove(i);
+				}
+			}
+		}
+		reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
+//#29732 End - reOpen Fix
+		
+		// 29521 - start
+		if (null == reqDTO.getBackupScQt()) {
+			reqDTO.setBackupScQt(retrieveScqtdetails());
+		}
+		if (null == reqDTO.getListBackupCategoryCode()) {
+			reqDTO.setListBackupCategoryCode(retrieveCurrentScQtCategoryCode());
+		}
+		if (null == reqDTO.getListNewCategoryCode()) {
+			reqDTO.setListNewCategoryCode(getManagedBean().getQtCategoryList());
+		}
+		if (null == reqDTO.getPmUser()) {
+			FacesScopes fs = new FacesScopes();
+			reqDTO.setPmUser(fs.getUserSessionBean());
+		}
+
+		validateZonalChanges();
+		// 29521 - end
+		
+		// #34656 validateSpecZoneQtyZero
+				
+		SpecificationResDTO resDTO = new SpecificationResDTO();
+		try {
+			resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
+		} 
+		//1873 -  start - note 97
+		catch (Exception e) {
+			ScQtCheckList finChecklist = this.getManagedBean().getFinTempScQtChecklist();
+			if(finChecklist!=null 
+					&& CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())
+					&& index !=null){
+				if(finChecklist.isCurrentlySelected()){
+					this.getManagedBean().getScQtCheckSt2financeProposalList().set(index, this.getManagedBean().getFinTempScQtChecklist());
+					finChecklist.setCurrentlySelected(false);
+				}else{
+					this.getManagedBean().getScQtCheckSt2financeProposalList().add(index, this.getManagedBean().getFinTempScQtChecklist());
+				}
+			}
+			resDTO.setSuccessful(false);
+			if(e instanceof EpException){
+				String msgCode = e.getMessage();
+				String msgParam[] = ((EpException) e).getParameters();
+				if (MessageConst.ERROR_760460.equalsIgnoreCase(msgCode)) {
+					msgCode = MessageConst.ERROR_760295;
+					msgParam = new String[] { "Tier Quantity" };
+				}
+				throw new EpException(msgCode, msgParam);
+			}
+			throw e;
+		}finally{
+			this.getManagedBean().setFinTempScQtChecklist(null);
+			//Bug #34100 - Start
+			this.getManagedBean()
+			.getScQtChecklist()
+			.setPmStatus(
+					getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			//Bug #34100 - End
+		}
+		//1873 - end - note 97
+
+		// Need to redirect particualr page..
+		if (resDTO.isSuccessful()) {
+			this.getManagedBean().setTempScQtChecklist(null);//1873 - note 97
+			ScQt qt = resDTO.getScQt();
+			if (qt != null) {
+				this.getManagedBean().setQt(qt);
+				if (null != this.getManagedBean().getCtContract()) {
+					this.getManagedBean()
+							.getCtContract()
+							.setContractNo(
+									this.getManagedBean().getQt()
+											.getExistingContractNo());
+				}
+				if (qt.getEstimatedAmount() != null
+						&& qt.getEstimatedAmount().intValue() > 0
+						&& SourcingConstants.FINANCIAL_DOCTYPE
+								.equalsIgnoreCase(specType)) {
+					new CreateQtBackingBean().setProcurementMode(qt,
+							qt.getEstimatedAmount());
+					// 20190415@asyrafhaziq - 15979 -Start
+					new CreateQtBackingBean().setOpenFor(qt,
+							qt.getEstimatedAmount());
+					// 20190415@asyrafhaziq - 15979 -End
+				}
+			}
+
+			List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
+			settemplateSpecList(savedCheckLists, flowType);
+			this.getManagedBean().setIndex(-1);
+			this.getManagedBean().setCheckListTitle("");
+			this.getManagedBean().setFinancialScoring(null);
+			this.getManagedBean().setOfferPricePackage(null);
+			this.getManagedBean().setPanelSpecExistedOrNot(false);
+			this.getManagedBean().setOfferPricePackageList(null);//33587
+			specCommitteeResetData();
+			if (reqDTO.isZonesQt()
+					|| (this.getManagedBean().getQt().isZonal() && SourcingConstants.FINANCIAL_DOCTYPE
+							.equalsIgnoreCase(specType))) {
+				this.getManagedBean().setZoneGeneralTrees(
+						new ArrayList<TreeNode>());
+				retriveSpecdetails(this.getManagedBean().getQt().getQtId());
+			}
+			saveSpecMaintenanceWorkFlowStatus();
+			addDemoTechnicalCheckList();//#28784 - Start
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				resetDemoSpecStatus();// #28784
+
+				boolean isModified = false;
+				boolean isSpecNotExist = false;					
+				SpecificationReqDTO reqDTO1 = new SpecificationReqDTO();
 				boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList
 						.getDefinationType().getParameterCode());
-				boolean isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
-				if(isItemDeleted || isModified){//#28784
-					scQtCheckList.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-				}
-				
-				if(buildFinancialTemplate){//1873 - note 97
-				IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IParameterSO.class);
-				ParameterReqDTO finSpecType = new ParameterReqDTO();
-				finSpecType.setParameterType(ParameterTypeConst.SPECIFICATION_TYPE);
-				finSpecType
-						.setParameterCode(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
-				ParameterResDTO finSpecresDTO = parameterSO
-						.retrieveParameterByTypeAndCode(finSpecType);
-				specMaster.setSpecTypeCode(finSpecresDTO.getPmParameter());
-				specMaster.setScoringReq(true);
-				TemplateSpecHelper.getInstance().cloneTplSpecQuestions(
-						specMaster,
-						scQtCheckList.getScQtDoc().getTplSpecMaster()
-								.getTplSpecQuestions());
-				ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
-						SourcingConstants.FINANCIAL_DOCTYPE);
-				qtCheckList
-						.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION)); //1873 - note 97
-				qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
-						.getSpecName());
-				qtCheckList.setScoringReq(true);
-				qtCheckList.getScQtDoc().getTplSpecMaster()
-						.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT); //1873 - note 97
-				qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
-				qtCheckList.setChecklistSeq(scQtCheckList.getChecklistSeq());
-				TemplateSpecHelper.getInstance().updateItemWeightageReq(
-						qtCheckList.getScQtDoc().getTplSpecMaster(),
-						qtCheckList.getScQtDoc().getTplSpecMaster()
-								.getTplSpecQuestions());
-	
-				// copy scoring and estimated cost
-				List<ScQtCheckList> toBeRemovedList = validateDuplicateFinancialSpecs(
-						qtCheckList, flowType, scQtCheckList);
-				if (toBeRemovedList != null && toBeRemovedList.size() > 0) {
-					TplSpecMaster oldSpecMaster = toBeRemovedList.get(0)
-							.getScQtDoc().getTplSpecMaster();
-					ITemplateSpecSO templateSpecSO;
-	
-					try {
-						templateSpecSO = EpEjbBusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-										ITemplateSpecSO.class);
-						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-						specReqDTO.setSpecMaster(oldSpecMaster);
-						specReqDTO
-								.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-						oldSpecMaster = templateSpecSO
-								.getTemplateMaster(specReqDTO).getSpecMaster();
-	
-						TemplateSpecHelper.getInstance().copySpecDetails(
-								specMaster, oldSpecMaster);
-	
-					} finally {
-						templateSpecSO = null;
-					}
-	
-				}
-				checkTechnicalFinancialItemCount(scQtCheckList, qtCheckList);
-				updatedCheckLists.add(scQtCheckList);
-				updatedCheckLists.add(qtCheckList);
-				List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
-						.getScQtCheckSt2financeProposalList();
-				//1873 - start - note 97
-				if(CollectionUtils.isNotEmpty(finanicalCheckList)){
-					index = index == null ? 0: index;
-					for(ScQtCheckList finChecklist: finanicalCheckList){
-						if(StringUtils.isNotEmpty(finChecklist.getTitle()) 
-								&& StringUtils.isNotEmpty(this.getManagedBean().getCheckListTitle())
-								&& finChecklist.getTitle().trim().replaceAll("\\s", "").equalsIgnoreCase(this.getManagedBean().getCheckListTitle().trim().replaceAll("\\s", ""))
-								&& QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(finChecklist.getDefinationType().getParameterCode())){
-							this.getManagedBean().setFinTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(finChecklist));
-							finanicalCheckList.remove(finChecklist);
-							break;
+				isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
+				isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
+				List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<>();
+				if (isModified || !isTemplateSpec || isSpecNotExist || isItemDeleted) {//#28784
+					List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+					for (ScQtCheckList t : st2technicalproposalList) {
+						if (t.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
+								&& null != t.getQtChecklistId()
+								&& t.getQtChecklistId().equals(scQtCheckList.getQtChecklistId())) {// #28784 exclude demo & add null condition
+							t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));// #28784
 						}
-						index++;
-					}
-				}
-				reqDTO.setTobeRemoveList(toBeRemovedList);
-			}else{
-				List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
-						.getScQtCheckSt2financeProposalList();
-				if(CollectionUtils.isNotEmpty(finanicalCheckList)){
-					index = index == null ? 0: index;
-					for(ScQtCheckList finChecklist: finanicalCheckList){
-						if(StringUtils.isNotEmpty(finChecklist.getTitle()) 
-								&& finChecklist.getTitle().trim().replaceAll("\\s", "").equalsIgnoreCase(this.getManagedBean().getCheckListTitle().trim().replaceAll("\\s", ""))
-								&& QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(finChecklist.getDefinationType().getParameterCode())){
-							finChecklist.setCurrentlySelected(true);
-							setTemplateSpecMaster(finChecklist);//1873 - note 97
-							this.getManagedBean().setFinTempScQtChecklist((ScQtCheckList)SerializationUtils.clone(finChecklist));
-							TplSpecMaster finSpecMaster = finChecklist.getScQtDoc().getTplSpecMaster();
-							TplSpecMaster tecSpecMaster = scQtCheckList.getScQtDoc().getTplSpecMaster();
-							finChecklist.setTitle(tecSpecMaster.getSpecName());
-							finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
-							finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-							finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
-							scQtCheckList.setEdited(false);
-							//1873 - start - note 97
-							updatedCheckLists.add(finChecklist); 
-							updatedCheckLists.add(scQtCheckList); 
-							if(CollectionUtils.isNotEmpty(finSpecMaster.getTplSpecQuestions())){
-								List<Long> idList = new ArrayList<Long>();
-								if(CollectionUtils.isNotEmpty(tecSpecMaster.getFinSpecQuestionsToDelete())){
-									for(TplSpecQuestion question: tecSpecMaster.getFinSpecQuestionsToDelete()){
-										idList.add(question.getSpecQuestionId());
-									}
+
+						if (t.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+							t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+							updatedCheckListsDemo.add(t);
+						}
+
+						if (updatedCheckListsDemo != null) {
+							reqDTO1.setCheckLists(updatedCheckListsDemo);
+							SpecificationResDTO resDTO1 = specSO.completeDemoChecklist(reqDTO1);
+							
+							if (resDTO1.isSuccessful()) {
+								List<ScQtCheckList> savedCheckListsDemo = resDTO1.getSavedCheckLists();
+								for (ScQtCheckList obj : savedCheckListsDemo) {
+									resetDemoChecklist(obj);
 								}
-							    Iterator<TplSpecQuestion> questionIt = finSpecMaster.getTplSpecQuestions().iterator();
-							    while (questionIt.hasNext()) {
-							    	TplSpecQuestion question = (TplSpecQuestion) questionIt.next();
-							    	if(question.getSpecQuestionId()!=null && idList.contains(question.getSpecQuestionId())){
-								    	questionIt.remove();
-							    	}
-							    }
 							}
-							//1873 - end - note 97
-							break;
-						} 
-						index++;
-					} 
-				} 
-			}
-				//1873 - end - note 97
-			} else {
-				if (this.getManagedBean().getSpecMaintenanceScreen()
-						.equalsIgnoreCase("SC")) {
-					checkFinancialSpecEstimations(this.getManagedBean()
-							.getScQtCheckSt2financeProposalList(), scQtCheckList,
-							scQt,false);//20210205@haziq- Bug #30046
-					checkFinancialparentSpecQuestion(scQtCheckList);
-				}else if(this.getManagedBean().getSpecMaintenanceScreen()
-						.equalsIgnoreCase(QTConstants.SPEC_MAINTENANCE)) {//32134-start
-					checkFinancialSpecEstimations(this.getManagedBean()
-							.getScQtCheckSt2financeProposalList(), scQtCheckList,
-							scQt,false);
-				}//32134-End
-				// Bug #33249@Syazani 27/07/2022 -- Start
-				// 1873 - start - note 52
-				String finChecklistTitle = (scQtCheckList.getTitle() + "_" + (scQtCheckList.getDefinationType() != null ? scQtCheckList
-						.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");// 1873 - note 97
-				// 1873 note 86 - start
-				if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())) {
-					for (ScQtCheckList checklist : this.getManagedBean().getScQtCheckSt2techProposal()) {
-						boolean edited = checklist.isEdited() == null ? false : checklist.isEdited();
-						String checklistTitle = (checklist.getTitle() + "_" + (checklist.getDefinationType() != null ? checklist.getDefinationType()
-								.getParameterId() : "")).trim().replaceAll("\\s", "");
-						if (finChecklistTitle.equals(checklistTitle) && edited) {// 1873 - note 97
-							// Bug #33249@Syazani 27/07/2022 -- End
-							checklist.setEdited(false);
-							updatedCheckLists.add(checklist);	
-							break;
-						}
-				//1873 note 86 - end
+						}							
 					}
 				}
-				//1873 - end - note 52
-				scQtCheckList
-						.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
-				scQtCheckList
-						.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-				scQtCheckList.getScQtDoc().getTplSpecMaster()
-						.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
-				updatedCheckLists.add(scQtCheckList);
-	
-				reqDTO.setScQt(scQt);
-	
-			}
-	
-			reqDTO.setCheckLists(updatedCheckLists);
-			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			resetCommitteeActivity(reqDTO);
-			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
-					this.getManagedBean().getSpecMaintenanceScreen()));
-			// code if alredy checklist exist need to remove existing finalcialspec
-	
-			/*
-			 * IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
-			 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-			 * IQTSpecSO.class);
-			 */
-	// #29732 Start - reOpen Fix
-			List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-					.getTobeRemoveCategoryCodes();
-			if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-				for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-					if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-						deleteCategoryCodesList.remove(i);
-					}
-				}
-			}
-			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-	//#29732 End - reOpen Fix
-			
-			// 29521 - start
-			if (null == reqDTO.getBackupScQt()) {
-				reqDTO.setBackupScQt(retrieveScqtdetails());
-			}
-			if (null == reqDTO.getListBackupCategoryCode()) {
-				reqDTO.setListBackupCategoryCode(retrieveCurrentScQtCategoryCode());
-			}
-			if (null == reqDTO.getListNewCategoryCode()) {
-				reqDTO.setListNewCategoryCode(getManagedBean().getQtCategoryList());
-			}
-			if (null == reqDTO.getPmUser()) {
-				FacesScopes fs = new FacesScopes();
-				reqDTO.setPmUser(fs.getUserSessionBean());
-			}
-	
-			validateZonalChanges();
-			// 29521 - end
-			
-			// #34656 validateSpecZoneQtyZero
-					
-			SpecificationResDTO resDTO = new SpecificationResDTO();
-			try {
-				resDTO = specSO.saveOrUpdateTemplateSpecs(reqDTO);
-			} 
-			//1873 -  start - note 97
-			catch (Exception e) {
-				ScQtCheckList finChecklist = this.getManagedBean().getFinTempScQtChecklist();
-				if(finChecklist!=null 
-						&& CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())
-						&& index !=null){
-					if(finChecklist.isCurrentlySelected()){
-						this.getManagedBean().getScQtCheckSt2financeProposalList().set(index, this.getManagedBean().getFinTempScQtChecklist());
-						finChecklist.setCurrentlySelected(false);
-					}else{
-						this.getManagedBean().getScQtCheckSt2financeProposalList().add(index, this.getManagedBean().getFinTempScQtChecklist());
-					}
-				}
-				resDTO.setSuccessful(false);
-				if(e instanceof EpException){
-					String msgCode = e.getMessage();
-					String msgParam[] = ((EpException) e).getParameters();
-					if (MessageConst.ERROR_760460.equalsIgnoreCase(msgCode)) {
-						msgCode = MessageConst.ERROR_760295;
-						msgParam = new String[] { "Tier Quantity" };
-					}
-					throw new EpException(msgCode, msgParam);
-				}
-				throw e;
-			}finally{
-				this.getManagedBean().setFinTempScQtChecklist(null);
-				//Bug #34100 - Start
-				this.getManagedBean()
-				.getScQtChecklist()
-				.setPmStatus(
-						getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-				//Bug #34100 - End
-			}
-			//1873 - end - note 97
-	
-			// Need to redirect particualr page..
-			if (resDTO.isSuccessful()) {
-				this.getManagedBean().setTempScQtChecklist(null);//1873 - note 97
-				ScQt qt = resDTO.getScQt();
-				if (qt != null) {
-					this.getManagedBean().setQt(qt);
-					if (null != this.getManagedBean().getCtContract()) {
-						this.getManagedBean()
-								.getCtContract()
-								.setContractNo(
-										this.getManagedBean().getQt()
-												.getExistingContractNo());
-					}
-					if (qt.getEstimatedAmount() != null
-							&& qt.getEstimatedAmount().intValue() > 0
-							&& SourcingConstants.FINANCIAL_DOCTYPE
-									.equalsIgnoreCase(specType)) {
-						new CreateQtBackingBean().setProcurementMode(qt,
-								qt.getEstimatedAmount());
-						// 20190415@asyrafhaziq - 15979 -Start
-						new CreateQtBackingBean().setOpenFor(qt,
-								qt.getEstimatedAmount());
-						// 20190415@asyrafhaziq - 15979 -End
-					}
-				}
-	
-				List<ScQtCheckList> savedCheckLists = resDTO.getSavedCheckLists();
-				settemplateSpecList(savedCheckLists, flowType);
-				this.getManagedBean().setIndex(-1);
-				this.getManagedBean().setCheckListTitle("");
-				this.getManagedBean().setFinancialScoring(null);
-				this.getManagedBean().setOfferPricePackage(null);
-				this.getManagedBean().setPanelSpecExistedOrNot(false);
-				this.getManagedBean().setOfferPricePackageList(null);//33587
-				specCommitteeResetData();
-				if (reqDTO.isZonesQt()
-						|| (this.getManagedBean().getQt().isZonal() && SourcingConstants.FINANCIAL_DOCTYPE
-								.equalsIgnoreCase(specType))) {
-					this.getManagedBean().setZoneGeneralTrees(
-							new ArrayList<TreeNode>());
-					retriveSpecdetails(this.getManagedBean().getQt().getQtId());
-				}
-				saveSpecMaintenanceWorkFlowStatus();
-				addDemoTechnicalCheckList();//#28784 - Start
-				if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-					resetDemoSpecStatus();// #28784
-
-					boolean isModified = false;
-					boolean isSpecNotExist = false;
-					SpecificationResDTO resDTO1 = new SpecificationResDTO();
-					SpecificationReqDTO reqDTO1 = new SpecificationReqDTO();
-					boolean isTemplateSpec = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(scQtCheckList
-							.getDefinationType().getParameterCode());
-					isModified = isTemplateSpec && isSpecQuestionsModified(scQtCheckList);
-					isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
-					List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<ScQtCheckList>();
-					if (isModified || !isTemplateSpec || isSpecNotExist || isItemDeleted) {//#28784
-						List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
-						for (ScQtCheckList t : st2technicalproposalList) {
-							if (t.getDefinationType().getParameterCode()
-									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
-									&& null != t.getQtChecklistId()
-									&& t.getQtChecklistId().equals(scQtCheckList.getQtChecklistId())) {// #28784 exclude demo & add null condition
-								t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));// #28784
-							}
-
-							if (t.getDefinationType().getParameterCode()
-									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-								t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-								t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-								updatedCheckListsDemo.add(t);
-								// break;
-							}
-
-							if (updatedCheckListsDemo != null) {
-								reqDTO1.setCheckLists(updatedCheckListsDemo);
-								resDTO1 = specSO.completeDemoChecklist(reqDTO1);
-								
-								if (resDTO1.isSuccessful()) {
-									List<ScQtCheckList> savedCheckListsDemo = resDTO1.getSavedCheckLists();
-									for (ScQtCheckList obj : savedCheckListsDemo) {
-										resetDemoChecklist(obj);
-									}
-								}
-							}							
-						}
-					}
-				}//#28784 - End
-				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+			}//#28784 - End
+			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 			return null;
-			// Bug #33661@Syazani 12/04/2023 -- Start
-		} finally {
-			detailSO = null;
-		}
-		// Bug #33661@Syazani 12/04/2023 -- End
+			// Sqube QT Master Bug G85 - Issues 20@Syazani 30/11/2023
 	}
 
 	private List<ScQtCheckList> validateDuplicateFinancialSpecs(
@@ -15062,25 +15080,29 @@ if (null != checklist && !checklist.isEmpty()) {
 	 * @return none
 	 */
 	private void resetDemoSpecStatus() {	
-		boolean isTechSpecPending = false;
-		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
-		for (ScQtCheckList t : st2technicalproposalList) {
-			boolean isDemoStatusSubmit = t.getPmDemoStatus() != null && QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmDemoStatus().getStatusId());
-			if (t.getDefinationType().getParameterCode()
-					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
-					&& (QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId()) || 
-							isDemoStatusSubmit)) {
-				isTechSpecPending = true;
-				t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
-				}
+		//#28784 Demo WIP - Start
+		if (this.getManagedBean().isNewVersion()) {
+			boolean isTechSpecPending = false;
+			List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+			for (ScQtCheckList t : st2technicalproposalList) {
+				boolean isDemoStatusSubmit = t.getPmDemoStatus() != null && QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmDemoStatus().getStatusId());
+				if (t.getDefinationType().getParameterCode()
+						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
+						&& (QTStatusConst.TS_PENDING_SUBMISSION.equals(t.getPmStatus().getStatusId()) || 
+								isDemoStatusSubmit)) {
+					isTechSpecPending = true;
+					t.setPmDemoStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));//#28784
+					}
 
-			if (isTechSpecPending && t.getDefinationType().getParameterCode()
-					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-				t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-				t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-				break;
+				if (isTechSpecPending && t.getDefinationType().getParameterCode()
+						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+					t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					break;
+				}
 			}
 		}
+		//#28784 Demo WIP - End
 	}
 
 	/**
@@ -16942,10 +16964,8 @@ if (null != checklist && !checklist.isEmpty()) {
 					zoneLocal.add(tplSpecZoneDtl);
 				}
 				scQt.setZonal(true);
-				if (qtSupplierCriteria != null )//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
-						zoneLocal);
-
+				if (qtSupplierCriteria != null)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+					qtSupplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(zoneLocal);// Sonarqube #83
 			}
 			//20200214@asyrafhaziq_Bug #27381&#26694   - Start
 			else {
@@ -18900,11 +18920,15 @@ if (null != checklist && !checklist.isEmpty()) {
 			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 			// move this catch to end code
 			} catch (IOException e) {
+				//Sonarqube #83 - start
+				ScQt scQt = this.getManagedBean().getQt();
+				String docNo = scQt != null ? scQt.getQtNo() : "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				//e.printStackTrace();
-					SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "handleFileUploadExport", getUserIdSessionFromLoginId(), e);
-			
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, docNo, "handleFileUploadExport",
+						getUserIdSessionFromLoginId(), e);
+				//Sonarqube #83 - end
 			}
 
 		} else {
@@ -18919,11 +18943,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 			while (rowIterator.hasNext()) {
 
-				Row row = rowIterator.next();
-				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-				//comment bcs never used
-				//hasDataFlag = (row != null);
-
+				Row row = rowIterator.next();	
 				if (row.getCell(0).toString() != "" || row.getCell(0).toString() != null) {
 					item.add(row.getCell(0).toString());
 				} else {
@@ -18978,11 +18998,15 @@ if (null != checklist && !checklist.isEmpty()) {
 				log.info("\n");
 			}
 			} catch (IOException e) {
+				//Sonarqube #83 - start
+				ScQt scQt = this.getManagedBean().getQt();
+				String qtNo = scQt != null ? scQt.getQtNo() : "";
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				//e.printStackTrace();
-				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "handleFileUploadExport", getUserIdSessionFromLoginId(), e);
-				
+				SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, "handleFileUploadExport",
+						getUserIdSessionFromLoginId(), e);
+				//Sonarqube #83 - end
 			}
 
 		}
@@ -19880,36 +19904,30 @@ if (null != checklist && !checklist.isEmpty()) {
 			int index = -1;
 			String specType = "T";
 			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
-			try{
-				technicalChecklistReloadActionImport(item, specification, uom, priceType, quantity, tierQuantityFrom,
-						tierQuantityTo, score, scoreType, scoreSchemaFrom, scoreSchemaTo, scoreSchemaYes, scoreSchemaNo,
-						scoreMark, freqPerUom, uomPerDay, uomPerMonth,specificationWeightage, index, checkList, specType);
-				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_760502,
-										new String[] {},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}catch(Exception e){
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-				//e.printStackTrace();
-				SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "reloadFileImport", getUserIdSessionFromLoginId(), e);
-				
-			}
-		}
-		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-		// move this catch to end code
-		} catch (IOException e) {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-			//e.printStackTrace();
-			SLAUtils.getInstance().logSLAError("QT", "SpecificationBackingBean", "docNo", "reloadFileImport", getUserIdSessionFromLoginId(), e);
-			
-		}
+		//Sonarqube #83 - start
+			technicalChecklistReloadActionImport(item, specification, uom, priceType, quantity, tierQuantityFrom,
+					tierQuantityTo, score, scoreType, scoreSchemaFrom, scoreSchemaTo, scoreSchemaYes, scoreSchemaNo,
+					scoreMark, freqPerUom, uomPerDay, uomPerMonth,specificationWeightage, index, checkList, specType);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_760502,
+									new String[] {},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			} 
+		} catch (Exception e) {
+			ScQt scQt = this.getManagedBean().getQt();
+			String qtNo = scQt != null ? scQt.getQtNo() : "";
+			FacesContext.getCurrentInstance().addMessage(null, 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage())); 
+			SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION,
+					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, "reloadFileImport",
+					getUserIdSessionFromLoginId(), e);
+
+		} 
+		//Sonarqube #83 - end
 		log.info("handleFileUploadExport - END");
 		return "/xhtml/sc/boSctemplatespec/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 	}
@@ -20104,11 +20122,12 @@ if (null != checklist && !checklist.isEmpty()) {
 							tplSpecScoring.add(specScoring);
 							templateSpecBean.getSelectedSpecQuestion().setTplSpecScorings(tplSpecScoring);
 							
-							if(tplSpecScoring.size() == 1){
+							//Sonarqube #83 - 25633 - start
+							if (tplSpecScoring.size() == 1
+									|| (maxScore != null && maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0)) {
 								maxScore = new BigDecimal(scoreMark.get(i));
-							}else if(maxScore != null && maxScore.compareTo(new BigDecimal(scoreMark.get(i))) < 0){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-									maxScore = new BigDecimal(scoreMark.get(i));						
 							}
+							//Sonarqube #83 - 25633 - end
 							tpmQuest.setMaxScore(maxScore);
 						}
 						
@@ -21172,13 +21191,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public String demoTechnicalTemplatelist() {
 
 		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
-		List<ScQtCheckList> tempList = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> tempList = new ArrayList<>();
         
 		//#28784 - Enable back to handle record has been updated issue
 		for (ScQtCheckList l : st2technicalproposalList) {
 			if (l.getQtChecklistId() == null && l.getDefinationType().getParameterCode()
 					.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-				//throw new EpException(MessageConst.ERROR_760528);
 				//saveSpecificationCommitteeDtls(); //#28784 - Remove notification save
 				//#28784 record has been updated bug fix - Start
 				if (this.getManagedBean().getQt().isZonal()) {
@@ -21194,7 +21212,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						checkSpecMaintenanceOrNo(false);
 					}
 				}
-				//retriveTechnicalCheckList();
 			}
 		}
 		for (ScQtCheckList cl : st2technicalproposalList) {
@@ -21226,9 +21243,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 				specReqDTO.setSpecMaster(st2technicalproposalList1.getScQtDoc().getTplSpecMaster());
-				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO templateresDTO = null;
-				templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);				
+				TemplateSpecResDTO templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
 				TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 				if (null != templateresDTO) {
 					st2technicalproposalList1.getScQtDoc().setTplSpecMaster(templateresDTO.getSpecMaster());
@@ -21432,8 +21448,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		// #28784 bug #34101 button turn evaluate at evaluation - End
 
-		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
-
 		List<TplSpecQuestion> list = null;
 		if (scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
 			list = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
@@ -21471,12 +21485,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		long startTime = System.currentTimeMillis();
 		SpecificationResDTO resDTO = specSO.saveOrUpdateDemoTemplateSpecs(reqDTO);
 		SLAUtils.getInstance().logSQLPerformanceInfo("QT", "DEMO INVITATION (SAVE)",
-				"SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime, "#29305");
+				"SpecificationBackingBean.saveOrUpdateDemoTemplateSpecs", startTime, "");
 
-		if (resDTO.isSuccessful()) {
-			SpecificationResDTO resDTO1 = new SpecificationResDTO();
-			List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<ScQtCheckList>();
-			List<ScQtCheckList> updatedCheckListsOtherDemo = new ArrayList<ScQtCheckList>();
+		if (resDTO.isSuccessful()) {			
+			List<ScQtCheckList> updatedCheckListsDemo = new ArrayList<>();
+			List<ScQtCheckList> updatedCheckListsOtherDemo = new ArrayList<>();
 			SpecificationReqDTO reqDTO1 = new SpecificationReqDTO();
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 
@@ -21499,7 +21512,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 
 			// #28784 - Start
-			st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+			List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
 			if (updatedNewCheckLists.size() <= st2technicalproposalList.size()) {
 				for (ScQtCheckList st : st2technicalproposalList) {
 					if (!updatedNewCheckLists.contains(st)) {
@@ -21526,14 +21539,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE)) {
 					// #28784 sample become completed after demo save - end
 					if (null != this.getManagedBean().getDemoSampleChecklistStatusId()) {
-						//log.info("adsmnlkqwemlwqe: " + this.getManagedBean().getDemoSampleChecklistStatusId());
 						if (this.getManagedBean().getDemoSampleChecklistStatusId().equals(QTStatusConst.TS_COMPLETED)) {
 							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
 						} else {
 							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 						}
 					}
-					//log.info("null brooooooooooooooooooooooo");
 					// #28784 sample become completed after demo save - end
 				} else if (t.getDefinationType().getParameterCode()
 						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
@@ -21549,9 +21560,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			 * updateDemoScoreWeightage Performance START
 			 */
 			startTime = System.currentTimeMillis();
-			resDTO1 = specSO.updateDemoScoreWeightage(reqDTO1);
+			SpecificationResDTO resDTO1 = specSO.updateDemoScoreWeightage(reqDTO1);
 			SLAUtils.getInstance().logSQLPerformanceInfo("QT", "DEMO WEIGHTAGE", "QTSpecSO.updateDemoScoreWeightage",
-					startTime, "#29305");
+					startTime, "");
 			/*
 			 * Development #29305, Added SLA log to check
 			 * updateDemoScoreWeightage Performance END
@@ -22112,9 +22123,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 		for (ScQtCheckList e : existingTechChecklist) {
 			for (ScQtCheckList f : resDTO.getTechnicalCheckList()) {
-				if ((e.getQtChecklistId() != null && e.getQtScoreWeightage() != null && f.getQtScoreWeightage() != null)
-						&& (e.getQtScoreWeightage().getWeightage() != null && e.getQtChecklistId().equals(
-								f.getQtChecklistId()))) {
+				boolean condition = e.getQtChecklistId() != null && e.getQtScoreWeightage() != null	
+						&& f.getQtScoreWeightage() != null;
+				if (condition && (e.getQtScoreWeightage().getWeightage() != null && 
+						e.getQtChecklistId().equals(f.getQtChecklistId()))) {
 					f.getQtScoreWeightage().setWeightage(e.getQtScoreWeightage().getWeightage());
 				}
 			}			
@@ -22442,14 +22454,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	private ScQtScoreSetting checkScoreSetting(SpecificationReqDTO reqDTO){
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+		ScQtScoreSetting demoScoreSet = null;
 		SpecificationResDTO resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
 		if(resDTO.getScoreSettingResultBean() != null){
 			for (ScQtScoreSetting demoScoreSetting : resDTO.getScoreSettingResultBean().getResultList()) {
-				return demoScoreSetting;
+				demoScoreSet = demoScoreSetting;
 			}
 			
 		}
-		return null;
+		return demoScoreSet;
 	}
 	
 	//#28784 bug note-#424 - start
@@ -22698,11 +22711,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		try {
 			selectItems.add(new SelectItem(false, ResourceBundleUtils
-					.getMessage("lbl.txt.select",
+					.getMessage(QTConstants.LBL_TXT_SELECT,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 			selectItems.add(new SelectItem(true, ResourceBundleUtils
-					.getMessage("lbl.txt.yes",
+					.getMessage(QTConstants.LBL_TXT_YES,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
@@ -22718,16 +22731,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @return boolean
 	 */
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
-		boolean render = false;
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
 			if (question.isMandatorySpecForSample()) {
-				render = true;
-				break;
+				return true;
 			}
 		}
 
-		return render;
+		return false;
 	}
 	
 	/**
@@ -22772,152 +22783,27 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 	// Bug #33661@Syazani 06/10/2022 -- End
 	
-	// Bug #34065@Syazani 01/11/2022 -- Start
-	private void setDefTypeAndActionValues(ScQtCheckList qtCheckList) {
-		if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_VIEW));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV.equalsIgnoreCase(qtCheckList.getPmDocument()
-				.getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_NO_OF_EMPLOYEES.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_STAFF_LIST
-
-		.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_VIEW));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(qtCheckList.getPmDocument()
-				.getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_VIEW));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV
-
-		.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_FINANCE_BANK_STATEMENT
-
-		.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_ASSET_LIABILITY
-
-		.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_PAID_UP_CAPITAL.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_VIEW));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES
-
-		.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
-
-		} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_DETAILS.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_VIEW));
-
-		}
-
-		else if (SourcingConstants.DOC_DEF_KEY_CASH_ON_HAND.equalsIgnoreCase(qtCheckList.getPmDocument().getDocDefinitionKey())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, ParameterConst.CHECKLIST_ACTION_INPUT));
-
-		}
-
-		else if (null != qtCheckList.getDefinationType()
-				&& ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION.equalsIgnoreCase(qtCheckList.getDefinationType().getParameterCode())) {
-
-			qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION));
-			qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION,
-					ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD));
-
-		}
-	}
-	
-	//Bug #34065@Syazani 30/11/2022 - Start
-	private PmParameter retriveParammeterByTypeAndCode(String parameterType, String parameterCode) {
-		String key = parameterType + "_" + parameterCode;
-		PmParameter pmParam = pmParameterMapStringKey.get(key); //cache
-		if (pmParam == null) {
-			IParameterSO parameterSo = null;
-			ParameterResDTO resDTO = null;
-			try {
-				parameterSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(parameterType);
-				reqDTO.setParameterCode(parameterCode);
-				resDTO = parameterSo.retrieveParameterByTypeAndCode(reqDTO);
-				reqDTO = null;
-				pmParam = resDTO.getPmParameter();
-				pmParameterMapStringKey.put(key, pmParam);
-			} finally {
-				parameterSo = null;
-			}
-		}
-		return pmParam;
-	}
-	//Bug #34065@Syazani 30/11/2022 -- End
-	
-	private void selectOneItemActionAndDefinationBugRepair(List<ScQtCheckList> chcLst, Integer currentIndex, boolean isAction) {
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	private void selectOneItemActionAndDefinationBugRepair(List<ScQtCheckList> chcLst, List<ScQtCheckList> chcLstClone,
+			Integer currentIndex) {
 		int i = 0;
-		PmParameter parameterTemp = null;
-		String pCode = null;
-		String pType = null;
-		for (ScQtCheckList scl : chcLst) {
-			if (currentIndex == null || (currentIndex != null && i != currentIndex)) {
-				parameterTemp = isAction ? scl.getAction() : scl.getDefinationType();
-				pCode = parameterTemp.getParameterCode();
-				pType = parameterTemp.getParameterType();
-				parameterTemp = retriveParammeterByTypeAndCode(pType, pCode);
-				if (isAction)
-					scl.setAction(parameterTemp);
-				else
-					scl.setDefinationType(parameterTemp);
+		for (ScQtCheckList copyOfscl : chcLstClone) {
+			for (ScQtCheckList scl : chcLst) {
+				boolean isNotCurrentIndex = currentIndex == null || (currentIndex != null && i != currentIndex);
+				boolean isSameIDi = copyOfscl.getQtChecklistId() != null && scl.getQtChecklistId() != null
+						&& copyOfscl.getQtChecklistId().equals(scl.getQtChecklistId());
+				boolean isSameIDii = !isSameIDi && copyOfscl.getIndex() != -1 && scl.getIndex() != -1 ? copyOfscl
+						.getIndex() == scl.getIndex() : false;
+				if (isNotCurrentIndex && (isSameIDi || isSameIDii)) {
+					scl.setAction(copyOfscl.getAction());
+					scl.setDefinationType(copyOfscl.getDefinationType());
+				}
+				i++;
 			}
-			parameterTemp = null;
-			pCode = null;
-			pType = null;
-			i++;
+			i = 0;
 		}
 	}
-	// Bug #34065@Syazani 01/11/2022 -- End
+	// Bug #35219@Syazani 07/11/2023 -- End
 	
 	//#34048 - Start
 	public boolean isSpecQuestionNotExist(ScQtCheckList qtCheckList) {
@@ -22945,7 +22831,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				}
 			}
 			
-			if (item != null && spec.isSpecificationReq() && specCount == 0 && questionList.size() > 0) {
+			if (item != null && spec.isSpecificationReq() && specCount == 0 && CollectionUtils.isNotEmpty(questionList)) {
 				return true;
 			}
 		}
@@ -23238,6 +23124,49 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return Boolean.FALSE;
 	}//11104_newEndorseEnd
-
-
+	
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	private void setDefTypeAndActionValues(ScQtCheckList qtCheckList) {
+		String[] defTypeNAction = docDefinitionKeyParameter(qtCheckList);
+		String defType = defTypeNAction[0];
+		String action = defTypeNAction[1];
+		
+		if (defType != null && action != null) {
+		    qtCheckList.setDefinationType(retriveParammeterByTypeAndCode(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
+				defType));
+		    qtCheckList.setAction(retriveParammeterByTypeAndCode(ParameterTypeConst.SC_SUPPLIER_ACTION, action));
+		}
+	}
+	
+	private String[] docDefinitionKeyParameter(ScQtCheckList qtCheckList) {
+		String docDefinitionKey = qtCheckList.getPmDocument().getDocDefinitionKey();
+		String defType;
+		String action;
+		
+		if (Arrays.asList(SourcingConstants.IS_DOCUMENT_DEFINITION_TYPE_WEB_FORM_AND_CHECKLIST_ACTION_INPUT).contains(docDefinitionKey)) {
+			defType = ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM;
+			action = ParameterConst.CHECKLIST_ACTION_INPUT;
+		} else if ((Arrays.asList(SourcingConstants.IS_DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED_AND_CHECKLIST_ACTION_VIEW)
+				.contains(docDefinitionKey))) {
+			defType = ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED;
+			action = ParameterConst.CHECKLIST_ACTION_VIEW;
+		} else if (null != qtCheckList.getDefinationType()
+				&& ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION.equalsIgnoreCase(qtCheckList.getDefinationType()
+						.getParameterCode())) { 
+			defType = ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION;
+			action = ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD;
+		} else {
+			defType = null;
+			action = null;
+		}
+		
+		return new String[]{defType, action};
+	}
+	
+	private PmParameter retriveParammeterByTypeAndCode(String parameterType, String parameterCode) {
+		return ParameterHelper.getInstance().getParameterByTypeAndCode(parameterType, parameterCode);
+	}
+	
+	// Bug #35219@Syazani 07/11/2023 -- End
+	
 }
