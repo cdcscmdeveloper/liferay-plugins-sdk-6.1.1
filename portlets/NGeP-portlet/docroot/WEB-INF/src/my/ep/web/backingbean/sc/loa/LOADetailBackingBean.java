@@ -8738,7 +8738,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			String remarkValue = "";
 			if (isZonalWithPaOrPs) {
 				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
-					count++;
 					
 					if(tplSpecAnswer.getIsWip() == null){
 						tplSpecAnswer.setIsWip(false);
@@ -8759,6 +8758,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							if (count < tplSpecAnswerList.size()) {
 								supplierOffer.append(System.lineSeparator()+"<br/>");
 							}
+							count++; //29006-963
 						}
 					} else {
 						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
