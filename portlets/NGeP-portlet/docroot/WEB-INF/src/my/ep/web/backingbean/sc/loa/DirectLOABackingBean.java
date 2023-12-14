@@ -10508,39 +10508,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					indexNew++;
 				}
 			}
-			List<ScLoiLoaItem> items = new ArrayList<>();
-			AwardSupplierReqDTO reqDTONew = new AwardSupplierReqDTO();
-			for (ScLoiLoaItem item : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
-				if (!scLoiLoaItem.getLoiLoaItemId().equals(item.getLoiLoaItemId())
-						&& scLoiLoaItem.getScRequestItem().getRequestNoteItemId()
-								.equals(item.getScRequestItem().getRequestNoteItemId())) {
-					reqDTOLatest.setScLoiLoaItem(item);
-					item = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest).getScLoiLoaItem();
-					reqDTONew.setTplSpecAnswerList(null);
-					item.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
-					item.setComplete(resDTO.getScLoiLoaItem().isComplete());
-					reqDTONew.setScLoiLoaItem(item);
-					getQtAwardSO().saveSupplierSpecification(reqDTONew);
-					items.add(item);
-				}
-			}
-			for (ScLoiLoaItem item : items) {
-				int indexNew = 0;
-				reqDTOLatest.setScLoiLoaItem(item);
-				item = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest).getScLoiLoaItem();
-				for (ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
-					if (loiLoaItem.getLoiLoaItemId() == item.getLoiLoaItemId()
-							|| loiLoaItem.getLoiLoaItemId().equals(item.getLoiLoaItemId())) {
-						if (null != this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()) {
-							resDTO.getScLoiLoaItem().setScLoa(this.getManagedBean().getScLoa());
-						}
-						this.getManagedBean().getScLoa().getScLoiLoaItems().remove(indexNew);
-						this.getManagedBean().getScLoa().getScLoiLoaItems().add(indexNew, item);
-						break;
-					}
-					indexNew++;
-				}
-			}
 
 if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				log.info("===========duringSaveSpecificationTimescodesexecuted=====");	
