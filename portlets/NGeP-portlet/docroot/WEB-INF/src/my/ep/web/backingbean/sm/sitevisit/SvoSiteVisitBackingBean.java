@@ -333,9 +333,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					getManagedBean().setSupplierCategory(catLs.get(0));
 				}
 				//28775 - Site Visit Grouping Enhancement - 28775 - end
-				//#35426 - end
 				setMachineList();
 			}
+			if(getManagedBean().getSmSvTask().getPmCategoryL3() == null){
+				getManagedBean().setSupplierCategory(null);
+			}
+			//#35426 - end
 			if((smSvTask.getSmSvDocLicenses() == null || smSvTask.getSmSvDocLicenses().isEmpty())
 					&& getManagedBean().getSmSvTask().getPmCategoryL3() != null){
 				retrieveAndSetSmSvDocLicense(); //retrieve and set SmSvDocLicense (Additional License)	
@@ -2994,6 +2997,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(getManagedBean().getSmSvTask().getPmCategoryL3() != null){
 			getManagedBean().setParameterDesc(getParameterDesc(
 					svTask.getPmCategoryL3().getCategoryTypeCode()));
+		//#35426
+		} else {
+			getManagedBean().getSmSvTask().getSmSvTemplate().setSuppCategory(null);
+			getManagedBean().setTemplates(null);
 		}
 		getManagedBean().setLicensed(false);
 		
