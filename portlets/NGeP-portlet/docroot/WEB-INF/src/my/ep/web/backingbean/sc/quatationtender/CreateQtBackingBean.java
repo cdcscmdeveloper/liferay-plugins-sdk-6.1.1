@@ -1191,7 +1191,8 @@ public class CreateQtBackingBean extends
 					//BugBug #35061 - asyrafhaziq 
 					//set message
 					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String. valueOf(indPriceThreshold).trim() });
-					this.getManagedBean().setMsgConfirmBelowIndi(msg.toString().trim());
+					//SONARQUBE QT 2023 - haziq
+					this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
 					
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
