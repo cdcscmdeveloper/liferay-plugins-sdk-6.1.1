@@ -2911,9 +2911,14 @@ public class SPDetailBackingBean extends
 			
 			if (CollectionUtils.isNotEmpty(zones)) {
 				this.getManagedBean().setZones(zones);
-
-				if (this.getManagedBean().getQt().isPartial()) {
-					disableDefaultSelected();
+				// wip doesnt need to execute this code below
+				if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					if (this.getManagedBean().getQt().isPartial()) {
+						disableDefaultSelected();
+					} else {
+						// for proposal technical item & spec
+						removeItemBaseOnSuppZoneQtyZero(templateSpecBean);
+					}
 				}
 			}
 		}
@@ -4642,6 +4647,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			if(this.getManagedBean().isFinancialAttchment()){//#28792-start
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
+			evaluateWIP(this.getManagedBean().getQt()); //#21695
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -6497,5 +6503,46 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	}
 	// 20220127@syazani - Enhancement #3657 - specific error message - End
 	
-	
+	//#21695 - Start
+	/**
+	 * 
+	 * @param templateSpecBean
+	 * Below method is to get supplier zone & remove the item if the supplier only has 1 zone and the zone is 0 quantity
+	 */
+	public void removeItemBaseOnSuppZoneQtyZero(TemplateSpecBean templateSpecBean) {
+		List<TplSpecAnswer> asnwerList = new ArrayList<>();
+		long specquestionidItem = 0;
+		for (TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			// Technical Spec Item 
+			if (ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion()
+					.getQuestionType())
+					&& retrieveAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+							.equals(specquestionidItem)) {
+				asnwerList.add(retrieveAns);
+			}
+			// Technical Item
+			if (retrieveAns != null && this.getManagedBean().getZones().size() == 1) {
+				for (TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()) {
+					if (specZonedtl != null) {
+						for (TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()) {
+							boolean hasDifferentSizes = this.getManagedBean().getZones().size() != retrieveAns.getTplSpecQuestion().getTplSpecZoneQties().size() ;
+							boolean hasPositiveQty = specZoneQty != null && specZoneQty.getQty().compareTo(BigDecimal.ZERO) > 0;
+							boolean hasMatchingSpecZoneId = specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId());
+
+							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId) {
+								specquestionidItem = retrieveAns.getTplSpecQuestion().getSpecQuestionId();
+								asnwerList.add(retrieveAns);
+							}
+						}
+					}
+				}
+			}
+		}
+		if(CollectionUtils.isEmpty(asnwerList)){
+			templateSpecBean.setSpecAnswerList(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList());
+		}else{
+			templateSpecBean.setSpecAnswerList(asnwerList);
+		}
+	}
+	//#21695 - End
 }
