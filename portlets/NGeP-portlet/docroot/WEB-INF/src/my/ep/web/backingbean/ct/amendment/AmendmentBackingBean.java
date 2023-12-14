@@ -622,6 +622,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setBackToNtf("notifications"); //25956
 
 				getManagedBean().setViewOnly(true);
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
+				ctBackingBean.getManagedBean().setViewContract(true); //25956
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
