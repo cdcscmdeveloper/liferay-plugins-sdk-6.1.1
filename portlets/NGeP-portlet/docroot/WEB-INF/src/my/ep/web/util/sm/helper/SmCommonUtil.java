@@ -6441,18 +6441,20 @@ public class SmCommonUtil {
 		} else {
 			FacesScopes fc = new FacesScopes();
 			list = SmServiceLookup.getMofRegistrationSO().retrieveAutoCancelledBumiAppl(
-					fc.getUserSessionBean().getUserId(), fc.hasRoleUser(RoleCode.UPS_SDO.value()), 
-					fc.hasRoleUser(RoleCode.UPS_APPROVER.value()) || fc.hasRoleUser(RoleCode.UPS_PO.value()))
-					.getApplList();
+					fc.getUserSessionBean().getUserId(), true, true).getApplList();
 		}
-		if(list.isEmpty()) return null;
+		if(list.isEmpty()){
+			return null;
+		}
 		
 		StatusReqDTO statReqDTO = new StatusReqDTO();
 		statReqDTO.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
 		statReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
 				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
-		if(statDesc == null) return list;
+		if(statDesc == null){
+			return list;
+		}
 		
 		SmWorkFlowStatusReqDTO wfDTO = new SmWorkFlowStatusReqDTO();
 		for(SmAppl smAppl : list){
@@ -6460,8 +6462,9 @@ public class SmCommonUtil {
 			wfDTO.setApplId(smAppl.getApplId());
 			SmWorkflowStatus wf = SmServiceLookup.getSmWorkFlowStatusSO()
 				.retrieveCurrentWorkFlowStatusByDocId(wfDTO).getWorkflowStatus();
-			if(wf != null)	//set cancelled date
+			if(wf != null){	//set cancelled date
 				smAppl.setChangedDate(wf.getCreatedDate());
+			}
 		}
 		return list;
 	}
