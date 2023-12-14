@@ -3437,7 +3437,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDeclaration);
 		}
 		
-		for(String sidemenu : getManagedBean().getFinalListOfSideMenu()){ //#35132
+		for(String sidemenu : getManagedBean().getFinalListOfSideMenu()){  //#35132
 			getManagedBean().getIndexing().put(sidemenu, ++indexing);
 		}
 		log.info("Check getFinalListOfSideMenu Size"+getManagedBean().getFinalListOfSideMenu().size());
