@@ -10143,13 +10143,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		//#34413 - Start
-		if(null != qtType && ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())){
-			if (null == getManagedBean().getScLoa().getJustificationType()) {
-				getManagedBean().getScLoa().setJustificationType(new PmReason());
-			}
+		if(resetJustificatonPmReasonIfNull(qtType)){
 			return true;
-		}else 
-		//#34413 - End	
+		}
+		//#34413 - End
+		
 		if (null != qtType && null != fulfilmentType 
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
@@ -10168,6 +10166,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		return false;
 	}
+	
+	//#34413 - Start
+	/**
+	* Method to return true, if dropdown of Special Item / Item In PK 7 is selected
+	* @param qtType
+	* @return true or false
+	**/
+	private Boolean resetJustificatonPmReasonIfNull(PmParameter qtType){
+		if(null != qtType && 
+				ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode()) && 
+				null != getManagedBean().getScLoa().getJustificationType()){
+			 return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	//#34413 - End
 	
 	/*#29007 Start Vinod*/
 	private String itemNameSearchCriteria;
