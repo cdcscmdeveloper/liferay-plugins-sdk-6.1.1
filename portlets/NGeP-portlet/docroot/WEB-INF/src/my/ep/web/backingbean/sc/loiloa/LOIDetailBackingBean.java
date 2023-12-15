@@ -792,14 +792,14 @@ public class LOIDetailBackingBean extends
 								}
 							}
 							
-							if (!isZonal && (previousLois != null && (CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-									!previousLois.contains(scLoi)))) {
+							if (!isZonal && ((CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+									!previousLois.contains(scLoi)))) {//fixedNullpointerIssueSonarQube
 									if (supplierLoiLoaItemsMap == null) {
 										supplierLoiLoaItemsMap = new HashMap<>();
 									}
 									Long supplierId = scLoi.getScLoiLoa().getSmSupplier().getSupplierId();
-									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());								
-								
+									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());	
+																								
 							}
 						}
 					}
