@@ -2640,30 +2640,6 @@ u.underline {
 									#set($countZoneList = $countZoneList + 1)
 									#end
 								</td>
-								
-								<td valign="top"  class="tableDataPR">
-									#set($maxQty = 0)
-									#set($minQty = 0)
-									#set($currentValue = 0)								
-									#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-											#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
-												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
- 											  		#set($currentValue = $scLoiLoaItem.itemQty)
-												   #if($currentValue == 0)
-													   	#if($tplspecQuestion.clQuantity)
-												   			#set($currentValue = $tplspecQuestion.clQuantity)												
-												  	   	#else
-													   		#if($tplSpecZoneQtie.qty)
-													   			#set($currentValue = $tplSpecZoneQtie.qty) 
-															#end
-												   		#end									   
-												   #end	
-											  	 #end
-											#end
-									#end
-									<span>$currentValue</span>
-										
-								</td>
 								<td valign="top"  class="tableDataPR">
 									#set($maxQty = 0)
 									#set($minQty = 0)
