@@ -312,4 +312,14 @@ public interface QTConstants {
 	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
 
+	public static final String SERVICE_OBJECT_CC = "cc";
+
+	//#10542 Start Dayan
+	public static final String COMPLIANCE_DOCUMENT_SUPPLIER_NO = "Supplier ";
+	public static final String FINANCIAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Financial-BySupplier";
+	public static final String FINANCIAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Financial-ByTitleDocument";
+	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
+	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
+	//#10542 End Dayan
+
 }

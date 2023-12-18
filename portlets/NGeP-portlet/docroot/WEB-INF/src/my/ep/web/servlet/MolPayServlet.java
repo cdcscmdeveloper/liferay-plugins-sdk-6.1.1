@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +26,7 @@ import my.ep.persistence.entity.py.PyPayment;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -39,8 +39,7 @@ import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
 import com.liferay.portal.util.PortalUtil;
-//#26307 start
-//#26307 start
+
 
 /**
  * Servlet implementation class MolPayServlet
@@ -54,16 +53,15 @@ public class MolPayServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		log.info("******Servlet Testing doGet*********");
 		PrintWriter out = res.getWriter();
-		try{
+		try {
 			out.print("CBTOKEN:MPSTATOK");
-		}finally{
+		} finally {
 			out.close();
 		}
 
-		//res.sendRedirect("http://localhost:8080/web/guest/svo-site-visit");
+		// res.sendRedirect("http://localhost:8080/web/guest/svo-site-visit");
 	}
 
 	@Override
@@ -357,6 +355,9 @@ public class MolPayServlet extends HttpServlet {
 						log.info(">>>>paymentType<<<"+paymentType);
 					}else if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 						paymentType = SupplierManagementConst.SOFTCERT_PAYMENT;
+						//START 35182
+						smPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
+						//END 35182
 						log.info(">>>>paymentType<<<"+paymentType);
 					}
 					pymtReqDTO.setPaymentType(paymentType);
@@ -389,7 +390,6 @@ public class MolPayServlet extends HttpServlet {
 							try {
 								SmCommonUtil.paymentCurlIPN(req, true, merchantId, molIpnUrl);
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								log.info("paymentCurlIPN error>>>>>>>>>" + e.getMessage());
 							}
 						}
