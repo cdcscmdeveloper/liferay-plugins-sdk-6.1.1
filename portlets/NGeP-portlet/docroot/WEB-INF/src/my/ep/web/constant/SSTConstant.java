@@ -70,7 +70,7 @@ public class SSTConstant {
 		public static final String SUBJECT_TITLE = "subTitle";
 		public static final String SIGN_PERCENTAGE = "%";
 		public static final String SIGN_RINGGIT = "RM";
-		public static final String UNDERLINE = "........................................................";
+		public static final String UNDERLINE = "_____________________________";
 		public static final String BOND_PERCENTAGE_TEXT = "bondPercentageText";
 		public static final String BOND_PERCENTAGE = "bondPercentage";
 		public static final String BOND_AMOUNT = "bondAmt";
@@ -89,7 +89,13 @@ public class SSTConstant {
 		public static final String LINE_BREAK = "\n";
 		public static final String BUMIPUTERA = "Bumiputera";
 		public static final String BUKAN_BUMIPUTERA = "Bukan Bumiputera";
-		public static final String UNDERLINE_BOND_AMT = "...................................................";
+		public static final String UNDERLINE_BOND_AMT = "__________________________";
+		public static final String PROTEGE_UPPERCASE_E = "&#201;";
+		public static final String PROTEGE_LOWERCASE_E = "&#233;";
+		public static final String LESS_THAN_SYMBOL = "&#60;";
+		public static final String GREATER_THAN_SYMBOL = "&#62;";
+		public static final String AND_SYMBOL = "&#38;";
+		public static final String BREAKLINE ="<br />";
 		//25025 - end
 	
 }

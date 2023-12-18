@@ -1593,7 +1593,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		
-		//#34624 start
+		//#34624 & #35204 start
 		log.info("Application Type: " + applicationType);
 		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
 		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
@@ -1601,7 +1601,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setApplCategoryType("N");
 		}
 		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
-		//#34624 end
+		//#34624 & #35204 end
 		//32008 to initialize set PO & Approver cannot edit field key in by supplier
 		getManagedBean().setUpsCannotEdit(false);
 		if (fromBpm
@@ -2297,7 +2297,7 @@ public class SmApplicationBackingBean extends
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 						//start #29956
-						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smAppl, ssmResDTO);
+						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(),ssmResDTO);
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
 							// start #29956 smOwnerSsmPopup
@@ -10345,12 +10345,16 @@ public class SmApplicationBackingBean extends
 		if (dialog.equalsIgnoreCase("approverAppDialog")) {
 			Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
 			List<SmSupplierBranch> supplierList = new ArrayList<SmSupplierBranch>();
-			for (SmSupplierBranch suppBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
-				if (suppBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
-					continue;
+			//#28777 - START
+			if(getManagedBean().getSelectedBranches() != null){
+				for (SmSupplierBranch suppBranch : getManagedBean().getSelectedBranches()) {
+					if (suppBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+						continue;
+					}
+					supplierList.add(suppBranch);
 				}
-				supplierList.add(suppBranch);
 			}
+			//#28777 - END
 
 			StringBuilder deletedBranch = checkingDeletedBranchPendingFL(supplierId, supplierList);
 			if (deletedBranch.length() > 0) {
@@ -11207,12 +11211,9 @@ public class SmApplicationBackingBean extends
 							}
 						}
 						//#31386 - START
-						List<SmAppl> allAppl = reqSO.getApplWithActiveBumiAppl(getManagedBean().getSmAppl());
+						List<SmAppl> allAppl = reqSO.getActiveApplForSVAP(getManagedBean().getSmAppl());
 						if(!EntityHelper.isCollectionEmpty(allAppl)){
-							for(SmAppl pendingKb: allAppl){
-								log.info("Appl No: "+pendingKb.getApplNo());
-								reqDTO.setPendingKBAppl(pendingKb);
-							}
+							reqDTO.setPendingAppls(allAppl);
 						}
 						//#31386 - END
 					}
