@@ -620,7 +620,12 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	public void printVirtualCert(SmMofCert cert) {
 		try {
+			final long startTime = System.currentTimeMillis();
+			log.info("START printVirtualCert time: " + startTime);
 			getVirtualCertInstance().printVirtualCert(cert);
+			final long endTime = System.currentTimeMillis();
+			log.info("Total printVirtualCert time: " + (endTime - startTime));
+			log.info("--------------------------END VIRTUAL CERT ");
 		} catch (IOException e) {
 			throw new EpException(e.getMessage());
 		}
@@ -1974,21 +1979,5 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	// #32628 - end
-	
-	/**
-	 * Download virtual certificate
-	 * 
-	 * @param SmMofCert
-	 *            cert
-	 */
-	public void printVirtualCertUI(String clientId, SmMofCert cert) {
-		try {
-			//#28175 - START
-			getVirtualCertInstance().printVirtualCert(cert);
-			RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click();");
-			//#28175 - END
-		} catch (IOException e) {
-			throw new EpException(e.getMessage());
-		}
-	}
+
 }
