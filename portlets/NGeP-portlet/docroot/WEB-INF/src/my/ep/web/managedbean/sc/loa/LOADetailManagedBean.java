@@ -348,6 +348,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private int retainPageNumber = 0; // #34242
 	private boolean resetAll = false;
 	private boolean resetAllforNoReport = false;
+	private String firstZone; // Bug #34757
 	/* #29007 End Vinod */
 	
 	//#27797 - start
@@ -2034,6 +2035,16 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.loiLoaItemsResult = loiLoaItemsResult;
 	}
 	// 29007 - fix issue 2 search action note 347 - end
+
+	// Bug #34757, #29007 -start-
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
+	}
+	// Bug #34757, #29007 -end-
 
 	//#27797 - start
 	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
