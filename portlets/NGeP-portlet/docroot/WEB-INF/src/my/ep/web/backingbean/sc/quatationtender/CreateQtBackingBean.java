@@ -1191,7 +1191,8 @@ public class CreateQtBackingBean extends
 					//BugBug #35061 - asyrafhaziq 
 					//set message
 					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String. valueOf(indPriceThreshold).trim() });
-					this.getManagedBean().setMsgConfirmBelowIndi(msg.toString().trim());
+					//SONARQUBE QT 2023 - haziq
+					this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
 					
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
@@ -3343,6 +3344,18 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().getQt().setPmProcurementCategory(
 					parameterResDTO.getPmParameter());
 		}
+		//#35285 & #25635 - Start
+		else{
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+		}
+		if(null != this.getManagedBean().getQt().getPmProcurementCategory()) {
+			if (!ParameterConst.PROCUREMENT_CATEGORY_ICT.equalsIgnoreCase(this.getManagedBean().getQt().getPmProcurementCategory().getParameterCode())) {
+				this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+			}
+		}else{
+			this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+		}
+		//#35285 & #25635 - End
 	}
 	
 	/**
@@ -3519,8 +3532,9 @@ public class CreateQtBackingBean extends
 	 * @param approvalDetails
 	 */
 	public void otherApprovalStatus(ScQtApprovalRequest approvalDetails) {
-		
-		Long parameterId = (approvalDetails != null && approvalDetails
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+	 if (approvalDetails != null){
+		Long parameterId = (approvalDetails
 				.getApproverAction() != null) ? approvalDetails
 				.getApproverAction().getParameterId() : null;
 		if (parameterId != null) {
@@ -3530,7 +3544,7 @@ public class CreateQtBackingBean extends
 		} else {
 			approvalDetails.setApproverAction(new PmParameter());
 		}
-
+	 }
 	}
 	
 	//#25077 - Start 
@@ -3809,7 +3823,7 @@ public class CreateQtBackingBean extends
 								break;
 							}	
 						}
-						if (isInsert == true){
+						if (isInsert == true && rootTrees != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 							if (getManagedBean().getIndex() == -1) {
 								rootTrees.add(node);		
 							}
@@ -3840,7 +3854,7 @@ public class CreateQtBackingBean extends
 			
 			TplSpecZoneDtl zoneDtl = null;
 			
-			if (!rootTrees.isEmpty()) {
+			if (rootTrees != null && !rootTrees.isEmpty()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 				ScQtZoneCriteria zonCriteria =getManagedBean().getQt()
 						.getScQtSupplierCriteria().getQtZoneCriterias();
 				zonCriteria.setTplSpecZoneDtls(
@@ -3862,7 +3876,7 @@ public class CreateQtBackingBean extends
 			ScQt scQt = getManagedBean().getQt();
 			if (scQt.isZonal() &&  scQt.isPanel() ){
 				List<TplSpecZoneDtl> specZoneDtls = null;
-				if (!rootTrees.isEmpty()){
+				if (rootTrees != null && !rootTrees.isEmpty()){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 					specZoneDtls = convertTreeNodesToZoneCriteria(rootTrees, zoneDtl);
 				}
 				else{

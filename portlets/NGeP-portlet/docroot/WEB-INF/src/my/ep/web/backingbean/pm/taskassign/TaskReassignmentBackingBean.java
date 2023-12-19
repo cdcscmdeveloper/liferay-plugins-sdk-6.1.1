@@ -106,6 +106,8 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.PmTaskReassignmentVO;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -1410,8 +1412,8 @@ public class TaskReassignmentBackingBean extends
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							// #7465 Re-open issues on 24/11/2023
+							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
 								//#7465 start - missing document number to search in bpm
 								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
 								getManagedBean().setAllGroupTasks(resetWorklist);
@@ -1423,12 +1425,14 @@ public class TaskReassignmentBackingBean extends
 							} else {
 								//#7465, #29822  - START - reendorse
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
+								getManagedBean().setEnableDeleteGroupTasksButton(false); // #7465 Re-open issues on 24/11/2023
 								getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 								//#7465, #29822  - end - reendorse
 							}
 						}
 						//#7465 START - reendorse
-						if(getManagedBean().isShowRemoveProcessMessageGroup()==true) {
+						// #7465 Re-open issues on 24/11/2023
+						if(getManagedBean().isShowRemoveProcessMessageGroup()) {
 							//disable check box for group task
 							getManagedBean().setCheckAllGroupTasksEnabled(false);
 							//disable button for group task
@@ -1608,8 +1612,8 @@ public class TaskReassignmentBackingBean extends
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							// #7465 Re-open issues on 24/11/2023
+							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
 								//#7465 start - missing document number to search in bpm
 								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
 								getManagedBean().setAllOthersTasks(resetWorklist); //7465 - wrong reset value for others
@@ -1621,12 +1625,14 @@ public class TaskReassignmentBackingBean extends
 							} else {
 								//#7465, #29822  - START - reendorse
 								getManagedBean().setCheckAllOthersTasksEnabled(false); 
+								getManagedBean().setEnableDeleteOthersTasksButton(false); // #7465 Re-open issues on 24/11/2023
 								getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 //								//#7465, #29822  - end - reendorse
 							}
 						}
 						//#7465 START - reendorse
-						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+						// #7465 Re-open issues on 24/11/2023
+						if(getManagedBean().isShowRemoveProcessMessageOther()) {
 							//disable check box for group task
 							getManagedBean().setCheckAllOthersTasksEnabled(false);
 							//disable button for group task
@@ -3117,7 +3123,9 @@ public class TaskReassignmentBackingBean extends
 
 		try {
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
-			reqDTO.setTaskId(task.getTaskId());
+			// #7465 Re-open issues on 24/11/2023
+			String taskId = task.getTaskId();
+			reqDTO.setTaskId(taskId);
 			reqDTO.setUserIdList(assigneeUsers);
 			reqDTO.setClaimedBy(claimedBy);
 
@@ -3126,6 +3134,7 @@ public class TaskReassignmentBackingBean extends
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							ITaskAssignmentSO.class);
 			TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
+			clearRemovedSelectedTask(taskId); // #7465 Re-open issues on 24/11/2023
 
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
@@ -3139,6 +3148,25 @@ public class TaskReassignmentBackingBean extends
 
 	}
 
+	// #7465 Re-open issues on 24/11/2023
+	private void clearRemovedSelectedTask(String taskId) {
+		boolean removedFromSelectedTask = false;
+		if (getManagedBean().getSelectedGroupTasks().containsKey(taskId)) {
+			getManagedBean().getSelectedGroupTasks().remove(taskId);
+			getManagedBean().setEnableDeleteGroupTasksButton(MapUtils.isNotEmpty(getManagedBean().getSelectedGroupTasks()));
+			removedFromSelectedTask = true;
+		} else if (getManagedBean().getSelectedOthersTasks().containsKey(taskId)) {
+			getManagedBean().getSelectedOthersTasks().remove(taskId);
+			getManagedBean().setEnableDeleteOthersTasksButton(MapUtils.isNotEmpty(getManagedBean().getSelectedOthersTasks()));
+			removedFromSelectedTask = true;
+		}
+		
+		if (!removedFromSelectedTask) {
+			getManagedBean().setEnableDeleteGroupTasksButton(false);
+			getManagedBean().setEnableDeleteOthersTasksButton(false);
+		}
+	}
+	
 	/**
 	 * @return the userTaskListDataModel
 	 */

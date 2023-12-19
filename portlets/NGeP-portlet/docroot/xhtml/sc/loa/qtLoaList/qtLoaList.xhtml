@@ -57,16 +57,9 @@
 					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="text-align: center;">
-				  <!-- #29729 Start  -->
-				  <ui:param name="isBranchSupplierListDeleted" 
-				  value="#{qtLOABackingBean.displaySupplierBranchListDeletedForLOA(scLoiLoa.smSupplier.supplierId)}" />
-				        <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
-											rendered="#{!scLoiLoa.loaCreated and isBranchSupplierListDeleted}"
-											action="#{qtLOABackingBean.infoBranchSupplierListDeletedForLOA()}" />
-				  <!-- #29729 End -->
-				         <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
-											rendered="#{!scLoiLoa.loaCreated and !isBranchSupplierListDeleted}"
-											action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}" />
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
+						rendered="#{!scLoiLoa.loaCreated}"
+						action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}" />
 				</p:column>
 			</p:dataTable>
 
