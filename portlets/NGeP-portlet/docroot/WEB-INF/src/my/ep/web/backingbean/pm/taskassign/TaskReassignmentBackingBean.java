@@ -2826,14 +2826,15 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
-			actualOrgProfileId = vo.getOrgProfileId();
-			if(actualOrgProfileId != null){
+			//#35396 - Start
+			//actualOrgProfileId = vo.getOrgProfileId();
+			if(orgProfileId != null){
 				if(roleList == null || roleList.isEmpty()){
 					roleList = retrieveAvailableRoles(task.getDocStatus()
 						.longValue(),reassignType,subReassignType);
 				}
 				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
-						actualOrgProfileId,
+						orgProfileId,
 						roleList,
 						false,
 						null,
@@ -2842,6 +2843,7 @@ public class TaskReassignmentBackingBean extends
 										.getUserId())),searchBean);
 				
 			}
+			//#35396 - End
 			isSearched = true;
 			
 			break;
