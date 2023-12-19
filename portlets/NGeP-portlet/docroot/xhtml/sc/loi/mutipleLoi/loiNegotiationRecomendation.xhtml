@@ -157,7 +157,7 @@
 												  or lOIDetailBackingBean.managedBean.readOnly 
 												  or (supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions 
 												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA) 
-												  or lOIDetailBackingBean.disableRadioButtonIfSupplierBranchDeleted(supplierDtl.qtEvaluationResult)}" /> <ui:remove> #28777#29729 </ui:remove>
+												  or lOIDetailBackingBean.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplierDtl.qtEvaluationResult)}" /> <ui:remove> #28777#29729 </ui:remove>
 							<ui:remove>
 								#31061 - SHAFFUL (END)
 							</ui:remove>
@@ -196,12 +196,15 @@
 										<ui:remove>
 											31061 - SHAFFUL (Added filter disciplinaryAction)
 										</ui:remove>
+										<ui:remove> #28777#29729 - Start </ui:remove>
+										<ui:param name="isQTBranchDeleted" value="#{lOIDetailBackingBean.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(recommendedSuppl.qtEvaluationResult)}" />
+										<ui:remove> #28777#29729 - End </ui:remove>
 										<p:selectBooleanCheckbox
 											value="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatus}"
 											disabled="#{!isPendingNegotiationStatus or 
 															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded) or lOIDetailBackingBean.managedBean.readOnly
-															or recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-											style="margin-right:1px !important;">
+															or recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or isQTBranchDeleted}"
+											style="margin-right:1px !important;"> <ui:remove> #28777#29729 </ui:remove>
 											<p:ajax event="change" partialSubmit="true" process="@this"
 													update="@this, @([id$=recommendTbl])"
 													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
@@ -218,6 +221,14 @@
 												target="#{supplierDetailBackingBean.scQtProposal}" />
 											<h:outputText value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
+										
+										<ui:remove> #28777#29729 - Start </ui:remove>
+										 <p:spacer width="15" height="15"/>
+						                     <p:commandLink  process="@this"  action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
+								         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+												<h:graphicImage value="/css/images/exclam-info.png" />
+							         		</p:commandLink> 
+										<ui:remove> #28777#29729 - End </ui:remove>		
 										<br />
 									</p:column>
 								</p:dataList>
