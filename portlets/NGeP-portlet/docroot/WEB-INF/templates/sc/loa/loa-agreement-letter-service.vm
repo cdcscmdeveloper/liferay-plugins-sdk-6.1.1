@@ -623,7 +623,7 @@ u.underline {
 		<tr>
 			<td align="left" width="30%">
 				<span class="text_family_medium">Tandatangan Syarikat</span><br/>
-				_____________________________<br/>
+				.......................................................<br/>
 				<span class="text_family">Nama Penuh</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
@@ -638,7 +638,7 @@ u.underline {
 			</td>
 			<td align="left" width="30%">
 				<span class="text_family_medium">Tandatangan Saksi Syarikat</span><br/>
-				_____________________________<br/>
+				.......................................................<br/>
 				<span class="text_family">Nama Penuh Saksi</span><br/>
 				<span class="text_family">No. Kad Pengenalan</span><br/>
 				<span class="text_family">Alamat</span><br/>
@@ -1014,7 +1014,7 @@ u.underline {
 					<td class="text_family_red" valign="bottom">
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr style="margin-bottom:1px;" align="bottom"> 
-						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan.</span></td>
+						       		<td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
 					      </tr>
 					    </table>
 					</td>
@@ -2607,63 +2607,27 @@ u.underline {
 								</td>
 								
 								<td valign="top"  class="tableDataPR">
-									
-									#* 35295 - start
 									#set($maxQty = 0)
 									#set($minQty = 0)
 									#set($currentValue = 0)								
-									
 									#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
 											#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
 												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
  											  		#set($currentValue = $scLoiLoaItem.itemQty)
-											  
-											   #if($currentValue == 0)
-												   	#if($tplspecQuestion.clQuantity)
-											   			#set($currentValue = $tplspecQuestion.clQuantity)												
-											  	   	#else
-												   		#if($tplSpecZoneQtie.qty)
-												   			#set($currentValue = $tplSpecZoneQtie.qty) 
-														#end
-											   		#end									   
-											   #end	
-																	
-											  
-											   #if($maxQty == 0)
-												   #set($maxQty = $currentValue)
-												   #set($minQty = $currentValue)								   
-											   #end	
-											   
-											   #if($currentValue > $maxQty)
-											   		#set($maxQty = $currentValue)
-											   #end											 
-											   #if($currentValue < $minQty)
-												   #set($minQty = $currentValue)
-											   #end
-											   #end
-	
+												   #if($currentValue == 0)
+													   	#if($tplspecQuestion.clQuantity)
+												   			#set($currentValue = $tplspecQuestion.clQuantity)												
+												  	   	#else
+													   		#if($tplSpecZoneQtie.qty)
+													   			#set($currentValue = $tplSpecZoneQtie.qty) 
+															#end
+												   		#end									   
+												   #end	
+											  	 #end
 											#end
-	   
 									#end
-									
-									#if($minQty != $maxQty)
-										<span>$minQty - $maxQty</span>
-									#else
-										<span>$maxQty</span>
-									#end
-									35295 - end
-									*#
-									#set($currentValue = 0)	
-									#if($currentValue == 0)
-										   	#if($tplspecQuestion.clQuantity)
-												#set($currentValue = $tplspecQuestion.clQuantity)												
-									  	   	#else
-										   		#if($tplSpecZoneQtie.qty)
-										   			#set($currentValue = $tplSpecZoneQtie.qty) 
-												#end
-									  		#end									   
-									#end	
 									<span>$currentValue</span>
+										
 								</td>
 
 								<td valign="top"  class="tableDataPR" rowspan="2">							
