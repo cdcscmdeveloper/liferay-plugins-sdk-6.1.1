@@ -8327,41 +8327,21 @@ public void saveComplianceSample() {
 							evalResDTO = evaluationSo.saveReportDtls(reqDTO);
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
 						}
-					}
-				//2tier enter below
-					if(outputTab == 3 && this.getManagedBean().getEvaluatioStageActiveIndex() == 0
-							&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-									.getManagedBean().getScQt().getEvaluationType())){
-						retriveFinancialEvaluationStage();
-						retriveNonScoringComplianceFinancial(true);//#25138
-						this.getManagedBean().setTabFinancialIndex(1);
-	
-					}
-					//#34588 start
-					IQTEvaluationSO evaluationSO = null;
-					evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTEvaluationSO.class);
-					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-					reqDTO.setScQt(this.getManagedBean().getScQt());
-					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-					
-					if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						//#35011 start
-						retriveSummaryEvaluationStage();
-						//#35011 end
-					} 
-					//#34588 end
+
+						//#34588 start
+						if (this.getManagedBean().getWipStatusMax() <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+							//#35011 start
+							retriveSummaryEvaluationStage();
+							//#35011 end
+						} 
+						//#34588 end
+				}
 					
 				else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
 					if (currentTab == 2) {
-						//#25138(wip 4serangkai) bug -Start 8/6/2023
-						evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTEvaluationSO.class);
-						EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
-						//#25138(wip 4serangkai) bug -End 8/6/2023
+
 						if (this.getManagedBean()
 								.getEvaluatioStageActiveIndex() < 1) {
 							
@@ -8394,9 +8374,8 @@ public void saveComplianceSample() {
 											this.getManagedBean().setTabFinancialIndex(3);
 											outputTab = 2;
 										}
-										reqDTOwip.setScQt(this.getManagedBean().getScQt());
 										
-										if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+										if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 											retriveFinancialEvaluationStagePackage();
 											
 											this.getManagedBean().setTabFinancialIndex(2);
@@ -8424,9 +8403,8 @@ public void saveComplianceSample() {
 							retriveSummaryEvaluationStage();
 //							retriveOneTierFinancialSupplierSummary();
 							this.getManagedBean().setTabFinancialIndex(3);	
-							reqDTOwip.setScQt(this.getManagedBean().getScQt());
 							
-							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							if (this.getManagedBean().getWipStatusMax()  <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
 									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 											.getManagedBean().getScQt().getEvaluationType())) {
 								retrieveReportTabDtl();									
@@ -8705,10 +8683,19 @@ public void saveComplianceSample() {
 						
 					}
 					//#10542 from task list to train based on last save from user -start
-					if(currentTab == 0 && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
+					if((currentTab == 0 || currentTab == 1) && ParameterConst.EVALUATION_TYPES_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType())){
 						financialCheckListStatusCheck();
-						financialCheckListStatusCheckPackage();
+						//#10542 use when have 4serangkai - Start
+						if( this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE){
+							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
+									.get(0).getDocCategory());
+						}
+						if (!this.getManagedBean().getSingleSpecQuestion()) {
+							financialCheckListStatusCheckPackage();
+						}
+						//#10542 use when have 4serangkai - End
+						//financialCheckListStatusCheckPackage(); -use this if dont have 4serangkai
 						retrieveReportTabDtl();									
 						outputTab = 4;
 					}
@@ -14903,10 +14890,11 @@ private void retriveCommitteeRemarksList(){
 		if (SourcingConstants.EVALUATE_BY_BOTH_PACKAGE_ITEM.equalsIgnoreCase(this.getManagedBean().getScQt()
 				.getEvaluateBy())) {
 			if (maxSet == ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT) {
-				selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
-						.getMessage("lbl.sc.evaluation.view.by.tech.package.score",//#25138-Ahmaa
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())));
+				if(!this.getManagedBean().getNoSupplierPackageExist()){ //do not merge to previous if.. remeain below maxset flag, if supplier exist need to enter
+					selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
+							.getMessage("lbl.sc.evaluation.view.by.tech.package.score",// #25138-Ahmaa
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}			
 			} else {
 
 				selectItems.add(new SelectItem(QTConstants.FINANCIAL_SUMMARY_PACKAGE_MARGIN, ResourceBundleUtils
