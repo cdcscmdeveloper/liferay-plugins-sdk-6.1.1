@@ -17389,7 +17389,11 @@ private void retriveCommitteeRemarksList(){
 	}
 	
 	public String retriveTotalDemolScore(ScQtEvaluationResultDtl propId) {
-		String totalDemoScore = null;
+		String totalDemoScore = ResourceBundleUtils.getMessage(
+				"lbl.sc.qt.item.spec.null",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes()
+				.getUserLocale());//#28784 remove supplier not in demo supplier
 		BigDecimal divNum = new BigDecimal(0);
 		BigDecimal totalNum = new BigDecimal(0);
 		IQTEvaluationSO evaluationSO = null;
