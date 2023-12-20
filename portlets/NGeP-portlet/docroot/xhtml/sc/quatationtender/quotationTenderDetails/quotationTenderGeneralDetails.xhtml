@@ -368,7 +368,7 @@
 									test="#{!isReadOnly and createQtBB.managedBean.procMethodDropdownPresent}">
 									<ui:remove>9019 Reopen #note-289 - change required validation</ui:remove>
 									<p:selectOneMenu id="procMode" required="#{not empty param['skipsubmitvalidation']}"
-										value="#{scQt.procurementMode.parameterId}"
+										value="#{.procurementMode.parameterId}"
 										style="width: 205px;margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.procurement.mode']}">
 										<f:selectItems

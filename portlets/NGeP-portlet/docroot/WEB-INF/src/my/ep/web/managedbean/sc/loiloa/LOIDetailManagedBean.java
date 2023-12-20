@@ -420,6 +420,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String justification;
 	private String notReachAgreement;
 	private boolean negoDecisitionReadOnly;
+	private String decisionCode;
 	
 	
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
@@ -2416,6 +2417,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setNegoDecisitionReadOnly(boolean negoDecisitionReadOnly) {
 		this.negoDecisitionReadOnly = negoDecisitionReadOnly;
+	}
+
+	public String getDecisionCode() {
+		return decisionCode;
+	}
+
+	public void setDecisionCode(String decisionCode) {
+		this.decisionCode = decisionCode;
 	}
 	
 }
