@@ -415,12 +415,13 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	private String loiTaskId;
 	
-	//#30008
+	//#30008 - Start
 	private PmParameter decision;
 	private String justification;
 	private String notReachAgreement;
 	private boolean negoDecisitionReadOnly;
 	private String decisionCode;
+	//#30008 - end
 	
 	
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
@@ -2386,7 +2387,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#28777 & #29729 - End
 	
-	//#30008
+	//#30008 - Start
 	public String getJustification() {
 		return justification;
 	}
@@ -2426,5 +2427,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setDecisionCode(String decisionCode) {
 		this.decisionCode = decisionCode;
 	}
+	//#30008 - end
 	
 }

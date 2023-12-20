@@ -460,10 +460,11 @@ public class LOIDetailBackingBean extends
 					}
 		// #29007	Vinod End
 					
-					//#30008	
+					//#30008 - Start	
 					if(scLoi.getNegoDecision() != null){
 						this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId().toString()));
 					}
+					//#30008 - End
 					
 	}
 	
@@ -952,7 +953,7 @@ public class LOIDetailBackingBean extends
 					
 				}//34905-End
 				
-				//#30008
+				//#30008 - Start
 				if (this.getManagedBean().isItemized()) {
 					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
 					for (ScLoi scLoi : scLois) {
@@ -1007,6 +1008,7 @@ public class LOIDetailBackingBean extends
 						}
 					}
 				}
+				//#30008 - End
 			}		
 
 		} finally {
@@ -1486,13 +1488,14 @@ public class LOIDetailBackingBean extends
 			this.getManagedBean().setProgressivePaymentList(null);
 		}
 		
-		// #30008
+		//#30008 - Start
 		if (scLoi.getNegoDecision() != null) {
 			getManagedBean().setDecision(new PmParameter());
 			getManagedBean().setDecision(scLoi.getNegoDecision());
 			getManagedBean().setJustification(scLoi.getDecisionJustification());
 			getManagedBean().setNegoDecisitionReadOnly(true);
 		}
+		//#30008 - End
 		
 		getManagedBean().setSelectedScQtDeduction(null);
 	}
@@ -2332,10 +2335,11 @@ public class LOIDetailBackingBean extends
 		if (scLoi != null) // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
 			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
-		//#30008 
+		//#30008 - Start
 		getManagedBean().setDecision(new PmParameter());
 		getManagedBean().setDecision(scLoi.getNegoDecision());
-		getManagedBean().setJustification(scLoi.getDecisionJustification());		
+		getManagedBean().setJustification(scLoi.getDecisionJustification());
+		//#30008 - End
 		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
@@ -2916,14 +2920,14 @@ public class LOIDetailBackingBean extends
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO2);
 			PmParameter pmParameter = resDTO.getPmParameter();
 			scLoi.setNegoDecision(pmParameter);
-			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
-			//#30008 - end
+			scLoi.setDecisionJustification(this.getManagedBean().getJustification());			
 			
 			if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {	
 				awardDataType.setIsAgreement(false);
 			} else {
 				awardDataType.setIsAgreement(true);
 			}
+			//#30008 - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -7010,6 +7014,6 @@ public class LOIDetailBackingBean extends
 		} finally {
 		}
 
-	}
+	}//#30008 - end
 
 }

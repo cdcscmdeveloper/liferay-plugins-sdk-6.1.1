@@ -149,9 +149,7 @@
 								<h:outputText rendered="#{!supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
 								 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />								
 							</p:column>
-							<ui:remove>
-								#30008 - Add supplierDtl.noReachAgreement
-							</ui:remove>
+							<ui:remove>#30008 - Start</ui:remove>
 							<p:column selectionMode="single"
 								styleClass="td-check-box-spacing"
 								disabledSelection="#{!isPendingNegotiationStatus 
@@ -162,7 +160,7 @@
 												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA) 
 												  or lOIDetailBackingBean.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplierDtl.qtEvaluationResult)}" /> <ui:remove> #28777#29729 </ui:remove>
 							<ui:remove>
-								#31061 - SHAFFUL (END)
+								#31061 - SHAFFUL (END), #30008 - End
 							</ui:remove>
 						</p:dataTable> 
 						
