@@ -190,11 +190,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private Map<String, Integer> indexing;
 	
-	private boolean viewSclFromAgreement;
 	//Enhancement 15851 - shaqimi end
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	
-	private boolean isFromViewPage = false; // Fix - #34110
+	private String backToNtf; //25956
+	
+//	private boolean isFromViewPage = false; // Fix - #34110
 	
 	public void reassignValue(boolean value) 
 	{
@@ -262,7 +263,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 					contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 					log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 				}
-				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
+//				isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 				//if contract from tasklist taskid != null
 				if(getTaskId()!= null){
 					
@@ -355,7 +356,7 @@ private class ServiceListingPagingDataModel extends PagingDataModel<CtContractIt
 					
 					if(isServicecollapse()){
 				
-						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO , isFromViewPage); // Fix - #34110
+						resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 					    resDTO.getContractItemResultBean();
 
 					    if(resDTO.getContractItemResultBean().getResultList().size()>0){
@@ -418,7 +419,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 				contractVerId=contractBb.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId();
 				log.info("maintenance screen  :: contractVer :: >>> "+contractVerId);
 			}
-			isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
+//			isFromViewPage = contractBb.getManagedBean().isViewContract(); //Fix - #34110
 			// End - #29507 Fixing
 			  if(contractVerId!=null ){					
 					SearchFilterBean filterBean = new SearchFilterBean("ctContractVer.contractVerId", SearchOperator.OPERATOR_EQUALS.value(),contractVerId);
@@ -502,7 +503,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
             	
             	if(isProdcollapse()){
 				
-				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO, isFromViewPage); //Fix - #34110
+				resDTO=contractItemSO.searchProductServiceItemDtls(reqDTO);
 				if(resDTO.getContractItemResultBean().getResultList().size()>0) {
 //			    	 readOnly=false;
 			    	 return resDTO.getContractItemResultBean();
@@ -1626,13 +1627,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.indexing = indexing;
 	}
 
-	public boolean isViewSclFromAgreement() {
-		return viewSclFromAgreement;
-	}
-	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
-		this.viewSclFromAgreement = viewSclFromAgreement;
-	}
-
 	//Bug 34142, 15851 - shaqimi 04/12/2022 removed unnecessary code
 	//Bug 33096 - shaqimi start
 	public String getSupplementalLoaNo() {
@@ -1666,4 +1660,13 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedChangeItemPrice = selectedChangeItemPrice;
 	}
 	// End Fix - #33256
+	
+	//#25956 - Start
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	//#25956 - End
 }
