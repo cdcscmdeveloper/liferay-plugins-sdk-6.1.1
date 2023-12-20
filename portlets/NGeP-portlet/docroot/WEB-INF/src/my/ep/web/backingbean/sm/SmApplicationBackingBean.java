@@ -1413,7 +1413,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		
-		//#34624 start
+		//#34624 & #35204 start
 		log.info("Application Type: " + applicationType);
 		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
 		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
@@ -1421,7 +1421,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setApplCategoryType("N");
 		}
 		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
-		//#34624 end
+		//#34624 & #35204 end
 		
 		if (fromBpm
 				&& (getManagedBean().isPoUser() || getManagedBean()
