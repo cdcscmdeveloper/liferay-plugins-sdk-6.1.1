@@ -33,6 +33,16 @@
 				<ui:decorate template="/WEB-INF/facelets/templates/claim_template.xhtml">
 					<ui:define name="outComeSection">
 						<ui:repeat var="bpmAction" value="#{approvalBackingBean.managedBean.outComes}">
+						<ui:remove>#21692 WIP - Start</ui:remove>
+						<c:choose>
+							<c:when test="#{approvalBackingBean.managedBean.qt.responsePeriod == null}">
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
+							</c:when>
+							<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.btn.agree']}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();"
 								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" rendered="#{bpmAction eq 'ACCEPT'}"/>
@@ -45,6 +55,9 @@
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();"
 								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" rendered="#{!((bpmAction eq 'ACCEPT') or (bpmAction eq 'REJECT'))}"/>
+							</c:otherwise>
+						</c:choose>
+						<ui:remove>#21692 WIP - End</ui:remove>
 						</ui:repeat>
 						<ac:spkiPopup id="spkiPopup"
 												password="#{approvalBackingBean.managedBean.spkiBackingBean.password}"
