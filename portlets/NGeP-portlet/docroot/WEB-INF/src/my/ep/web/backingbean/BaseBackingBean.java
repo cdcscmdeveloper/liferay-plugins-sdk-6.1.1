@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -4292,7 +4293,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(isLatestCatCodeDesc(isSupplierProfile)
+		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
 				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
 			return catL3.getCategoryName();
 		}
@@ -4314,7 +4315,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile){
-		SmAppl appl = getManagedBean().getSmAppl();
+		return isLatestCatCodeDesc(isSupplierProfile, getManagedBean().getSmAppl());
+	}
+	
+	/**
+	 * @param isSupplierProfile
+	 * @param appl
+	 * @return
+	 */
+	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
+		if(appl == null || appl.getPmStatus() == null){
+			return false;
+		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
@@ -4353,4 +4365,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return getManagedBean().isDowngradeRole();
 	}
 	//END #29956
+	
+	//#32304
+	/**
+	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
+	 * @param isSVC
+	 * @throws IOException
+	 */
+	public void downloadCancelledBumiAppl(boolean isSVC) throws IOException{
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
+		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes().getUserSessionBean().getUserId().toString());
+		paramMap.put("PLANGUANGE", "ms");
+		String report = isSVC ? ReportConst.SM_BUMI_APPL_CANCELLED_SVC : ReportConst.SM_BUMI_APPL_CANCELLED;
+
+		generateReport(report, paramMap);
+	}
 }
