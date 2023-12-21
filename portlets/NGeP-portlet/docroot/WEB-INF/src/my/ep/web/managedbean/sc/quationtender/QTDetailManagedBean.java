@@ -1667,16 +1667,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	
-	/**
-	 * Sets the panel suppliers.
-	 * 
-	 * @param panelSuppliers
-	 *            the new panel suppliers
-	 */
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
-	}
-
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -1905,6 +1895,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
+	private String approverUserId;//12471
+
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -3469,6 +3461,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public List<SmSupplier> getPanelSuppliers() {
 		return panelSuppliers;
+	}
+	
+	/**
+	 * Sets the panel suppliers.
+	 * 
+	 * @param panelSuppliers
+	 *            the new panel suppliers
+	 */
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
 	}
 
 	/**
@@ -12071,6 +12073,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
+
+	public String getApproverUserId() {
+		return approverUserId;
+	}
+
+	public void setApproverUserId(String approverUserId) {
+		this.approverUserId = approverUserId;
+	}
 	
 }
 
