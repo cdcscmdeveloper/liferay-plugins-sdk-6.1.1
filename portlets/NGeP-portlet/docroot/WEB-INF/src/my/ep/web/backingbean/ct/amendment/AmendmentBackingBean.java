@@ -8499,7 +8499,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //				setTabValue("AD");
 				
 				//#35434 - Start
-				if(getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){ 
+				if(getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){ 
 					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				}else{
