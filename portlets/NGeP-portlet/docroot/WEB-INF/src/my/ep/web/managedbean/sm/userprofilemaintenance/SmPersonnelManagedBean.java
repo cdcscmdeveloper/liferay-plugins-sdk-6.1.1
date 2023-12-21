@@ -160,6 +160,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	// #31710 - start
 	private String supplierType;
 	// #31710 - end
+	// #34810 - Start
+	private boolean checkingAfterSave;
+	// #34810 - End
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -1123,5 +1126,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.supplierType = supplierType;
 	}
 	// #31710 - end
+	// #34810 - Start
+	public boolean isCheckingAfterSave() {
+		return checkingAfterSave;
+	}
+
+	public void setCheckingAfterSave(boolean checkingAfterSave) {
+		this.checkingAfterSave = checkingAfterSave;
+	}
+	// #34810 - End
 	
 }

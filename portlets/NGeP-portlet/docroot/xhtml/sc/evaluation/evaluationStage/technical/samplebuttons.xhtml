@@ -23,7 +23,7 @@
 								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 								style="float:right;" update="@all" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								action="#{evaluationBackingBean.saveProposalScoreDtls}" />
+								action="#{evaluationBackingBean.checkSampleCompliance}" />
 						</ui:fragment></td>
 				</tr>
 			</table>
