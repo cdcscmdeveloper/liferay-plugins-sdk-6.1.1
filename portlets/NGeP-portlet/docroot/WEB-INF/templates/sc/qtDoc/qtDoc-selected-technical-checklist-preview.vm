@@ -1,0 +1,687 @@
+<html>
+<head>
+	<style>
+@page {
+	size: A4 landscape;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+@page { @bottom-center { content:"Page "counter(page)" / "counter(pages);	
+}
+</style>
+</head>
+<body>
+#set($rowCount = 0)
+	#foreach( $techChecklist in $selectedTechChecklist )
+		#if($techChecklist.definationType.parameterId == $Specification)
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td bgcolor="#6d839b" valign="top" colspan="4" class="title border left" style="text-align: left; background-color: #ddd; padding-left: 5px; padding-right: 5px; font-family: Arial;"><b><span style="text-transform:uppercase">$bean.getMessageCommon("lbl.sc.template.spec")</span></b></td>
+			</tr>
+			<tr>
+				<td style="color: #0000cc; font-family: Arial; font-size: 10px;" width="7%">$bean.getMessageCommon("lbl.sc.spec.items.guideline.pdf")</td>
+				<td style="font-family: Arial; font-size: 10px;" width="93%"><u style="border-bottom: 0.5px solid #000; text-decoration: none;">$bean.getMessageCommon("lbl.sc.spec.items.guideline1.pdf").</u></td>
+			</tr>
+			<tr>
+				<td style="color: #0000cc; font-family: Arial; font-size: 10px;" colspan="2">$bean.getMessageCommon("lbl.pm.uom.instruction.please.click") $bean.getMessageCommon("lbl.pm.uom.instruction.view.uom.code.name1")</td>
+			</tr>
+		</table>
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:5px;">
+			<tr>
+				<td style="font-family: Arial; font-size: 10px; text-align:right;" width="15%">$bean.getMessageCommon("lbl.sc.document.title")</td>
+				<td style="font-family: Arial; font-size: 10px; " width="1%"></td>
+				<td style="font-family: Arial; font-size: 10px; " width="84%" colspan="4">
+					<table width="80%" style="margin-top:5px; border: 1px solid #ddd;">
+					$techChecklist.scQtDoc.tplSpecMaster.specName
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="font-family: Arial; font-size: 10px; text-align:right;" width="10%">$bean.getMessageCommon("lbl.sc.item.type")</td>
+				<td style="font-family: Arial; font-size: 10px; " width="1%"></td>
+				<td style="font-family: Arial; font-size: 10px; " width="39%">
+					<table width="30%" style="margin-top:5px; border: 1px solid #ddd;">
+					$bean.getParameterDesc($techChecklist.scQtDoc.tplSpecMaster.itemTypeCode)
+					</table>
+				</td>
+				<td style="font-family: Arial; font-size: 10px; text-align:right;" width="10%">$bean.getMessageCommon("lbl.tpl.spec.specification.type")</td>
+				<td style="font-family: Arial; font-size: 10px; " width="1%"></td>
+				<td style="font-family: Arial; font-size: 10px; " width="39%">
+					<table width="30%" style="margin-top:5px; border: 1px solid #ddd;">
+					$bean.getParameterDesc($techChecklist.scQtDoc.tplSpecMaster.specTypeCode)
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="font-family: Arial; font-size: 10px; text-align:right;" width="10%">$bean.getMessageCommon("lbl.sc.spec.local.goods")</td>
+				<td style="font-family: Arial; font-size: 10px; " width="1%"></td>
+				<td style="font-family: Arial; font-size: 10px; " width="89%" colspan="4">
+					#if($bean.getParameterDesc($techChecklist.scQtDoc.tplSpecMaster.itemOriginCode)=="Local")
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
+					#else
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
+					#end
+					Local
+					#if($bean.getParameterDesc($techChecklist.scQtDoc.tplSpecMaster.itemOriginCode)!="Local")
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="8px" height ="8px"></img> 
+					#else
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="8px" height ="8px"></img> 
+					#end
+					Imported
+				</td>
+			</tr>
+			<tr>
+				<td style="font-family: Arial; font-size: 10px; text-align:right;" width="10%">$bean.getMessageCommon("lbl.sc.status")</td>
+				<td style="font-family: Arial; font-size: 10px; " width="1%"></td>
+				<td style="font-family: Arial; font-size: 10px; " width="39%">
+					<table width="30%" style="margin-top:5px; border: 1px solid #ddd;">
+					$bean.getStatusDescById($techChecklist.pmStatus.statusId)
+					</table>
+				</td>
+				<td style="font-family: Arial; font-size: 10px; text-align:right;" width="10%">$bean.getMessageCommon("lbl.sc.spec.item.weightage")</td>
+				<td style="font-family: Arial; font-size: 10px; " width="1%"></td>
+				<td style="font-family: Arial; font-size: 10px; " width="39%">
+					#if($techChecklist.scQtDoc.tplSpecMaster.weightageReq)
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="10px" height ="10px"></img> 
+					#else
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="10px" height ="10px"></img> 
+					#end
+					Weighted Point 
+					#if(!$techChecklist.scQtDoc.tplSpecMaster.weightageReq)
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="10px" height ="10px"></img> 
+					#else
+						<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="10px" height ="10px"></img> 
+					#end
+					Direct Scoring  <img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 1px;"></img>
+				</td>
+			</tr>
+		</table>
+		<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:5px;">
+		<tr>
+			<td bgcolor="#6d839b" valign="top" colspan="4" class="title border left" style="text-align: left; background-color: #ddd; padding-left: 5px; padding-right: 5px; font-family: Arial;"><b><span style="text-transform:uppercase">$bean.getMessageCommon("lbl.tpl.spec.content.specification")</span></b></td>
+		</tr>
+		<tr>
+			<td style="color: #0000cc; font-family: Arial; font-size: 10px;" width="100%">$bean.getMessageCommon("lbl.tpl.spec.content.instruction")</td>
+		</tr>
+		</table>
+		<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:5px; border: 1px solid #ddd;">
+			<tbody>
+				<tr>
+					<th width="35%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: red;">* </b><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.item")</b></th>
+					<th width="15%" valign="top" rowspan="2" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: red;">* </b><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.uom")</b></th>
+					<th width="15%" valign="top" rowspan="2" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: red;">* </b><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.price.type")</b>  <img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 1px;"></img></th>
+					<th width="15%" valign="top" rowspan="2" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: red;">* </b><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.quantity")</b></th>
+					<th width="15%" valign="top" rowspan="2" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: red;">* </b><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.answer.schema")</b></th>
+					<th width="5%" valign="top" rowspan="2" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"></th>
+				</tr>
+				<tr>
+					<th width="20%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: red;">* </b><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.specification")</b></th>
+				</tr>
+				#foreach( $question in $techChecklist.scQtDoc.tplSpecMaster.tplSpecQuestions )
+				<tr>
+					<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						<table height="95%" width="95%" style="margin-top:5px; margin-bottom:5px; margin-left: 5px; border:1px solid #ddd;">
+							#if($question.questionType == "I")
+							$question.clItem
+							#else
+							$question.clSpecDetail
+							#end
+						</table>
+					</td>
+					<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						#if($question.questionType == "I")
+						<table>
+							<tr>
+								<td width="90%">
+									<table width="95%" style="margin-top:5px; margin-bottom:5px; margin-left: 5px; border:1px solid #ddd;">
+										<tr>
+											$question.clUom.uomCode - $question.clUom.uomName
+										</tr>
+									</table>
+								</td>
+								<td width="10%">
+								<u style="border-bottom: 0.5px solid #000; text-decoration: none;">$bean.getMessageCommon("lbl.tpl.spec.content.uom")</u>
+								</td>
+							</tr>
+						</table>
+						
+						#end
+					</td>
+					<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						#if($question.questionType == "I")
+						<table width="90%" style="margin-top:5px; margin-bottom:5px; margin-left: 5px; border:1px solid #ddd;">
+							$bean.getParameterDesc($question.clPriceTypeCode)
+						</table>
+						#end
+					</td>
+					<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;"></td>
+					<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						#if($question.questionType != "I")
+						<table width="90%" style="margin-top:5px; margin-bottom:5px; margin-left: 5px; border:1px solid #ddd;">
+							$bean.getParameterDesc($question.scoreTypeCode)
+						</table>
+						#end
+					</td>
+					<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;"></td>
+				</tr>
+				#end
+			</tbody>
+		</table>
+			
+		#end
+		
+		#if($techChecklist.definationType.parameterId == $SystemDefined || $techChecklist.definationType.parameterId == $WebForm)
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td bgcolor="#f2f2f2;" style="font-family: Arial; font-size: 10px;" width="8%"><b>$bean.getMessageCommon("lbl.sc.spec.checklist.title")</b>   <span style="color: #595959;">$techChecklist.title</span></td>
+			</tr>
+			<tr>
+				<td colspan="2" >
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:15px;">
+						<tr>
+							<td bgcolor="#6d839b" valign="top" class="title border left" style="text-align: left; background-color: #ddd; padding-left: 5px; padding-right: 5px; font-family: Arial; font-size: 12px;">
+								<b style="color: red;">* </b>
+								<b>
+									<span style="text-transform:uppercase">
+									#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+									$bean.getMessageCommon("lbl.sc.spec.company.exp.fed.gov") <img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 1px;"></img>
+									#elseif($techChecklist.pmDocument.docDefinitionKey == "TN")
+									$bean.getMessageCommon("lbl.sc.spec.company.exp.fed.gov") <img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 1px;"></img>
+									#elseif($techChecklist.pmDocument.docDefinitionKey == "NE")
+									$bean.getMessageCommon("lbl.sc.spec.total.num.employees")
+									#elseif($techChecklist.pmDocument.docDefinitionKey == "TL")
+									$bean.getMessageCommon("lbl.sc.spec.tech.staff.list")
+									#end
+									</span>
+								</b>
+							</td>
+						</tr>
+						<tr>
+							#if($techChecklist.pmDocument.docDefinitionKey != "NE" && $techChecklist.pmDocument.docDefinitionKey != "TL")
+							<table width="100%">
+								<tr>
+									<td style="font-family: Arial; font-size: 10px;" width="30%">
+									<b style="color: red;">* </b>
+									#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+									$bean.getMessageCommon("lbl.sc.spec.company.exp.since.year")
+									#elseif($techChecklist.pmDocument.docDefinitionKey == "TN")
+									$bean.getMessageCommon("lbl.sc.spec.company.exp.since.year")
+									#end
+									</td>
+									<td width="70%">
+										<table width="15%" style="margin-left:3px; border: 1px solid #ddd; text-align: right; font-size: 10px;">
+											<tr>
+											#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+											$techChecklist.scQtCheckListValue.year
+											#elseif($techChecklist.pmDocument.docDefinitionKey == "TN")
+											$techChecklist.scQtCheckListValue.year
+											#end
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+							#end
+						</tr>
+						<tr>
+							<td style="color: #0000cc; font-family: Arial; font-size: 10px;" width="100%">
+							#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+							$bean.getMessageCommon("lbl.sc.spec.score.company.exp.tech.fin.gov.supplier.instructions")
+							#elseif($techChecklist.pmDocument.docDefinitionKey == "TN")
+							$bean.getMessageCommon("lbl.sc.spec.score.company.exp.tech.fin.non.gov.supplier.instructions")
+							#elseif($techChecklist.pmDocument.docDefinitionKey == "NE")
+							$bean.getMessageCommon("lbl.sc.spec.total.num.employees.instruction")
+							#elseif($techChecklist.pmDocument.docDefinitionKey == "TL")
+							$bean.getMessageCommon("lbl.sc.spec.score.company.exp.tech.fin.gov.supplier.instructions")
+							#end
+							</td>
+						</tr>
+					</table>
+					#if($techChecklist.pmDocument.docDefinitionKey != "NE")
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:15px; border: 1px solid #ddd;">
+					#else
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:15px;">
+					#end
+					
+						#if($techChecklist.pmDocument.docDefinitionKey == "TG" || $techChecklist.pmDocument.docDefinitionKey == "TL")
+						<tr>
+							<th width="15%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;">
+								<b style="color: #b3b3b3;">
+								#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+								$bean.getMessageCommon("lbl.sc.spec.customer.name")
+								#else
+								$bean.getMessageCommon("lbl.sc.name")
+								#end
+								</b>
+							</th>
+							<th width="15%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;">
+								<b style="color: #b3b3b3;">
+								#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+								$bean.getMessageCommon("lbl.sm.projDtls.projTitle")
+								#else
+								$bean.getMessageCommon("lbl.sc.identification.no")
+								#end
+								</b>
+							</th>
+							<th width="25%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;">
+								<b style="color: #b3b3b3;">
+								#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+								$bean.getMessageCommon("lbl.sm.projDtls.contrVal")
+								#else
+								$bean.getMessageCommon("lbl.sc.designation")
+								#end
+								</b>
+							</th>
+							<th width="25%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;">
+								<b style="color: #b3b3b3;">
+								#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+								$bean.getMessageCommon("lbl.sm.projDtls.procDate")
+								#else
+								$bean.getMessageCommon("lbl.sc.qualification")
+								#end
+								</b>
+							</th>
+							<th width="25%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;">
+								<b style="color: #b3b3b3;">
+								#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+								$bean.getMessageCommon("lbl.sm.projDtls.workProgress")
+								#else
+								$bean.getMessageCommon("lbl.sc.spec.no.of.yrs.exp")
+								#end
+								</b>
+							</th>
+						</tr>
+						<tr>
+							<td colspan="5" style="font-family: Arial; font-size: 10px;">
+							No records found
+							</td>
+						</tr>
+						#elseif($techChecklist.pmDocument.docDefinitionKey == "TN")
+						<tr>
+							<th width="10%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.spec.customer.name")</b></th>
+							<th width="10%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.spec.contract.title")</b></th>
+							<th width="15%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.spec.loa.no")</b></th>
+							<th width="10%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.effective.date")</b></th>
+							<th width="10%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.exp.date")</b></th>
+							<th width="18%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.spec.contarct.period")</b></th>
+							<th width="17%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.spec.contarct.amount")</b></th>
+							<th width="10%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3; font-size: 10px;">$bean.getMessageCommon("lbl.sc.remarks")</b></th>
+						</tr>
+						<tr>
+							<td colspan="8" style="font-family: Arial; font-size: 10px;">
+							No records found
+							</td>
+						</tr>
+						#elseif($techChecklist.pmDocument.docDefinitionKey == "NE")
+						<tr>
+							<td style="font-family: Arial; font-size: 10px; align-left:0px;">
+							#if(!$techChecklist.scQtCheckListValue.allEmployee())
+							<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="10px" height ="10px"></img> 
+							#else
+							<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="10px" height ="10px"></img> 
+							#end
+							$bean.getMessageCommon("lbl.sc.spec.total.num.employees.for.this.project")
+							#if($techChecklist.scQtCheckListValue.allEmployee())
+							<img src='$hostUrl/NGeP-portlet/css/images/radio_checked.png' width="10px" height ="10px"></img> 
+							#else
+							<img src='$hostUrl/NGeP-portlet/css/images/radio_unchecked.png' width="10px" height ="10px"></img> 
+							#end
+							$bean.getMessageCommon("lbl.sc.spec.total.num.employees.for.all.employees") <img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 1px;"></img>
+							</td>
+						</tr>
+						#end
+					</table>
+					#if($techChecklist.pmDocument.docDefinitionKey != "NE")
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:20px;">
+						<tr>
+							<td style="font-family: Arial; font-size: 10px; text-align:right;" width="15%">
+							#if($techChecklist.pmDocument.docDefinitionKey == "TL")
+							$bean.getMessageCommon("lbl.sc.spec.total.staff")
+							#elseif($techChecklist.pmDocument.docDefinitionKey == "TG" || $techChecklist.pmDocument.docDefinitionKey == "TN")
+							$bean.getMessageCommon("lbl.sc.spec.total.no.contracts")
+							#end
+							</td>
+							<td width="85%">
+								<table width="15%" style="margin-left:3px; border: 1px solid #ddd;">
+									<tr rowspan="5"></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					#end
+				</td>
+			</tr>
+			#if($techChecklist.isScoringReq())
+				<tr>
+					<td width="100%" colspan="2">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:15px;">
+							<tr>
+								<td bgcolor="#6d839b" valign="top" class="title border left" style="text-align: left; background-color: #ddd; padding-left: 5px; padding-right: 5px; font-family: Arial; font-size: 12px;">
+									<b>
+										<span style="text-transform:uppercase">
+										#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+										$bean.getMessageCommon("lbl.sc.spec.score.total.no.contracts")
+										#elseif($techChecklist.pmDocument.docDefinitionKey == "TN")
+										$bean.getMessageCommon("lbl.sc.spec.score.total.no.contracts") <img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 1px;"></img>
+										#elseif($techChecklist.pmDocument.docDefinitionKey == "NE")
+										$bean.getMessageCommon("lbl.sc.scoring.tot.employees")
+										#elseif($techChecklist.pmDocument.docDefinitionKey == "TL")
+										$bean.getMessageCommon("lbl.sc.spec.score.tot.tech.staff")
+										#end
+										</span>
+									</b>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				#set($scoreType =$techChecklist.scQtCheckListScores.size())
+				<tr>
+					<td width="100%">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:15px;">
+							<tr>
+								<td style="font-family: Arial; font-size: 10px; text-align:left;" width="15%">
+								<b style="color: red;">* </b>$bean.getMessageCommon("lbl.tpl.spec.content.scoring.settings.score.type")
+								</td>
+								<td width="13%" style="border: 1px solid #ddd;font-size: 13px;">
+									<table width="5%">
+										<tr>
+											<td>
+											#if($scoreType==1)
+											$bean.getMessageCommon("lbl.sc.checklist.user.score")
+											#else
+											$bean.getMessageCommon("lbl.sc.checklist.auto.score")
+											#end
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td width="72%">
+									<img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 5px;"></img>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				#if($scoreType==1)
+				<tr>
+					<td width="100%">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:5px;">
+							<tr>
+								<td style="font-family: Arial; font-size: 10px; text-align:left;" width="15%">
+								<b style="color: red;">* </b>$bean.getMessageCommon("lbl.tpl.spec.content.scoring.settings.max.score")
+								</td>
+								<td width="85%">
+									<table width="15%" style="border: 1px solid #ddd; text-align:right; font-size: 13px;">
+										<tr>
+											<td>
+											#foreach( $score in $techChecklist.scQtCheckListScores )
+											$score.score
+											#end
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				#else
+				<tr>
+					<td width="100%">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:5px; border: 1px solid #ddd;">
+							<tr>
+								<th width="10%" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial;"><img src='$hostUrl/NGeP-portlet/css/images/checkbox_unchecked.png' width="20px" height ="20px" style="display: block; margin: 0 auto;"></img></th>
+								<th width="30%" valign="top" style="text-align: left; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3;"><b style="color: red;">* </b>$bean.getMessageCommon("lbl.tpl.spec.content.scoring.scoring.range.from")</b><img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 5px;"></img></th>
+								<th width="30%" valign="top" style="text-align: left; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3;"><b style="color: red;">* </b>$bean.getMessageCommon("lbl.tpl.spec.content.scoring.scoring.range.to")</b><img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 5px;"></img></th>
+								<th width="30%" valign="top" style="text-align: left; border: 1px solid #ddd; font-family: Arial;"><b style="color: #b3b3b3;"><b style="color: red;">* </b>$bean.getMessageCommon("lbl.tpl.spec.content.scoring.scoring.score")</b></th>
+							</tr>
+							#foreach( $score in $techChecklist.scQtCheckListScores )
+							<tr>
+								<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd; text-align: center;">
+								<img src='$hostUrl/NGeP-portlet/css/images/checkbox_unchecked.png' width="20px" height ="20px" style="display: block; margin: 0 auto;"></img>
+								</td>
+								<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+									<table width="30%" style="margin-top:2px; margin-bottom:2px; margin-left:2px; border: 1px solid #ddd; text-align:right;">
+										<tr>
+											<td>
+											$score.rangeFrom
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+									<table width="30%" style="margin-top:2px; margin-bottom:2px; margin-left:2px; border: 1px solid #ddd; text-align:right;">
+										<tr>
+											<td>
+											$score.rangeTo
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+									<table width="30%" style="margin-top:2px; margin-bottom:2px; margin-left:2px; border: 1px solid #ddd; text-align:right;">
+										<tr>
+											<td>
+											$score.score
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							#end
+						</table>
+					</td>
+				</tr>
+				#end
+			#end
+		</table>
+		#end
+		#if($techChecklist.definationType.parameterId == $Sample)
+		#set($rowCountSample=0)
+			#foreach( $template in $TemplatesForSample )
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 10px;">
+				<tr>
+					<td bgcolor="#6d839b" valign="top" colspan="3" style="text-align: left; background-color: #ddd; padding-left: 5px; padding-right: 5px; font-family: Arial; font-size: 12px;">
+					<b>
+					<span style="text-transform:uppercase">
+					$bean.getMessageCommon("lbl.sc.qt.sampel.technical.panel.search.criteria")	
+					</span>
+					</b>
+					</td>
+				</tr>
+				<tr>
+					<td style="margin-top:5px;" width="7%">
+					$bean.getMessageCommon("lbl.sc.price.inquiry.item.name")
+					</td>
+					<td width="93%" colspan="2">
+						<table width="50%" style="margin-top:5px; border: 1px solid #ddd;">
+							<tr rowspan="5"></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td style="margin-top:15px; text-align: center;" colspan="2" width="95%">
+						<table style="border: 1px solid #ddd; float: right;">
+							<tr><td>$bean.getMessageCommon("lbl.btn.search")</td></tr>
+						</table>
+					</td>
+					<td style="margin-top:15px; text-align: center;" width="5%">
+						<table style="border: 1px solid #ddd; margin-left: 5px; margin-right: 5px; float: right;">
+							<tr><td>$bean.getMessageCommon("lbl.btn.reset")</td></tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 5px;">
+				<tr>
+					<td bgcolor="#6d839b" valign="top" colspan="3" style="text-align: left; background-color: #ddd; padding-left: 5px; padding-right: 5px; font-family: Arial; font-size: 12px;">
+						<b>
+						<span style="text-transform:uppercase">
+						$bean.getMessageCommon("lbl.sc.qt.sampel.technical.panel.item.search.header")	
+						</span>
+						</b>
+					</td>
+				</tr>
+				<tr>
+					<td style="color: #0000cc; font-family: Arial; font-size: 10px;" width="100%">
+					$bean.getMessageCommon("lbl.sc.qt.spec.sample.instruction")<br/>
+					$bean.getMessageCommon("lbl.tpl.spec.content.scoring.settings.mandatory.specification.sample.instruction.spec.prepare")
+					</td>
+				</tr>
+			</table>
+			<table style="margin-top: 5px; font-size: 10px; text-align:right;" width="65%">
+				<tr>
+					<td width="10%">$bean.getMessageCommon("lbl.sc.document.title")</td>
+					<td width="90%" style="border: 1px solid #ddd; font-size: 10px; text-align:left;">
+					$template.scQtDoc.tplSpecMaster.specName
+					</td>
+				</tr>
+			</table>
+			<table style="font-size: 10px; text-align:right;" width="65%">
+				<tr>
+					<td width="10%">$bean.getMessageCommon("lbl.sc.item.type")</td>
+					<td width="25%" style="border: 1px solid #ddd; font-size: 10px; text-align:left;"> 
+					$bean.getParameterDesc($template.scQtDoc.tplSpecMaster.itemTypeCode)
+					</td>
+					<td width="40%">$bean.getMessageCommon("lbl.tpl.spec.specification.type")</td>
+					<td width="25%" style="border: 1px solid #ddd; font-size: 10px; text-align:left;"> 
+					$bean.getParameterDesc($template.scQtDoc.tplSpecMaster.specTypeCode)
+					</td>
+				</tr>
+				<tr>
+					<td width="10%">$bean.getMessageCommon("lbl.sc.spec.local.goods")</td>
+					<td width="25%" style="border: 1px solid #ddd; font-size: 10px; text-align:left;"> 
+					#if($template.scQtDoc.tplSpecMaster.itemOriginCode.parameterCode == "L")
+					$bean.getMessageCommon("lbl.sc.qt.sample.type.of.goods.local")
+					#elseif($template.scQtDoc.tplSpecMaster.itemOriginCode.parameterCode == "I")
+					$bean.getMessageCommon("lbl.sc.qt.sample.type.of.goods.import")
+					#end
+					</td>
+					<td width="40%"></td>
+					<td width="25%"></td>
+				</tr>
+			</table>
+			#set($manSpec=0)
+			#foreach( $question in $template.scQtDoc.tplSpecMaster.tplSpecQuestions )
+				#if($question.questionType == "I")
+					#if($question.mandatorySpecForSample)
+					#set($manSpec=$manSpec + 1)
+					#end
+				#end
+			#end
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:5px; border: 1px solid #ddd;">
+				<tr>
+					<th width="25%" rowspan="2" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.item")</b></th>
+					<th width="10%" rowspan="2" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.uom")</b></th>
+					<th width="10%" rowspan="2" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.price.type")</b></th>
+					<th width="10%" rowspan="2" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.quantity")</b></th>
+					<th width="25%" colspan="2" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.sc.qt.sampel")</b></th>
+					<th width="10%" rowspan="2" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.scoring.settings.max.score")</b></th>
+					#if($manSpec > 0)
+					<th width="10%" rowspan="2" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.scoring.settings.mandatory.specification")</b></th>
+					#end
+				</tr>
+				<tr>
+					<th width="12.5%" colspan="1" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.sc.qt.spec.sample.question.requird.sample")</b></th>
+					<th width="12.5%" colspan="1" valign="top" style="text-align: center; border: 1px solid #ddd; font-family: Arial; font-size: 10px;"><b style="color: #b3b3b3;">$bean.getMessageCommon("lbl.tpl.spec.content.quantity")</b></th>
+				</tr>
+				#set($totelScore=0)
+				#foreach( $question in $template.scQtDoc.tplSpecMaster.tplSpecQuestions )
+					#if($question.questionType == "I")
+					<tr>
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						$question.clItem
+						</td>
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						$question.clUom.uomName
+						</td>
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						$bean.getParameterDesc($question.clPriceTypeCode)
+						</td>
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+						#if($question.clPriceTypeCode.parameterCode == "05" || $question.clPriceTypeCode.parameterCode == "07")
+						<img src='$hostUrl/NGeP-portlet/css/images/design/ico-edit.png' width="10px" height ="10px" style="margin-left: 5px;"></img>
+						#end
+						#if($question.clPriceTypeCode.parameterCode == "03" || $question.clPriceTypeCode.parameterCode == "07")
+						<img src='$hostUrl/NGeP-portlet/css/images/design/ico-edit.png' width="10px" height ="10px" style="margin-left: 5px;"></img>
+						#end
+						</td>
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd; text-align: center;">
+						#if($question.sampleReq)
+						<img src='$hostUrl/NGeP-portlet/css/images/checkbox_checked.png' width="20px" height ="20px"></img>
+						#else
+						<img src='$hostUrl/NGeP-portlet/css/images/checkbox_unchecked.png' width="20px" height ="20px"></img>
+						#end
+						</td>
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+							<table width="95%" style="margin-top:2px; margin-bottom:2px; margin-left:2px; border: 1px solid #ddd; text-align:right;">
+								#if($question.sampleQuantity!=$null)
+								<tr>
+									<td>
+									$question.sampleQuantity
+									
+									</td>
+								</tr>
+								#else
+								<tr rowspan="7"></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+								#end
+							</table>
+						</td>
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+							#if($question.sampleScore!=$null)
+							<table width="95%" style="margin-top:2px; margin-bottom:2px; margin-left:2px; border: 1px solid #ddd; text-align:right;">
+								<tr>
+									<td>
+									$question.sampleScore
+									</td>
+								</tr>
+							</table>
+							#end
+						</td>
+						#if($manSpec > 0)
+						<td style="font-family: Arial; font-size: 10px; border: 1px solid #ddd;">
+							#if($question.mandatorySpecForSample)
+							<table width="100%">
+								<tr>
+									<td width="80%" style="margin-top:2px; margin-bottom:2px; margin-left:2px; border: 1px solid #ddd;">
+									$bean.getMessageCommon("lbl.txt.yes")
+									</td>
+									<td width="20%" style="margin-top:2px; margin-bottom:2px; margin-left:2px;">
+									<img src='$hostUrl/NGeP-portlet/css/images/ico-info.png' width="10px" height ="10px" style="margin-left: 1px;"></img>
+									</td>
+								</tr>
+							</table>
+							#end
+						</td>
+						#end
+					</tr>
+					#set($totelScore = $totelScore + $question.sampleScore)
+					#end
+				#end
+			</table>
+			<table width="100%" style="margin-top:20px; text-align:right;">
+				<tr>
+					<td width="15%">$bean.getMessageCommon("lbl.sc.spec.total.points")</td>
+					<td width="15%" style="border: 1px solid #ddd;">
+					#if($totelScore!=0)
+					$totelScore
+					#end
+					</td>
+					<td width="70%"></td>
+				</tr>
+			</table>
+			#set($rowCountSample = $rowCountSample + 1)
+			#if($rowCountSample < $TemplatesForSample.size())
+				<div style="page-break-after:always;"><br/></div>
+			#end
+			#end
+		#end
+		#set($rowCount = $rowCount + 1)
+		#if($rowCount < $selectedTechChecklist.size())
+			<div style="page-break-after:always;"><br/></div>
+		#end
+	#end
+</body>
+</html>
