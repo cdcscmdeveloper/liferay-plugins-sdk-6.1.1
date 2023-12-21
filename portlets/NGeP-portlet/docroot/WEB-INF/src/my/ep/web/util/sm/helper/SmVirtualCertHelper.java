@@ -188,12 +188,16 @@ public class SmVirtualCertHelper {
 					double kilobytes = (bytes / 1024);
 					
 					if(kilobytes > 10){
+						log.info("****path: " + path);
+						log.info("****fileName: ****" + fileName);
 						//update MOF Cert with file path & name
 						cert.setFilePath(path);
 						cert.setFileName(fileName);
 						SmMofCert mofcert = updateMOFCertFilePath(cert);
+						log.info("****after updateMOFCertFilePath");
 						return mofcert;
 					}
+					log.info("****false checking kilobytes>10");
 				}
 			}else{
 				log.info("****genReport contentType****" + urlConnection.getContentType());
@@ -205,7 +209,7 @@ public class SmVirtualCertHelper {
 			buf.close();
 			out.close();
 		}
-		
+		log.info("******return null");
 		return null;
 	}
 	

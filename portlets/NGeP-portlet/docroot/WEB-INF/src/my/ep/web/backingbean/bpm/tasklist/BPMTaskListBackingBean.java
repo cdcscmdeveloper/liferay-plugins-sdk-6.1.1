@@ -1870,11 +1870,5 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 
 	// 29810 - end
-	
-	//#32304 - start
-	public void downloadCancelledBumiAppl(){
-		SmCommonUtil.downloadCancelledBumiAppl();
-	}
-	//#32304 - end
 }
 
