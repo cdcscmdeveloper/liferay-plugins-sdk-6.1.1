@@ -837,7 +837,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					currentStatus, 
 					getManagedBean().getScQtApproval().getScQtApprovalRemarks(),
 					ScQtApprovalRemark.class, true);
-			page = QTConstants.EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL;
+			//#21692 WIP - Start
+			if (this.getManagedBean().getQt().getResponsePeriod() != null) {
+				page = QTConstants.EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL;
+			}
+			//#21692 WIP - End
 			qtPageFirst = false;
 		}
 		//#21692 Re-open - End
