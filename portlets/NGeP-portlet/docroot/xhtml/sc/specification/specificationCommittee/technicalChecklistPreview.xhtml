@@ -7,16 +7,16 @@
 
 <p:dialog id="technicalChecklistPreviewId" widgetVar="technicalChecklistPreview"
 	resizable="false" position="top" styleClass="pop_up_top"
-	header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650" height="550">
+	header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650" height="650">
 		
 	<p:panel id="technicalChecklistPreviewPanel1Id" header="#{lbl['lbl.sc.spec.technical.checklist.preview.printing']}" toggleable="true">
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction1']}" /><br />
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction2']}" /><br />
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction3']}" /><br />
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction4']}" />
 			
 		<div align="right">
@@ -27,15 +27,15 @@
 	</p:panel>
 		
 	<p:panel id="technicalChecklistPreviewPanel2Id" header="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing']}" toggleable="true">
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction1']}" /><br />
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction2']}" /><br />
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction3']}" /><br />
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction4']}" /><br />
-		<h:outputText styleClass="instruction"
+		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
 			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction5']}" />
 				
 		<p:dataTable id="technicalChecklistTitleListId"
@@ -49,15 +49,15 @@
 			<p:column style="width:10%;text-align:center;">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox
-						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" disabled="true"
+						value="#{specificationBackingBean.managedBean.selectAllTechPreview}">
+						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=technicalChecklistTitleListId])"
-							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.selectAllTechPreview, specificationBackingBean.managedBean.techChecklistPreview)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{techChecklist.selected}">		
-					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=technicalChecklistTitleListId])"
-						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />				
+					<p:ajax partialSubmit="true" process="@this" update="@this"
+						listener="#{specificationBackingBean.updateSelectedTechnicalChecklistPreviewIndx(techChecklist,index)}" />				
 				</p:selectBooleanCheckbox>
 
 			</p:column>
@@ -72,7 +72,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
-				action="#{specificationBackingBean.downloadTechnicalChecklistPreview(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
+				action="#{specificationBackingBean.downloadSelectedTechnicalChecklistPreview()}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>

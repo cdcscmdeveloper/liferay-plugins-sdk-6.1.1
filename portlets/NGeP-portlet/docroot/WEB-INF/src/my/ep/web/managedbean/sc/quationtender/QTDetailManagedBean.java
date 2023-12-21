@@ -1678,6 +1678,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> finChecklistSelect;
 	private int technicalPreviewTableRow;
 	private int financialPreviewTableRow;
+	private boolean selectAllTechPreview;
+	private boolean selectAllFinPreview;
 	// #10141 - end
 	
 	/**
@@ -11862,7 +11864,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinChecklistPreview(List<ScQtCheckList> finChecklistPreview) {
 		this.finChecklistPreview = finChecklistPreview;
 	}
+	public boolean isSelectAllTechPreview() {
+		return selectAllTechPreview;
+	}
 
+	public void setSelectAllTechPreview(boolean selectAllTechPreview) {
+		this.selectAllTechPreview = selectAllTechPreview;
+	}
+
+	public boolean isSelectAllFinPreview() {
+		return selectAllFinPreview;
+	}
+
+	public void setSelectAllFinPreview(boolean selectAllFinPreview) {
+		this.selectAllFinPreview = selectAllFinPreview;
+	}
 	// #10141 - end
 
 	public String getEpvAttachmentValue() {
@@ -11913,7 +11929,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
+
 }
 
 // ***25201

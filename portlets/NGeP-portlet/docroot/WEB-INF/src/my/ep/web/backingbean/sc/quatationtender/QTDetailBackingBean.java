@@ -287,6 +287,7 @@ import my.ep.web.constant.CommonUIConst;
 //#21695 Farid
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
@@ -12882,8 +12883,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#11299 End Vinod
 	// #10141 Start Vinod
+	/**
+	* this method will check inactive checklist and show the confirmation to remove those checklist.
+	* 
+	* @param status.
+	* @return 
+	*/
 	public void checkInactiveChecklistProcessForDoc(String status) {
-		log.info("initiateInactiveChecklistProcessForDoc");
 		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
 		if (SCProcessNameConst.PREPARE_QT_SCHEDULE.equals(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -12904,37 +12910,51 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 		if (!inActiveChecklist.isEmpty()) {
 			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
-			StringBuffer confirmationMsg = new StringBuffer();
-			String nextline = QTConstants.HTML_NEW_LINE_CHARACTER;
-			String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
-			String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
-			int tecCLcount = 0;
-			int finCLcount = 0;
-			for (ScQtCheckList inactive : inActiveChecklist) {
-				if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
-					tecCLcount++;
-					confirmationMsg.append(tecCLcount + ". " + techCheckList + " " + inactive.getTitle() + nextline);
-				} else {
-					if (tecCLcount != 0) {
-						confirmationMsg.append(nextline);
-						tecCLcount = 0;
-					}
-					finCLcount++;
-					confirmationMsg.append(finCLcount + ". " + finCheckList + " " + inactive.getTitle() + nextline);
-				}
-			}
+			
+			String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
+			
 			this.getManagedBean().setShowInactiveChecklistPopup(true);
 			this.getManagedBean().setInActiveChecklistNotificationText(
-					getMessage("lbl.sc.spec.confirm.inactive.techfin.checklist",
-							new String[] { confirmationMsg.toString() }));
+					getMessage(QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
+							new String[] { confirmationMsg }));
 		}
 	}
+	
+	private String inactiveChecklistChecking(List<ScQtCheckList> inActiveChecklist){
+		StringBuilder confirmationMsg = new StringBuilder();
+		String nextline = QTConstants.HTML_NEW_LINE_CHARACTER;
+		String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
+		String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
+		int tecCLcount = 0;
+		int finCLcount = 0;
+		for (ScQtCheckList inactive : inActiveChecklist) {
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
+				tecCLcount++;
+				confirmationMsg.append(tecCLcount + ". " + techCheckList + " " + inactive.getTitle() + nextline);
+			} else {
+				if (tecCLcount != 0) {
+					confirmationMsg.append(nextline);
+					tecCLcount = 0;
+				}
+				finCLcount++;
+				confirmationMsg.append(finCLcount + ". " + finCheckList + " " + inactive.getTitle() + nextline);
+			}
+		}
+		
+		return confirmationMsg.toString();
+	}
 
+	/**
+	* this method will delete inactive checklist and submit.
+	* 
+	* @param status.
+	* @return 
+	*/
 	public void initiateInactiveChecklistProcessForDoc() {
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-		QuationTenderResDTO qtResDTO = new QuationTenderResDTO();
+		QuationTenderResDTO qtResDTO;
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(getManagedBean().getQt().getQtId());
@@ -12947,9 +12967,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
 			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", 
-					"QTDetailBackingBean", this.getManagedBean().getQt().getQtNo(),
-					"initiateInactiveChecklistProcessForDoc", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, 
+					SLALogConstant.QT_DETAIL_BACKINGBEAN, this.getManagedBean().getQt().getQtNo(),
+					SLALogConstant.QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC, getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
