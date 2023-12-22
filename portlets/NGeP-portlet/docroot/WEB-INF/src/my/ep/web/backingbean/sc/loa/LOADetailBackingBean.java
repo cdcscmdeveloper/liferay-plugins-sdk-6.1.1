@@ -2469,10 +2469,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		//replace all special characters
 		//title = title.replaceAll("\\W", ""); 
-		//title=title.replaceAll("&", "&#38;");
-		title = title.replaceAll("<", "&#60;");
-		title = title.replaceAll(">", "&#62;");
-		title = title.replaceAll("\r\n", "<br />");
+		//25025 - note 436 start
+		title=title.replaceAll("&", SSTConstant.AND_SYMBOL);
+		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
+		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
+		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
+		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		//25025 - note 436- end
 		context.put("loaTitle", title);
 
 		context.put("hasLoi", false);
@@ -8772,7 +8776,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			String remarkValue = "";
 			if (isZonalWithPaOrPs) {
 				for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
-					count++;
 					
 					if(tplSpecAnswer.getIsWip() == null){
 						tplSpecAnswer.setIsWip(false);
@@ -8793,6 +8796,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							if (count < tplSpecAnswerList.size()) {
 								supplierOffer.append(System.lineSeparator()+"<br/>");
 							}
+							count++; //29006-963
 						}
 					} else {
 						if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
@@ -11722,6 +11726,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return false;
 		}
 		//35284 - end
+		if (!this.getManagedBean().getScLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			return isShowAssignButtonIfNotPR(loiLoaItem);
+		} else {
+			return true;
+		}
+	}
+	
+	private boolean isShowAssignButtonIfNotPR(ScLoiLoaItem loiLoaItem) {
 		boolean isShow = false;
 		if (loiLoaItem.getTplSpecZoneDtl() != null) {
 			if (this.getManagedBean().getFirstZone() == null) {

@@ -42,7 +42,8 @@
 			<!-- #28175 start -->
 			<c:choose>
 				<!-- #28175 Reopen #94 Start -->
-				<c:when test="#{not svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.activeAppl}">
+				<c:when test="#{!svoSiteVisitBackingBean.isLatestCatCodeDesc(false,
+							svoSiteVisitBackingBean.managedBean.smSvTask.smAppl)}">
 		        <!-- #28175 Reopen #94 End -->
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
 						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
