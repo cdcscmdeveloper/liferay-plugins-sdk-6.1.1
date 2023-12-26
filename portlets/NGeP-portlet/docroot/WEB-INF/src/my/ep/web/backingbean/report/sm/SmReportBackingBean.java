@@ -215,7 +215,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				throw new EpException(MessageConst.ERROR_REPORT_780062);
 			} else {
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
-					validateMofRegNo(getManagedBean().getMofNo());
+					validateMofRegNo(getManagedBean().getSelectedMofAccount().getMofNo()); //30824
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedBasicAccount());
 					if (getManagedBean().getSelectedBasicAccount() == null) {
