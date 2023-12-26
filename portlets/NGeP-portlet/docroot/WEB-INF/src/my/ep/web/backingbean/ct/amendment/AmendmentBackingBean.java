@@ -628,6 +628,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setBackToNtf("notifications"); //25956
 
 				getManagedBean().setViewOnly(true);
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
+				ctBackingBean.getManagedBean().setViewContract(true); //25956
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
@@ -3445,7 +3447,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
-				if (getManagedBean().isDecisionPbQcLOA()) {
+				if (getManagedBean().isDecisionPbQcLOA() && !ctBackingBean.getManagedBean().isViewSCL()) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
 				}
 			}
@@ -8495,8 +8497,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (message != null && ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
 					&& (supplierRemark == null || supplierRemark.length() == 0))) {
 //				setTabValue("AD");
-				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				//#35434 - Start
+				if(getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){ 
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}else{
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}
+				//#35434 - End
 				
 				throw new EpException(message, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
@@ -8739,6 +8749,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					reqDTO.setViewOnly(true);
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setViewOnly(true);
+					
+					//#15851 start
+					//Resetting the managed bean
+					getManagedBean().setSelectedItem(null);
+					getManagedBean().setSelectedServiceItem(null);
+					getManagedBean().setMemberSignOff(false);  
+					getManagedBean().setPbConfirmMeeting(false);
+					getManagedBean().setSignUpdateDecision(false);
+					getManagedBean().setLetterOfAcceptance(false);
+					getManagedBean().setPrepareLOA(false);
+					getManagedBean().setDecisionPbQcLOA(false);
+					getManagedBean().setSignOffDecision(false);
+					//#15851 end
+					
 					if(getManagedBean().getCtLetterOfAcceptance() != null){
 						getManagedBean().getCtLetterOfAcceptance().clear();
 					}
