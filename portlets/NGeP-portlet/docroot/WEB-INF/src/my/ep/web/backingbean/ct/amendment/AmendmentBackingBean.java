@@ -3447,7 +3447,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
-				if (getManagedBean().isDecisionPbQcLOA()) {
+				if (getManagedBean().isDecisionPbQcLOA() && !ctBackingBean.getManagedBean().isViewSCL()) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
 				}
 			}
@@ -8749,6 +8749,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					reqDTO.setViewOnly(true);
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setViewOnly(true);
+					
+					//#15851 start
+					//Resetting the managed bean
+					getManagedBean().setSelectedItem(null);
+					getManagedBean().setSelectedServiceItem(null);
+					getManagedBean().setMemberSignOff(false);  
+					getManagedBean().setPbConfirmMeeting(false);
+					getManagedBean().setSignUpdateDecision(false);
+					getManagedBean().setLetterOfAcceptance(false);
+					getManagedBean().setPrepareLOA(false);
+					getManagedBean().setDecisionPbQcLOA(false);
+					getManagedBean().setSignOffDecision(false);
+					//#15851 end
+					
 					if(getManagedBean().getCtLetterOfAcceptance() != null){
 						getManagedBean().getCtLetterOfAcceptance().clear();
 					}
