@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -427,6 +428,15 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String memberPtjOrgName;
 
 	// #12471 End
+	
+	//#30008 - Start
+	private PmParameter decision;
+	private String justification;
+	private String notReachAgreement;
+	private boolean negoDecisitionReadOnly;
+	private String decisionCode;
+	//#30008 - end
+	
 	
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 	
@@ -2467,5 +2477,47 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.memberPtjOrgName = memberPtjOrgName;
 	}
 	// #12471 End
+	
+	//#30008 - Start
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	public PmParameter getDecision() {
+		return decision;
+	}
+
+	public void setDecision(PmParameter decision) {
+		this.decision = decision;
+	}
+
+	public String getNotReachAgreement() {
+		return notReachAgreement;
+	}
+
+	public void setNotReachAgreement(String notReachAgreement) {
+		this.notReachAgreement = notReachAgreement;
+	}
+
+	public boolean isNegoDecisitionReadOnly() {
+		return negoDecisitionReadOnly;
+	}
+
+	public void setNegoDecisitionReadOnly(boolean negoDecisitionReadOnly) {
+		this.negoDecisitionReadOnly = negoDecisitionReadOnly;
+	}
+
+	public String getDecisionCode() {
+		return decisionCode;
+	}
+
+	public void setDecisionCode(String decisionCode) {
+		this.decisionCode = decisionCode;
+	}
+	//#30008 - end
 	
 }

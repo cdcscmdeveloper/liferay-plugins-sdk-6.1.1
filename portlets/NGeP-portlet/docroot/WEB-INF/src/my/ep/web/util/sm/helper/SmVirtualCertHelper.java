@@ -172,7 +172,8 @@ public class SmVirtualCertHelper {
 					dir.mkdirs();
 					log.info("after make directory");
 				}
-
+				
+				log.info("****finalFile: **** filePath:"  +filePath + " fileName:" + fileName +" path:" +path);
 				String finalFile = filePath + "/" + fileName;
 				out =  new FileOutputStream(new File(finalFile));
 
@@ -194,7 +195,9 @@ public class SmVirtualCertHelper {
 						cert.setFilePath(path);
 						cert.setFileName(fileName);
 						SmMofCert mofcert = updateMOFCertFilePath(cert);
-						log.info("****after updateMOFCertFilePath");
+						log.info("****after updateMOFCertFilePath****");
+						log.info("****path: " + mofcert.getFileName());
+						log.info("****fileName: "+  mofcert.getFileName());
 						return mofcert;
 					}
 					log.info("****false checking kilobytes>10");
