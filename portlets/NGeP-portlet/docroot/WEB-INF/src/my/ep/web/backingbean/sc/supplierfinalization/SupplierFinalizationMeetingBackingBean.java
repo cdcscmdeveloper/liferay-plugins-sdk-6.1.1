@@ -42,6 +42,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -747,21 +748,21 @@ public class SupplierFinalizationMeetingBackingBean extends
 				String ministry = userSearchBean.getMinistry();
 				if (!StringUtils.isBlank(ministry)) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ministry, true));
 				}
 				String ptjGroup = userSearchBean.getPtjGroup();
 				if (!StringUtils.isBlank(ptjGroup)) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ptjGroup, true));
 				}
 				String ptj = userSearchBean.getPtj();
 				if (!StringUtils.isBlank(ptj)) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
 				}
@@ -770,14 +771,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 				String orgType = userSearchBean.getOrgType();
 				if (!StringUtils.isBlank(orgType)) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId"
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE_ORGTYPECODE_PARAMETERID
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.OTHERS.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), orgType, true));
 				}
 				String orgName = userSearchBean.getOrgName();
 				if (!StringUtils.isBlank(orgName)) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId"
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE_ORGPROFILEID
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.SUPPORT.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), orgName, true));
 				}
@@ -2393,7 +2394,7 @@ if (CollectionUtils.isNotEmpty(
 				break;
 			}
 		}
-		RequestContext.getCurrentInstance().execute("memberInfoPopUp.show()");
+		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
 	}
 
 	/**
@@ -2413,7 +2414,7 @@ if (CollectionUtils.isNotEmpty(
 					.getMinistry()));
 		} else {
 			items = new SelectItem[1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 		}
 		this.getManagedBean().setPtjGroupDDList(items);
@@ -2442,7 +2443,7 @@ if (CollectionUtils.isNotEmpty(
 			} else {
 				items = new SelectItem[1];
 			}
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			for (Object[] object : list) {
 				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
@@ -2462,7 +2463,7 @@ if (CollectionUtils.isNotEmpty(
 	 */
 	public void buildOrgTypeDD() {
 		SelectItem[] items = null;
-		ISearchBean<Object[]> searchBean = super.createSearchBean(Object[].class, "somOtherOrgType");
+		ISearchBean<Object[]> searchBean = super.createSearchBean(Object[].class, QTSearchBeanConst.SEARCH_SOMOTHERORGTYPE);
 		// Limit to only OTHERS
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("parameterDescId", SearchOperator.OPERATOR_EQUALS.value(),
@@ -2485,7 +2486,7 @@ if (CollectionUtils.isNotEmpty(
 				OrgTypeID = Long.parseLong(this.getManagedBean().getUserSearchBean().getOrgType());
 				ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("orgTypeCode.parameterId", SearchOperator.OPERATOR_EQUALS.value(),
+						new SearchFilterBean(QTSearchBeanConst.SEARCH_ORGTYPECODE_PARAMETERID, SearchOperator.OPERATOR_EQUALS.value(),
 								OrgTypeID));
 				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -2497,7 +2498,7 @@ if (CollectionUtils.isNotEmpty(
 			} else {
 				items = new SelectItem[1];
 			}
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			for (PmOrgProfile object : list) {
 				items[i++] = new SelectItem(object.getOrgProfileId(), object.getOrgName());

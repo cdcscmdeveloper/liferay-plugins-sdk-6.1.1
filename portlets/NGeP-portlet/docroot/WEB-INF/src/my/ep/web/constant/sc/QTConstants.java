@@ -351,4 +351,9 @@ public interface QTConstants {
 	public static final String FINALIZATION_COMMITTEE_SECRETARY="lbl.sc.finalization.committee.secretary.";//25635&sonarQubeIssue12#84
 	
 	public static final String SERVICE_OBJECT_CC = "cc";
+	//12471 - start
+	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
+	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	//12471 - end
+
 }

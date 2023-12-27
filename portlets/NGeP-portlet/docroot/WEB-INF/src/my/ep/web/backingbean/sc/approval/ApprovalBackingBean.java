@@ -3639,7 +3639,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 			}
 		}
-		RequestContext.getCurrentInstance().execute("memberInfoPopUp.show()");
+		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
 	}
 	// #12471 End
 }
