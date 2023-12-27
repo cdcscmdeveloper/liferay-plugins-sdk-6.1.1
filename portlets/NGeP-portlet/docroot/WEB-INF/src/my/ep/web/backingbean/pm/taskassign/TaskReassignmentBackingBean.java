@@ -2790,9 +2790,11 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			if(vo.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			//#35396 - Start
+			if(orgProfileId != null){
+				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(orgProfileId);
 			}
+			//#35396 - End
 			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(
@@ -2825,15 +2827,14 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
-			//#35396 - Start
-			//actualOrgProfileId = vo.getOrgProfileId();
-			if(orgProfileId != null){
+			actualOrgProfileId = vo.getOrgProfileId();
+			if(actualOrgProfileId != null){
 				if(roleList == null || roleList.isEmpty()){
 					roleList = retrieveAvailableRoles(task.getDocStatus()
 						.longValue(),reassignType,subReassignType);
 				}
 				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
-						orgProfileId,
+						actualOrgProfileId,
 						roleList,
 						false,
 						null,
@@ -2842,7 +2843,6 @@ public class TaskReassignmentBackingBean extends
 										.getUserId())),searchBean);
 				
 			}
-			//#35396 - End
 			isSearched = true;
 			
 			break;
