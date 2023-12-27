@@ -1595,6 +1595,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						qtReqDTO.setRejected(true);
 						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+						//#21692 WIP - Start
+						if (null == qt.getResponsePeriod()) {
+							qt.setResponsePeriod(ParameterConst.DEFAULT_RESP_DAYS);
+						}
+						//#21692 WIP - End
 						//#21692 - start
 						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
 						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
