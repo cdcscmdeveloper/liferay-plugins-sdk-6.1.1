@@ -1826,8 +1826,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {		
 				
-						if (getManagedBean().getInvoice().getPaymentBank()!=null){
-							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId());
+						if (getManagedBean().getInvoice().getFlFulfilmentOrder()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finOrgReqDTO);
 							if (finOrgResDTO.getPmFinancialOrg()!=null && !finOrgResDTO.getPmFinancialOrg()
 									.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -1850,9 +1850,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					}
 				} else if (getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {
-						
-						if (getManagedBean().getInvoice().getPaymentBank()!=null){
-							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId());
+						if (getManagedBean().getInvoice().getFlFulfilmentOrder()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finOrgReqDTO);
 							if (finOrgResDTO.getPmFinancialOrg()!=null && !finOrgResDTO.getPmFinancialOrg()
 									.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -2082,6 +2081,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				//#34686 start
+				orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+				//#34686 end
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 					return NAV_PO;

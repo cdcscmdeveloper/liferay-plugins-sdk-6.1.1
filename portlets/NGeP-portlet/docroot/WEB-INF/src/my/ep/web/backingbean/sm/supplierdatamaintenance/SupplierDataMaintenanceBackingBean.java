@@ -1,6 +1,9 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,6 +67,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -1844,6 +1848,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						apprCat.setCancelledDate(new Date());
+						apprCat.setChangedBy(null); //#34209 - START_END
 						getManagedBean().getDeleteApprovedCategories().add(apprCat);
 					}
 				}
@@ -2061,6 +2066,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	private void initSupplierDisciplinaryAction(SmSupplier supplier) {
 		//getManagedBean().setEditDisciplinaryAction(false); //27857: Disciplinary Action - disabled hardcoded value - 26238
+		getManagedBean().setHasActiveDA(false); //#34626
 		DisciplinaryActionVO discipline = getInitDisciplinaryActionVO();
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
@@ -2151,7 +2157,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					discipline.getSmDiscplinaryAction().setEndDate(
 							disc.getEndDate());
 					discipline.setSuspend(true);
-					
+					getManagedBean().setHasActiveDA(true); //#34626
 					break;
 				}
 			}
@@ -3287,4 +3293,34 @@ public class SupplierDataMaintenanceBackingBean extends
 		return resDTO.getSmSupplierCategoryList();
 	}
 	//32891 - Checking category code for activeappl - 26238 - end
+	//32792 - START
+	/**
+	 * @param List<SmMofAccount> mofList
+	 * @return String 
+	 */
+	public String getLatestMOFNo(List<SmMofAccount> mofList){
+		// sort by latest created date 
+		Collections.sort(mofList,new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount mof1, SmMofAccount mof2) {
+				return Integer.valueOf(mof2.getCreatedDate().compareTo(mof1.getCreatedDate()));
+				
+			}
+		});
+		return mofList.get(0).getMofNo();
+	}
+	/**
+	 * @param SmMofAccount mofAcc
+	 * @return Date 
+	 */
+	public Date getMinDate(SmMofAccount mofAcc) {
+        Date effDate = mofAcc.getEffDate();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(effDate);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        return calendar.getTime();
+    }
+	//32792 - END
 }

@@ -27,17 +27,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -52,7 +41,6 @@ import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -94,8 +82,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
-import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
@@ -146,7 +132,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.VAddressTypeDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -169,6 +154,7 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.pm.common.VPmDo;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -201,7 +187,16 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLSupplierItemVO;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Purchase Order.
@@ -502,12 +497,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			Calendar calendar = Calendar.getInstance();
 			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));//34555
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));//34555
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_YEARS)) {
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_YEARS));
+				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_YEARS));//34555
 			}
-			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
+//			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime()); //Close for #34555
 		}
 		for(FlFulfilmentItem item : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
 			if(item.getFlQuery() != null){
@@ -1113,6 +1111,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
+			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}	
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
@@ -1534,9 +1533,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		log.info("start - initializePRBeans");
 		initializePRBeans();
 		log.info("end - initializePRBeans");
-		log.info("start - updateDeliveryDate");
-		updateDeliveryDate();
-		log.info("end - updateDeliveryDate");
+		//34555-start
+		log.info("start - updateMaxDeliveryDate");
+		updateMaxDeliveryDate();
+		log.info("end - updateMaxDeliveryDate");
+		//34555-end
 		/*#17087 Get Zonal flag*/
 		log.info("start - getzonalTest");
 		getzonalTest();
@@ -1587,7 +1588,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Method get approver group and approver List.
 	 */
 	private void initializeApproverGroup() {
-		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);;
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
@@ -1876,7 +1877,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void retrieveDivisionList(AjaxBehaviorEvent e){
 		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDivision() != null){
 			getManagedBean().setDivisionList(null);
-			getManagedBean().getFlManualAddress().getFlAddress().getPmDivision().setDivisionId(null);;
+			getManagedBean().getFlManualAddress().getFlAddress().getPmDivision().setDivisionId(null);
 		}
 		if(getManagedBean().getFlManualAddress().getFlAddress().getPmDistrict() != null){
 			getManagedBean().setDistrictList(null);
@@ -2929,20 +2930,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		
 		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-			//34555-Start
-			if(getManagedBean().getTaskId() == null){
-				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
-			}else{
-				getManagedBean().getFulfilmentRequest().setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
-			}
+			getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 			getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-			if(getManagedBean().getTaskId() == null){
-				getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
-			}else{
-				getManagedBean().getFulfilmentRequest().setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
-			}
-			//34555-End
+			getManagedBean().getFulfilmentRequest().setEndDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 		}
 		//update delivery address
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
@@ -3299,8 +3290,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Page navigation to FLDoc search page in PR.
 	 *
 	 * @return the string
+	 * 
 	 */
-	public String backToPervious() {
+	public String backToPervious(){
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -3308,6 +3300,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
+		//35357-Start
+		else if(getManagedBean().getBackToNtf() != null){
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect(
+						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			} catch (IOException e) {
+				log.error("File:purchaseRequestBackingBean Method:backToPervious", e);
+			}
+			return null;
+		}
+		//35357-End
 		else{
 			return "flDocSearch";
 		}
@@ -4455,7 +4458,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35357
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
@@ -4466,6 +4469,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			setFulfilmentRequestField(resDTO);
 			getManagedBean().setBackToDocument(null);
+			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -5204,4 +5208,23 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			updateSupplierHqAddress(supplierDtl,supplier);
 		}
 		//29728 -end
+		
+		//34555-start
+		/**
+		 * Update delivery date based on delivery Term and uomCode.
+		 */
+		public void updateMaxDeliveryDate() {
+			Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
+			int deliveryTerm = 0;
+			String uomCode = "";
+			deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
+			uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+			
+			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_DAYS));
+			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
+			}
+		}
+		//34555-End		
 }

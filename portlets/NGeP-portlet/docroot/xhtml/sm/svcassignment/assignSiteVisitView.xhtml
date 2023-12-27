@@ -69,8 +69,8 @@
 			</tr>
 			
 			<tr>
-			<td><p:outputLabel  value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
-			<td class="header-info-text">
+				<td><p:outputLabel  value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+				<td class="header-info-text">
 					<h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{!empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
 					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
 					&#160;
@@ -78,7 +78,8 @@
 						<p:tooltip id="newRegNott" for="newRegNoti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
 						</p:tooltip>&#160;
-			</td>	
+				</td>
+			</tr>
 			<tr>
 				<td></td>
 				<td  class="header-info-text">
@@ -87,9 +88,6 @@
 				<td></td>
 				<td></td>
 			</tr>
-			</tr>
-				
-				
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.siteassign.company.address']}" /></td>
 				<td>
@@ -113,12 +111,21 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
 				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start-->
-					<!-- #{catCode} -->
-					<h:outputText value="#{catCode} - #{catApp.categoryL1Name} / #{catApp.categoryL2Name} / #{catApp.categoryL3Name}"></h:outputText>
+					#{catCode} 
+					<!-- <h:outputText value="#{catCode} - #{catApp.categoryL1Name} / #{catApp.categoryL2Name} / #{catApp.categoryL3Name}"></h:outputText> -->
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.category.description']}">
-					<!-- #{catApp.pmCategoryL3.categoryName} -->
+					<!-- #28175 - start -->
+					<c:choose>
+						<c:when test="#{not svcSiteAssignBackingBean.managedBean.smAppl.activeAppl}">
+							#{catApp.categoryL3Name}
+						</c:when>
+						<c:otherwise>
+							#{catApp.pmCategoryL3.categoryName}
+						</c:otherwise>
+					</c:choose>
+					<!-- #28175 - start -->
 					<h:outputText value="#{catApp.otherDesc}" rendered="#{catApp.otherDesc != null}" />
 				</p:column>
 			</p:dataTable>

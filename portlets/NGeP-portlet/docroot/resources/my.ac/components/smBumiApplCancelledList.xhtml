@@ -11,7 +11,6 @@
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="applList" required="true" />
 		<cc:attribute name="isSvc" default="false"/>
-		<!-- <cc:attribute name="file" required="true" /> -->
 	</cc:interface>
 	
 	<cc:implementation>
@@ -54,8 +53,7 @@
 		
 		<p:commandButton value="#{lbl['lbl.btn.download']}" style="float:right;"
 			 	immediate="true" ajax="false">
-			<!-- <p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl()}" /> -->
-			<!-- <f:ajax execute="@this" render="@form" /> -->
+			<p:fileDownload value="#{cc.attrs.bBean.downloadCancelledBumiAppl(cc.attrs.isSvc)}" />
 		</p:commandButton>
 	</p:dialog>
 	</cc:implementation>
