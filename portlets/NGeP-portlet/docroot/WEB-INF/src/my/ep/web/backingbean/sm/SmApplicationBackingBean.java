@@ -10572,19 +10572,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void initMissingDocs(boolean isNewInquiry, String dialogId) {
 		SmApplicationUtil.initPoInquiry(getManagedBean(), isNewInquiry);
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
+		getManagedBean().setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
+		getManagedBean().setNonMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
 			//#34392 - START
 			if (doc.getPmDocument().isMandatory()
 					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
+				getManagedBean().getMandatoryDocs().add(doc);
 			}else if(!doc.getPmDocument().isMandatory() && (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)){
 				getManagedBean().getMissinDocs().add(doc);
+				getManagedBean().getNonMandatoryDocs().add(doc);
 			}
 			//#34392 - End
 		}
 		log.info("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getMissinDocs().size());
+		log.info("**** Send Inquiry List Size ***** "
+				+ getManagedBean().getMandatoryDocs().size());
+		log.info("**** Send Inquiry List Size ***** "
+				+ getManagedBean().getNonMandatoryDocs().size());
+		if (dialogId != null) {
+			RequestContext.getCurrentInstance().execute(dialogId + ".show()");
+		}
 		if (dialogId != null) {
 			RequestContext.getCurrentInstance().execute(dialogId + ".show()");
 		}
