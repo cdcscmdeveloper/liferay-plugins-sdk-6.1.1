@@ -1895,7 +1895,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
-	private String approverUserId;//12471
+	//12471 - start
+	private String approverUserId;
+	private Map<String, String> committeeMembersTypeMap; 
+	//12471 - end
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12080,6 +12083,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setApproverUserId(String approverUserId) {
 		this.approverUserId = approverUserId;
+	}
+
+	public Map<String, String> getCommitteeMembersTypeMap() {
+		return committeeMembersTypeMap;
+	}
+
+	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
+		this.committeeMembersTypeMap = committeeMembersTypeMap;
 	}
 	
 }
