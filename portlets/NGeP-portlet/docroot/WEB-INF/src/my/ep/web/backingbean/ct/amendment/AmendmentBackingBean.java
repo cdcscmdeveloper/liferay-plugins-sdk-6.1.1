@@ -625,8 +625,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctReqDTO.setUpdateAction(false);
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
+				getManagedBean().setBackToNtf("notifications"); //25956
 
 				getManagedBean().setViewOnly(true);
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
+				ctBackingBean.getManagedBean().setViewContract(true); //25956
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
@@ -963,8 +966,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to navigate to contract maintenance screen.
 	 * 
 	 * @return the navigate URL 
+	 * @throws IOException 
+	 * //25956
 	 */
-	public String backAction() {
+	public String backAction() throws IOException {
 		//Enhancement 15851 - shaqimi start
 		ContractDetailsBackingBean ctDT =  new ContractDetailsBackingBean();
 		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
@@ -1050,6 +1055,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setViewSCL(false);
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
+			
+		}else if(getManagedBean().getBackToNtf() != null){ //25956
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			return null;
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		this.getManagedBean().setSecretaryList(null);
@@ -3437,7 +3447,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
 				}
-				if (getManagedBean().isDecisionPbQcLOA() || ctBackingBean.getManagedBean().isViewSCL()) { //33096
+				if (getManagedBean().isDecisionPbQcLOA() && !ctBackingBean.getManagedBean().isViewSCL()) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);	    
 				}
 			}
@@ -8487,8 +8497,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (message != null && ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) 
 					&& (supplierRemark == null || supplierRemark.length() == 0))) {
 //				setTabValue("AD");
-				getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				//#35434 - Start
+				if(getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)){ 
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}else{
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}
+				//#35434 - End
 				
 				throw new EpException(message, 
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
@@ -8731,6 +8749,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					reqDTO.setViewOnly(true);
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setViewOnly(true);
+					
+					//#15851 start
+					//Resetting the managed bean
+					getManagedBean().setSelectedItem(null);
+					getManagedBean().setSelectedServiceItem(null);
+					getManagedBean().setMemberSignOff(false);  
+					getManagedBean().setPbConfirmMeeting(false);
+					getManagedBean().setSignUpdateDecision(false);
+					getManagedBean().setLetterOfAcceptance(false);
+					getManagedBean().setPrepareLOA(false);
+					getManagedBean().setDecisionPbQcLOA(false);
+					getManagedBean().setSignOffDecision(false);
+					//#15851 end
+					
 					if(getManagedBean().getCtLetterOfAcceptance() != null){
 						getManagedBean().getCtLetterOfAcceptance().clear();
 					}

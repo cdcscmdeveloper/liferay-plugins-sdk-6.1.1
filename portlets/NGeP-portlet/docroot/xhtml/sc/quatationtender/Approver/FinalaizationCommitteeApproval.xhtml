@@ -34,7 +34,7 @@
 		</table>
 		<table
 			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
-			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
+			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange and scQt.responsePeriod != null}" ><ui:remove>#21692 WIP</ui:remove>
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.new.validity.days']}" />

@@ -2534,36 +2534,13 @@ public class SupplierFinalizationBackingBean extends
 				|| QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.equals(currentStatusId)
 				// #25638 - End. 
 		        ) {
+
 			this.getManagedBean().setSubmit(true);
-			
-			// Bug #32682 start
-			boolean isSecretaryUser = this.getManagedBean().isSecretaryUser();
-			if (isSecretaryUser
-					&& (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId) || QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION
-							.equals(currentStatusId))) {
-				if (scQtFinalization.getLoiLoaBy() != null) {
-					if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(
-							SourcingConstants.SC_LETTER_CREATOR_SECRETARY)) {
-						scQtFinalization.setLoiLoaById(getUserIdSessionFromLoginId());
-					} else if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(
-							SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
-						scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(scQtFinalization.getScQt()
-								.getQtId()));
-					}
-				}
-			}
-			// Bug #32682 end
 		}
 		
-		// #27502 & #34921 - Start
-		if(QTStatusConst.SF_MOF_COMMITTEE .equals(currentStatusId) && 
-				scQtFinalization.getLoiLoaBy() != null && 
-				scQtFinalization.getLoiLoaBy().equalsIgnoreCase(
-						SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
-				scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(
-			    scQtFinalization.getScQt().getQtId()));
-		}
-		// #27502 & #34921 - End
+		// Bug #32682 #27502 & #34921 - Start
+		setUserLoiLoaPreparedBy(scQtFinalization, currentStatusId);
+		// Bug #32682 #27502 & #34921 - End
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 		// #18685-Start.
@@ -8360,6 +8337,7 @@ return	remarksNotFound;
 		boolean isAward = false;
 		boolean supplierSelected = true;
 		boolean minSuppliersExist = true;
+		int isNotSelectedRadioButton = 0;//#28834
 		TplSpecZoneDtl zoneDtl = scQtRecommend.getTplSpecZoneDtl();
 		PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
 											.getFinalizationMethod();
@@ -8397,21 +8375,24 @@ return	remarksNotFound;
 			if (!minSuppliersExist) {
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
-			} 
-			//#28834 - Start
-			else if(!supplierSelected && minSuppliersExist){ 
-				throw new EpException(MessageConst.ERROR_760206);
-			} 
-			//#28834 - End
-			else {
+			} else {
 				//#21695 allow no records validation start
 				if(CollectionUtils.isNotEmpty(
 						scQtRecommend.getRecommendDtls())){
 					throw new EpException(MessageConst.ERROR_760206);
 				}
 				//#21695 allow no records validation end
+				//#28834 - Start
+				isNotSelectedRadioButton++;
+				//#28834 - End
 			}
-		}		
+		}	
+		
+		//#28834 - Start
+		if(!supplierSelected && (isNotSelectedRadioButton > 0)){ 
+		   throw new EpException(MessageConst.ERROR_760206);
+		} 
+		//#28834 - End
 	}
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
@@ -9766,29 +9747,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * @param reports
 	 */
 	private void sortEndorsementReports(List<ScQtFinalizationReport> reports){
-		log.info("sortEndorsementReports");
-		Collections.sort(reports, 
-				new Comparator<ScQtFinalizationReport>() {
-					public int compare(ScQtFinalizationReport report1, 
-							ScQtFinalizationReport report2) {
-						if (report1.getChangedDate() != null && 
-								report2.getChangedDate() != null) {
-							
-							// Ascending order
-							if (report1.getChangedDate().getTime() == 
-									report2.getChangedDate().getTime()) {
-								return 0;
-							} else if (report1.getChangedDate().getTime() >
-									report2.getChangedDate().getTime()) {
-								return -1; //Bug #29707
-							} else {
-								return 1; //Bug #29707
-							}
-						}
-						return -1;
-					}
-				});
-			}
+		// 35381 - related to 6906 - start
+		Collections.sort(reports, new Comparator<ScQtFinalizationReport>() {
+			@Override
+			public int compare(ScQtFinalizationReport report1, ScQtFinalizationReport report2) {
+				if (report1.getChangedDate() == null || report2.getChangedDate() == null) {
+					return -1;
+				}
+				return report2.getChangedDate().compareTo(report1.getChangedDate());
+			} 
+		});
+		// 35381 - related to 6906 - end
+	}
 	
 	/**
 	 * Method to handle endoresement report upload event
@@ -10860,11 +10830,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					// need to set Keputusan report at time of Endorsement and signOff status
 					// #28834- Start.
 					// #34410 - Start
-					ScQt scQt = this.getManagedBean().getScQt();
 					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-					qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-					scQt = qtBackingBean.getManagedBean().getQt();
-					if (!isBpkCentralContract(scQt)) { // #34410 - End
+					qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+					if (!isBpkCentralContract(qtBackingBean.getManagedBean().getQt())) {// #34410 - End
 						this.getManagedBean().getScQtFinalization()
 						.getScQtFinalizationReports()
 						.addAll(this.getManagedBean().getEndorsementReports());
@@ -10996,15 +10964,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 			
 			if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
-	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId,scQt));
+	    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
 	    	}else{
-	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId,scQt));
+	    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
 	    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
 	    	}
 			
 		}
 		
-		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId,ScQt scQt){
+		private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
 			
 			List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
 
@@ -11030,10 +10998,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 			
 			boolean isSupplierBranchDeleted = false;
-			if(supplierId != null && scQt != null){
-				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
-					isSupplierBranchDeleted = true;
-			    }
+			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+				isSupplierBranchDeleted = true;
 			}
 		    return isSupplierBranchDeleted;
 		}
@@ -11083,7 +11049,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 				//List<String> localTitle=new ArrayList<String>();
-				List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #34720@Syazani 07/06/2022
+				List<ScQtFinalizationReport> titleList = new ArrayList<>(); // Bug #34720@Syazani 07/06/2022	//Sqube QT Master Bug G85 - Issues 21@Syazani 30/11/2023
 				while(iterator.hasNext()){
 					ScQtFinalizationReport finalizationReport = iterator.next();
 					// Bug #34720@Syazani 07/06/2022 -- Start
@@ -11550,30 +11516,43 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 	//6906 note 117 - end
 	
+	// Bug #32682 #27502 & #34921 - Start
+	/**
+	 * to set user id for LoiLoaById based on LoiLoaBy
+	 * @param scQtFinalization
+	 * @param currentStatusId
+	 */
+	private void setUserLoiLoaPreparedBy(ScQtFinalization scQtFinalization, Long currentStatusId) {
+		if (scQtFinalization.getLoiLoaBy() != null
+				&& (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
+					|| QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(currentStatusId) 
+					|| QTStatusConst.SF_MOF_COMMITTEE.equals(currentStatusId))) {
+			if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(SourcingConstants.SC_LETTER_CREATOR_SECRETARY)) {
+				scQtFinalization.setLoiLoaById(getUserIdSessionFromLoginId());
+			} else if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+				scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(scQtFinalization.getScQt().getQtId()));
+			}
+		}
+	}
+	// Bug #32682 #27502 & #34921 - end
+	
 	//Bug #32682 start
 	private Long getActorUserIdByQtIdAndRoleCode(Long qtId) {
 		Long userId = null;
-		IScActorSO actorSO = null;
-		try {
-			actorSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
+		IScActorSO actorSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScActorSO.class);
 
-			ScActorReqDTO reqDTO = new ScActorReqDTO();
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			reqDTO.setDocId(qtId);
-			reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+		ScActorReqDTO reqDTO = new ScActorReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		reqDTO.setDocId(qtId);
+		reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 
-			ScActor scActor = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO)
-					.getScActor();
+		ScActor scActor = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO).getScActor();
 
-			if (scActor != null) {
-				userId = scActor.getUserId();	
-			}
-			return userId;
-
-		} finally {
-			actorSO = null;
+		if (scActor != null) {
+			userId = scActor.getUserId();
 		}
+		return userId;
 	}
 	//Bug #32682 end
 	
@@ -11586,7 +11565,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			List<ScQtFinalizationReport> titleList) {
 		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
 				.getDocDefinitionKey() : "";
-		if (titleList != null && titleList.size() > 0) {
+		if (titleList != null && !titleList.isEmpty()) {	// Sqube QT Master Bug G85 - Issues 22@Syazani 30/11/2023
 			for (ScQtFinalizationReport sfReportTemp : titleList) {
 				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
 						.getDocDefinitionKey() : "";
