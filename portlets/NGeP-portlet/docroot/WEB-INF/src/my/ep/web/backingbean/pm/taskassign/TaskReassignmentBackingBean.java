@@ -107,7 +107,6 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.PmTaskReassignmentVO;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -2791,9 +2790,11 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			if(vo.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			//#35396 - Start
+			if(orgProfileId != null){
+				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(orgProfileId);
 			}
+			//#35396 - End
 			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(
@@ -3134,11 +3135,10 @@ public class TaskReassignmentBackingBean extends
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							ITaskAssignmentSO.class);
 			TaskAssignmentResDTO resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
-			clearRemovedSelectedTask(taskId); // #7465 Re-open issues on 24/11/2023
 
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
-				reloadAllTaskList();
+				resetForRemoveReassignTask(taskId); // #7465 Re-open issues on 14/12/2023
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 			}
@@ -3148,24 +3148,31 @@ public class TaskReassignmentBackingBean extends
 
 	}
 
-	// #7465 Re-open issues on 24/11/2023
-	private void clearRemovedSelectedTask(String taskId) {
+	// #7465 Re-open issues on 24/11/2023 & 14/12/2023 Start
+	private void resetForRemoveReassignTask(String taskId) {
 		boolean removedFromSelectedTask = false;
+		resetCheckAllTasks();
 		if (getManagedBean().getSelectedGroupTasks().containsKey(taskId)) {
+			getManagedBean().getAllGroupTasks().clear();
+			getManagedBean().getSelectedGroupTasks().clear();
 			getManagedBean().getSelectedGroupTasks().remove(taskId);
-			getManagedBean().setEnableDeleteGroupTasksButton(MapUtils.isNotEmpty(getManagedBean().getSelectedGroupTasks()));
+			getManagedBean().setEnableDeleteGroupTasksButton(false);
 			removedFromSelectedTask = true;
 		} else if (getManagedBean().getSelectedOthersTasks().containsKey(taskId)) {
+			getManagedBean().getAllOthersTasks().clear();
+			getManagedBean().getSelectedOthersTasks().clear();
 			getManagedBean().getSelectedOthersTasks().remove(taskId);
-			getManagedBean().setEnableDeleteOthersTasksButton(MapUtils.isNotEmpty(getManagedBean().getSelectedOthersTasks()));
+			getManagedBean().setEnableDeleteOthersTasksButton(false);
 			removedFromSelectedTask = true;
 		}
-		
+
 		if (!removedFromSelectedTask) {
 			getManagedBean().setEnableDeleteGroupTasksButton(false);
 			getManagedBean().setEnableDeleteOthersTasksButton(false);
 		}
+		reloadAllTaskList();
 	}
+	// #7465 Re-open issues on 24/11/2023 & 14/12/2023 End
 	
 	/**
 	 * @return the userTaskListDataModel
