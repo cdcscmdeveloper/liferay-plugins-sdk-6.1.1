@@ -393,7 +393,7 @@
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
 				action="#{specificationBackingBean.technicalCheckListPreview}"
-				oncomplete="technicalChecklistPreview.show()"
+				oncomplete="technicalChecklistPreview.show();"
 				process="@this" update="@([id$=technicalChecklistTitleListId])" /> <!-- #10141 Added Vinod -->
 			<p:commandButton styleClass="BtnSpacing"
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"

@@ -324,6 +324,7 @@ public interface QTConstants {
 	// #29007 End Vinod
 	public static final String CONFIRM_BRIEF_POPUP = "confirmBriefPopup.show()";//sonarQube Issue 2 #91 # Vinod #Added
 	//#10141 Start Vinod
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION = "inActiveChecklistNotification.show()";
 	public static final int ACTIVE_INDEX_4 = 4;
 	public static final int ACTIVE_INDEX_5 = 5;
 	public static final int ACTIVE_INDEX_6 = 6;

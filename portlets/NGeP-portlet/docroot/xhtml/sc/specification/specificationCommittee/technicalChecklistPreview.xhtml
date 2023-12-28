@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <p:dialog id="technicalChecklistPreviewId" widgetVar="technicalChecklistPreview"
@@ -11,13 +12,7 @@
 		
 	<p:panel id="technicalChecklistPreviewPanel1Id" header="#{lbl['lbl.sc.spec.technical.checklist.preview.printing']}" toggleable="true">
 		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction1']}" /><br />
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction2']}" /><br />
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction3']}" /><br />
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instruction4']}" />
+			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instructions']}" escape="false"/>
 			
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
@@ -28,15 +23,7 @@
 		
 	<p:panel id="technicalChecklistPreviewPanel2Id" header="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing']}" toggleable="true">
 		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction1']}" /><br />
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction2']}" /><br />
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction3']}" /><br />
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction4']}" /><br />
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing.instruction5']}" />
+			value="#{lbl['lbl.sc.spec.technical.financial.checklist.element.details.preview.printing.instructions']}" escape="false"/>
 				
 		<p:dataTable id="technicalChecklistTitleListId"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

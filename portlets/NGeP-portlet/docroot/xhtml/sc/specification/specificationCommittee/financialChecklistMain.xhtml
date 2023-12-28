@@ -339,9 +339,8 @@
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
 				action="#{specificationBackingBean.financialCheckListPreview}"
-				update="@([id$=financialChecklistTitleListId])"
-				oncomplete="financialChecklistPreview.show()"
-				process="@this" onclick="" /> <!-- #10141 Added Vinod -->
+				oncomplete="financialChecklistPreview.show();"
+				process="@this" update="@([id$=financialChecklistTitleListId])"/> <!-- #10141 Added Vinod -->
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"

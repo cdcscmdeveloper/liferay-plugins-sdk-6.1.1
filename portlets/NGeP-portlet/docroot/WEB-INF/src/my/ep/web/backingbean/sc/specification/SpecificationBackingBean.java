@@ -23054,7 +23054,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					getMessage(QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
 							new String[] { confirmationMsg }));
 
-			RequestContext.getCurrentInstance().execute("inActiveChecklistNotification.show()");
+			RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
 		} else {
 			if (!this.getManagedBean().getInActiveChecklist().isEmpty()) {
 				this.getManagedBean().setInActiveChecklist(null);
@@ -23136,9 +23136,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			if (null!=finChecklist.getDefinationType() &&
 				null!=finChecklist.getDefinationType().getParameterId() &&
 				Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(finChecklist.getDefinationType().getParameterId())) {
-				if(null!=finChecklist.getPmDocument()){
-					log.info("Title : "+finChecklist.getTitle()+" Def key : "+finChecklist.getPmDocument().getDocDefinitionKey());
-				}
 				finChecklist.setSelected(false);
 				finCheckListforPreview.add(finChecklist);
 			}
@@ -23175,11 +23172,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		VelocityContext context = new VelocityContext();
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+		String qtNo = null!=this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getQtNo() ? this.getManagedBean().getQt().getQtNo() : "";
 
 		String name = getMessageCommon(QTConstants.LBL_TECHNICAL_CHECKLIST_PREVIEW_PRINTING).replaceAll("\\s", "");
 		filename.append(name + QTConstants.PDF_EXTENSION);
 		attachment.setFileName(filename.toString());
-		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setDocNo(qtNo);
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 
 		populateAttachmentDetails(attachment);
@@ -23188,20 +23186,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		context.put(QTConstants.SC_QT_CHECK_ST2TECH_PROPOSAL_LIST, scQtCheckSt2techProposal);
 		context.put(QTConstants.STRING_BEAN, this);
 
-		FileOutputStream fos = null;
-
 		try {
-			fos = new FileOutputStream(getActualFilePath(attachment));
+			FileOutputStream fos = new FileOutputStream(getActualFilePath(attachment));
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.TECHNICAL_CHECKLIST_PREVIEW,
 					context, fos);
 		} catch (FileNotFoundException e) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
 		} catch (Exception ex) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), ex);
 		}
@@ -23238,11 +23230,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		VelocityContext context = new VelocityContext();
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+		String qtNo = null!=this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getQtNo() ? this.getManagedBean().getQt().getQtNo() : "";
 
 		String name = getMessageCommon(QTConstants.LBL_FINANCIAL_CHECKLIST_PREVIEW_PRINTING).replaceAll("\\s", "");
 		filename.append(name + QTConstants.PDF_EXTENSION);
 		attachment.setFileName(filename.toString());
-		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setDocNo(qtNo);
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 
 		populateAttachmentDetails(attachment);
@@ -23251,20 +23244,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		context.put(QTConstants.SC_QT_CHECK_ST2FINANCE_PROPOSAL_LIST, scQtCheckSt2financeProposalList);
 		context.put(QTConstants.STRING_BEAN, this);
 
-		FileOutputStream fos = null;
-
 		try {
-			fos = new FileOutputStream(getActualFilePath(attachment));
+			FileOutputStream fos = new FileOutputStream(getActualFilePath(attachment));
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.FINANCIAL_CHECKLIST_PREVIEW,
 					context, fos);
 		} catch (FileNotFoundException e) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
 		} catch (Exception ex) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), ex);
 		}
@@ -23384,6 +23371,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	*/
 	public void downloadSelectedTechnicalChecklistPreview() throws Exception {
 		List<ScQtCheckList> selectedTechCheckList = new ArrayList<>();
+		String qtNo = null!=this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getQtNo() ? this.getManagedBean().getQt().getQtNo() : "";
 		for (ScQtCheckList scQtCheckList : this.getManagedBean()
 				.getTechChecklistPreview()) {
 			if(scQtCheckList.isSelected()){
@@ -23394,14 +23382,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		try {
 			downloadFile(attachment);
 		} catch (IOException ie) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ie);
 
 		} catch (EpException ex) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ex);
 		}
@@ -23412,39 +23396,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		VelocityContext context = new VelocityContext();
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
-		List<ScQtCheckList> templateCheckListsForSample = new ArrayList<>();
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
-		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		String qtNo = null!=this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getQtNo() ? this.getManagedBean().getQt().getQtNo() : "";
 
 		String name = getMessageCommon(QTConstants.LBL_TECHNICAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING).replaceAll("\\s", "");
 		filename.append(name + QTConstants.PDF_EXTENSION);
 		attachment.setFileName(filename.toString());
-		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setDocNo(qtNo);
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 
 		populateAttachmentDetails(attachment);
 		
 		if(this.getManagedBean().getQt().isSampleReq()){
-			for(ScQtCheckList checklist : this.getManagedBean().getScQtCheckSt2techProposal()){
-				if(checklist.getDefinationType().getParameterId().equals(QTConstants.DEFINATION_TYPE_SPECIFICATION)
-					|| checklist.getDefinationType().getParameterId()==QTConstants.DEFINATION_TYPE_SPECIFICATION){
-					templateCheckListsForSample.add(checklist);
-				}
-			}
-			for(ScQtCheckList checklist : templateCheckListsForSample){
-				for(TplSpecQuestion itemQuestion : checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
-					specReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-					specReqDTO.setItemName(itemQuestion.getClItem());
-					TemplateSpecResDTO resDTO = templateSpecSO
-						.retrieveTechSpecByItemNames(specReqDTO);
-					
-					checkMandatorySpecForSample(itemQuestion, resDTO);
-				}
-			}
-			
-			context.put(QTConstants.TEMPLATES_FOR_SAMPLE, templateCheckListsForSample);
+			context.put(QTConstants.TEMPLATES_FOR_SAMPLE, retriveChecklistsForSample());
 		}
 
 		context.put(QTConstants.HOST_URL, getLogoHeaderPath());
@@ -23461,18 +23424,40 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.SELECTED_TECHNICAL_CHECKLIST_PREVIEW,
 					context, fos);
 		} catch (FileNotFoundException e) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
 		} catch (Exception ex) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), ex);
 		}
 
 		return attachment;
+	}
+	private List<ScQtCheckList> retriveChecklistsForSample(){
+		List<ScQtCheckList> templateCheckListsForSample = new ArrayList<>();
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		
+		for(ScQtCheckList checklist : this.getManagedBean().getScQtCheckSt2techProposal()){
+			if(checklist.getDefinationType().getParameterId().equals(QTConstants.DEFINATION_TYPE_SPECIFICATION)
+				|| checklist.getDefinationType().getParameterId()==QTConstants.DEFINATION_TYPE_SPECIFICATION){
+				templateCheckListsForSample.add(checklist);
+			}
+		}
+		for(ScQtCheckList checklist : templateCheckListsForSample){
+			for(TplSpecQuestion itemQuestion : checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+				specReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				specReqDTO.setItemName(itemQuestion.getClItem());
+				TemplateSpecResDTO resDTO = templateSpecSO
+					.retrieveTechSpecByItemNames(specReqDTO);
+				
+				checkMandatorySpecForSample(itemQuestion, resDTO);
+			}
+		}
+		
+		return templateCheckListsForSample;
 	}
 	
 	/**
@@ -23482,6 +23467,20 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	* @return 
 	*/
 	public void downloadSelectedFinancialChecklistPreview() throws Exception {
+		ScQtCheckListAttachment attachment = generateSelectedFinancialChecklistPreviewPdfFromVelocity(selectedFinancialChecklistSorting());
+		String qtNo = null!=this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getQtNo() ? this.getManagedBean().getQt().getQtNo() : "";
+		try {
+			downloadFile(attachment);
+		} catch (IOException ie) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ie);
+
+		} catch (EpException ex) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ex);
+		}
+	}
+	private List<ScQtCheckList> selectedFinancialChecklistSorting(){
 		List<ScQtCheckList> selectedFinCheckList = new ArrayList<>();
 		for (ScQtCheckList scQtCheckList : this.getManagedBean()
 				.getFinChecklistPreview()) {
@@ -23489,12 +23488,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				&& null != scQtCheckList.getPmDocument().getDocDefinitionKey()
 				&& scQtCheckList.getPmDocument().getDocDefinitionKey().equals(QTConstants.FINANCIAL_BANK_STMT_CODE)){
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-				SpecificationResDTO resDTO = new SpecificationResDTO();
 				IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				
 				reqDTO.setScQtCheckList(scQtCheckList);
-				resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
+				SpecificationResDTO resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 				
 				if (null != resDTO.getScQtCheckListValue()) {
 					scQtCheckList.setScQtCheckListValue(resDTO
@@ -23508,21 +23506,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				selectedFinCheckList.add(scQtCheckList);
 			}
 		}
-		ScQtCheckListAttachment attachment = generateSelectedFinancialChecklistPreviewPdfFromVelocity(selectedFinCheckList);
-		try {
-			downloadFile(attachment);
-		} catch (IOException ie) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
-					SLALogConstant.QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ie);
-
-		} catch (EpException ex) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
-					SLALogConstant.QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), ex);
-		}
+		
+		return selectedFinCheckList;
 	}
 	
 	private ScQtCheckListAttachment generateSelectedFinancialChecklistPreviewPdfFromVelocity(
@@ -23530,11 +23515,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		VelocityContext context = new VelocityContext();
 		StringBuilder filename = new StringBuilder();
 		ScQtCheckListAttachment attachment = new ScQtCheckListAttachment();
+		String qtNo = null!=this.getManagedBean().getQt() && null!=this.getManagedBean().getQt().getQtNo() ? this.getManagedBean().getQt().getQtNo() : "";
 
 		String name = getMessageCommon(QTConstants.LBL_FINANCIAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING).replaceAll("\\s", "");
 		filename.append(name + QTConstants.PDF_EXTENSION);
 		attachment.setFileName(filename.toString());
-		attachment.setDocNo(this.getManagedBean().getQt().getQtNo());
+		attachment.setDocNo(qtNo);
 		attachment.setScQtCheckList(this.getManagedBean().getScQtChecklist());
 
 		populateAttachmentDetails(attachment);
@@ -23553,13 +23539,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.SELECTED_FINANCIAL_CHECKLIST_PREVIEW,
 					context, fos);
 		} catch (FileNotFoundException e) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
 		} catch (Exception ex) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
 					SLALogConstant.QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), ex);
 		}
