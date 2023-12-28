@@ -4589,9 +4589,20 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 								.equals(approvalCategoryCode)) {
 							Long[] orgIds={scQt.getOwnerOrgProfile().getOrgProfileId(),scQt.getPmOrgProfile().getOrgProfileId()};
-							DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(
-									RoleCode.COMMITTEE_APPROVER,orgIds,
-							qtApproval);
+							//12471 - start
+							List<TabBean> committeTabs = CollectionUtils.isNotEmpty(this.getManagedBean().getReadOnlyCommitteeTabBean()) ? this
+									.getManagedBean().getReadOnlyCommitteeTabBean() : this.getManagedBean().getScCommitteeMemberTabList();
+
+							List<Long> committeeMemberIds = new ArrayList<>();
+							for (TabBean tabBean : committeTabs) {
+								List<ScCommitteeMember> members = tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers();
+								for (ScCommitteeMember member : members) {
+									committeeMemberIds.add(member.getPmUser().getUserId());
+								}
+							}
+							DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails( 
+									RoleCode.COMMITTEE_APPROVER,orgIds, qtApproval, committeeMemberIds);
+							//12471 - end
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
 									budgetApprovalUsers));
@@ -13371,4 +13382,35 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
+	//12471 - start
+	/**
+	 * Validate selected approver from picklist
+	 * @return void
+	 */
+	public void validateApproverPickListSelection() {
+		List<TabBean> committeTabs = CollectionUtils.isNotEmpty(this.getManagedBean().getReadOnlyCommitteeTabBean()) ? this
+				.getManagedBean().getReadOnlyCommitteeTabBean() : this.getManagedBean().getScCommitteeMemberTabList();
+
+		Map<String, String> committeeMemberMap = new HashMap<>();
+		for (TabBean tabBean : committeTabs) {
+			List<ScCommitteeMember> members = tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers();
+			for (ScCommitteeMember member : members) {
+				committeeMemberMap.put(member.getPmUser().getUserId().toString(),
+						tabBean.getTabType().concat("|").concat(member.getMemberName()));
+			}
+		}
+		String approverUserId = this.getManagedBean().getApproverUserId();
+		
+		if (committeeMemberMap.get(approverUserId) != null) {
+			String[] committeeTypeNameArr = committeeMemberMap.get(approverUserId).split("\\|");
+			String memberName = committeeTypeNameArr[1];
+			String committeeDesc = this.getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeTypeNameArr[0]);
+			String message = MessageUtils.getMessage(MessageConst.ERROR_775302, new String[] { memberName,
+					committeeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, message));
+
+		}
+	}
+	//12471 - end
 }
