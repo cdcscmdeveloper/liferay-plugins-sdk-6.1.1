@@ -4597,6 +4597,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							Map<String, String> committeeMemberMap = new HashMap<>();
 							if(CollectionUtils.isNotEmpty(committeTabs)){
 								for (TabBean tabBean : committeTabs) {
+									if(tabBean.getScQtCommittee() == null 
+											|| tabBean.getScQtCommittee().getScCommittee() == null
+											|| tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers() == null
+											|| tabBean.getTabType() == null)
+										continue;
+
 									List<ScCommitteeMember> members = tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers();
 									for (ScCommitteeMember member : members) {
 										committeeMemberIds.add(member.getPmUser().getUserId());
