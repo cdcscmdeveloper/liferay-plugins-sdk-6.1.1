@@ -42,7 +42,7 @@
 				        timeout = setTimeout(later, wait);
 				    };
 				};
-				selections[i].addEventListener("mouseup", debounce(validateApprover, 600));
+				selections[i].addEventListener('mouseup', debounce(validateApprover, 600));
 				i++;
 			}
 		}
@@ -70,9 +70,7 @@
 				binding="#{approverToValidate}"
 				value="#{qTDetailBB.managedBean.approverUserId}" />
 			<p:remoteCommand name="validatePicklist"
-				action="#{qTDetailBB.validateApproverPickListSelection()}"
-				onstart="setTimeout(function (){cmtApproverPickListBlock.show();}, 300)"
-				oncomplete="setTimeout(function (){cmtApproverPickListBlock.hide();}, 300)" />
+				action="#{qTDetailBB.validateApproverPickListSelection()}"  />
 			<p:pickList styleClass="cmtApproverPickList" id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
 				itemLabel="#{approverUser.pmUser.userName}"
