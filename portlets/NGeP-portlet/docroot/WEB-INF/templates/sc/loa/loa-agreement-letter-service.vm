@@ -1614,24 +1614,27 @@ u.underline {
 					<table width="100%" border=1 cellpadding="0" cellspacing="-1">
 					##26130 - end 03032022
 					  #if ($rowCount == 0)
+					  	#if ($isZonal)
+								#set($colspanZone = 7)
+						#else
+								#set($colspanZone = 6)
+						#end
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
+								<td colspan="2" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
+								<td colspan="2" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
 							</tr>
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Barangan</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
+								<td colspan="2" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Barangan</nobr></td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 							</tr>
 							<tr>
-								<td class="title border left" colspan="10" style="text-align: left; border-right: none !important; border-bottom: none !important;">&nbsp;</td>
-								<td class="title border left" colspan="10" style="text-align: left; border-left: none !important; border-bottom: none !important;">&nbsp;</td>
+								<td colspan="2" class="title border left" colspan="10" style="text-align: left; border-right: none !important; border-bottom: none !important;">&nbsp;</td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; border-left: none !important; border-bottom: none !important;">&nbsp;</td>
 							</tr>
-						</table>
-						<table width="100%" border=1 cellpadding="0" cellspacing="-1">
 							<tr>
 					            <th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
 					            <th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
@@ -1646,7 +1649,7 @@ u.underline {
 								
 					            <th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
 					         	<th valign="top" width="30%" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
-								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Skop Perkhidmatan<br/>/<br/> SLA</th>
 							</tr>
 							<tr>
 								#if ($isZonal)
@@ -1743,7 +1746,7 @@ u.underline {
 																#end
 															#end
 														
-															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+																<td class="standard border-bottom left" style="text-align: left;" rowspan="$rowSpanSize">$whitespace</td>
 															
 															#set($rowCount = $rowCount + 1)
 														#end
@@ -2206,7 +2209,7 @@ u.underline {
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
-								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan<br/>/</br/> SLA</th>
 							</tr>
 							<tr>
 								#if ($isZonal)
