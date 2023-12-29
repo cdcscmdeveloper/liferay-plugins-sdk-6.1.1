@@ -304,19 +304,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				if(!catLs.isEmpty()){
 					getManagedBean().setSupplierCategory(catLs.get(0));
 				}
-				else{
-					if(!suppCatLs.isEmpty()){
-						for(SmSupplierCategory sCat : suppCatLs){
-							//28774
-							if(sCat.getPmCategoryL3().getCategoryL3Id().equals(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id())){
-								getManagedBean().setSupplierCategory(sCat);
-								break;
-							}
-						}
-					}
-				}
+				//#35426 - start
 				setMachineList();
+			} else {
+				getManagedBean().setSupplierCategory(null);
 			}
+			//#35426 - end
 			if((smSvTask.getSmSvDocLicenses() == null || smSvTask.getSmSvDocLicenses().isEmpty())
 					&& getManagedBean().getSmSvTask().getPmCategoryL3() != null){
 				retrieveAndSetSmSvDocLicense(); //retrieve and set SmSvDocLicense (Additional License)	
@@ -2096,7 +2089,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				// #30504 start
+				// #30504 start #34795 start
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
 				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
 				log.info("---Curent PO: "+currPo.getUserName());
@@ -2117,6 +2110,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					smObj.setPoUsers(newPo.getLoginId());
 					this.getManagedBean().setBpmPojo(smObj);
 
+				} else {
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(currPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
 				}
 				log.info("---Curent PO Latest: "+currPo.getUserName());
 				
@@ -2153,7 +2150,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				reqDTO.setPoName(currPo.getUserName());
-				//#30504 Re-open end
+				//#30504 Re-open end #34795 end
 			}
 
 			reqDTO.setSmSvTask(svTask);
@@ -2608,7 +2605,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
 		reqDTO.setCategoryId(getManagedBean().getSmSvTask().getPmCategoryL3().getCategoryL3Id());
-		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrievePendingApprovalCategoryByApplIdAndCategoryId(reqDTO);
+		//#35426
+		SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retrieveCategoryByApplIdAndCategoryId(reqDTO);
 		
 		return resDTO.getSmSupplierCategoryList();
 	}
