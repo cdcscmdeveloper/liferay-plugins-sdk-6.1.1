@@ -29,12 +29,11 @@
 							<ac:instructionText
 								value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
 							<br />
-							<br />
 							<ac:instructionText
 								value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
 							<!-- #12471 End -->
-							<table>
-								<!-- #12471 Start -->
+							<!-- #12471 Start -->
+							<table style="width:100%">
 								<tr> 
 									<td><p:outputLabel
 											value="#{lbl['lbl.sc.committee.add.member.search.org.cat']}" /></td>
@@ -124,7 +123,7 @@
 											<p:message id="name1Msg" for="name1" display="icon" /></td>
 								</tr>
 								<tr>
-									<td style="width: 125px;"><p:outputLabel
+									<td><p:outputLabel
 											value="#{lbl['lbl.sc.id.type']}" /></td>
 									<td><p:selectOneMenu
 											value="#{evaluationMeetingBackingBean.managedBean.identificationType}"
@@ -285,7 +284,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td style="width: 125px;"><p:outputLabel
+									<td><p:outputLabel
 											value="#{lbl['lbl.sc.id.type']}" /> <p:outputLabel value="*"
 											styleClass="mandatory" /></td>
 									<td colspan="4">
