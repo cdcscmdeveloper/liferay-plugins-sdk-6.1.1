@@ -20,7 +20,6 @@
 				<ac:instructionText
 					value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
 				<br />
-				<br />
 				<ac:instructionText
 					value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
 				<!-- #12471 End -->
@@ -84,7 +83,7 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
-							<td><p:selectOneMenu id="orgTypeDD"
+							<td><p:selectOneMenu id="orgTypeDD" required="true" label="#{lbl['lbl.sc.committee.add.member.search.org.type']}"
 									value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.orgType}">
 									<p:ajax onstart="blockWidget.show()"
 										oncomplete="blockWidget.hide()" update="orgNameDD"
