@@ -92,7 +92,7 @@
 									<tr>
 										<td><p:outputLabel
 												value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
-										<td><p:selectOneMenu id="orgTypeDD"
+										<td><p:selectOneMenu id="orgTypeDD" required="true" label="#{lbl['lbl.sc.committee.add.member.search.org.type']}"
 												value="#{evaluationMeetingBackingBean.managedBean.orgType}">
 												<p:ajax onstart="blockWidget.show()"
 													oncomplete="blockWidget.hide()" update="orgNameDD"
