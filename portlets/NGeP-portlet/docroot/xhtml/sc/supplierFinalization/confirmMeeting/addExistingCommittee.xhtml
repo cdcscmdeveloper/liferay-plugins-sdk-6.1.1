@@ -15,10 +15,98 @@
 		<h:panelGroup id="userSearch" style="width:100%;margin-top:10px;">
 				<p:panel id="memberPanel" header="#{lbl['lbl.btn.search']}"
 					toggleable="true" style="width:100%;margin-top:0px;">
+					<!-- #12471 Start -->
+					<ac:instructionText
+						value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
+					<br />
+					<br />
+					<ac:instructionText
+						value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
+					<!-- #12471 End -->
 					<table>
+						<!-- #12471 Start -->
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sc.committee.add.member.search.org.cat']}" /></td>
+							<td colspan="3"><p:selectOneRadio id="orgCatRad"
+									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat}">
+									<p:ajax onstart="blockWidget.show()"
+										oncomplete="blockWidget.hide()"
+										update="memberPanel existingMemberTbl"
+										listener="#{suppFinalMeetingBackingBean.resetUserAction}" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sc.committee.add.member.search.ptj.full']}"
+										itemValue="#{suppFinalMeetingBackingBean.managedBean.orgCatPTJ}" />
+									<f:selectItem
+										itemLabel="#{lbl['lbl.sc.committee.add.member.search.other']}"
+										itemValue="#{suppFinalMeetingBackingBean.managedBean.orgCatOther}" />
+								</p:selectOneRadio></td>
+						</tr>
+						<c:if
+							test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq suppFinalMeetingBackingBean.managedBean.orgCatPTJ}">
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
+								<td><p:selectOneMenu id="ministryDD"
+										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.ministry}">
+										<p:ajax onstart="blockWidget.show()"
+											oncomplete="blockWidget.hide()" update="PtjGroupDD PtjDD"
+											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterConst.getOrgTypeMinistry())}" />
+										<f:selectItems
+											value="#{suppFinalMeetingBackingBean.managedBean.ministryDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}" /></td>
+								<td><p:selectOneMenu id="PtjGroupDD"
+										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.ptjGroup}">
+										<p:ajax onstart="blockWidget.show()"
+											oncomplete="blockWidget.hide()" update="PtjDD"
+											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterConst.getOrgTypePtjGroup())}" />
+										<f:selectItems
+											value="#{suppFinalMeetingBackingBean.managedBean.ptjGroupDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.ptj']}" /></td>
+								<td><p:selectOneMenu id="PtjDD"
+										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.ptj}">
+										<f:selectItems
+											value="#{suppFinalMeetingBackingBean.managedBean.ptjDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+						</c:if>
+						<c:if
+							test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq suppFinalMeetingBackingBean.managedBean.orgCatOther}">
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
+								<td><p:selectOneMenu id="orgTypeDD"
+										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgType}">
+										<p:ajax onstart="blockWidget.show()"
+											oncomplete="blockWidget.hide()" update="orgNameDD"
+											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterTypeConst.getOrganisationTypes())}" />
+										<f:selectItems
+											value="#{suppFinalMeetingBackingBean.managedBean.orgTypeDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committee.add.member.search.org.name']}" /></td>
+								<td><p:selectOneMenu id="orgNameDD"
+										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgName}">
+										<f:selectItems
+											value="#{suppFinalMeetingBackingBean.managedBean.orgNameDDList}" />
+									</p:selectOneMenu></td>
+							</tr>
+						</c:if>
+						<!-- #12471 End -->
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
-							   <p:outputLabel value="*" styleClass="mandatory" /></td>
+							<!-- #12471 -->
+							</td>
 							<td colspan="3"><p:inputText onkeypress="if (event.keyCode == 13) { supplierFinalizationConfirmMeetingAddSearch.jq.click(); return false; }"
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.name}"
 									size="64" id="name1"  label="#{lbl['lbl.sc.name']}" required="#{suppFinalMeetingBackingBean.managedBean.nameRequired}"/>
@@ -82,6 +170,26 @@
 							<h:outputText value="#{existingMember.designation}"
 								style="white-space: normal;" />
 						</p:column>
+					<!-- #12471 Start -->
+					<c:if
+						test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq suppFinalMeetingBackingBean.managedBean.orgCatPTJ}">
+						<p:column
+							headerText="#{lbl['lbl.sc.committee.add.member.search.ministry']}">
+							<h:outputText style="white-space: normal;"
+								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.getOrgTypeMinistry())}" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}">
+							<h:outputText style="white-space: normal;"
+								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.getOrgTypePtjGroup())}" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.committee.add.member.search.ptj']}">
+							<h:outputText style="white-space: normal;"
+								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.getOrgTypePtj())}" />
+						</p:column>
+					</c:if>
+					<!-- #12471 End -->
 						<p:column headerText="#{lbl['lbl.sc.email']}">
 							<h:outputText value="#{existingMember.email}"
 								style="white-space: normal;" />
