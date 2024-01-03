@@ -168,6 +168,7 @@ u {
 	-fs-table-paginate: paginate;
 	border-spacing:-2px;
 	border:1px solid black
+}	
 ##26130-end
 </style>
 </head>
@@ -396,8 +397,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 </table>
 #end
 	##26130 -end
-		<br/>
-		<br/>
 	  #else 
 		
 		  	#foreach( $tplspecMaster in $masters )
@@ -759,6 +758,8 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 #else
 	<div class="break-after"><br/></div>
 #end
+<br/>
+<br/>
 <table width="100%" cellspacing="0" cellpadding="0" class="tableSST">
 <tbody>	
 #if ($isZonal)
@@ -975,8 +976,6 @@ No. Surat Setuju Terima : <span style="font-family: Arial; font-size:13px; text-
 </table>
 #end		
 ##26130 - end	
-		<br/>
-		<br/>
 	  #else 
 		
 		  	#foreach( $tplspecMaster in $masters )
