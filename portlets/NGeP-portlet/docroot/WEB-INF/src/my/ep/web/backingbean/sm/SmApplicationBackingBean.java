@@ -17002,6 +17002,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		 */
 		public void POinquiryRowSelect(SmApplInquiry applInquiry) {
 			this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+			getManagedBean().setMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
+			getManagedBean().setNonMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
+			for (SmApplSupportDocInquiry doc : applInquiry.getSmApplSupportDocInquiries()) {
+				//#34392 - START
+				doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
+				if (doc.getPmDocument().isMandatory()) {
+					getManagedBean().getMandatoryDocsInquiry().add(doc);
+				}else if(!doc.getPmDocument().isMandatory()){
+					getManagedBean().getNonMandatoryDocsInquiry().add(doc);
+				}
+				//#34392 - End
+			}
 			RequestContext.getCurrentInstance().update("inquiryDetails");
 		}
 		// 14530 - END
