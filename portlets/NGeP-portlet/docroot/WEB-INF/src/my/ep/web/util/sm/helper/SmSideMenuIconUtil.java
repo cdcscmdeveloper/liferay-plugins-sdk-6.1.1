@@ -591,6 +591,8 @@ public class SmSideMenuIconUtil {
 			SmApplicationManagedBean bean, String sectionType) {
 		String retVal = StringUtils.EMPTY;
 		String applStatus = bean.getSmAppl().getPmStatus().getStatusId().toString();
+		log.info("Appl status: "+applStatus);
+		log.info("appl no: "+ bean.getSmAppl().getApplNo());
 		if (!bean.isSupplierUser()) {
 			retVal = ICON_UNTICK;
 			SmApplSectionReview rev = bean.isPoUser() ? bean.getPoSecReview()
