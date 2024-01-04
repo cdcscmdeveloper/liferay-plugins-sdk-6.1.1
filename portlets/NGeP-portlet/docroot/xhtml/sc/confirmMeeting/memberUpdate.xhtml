@@ -105,7 +105,7 @@
 					<p:commandLink
 						actionListener="#{evaluationMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						update="@form">
+						process="@this" update="@([id$=memberInfoPopup])">
 						<h:outputText value="#{committeeMember.memberName}"></h:outputText>
 					</p:commandLink>
 					<!-- #12471 End -->
