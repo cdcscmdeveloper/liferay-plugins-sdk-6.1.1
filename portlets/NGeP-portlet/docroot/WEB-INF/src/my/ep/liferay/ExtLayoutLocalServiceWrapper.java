@@ -173,7 +173,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 					|| UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, Long.valueOf(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_SITE_ID)).longValue(),
 							BASIC_SUPPLIER_USER, true);
 		} catch (Exception e) {
-			System.err.println(e);
+			log.error(e.getMessage());
 		}
 		return isBasic;
 	}
