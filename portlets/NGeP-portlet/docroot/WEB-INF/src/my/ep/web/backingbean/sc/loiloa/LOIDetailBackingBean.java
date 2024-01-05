@@ -2782,23 +2782,25 @@ public class LOIDetailBackingBean extends
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 			
 			//#30008 - Start
-			Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
-			
-			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-			reqDTO2.setParameterId(parameterId);
-			ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
-			PmParameter pmParameter = resDTO2.getPmParameter();
-			scLoi.setNegoDecision(pmParameter);
-			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
-			
-			if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {	
-				awardDataType.setIsAgreement(false);
-			} else {
-				awardDataType.setIsAgreement(true);
-			}//#30008 - end
+			if (this.getManagedBean().getDecisionCode() != null) {
+				Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
+
+				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+				ParameterReqDTO reqDTO2 = new ParameterReqDTO();
+				reqDTO2.setParameterId(parameterId);
+				ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
+				PmParameter pmParameter = resDTO2.getPmParameter();
+				scLoi.setNegoDecision(pmParameter);
+				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+
+				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+					awardDataType.setIsAgreement(false);
+				} else {
+					awardDataType.setIsAgreement(true);
+				}
+			}// #30008 - end
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
@@ -2916,24 +2918,30 @@ public class LOIDetailBackingBean extends
 			// remove empty remark - end
 			
 			//#30008 - Start
-			Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
-			
+			Long parameterId = null;
+			if (this.getManagedBean().getDecisionCode() != null) {
+				parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
+			}
+
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
+
 			ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-			reqDTO2.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO2);
-			PmParameter pmParameter = resDTO.getPmParameter();
-			scLoi.setNegoDecision(pmParameter);
-			scLoi.setDecisionJustification(this.getManagedBean().getJustification());			
-			
-			if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {	
-				awardDataType.setIsAgreement(false);
-			} else {
-				awardDataType.setIsAgreement(true);
+			if (parameterId != null) {
+				reqDTO2.setParameterId(parameterId);
+
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO2);
+				PmParameter pmParameter = resDTO.getPmParameter();
+				scLoi.setNegoDecision(pmParameter);
+				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+
+				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+					awardDataType.setIsAgreement(false);
+				} else {
+					awardDataType.setIsAgreement(true);
+				}
 			}
-			//#30008 - end
+			// #30008 - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -6996,13 +7004,14 @@ public class LOIDetailBackingBean extends
 	 * @param bpmAction
 	 * @return void
 	 */
-	public void validateNegoDecisionAction(String bpmAction) {
+	public void validateNegoDecisionAction() {
 		try {
 			
 			String decision = String.valueOf(this.getManagedBean().getDecisionCode());
 			String justification = this.getManagedBean().getJustification();
+			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
+//			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
 				if (decision == null) {
 					throw new EpException(MessageConst.ERROR_775192);
 				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
@@ -7012,9 +7021,9 @@ public class LOIDetailBackingBean extends
 				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
 					updateBpmTaskAction(bpmAction);
 				}
-			} else {
-				updateBpmTaskAction(bpmAction);
-			}
+//			} else {
+//				updateBpmTaskAction(bpmAction);
+//			}
 
 		} finally {
 		}
