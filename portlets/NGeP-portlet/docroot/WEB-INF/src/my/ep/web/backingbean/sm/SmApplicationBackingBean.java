@@ -10587,6 +10587,37 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			//#34392 - End
 		}
+		
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())){
+			Collections.sort(getManagedBean().getMandatoryDocs(), new Comparator<SmApplSupportDoc>(){
+				@Override
+				public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+		
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocs())){
+			Collections.sort(getManagedBean().getNonMandatoryDocs(), new Comparator<SmApplSupportDoc>(){
+				@Override
+				public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+		
 		log.info("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getMissinDocs().size());
 		log.info("**** Send Inquiry List Size ***** "
@@ -17013,6 +17044,36 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					getManagedBean().getNonMandatoryDocsInquiry().add(doc);
 				}
 				//#34392 - End
+			}
+			
+			if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())){
+				Collections.sort(getManagedBean().getMandatoryDocs(), new Comparator<SmApplSupportDoc>(){
+					@Override
+					public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+						if(doc1.getPmDocument().getDisplaySeq() == null){
+							return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+						}
+						if(doc2.getPmDocument().getDisplaySeq() == null){
+							return -1;
+						}
+						return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+					}
+				});
+			}
+			
+			if(!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocs())){
+				Collections.sort(getManagedBean().getNonMandatoryDocs(), new Comparator<SmApplSupportDoc>(){
+					@Override
+					public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+						if(doc1.getPmDocument().getDisplaySeq() == null){
+							return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+						}
+						if(doc2.getPmDocument().getDisplaySeq() == null){
+							return -1;
+						}
+						return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+					}
+				});
 			}
 			RequestContext.getCurrentInstance().update("inquiryDetails");
 		}
