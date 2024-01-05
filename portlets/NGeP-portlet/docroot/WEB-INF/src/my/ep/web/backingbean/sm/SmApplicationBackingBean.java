@@ -10571,12 +10571,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	public void initMissingDocs(boolean isNewInquiry, String dialogId) {
 		SmApplicationUtil.initPoInquiry(getManagedBean(), isNewInquiry);
+		//#34392 - START
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		getManagedBean().setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 		getManagedBean().setNonMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			//#34392 - START
+			
 			if (doc.getPmDocument().isMandatory()
 					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
@@ -10585,7 +10586,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getMissinDocs().add(doc);
 				getManagedBean().getNonMandatoryDocs().add(doc);
 			}
-			//#34392 - End
 		}
 		
 		if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())){
@@ -10617,6 +10617,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			});
 		}
+		//#34392 - End
 		
 		log.info("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getMissinDocs().size());
@@ -17033,17 +17034,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		 */
 		public void POinquiryRowSelect(SmApplInquiry applInquiry) {
 			this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+			//#34392 - START
 			getManagedBean().setMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
 			getManagedBean().setNonMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
 			for (SmApplSupportDocInquiry doc : applInquiry.getSmApplSupportDocInquiries()) {
-				//#34392 - START
 				doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
 				if (doc.getPmDocument().isMandatory()) {
 					getManagedBean().getMandatoryDocsInquiry().add(doc);
 				}else if(!doc.getPmDocument().isMandatory()){
 					getManagedBean().getNonMandatoryDocsInquiry().add(doc);
 				}
-				//#34392 - End
+				
 			}
 			
 			if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())){
@@ -17075,6 +17076,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				});
 			}
+			
+			//#34392 - End
 			RequestContext.getCurrentInstance().update("inquiryDetails");
 		}
 		// 14530 - END
