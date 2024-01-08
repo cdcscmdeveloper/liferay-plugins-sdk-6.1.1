@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -413,6 +414,29 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * Enhancement #21694
 	 */
 	private String loiTaskId;
+	// #12471 Start
+	/** The popup member name. */
+	private String memberName;
+
+	/** The popup member ministry or organization. */
+	private String memberMinOrg;
+
+	/** The popup member ptj or organization code. */
+	private String memberPtjOrgCode;
+
+	/** The popup member ptj or organization name. */
+	private String memberPtjOrgName;
+
+	// #12471 End
+	
+	//#30008 - Start
+	private PmParameter decision;
+	private String justification;
+	private String notReachAgreement;
+	private boolean negoDecisitionReadOnly;
+	private String decisionCode;
+	//#30008 - end
+	
 	
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 	
@@ -2366,7 +2390,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.renderInstruction = renderInstruction;
 	}
 	//#29007 End Vinod
-
+	
 	//#28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
@@ -2376,5 +2400,124 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.supplierBranchList = supplierBranchList;
 	}
 	//#28777 & #29729 - End
+	// #12471 Start
+	/**
+	 * Gets the member name.
+	 * 
+	 * @return the member name.
+	 */
+	public String getMemberName() {
+		return memberName;
+	}
+
+	/**
+	 * Sets the member name.
+	 * 
+	 * @param memberName
+	 *            the new member name.
+	 */
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	/**
+	 * Gets the member ministry or organization.
+	 * 
+	 * @return the member ministry or organization.
+	 */
+	public String getMemberMinOrg() {
+		return memberMinOrg;
+	}
+
+	/**
+	 * Sets the member ministry or organization.
+	 * 
+	 * @param memberMinOrg
+	 *            the new member ministry or organization.
+	 */
+	public void setMemberMinOrg(String memberMinOrg) {
+		this.memberMinOrg = memberMinOrg;
+	}
+
+	/**
+	 * Gets the member ptj or organization code.
+	 * 
+	 * @return the member ptj or organization code.
+	 */
+	public String getMemberPtjOrgCode() {
+		return memberPtjOrgCode;
+	}
+
+	/**
+	 * Sets the member ptj or organization code.
+	 * 
+	 * @param memberPtjOrgCode
+	 *            the new member ptj or organization code.
+	 */
+	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
+		this.memberPtjOrgCode = memberPtjOrgCode;
+	}
+
+	/**
+	 * Gets the member ptj or organization name.
+	 * 
+	 * @return the member ptj or organization name.
+	 */
+	public String getMemberPtjOrgName() {
+		return memberPtjOrgName;
+	}
+
+	/**
+	 * Sets the member ptj or organization name.
+	 * 
+	 * @param memberPtjOrgName
+	 *            the new member ptj or organization name.
+	 */
+	public void setMemberPtjOrgName(String memberPtjOrgName) {
+		this.memberPtjOrgName = memberPtjOrgName;
+	}
+	// #12471 End
+	
+	//#30008 - Start
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	public PmParameter getDecision() {
+		return decision;
+	}
+
+	public void setDecision(PmParameter decision) {
+		this.decision = decision;
+	}
+
+	public String getNotReachAgreement() {
+		return notReachAgreement;
+	}
+
+	public void setNotReachAgreement(String notReachAgreement) {
+		this.notReachAgreement = notReachAgreement;
+	}
+
+	public boolean isNegoDecisitionReadOnly() {
+		return negoDecisitionReadOnly;
+	}
+
+	public void setNegoDecisitionReadOnly(boolean negoDecisitionReadOnly) {
+		this.negoDecisitionReadOnly = negoDecisitionReadOnly;
+	}
+
+	public String getDecisionCode() {
+		return decisionCode;
+	}
+
+	public void setDecisionCode(String decisionCode) {
+		this.decisionCode = decisionCode;
+	}
+	//#30008 - end
 	
 }
