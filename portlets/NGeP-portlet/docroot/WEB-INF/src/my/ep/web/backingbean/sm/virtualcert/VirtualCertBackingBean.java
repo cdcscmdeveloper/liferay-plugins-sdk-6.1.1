@@ -196,35 +196,20 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	//rollback to v H1.53 cz error on redmine:26915
 	public void printVirtualCert(SmMofCert cert) throws IOException{
 		//#28175
-		log.info("FILE NAME BEFORE: " +cert.getFileName());
-		log.info("FILE PATH BEFORE: " +cert.getFilePath());
 		if(!checkCatCodeList(cert.getSmAppl())){
 			cert.setFileName(null);
 			cert.setFilePath(null);
-			log.info("SET TO NULL");
-			log.info("FILE NAME IS SET TO NULL: " +cert.getFileName());
-			log.info("FILE PATH IS SET TO NULL: " +cert.getFilePath());
 		}
-		log.info("FILE NAME AFTER: " +cert.getFileName());
-		log.info("FILE PATH AFTER: " +cert.getFilePath());
 		//#28175 end
 		if(cert.getFileName() != null || cert.getFilePath() != null){
-			log.info("FILE NAME NOT NULL BEFORE: " +cert.getFileName());
-			log.info("FILE PATH NOT NULL BEFORE: " +cert.getFilePath());
 			String file = cert.getFilePath() + "/" + cert.getFileName();
 			commonDownload(file,cert.getFileName());
-			log.info("FILE NAME NOT NULL AFTER: " +cert.getFileName());
-			log.info("FILE PATH NOT NULL AFTER: " +cert.getFilePath());
 		}else{
-			log.info("FILE NAME NULL BEFORE: " +cert.getFileName());
-			log.info("FILE PATH NULL BEFORE: " +cert.getFilePath());
 			SmMofCert mofCert = SmVirtualCertHelper.getInstance().genReport(
 					SmVirtualCertHelper.getInstance().getReportType(cert.getBumiCertFlg()), 
 					SmVirtualCertHelper.getInstance().getReportParam(cert), cert, false);
 			String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
 			commonDownload(newfile,mofCert.getFileName());
-			log.info("FILE NAME NULL AFTER: " +cert.getFileName());
-			log.info("FILE PATH NULL AFTER: " +cert.getFilePath());
 		}
 		
 	}

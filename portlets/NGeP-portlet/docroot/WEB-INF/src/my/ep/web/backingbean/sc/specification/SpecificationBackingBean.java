@@ -23571,8 +23571,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */	
 	public boolean checkTemplateRequiredSample(ScQtCheckList templateChecklist){//11104_newEndorsestart
 		if (null == templateChecklist.getSampleStatus()
-				|| QTStatusConst.TS_PENDING_SUBMISSION.equals(templateChecklist
-						.getSampleStatus().getStatusId()) || templateChecklist.isCloned()) {//11104-Reenorse
+				 || templateChecklist.isCloned()) {//11104-Reenorse728
 			return Boolean.FALSE;
 		} else {
 			for (TplSpecQuestion specQuestion :  getTemplateSampleQuestions(templateChecklist)) {

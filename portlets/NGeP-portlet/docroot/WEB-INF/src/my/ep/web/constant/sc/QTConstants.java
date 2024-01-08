@@ -369,6 +369,12 @@ public interface QTConstants {
 	//#25726 end
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
+	// #12471 Start
+	public static final String ORG_CATEGORY_PTJ = "PTJ";
+	public static final String ORG_CATEGORY_OTHERS = "OTH";
+	public static final Long ORG_CAT_TYPE_OTHER_ID = 209L;
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
+	// #12471 End
 	
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 	
@@ -385,4 +391,9 @@ public interface QTConstants {
 	public static final String FINALIZATION_COMMITTEE_SECRETARY="lbl.sc.finalization.committee.secretary.";//25635&sonarQubeIssue12#84
 	
 	public static final String SERVICE_OBJECT_CC = "cc";
+	//12471 - start
+	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
+	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	//12471 - end
+
 }

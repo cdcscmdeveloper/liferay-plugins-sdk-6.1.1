@@ -172,6 +172,12 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+//#12471 Start
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+//#12471 End
 
 // TODO: Auto-generated Javadoc
 /**
@@ -2776,23 +2782,25 @@ public class LOIDetailBackingBean extends
 			List<ScLoiLoa> pendingloiloas  = getPendingLoiLoas(scLoi, getManagedBean().getRecSupplierList());
 			
 			//#30008 - Start
-			Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
-			
-			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-			reqDTO2.setParameterId(parameterId);
-			ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
-			PmParameter pmParameter = resDTO2.getPmParameter();
-			scLoi.setNegoDecision(pmParameter);
-			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
-			
-			if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {	
-				awardDataType.setIsAgreement(false);
-			} else {
-				awardDataType.setIsAgreement(true);
-			}//#30008 - end
+			if (this.getManagedBean().getDecisionCode() != null) {
+				Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
+
+				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+				ParameterReqDTO reqDTO2 = new ParameterReqDTO();
+				reqDTO2.setParameterId(parameterId);
+				ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
+				PmParameter pmParameter = resDTO2.getPmParameter();
+				scLoi.setNegoDecision(pmParameter);
+				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+
+				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+					awardDataType.setIsAgreement(false);
+				} else {
+					awardDataType.setIsAgreement(true);
+				}
+			}// #30008 - end
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
@@ -2910,24 +2918,30 @@ public class LOIDetailBackingBean extends
 			// remove empty remark - end
 			
 			//#30008 - Start
-			Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
-			
+			Long parameterId = null;
+			if (this.getManagedBean().getDecisionCode() != null) {
+				parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
+			}
+
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
+
 			ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-			reqDTO2.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO2);
-			PmParameter pmParameter = resDTO.getPmParameter();
-			scLoi.setNegoDecision(pmParameter);
-			scLoi.setDecisionJustification(this.getManagedBean().getJustification());			
-			
-			if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {	
-				awardDataType.setIsAgreement(false);
-			} else {
-				awardDataType.setIsAgreement(true);
+			if (parameterId != null) {
+				reqDTO2.setParameterId(parameterId);
+
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO2);
+				PmParameter pmParameter = resDTO.getPmParameter();
+				scLoi.setNegoDecision(pmParameter);
+				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+
+				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+					awardDataType.setIsAgreement(false);
+				} else {
+					awardDataType.setIsAgreement(true);
+				}
 			}
-			//#30008 - end
+			// #30008 - end
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
@@ -6917,7 +6931,6 @@ public class LOIDetailBackingBean extends
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#21692 - end
-	
 	//#28777 & #29729 - Start
 	/**
 	* Method to display list of supplier branch had deleted or not with related current QT
@@ -6985,19 +6998,20 @@ public class LOIDetailBackingBean extends
 		return Boolean.FALSE;
 	}
 	//#28777 & #29729 - End
-	
+		
 	/**
 	 * #30008 - Validate LOI Negotiation result before submit
 	 * @param bpmAction
 	 * @return void
 	 */
-	public void validateNegoDecisionAction(String bpmAction) {
+	public void validateNegoDecisionAction() {
 		try {
 			
 			String decision = String.valueOf(this.getManagedBean().getDecisionCode());
 			String justification = this.getManagedBean().getJustification();
+			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
+//			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
 				if (decision == null) {
 					throw new EpException(MessageConst.ERROR_775192);
 				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
@@ -7007,13 +7021,63 @@ public class LOIDetailBackingBean extends
 				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
 					updateBpmTaskAction(bpmAction);
 				}
-			} else {
-				updateBpmTaskAction(bpmAction);
-			}
+//			} else {
+//				updateBpmTaskAction(bpmAction);
+//			}
 
 		} finally {
 		}
 
 	}//#30008 - end
-
+	
+	// #12471 Start
+	/**
+	 * Initialize member info for popup
+	 */
+	public void onClickMemberInfo(PmUser memberInfo) {
+		this.getManagedBean().setMemberName(memberInfo.getUserName());
+		UserReqDTO reqDTOuser = new UserReqDTO();
+		UserResDTO resDTOuser = new UserResDTO();
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		reqDTOuser.setUserId(memberInfo.getUserId());
+		resDTOuser = userSO.retrieveUserProfileByUserId(reqDTOuser);
+		memberInfo = resDTOuser.getPmUser();
+		for (PmUserOrg org : memberInfo.getPmUserOrgs()) {
+			if (org.getRecordStatusFlg() == 1) {
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+				reqDTO.setOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+				OrgProfileResDTO resDTO = new OrgProfileResDTO();
+				if (org.getPmOrgProfile().getEpPtj()) {
+					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					this.getManagedBean().setMemberMinOrg(resDTO.getPmOrgProfile().getPmOrgValidity().getOrgName());
+					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				} else {
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					ParameterReqDTO reqDTO2 = new ParameterReqDTO();
+					reqDTO2.setParameterId(org.getPmOrgProfile().getOrgTypeCode().getParameterId());
+					ParameterResDTO resDTO2 = new ParameterResDTO();
+					resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
+					String orgType = "";
+					for (PmParameterDesc desc : resDTO2.getPmParameter().getPmParameterDescsSpecCallOnly()) {
+						if (desc.getLanguageCode().equalsIgnoreCase(new FacesScopes().getUserLocale().getLanguage())) {
+							orgType = desc.getCodeName();
+							break;
+						}
+					}
+					this.getManagedBean().setMemberMinOrg(orgType);
+					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				}
+				break;
+			}
+		}
+		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
+	}
+	// #12471 End
 }
