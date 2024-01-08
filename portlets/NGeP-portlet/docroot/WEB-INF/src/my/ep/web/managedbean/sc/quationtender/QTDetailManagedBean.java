@@ -1662,6 +1662,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	List<String> selectedCategories;
 	Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode;
 	// #29468 Vinod End
+	// #10141 - start
+	private String inActiveChecklistNotificationText;
+	private List<ScQtCheckList> inActiveChecklist;
+	private int inActiveChecklistCount;
+	private boolean disableButtonForInactiveChecklist = false;
+	private boolean showInactiveChecklistPopup = false;
+	private List<ScQtCheckList> techChecklistPreview;
+	private List<ScQtCheckList> finChecklistPreview;
+	private List<ScQtCheckList> techChecklistSelect;
+	private List<ScQtCheckList> finChecklistSelect;
+	private int technicalPreviewTableRow;
+	private int financialPreviewTableRow;
+	private boolean selectAllTechPreview;
+	private boolean selectAllFinPreview;
+	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
@@ -11357,6 +11372,112 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.mapCatCode = mapCatCode;
 		}
 		//#29468 Vinod End
+		// #10141 - start
+		public String getInActiveChecklistNotificationText() {
+			return inActiveChecklistNotificationText;
+		}
+
+		public void setInActiveChecklistNotificationText(String inActiveChecklistNotificationText) {
+			this.inActiveChecklistNotificationText = inActiveChecklistNotificationText;
+		}
+
+		public List<ScQtCheckList> getInActiveChecklist() {
+			return inActiveChecklist;
+		}
+
+		public void setInActiveChecklist(List<ScQtCheckList> inActiveChecklist) {
+			this.inActiveChecklist = inActiveChecklist;
+		}
+
+		public int getInActiveChecklistCount() {
+			return inActiveChecklistCount;
+		}
+
+		public void setInActiveChecklistCount(int inActiveChecklistCount) {
+			this.inActiveChecklistCount = inActiveChecklistCount;
+		}
+
+		public boolean isDisableButtonForInactiveChecklist() {
+			return disableButtonForInactiveChecklist;
+		}
+
+		public void setDisableButtonForInactiveChecklist(boolean disableButtonForInactiveChecklist) {
+			this.disableButtonForInactiveChecklist = disableButtonForInactiveChecklist;
+		}
+
+		public boolean isShowInactiveChecklistPopup() {
+			return showInactiveChecklistPopup;
+		}
+
+		public void setShowInactiveChecklistPopup(boolean showInactiveChecklistPopup) {
+			this.showInactiveChecklistPopup = showInactiveChecklistPopup;
+		}
+
+		public List<ScQtCheckList> getTechChecklistSelect() {
+			return techChecklistSelect;
+		}
+
+		public void setTechChecklistSelect(List<ScQtCheckList> techChecklistSelect) {
+			this.techChecklistSelect = techChecklistSelect;
+		}
+
+		public List<ScQtCheckList> getFinChecklistSelect() {
+			return finChecklistSelect;
+		}
+
+		public void setFinChecklistSelect(List<ScQtCheckList> finChecklistSelect) {
+			this.finChecklistSelect = finChecklistSelect;
+		}
+
+		public int getTechnicalPreviewTableRow() {
+			return technicalPreviewTableRow;
+		}
+
+		public void setTechnicalPreviewTableRow(int technicalPreviewTableRow) {
+			this.technicalPreviewTableRow = technicalPreviewTableRow;
+		}
+
+		public int getFinancialPreviewTableRow() {
+			return financialPreviewTableRow;
+		}
+
+		public void setFinancialPreviewTableRow(int financialPreviewTableRow) {
+			this.financialPreviewTableRow = financialPreviewTableRow;
+		}
+
+		public List<ScQtCheckList> getTechChecklistPreview() {
+			return techChecklistPreview;
+		}
+
+		public void setTechChecklistPreview(List<ScQtCheckList> techChecklistPreview) {
+			this.techChecklistPreview = techChecklistPreview;
+		}
+
+		public List<ScQtCheckList> getFinChecklistPreview() {
+			return finChecklistPreview;
+		}
+
+		public void setFinChecklistPreview(List<ScQtCheckList> finChecklistPreview) {
+			this.finChecklistPreview = finChecklistPreview;
+		}
+
+		public boolean isSelectAllTechPreview() {
+			return selectAllTechPreview;
+		}
+
+		public void setSelectAllTechPreview(boolean selectAllTechPreview) {
+			this.selectAllTechPreview = selectAllTechPreview;
+		}
+
+		public boolean isSelectAllFinPreview() {
+			return selectAllFinPreview;
+		}
+
+		public void setSelectAllFinPreview(boolean selectAllFinPreview) {
+			this.selectAllFinPreview = selectAllFinPreview;
+		}
+
+		// #10141 - end
 		
 		//#9019 - Start (Harun) 08082022 Missing remarks issue
 		public boolean isScQtRemarksEmpty() {
