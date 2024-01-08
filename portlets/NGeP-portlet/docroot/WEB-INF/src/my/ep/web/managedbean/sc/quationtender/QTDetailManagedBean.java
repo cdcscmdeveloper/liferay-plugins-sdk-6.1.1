@@ -1666,21 +1666,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
-	// #10141 - start
-	private String inActiveChecklistNotificationText;
-	private List<ScQtCheckList> inActiveChecklist;
-	private int inActiveChecklistCount;
-	private boolean disableButtonForInactiveChecklist = false;
-	private boolean showInactiveChecklistPopup = false;
-	private List<ScQtCheckList> techChecklistPreview;
-	private List<ScQtCheckList> finChecklistPreview;
-	private List<ScQtCheckList> techChecklistSelect;
-	private List<ScQtCheckList> finChecklistSelect;
-	private int technicalPreviewTableRow;
-	private int financialPreviewTableRow;
-	private boolean selectAllTechPreview;
-	private boolean selectAllFinPreview;
-	// #10141 - end
 	
 	/**
 	 * Sets the panel suppliers.
