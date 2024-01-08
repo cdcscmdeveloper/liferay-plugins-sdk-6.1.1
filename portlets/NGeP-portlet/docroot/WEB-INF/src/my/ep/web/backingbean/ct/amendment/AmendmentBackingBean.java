@@ -625,7 +625,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctReqDTO.setUpdateAction(false);
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
-				getManagedBean().setBackToNtf("notifications"); //25956
+				getManagedBean().setBackToNtf(constructNotifUrl()); //25956
 
 				getManagedBean().setViewOnly(true);
 				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
@@ -1057,9 +1057,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return this.getManagedBean().getBackToPreviousPage();
 			
 		}else if(getManagedBean().getBackToNtf() != null){ //25956
-			FacesContext.getCurrentInstance().getExternalContext().redirect(
-					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
-			return null;
+
+			return getManagedBean().getBackToNtf();
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		this.getManagedBean().setSecretaryList(null);
@@ -9000,4 +8999,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #34539
+	
+	// #25956 - Start
+	/**
+	 * Method used to navigate Notification Page
+	 * @return String
+	 */
+	private String constructNotifUrl() {
+		StringBuilder backNotifUrlLink = new StringBuilder();
+		backNotifUrlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
+		backNotifUrlLink.append("notifications#!"); 
+		String url = backNotifUrlLink.toString();
+		return url;
+	}
+	// #25956 - End
 	}
