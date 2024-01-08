@@ -3032,6 +3032,9 @@ public class SupplierFinalizationBackingBean extends
 			checkKertasTaklimatReports(finalizationReports, reportTitleList, SourcingConstants.SUPPLIER_FINALIZATION_TASK);
 			// #18685 -end-
 			
+			//testing uat simulate 35451
+			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));
+			
 			int endorsementReportCount = 0;
 			ScQtFinalizationReport coverReport = null;
 			List<ScQtFinalizationReport> endorsementReports = 
