@@ -139,6 +139,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+//#12471 Start
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+//#12471 End
 
 /**
  * Backing Bean for Approvals.
@@ -806,23 +812,25 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		String page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";
 		if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
 			// #21692 new remark for supplier - Start
-			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class);
-			QuationTenderReqDTO epvReqDTO = new QuationTenderReqDTO();
-			FacesScopes facesScope = new FacesScopes();
-			epvReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			epvReqDTO.setPmUser(facesScope.getUserSessionBean());
-			this.getManagedBean().setPmUser(facesScope.getUserSessionBean());
-			QuationTenderResDTO epvResDTO = detailSO.retrieveEpvApprovalRequest(epvReqDTO);
-			ScQtApprovalRequest qtEPVApprolvaReq = epvResDTO.getDoaActiveRequest();
-			ScQtProposal prop = epvResDTO.getScQtProposal();
+			if (this.getManagedBean().getQt().getResponsePeriod() != null) {
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+				QuationTenderReqDTO epvReqDTO = new QuationTenderReqDTO();
+				FacesScopes facesScope = new FacesScopes();
+				epvReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				epvReqDTO.setPmUser(facesScope.getUserSessionBean());
+				this.getManagedBean().setPmUser(facesScope.getUserSessionBean());
+				QuationTenderResDTO epvResDTO = detailSO.retrieveEpvApprovalRequest(epvReqDTO);
+				ScQtApprovalRequest qtEPVApprolvaReq = epvResDTO.getDoaActiveRequest();
+				ScQtProposal prop = epvResDTO.getScQtProposal();
 
-			ScQtEpvSupplierResponse suppResp = new ScQtEpvSupplierResponse();
-			suppResp.setScQtApprovalRequest(qtEPVApprolvaReq);
-			suppResp.setScQtSupplier(prop.getScQtSupplier());
-			suppResp.setQtSupplierName(prop.getSupplierName());
+				ScQtEpvSupplierResponse suppResp = new ScQtEpvSupplierResponse();
+				suppResp.setScQtApprovalRequest(qtEPVApprolvaReq);
+				suppResp.setScQtSupplier(prop.getScQtSupplier());
+				suppResp.setQtSupplierName(prop.getSupplierName());
 
-			this.getManagedBean().setSuppResp(suppResp);
+				this.getManagedBean().setSuppResp(suppResp);
+			}
 			//#21692 new remark for supplier - End
 			page = QTConstants.EXTEND_PROPOSAL_VALIDITY_SUPPLIER_ACCEPTANCE;
 			qtPageFirst = false;
@@ -1601,6 +1609,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equalsIgnoreCase(approvalCategoryCode)) { //FC
 
+					approvalRequests = proposalValidityWip(outcome);
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
 						revertToOldValues(qt, approvalRequests);
@@ -3572,7 +3581,67 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
+		
+		private List<ScQtApprovalRequest> proposalValidityWip(String outcome) {
+
+			List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
+				if (approvalRequest.getApproverAction() == null) {
+					PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
+							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
+					approvalRequest.setApproverAction(pmParameter);
+					approvalRequest.setDecessionType(null);
+					approvalRequest.setDecisionCertPBM(null);
+					
+				}
+				scQtApprovalRequests.add(approvalRequest);
+			}
+			return scQtApprovalRequests;
+		}
 		//#21692 - End
+	// #12471 Start
+	/**
+	 * Initialize member info for popup
+	 */
+	public void onClickMemberInfo(PmUser memberInfo) {
+		this.getManagedBean().setMemberName(memberInfo.getUserName());
+		for (PmUserOrg org : memberInfo.getPmUserOrgs()) {
+			if (org.getRecordStatusFlg() == 1) {
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+				reqDTO.setOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+				OrgProfileResDTO resDTO = new OrgProfileResDTO();
+				if (org.getPmOrgProfile().getEpPtj()) {
+					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					this.getManagedBean().setMemberMinOrg(resDTO.getPmOrgProfile().getPmOrgValidity().getOrgName());
+					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				} else {
+					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					ParameterReqDTO reqDTO2 = new ParameterReqDTO();
+					reqDTO2.setParameterId(org.getPmOrgProfile().getOrgTypeCode().getParameterId());
+					ParameterResDTO resDTO2 = new ParameterResDTO();
+					resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
+					String orgType = "";
+					for (PmParameterDesc desc : resDTO2.getPmParameter().getPmParameterDescsSpecCallOnly()) {
+						if (desc.getLanguageCode().equalsIgnoreCase(new FacesScopes().getUserLocale().getLanguage())) {
+							orgType = desc.getCodeName();
+							break;
+						}
+					}
+					this.getManagedBean().setMemberMinOrg(orgType);
+					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				}
+				break;
+			}
+		}
+		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
+	}
+	// #12471 End
 }
 
 // ***25692
