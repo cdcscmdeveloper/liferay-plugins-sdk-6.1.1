@@ -1667,16 +1667,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	
-	/**
-	 * Sets the panel suppliers.
-	 * 
-	 * @param panelSuppliers
-	 *            the new panel suppliers
-	 */
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
-	}
-
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -1860,6 +1850,41 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	// #12471 Start
+	/** The organization category ptj constant. */
+	private String orgCatPTJ;
+
+	/** The organization category others constant. */
+	private String orgCatOther;
+
+	/** The ministry dropdown list. */
+	private SelectItem[] ministryDDList;
+
+	/** The ptj group dropdown list. */
+	private SelectItem[] ptjGroupDDList;
+
+	/** The ptj dropdown list. */
+	private SelectItem[] ptjDDList;
+
+	/** The organization type dropdown list. */
+	private SelectItem[] orgTypeDDList;
+
+	/** The organization name dropdown list. */
+	private SelectItem[] orgNameDDList;
+
+	/** The popup member name. */
+	private String memberName;
+
+	/** The popup member ministry or organization. */
+	private String memberMinOrg;
+
+	/** The popup member ptj or organization code. */
+	private String memberPtjOrgCode;
+
+	/** The popup member ptj or organization name. */
+	private String memberPtjOrgName;
+
+	// #12471 End
 	
 	//Bug #35061 - asyrafhaziq 
 	private String msgConfirmBelowIndi;
@@ -1870,6 +1895,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
+	//12471 - start
+	private String approverUserId;
+	private Map<String, String> committeeMembersTypeMap; 
+	//12471 - end
+
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -3434,6 +3464,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public List<SmSupplier> getPanelSuppliers() {
 		return panelSuppliers;
+	}
+	
+	/**
+	 * Sets the panel suppliers.
+	 * 
+	 * @param panelSuppliers
+	 *            the new panel suppliers
+	 */
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
 	}
 
 	/**
@@ -11769,6 +11809,232 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
+	// #12471 Start
+	/**
+	 * Gets the organization category ptj constant.
+	 * 
+	 * @return the organization category ptj constant.
+	 */
+	public String getOrgCatPTJ() {
+		return orgCatPTJ;
+	}
+
+	/**
+	 * Sets the organization category ptj constant.
+	 * 
+	 * @param orgCatPTJ
+	 *            the new organization category ptj constant.
+	 */
+	public void setOrgCatPTJ(String orgCatPTJ) {
+		this.orgCatPTJ = orgCatPTJ;
+	}
+
+	/**
+	 * Gets the organization category others.
+	 * 
+	 * @return the organization category others.
+	 */
+	public String getOrgCatOther() {
+		return orgCatOther;
+	}
+
+	/**
+	 * Sets the organization category others.
+	 * 
+	 * @param orgCatOther
+	 *            the new organization category others.
+	 */
+	public void setOrgCatOther(String orgCatOther) {
+		this.orgCatOther = orgCatOther;
+	}
+
+	/**
+	 * Gets the ministry dropdown list.
+	 * 
+	 * @return the ministry dropdown list.
+	 */
+	public SelectItem[] getMinistryDDList() {
+		return ministryDDList;
+	}
+
+	/**
+	 * Sets the ministry dropdown list.
+	 * 
+	 * @param ministryDDList
+	 *            the new ministry dropdown list.
+	 */
+	public void setMinistryDDList(SelectItem[] ministryDDList) {
+		this.ministryDDList = ministryDDList;
+	}
+
+	/**
+	 * Gets the ptj group dropdown list.
+	 * 
+	 * @return the ptj group dropdown list.
+	 */
+	public SelectItem[] getPtjGroupDDList() {
+		return ptjGroupDDList;
+	}
+
+	/**
+	 * Sets the ptj group dropdown list.
+	 * 
+	 * @param ptjGroupDDList
+	 *            the new ptj group dropdown list.
+	 */
+	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
+		this.ptjGroupDDList = ptjGroupDDList;
+	}
+
+	/**
+	 * Gets the ptj dropdown list.
+	 * 
+	 * @return the ptj dropdown list.
+	 */
+	public SelectItem[] getPtjDDList() {
+		return ptjDDList;
+	}
+
+	/**
+	 * Sets the ptj dropdown list.
+	 * 
+	 * @param ptjDDList
+	 *            the new ptj dropdown list.
+	 */
+	public void setPtjDDList(SelectItem[] ptjDDList) {
+		this.ptjDDList = ptjDDList;
+	}
+
+	/**
+	 * Gets the organization type dropdown list.
+	 * 
+	 * @return the organization type dropdown list.
+	 */
+	public SelectItem[] getOrgTypeDDList() {
+		return orgTypeDDList;
+	}
+
+	/**
+	 * Sets the organization type dropdown list.
+	 * 
+	 * @param orgTypeDDList
+	 *            the new organization type dropdown list.
+	 */
+	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
+		this.orgTypeDDList = orgTypeDDList;
+	}
+
+	/**
+	 * Gets the organization name dropdown list.
+	 * 
+	 * @return the organization name dropdown list.
+	 */
+	public SelectItem[] getOrgNameDDList() {
+		return orgNameDDList;
+	}
+
+	/**
+	 * Sets the organization name dropdown list.
+	 * 
+	 * @param orgNameDDList
+	 *            the new organization name dropdown list.
+	 */
+	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
+		this.orgNameDDList = orgNameDDList;
+	}
+
+	/**
+	 * Gets the member name.
+	 * 
+	 * @return the member name.
+	 */
+	public String getMemberName() {
+		return memberName;
+	}
+
+	/**
+	 * Sets the member name.
+	 * 
+	 * @param memberName
+	 *            the new member name.
+	 */
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	/**
+	 * Gets the member ministry or organization.
+	 * 
+	 * @return the member ministry or organization.
+	 */
+	public String getMemberMinOrg() {
+		return memberMinOrg;
+	}
+
+	/**
+	 * Sets the member ministry or organization.
+	 * 
+	 * @param memberMinOrg
+	 *            the new member ministry or organization.
+	 */
+	public void setMemberMinOrg(String memberMinOrg) {
+		this.memberMinOrg = memberMinOrg;
+	}
+
+	/**
+	 * Gets the member ptj or organization code.
+	 * 
+	 * @return the member ptj or organization code.
+	 */
+	public String getMemberPtjOrgCode() {
+		return memberPtjOrgCode;
+	}
+
+	/**
+	 * Sets the member ptj or organization code.
+	 * 
+	 * @param memberPtjOrgCode
+	 *            the new member ptj or organization code.
+	 */
+	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
+		this.memberPtjOrgCode = memberPtjOrgCode;
+	}
+
+	/**
+	 * Gets the member ptj or organization name.
+	 * 
+	 * @return the member ptj or organization name.
+	 */
+	public String getMemberPtjOrgName() {
+		return memberPtjOrgName;
+	}
+
+	/**
+	 * Sets the member ptj or organization name.
+	 * 
+	 * @param memberPtjOrgName
+	 *            the new member ptj or organization name.
+	 */
+	public void setMemberPtjOrgName(String memberPtjOrgName) {
+		this.memberPtjOrgName = memberPtjOrgName;
+	}
+	// #12471 End
+
+	//#9019 - Start
+	/**
+	 * @return the qtRemarksIdRemoveList
+	 */
+	public List<ScRemark> getQtRemarksIdRemoveList() {
+		return qtRemarksIdRemoveList;
+	}
+
+	/**
+	 * @param qtRemarksIdRemoveList the qtRemarksIdRemoveList to set
+	 */
+	public void setQtRemarksIdRemoveList(List<ScRemark> qtRemarksIdRemoveList) {
+		this.qtRemarksIdRemoveList = qtRemarksIdRemoveList;
+	}
+	//#9019 - End
 	
 	public String getMsgConfirmBelowIndi() {
 		return msgConfirmBelowIndi;
@@ -11810,6 +12076,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
+
+	public String getApproverUserId() {
+		return approverUserId;
+	}
+
+	public void setApproverUserId(String approverUserId) {
+		this.approverUserId = approverUserId;
+	}
+
+	public Map<String, String> getCommitteeMembersTypeMap() {
+		return committeeMembersTypeMap;
+	}
+
+	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
+		this.committeeMembersTypeMap = committeeMembersTypeMap;
+	}
 	
 }
 
