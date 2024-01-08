@@ -181,6 +181,7 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+
 /**
  * Implementation for supplier finalization
  * 
@@ -215,9 +216,7 @@ public class SupplierFinalizationBackingBean extends
 	private static final Long DEFAULT_ZONE = 0L;
 	private static final String JUSTIFICATION_OTHERS = "OTHERS";
 	
-	private ScQt scQt;
-	
-	
+	private ScQt scQt; // #25201
 	
 	/**
 	 * Default constructor
@@ -552,8 +551,7 @@ public class SupplierFinalizationBackingBean extends
 		String decisionTypeCode = scQtFinalization.getDecision()
 												  .getParameterCode();
 		//6906 note 117 - start
-		if (decisionTypeCode!=null && (decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER) ||
-				  decisionTypeCode.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY))) {
+		if (decisionTypeCode!=null && (decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER) || decisionTypeCode.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY))) {
 		//6906 note 117 - end
 			retrieveSupplierDetailsByRecommendType(scQtFinalization);
 			hasTierPriceInMixtureOfItems(scQtFinalization);
@@ -577,10 +575,7 @@ public class SupplierFinalizationBackingBean extends
 		decisionEvent(null);
 		//#26169 #38 - START Added by Haidah
 		validateFCByDataTypeRule();
-		//checkSFHasQualifiedSupplier();
 		//#26169 #38 - END
-		
-		
 		populateRecommendTypeEventDetails(false);
 		fwdHigherAuthorityEvent();
 		finalizationMethodEvent(null);
@@ -650,6 +645,7 @@ public class SupplierFinalizationBackingBean extends
 					
 					getManagedBean().getPendingRecPackageRemark().add(remark);
 
+					// #33099,#33070 -start-
 				} else {
 					// #25638 - Start.
 					if (getManagedBean().getNewSfRemarks() == null) {
@@ -660,6 +656,7 @@ public class SupplierFinalizationBackingBean extends
 					
 					getManagedBean().getNewSfRemarks().add(remark);
 					// #25638 - End.
+					// #33099,#33070 -end-
 				}
 			}
 		}
@@ -889,7 +886,7 @@ public class SupplierFinalizationBackingBean extends
 						// 32613 -start-
 						SimpleDateFormat hourFormat = new SimpleDateFormat(CommonConstants.DEFAULT_HOUR_FORMAT);
 						SimpleDateFormat minuteFormat = new SimpleDateFormat(CommonConstants.DEFAULT_MINUTE_FORMAT);
-						SimpleDateFormat Date = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+						//SimpleDateFormat Date = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 						scQtMeeting.setMeetDateStr(getDateValues(hourFormat.format(scQtMeeting.getMeetingDate())));
 						scQtMeeting.setMeetTimeStr(getDateValues(minuteFormat.format(scQtMeeting.getMeetingDate())));
@@ -1331,6 +1328,7 @@ public class SupplierFinalizationBackingBean extends
 	// #25037 - start
 		saveSupplierFinalization(false);
 	}
+	
 	public void saveSupplierFinalization(boolean skipValidation) {	
 	// #25037 - end
 		this.getManagedBean().setSubmit(false);
@@ -2422,7 +2420,7 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void submitAction() {
 		//28834 -start-
-		ScQtMeeting scQtMeeting = new ScQtMeeting();
+		//ScQtMeeting scQtMeeting = new ScQtMeeting();
 		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 		//28834 -end-
@@ -2434,7 +2432,7 @@ public class SupplierFinalizationBackingBean extends
 			//28834 -start-
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
 				List<ScQtMeeting> meetingListList = getManagedBean().getMeetingList();
-				int pendingCount = 0;
+				//int pendingCount = 0;
 				
 				if (CollectionUtils.isNotEmpty(meetingListList)) {
 				  for (ScQtMeeting meeting : meetingListList) {
@@ -8218,7 +8216,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		reqDTO.setCtxToken(token);
 		reqDTO.setDocNumber(scQt.getQtNo());
 		SuppFinalizationReqDTO sfReqDTO = new SuppFinalizationReqDTO();
-		Set<String> fetchSet = new HashSet();
+		Set<String> fetchSet = new HashSet<String>();
 		fetchSet.add("finalizationCommittee");
 		sfReqDTO.setFetchSet(fetchSet);
 		sfReqDTO.setQtId(scQt.getQtId());
@@ -8331,7 +8329,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					}	
 				}
 			}		
-			// TODO error flash message if user is not allowed to view i.e. never was an assignee/actor
 		}		
 		
 		if(isQTMaintenanceScreen() && !StringUtils.isBlank(taskId)){
@@ -8341,12 +8338,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				dataType = getBpmTaskDetails(SCEvaluationDataType.class, null, taskId, !StringUtils.isBlank(latestAssignee)?latestAssignee:null);
 			}*/
 			//as in preRenderView()
-			Long qtId = scQt.getQtId();
+			//Long qtId = scQt.getQtId();
 			getManagedBean().setActiveIndex(0);
 			
 			
-			Long loggedInUserId = getFacesScopes().getUserSessionBean()
-									.getUserId();
+			Long loggedInUserId = getFacesScopes().getUserSessionBean().getUserId();
 			getManagedBean().setLoggedInUserId(loggedInUserId);
 			
 		}
@@ -9137,23 +9133,26 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			estimatedAmountStr = qt.getEstimatedAmount().toString();
 		} else {
 			IQTDetailSO qtDetailSO = null;
+			
 			try {
 				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				BigDecimal estimatedAmount = qtDetailSO
-						.getdecryptedEstAmount(qtId);
+				BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
 				estimatedAmountStr = estimatedAmount.toPlainString();
 			} finally {
 				qtDetailSO = null;
 			}
 		}
+		
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		
 		StringBuilder ulasan = new StringBuilder();
 		List<ScQtRecommendationUlasanRemarks> ulasanRemarks = this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
+		
 		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
 			//log.info("ulasanremarknotempty");
 			for (ScQtRecommendationUlasanRemarks remark : ulasanRemarks) {
@@ -9163,12 +9162,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				}
 			}
 		}
+		
 		paramMap.put(ReportConst.PARAM_REMARK,
 				ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
 		// #18685 - Start
 		paramMap.put("flowType", "tasklist");
 		// #18685 - End
+		
 		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 	// #18685 - End
@@ -9385,7 +9386,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		
 		public void checkSFHasQualifiedSupplier(){
 			//#26169 #66 -start-
-			String recommendType = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
+			//String recommendType = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
 			//#26169 #66 -end-
 			
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -9556,7 +9557,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 
 		if (CollectionUtils.isNotEmpty(meetingList)) {
-			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+			//List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 
 			for (ScQtMeeting meeting : meetingList) {
 				
@@ -9587,7 +9588,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
 
 		if (CollectionUtils.isNotEmpty(meetingList)) {
-			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
+			//List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 
 			for (ScQtMeeting meeting : meetingList) {
 
@@ -9665,11 +9666,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 	// 28834 starts
 	private SuppFinalizationReqDTO validateInfobreif(int index, boolean skipValidation) {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		//IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		
 		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSuppFinalizationSO.class);
+			//qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTSuppFinalizationSO.class);
 			// boolean isZonal = getManagedBean().getScQt().isZonal();
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
@@ -10217,7 +10217,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 
-		List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
+		//List<ScQtMeeting> meetingList = this.getManagedBean().getMeetingList();
 
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -10324,15 +10324,20 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			int count=0;
 			List<ScQtFinalizationReport> localListReport=new ArrayList<ScQtFinalizationReport>();
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-
+			List<ScQtFinalizationReport> titleList = new ArrayList<ScQtFinalizationReport>(); // Bug #35379 = #34720@Syazani 07/06/2022
 			while (iterator.hasNext()) {
 				ScQtFinalizationReport finalizationReport = iterator.next();
+				// Bug #35379 = #34720@Syazani 07/06/2022 -- Start
+				if (duplicateCheckFinalizationReportList(finalizationReport, titleList)) {
+					iterator.remove();
+					continue;
+				}
+				titleList.add(finalizationReport);
+				// Bug #35379 = #34720@Syazani 07/06/2022 -- End
 				
 				if (null != finalizationReport.getPmDocument()) {
 					if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport.getPmDocument().getDocCategoryCode().getParameterCode())) {
-//						log.info("=======sourbasebackingBeanTitle===="+finalizationReport.getTitle());
 						if(finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)){
-//							log.info("=======mangatitlecodesexecutes========"+ finalizationReport.getPmDocument().getDocName());
 							count++;
 							localListReport.add(finalizationReport);
 							continue;
@@ -10412,7 +10417,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 
 			if (count == 1) {
-//				log.info("enter count1"+count);
 				for(ScQtFinalizationReport finalizationReport:finalizationReports){
 					if (null != finalizationReport.getPmDocument()
 							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
@@ -10422,12 +10426,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					
 				}	
 			} else if (count > 1) {
-//				log.info("enter countGreaterThan1"+count);
 				String SPACE = " ";
 				String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, SourcingConstants.MY_LOCALE) 
 				 			+ SPACE + "(" + (count-1) + ")";
-//				  log.info("reportTitle"+reportTitle);
+
 				for(ScQtFinalizationReport finalizationReport:finalizationReports){
 					if (null != finalizationReport.getPmDocument()
 							&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equalsIgnoreCase(finalizationReport
@@ -10448,24 +10451,23 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * 
 	 * @return
 	 */
+	/*
 	private int findReviseBpCount() {
 		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
 
 		try {
-			scWorkFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IScWorkFlowStatusSO.class);
-			
+			scWorkFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+
 			ScWorkFlowStatusReqDTO tenderReqDTO = new ScWorkFlowStatusReqDTO();
 			tenderReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());
-			
+
 			List<Long> statusIds = new ArrayList<Long>();
 			statusIds.add(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER);
-			
+
 			tenderReqDTO.setStatusIds(statusIds);
-			
-			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO.retrieveWorkFlowStatus(tenderReqDTO)
-					.getWorkFlowStatusList();
-			
+
+			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO.retrieveWorkFlowStatus(tenderReqDTO).getWorkFlowStatusList();
+
 			if (statusList != null) {
 				return statusList.size();
 			}
@@ -10475,6 +10477,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		return 0;
 	}
+	*/
 	// #28834 - End.
 
 	// #28834 - Start.
@@ -10816,4 +10819,28 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 	}
 	// #35129 End
+
+	// Bug #35379 = #34720@Syazani 07/06/2022 -- Start
+	/**
+	 * Check for duplicate report related to UUM Definiation Key Report This
+	 * issue occur in production Bug #34720
+	 */
+	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport,
+			List<ScQtFinalizationReport> titleList) {
+		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
+				.getDocDefinitionKey() : "";
+		if (titleList != null && titleList.size() > 0) {
+			for (ScQtFinalizationReport sfReportTemp : titleList) {
+				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
+						.getDocDefinitionKey() : "";
+				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim())
+						&& defKey.equalsIgnoreCase(defKeyTemp)
+						&& defKey.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	// Bug #35379 = #34720@Syazani 07/06/2022 -- End	
 }
