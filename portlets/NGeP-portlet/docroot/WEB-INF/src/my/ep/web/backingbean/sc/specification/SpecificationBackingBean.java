@@ -2078,16 +2078,19 @@ public class SpecificationBackingBean extends
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2techProposal());
 				}
-				// 20231122@asyrafhaziq_25726 - Issue 14 
-				// comment this because it will reset session value for financial checkList where is not null
-				// and this method should not in this function .
-				/*this.getManagedBean().setScQtCheckSt2financeProposalList(
+			   // 20231122@asyrafhaziq_25726 - Issue 14 
+			   if (null == this.getManagedBean()
+						.getScQtCheckSt2financeProposalList()
+						|| this.getManagedBean()
+								.getScQtCheckSt2financeProposalList().isEmpty()){
+				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 				if (CollectionUtils.isNotEmpty(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList())) {
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2financeProposalList());
-				}*/
+				}
+			   }
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
