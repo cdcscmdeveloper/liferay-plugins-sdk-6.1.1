@@ -793,6 +793,11 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	public void onChangeState(PmState state, String addrType) {//13320
 		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
+			//#34159 - START - Reset District when change state
+			if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId() !=null){
+				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().setDistrictId(null);
+			}
+			//#34159 - END
 			Long State=this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(State));
 			if(states !=null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
@@ -820,6 +825,11 @@ public class GovtSellerRegistrationBackingBean extends
 			}
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
+			//#34159 - START - Reset District when change state
+			if(getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId() !=null){
+				getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
+			}
+			//#34159 - END
 			//13320-Start
 			Long State=getManagedBean().getSmPermenantAdd().getPmState().getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(State));
@@ -852,6 +862,11 @@ public class GovtSellerRegistrationBackingBean extends
 			}
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
+			//#34159 - START - Reset District when change state
+			if(getManagedBean().getSmResAdd().getPmDistrict().getDistrictId() !=null){
+				getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
+			}
+			//#34159 - END
 			//13320-Start
 			Long State=getManagedBean().getSmResAdd().getPmState().getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(State));
@@ -866,6 +881,8 @@ public class GovtSellerRegistrationBackingBean extends
 				
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(true);
 			}else{
+				//#34159 - remove division for non-Sarawak
+				this.getManagedBean().getSmResAdd().setPmDivision(null);
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
 
 			}if(states !=null && states.getAdoptDivision()) {//13320
@@ -879,6 +896,11 @@ public class GovtSellerRegistrationBackingBean extends
 						new ArrayList<SelectItem>());
 			}
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
+			//#34159 - START - Reset District when change state
+			if(this.getManagedBean().getSelectedBranch().getSmAddress().getPmDistrict().getDistrictId() !=null){
+				this.getManagedBean().getSelectedBranch().getSmAddress().setPmDistrict(new PmDistrict());
+			}
+			//#34159 - END
 			//13320-Start
 			Long stateId = state.getStateId();
 			PmState states = (SmCommonUtil.getInstance().getStateById(stateId));

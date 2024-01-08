@@ -411,9 +411,11 @@
 							<f:selectItems var="state"
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
+							<!-- #34159 - START - change reset value to true -->
 							<p:ajax event="change"
-								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',false)}"
+								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',true)}"
 								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
+							<!-- #34159 - END -->
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 					<!--#30936-END-->
