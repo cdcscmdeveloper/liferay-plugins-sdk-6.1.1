@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -625,7 +626,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctReqDTO.setUpdateAction(false);
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
-				getManagedBean().setBackToNtf(constructNotifUrl()); //25956
+				getManagedBean().setBackToNtf("notifications"); //25956
 
 				getManagedBean().setViewOnly(true);
 				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
@@ -1057,8 +1058,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return this.getManagedBean().getBackToPreviousPage();
 			
 		}else if(getManagedBean().getBackToNtf() != null){ //25956
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
 
-			return getManagedBean().getBackToNtf();
+			return null;
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		this.getManagedBean().setSecretaryList(null);
@@ -8999,18 +9003,4 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #34539
-	
-	// #25956 - Start
-	/**
-	 * Method used to navigate Notification Page
-	 * @return String
-	 */
-	private String constructNotifUrl() {
-		StringBuilder backNotifUrlLink = new StringBuilder();
-		backNotifUrlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
-		backNotifUrlLink.append("notifications#!"); 
-		String url = backNotifUrlLink.toString();
-		return url;
-	}
-	// #25956 - End
 	}
