@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -1058,7 +1059,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 		}else if(getManagedBean().getBackToNtf() != null){ //25956
 
-			return getManagedBean().getBackToNtf();
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
+
+			return null;
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		this.getManagedBean().setSecretaryList(null);
