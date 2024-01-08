@@ -626,7 +626,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctReqDTO.setUpdateAction(false);
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
-				getManagedBean().setBackToNtf("notifications"); //25956
+				getManagedBean().setBackToNtf(constructNotifUrl()); //25956
 
 				getManagedBean().setViewOnly(true);
 				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
@@ -1058,6 +1058,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return this.getManagedBean().getBackToPreviousPage();
 			
 		}else if(getManagedBean().getBackToNtf() != null){ //25956
+
 			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			externalContext.redirect(commonUrl + "notifications");
@@ -9003,4 +9004,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #34539
+	
+	// #25956 - Start
+	/**
+	 * Method used to navigate Notification Page
+	 * @return String
+	 */
+	private String constructNotifUrl() {
+		StringBuilder backNotifUrlLink = new StringBuilder();
+		backNotifUrlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
+		backNotifUrlLink.append("notifications#!"); 
+		String url = backNotifUrlLink.toString();
+		return url;
+	}
+	// #25956 - End
 	}
