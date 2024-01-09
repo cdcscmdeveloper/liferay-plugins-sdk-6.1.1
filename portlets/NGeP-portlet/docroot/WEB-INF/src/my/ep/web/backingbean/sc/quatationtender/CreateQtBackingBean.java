@@ -1406,7 +1406,8 @@ public class CreateQtBackingBean extends
 
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
-				  if (paramDesc.getPmParameter().getParameterId() == type) {
+				//20231122@asyrafhaziq_25726 - Issue 10
+				  if (paramDesc.getPmParameter().getParameterId().equals(type)) {
 
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
