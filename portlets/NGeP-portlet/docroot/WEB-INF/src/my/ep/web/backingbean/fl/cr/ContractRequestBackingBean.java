@@ -302,7 +302,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	
 	public String submitAction(String action) throws Exception {
-		log.info("######## SLA submitAction() START action::"+action); //35159
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -325,12 +324,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 								itemAddr.setChargePTJOrg(getManagedBean().getFlRequest().getIssuedOrgProfile());
 							}
 							//end-28659
-							
-							//35159-Start
-							if(itemAddr.getScRequestItem() != null){
-								log.info("*****submitAction NoteItemId= ["+ itemAddr.getScRequestItem().getRequestNoteItemId()+"] OrderQty: ["+itemAddr.getOrderedQty() +"] unitPrice: ["+itemAddr.getUnitPrice()+ "]");
-							}
-							//35159-End
 						}
 					//}
 					//#29171, CR 14650: Static Code Analysis Start
@@ -420,18 +413,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//24893 - start
 
 			//24893 - end
-			
-			//35159-start
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-				log.info("######## SLA SubmitAction before saveFulfillmentRequest- Doc No. : "+reqDTO.getFlFulfilmentRequest().getDocNo());
-				for(FlDeliveryAddress flDeliveryAddress : flRequest.getFlDeliveryAddresses()){
-					for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
-						log.info("*****submitAction NoteItemId= ["+ itemAddr.getScRequestItem().getRequestNoteItemId()+"] OrderQty: ["+itemAddr.getOrderedQty() +"] unitPrice: ["+itemAddr.getUnitPrice()+ "]");
-					}
-				}
-			}
-			//35159-end
-				
 
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			//26646-start
@@ -2517,6 +2498,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
+			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
@@ -4393,6 +4375,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	/**
 	 * Page navigation to FLDoc search page in CR
+	 * 
 	 */
 	public String backToPervious() {
 		if(getManagedBean().getBackToDocument() !=null){
@@ -4402,6 +4385,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
+		//35357-Start
+		else if(getManagedBean().getBackToNtf() != null){
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect(
+						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			} catch (IOException e) {
+				log.error("File:ContractRequestBackingBean Method:backToPervious", e);
+			}
+			return null;
+		}
+		//35357-End
 		else{
 			return "flDocSearch";
 		}
@@ -6466,7 +6460,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal(null);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35357
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
@@ -6488,6 +6482,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getPreparedByName();
 			//29555 end
 			getManagedBean().setBackToDocument(null);
+			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			getEspkbCommitmentNo();

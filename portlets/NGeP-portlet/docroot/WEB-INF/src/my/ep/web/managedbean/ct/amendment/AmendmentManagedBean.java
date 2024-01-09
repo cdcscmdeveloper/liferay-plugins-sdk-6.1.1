@@ -190,9 +190,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private Map<String, Integer> indexing;
 	
-	private boolean viewSclFromAgreement;
 	//Enhancement 15851 - shaqimi end
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
+	
+	private String backToNtf; //25956
 	
 //	private boolean isFromViewPage = false; // Fix - #34110
 	
@@ -1626,13 +1627,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.indexing = indexing;
 	}
 
-	public boolean isViewSclFromAgreement() {
-		return viewSclFromAgreement;
-	}
-	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
-		this.viewSclFromAgreement = viewSclFromAgreement;
-	}
-
 	//Bug 34142, 15851 - shaqimi 04/12/2022 removed unnecessary code
 	//Bug 33096 - shaqimi start
 	public String getSupplementalLoaNo() {
@@ -1666,4 +1660,13 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedChangeItemPrice = selectedChangeItemPrice;
 	}
 	// End Fix - #33256
+	
+	//#25956 - Start
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	//#25956 - End
 }
