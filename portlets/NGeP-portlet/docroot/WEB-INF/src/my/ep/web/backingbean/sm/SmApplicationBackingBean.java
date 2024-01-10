@@ -9707,7 +9707,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-			validateSupportingDocs();
+			validateMandatoryEnquirySupportingDocs();
 		}
 		//getManagedBean().getSmAppl().setResubmit(true);
 		getManagedBean().setPoInquiryRespond(true);
@@ -10625,9 +10625,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				+ getManagedBean().getMandatoryDocs().size());
 		log.info("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getNonMandatoryDocs().size());
-		if (dialogId != null) {
-			RequestContext.getCurrentInstance().execute(dialogId + ".show()");
-		}
 		if (dialogId != null) {
 			RequestContext.getCurrentInstance().execute(dialogId + ".show()");
 		}
@@ -13672,6 +13669,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private boolean validateSupportingDocs() {
 		return SmApplicationUtil.validateSupportingDocs(getManagedBean()
 				.getSmAppl().getSmApplSupportDocs());
+	}
+	
+	/**
+	 * Validate supporting docs.
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean validateMandatoryEnquirySupportingDocs() {
+		return SmApplicationUtil.validateSupportingDocsEnquiry(getManagedBean().getMandatoryDocs());
 	}
 
 	/**
