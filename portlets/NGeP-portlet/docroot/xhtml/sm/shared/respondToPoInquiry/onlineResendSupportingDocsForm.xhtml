@@ -149,9 +149,6 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
 				rendered="#{table.pmDocument.mandatory and table.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-					<h:outputText value="#{table.smApplDocFiles[0].fileName}"
-						rendered="#{table.verifiedFlg != 1}"
-						style="float: left;white-space: normal;" />
 					<ui:repeat var="applDocsFile" value="#{table.smApplDocFiles}">
 						<ui:remove>
 							<p:commandLink value="#{applDocsFile.fileName}"
