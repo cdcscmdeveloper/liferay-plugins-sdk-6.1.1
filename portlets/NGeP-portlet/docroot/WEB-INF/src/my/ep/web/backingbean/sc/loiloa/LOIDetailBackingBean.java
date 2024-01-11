@@ -962,7 +962,7 @@ public class LOIDetailBackingBean extends
 							getManagedBean().setDecision(new PmParameter());
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							getManagedBean().setReadOnly(true);
+							//getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
@@ -989,7 +989,7 @@ public class LOIDetailBackingBean extends
 								&& ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							getManagedBean().setReadOnly(true);
+							//getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
@@ -7000,24 +7000,20 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction() {
 		try {
-			
+
 			String decision = String.valueOf(this.getManagedBean().getDecisionCode());
 			String justification = this.getManagedBean().getJustification();
 			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
-//			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
-				if (decision == null) {
-					throw new EpException(MessageConst.ERROR_775192);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
-					throw new EpException(MessageConst.ERROR_775193);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
-					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
-					updateBpmTaskAction(bpmAction);
-				}
-//			} else {
-//				updateBpmTaskAction(bpmAction);
-//			}
+			if (decision == null) {
+				throw new EpException(MessageConst.ERROR_775192);
+			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+				throw new EpException(MessageConst.ERROR_775193);
+			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+				RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+			} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+				updateBpmTaskAction(bpmAction);
+			}
 
 		} finally {
 		}
