@@ -22,8 +22,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:messages id="messages" showDetail="true" showSummary="false"
-			autoUpdate="true" closable="true" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!backingBean.managedBean.claimTask}"/><br />
 		<table style="width: 100%">
 			<tr>
@@ -130,7 +129,7 @@
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
 							style="width:48% !important; overflow: hidden !important;" />
-						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"	
 							style="width:11% !important; overflow: hidden !important;"/>
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
 							style="width:23% !important; overflow: hidden !important;" />
