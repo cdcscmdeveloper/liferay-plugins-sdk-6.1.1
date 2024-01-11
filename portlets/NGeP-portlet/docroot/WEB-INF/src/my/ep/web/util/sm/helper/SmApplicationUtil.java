@@ -554,7 +554,7 @@ public class SmApplicationUtil {
 			}
 		}
 		if (!validSupportDocs) {
-			throw new EpException(MessageConst.ERROR_722537,
+			throw new EpException(MessageConst.ERROR_722686,
 					new String[] { sb.toString() });
 		} else {
 			for (SmApplSupportDoc doc : suppDocs) {
