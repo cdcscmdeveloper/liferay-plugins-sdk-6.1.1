@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -201,7 +202,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private CtPerformanceBond[] selectedBondList;
 	private List<SelectItem> populateBankAccountList;
 	private IPagingDataModel<PmUser> committeDataModel = new CommittePagingDataModel(); 
-
+	//Start Fix - #33287
+	private boolean isUntickContractExtension = false;
+	private boolean isUntickItemPrice = false;
+	private boolean isUntickItemMaxQty = false;
+	private boolean isUntickOther = false;
+	private boolean spToCheck = false;
+	//End Fix - #33287
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -625,7 +632,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctReqDTO.setUpdateAction(false);
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
-				getManagedBean().setBackToNtf("notifications"); //25956
+				getManagedBean().setBackToNtf(constructNotifUrl()); //25956
 
 				getManagedBean().setViewOnly(true);
 				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
@@ -1057,8 +1064,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return this.getManagedBean().getBackToPreviousPage();
 			
 		}else if(getManagedBean().getBackToNtf() != null){ //25956
-			FacesContext.getCurrentInstance().getExternalContext().redirect(
-					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
+
 			return null;
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
@@ -1974,6 +1984,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 				
+				if(spToCheck){
+					amendmentRevert(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
+				}
+				
 				// Start Fix - #33256
 				if(ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
 					if (getManagedBean().getSelectedChangeItemQuantity() != null
@@ -2159,6 +2173,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		} finally {
 			contractAmendmentSO = null;
+			spToCheck = false;
 		}
 		return null;		
 	}
@@ -5275,7 +5290,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setMofApproved(true);
 		}
 	}
-
+	//Start Fix - #33287
 	/**
 	 * The method used to set the amendment information
 	 * when user wish to amend the contract period.
@@ -5298,12 +5313,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//#26076 - end
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+			spToCheck = false;
+			isUntickContractExtension = false;
+
 		}
 		else {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
+			isUntickContractExtension = true;
+			spToCheck = true;
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 		}
 		changeAmendmentEffDate();
 	}
@@ -5321,6 +5343,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
 			}
+			spToCheck = false;
+			isUntickItemPrice = false;
+
 		} else if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
@@ -5331,6 +5356,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
 			resetItemPrice(); // #30879 
+			isUntickItemPrice = true;
+			spToCheck = true;
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 		}
 		ConstructTabSideMenu();
 	}
@@ -5348,6 +5377,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
 			}
+			spToCheck = false;
+			isUntickItemMaxQty = false;
+
 		} else if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
@@ -5358,6 +5390,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			resetItemQty(); // #30879 
+			isUntickItemMaxQty = true;
+			spToCheck = true;
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 		}
 		ConstructTabSideMenu();
 	}
@@ -5367,7 +5403,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user wish to amend the contract value.
 	 */
 	public void onChangeValueChecked() {
+		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+			spToCheck = false;
+		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			spToCheck = true;
+		}
 	}
 
 	/**
@@ -5375,7 +5419,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user wish to amend the contract value caused by gst.
 	 */
 	public void onChangeValueByGstChecked() {
+		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
 			ctBackingBean
 					.getManagedBean()
@@ -5403,14 +5449,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(true);
-		} else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+		}
+		spToCheck = false;
+		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			spToCheck = true;
 		}
 	}
+	
+	public void onClauseChecked() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
+			spToCheck = false;
+		}
 
+		if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			spToCheck = true;
+		}
+
+	}
+	//End Fix - #33287
 	/**
 	 * The method used to set the related amendment information
 	 * when user extended the contract period.
@@ -7387,10 +7451,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when Others is selected/not selected
 	 */
 	public void onChangeOther() {
-		if (ctBackingBean.isBeforeGstReliefDueDate() && ctBackingBean.imposedServiceTaxCondition()) {
-			ctBackingBean.onChangeServiceTax();
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+			if (ctBackingBean.isBeforeGstReliefDueDate() && ctBackingBean.imposedServiceTaxCondition()) {
+				ctBackingBean.onChangeServiceTax();
+			}
+			spToCheck = false;
 		}
 		ctBackingBean.renderUpdateCheckbox(ctBackingBean.getManagedBean().getContractVer());
+		if(!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+			isUntickOther = true;
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			spToCheck = true;
+		}
 	}
 
 	/**
@@ -9000,4 +9073,40 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #34539
+	
+	// #25956 - Start
+	/**
+	 * Method used to navigate Notification Page
+	 * @return String
+	 */
+	private String constructNotifUrl() {
+		StringBuilder backNotifUrlLink = new StringBuilder();
+		backNotifUrlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
+		backNotifUrlLink.append("notifications#!"); 
+		String url = backNotifUrlLink.toString();
+		return url;
+	}
+	// #25956 - End
+	
+	//Start Fix - #33287
+	private void amendmentRevert(Long currentAmendmentVerID) {
+
+		IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		ContractAmendmentReqDTO amendReqDTO = new ContractAmendmentReqDTO();
+
+		int updateCheck = 0;
+		if (isUntickContractExtension && (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange())) {
+			updateCheck = 1;
+		}
+
+		amendReqDTO.setUpdateStatusCheck(updateCheck);
+		amendReqDTO.setContractVerId(currentAmendmentVerID);
+		ContractAmendmentResDTO resDTO = contractAmendmentSO.amendmentRevertSO(amendReqDTO);
+		if (resDTO.isSuccessful()) {
+			log.info(" Done !!! ");
+		}
+	}
+	//End Fix - #33287
+	
 	}
