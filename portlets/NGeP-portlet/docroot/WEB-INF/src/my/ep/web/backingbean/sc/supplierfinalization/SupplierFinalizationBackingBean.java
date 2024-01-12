@@ -10861,6 +10861,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		ScQtProposal proposal = evalResultDtl.getQtEvaluationResult().getScQtProposal();
 		SmSupplier supplier = proposal.getScQtSupplier().getSmSupplier();
 		// #21692 -start-
+		//open comment when 21692 ready for UAT
 //		boolean periodExtensionRejected = proposal.getIsAgreeQtExtendPeriod() == null ? false : proposal
 //				.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
 		// #21692 -end-
@@ -10874,11 +10875,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						(supplier.isDisciplinaryActions() && !supplier.isWarningDA()),
 						// #26247 -end-
 						// #21692 -start-
-//						periodExtensionRejected,
+//						periodExtensionRejected, //open comment when 21692 ready for UAT
 						// #21692 -end-
 						// #28777, #29729 -start-
 //						this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(),
-//								getManagedBean().getScQt()),
+//								getManagedBean().getScQt()), //open comment when 28777 ready for UAT
 						// #28777, #29729 -end-
 						this.isQTMaintenanceScreen(), !(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) })
 				.contains(Boolean.TRUE);
