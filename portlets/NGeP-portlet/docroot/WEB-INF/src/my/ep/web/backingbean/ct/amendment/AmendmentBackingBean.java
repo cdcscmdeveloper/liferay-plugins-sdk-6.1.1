@@ -8841,9 +8841,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 					setAmendmentContractVer(reqDTO);
 					
-					if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
+//					if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
 						ctBackingBean.getManagedBean().setViewContract(true);
-					}
+//					}
 					//Bug 34142 - shaqimi start 16112022
 					
 					//for loa header
