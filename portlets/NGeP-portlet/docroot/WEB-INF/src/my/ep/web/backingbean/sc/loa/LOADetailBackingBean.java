@@ -2601,7 +2601,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setScLoa(scLoa);
 			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
 			if (qtNo.contains("SQ") && StringUtils.isNotEmpty(rnNo)) {
-				qtNo = qtNo + " / " + rnNo;
+				qtNo = qtNo + "/" + rnNo;
 			} else {
 				qtNo = rnNo;
 			}

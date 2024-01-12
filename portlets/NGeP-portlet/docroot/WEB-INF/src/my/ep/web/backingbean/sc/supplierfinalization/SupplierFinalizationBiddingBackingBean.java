@@ -3059,8 +3059,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			this.submitBiddingEndorsement(action);
 		}
 	}
-	//#25037-END
-	
+	//#25037-END	
 	//#28777 & #29729 - Start
 	/**
 	* Method to display list of supplier branch had deleted or not with related current QT

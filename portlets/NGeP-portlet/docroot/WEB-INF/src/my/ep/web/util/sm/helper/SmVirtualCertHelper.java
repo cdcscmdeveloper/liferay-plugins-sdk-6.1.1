@@ -172,8 +172,7 @@ public class SmVirtualCertHelper {
 					dir.mkdirs();
 					log.info("after make directory");
 				}
-				
-				log.info("****finalFile: **** filePath:"  +filePath + " fileName:" + fileName +" path:" +path);
+
 				String finalFile = filePath + "/" + fileName;
 				out =  new FileOutputStream(new File(finalFile));
 
@@ -189,18 +188,12 @@ public class SmVirtualCertHelper {
 					double kilobytes = (bytes / 1024);
 					
 					if(kilobytes > 10){
-						log.info("****path: " + path);
-						log.info("****fileName: ****" + fileName);
 						//update MOF Cert with file path & name
 						cert.setFilePath(path);
 						cert.setFileName(fileName);
 						SmMofCert mofcert = updateMOFCertFilePath(cert);
-						log.info("****after updateMOFCertFilePath****");
-						log.info("****path: " + mofcert.getFileName());
-						log.info("****fileName: "+  mofcert.getFileName());
 						return mofcert;
 					}
-					log.info("****false checking kilobytes>10");
 				}
 			}else{
 				log.info("****genReport contentType****" + urlConnection.getContentType());
@@ -212,7 +205,7 @@ public class SmVirtualCertHelper {
 			buf.close();
 			out.close();
 		}
-		log.info("******return null");
+		
 		return null;
 	}
 	
