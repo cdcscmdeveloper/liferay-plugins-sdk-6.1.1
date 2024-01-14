@@ -172,12 +172,6 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
-//#12471 Start
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-//#12471 End
 
 // TODO: Auto-generated Javadoc
 /**
@@ -968,7 +962,7 @@ public class LOIDetailBackingBean extends
 							getManagedBean().setDecision(new PmParameter());
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							getManagedBean().setReadOnly(true);
+							//getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
@@ -995,7 +989,7 @@ public class LOIDetailBackingBean extends
 								&& ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							getManagedBean().setReadOnly(true);
+							//getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
@@ -7006,78 +7000,23 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction() {
 		try {
-			
+
 			String decision = String.valueOf(this.getManagedBean().getDecisionCode());
 			String justification = this.getManagedBean().getJustification();
 			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
-//			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
-				if (decision == null) {
-					throw new EpException(MessageConst.ERROR_775192);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
-					throw new EpException(MessageConst.ERROR_775193);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
-					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
-					updateBpmTaskAction(bpmAction);
-				}
-//			} else {
-//				updateBpmTaskAction(bpmAction);
-//			}
+			if (decision == null) {
+				throw new EpException(MessageConst.ERROR_775192);
+			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+				throw new EpException(MessageConst.ERROR_775193);
+			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+				RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+			} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+				updateBpmTaskAction(bpmAction);
+			}
 
 		} finally {
 		}
 
 	}//#30008 - end
-	
-	// #12471 Start
-	/**
-	 * Initialize member info for popup
-	 */
-	public void onClickMemberInfo(PmUser memberInfo) {
-		this.getManagedBean().setMemberName(memberInfo.getUserName());
-		UserReqDTO reqDTOuser = new UserReqDTO();
-		UserResDTO resDTOuser = new UserResDTO();
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		reqDTOuser.setUserId(memberInfo.getUserId());
-		resDTOuser = userSO.retrieveUserProfileByUserId(reqDTOuser);
-		memberInfo = resDTOuser.getPmUser();
-		for (PmUserOrg org : memberInfo.getPmUserOrgs()) {
-			if (org.getRecordStatusFlg() == 1) {
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
-				reqDTO.setOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
-				OrgProfileResDTO resDTO = new OrgProfileResDTO();
-				if (org.getPmOrgProfile().getEpPtj()) {
-					resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
-					this.getManagedBean().setMemberMinOrg(resDTO.getPmOrgProfile().getPmOrgValidity().getOrgName());
-					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
-					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
-				} else {
-					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-					ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-					reqDTO2.setParameterId(org.getPmOrgProfile().getOrgTypeCode().getParameterId());
-					ParameterResDTO resDTO2 = new ParameterResDTO();
-					resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
-					String orgType = "";
-					for (PmParameterDesc desc : resDTO2.getPmParameter().getPmParameterDescsSpecCallOnly()) {
-						if (desc.getLanguageCode().equalsIgnoreCase(new FacesScopes().getUserLocale().getLanguage())) {
-							orgType = desc.getCodeName();
-							break;
-						}
-					}
-					this.getManagedBean().setMemberMinOrg(orgType);
-					this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
-					this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
-				}
-				break;
-			}
-		}
-		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
-	}
-	// #12471 End
 }
