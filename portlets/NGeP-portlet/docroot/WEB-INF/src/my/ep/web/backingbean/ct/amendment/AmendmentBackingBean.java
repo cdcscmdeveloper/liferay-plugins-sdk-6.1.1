@@ -626,22 +626,52 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//setAmendmentContractVer here is used in message notification
 			if(contractVerId!=null) {
+
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
+//				ctReqDTO.setContractId(new Long(80575));
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 				ctReqDTO.setUpdateAction(false);
+				ctReqDTO.setViewOnly(true);
+				getManagedBean().setBackToNtf("notifications"); //25956
+				getManagedBean().setViewOnly(true);
+				getManagedBean().setSelectedTabIndex(0);
+				ctBackingBean.getManagedBean().setViewContract(true); //25956
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
+				
+				
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
-				getManagedBean().setBackToNtf(constructNotifUrl()); //25956
 
-				getManagedBean().setViewOnly(true);
-				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
-				ctBackingBean.getManagedBean().setViewContract(true); //25956
+				
+				/*Start if statement if login user not contract admin
+				String roleCode = null;
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+					roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
+				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+					roleCode = RoleCode.BPK_CCA.value();
+				}
+				
+				CtActor contractAdminActor = retrieveContractActor(
+						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+						ctBackingBean.getManagedBean().getContractVer().getDocType(),roleCode);
+
+				if (contractAdminActor != null
+						&& !getFacesScopes().getUserSessionBean().getUserId().equals(contractAdminActor.getUser().getUserId())) {
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"", MessageUtils.getMessage(MessageConst.ERROR_700116,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+					return;
+				}*end if statement*/
+
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
+				//#25956 - End (view Contract Amendment url from notification)
 			
-			//#25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
 				ConstructTabSideMenu();
 
@@ -977,6 +1007,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * //25956
 	 */
 	public String backAction() throws IOException {
+		//25956 - Start ( Back to notification pages )
+		if(getManagedBean().getBackToNtf() != null){ 
+			
+			getManagedBean().setBackToNtf("");
+			getManagedBean().setViewOnly(false);
+			ctBackingBean.getManagedBean().setViewContract(false);
+			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
+
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
+
+			return null;
+		}
+		//25956 - End ( Back to notification pages )
+		
 		//Enhancement 15851 - shaqimi start
 		ContractDetailsBackingBean ctDT =  new ContractDetailsBackingBean();
 		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
@@ -1063,13 +1109,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
 			
-		}else if(getManagedBean().getBackToNtf() != null){ //25956
-
-			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.redirect(commonUrl + "notifications");
-
-			return null;
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		this.getManagedBean().setSecretaryList(null);
@@ -9073,20 +9112,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// End Fix - #34539
-	
-	// #25956 - Start
-	/**
-	 * Method used to navigate Notification Page
-	 * @return String
-	 */
-	private String constructNotifUrl() {
-		StringBuilder backNotifUrlLink = new StringBuilder();
-		backNotifUrlLink.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)); // portal application url
-		backNotifUrlLink.append("notifications#!"); 
-		String url = backNotifUrlLink.toString();
-		return url;
-	}
-	// #25956 - End
 	
 	//Start Fix - #33287
 	private void amendmentRevert(Long currentAmendmentVerID) {
