@@ -629,7 +629,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
-//				ctReqDTO.setContractId(new Long(80575));
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 				ctReqDTO.setUpdateAction(false);
 				ctReqDTO.setViewOnly(true);
@@ -638,35 +637,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setSelectedTabIndex(0);
 				ctBackingBean.getManagedBean().setViewContract(true); //25956
 				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
-				
-				
+								
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
-
-				
-				/*Start if statement if login user not contract admin
-				String roleCode = null;
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-					roleCode = RoleCode.MIN_CONTRACT_ADMIN.value();
-				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-					roleCode = RoleCode.BPK_CCA.value();
-				}
-				
-				CtActor contractAdminActor = retrieveContractActor(
-						ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
-						ctBackingBean.getManagedBean().getContractVer().getDocType(),roleCode);
-
-				if (contractAdminActor != null
-						&& !getFacesScopes().getUserSessionBean().getUserId().equals(contractAdminActor.getUser().getUserId())) {
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"", MessageUtils.getMessage(MessageConst.ERROR_700116,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
-					return;
-				}*end if statement*/
-
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
