@@ -30,6 +30,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -613,22 +614,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			//setAmendmentContractVer here is used in message notification
 			if(contractVerId!=null) {
+
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 				ctReqDTO.setUpdateAction(false);
+				ctReqDTO.setViewOnly(true);
+				getManagedBean().setBackToNtf("notifications"); //25956
+				getManagedBean().setViewOnly(true);
+				getManagedBean().setSelectedTabIndex(0);
+				ctBackingBean.getManagedBean().setViewContract(true); //25956
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
+								
 				setAmendmentContractVer(ctReqDTO);
 				ConstructTabSideMenu();
-				getManagedBean().setBackToNtf("notifications"); //25956
-
-				getManagedBean().setViewOnly(true);
-				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
-				ctBackingBean.getManagedBean().setViewContract(true); //25956
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
+				//#25956 - End (view Contract Amendment url from notification)
 			
-			//#25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
 				ConstructTabSideMenu();
 
@@ -964,6 +968,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * //#25956
 	 */
 	public String backAction() throws IOException {
+		
+		//25956 - Start ( Back to notification pages )
+				if(getManagedBean().getBackToNtf() != null){ 
+					
+					getManagedBean().setBackToNtf("");
+					getManagedBean().setViewOnly(false);
+					ctBackingBean.getManagedBean().setViewContract(false);
+					ctBackingBean.getManagedBean().setDisableAmendDetails(false);
+
+					String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+					ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+					externalContext.redirect(commonUrl + "notifications");
+
+					return null;
+				}
+				//25956 - End ( Back to notification pages )
+				
 		//Enhancement 15851 - shaqimi start
 		ContractDetailsBackingBean ctDT =  new ContractDetailsBackingBean();
 		Long contractId = ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractId();
@@ -1050,10 +1071,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
 			
-		}else if(getManagedBean().getBackToNtf() != null){ //#25956
-			FacesContext.getCurrentInstance().getExternalContext().redirect(
-					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
-			return null;
 		}
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		this.getManagedBean().setSecretaryList(null);
