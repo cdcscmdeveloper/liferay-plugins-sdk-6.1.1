@@ -1059,7 +1059,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else if(ctBackingBean.getManagedBean().isAmendFromTaskList()){//tasklist
 					if(!ctBackingBean.getManagedBean().isViewSclFromAgreement() && !ctBackingBean.getManagedBean().isViewSCLFromContract()){ //#15851
 						getManagedBean().setViewOnly(false);
-						ctBackingBean.getManagedBean().setViewContract(false);
 						ctBackingBean.getManagedBean().setAmendFromTaskList(false);
 						ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
 						
@@ -1078,6 +1077,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
+			ctBackingBean.getManagedBean().setViewContract(false); //35467
 			ctBackingBean.getManagedBean().setViewSCL(false);
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
