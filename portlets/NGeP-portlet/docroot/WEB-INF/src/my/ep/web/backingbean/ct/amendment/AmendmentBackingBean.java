@@ -624,9 +624,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setViewOnly(true);
 				getManagedBean().setSelectedTabIndex(0);
 				ctBackingBean.getManagedBean().setViewContract(true); //25956
-				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
-								
+												
 				setAmendmentContractVer(ctReqDTO);
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
 				ConstructTabSideMenu();
 				getManagedBean().setTaskId(taskId);
 				return;
