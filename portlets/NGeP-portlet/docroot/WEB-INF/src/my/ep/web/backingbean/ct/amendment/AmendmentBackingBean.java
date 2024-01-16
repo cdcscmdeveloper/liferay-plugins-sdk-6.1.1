@@ -8856,6 +8856,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //					if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
 						ctBackingBean.getManagedBean().setViewContract(true);
 //					}
+					
+					//retrieve approver from CtActor
+					String roleCode = null;
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+						roleCode = RoleCode.CT_APPROVER.value();
+					} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+						roleCode = RoleCode.BPK_CC_APPROVER.value();
+					}
+					CtActor approverActor = retrieveContractActor(
+							ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+							ctBackingBean.getManagedBean().getContractVer().getDocType(),
+							roleCode);
+					if (approverActor != null) {
+						getManagedBean().setApproverName(approverActor.getUserName());
+					}
+					
 					//Bug 34142 - shaqimi start 16112022
 					
 					//for loa header
