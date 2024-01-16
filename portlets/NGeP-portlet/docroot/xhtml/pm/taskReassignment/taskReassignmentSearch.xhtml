@@ -144,7 +144,8 @@
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
 						or (taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''
-						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null)}" 
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null
+						and not taskReassignmentBackingBean.managedBean.fromUserMaintenanceDetails)}" 
 		            	update="@this,:form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.document.type']}"
 						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType.codeName}"

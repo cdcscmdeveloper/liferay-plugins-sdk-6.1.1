@@ -544,16 +544,19 @@ public class QTCloneBackingbean extends
 		}
 	}
 	
-	/*
-	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START	 * 
+	/**
+	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 START REFRACTORING DANIAL CODES
+	 * Purpose : To Get List Of status based on Constant QT_ORDERED_STATUSES
+	 * @param fromStatusId
+	 * @param toStatusId
+	 * @return Long[] statuses
 	 */
 	public Long[] getStatuses(Long fromStatusId,Long toStatusId){
 		List<Long> orderedStatuses = Arrays.asList(QTStatusConst.QT_ORDERED_STATUSES);
 	    int startIndex = orderedStatuses.indexOf(fromStatusId);
 	    int endIndex = orderedStatuses.indexOf(toStatusId) + 1;
 	    List<Long> subList = orderedStatuses.subList(startIndex, endIndex);
-	    Long[] ret = subList.toArray(new Long[subList.size()]);
-	    return ret;
+	    return subList.toArray(new Long[subList.size()]);
 	}
 	/*
 	 * @13/7/2023 : Shafful Sonarqube QT Bug Minor Danial #8 END	 * 
@@ -990,8 +993,8 @@ public class QTCloneBackingbean extends
 			}
 			this.getManagedBean().setRemoveDocReports(listDel);
 		}
-		if(null!=reportList)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-		reportList.removeAll(listDel);
+		if (null != reportList)// 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+			reportList.removeAll(listDel);//Sonarqube #83
 		
 		List<String> existedDocumets=new ArrayList<String>(); //additional docs;
 		ScQtDocReport templetDoc=null;
@@ -1066,7 +1069,7 @@ public class QTCloneBackingbean extends
 					boolean templateDoc=Boolean.FALSE;//33954
 					//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					if (reportList == null)
-						reportList = new ArrayList<ScQtDocReport>();
+						reportList = new ArrayList<>();//Sonarqube #83
 					
 					if(null!=docDefinitionKey && SourcingConstants.DOC_DEF_KEY_RULES_REGULATION
 							.equals(docDefinitionKey)){
@@ -1837,11 +1840,11 @@ public class QTCloneBackingbean extends
 						currreqDTO.setScQt(qt);
 						currreqDTO.setLanguageCode(languageCode);
 						currreqDTO.setMaintanceFlow(true);
-						BriefingResDTO CurrresDTO = qTBriefingSO
-								.retrieveBriefingSiteVisitDtl(currreqDTO);	
-						 ScQtBsv CurrqtBsv = CurrresDTO.getScQtBsv();	
-						if(!CurrqtBsv.isBrandNew()&& null!=CurrqtBsv.getQtBsvId()){						
-							ScQtBsv ori=CurrqtBsv;//33954&25635-end
+						BriefingResDTO currResDTO = qTBriefingSO
+								.retrieveBriefingSiteVisitDtl(currreqDTO);//sonarQubeIssue8&9&25635#84	
+						 ScQtBsv currQtBsv = currResDTO.getScQtBsv();//sonarQubeIssue8&9&25635#84	
+						if(!currQtBsv.isBrandNew()&& null!=currQtBsv.getQtBsvId()){	//sonarQubeIssue8&9&25635#84					
+							ScQtBsv ori=currQtBsv;//33954&25635&sonarQubeIssue8&9&25635#84-end
 							briefingZoneBean=updateBrief(ori,qtBsv);
 						}else{//25635-start
 							
@@ -2093,11 +2096,9 @@ public class QTCloneBackingbean extends
 				
 			}else if(ParameterConst.APPROVAL_CATEGORY_OTHERS
 					.equalsIgnoreCase(approval.getApprovalCategory()
-							.getParameterCode())){//25635 & 34502
-				if(CollectionUtils.isEmpty(otherapprovals)){//25635 & 34502 
+							.getParameterCode()) && ParameterConst.PROCUREMENT_CATEGORY_ICT.equals(scQt
+									.getPmProcurementCategory().getParameterCode()) && CollectionUtils.isEmpty(otherapprovals)){//25635 & 34502&35282&sonarQubeIssue10#84 
 				otherapprovals.add(approval);
-				}//25635 & 34502
-				
 			}//25635 & 34502 
 		}
 		}//25635-End
@@ -2167,7 +2168,7 @@ public class QTCloneBackingbean extends
 				newApproval.setScQtApprovalAttachments(approverAttachments);
 			}
 			
-			if(scQt.isBrandNew() & copyApproval.getScQtApprovalDtls()!=null && !copyApproval.getScQtApprovalDtls().isEmpty()){//25635&31484-start
+			if(scQt.isBrandNew() && copyApproval.getScQtApprovalDtls()!=null && !copyApproval.getScQtApprovalDtls().isEmpty()){//25635&31484&sonarQubeIssue11#84-start
 				List<ScQtApprovalRequest> approverRequest=new ArrayList<ScQtApprovalRequest>();
 				for(ScQtApprovalRequest request:copyApproval.getScQtApprovalDtls()){
 					if(null!=request.getApprovalType() && null!=request.getApprovalType().getParameterId() && ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equalsIgnoreCase(request.getApprovalType().getParameterCode())){//25635&31484-start
@@ -2249,14 +2250,12 @@ public class QTCloneBackingbean extends
 			ScQtApproval newOthersApproval= null;
 			scQt.setCloneEnabled(Boolean.TRUE);//34502&25635-end
 			this.getManagedBean().setApproverTabLoaded(Boolean.TRUE);//34502&25635-end
-			 if(!scQt.isBrandNew()){
-				if(null!=scQt.getScQtApprovals() && CollectionUtils.isNotEmpty(scQt.getScQtApprovals())){
-					for(ScQtApproval approval:scQt.getScQtApprovals()){
-						if (!approval.isBrandNew() && ParameterConst.APPROVAL_CATEGORY_OTHERS
-								.equalsIgnoreCase(approval.getApprovalCategory()
-										.getParameterCode())) {
-							newOthersApproval=approval;
-						}
+			 if(!scQt.isBrandNew() && null!=scQt.getScQtApprovals() && CollectionUtils.isNotEmpty(scQt.getScQtApprovals())){
+				for(ScQtApproval approval:scQt.getScQtApprovals()){
+					if (!approval.isBrandNew() && ParameterConst.APPROVAL_CATEGORY_OTHERS
+							.equalsIgnoreCase(approval.getApprovalCategory()
+									.getParameterCode())) {
+						newOthersApproval=approval;
 					}
 				}
 			 }
@@ -2270,7 +2269,7 @@ public class QTCloneBackingbean extends
 			 }
 			
 			 if(copyOthersApproval.getScQtApprovalDtls()!=null && !copyOthersApproval.getScQtApprovalDtls().isEmpty()){//25635 & 34502
-				List<ScQtApprovalRequest> approverRequest=new ArrayList<ScQtApprovalRequest>();
+				List<ScQtApprovalRequest> approverRequest=new ArrayList<>();
 				for(ScQtApprovalRequest approvalRequest:copyOthersApproval.getScQtApprovalDtls()){
 						
 					if(null!=approvalRequest.getApprovalType() && null!=approvalRequest.getApprovalType().getParameterId() &&
@@ -2332,6 +2331,22 @@ public class QTCloneBackingbean extends
 		    if(newOthersApproval.getApprovalCategory().getParameterCode().equals(ParameterConst.APPROVAL_CATEGORY_OTHERS)){
 		    	List<PmParameter> settings = null;
 				ParameterHelper parameterHelper = ParameterHelper.getInstance();
+				if(CollectionUtils.isEmpty(newOthersApproval.getScQtApprovalDtls())){//35282-start
+					List<ScQtApprovalRequest> approverRequest = new ArrayList<>();
+					ScQtApprovalRequest req = new ScQtApprovalRequest();
+					req.setBrandNew(true);
+					req.setApprovalType(getParameterByTypeAndCode(
+							ParameterTypeConst.APPROVAL_REQUEST_TYPES,
+							ParameterConst.APPROVAL_REQUEST_ICT_PROJECTS));
+					req.setApproverAction(new PmParameter());
+					req.setApprovalRequestAttachement(null);
+					ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+					approvalRemark.setApprovalRequest(req);
+					req.setAppRequestRemark(approvalRemark);
+					req.setScQtApproval(newOthersApproval);
+					approverRequest.add(req);
+					newOthersApproval.setScQtApprovalDtls(approverRequest);
+				}//35282-End
 				
 				String approvalCategoryCode = newOthersApproval
 						.getApprovalCategory().getParameterCode();
@@ -2938,7 +2953,7 @@ public class QTCloneBackingbean extends
 				PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
 				tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
 				StringBuilder fcTitleLabel1 = new StringBuilder(
-						"lbl.sc.finalization.committee.secretary.");
+						QTConstants.FINALIZATION_COMMITTEE_SECRETARY);//25635&sonarQubeIssue12#84
 				String fcTitleName1 = ResourceBundleUtils
 						.getMessage(fcTitleLabel1.toString()
 									+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
@@ -2983,7 +2998,7 @@ public class QTCloneBackingbean extends
 			PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
 			tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
 			StringBuilder fcTitleLabel = new StringBuilder(
-					"lbl.sc.finalization.committee.secretary.");
+					QTConstants.FINALIZATION_COMMITTEE_SECRETARY);//25635&sonarQubeIssue12#84
 			String fcTitleName = ResourceBundleUtils
 					.getMessage(fcTitleLabel.toString()
 								+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
@@ -4902,7 +4917,7 @@ public class QTCloneBackingbean extends
 			PmParameter fcSecretaryCode = scQt.getFinalizationCommitte();
 			tabType = SourcingConstants.COMMITTE_TYPE_FINALIZATION;
 			StringBuilder fcTitleLabel = new StringBuilder(
-					"lbl.sc.finalization.committee.secretary.");
+					QTConstants.FINALIZATION_COMMITTEE_SECRETARY);//25635&sonarQubeIssue12#84
 			String fcTitleName = ResourceBundleUtils
 					.getMessage(fcTitleLabel.toString()
 								+ SourcingConstants.FC_COMMITTEE_TYPE_QUOTATION_COMMITTEE.toLowerCase(),
@@ -5184,11 +5199,4 @@ public class QTCloneBackingbean extends
 		}
 		return startMonth;
 	}//33916
-	
-	/*
-	private void foo() {
-		// This is a dummy method
-	}
-	*/
-	
 }

@@ -282,7 +282,7 @@ u {
 					<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black;">$tplSpecAnswer.answerCompliance</td>
 					#end
 					#end
-					<td valign="top"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black; colspan="1"">
+					<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black;">
 					#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != ""  && $scLoiLoaItem.Complete == 'true')
 						$tplSpecAnswer.newSupplierOffer
 					#else
@@ -307,28 +307,28 @@ u {
 		<br/>
 		#end
 		#if ($itemType == "Perkhidmatan" || $itemType == "Service" || $itemType == "Produk" || $itemType == "Product")
-		<table width="100%" border="1" cellpadding="0" cellspacing="0" style='font-size:85%'>
+		<table width="100%" cellpadding="0" cellspacing="0" style='font-size:85%; border: 1px solid black;'>
 			<tbody>
 			<tr>
-				<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Item</th>
-				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Jenis<br/>Pemenuhan</th>
-				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">UOM</th>
-				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Kekerapan/<br/>Unit<br/>Ukuran</th>
-				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Bil.<br/>Unit<br/>Ukuran<br/>Sehari</th>
-				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Bil.<br/>Unit<br/>Ukuran<br/>Sebulan</th>
-				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Tempoh<br/>(Bulan)</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Item</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Jenis<br/>Pemenuhan</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">UOM</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Kekerapan/<br/>Unit<br/>Ukuran</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Bil.<br/>Unit<br/>Ukuran<br/>Sehari</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Bil.<br/>Unit<br/>Ukuran<br/>Sebulan</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Tempoh<br/>(Bulan)</th>
 				#if ($isZonal)
-					<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Zon</th>
+					<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Zon</th>
 				#end
-				<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Kuantiti</th>
-				<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Tawaran<br/>Pembekal</th>
-				<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Skop<br/>Perkhidmatan<br/>/ SLA</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Kuantiti</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Tawaran<br/>Pembekal</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Skop<br/>Perkhidmatan<br/>/ SLA</th>
 			</tr>
 			<tr>
 				#if ($isZonal)
-					<th bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
+					<th bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Spesifikasi</th>
 				#else
-					<th bgcolor="#6d839b" class="title border left" colspan="7" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">Spesifikasi</th>
+					<th bgcolor="#6d839b" class="title border left" colspan="7" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Spesifikasi</th>
 				#end
 			</tr>
 		
@@ -401,15 +401,15 @@ u {
 								#set($rowCount = 0)
 								#foreach($zoneName in $scLoiLoaItem.zoneNameList)
 									#set($rowCount = $rowCount + 1)
-									<table width="100%">
+									<table width="100%" style="border-collapse:collapse; margin-top:-2px;">
 										<tbody>
 											<tr>
 											#if ($scLoiLoaItem.zoneNameList.size() == $rowCount)
-												<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
+												<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: left; padding-left:2px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
 													<span>$zoneName</span>
 												</td>
 											#else
-												<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+												<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: left; padding-left:2px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
 													<span>$zoneName</span>
 												</td>
 											#end
@@ -463,24 +463,25 @@ u {
 							$scLoiLoaItem.qty
 						#end
 					</td>
-							<td valign="top"  class="standard border-bottom left" rowspan="2" colspan="1" style="border: 1px solid black;padding-left: 2px; padding-right: 2px;padding-top: 2px;padding-bottom: 2px;">
-									 <td valign="top"  class="standard border-bottom left" rowspan="2" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; padding-left: 5px; padding-right: 5px;">
+									 <td valign="top"  class="standard border-bottom left" rowspan="2" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; padding-left: 5px; padding-right: 5px; border: 1px solid black;">
 										#if ($tplSpecAnswer.newSupplierOffer != $null && $tplSpecAnswer.newSupplierOffer != "" && $scLoiLoaItem.Complete == 'true')
 											<span>$tplSpecAnswer.newSupplierOffer</span>
 										#else											
 											#set($rowCount = 0)
 											#if($scLoiLoaItem.supplierOfferDetailList.size() != 0)											
 												#foreach($supplierOffer in $scLoiLoaItem.supplierOfferDetailList)
+													#set($supplierOffer = $supplierOffer.replace("<", "&#60;"))
+													#set($supplierOffer = $supplierOffer.replace(">", "&#62;"))
 													#set($rowCount = $rowCount + 1)
-													<table width="100%">
+													<table width="100%" style="border-collapse:collapse; margin-top:-2px;">
 														<tbody>
 															<tr>
 															#if ($scLoiLoaItem.supplierOfferDetailList.size() == $rowCount)
-																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
+																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
 																	<span>$supplierOffer</span>																
 																</td>
 															#else
-																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+																<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: left; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
 																	<span>$supplierOffer</span>
 																</td>
 															#end
@@ -493,14 +494,14 @@ u {
 											#end		
 										#end
 									</td>								
-							</td>
+						
 					<td valign="top"  class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">
 					$serviceScope
 					</td>
 				</tr>
 				<tr>
 					#if ($isZonal)
-						<td valign="top"  class="standard border-bottom left" colspan="8" >
+						<td valign="top"  class="standard border-bottom left" colspan="8" style="border: 1px solid black;">
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
@@ -509,7 +510,7 @@ u {
 								#set($specification = $specification.replace(">", "&#62;"))
 								
 									#set($rowCount = $rowCount + 1)
-									<table width="100%">
+									<table width="100%" style="border-collapse:collapse; margin:0px;"  >
 										<tbody>
 											<tr>
 											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
@@ -531,7 +532,7 @@ u {
 							#end
 						</td>
 					#else
-						<td valign="top"  class="standard border-bottom left" colspan="7" >
+						<td valign="top"  class="standard border-bottom left" colspan="7" style="border: 1px solid black;">
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)	
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
@@ -540,7 +541,7 @@ u {
 								#set($specification = $specification.replace(">", "&#62;"))
 								
 									#set($rowCount = $rowCount + 1)
-									<table width="100%">
+									<table width="100%" style="border-collapse:collapse; margin:0px;">
 										<tbody>
 											<tr>
 											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
@@ -599,11 +600,11 @@ u {
 											<tbody>
 												<tr>
 												#if ($scLoiLoaItem.supplierOfferDetailList.size() == $rowCount)
-													<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif;">
+													<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: left; font-size:7px; font-family: Arial, Helvetica, sans-serif;">
 														<span>$supplierOffer</span>
 													</td>
 												#else
-													<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: center; font-size:7px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
+													<td valign="top"  class="standard border-bottom left" colspan="1" style="text-align: left; font-size:7px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
 														<span>$supplierOffer</span>
 													</td>
 												#end

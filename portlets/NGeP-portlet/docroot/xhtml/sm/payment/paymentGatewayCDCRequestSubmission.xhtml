@@ -20,7 +20,7 @@
 		}*/
 		
 		$('#formReg').ready(function(){
-			 setTimeout(function (){}, 5000); // how long do you want the delay to be? 
+			 setTimeout(function (){}, 30000); // how long do you want the delay to be? 
             $('#formReg').submit();
         });
 	});
@@ -32,15 +32,9 @@
 		</div>
 <!-- 	<form id="formReg" name="formReg" action="#{paymentBackingBean.paymentGatewayUrl}" method="post" target="DoSubmit" onsubmit="DoSubmit = window.open('about:blank','DoSubmit','width=400,height=350');"> -->
 		<form id="formReg" name="formReg" action="#{paymentBackingBean.cdcPaymentGatewayUrl}" method="post">
-		<input type="hidden" name="orderid" value="#{paymentBackingBean.managedBean.orderId}" /><br />
-		<input type="hidden" name="amount" value="#{paymentBackingBean.managedBean.totalAmount}" /><br />
-		<input type="hidden" name="bill_name" value="#{paymentBackingBean.managedBean.billName}" /><br />
-		<input type="hidden" name="bill_email" value="#{paymentBackingBean.managedBean.billEmail}" /><br />
-		<input type="hidden" name="bill_mobile" value="#{paymentBackingBean.managedBean.billMobile}" /><br />
-		<input type="hidden" name="bill_desc" value="#{paymentBackingBean.managedBean.billDesc}" /><br />
-		<input type="hidden" name="country" value="#{paymentBackingBean.managedBean.country}" /><br />
-		<input type="hidden" name="vcode" value="#{paymentBackingBean.vCode}" /><br />
-		<input type="hidden" name="cancelurl" value="#{paymentBackingBean.cancelUrl}" /><br />
+		<input type="hidden" name="merchantCode" value="#{paymentBackingBean.managedBean.merchantCode}" />
+		<input type="hidden" name="payload" value="#{paymentBackingBean.managedBean.payLoad}" />
+		<input type="hidden" name="vcode" value="#{paymentBackingBean.vCode}" />
 	</form>
 </body>
 

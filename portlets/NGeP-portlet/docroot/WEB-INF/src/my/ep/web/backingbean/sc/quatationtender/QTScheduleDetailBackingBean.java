@@ -683,7 +683,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			deletedAttachment.add(att);
 		}
 		
-		if (deletedAttachment != null) {
+		if (CollectionUtils.isNotEmpty(deletedAttachment)) {
 			attachmentList.removeAll(deletedAttachment);
 		}
 		apprvRequest.setEpvApprovalReqAttachment(attachmentList);

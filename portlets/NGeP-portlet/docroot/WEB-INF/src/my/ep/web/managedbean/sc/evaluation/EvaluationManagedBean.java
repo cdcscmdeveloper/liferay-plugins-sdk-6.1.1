@@ -612,6 +612,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
 	//#28784 - end
+	private boolean fecIndexPreRender;//#10542
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -648,7 +649,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//#10542 - start
 	private String downloadBy;
-	private byte[] zipFileContent;
+	private byte[] technicalZipFileDownloadByDocument;
+	private byte[] technicalZipFileDownloadBySupplier;
+	private byte[] financialZipFileDownloadByDocument;
+	private byte[] financialZipFileDownloadBySupplier;
 	private String mainDocumentTitle;
 	//#10542 - end
 	
@@ -4218,12 +4222,36 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		return downloadBy;
 	}
 	
-	public byte[] getZipFileContent() {
-		return zipFileContent;
+	public byte[] getTechnicalZipFileDownloadByDocument() {
+		return technicalZipFileDownloadByDocument;
 	}
 	
-	public void setZipFileContent(byte[] zipFileContent){
-		this.zipFileContent = zipFileContent;
+	public void setTechnicalZipFileDownloadByDocument(byte[] technicalZipFileDownloadByDocument){
+		this.technicalZipFileDownloadByDocument = technicalZipFileDownloadByDocument;
+	}
+	
+	public byte[] getTechnicalZipFileDownloadBySupplier() {
+		return technicalZipFileDownloadBySupplier;
+	}
+	
+	public void setTechnicalZipFileDownloadBySupplier(byte[] technicalZipFileDownloadBySupplier){
+		this.technicalZipFileDownloadBySupplier = technicalZipFileDownloadBySupplier;
+	}
+	
+	public byte[] getFinancialZipFileDownloadByDocument(){
+		return financialZipFileDownloadByDocument;
+	}
+	
+	public void setFinancialZipFileDownloadByDocument(byte[] financialZipFileDownloadByDocument){
+		this.financialZipFileDownloadByDocument = financialZipFileDownloadByDocument;
+	}
+	
+	public byte[] getFinancialZipFileDownloadBySupplier(){
+		return financialZipFileDownloadBySupplier;
+	}
+	
+	public void setFinancialZipFileDownloadBySupplier(byte[] financialZipFileDownloadBySupplier){
+		this.financialZipFileDownloadBySupplier = financialZipFileDownloadBySupplier;
 	}
 	
 	public void setMainDocumentTitle(String mainDocumentTitle){
@@ -4346,5 +4374,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setDemoWip(boolean demoWip) {
 		this.demoWip = demoWip;
+	}
+	
+	//#10542
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
 	}
 }

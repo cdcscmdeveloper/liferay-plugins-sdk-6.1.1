@@ -107,6 +107,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.PmTaskReassignmentVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -141,9 +142,9 @@ public class TaskReassignmentBackingBean extends
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 
 	// List for Paging
-	private PagingDataModel<WorklistItemVO> userTaskListDataModel = new userTaskListDataModel();	
-	private PagingDataModel<WorklistItemVO> groupTaskListDataModel = new groupTaskListDataModel();
-	private PagingDataModel<WorklistItemVO> othersTaskListDataModel = new othersTaskListDataModel();
+	private PagingDataModel<WorklistItemVO> userTaskListDataModel = new UserTaskListDataModel();	
+	private PagingDataModel<WorklistItemVO> groupTaskListDataModel = new GroupTaskListDataModel();
+	private PagingDataModel<WorklistItemVO> othersTaskListDataModel = new OthersTaskListDataModel();
 	private PagingDataModel<PmUser> userListDataModel = new userPagingDataModel();
 	
 	//[#25018] - start	
@@ -256,6 +257,10 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 		this.getManagedBean().setSelectedTasksToBulkReassign(null);
 		//7465 - end reendorse
+		
+		if (this.getManagedBean().isFromUserMaintenanceDetails()) {
+			reinitRedirectedTaskReassignmentSearchBean();
+		}
 	}
 	
 	/**
@@ -1124,11 +1129,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class userTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class UserTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public userTaskListDataModel() {
+		public UserTaskListDataModel() {
 			super("dtTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1306,11 +1311,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class groupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class GroupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public groupTaskListDataModel() {
+		public GroupTaskListDataModel() {
 			super("dtGroupTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1403,8 +1408,7 @@ public class TaskReassignmentBackingBean extends
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
 								//#7465 start - missing document number to search in bpm
 								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
 								getManagedBean().setAllGroupTasks(resetWorklist);
@@ -1416,12 +1420,13 @@ public class TaskReassignmentBackingBean extends
 							} else {
 								//#7465, #29822  - START - reendorse
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
+								getManagedBean().setEnableDeleteGroupTasksButton(false);
 								getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 								//#7465, #29822  - end - reendorse
 							}
 						}
 						//#7465 START - reendorse
-						if(getManagedBean().isShowRemoveProcessMessageGroup()==true) {
+						if(getManagedBean().isShowRemoveProcessMessageGroup()) {
 							//disable check box for group task
 							getManagedBean().setCheckAllGroupTasksEnabled(false);
 							//disable button for group task
@@ -1506,11 +1511,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class othersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class OthersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public othersTaskListDataModel() {
+		public OthersTaskListDataModel() {
 			super("dtOthersTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1601,8 +1606,7 @@ public class TaskReassignmentBackingBean extends
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
 								//#7465 start - missing document number to search in bpm
 								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
 								getManagedBean().setAllOthersTasks(resetWorklist); //7465 - wrong reset value for others
@@ -1614,12 +1618,13 @@ public class TaskReassignmentBackingBean extends
 							} else {
 								//#7465, #29822  - START - reendorse
 								getManagedBean().setCheckAllOthersTasksEnabled(false); 
+								getManagedBean().setEnableDeleteOthersTasksButton(false);
 								getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 //								//#7465, #29822  - end - reendorse
 							}
 						}
 						//#7465 START - reendorse
-						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+						if(getManagedBean().isShowRemoveProcessMessageOther()) {
 							//disable check box for group task
 							getManagedBean().setCheckAllOthersTasksEnabled(false);
 							//disable button for group task
@@ -2778,9 +2783,11 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			if(vo.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			// #35396 - Start
+			if (orgProfileId != null) {
+				orgProfile = PmCommonUtil.retrievePmOrgProfileDtl(orgProfileId);
 			}
+			// #35396 - End
 			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(
@@ -3110,7 +3117,8 @@ public class TaskReassignmentBackingBean extends
 
 		try {
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
-			reqDTO.setTaskId(task.getTaskId());
+			String taskId = task.getTaskId();
+			reqDTO.setTaskId(taskId);
 			reqDTO.setUserIdList(assigneeUsers);
 			reqDTO.setClaimedBy(claimedBy);
 
@@ -3122,7 +3130,7 @@ public class TaskReassignmentBackingBean extends
 
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
-				reloadAllTaskList();
+				resetForRemoveReassignTask(taskId);
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 			}
@@ -3131,7 +3139,31 @@ public class TaskReassignmentBackingBean extends
 		}
 
 	}
+	
+	private void resetForRemoveReassignTask(String taskId) {
+		boolean removedFromSelectedTask = false;
+		resetCheckAllTasks();
+		if (getManagedBean().getSelectedGroupTasks().containsKey(taskId)) {
+			getManagedBean().getAllGroupTasks().clear();
+			getManagedBean().getSelectedGroupTasks().clear();
+			getManagedBean().getSelectedGroupTasks().remove(taskId);
+			getManagedBean().setEnableDeleteGroupTasksButton(false);
+			removedFromSelectedTask = true;
+		} else if (getManagedBean().getSelectedOthersTasks().containsKey(taskId)) {
+			getManagedBean().getAllOthersTasks().clear();
+			getManagedBean().getSelectedOthersTasks().clear();
+			getManagedBean().getSelectedOthersTasks().remove(taskId);
+			getManagedBean().setEnableDeleteOthersTasksButton(false);
+			removedFromSelectedTask = true;
+		}
 
+		if (!removedFromSelectedTask) {
+			getManagedBean().setEnableDeleteGroupTasksButton(false);
+			getManagedBean().setEnableDeleteOthersTasksButton(false);
+		}
+		reloadAllTaskList();
+	}
+	
 	/**
 	 * @return the userTaskListDataModel
 	 */
@@ -3179,6 +3211,8 @@ public class TaskReassignmentBackingBean extends
 	
 	public void redirectToTaskReassignment(PmOrgProfile orgProfile, PmUser user) {		
 		log.info("redirectToTaskReassignment");
+		this.getManagedBean().setPmOrgProfile(orgProfile);
+		this.getManagedBean().setPmUser(user);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());		
 		resetTaskAssignSearchBean();
@@ -3194,18 +3228,18 @@ public class TaskReassignmentBackingBean extends
 		}
 		//[#25018] - end
 		
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.setOrgProfile(orgProfile);
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.setOrgType(orgProfile.getOrgTypeCode());
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.setUser(user);
-		this.getManagedBean().setOrgProfileRequired(false);
-		this.getManagedBean().setDisableForTaskAssignment(true);
+		this.getManagedBean().setFromUserMaintenanceDetails(true);
+		reinitRedirectedTaskReassignmentSearchBean();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/pm/taskReassignment/taskReassignment.xhtml");
-
-		
+	}
+	
+	private void reinitRedirectedTaskReassignmentSearchBean() {
+		this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(this.getManagedBean().getPmOrgProfile());
+		this.getManagedBean().getTaskAssignmentSearchBean().setOrgType(this.getManagedBean().getPmOrgProfile().getOrgTypeCode());
+		this.getManagedBean().getTaskAssignmentSearchBean().setUser(this.getManagedBean().getPmUser());
+		this.getManagedBean().setOrgProfileRequired(false);
+		this.getManagedBean().setDisableForTaskAssignment(true);
 	}
 	
 	public void redirectToPmUserPage(){
@@ -3518,6 +3552,7 @@ public class TaskReassignmentBackingBean extends
 			FacesMessage.SEVERITY_INFO, MessageConst.INFO_780071, null);
 			
 			//#7465, #29822 - START - reendorse
+			this.getManagedBean().setEnableDeleteGroupTasksButton(false);
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 			this.getManagedBean().setCheckAllGroupTasksEnabled(false);
 			this.getManagedBean().setShowRemoveProcessMessageGroup(true);
@@ -3609,6 +3644,7 @@ public class TaskReassignmentBackingBean extends
 					MessageConst.INFO_780071, null);
 			
 			//#7465, #29822  - START - reendorse
+			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 			this.getManagedBean().setCheckAllOthersTasksEnabled(false); 
 			this.getManagedBean().setShowRemoveProcessMessageOther(true);

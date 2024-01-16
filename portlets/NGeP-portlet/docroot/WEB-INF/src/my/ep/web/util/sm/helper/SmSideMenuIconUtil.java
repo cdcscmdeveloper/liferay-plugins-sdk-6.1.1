@@ -3,12 +3,9 @@ package my.ep.web.util.sm.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
-import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -27,15 +24,10 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.entity.sm.SmSvInterviewee;
-import my.ep.persistence.entity.sm.SmSvMachine;
-import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.pm.RoleCode;
-import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmSectionEditorVO;
 
