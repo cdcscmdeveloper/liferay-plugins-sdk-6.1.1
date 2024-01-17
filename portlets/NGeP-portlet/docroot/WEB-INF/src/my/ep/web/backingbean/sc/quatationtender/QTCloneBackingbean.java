@@ -779,7 +779,10 @@ public class QTCloneBackingbean extends
 			QTSelectionNode selection=(QTSelectionNode) node.getData();
 			list.add(selection.getValue());
 		}
-		boolean tabTreeNode=list.contains(QTConstants.TREENODE_GENERAL_INFORMATION)||list.contains(QTConstants.TREENODE_SUPPLIER_CRITERIA)||list.contains(QTConstants.TREENODE_COMMITTEE_APPOINTMENT)||list.contains(QTConstants.TREENODE_COMMITTEE_APPROVAL);//SonarQubeIssuesFixed25635
+		boolean tabTreeNode=Boolean.FALSE;//SonarQubeIssuesFixed25635-start
+		if(CollectionUtils.isNotEmpty(list)){
+		 tabTreeNode=list.contains(QTConstants.TREENODE_GENERAL_INFORMATION)||list.contains(QTConstants.TREENODE_SUPPLIER_CRITERIA)||list.contains(QTConstants.TREENODE_COMMITTEE_APPOINTMENT)||list.contains(QTConstants.TREENODE_COMMITTEE_APPROVAL);//SonarQubeIssuesFixed25635
+		}//SonarQubeIssuesFixed25635-End
 		if(tabTreeNode){//SonarQubeIssuesFixed25635
             return true;
         }
