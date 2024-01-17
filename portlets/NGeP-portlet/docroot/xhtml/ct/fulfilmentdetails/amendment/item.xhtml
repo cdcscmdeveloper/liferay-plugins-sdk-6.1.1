@@ -459,11 +459,11 @@
 								<p:commandLink update=":form:itemId" process="@form" 
 									disabled="#{itemMaxQtyVar.chkIndexOfRow 
 									  or (ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"
-								   	rendered="#{!itemMaxQtyVar.changeQuantity and itemMaxQtyVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
+								   	rendered="#{!itemMaxQtyVar.changeQuantity and itemMaxQtyVar.editable and !itemMaxQtyVar.newIconIndication}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 									<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 								</p:commandLink>
-								<p:commandLink rendered="#{itemMaxQtyVar.changeQuantity}" oncomplete="dlgItemMaxQty.show();return false;">
+								<p:commandLink rendered="#{itemMaxQtyVar.changeQuantity and !itemMaxQtyVar.newIconIndication}" oncomplete="dlgItemMaxQty.show();return false;">
 									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 									<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
 								</p:commandLink>
