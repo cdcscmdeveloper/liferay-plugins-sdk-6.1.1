@@ -7531,6 +7531,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 				}
 				//Bug 32277 - end
+				retrieveApprovalTabDtl();//12471
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
