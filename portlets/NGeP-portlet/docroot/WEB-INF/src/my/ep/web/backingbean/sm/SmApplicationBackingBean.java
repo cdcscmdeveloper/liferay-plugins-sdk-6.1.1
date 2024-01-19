@@ -17571,6 +17571,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 		//#11641 - END
+		//#34392 - Start
 		if(!EntityHelper.isCollectionEmpty(this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries())){
 			Collections.sort(this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries(), new Comparator<SmApplSupportDocInquiry>(){
 				@Override
@@ -17585,7 +17586,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			});
 		}
-		
+		//#34392 - END
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
