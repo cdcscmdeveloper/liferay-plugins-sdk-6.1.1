@@ -97,10 +97,10 @@
 					maxlength="4" id="numberValueId" style="text-align:right"
 					disabled="#{!(typeValueObj.brandNew)}" 
 					required="true"
-					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"	>
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					requiredMessage="#{ruleCatalogueBackingBean.getRequiredMsgValue(typeValueObj)}"	> <!-- #34397, #34398 - start -->
 					<f:attribute name="min" value="0"/>	
-		  			<f:attribute name="max" value="9999"/>		
+		  			<f:attribute name="max" value="9999"/>	
+		  			<f:converter converterId="pmValueConverter"/> <!-- #34397, #34398 - end -->
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<!-- 29650 - START -->
 					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.valueErrorCheck(index)}"
@@ -306,6 +306,30 @@
 				<p:message id="zoneCodeMsg" for="zoneCode" display="icon"/>
 			</p:column>
 			<!-- 27827 - END -->
+			<!-- #34397, #34398 - start -->
+			<p:column width="15%" style="white-space:normal"
+				rendered="#{(ruleCatalogueBackingBean.isRenewTypes(
+					ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType))}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+	             	#{lbl['lbl.pm.zone']}
+		       	</f:facet>
+		      	<p:selectOneMenu id="zoneMain"
+					label="#{lbl['lbl.pm.zone.name']}"
+					value="#{typeValueObj.zoneId}"
+					required="true"
+					requiredMessage="#{ruleCatalogueBackingBean.getRequiredMsgZone()}"
+					disabled="#{!(typeValueObj.brandNew)}"
+					style="width: 250px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
+					<f:selectItems var="zoneLs"
+						value="#{ruleCatalogueBackingBean.managedBean.mainZones}"
+						itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}"/>
+					<p:ajax partialSubmit="true" process="@this" update="@this, zoneMainMsg"/>
+				</p:selectOneMenu>
+				<p:message id="zoneMainMsg" for="zoneMain" display="icon"/>
+			</p:column>
+			<!-- #34397, #34398 - end -->
 
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">
