@@ -137,6 +137,9 @@ public class QtSpecCloneBackingBean extends
 	private String scoreTypeN = "";//ahmaa-#25138
 	private static final BigDecimal TECHNICAL_ITEM_SCORE = new BigDecimal(50);//35113
 
+	/**
+	 * create tree node for all specpreparation tabs.
+	 */
 	public QtSpecCloneBackingBean() {
 		this.root = new DefaultTreeNode("Root Node", null);
 
@@ -173,14 +176,14 @@ public class QtSpecCloneBackingBean extends
 		FacesContext context = FacesContext.getCurrentInstance();
 		ResourceBundle bundle = context.getApplication().getResourceBundle(
 				context, "lbl");
-		String message = bundle.getString(label);
-		return message;
+		return bundle.getString(label);//SonarQubeIssuesFixed25635
 	}
 
-	public void cloneCommitteePopupAction() {
+	/***
+	 * clone SpecPrepation Committee Popup listener.
+	 */
+	public void cloneCommitteePopupAction() {//SonarQubeIssuesFixed25635
 		debugLogger("cloneCommitteePopupAction");
-		// logic to check whether committe will allow for clone or not..
-		// checkIsSpecCommitteFormOrNot();
 		getManagedBean().setCloneCommitteeSelectQt(null);
 		this.getManagedBean().setSelectedCloneTender(null);//25635
 
@@ -250,7 +253,7 @@ public class QtSpecCloneBackingBean extends
 		}
 		
 		if(resDTO.getCheckListScores()!=null){
-			List<ScQtCheckListScore> scores = new ArrayList<ScQtCheckListScore>();
+			List<ScQtCheckListScore> scores = new ArrayList<>();//SonarQubeIssuesFixed25635
 			for (ScQtCheckListScore origin : resDTO
 					.getCheckListScores()) {
 				
@@ -355,14 +358,13 @@ public class QtSpecCloneBackingBean extends
 			reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
 			resDTO = specSo.retrieveCheckLists(reqDTO);
 			if(null!=resDTO.getFinancialCheckLists()){
-				List<ScQtCheckList> toAdd =new ArrayList<ScQtCheckList>();
+				List<ScQtCheckList> toAdd =new ArrayList<>();//SonarQubeIssuesFixed25635
 				List<ScQtCheckList> localcheckList =this.getManagedBean().getScQtCheckSt2financeProposalList();
 				for (ScQtCheckList checklist : resDTO
 						.getFinancialCheckLists()) {
 					
 					if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {
-						 // if(!checklist.isManditory()){
 							ScQtCheckList copy = copyBean(checklist);
 							copy.setScQt(this.getManagedBean().getQt());
 							copy=retrieveScoreNValue(checklist,copy);
@@ -376,44 +378,13 @@ public class QtSpecCloneBackingBean extends
 							} else {
 								toAdd.add(copy);
 							}
-//						}else{
-//							ScQtCheckList copy =getDefault(checklist.getTitle());
-//							if(null!=copy){
-//								copy=retrieveScoreNValue(checklist,copy);
-//								copy=setStatus(copy);
-//							}else{
-//								copy = copyBean(checklist);
-//								copy.setScQt(this.getManagedBean().getQt());
-//								copy=retrieveScoreNValue(checklist,copy);
-//							}
-//							toAdd.add(copy);
-//						}
 					}
 				}
 				
-				//this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
-				//List<ScQtCheckList> finList=getCheckListInDB(this.getManagedBean().getQt(),SourcingConstants.FINANCIAL_DOCTYPE);
-//				if(null!=finList
-//						&& !finList.isEmpty()
-//						&& finList.size()!=0){
-//					
-//					List<ScQtCheckList> toRemove=new ArrayList<ScQtCheckList>();
-//					for(ScQtCheckList toDelete:finList){
-//						if(!toDelete.isManditory()){
-//							toDelete.setSelected(true);
-//							toDelete.setDeleted(true);
-//							toRemove.add(toDelete);
-//						}
-//					}
-//					//this.getManagedBean().getScQtCheckSt2financeProposalList().removeAll(toRemove);
-//					this.getManagedBean().setMarkDeletedFinChecklist(toRemove);
-//					
-//				}
+			
 				
-				List<ScQtCheckList> toRemove=new ArrayList<ScQtCheckList>();
-				if(null!=this.getManagedBean().getScQtCheckSt2financeProposalList()
-				&& !this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()
-				&& this.getManagedBean().getScQtCheckSt2financeProposalList().size()!=0){
+				List<ScQtCheckList> toRemove=new ArrayList<>();//SonarQubeIssuesFixed25635
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())){//SonarQubeIssuesFixed25635
 					
 					for(ScQtCheckList toDelete:this.getManagedBean().getScQtCheckSt2financeProposalList()){
 						if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
@@ -422,10 +393,7 @@ public class QtSpecCloneBackingBean extends
 							
 						}//34701_start
 							toDelete.setSelected(true);
-							toDelete.setDeleted(true);
-							//toRemove.add(toDelete);
-						//}
-						
+							toDelete.setDeleted(true);		
 					}
 					
 				}
@@ -462,19 +430,15 @@ public class QtSpecCloneBackingBean extends
 
 		try {
 
-			List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
+			List<ScQtCheckList> localcheckList = new ArrayList<>();//SonarQubeIssuesFixed25635
 			this.getManagedBean().getQt().setScQtChecklists(localcheckList);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			reqDTO.setScQt(scqt);
 			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			resDTO = specSo.retrieveCheckLists(reqDTO);
-			
-			//if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {}
-			
+			resDTO = specSo.retrieveCheckLists(reqDTO);	
 			if (null != resDTO.getTechnicalCheckList()) {
-				// Collections.sort(resDTO.getTechnicalCheckList());
 				for (ScQtCheckList checklist : resDTO
 						.getTechnicalCheckList()) {
 					ScQtCheckList copy = copyBean(checklist);
@@ -484,42 +448,17 @@ public class QtSpecCloneBackingBean extends
 					copy=retrieveScoreNValue(checklist,copy);
 					}
 					if (null != copy.getPmDocument()) {
-						/*if (!SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE
-								.equalsIgnoreCase(checklist.getPmDocument()
-										.getDocDefinitionKey())) {*///32120
 							localcheckList.add(copy);
 						//}//32120
 					} else {
-						//33858if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-								//.equalsIgnoreCase(checklist.getDefinationType().getParameterCode())) {//21695&25635-start
 						localcheckList.add(copy);
 						//33858}//21695&25635-End
 					}
 				}
 			}
 			
-			//this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());			
-			//List<ScQtCheckList> tecList=getCheckListInDB(this.getManagedBean().getQt(),SourcingConstants.TECHNICAL_DOCTYPE);
-//			if(null!=tecList
-//					&& !tecList.isEmpty()
-//					&& tecList.size()!=0){
-//				
-//				List<ScQtCheckList> toRemove=new ArrayList<ScQtCheckList>();
-//				for(ScQtCheckList toDelete:tecList){
-//					if(!toDelete.isManditory()){
-//						toDelete.setSelected(true);
-//						toDelete.setDeleted(true);
-//						toRemove.add(toDelete);
-//					}
-//				}
-//			
-//				this.getManagedBean().setMarkDeletedTechChecklist(toRemove);
-//				
-//			}
 			
-			if(null!=this.getManagedBean().getScQtCheckSt2techProposal()
-					&& !this.getManagedBean().getScQtCheckSt2techProposal().isEmpty()
-					&& this.getManagedBean().getScQtCheckSt2techProposal().size()!=0){
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){//SonarQubeIssuesFixed25635
 				
 				for(ScQtCheckList toDelete:this.getManagedBean().getScQtCheckSt2techProposal()){
 						toDelete.setSelected(true);
@@ -584,8 +523,7 @@ public class QtSpecCloneBackingBean extends
 		try {
 			uploadAttachment(copy, originCheckList.getScQtCheckListAttachment());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError(ParameterConst.DOCTYPE_QUOTATION, QTConstants.QT_SPEC_CLONE_BACKING_BEAN, this.getManagedBean().getQt().getQtNo(), "copyAttachment", getUserIdSessionFromLoginId(), e);//SonarQubeIssuesFixed25635
 			return null;
 			
 		}
@@ -593,11 +531,10 @@ public class QtSpecCloneBackingBean extends
 	}
 
 	private void uploadAttachment(ScAttachment copy, ScAttachment origin)
-			throws FileNotFoundException, IOException {
+			throws FileNotFoundException, IOException {//SonarQubeIssuesFixed25635
 		String fileName = origin.getFileName();
 		File file = new File(getActualFilePath(origin));
 		byte[] fileBytes = Files.readAllBytes(file.toPath());
-		// byte[] fileBytes = null;//file.getContents();
 		FileOutputStream fos = null;
 		try {
 			if (fileBytes != null) {
@@ -624,7 +561,7 @@ public class QtSpecCloneBackingBean extends
 	 * @return the sc qt check list
 	 */
 	private ScQtCheckList constructQtDocByType(TplSpecMaster specMaster,
-			String docType) {
+			String docType) {//SonarQubeIssuesFixed25635
 		IParameterSO parameterSo = null;
 		parameterSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -645,7 +582,6 @@ public class QtSpecCloneBackingBean extends
 		}
 		scqtDocDest.setTplSpecMaster(specMaster);
 		scqtDocDest.setScQt(this.getManagedBean().getQt());
-		// scqtDocDest.setTplDocMaster(null);
 		ScQtCheckList checkList = new ScQtCheckList();
 		checkList.setDocCategory(docType);
 
@@ -664,9 +600,6 @@ public class QtSpecCloneBackingBean extends
 				.retrieveParameterByTypeAndCode(checkListActionType);
 		checkList
 				.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC);
-		// PmStatus status = new PmStatus();
-		// status.setStatusId(1l);
-		// checkList.setPmStatus(status);
 		checkList.setScQtDoc(scqtDocDest);
 		checkList.setScoringReq(this.getManagedBean().getQt()
 				.isTechEvaluationReq());
@@ -1128,8 +1061,8 @@ public class QtSpecCloneBackingBean extends
 			SpecificationResDTO resDTO = specSo
 					.retrieveFulFilMentScheduleDtls(reqDTO);
 			
-			List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
-			List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
+			List<ScQtSchedule> scheduleList = new ArrayList<>();//SonarQubeIssuesFixed25635
+			List<ScQtProgressivePayment> paymentList = new ArrayList<>();//SonarQubeIssuesFixed25635
 			
 			if (null != resDTO.getScheduleResults()
 					&& null != resDTO.getScheduleResults().getResultList()
@@ -1262,7 +1195,7 @@ public class QtSpecCloneBackingBean extends
 					&& null != resDTO.getScheduleResults().getResultList()
 					&& !resDTO.getScheduleResults().getResultList()
 							.isEmpty()) {
-				List<ScQtSchedule> deletes=new ArrayList<ScQtSchedule>();
+				List<ScQtSchedule> deletes=new ArrayList<>();//SonarQubeIssuesFixed25635
 				for(ScQtSchedule toDel:resDTO.getScheduleResults().getResultList()){
 					toDel.setDeleted(true);
 					deletes.add(toDel);
@@ -1275,7 +1208,7 @@ public class QtSpecCloneBackingBean extends
 							.getResultList()
 					&& !resDTO.getProgressivePaymentResults()
 							.getResultList().isEmpty()) {
-				List<ScQtProgressivePayment> deletes=new ArrayList<ScQtProgressivePayment>();
+				List<ScQtProgressivePayment> deletes=new ArrayList<>();//SonarQubeIssuesFixed25635
 				for(ScQtProgressivePayment toDel:resDTO.getProgressivePaymentResults().getResultList()){
 					toDel.setDeleted(true);
 					deletes.add(toDel);
@@ -1291,33 +1224,9 @@ public class QtSpecCloneBackingBean extends
 	private String fulfilmentMonthlyDtls(String startdate) {
 		String startMonth = "";
 		try {
-			if (startdate.equalsIgnoreCase("01")) {
-				startMonth = "0";
-			} else if (startdate.equalsIgnoreCase("02")) {
-				startMonth = "1";
-			} else if (startdate.equalsIgnoreCase("03")) {
-				startMonth = "2";
-			} else if (startdate.equalsIgnoreCase("04")) {
-				startMonth = "3";
-			} else if (startdate.equalsIgnoreCase("05")) {
-				startMonth = "4";
-			} else if (startdate.equalsIgnoreCase("06")) {
-				startMonth = "5";
-			}
-
-			else if (startdate.equalsIgnoreCase("07")) {
-				startMonth = "6";
-			} else if (startdate.equalsIgnoreCase("08")) {
-				startMonth = "7";
-			} else if (startdate.equalsIgnoreCase("09")) {
-				startMonth = "8";
-			} else if (startdate.equalsIgnoreCase("10")) {
-				startMonth = "9";
-			} else if (startdate.equalsIgnoreCase("11")) {
-				startMonth = "10";
-			} else if (startdate.equalsIgnoreCase("12")) {
-				startMonth = "11";
-			}
+			Map<String,String> monthNumbersdtls= getMonthNumberDtls();//SonarQubeIssuesFixed25635-Start
+			  startMonth=monthNumbersdtls.get(startdate);//SonarQubeIssuesFixed25635-Start
+			
 
 		} finally {
 
@@ -1332,7 +1241,7 @@ public class QtSpecCloneBackingBean extends
 		SpecificationResDTO resDTO = null;
 		IQTSpecSO specSo = null;
 		try {
-		List<Integer> settinglist = new ArrayList<Integer>();
+		List<Integer> settinglist = new ArrayList<>();//SonarQubeIssuesFixed25635
 		settinglist
 				.add(SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_PACKAGE);
 		settinglist
@@ -1344,7 +1253,7 @@ public class QtSpecCloneBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		resDTO = specSo
 				.retrieveScoreSettingDtls(reqDTO);
-		deleteTechnicalScoreSetting(reqDTO,"F");
+		deleteTechnicalScoreSetting(reqDTO,ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 		if (null != resDTO.getScoreSettingResultBean().getResultList()
 				&& !resDTO.getScoreSettingResultBean().getResultList()
 						.isEmpty()) {
@@ -1405,9 +1314,9 @@ public class QtSpecCloneBackingBean extends
 			reqDTO.setScQt(scqt);
 			reqDTO.setSpecType(SourcingConstants.FINANCIAL_DOCTYPE);
 			resDTO = specSo.retrieveCheckLists(reqDTO);
-			List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
+			List<ScQtCheckList> localChecklist = new ArrayList<>();
 
-			List<ScQtCheckList> specChecklist = new ArrayList<ScQtCheckList>();
+			List<ScQtCheckList> specChecklist = new ArrayList<>();
 
 			float addScore = 0;
 			int local = 0;
@@ -1662,10 +1571,10 @@ public class QtSpecCloneBackingBean extends
 			List<ScQtCheckList> weightageList = this.getManagedBean()
 					.getFinancialScoring();
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				weightageList = new ArrayList<>();//SonarQubeIssuesFixed25635
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
+				ScQtCheckList weight =  weightageList.get(i);//SonarQubeIssuesFixed25635
 				if (null != weight.getDefinationType()
 						&& ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 								.equalsIgnoreCase(weight.getDefinationType()
@@ -1704,10 +1613,10 @@ public class QtSpecCloneBackingBean extends
 			List<ScQtCheckList> weightageList = this.getManagedBean()
 					.getFinancialScoring();
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				weightageList = new ArrayList<>();//SonarQubeIssuesFixed25635
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
+				ScQtCheckList weight =  weightageList.get(i);//SonarQubeIssuesFixed25635
 				if (null != weight.getQtScoreWeightage()
 						&& weight.getQtScoreWeightage().getWeightage() == null) {
 					weight.getQtScoreWeightage()
@@ -1732,6 +1641,10 @@ public class QtSpecCloneBackingBean extends
 
 	}
 	
+	/***
+	 * calculate financial item overall Financial and other financial score setting.
+	 * @param financialItem
+	 */
 	public void calculateFinancialItemScore(ScQtScoreSetting financialItem) {
 		try {
 			if (null != financialItem) {
@@ -1773,10 +1686,10 @@ public class QtSpecCloneBackingBean extends
 			setting.setDeleted(true);
 		}
 		
-		if("T".equals(type)){
+		if(ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equals(type)){//SonarQubeIssuesFixed25635
 			this.getManagedBean().setMarkDeletedScQtScoreSettingTechnical(listDelete);
 		}
-		else if("F".equals(type)){
+		else if(ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(type)){//SonarQubeIssuesFixed25635
 			this.getManagedBean().setMarkDeletedScQtScoreSettingFinancial(listDelete);
 		}
 		else{
@@ -1794,7 +1707,7 @@ public class QtSpecCloneBackingBean extends
 		try {
 			if (null == this.getManagedBean().getRecommendationPackageScore()
 					&& null == this.getManagedBean().getRecommendationScore()) {
-				List<Integer> settinglist = new ArrayList<Integer>();
+				List<Integer> settinglist = new ArrayList<>();//SonarQubeIssuesFixed25635
 				settinglist
 						.add(SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE);
 				settinglist
@@ -1804,7 +1717,7 @@ public class QtSpecCloneBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				resDTO = specSo
 						.retrieveScoreSettingDtls(reqDTO);
-				deleteTechnicalScoreSetting(reqDTO,"O");
+				deleteTechnicalScoreSetting(reqDTO,ParameterConst.SPECIFICATION_TYPE_OTHER);//SonarQubeIssuesFixed25635
 				
 				if (resDTO.getScoreSettingResultBean().getResultList() != null
 						&& ! resDTO.getScoreSettingResultBean().getResultList()
@@ -1838,7 +1751,11 @@ public class QtSpecCloneBackingBean extends
 			specSo = null;
 		}
 	}
-	
+	/***
+	 * calculate overall Package technical and financial and passing scores.
+	 * @param technical
+	 * @param isValidationRequired
+	 */
 	public void calculateTotalPackage(ScQtScoreSetting technical,
 			boolean isValidationRequired) {
 		try {
@@ -1870,6 +1787,10 @@ public class QtSpecCloneBackingBean extends
 		}
 	}
 	
+	/***
+	 * calculate overall Item Technical and Othertechnical Item Total scores.
+	 * @param technical
+	 */
 	public void calculateRecommendtechnicalScore(ScQtScoreSetting technical) {
 		try {
 			int value1 = technical.getOverallTechnical() != null ? technical
@@ -1897,6 +1818,10 @@ public class QtSpecCloneBackingBean extends
 		}
 	}
 	
+	/***
+	 * calculate OverAll Item Financial and OtherFinancial Item Totalscore.
+	 * @param financial
+	 */
 	public void calculateRecommendFinancialScore(ScQtScoreSetting financial) {
 		try {
 			int value1 = financial.getOverallFin() != null ? financial
@@ -2236,10 +2161,10 @@ public class QtSpecCloneBackingBean extends
 			List<ScQtCheckList> weightageList = this.getManagedBean()
 					.getTechnicalScoring();
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				weightageList = new ArrayList<>();//SonarQubeIssuesFixed25635
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
+				ScQtCheckList weight =  weightageList.get(i);//SonarQubeIssuesFixed25635
 				if (null != weight.getQtScoreWeightage()
 						&& weight.getQtScoreWeightage().getWeightage() == null) {
 					weight.getQtScoreWeightage()
@@ -2269,10 +2194,10 @@ public class QtSpecCloneBackingBean extends
 			List<ScQtCheckList> weightageList = this.getManagedBean()
 					.getTechnicalScoring();
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				weightageList = new ArrayList<>();//SonarQubeIssuesFixed25635
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
+				ScQtCheckList weight =  weightageList.get(i);//SonarQubeIssuesFixed25635
 				if (null != weight.getQtScoreWeightage()
 						&& weight.getQtScoreWeightage().getWeightage() == null) {
 					weight.getQtScoreWeightage()
@@ -2294,16 +2219,16 @@ public class QtSpecCloneBackingBean extends
 	
 	private BigDecimal retrieveTechnicalEvalutionPassingScorePmrules(
 			String ruleType) {
-		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+		IRuleSO ruleSO =  BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IRuleSO.class);
+						IRuleSO.class);//SonarQubeIssuesFixed25635
 		BigDecimal technicalPassingScore = new BigDecimal(0);
 		RuleReqDTO ruleReqDTO = new RuleReqDTO();
 		ruleReqDTO.setRuleType(ruleType);
 		List<PmConfigRuleValue> ruleValueList = ruleSO
 				.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
 				.getRuleValueList();
-		if (ruleValueList != null && ruleValueList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(ruleValueList)) {//SonarQubeIssuesFixed25635
 			PmConfigRuleValue configRuleValue = ruleValueList.get(0);
 			if (configRuleValue != null
 					&& configRuleValue.getRuleValue() != null) {
@@ -2319,17 +2244,17 @@ public class QtSpecCloneBackingBean extends
 	}
 	
 	private List<ScQtCheckList> getToBeRemoveList() {
-		List<ScQtCheckList> toBeRemoveList = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> toBeRemoveList = new ArrayList<>();//SonarQubeIssuesFixed25635
 
 		List<ScQtCheckList> techList = getManagedBean()
 				.getMarkDeletedTechChecklist();
-		if (techList != null && techList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(techList)) {//SonarQubeIssuesFixed25635
 			toBeRemoveList.addAll(techList);
 		}
 
 		List<ScQtCheckList> finList = getManagedBean()
 				.getMarkDeletedFinChecklist();
-		if (finList != null && finList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(finList)) {//SonarQubeIssuesFixed25635
 			toBeRemoveList.addAll(finList);
 		}
 
@@ -2367,14 +2292,13 @@ public class QtSpecCloneBackingBean extends
 			SpecificationResDTO resDTO = specSo
 					.retrieveDeliverSeriviceAddress(reqDTO);
 			
-			if (resDTO.getSpecZoneDtls() == null
-					|| resDTO.getSpecZoneDtls().isEmpty()) {
+			if (CollectionUtils.isEmpty(resDTO.getSpecZoneDtls())) {//SonarQubeIssuesFixed25635
 				
 				//this.getManagedBean().setDeliveryLocRemoveList();
 				ScQt qt=this.getManagedBean().getQt();
 				List<ScQtDeliveryLoc> list=getDeliveryByQt(qt);
-				if(list!=null && !list.isEmpty()){
-					List<ScQtDeliveryLoc> listDelete=new ArrayList<ScQtDeliveryLoc>();
+				if(CollectionUtils.isNotEmpty(list)){//SonarQubeIssuesFixed25635
+					List<ScQtDeliveryLoc> listDelete=new ArrayList<>();//SonarQubeIssuesFixed25635
 					for(ScQtDeliveryLoc loc:list){
 						loc.setDeleted(true);
 						listDelete.add(loc);
@@ -2382,7 +2306,7 @@ public class QtSpecCloneBackingBean extends
 					this.getManagedBean().setDeliveryLocRemoveList(listDelete);
 				}
 				
-				List<ScQtDeliveryLoc> locs=new ArrayList<ScQtDeliveryLoc>();
+				List<ScQtDeliveryLoc> locs=new ArrayList<>();//SonarQubeIssuesFixed25635
 				if(null!=resDTO.getAddressResultBean()){
 					for(ScQtDeliveryLoc copyLoc:resDTO.getAddressResultBean()){
 						ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
@@ -2408,14 +2332,13 @@ public class QtSpecCloneBackingBean extends
 		}
 	}
 	
-	private ScAddress populateDeliveryAddress(PmAddressType addressType) {
+	private ScAddress populateDeliveryAddress(PmAddressType addressType) {//SonarQubeIssuesFixed25635
 		PmAddress pmAddress = addressType.getPmAddress();
 		ScAddress scAddress = new ScAddress();
 		scAddress.setAddressName(pmAddress.getAddressName());
 		scAddress.setAddress1(pmAddress.getAddress1());
 		scAddress.setAddress2(pmAddress.getAddress2());
 		scAddress.setAddress3(pmAddress.getAddress3());
-		// scAddress.setAddress4(pmAddress.getAddress4());
 		scAddress.setPostcode(pmAddress.getPostcode());
 		scAddress.setPmCountry(pmAddress.getPmCountry());
 		scAddress.setPmState(pmAddress.getPmState());
@@ -2436,48 +2359,45 @@ public class QtSpecCloneBackingBean extends
 	}
 	
 	private String getDeliveryAddressString(ScAddress scAddress) {
-		String COMMA = ",";
+		String comma = ",";//SonarQubeIssuesFixed25635
 		StringBuilder address = new StringBuilder();
 
-		String NULL_VALUE = "null";
+		String nullValue = "null";//SonarQubeIssuesFixed25635
 		if (StringUtils.isNotBlank(scAddress.getAddressName())
-				&& !NULL_VALUE.equalsIgnoreCase(scAddress.getAddressName())) {
+				&& !nullValue.equalsIgnoreCase(scAddress.getAddressName())) {//SonarQubeIssuesFixed25635
 			address.append(scAddress.getAddressName());
 		} else {
 			address.append("-");
 		}
 
 		if (StringUtils.isNotBlank(scAddress.getAddress1())
-				&& !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress1())) {
-			address.append(COMMA).append(scAddress.getAddress1());
+				&& !nullValue.equalsIgnoreCase(scAddress.getAddress1())) {//SonarQubeIssuesFixed25635
+			address.append(comma).append(scAddress.getAddress1());//SonarQubeIssuesFixed25635
 		}
 
 		if (StringUtils.isNotBlank(scAddress.getAddress2())
-				&& !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress2())) {
-			address.append(COMMA).append(scAddress.getAddress2());
+				&& !nullValue.equalsIgnoreCase(scAddress.getAddress2())) {//SonarQubeIssuesFixed25635
+			address.append(comma).append(scAddress.getAddress2());//SonarQubeIssuesFixed25635
 		}
 		if (StringUtils.isNotBlank(scAddress.getAddress3())
-				&& !NULL_VALUE.equalsIgnoreCase(scAddress.getAddress3())) {
-			address.append(COMMA).append(scAddress.getAddress3());
+				&& !nullValue.equalsIgnoreCase(scAddress.getAddress3())) {//SonarQubeIssuesFixed25635
+			address.append(comma).append(scAddress.getAddress3());//SonarQubeIssuesFixed25635
 		}
 		if (StringUtils.isNotBlank(scAddress.getPostcode())
-				&& !NULL_VALUE.equalsIgnoreCase(scAddress.getPostcode())) {
-			address.append(COMMA).append(scAddress.getPostcode());
+				&& !nullValue.equalsIgnoreCase(scAddress.getPostcode())) {//SonarQubeIssuesFixed25635
+			address.append(comma).append(scAddress.getPostcode());//SonarQubeIssuesFixed25635
 		}
 		if (scAddress.getPmCity() != null
 				&& scAddress.getPmCity().getCityName() != null
 				&& scAddress.getPmCity().getCityName().length() > 0) {
-			address.append(COMMA).append(scAddress.getPmCity().getCityName());
+			address.append(comma).append(scAddress.getPmCity().getCityName());//SonarQubeIssuesFixed25635
 		}
 		if (scAddress.getPmState() != null
 				&& scAddress.getPmState().getStateName() != null
 				&& scAddress.getPmState().getStateName().length() > 0) {
-			address.append(COMMA).append(scAddress.getPmState().getStateName());
+			address.append(comma).append(scAddress.getPmState().getStateName());//SonarQubeIssuesFixed25635
 		}
-		/*
-		 * if (StringUtils.isNotBlank( scAddress.getAddress4())) {
-		 * address.append(COMMA).append(scAddress.getAddress4()); }
-		 */
+		
 
 		return address.toString();
 	}
@@ -2533,13 +2453,11 @@ public class QtSpecCloneBackingBean extends
 		return false;
 	}
 
-	private void checklistSorting(List<ScQtCheckList> checkList) {
+	private void checklistSorting(List<ScQtCheckList> checkList) {//SonarQubeIssuesFixed25635
 		Collections.sort(checkList, new Comparator<ScQtCheckList>() {
 			public int compare(ScQtCheckList checklist1,
 					ScQtCheckList checklist2) {
 
-				// return
-				// checklist1.getChecklistSeq()-checklist2.getChecklistSeq();
 				return new CompareToBuilder()
 						.append(checklist1.getChecklistSeq(),
 								checklist2.getChecklistSeq())
@@ -2572,7 +2490,7 @@ public class QtSpecCloneBackingBean extends
 	 * @param message
 	 *            the message
 	 */
-	private void debugLogger(Object message) {
+	private void debugLogger(Object message) {//SonarQubeIssuesFixed25635
 
 		ScQt scQt = this.getManagedBean().getQt();
 		if (scQt != null) {
@@ -2581,9 +2499,7 @@ public class QtSpecCloneBackingBean extends
 		if (logger.isDebugEnabled()) {
 			logger.debug(message);
 		}
-		/*
-		 * else{ logger.info(message); }
-		 */
+		
 
 	}
 
@@ -2651,7 +2567,7 @@ public class QtSpecCloneBackingBean extends
 			QtnTenderSearchBean cloneQtnTenderSearchBean,
 			ISearchBean<ScQt> qtSearchBean) {
 		if (cloneQtnTenderSearchBean != null) {
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+			List<SearchFilterBean> searchFilterBean = new ArrayList<>();//SonarQubeIssuesFixed25635
 			String qtTitle = cloneQtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
 				qtSearchBean.getDataFilterBeans().add(
@@ -2670,7 +2586,7 @@ public class QtSpecCloneBackingBean extends
 
 			if (null != this.getManagedBean().getQt()
 					&& null != this.getManagedBean().getQt().getQtNo()) {
-				List<String> qtNo = new ArrayList<String>();
+				List<String> qtNo = new ArrayList<>();//SonarQubeIssuesFixed25635
 				qtNo.add(this.getManagedBean().getQt().getQtNo());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.QT_NUMBER);
@@ -2681,8 +2597,7 @@ public class QtSpecCloneBackingBean extends
 			
 			if (null != this.getManagedBean().getQt() 
 					&& null != this.getManagedBean().getPanel() 
-					//&& QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statId)
-					){
+					){//SonarQubeIssuesFixed25635
 				
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField("isPanel");
@@ -2752,7 +2667,7 @@ public class QtSpecCloneBackingBean extends
 								procurementMode));
 			} else {
 				// Filter By - procurementMode
-				List<String> procurementModes = new ArrayList<String>();
+				List<String> procurementModes = new ArrayList<>();//SonarQubeIssuesFixed25635
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_QUOTATION);
 				procurementModes.add(ParameterConst.PROCUREMENT_MODE_TENDER);
 				qtSearchBean.getDataFilterBeans().add(
@@ -2760,18 +2675,7 @@ public class QtSpecCloneBackingBean extends
 								SearchOperator.OPERATOR_IN.value(),
 								procurementModes));
 			}
-			/*
-			 * Date fromCreatedDate = cloneQtnTenderSearchBean
-			 * .getFromCreatedDate(); Date toCreatedDate =
-			 * cloneQtnTenderSearchBean.getToCreatedDate(); if (null !=
-			 * fromCreatedDate || toCreatedDate != null) { SearchFilterBean bean
-			 * = new SearchFilterBean();
-			 * bean.setSearchField(QTConstants.CREATED_DATE);
-			 * bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-			 * SearchBetweenValue<Date> betweenVal = new
-			 * SearchBetweenValue<Date>( fromCreatedDate, toCreatedDate);
-			 * bean.setSearchValue(betweenVal); searchFilterBean.add(bean); }
-			 */
+			
 			Date fromCreatedDate = cloneQtnTenderSearchBean
 					.getFromCreatedDate();
 			Date toCreatedDate = cloneQtnTenderSearchBean.getToCreatedDate();
@@ -2800,8 +2704,8 @@ public class QtSpecCloneBackingBean extends
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.CREATED_DATE);
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-						fromCreatedDate, toCreatedDate);
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<>(
+						fromCreatedDate, toCreatedDate);//SonarQubeIssuesFixed25635
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
@@ -2818,8 +2722,8 @@ public class QtSpecCloneBackingBean extends
 				if (toPublishDate == null) {
 					toPublishDate = DateUtils.getCurrentDateWithoutTime();
 				}
-				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-						fromPublishDate, toPublishDate);
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<>(
+						fromPublishDate, toPublishDate);//SonarQubeIssuesFixed25635
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
@@ -2836,8 +2740,8 @@ public class QtSpecCloneBackingBean extends
 				if (toClosingDate == null) {
 					toClosingDate = DateUtils.getCurrentDateWithoutTime();
 				}
-				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-						fromClosingDate, toClosingDate);
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<>(
+						fromClosingDate, toClosingDate);//SonarQubeIssuesFixed25635
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
@@ -2853,7 +2757,7 @@ public class QtSpecCloneBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}else{
 				Long[] stats= {QTStatusConst.QT_PENDING_QT_SUBMISSION,QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION};
-				ArrayList<Long> s=new ArrayList<Long>(Arrays.asList(stats));
+				ArrayList<Long> s=new ArrayList<>(Arrays.asList(stats));//SonarQubeIssuesFixed25635
 				qtSearchBean
 				.getDataFilterBeans()
 				.add(new SearchFilterBean(
@@ -2945,16 +2849,15 @@ if (null != this.getManagedBean().getQt()){//33870&25635-start
 	 * @return array of SelectItem
 	 */
 	public SelectItem[] getProcurementModeDropdownValues() {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();//SonarQubeIssuesFixed25635
+		List<String> recommendList = new ArrayList<>();//SonarQubeIssuesFixed25635
 		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
 		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE);
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
-		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+		return getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
-		return items;
 	}
 	
 	/**
@@ -2994,7 +2897,7 @@ if (null != this.getManagedBean().getQt()){//33870&25635-start
 	}
 	
 	/*25635-start
-	 * datatable page loading
+	 * datatable page loading during page change reset selected quotationTender.
 	 * 
 	 */
 	public void searchActionPageChange(){
@@ -3002,11 +2905,14 @@ if (null != this.getManagedBean().getQt()){//33870&25635-start
 	}
 	//25635-End
 	
+	/***
+	 * fetching paymentDeduction tab details from database.
+	 * @param copyScqt
+	 */
 	public void retrieveDeductionPaymentTabDtl(ScQt copyScqt) {//25635&33733-start
 		
 		
 		debugLogger("retrieveDeductionPaymentTabDtl");
-	//	if (this.getManagedBean().getScQtDeductionList() == null || this.getManagedBean().getScQtDeductionList().isEmpty()) {
 		IQTDetailSO detailSO=null;
 			try {
 				 detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -3018,7 +2924,7 @@ if (null != this.getManagedBean().getQt()){//33870&25635-start
 				List<ScQtDeduction> copyList = resDTO
 						.getDeductionResultBean().getResultList();
 				
-				List<ScQtDeduction> deductionList = new ArrayList<ScQtDeduction>();
+				List<ScQtDeduction> deductionList = new ArrayList<>();//SonarQubeIssuesFixed25635
 				
 				for(ScQtDeduction ded:copyList){
 					ScQtDeduction obj=new ScQtDeduction();
@@ -3026,10 +2932,8 @@ if (null != this.getManagedBean().getQt()){//33870&25635-start
 					obj.setDeductionAmount(ded.getDeductionAmount());
 					obj.setDeductionDesc(ded.getDeductionDesc());
 					obj.setDeductionType(ded.getDeductionType());
-					//obj.setScLoa(ded.getScLoa());
-					//obj.setScLoi(ded.getScLoi());
 					obj.setScQt(this.getManagedBean().getQt());
-					List<ScQtDeductionClause> clauses=new ArrayList<ScQtDeductionClause>();
+					List<ScQtDeductionClause> clauses=new ArrayList<>();//SonarQubeIssuesFixed25635
 					for(ScQtDeductionClause cloneClause:ded.getScQtDeductionClauses()){
 						ScQtDeductionClause newClause= new ScQtDeductionClause();
 						newClause.setBrandNew(true);
@@ -3061,18 +2965,9 @@ if (null != this.getManagedBean().getQt()){//33870&25635-start
 				this.getManagedBean().setScQtDeductionList(deductionList);
 				this.getManagedBean().getQt().setScQtDeductions(deductionList);
 				getManagedBean().setSelectedScQtDeduction(null);
-				/*
-				 * if (null != deductionList && !deductionList.isEmpty()) {
-				 * this.
-				 * getManagedBean().setSelectedScQtDeduction(deductionList.get
-				 * (0)); this.getManagedBean().getSelectedScQtDeduction().
-				 * setScQtDeductionClauses
-				 * (deductionList.get(0).getScQtDeductionClauses()); }
-				 */
 			} finally {
 				detailSO = null;
 			}
-		//}
 	}//25635&33733-start
 	
 	

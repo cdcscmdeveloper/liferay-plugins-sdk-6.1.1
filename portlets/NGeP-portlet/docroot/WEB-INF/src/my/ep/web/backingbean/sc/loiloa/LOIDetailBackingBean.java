@@ -462,7 +462,7 @@ public class LOIDetailBackingBean extends
 					
 					//#30008 - Start	
 					if(scLoi.getNegoDecision() != null){
-						this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId().toString()));
+						this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId()));
 					}
 					//#30008 - End
 					
@@ -957,47 +957,36 @@ public class LOIDetailBackingBean extends
 				if (this.getManagedBean().isItemized()) {
 					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
 					for (ScLoi scLoi : scLois) {
-						if (scLoi.getNegoDecision() != null
-								&& ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+						if (scLoi.getNegoDecision() != null && ParameterConst.NOT_REACH_AGREEMENT.
+								equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 							getManagedBean().setDecision(new PmParameter());
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							//getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
-									if (scLoi
-											.getScLoiLoa()
-											.getSmSupplier()
-											.getSupplierId()
-											.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+									if (scLoi.getScLoiLoa().getSmSupplier().getSupplierId().
+											equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
 													.getSmSupplier().getSupplierId())) {
 										recom.setNoReachAgreement(true);
 										break;
-
 									}
 								}
 							}
 						}
 					}
-				} else {
-					// List<ScQtEvaluationResultDtl> recomSuppList =
-					// this.getManagedBean().getRecommendedSupplierList();
+				} else {		
 					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
 					for (ScLoi scLoi : scLois) {
-						if (scLoi.getNegoDecision() != null
-								&& ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+						if (scLoi.getNegoDecision() != null	&& ParameterConst.NOT_REACH_AGREEMENT.
+								equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							//getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
-									if (scLoi
-											.getScLoiLoa()
-											.getSmSupplier()
-											.getSupplierId()
-											.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+									if (scLoi.getScLoiLoa().getSmSupplier().getSupplierId().
+											equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
 													.getSmSupplier().getSupplierId())) {
 										recom.setNoReachAgreement(true);
 										break;
@@ -2521,18 +2510,20 @@ public class LOIDetailBackingBean extends
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			
 			//#30008 - Start
-			Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
-			
-			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-			reqDTO2.setParameterId(parameterId);
-			ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
-			PmParameter pmParameter = resDTO2.getPmParameter();
-			scLoi.setNegoDecision(pmParameter);
-			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
-			//#30008 - end
+			if (this.getManagedBean().getDecisionCode() != null) {
+				Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
+
+				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+				ParameterReqDTO reqDTO2 = new ParameterReqDTO();
+				reqDTO2.setParameterId(parameterId);
+				ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
+				PmParameter pmParameter = resDTO2.getPmParameter();
+				scLoi.setNegoDecision(pmParameter);
+				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+				
+			}// #30008 - end
 			
 			parseLOIDetails(scLoi, outcome);
 			
@@ -2789,7 +2780,7 @@ public class LOIDetailBackingBean extends
 				scLoi.setNegoDecision(pmParameter);
 				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 
-				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+				if (ParameterConst.NOT_REACH_AGREEMENT.equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 					awardDataType.setIsAgreement(false);
 				} else {
 					awardDataType.setIsAgreement(true);
@@ -2929,7 +2920,7 @@ public class LOIDetailBackingBean extends
 				scLoi.setNegoDecision(pmParameter);
 				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 
-				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+				if (ParameterConst.NOT_REACH_AGREEMENT.equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 					awardDataType.setIsAgreement(false);
 				} else {
 					awardDataType.setIsAgreement(true);
