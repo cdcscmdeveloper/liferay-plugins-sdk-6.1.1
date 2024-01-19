@@ -246,6 +246,7 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -2102,15 +2103,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if((overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) < 0) || (overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) == 0))
 						setBondReq = false;					
 				}
-			
+			//20231122@asyrafhaziq_25726 - Issue 16
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 
 					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
 					&& null != scLoa.getScQt() 
 					&& null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
+					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+                    || scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 				setBondReq = false;
 			}
 			
@@ -6459,4 +6463,80 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return Boolean.FALSE;
 	}//11104_newEndorseEnd
+	
+	//12471 Start
+	/**
+	 * Initialize member info for  
+	 * @param memberInfo
+	 * @return void
+	 */
+	public void onClickMemberInfo(PmUser memberInfo) {
+		this.getManagedBean().setMemberName(memberInfo.getUserName());
+		for (PmUserOrg org : memberInfo.getPmUserOrgs()) {
+			if (org.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (org.getPmOrgProfile().getEpPtj()) {
+					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+					reqDTO.setOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					this.getManagedBean().setMemberMinOrg(resDTO.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				} else {
+					String orgType = this.getParameterDesc(org.getPmOrgProfile().getOrgTypeCode());
+					orgType = orgType == null ? "" : orgType;
+					this.getManagedBean().setMemberMinOrg(orgType);
+				}
+				this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+				this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				break;
+			}
+		}
+		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
+	}
+	/**
+	 * Get user organization description
+	 * @param pmUserOrgs
+	 * @param orgType
+	 * @return String - organization description
+	 */
+	public String getOrgDesc(List<PmUserOrg> pmUserOrgs, String orgType) {
+		String desc = "";
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		for (PmUserOrg org : pmUserOrgs) {
+			if (org.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+				if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ_GROUP)) {
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+					desc = org.getPmOrgProfile().getOrgName();
+				}
+				break;
+			}
+		}
+		return desc;
+	}
+	// 12471 - end
+	protected Map<String,String> getMonthNumberDtls(){//SonarQubeIssuesFixed25635-Start
+		Map<String,String> monthNumbers=new HashMap<>();
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JAN), QTConstants.MONTH_ZERO);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_FEB), QTConstants.MONTH_JAN);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_MARCH), QTConstants.MONTH_FEB);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_APRIL), QTConstants.MONTH_MARCH);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_MAY), QTConstants.MONTH_APRIL);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JUNE), QTConstants.MONTH_MAY);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JULY), QTConstants.MONTH_JUNE);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_AUG), QTConstants.MONTH_JULY);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_SEPT), QTConstants.MONTH_AUG);
+		monthNumbers.put(QTConstants.MONTH_OCT, QTConstants.MONTH_SEPT);
+		monthNumbers.put(QTConstants.MONTH_NOV, QTConstants.MONTH_OCT);
+		monthNumbers.put(QTConstants.MONTH_DEC, QTConstants.MONTH_NOV);
+		return monthNumbers;
+	}//SonarQubeIssuesFixed25635-End
 }

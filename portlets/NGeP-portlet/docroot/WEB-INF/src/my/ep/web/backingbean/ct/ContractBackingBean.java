@@ -4640,14 +4640,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
 	 * */
 	public boolean isPendingSupplementalContractLetter(){
-		if(getManagedBean().getContractVer().getStatus().getStatusId() 
+		if(getManagedBean().getContractVer().getStatus() != null &&
+				(getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue()){								
+				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue())){								
 			return true;
 		}
 		return false;

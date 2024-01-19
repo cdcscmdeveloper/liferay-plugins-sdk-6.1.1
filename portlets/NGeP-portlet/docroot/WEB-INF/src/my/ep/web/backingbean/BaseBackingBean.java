@@ -201,7 +201,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
-	private T managedBean;
+	private transient T managedBean;
 	private static final String UTF = "UTF-8";
 	//27346 - start
 	String fileInitName;
@@ -310,27 +310,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 	}
 
-	/*
-	 * private String getConcatId(){ String concatId = "";
-	 * 
-	 * 
-	 * FacesScopes facesScope = new FacesScopes();
-	 * 
-	 * String portletId =
-	 * (String)facesScope.getRequestScope(WebKeys.PORTLET_ID);
-	 * 
-	 * String pageId = null; ThemeDisplay themeDisplay =
-	 * (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY); if
-	 * (themeDisplay!=null){ pageId = String.valueOf(themeDisplay.getPlid());
-	 * facesScope.setSessionScope("title",
-	 * themeDisplay.getPortletDisplay().getTitle()); }
-	 * 
-	 * if (StringUtils.isNotBlank(portletId) && StringUtils.isNotBlank(pageId)){
-	 * concatId = "_" + portletId + "_" + pageId; }
-	 * 
-	 * return concatId; }
-	 */
-
 	/**
 	 * User image path.
 	 *
@@ -342,16 +321,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String imagePath = "";
 		if (userId != null) {
 			User user = null;
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest()
-					.getAttribute(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY);
 			try {
-				user = UserLocalServiceUtil.getUserByScreenName(
-						themeDisplay.getCompanyId(), userId);
+				user = UserLocalServiceUtil.getUserByScreenName(themeDisplay.getCompanyId(), userId);
 				if (user != null) {
-					imagePath = "/.."
-							+ user.getPortraitURL((ThemeDisplay) facesScopes
-									.getRequest().getAttribute(
-											WebKeys.THEME_DISPLAY));
+					imagePath = "/.." + user.getPortraitURL((ThemeDisplay) facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY));
 				}
 			} catch (Exception ex) {
 				log.error(ex.getMessage(), ex);
@@ -370,8 +344,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public boolean compareUserName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
-		if (username != null
-				&& username.equals(facesScopes.getUserScreenName())) {
+		if (username != null && username.equals(facesScopes.getUserScreenName())) {
 			return true;
 		} else {
 			return false;
@@ -383,9 +356,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public void claimBpmTask() {
 
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
-		
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+
 		claimTaskByTaskId(taskId);
 
 	}
@@ -406,8 +378,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * Release bpm task.
 	 */
 	public void releaseBpmTask() {
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		releaseTaskByTaskId(taskId);
 	}
 
@@ -446,44 +417,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reqDTO.setCtxToken(token);
 		bpmSO.releaseTask(reqDTO);
 	}
-
-	/*
-	 * protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS>
-	 * toEntityBeans(List<? extends ValueBean<RETURN_CLASS>> valueBeans) {
-	 * List<RETURN_CLASS> list = new ArrayList<RETURN_CLASS>();
-	 * 
-	 * for (ValueBean<RETURN_CLASS> valueBean : valueBeans) {
-	 * list.add(valueBean.getEntity()); }
-	 * 
-	 * return list; }
-	 * 
-	 * public <ENTITY_CLASS extends BaseEntity> void
-	 * addListBySelectedList(List<ENTITY_CLASS> list, List<ENTITY_CLASS>
-	 * selectedList) { for (ENTITY_CLASS entity : selectedList) { if
-	 * (entity.isSelected()) { entity.setSelected(false);
-	 * 
-	 * list.add(entity); } } }
-	 * 
-	 * public <ENTITY_CLASS extends BaseEntity> void
-	 * deleteRowsAction(DataValueBean<ENTITY_CLASS> dataValueBean) {
-	 * List<ENTITY_CLASS> displayedList = dataValueBean.getDisplayedList();
-	 * List<ENTITY_CLASS> removedList = dataValueBean.getRemovedList();
-	 * List<ENTITY_CLASS> listToBeRemoved = new ArrayList<ENTITY_CLASS>();
-	 * 
-	 * for (ENTITY_CLASS entity : displayedList) { if (entity.isSelected()) {
-	 * entity.setDeleted(true);
-	 * 
-	 * listToBeRemoved.add(entity); } }
-	 * 
-	 * // remove from display list. displayedList.removeAll(listToBeRemoved);
-	 * 
-	 * // added into removed list. removedList.addAll(listToBeRemoved); }
-	 * 
-	 * public <ENTITY_CLASS extends BaseEntity> void selectAllAction(boolean
-	 * selectAll, List<ENTITY_CLASS> list) { for (ENTITY_CLASS valueBean : list)
-	 * { valueBean.setSelected(selectAll); } }
-	 */
-
+	
 	/**
 	 * Select all.
 	 *
@@ -1388,18 +1322,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return null;
 	}
 	
-	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
+	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException {
 		log.info("START TO DOWNLOAD FILE");
-		PortletResponse resp = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
+		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
 
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
-//		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + displayFileName + "\"");
+		// response.setContentType("application/octet-stream");
 		response.setContentType(getMimeType(displayFileName));
 		response.flushBuffer();
 
@@ -1407,20 +1340,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {
 			URLConnection uc = new URL(filePath).openConnection();
 			docInputStream = new BufferedInputStream(uc.getInputStream());
-			log.info("ZAIM getURL "+uc.getURL().toString());
-			log.info("filePath----"+filePath);
+			log.info("ZAIM getURL " + uc.getURL().toString());
+			log.info("filePath----" + filePath);
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
-			log.info("docInputStream==="+docInputStream);
-			log.info("Error found while downloading file "+filePath+" : "+e);
+			log.info("docInputStream===" + docInputStream);
+			log.info("Error found while downloading file " + filePath + " : " + e);
 			log.error(e);
 			e.printStackTrace();
-			
+
 		}
 
 		OutputStream out = null;
-		try {		
+		try {
 
 			out = response.getOutputStream();
 			byte[] buffer = new byte[4096];
@@ -1429,14 +1362,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				out.write(buffer, 0, bytesRead);
 				buffer = new byte[4096];
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			log.error(e);
 		} finally {
 			if (out != null) {
 				out.close();
 			}
 			if (docInputStream != null) {
-				docInputStream.close();	
+				docInputStream.close();
 			}
 		}
 		log.info("END TO DOWNLOAD FILE");
@@ -1556,14 +1489,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			dir.mkdirs();
 			log.info("after make directory");
 		}
+		String finalFileName = StringUtils.replace(file.getFileName(), " ", "-");
 
-		try {
-			String finalFileName = StringUtils.replace(file.getFileName(), " ",
-					"-");
+		try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(uploadDir + "/" + finalFileName))) {
+			
 			log.info("finalFileName: " + finalFileName);
 
-			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-					new FileOutputStream(uploadDir + "/" + finalFileName));
+			//BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(uploadDir + "/" + finalFileName));
 
 			bufferedOutputStream.write(file.getContents());
 
@@ -4295,7 +4227,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(isLatestCatCodeDesc(isSupplierProfile)
+		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
 				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
 			return catL3.getCategoryName();
 		}
@@ -4317,7 +4249,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile){
-		SmAppl appl = getManagedBean().getSmAppl();
+		return isLatestCatCodeDesc(isSupplierProfile, getManagedBean().getSmAppl());
+	}
+	
+	/**
+	 * @param isSupplierProfile
+	 * @param appl
+	 * @return
+	 */
+	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
+		if(appl == null || appl.getPmStatus() == null){
+			return false;
+		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
@@ -4331,12 +4274,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		getManagedBean().setDowngradeRole(false);
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
 		if(!resDto.getSmPersonnelList().isEmpty() && resDto.getSmPersonnelList() != null){
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
-				if(personnelOwner == null && personnelDirector == null){
+				
+				if(!isMofAccEffDatePassedCurrDate(supplier) 
+						&& isPersonnelAdminRole(personnel)
+						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+					getManagedBean().getPersonnelsRole().add(personnel);
+				} else if(isMofAccEffDatePassedCurrDate(supplier)
+						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
 			}
@@ -4354,6 +4304,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 		}
 		return getManagedBean().isDowngradeRole();
+	}
+	
+	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){
+		return smPersonnel.getEpRole() != null 
+				&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(smPersonnel.getEpRole());
+	}
+	
+	public Boolean isPersonnelOwnerDirectorNull(SmPersonnel smPersonnelOwner,SmPersonnel smPersonnelDirector){
+		Boolean isPersonnelOwnerDirectorNull = false;
+		if(isNull(smPersonnelOwner) && isNull(smPersonnelDirector)){
+			isPersonnelOwnerDirectorNull = true;
+		}
+		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
 	

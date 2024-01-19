@@ -329,6 +329,12 @@ public interface QTConstants {
 	//#25726 end
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
+	// #12471 Start
+	public static final String ORG_CATEGORY_PTJ = "PTJ";
+	public static final String ORG_CATEGORY_OTHERS = "OTH";
+	public static final Long ORG_CAT_TYPE_OTHER_ID = 209L;
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
+	// #12471 End
 	
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 	
@@ -345,4 +351,26 @@ public interface QTConstants {
 	public static final String FINALIZATION_COMMITTEE_SECRETARY="lbl.sc.finalization.committee.secretary.";//25635&sonarQubeIssue12#84
 	
 	public static final String SERVICE_OBJECT_CC = "cc";
+	//12471 - start
+	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
+	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	//12471 - end
+    public static final Long TREENODE_GENERAL_INFORMATION=1L;//SonarQubeIssuesFixed25635-Start
+	public static final Long TREENODE_SUPPLIER_CRITERIA=2L;
+	public static final Long TREENODE_COMMITTEE_APPOINTMENT=3L;
+	public static final Long TREENODE_COMMITTEE_APPROVAL=4L;
+	public static final String MONTH_ZERO="0";
+	public static final String MONTH_JAN="1";
+	public static final String MONTH_FEB="2";
+	public static final String MONTH_MARCH="3";
+	public static final String MONTH_APRIL="4";
+	public static final String MONTH_MAY="5";
+	public static final String MONTH_JUNE="6";
+	public static final String MONTH_JULY="7";
+	public static final String MONTH_AUG="8";
+	public static final String MONTH_SEPT="9";
+	public static final String MONTH_OCT="10";
+	public static final String MONTH_NOV="11";
+	public static final String MONTH_DEC="12";
+	public static final String QT_SPEC_CLONE_BACKING_BEAN="QtSpecCloneBackingBean";//SonarQubeIssuesFixed25635-End
 }
