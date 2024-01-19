@@ -523,6 +523,7 @@ public class SmApplicationUtil {
 		return validSupportDocs;
 	}
 	
+	//#34392 - Start
 	/**
 	 * Validate supporting documents.For online application check whether
 	 * supplier uploaded all the files or not
@@ -566,6 +567,7 @@ public class SmApplicationUtil {
 		}
 		return validSupportDocs;
 	}
+	//#34392 - End
 
 	/**
 	 * Gets the current supplier based on the login id.
