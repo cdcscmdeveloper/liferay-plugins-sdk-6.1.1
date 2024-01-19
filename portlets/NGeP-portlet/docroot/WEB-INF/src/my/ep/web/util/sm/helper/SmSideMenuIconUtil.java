@@ -855,11 +855,10 @@ public class SmSideMenuIconUtil {
 			//#31043 - start
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)){
-				if(bean.isApproverUser())
+				if(bean.isApproverUser() && rev.isSitevisitVerified()){
 					rev.setSitevisitVerified(true);
-				
-				if(rev.isSitevisitVerified())
 					retVal = ICON_TICK;
+				}
 			}
 			//#31043 - end
 		}
