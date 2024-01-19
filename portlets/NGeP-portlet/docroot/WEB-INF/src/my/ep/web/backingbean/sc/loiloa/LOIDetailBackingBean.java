@@ -2780,7 +2780,7 @@ public class LOIDetailBackingBean extends
 				scLoi.setNegoDecision(pmParameter);
 				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 
-				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+				if (ParameterConst.NOT_REACH_AGREEMENT.equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 					awardDataType.setIsAgreement(false);
 				} else {
 					awardDataType.setIsAgreement(true);
@@ -2920,7 +2920,7 @@ public class LOIDetailBackingBean extends
 				scLoi.setNegoDecision(pmParameter);
 				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 
-				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+				if (ParameterConst.NOT_REACH_AGREEMENT.equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 					awardDataType.setIsAgreement(false);
 				} else {
 					awardDataType.setIsAgreement(true);
