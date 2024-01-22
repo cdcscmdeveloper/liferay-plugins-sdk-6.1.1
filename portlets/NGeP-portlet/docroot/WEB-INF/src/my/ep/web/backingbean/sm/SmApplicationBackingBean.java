@@ -9712,10 +9712,32 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//getManagedBean().getSmAppl().setResubmit(true);
 		getManagedBean().setPoInquiryRespond(true);
 		getManagedBean().getPoToSupplierInquiry().setResponseDate(new Date());
+		
+		//#34392 - start
+		for (SmApplSupportDoc smDocu : getManagedBean()
+				.getSmAppl().getSmApplSupportDocs()) {
+			replaceNewFile(smDocu);
+		}
+		//#34392 - end
+		
 		return submitSmApplToBpm(applType);
 
 	}
 
+	//#34392 - start
+	private void replaceNewFile(SmApplSupportDoc smDocu) {
+		// TODO Auto-generated method stub
+		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
+			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
+				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+					smDocFile.setFileName(smDocFileNewAdded.getFileName());
+					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
+				}
+			}
+		}
+	}
+	//#34392 - end
+	
 	/**
 	 * Submit sm application to bpm and save the latest information to DB.
 	 * 
