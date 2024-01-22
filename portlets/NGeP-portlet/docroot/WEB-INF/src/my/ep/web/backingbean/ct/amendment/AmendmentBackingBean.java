@@ -4491,6 +4491,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Calendar previousDate = Calendar.getInstance();
 		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 		previousDate.add(Calendar.DATE, -1);
+		
+		//Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+		
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		//End Fix - #33287
 
 		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedItem().getCtItemPrices()) {
 			ctItemPriceList.add(ctItemPrice);
@@ -4514,12 +4522,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						addDupObj.setCtContractItem(ctItemPrice.getCtContractItem());
 					}
 					addDupObj.setChangePrice(true);
+					//Start Fix - #33287
+					if(ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+							|| ctItemPrice.getEffDate().compareTo(ctItemPrice.getExpDate()) == 1){
+						addDupObj.setNewIconIndication(true);
+						addDupObj.setDeleteIcon(true);
+						ctItemPrice.setExpDate(currentAmendEffDate);
+						addDupObj.setEffDate(nextDate.getTime());
+					}else{
+						ctItemPrice.setExpDate(previousDate.getTime());
+						addDupObj.setNewIconIndication(false);
+					}
+					//End Fix - #33287
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
-					ctItemPrice.setChkIndexOfRow(true);
-					ctItemPrice.setExpDate(previousDate.getTime());
+					ctItemPrice.setChkIndexOfRow(true);				
 					ctItemPriceList.add(addDupObj);
-					log.info("totalsize itemprices "+addDupObj.getItemPriceId());
-					log.info("totalsize itemprices "+ctItemPriceList.size());
+
+					
 				}
 			}
 			// Start fix - #33256
@@ -4567,6 +4586,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Calendar previousDate = Calendar.getInstance();
 		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 		previousDate.add(Calendar.DATE, -1);
+		
+		// Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		// End Fix - #33287
 
 		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
 			ctItemPriceList.add(ctItemPrice);
@@ -4591,9 +4618,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						addDupObj.setCtContractItem(ctItemPrice.getCtContractItem());
 					}
 					addDupObj.setChangePrice(true);
+					//Start Fix - #33287
+					if(ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+							|| ctItemPrice.getEffDate().compareTo(ctItemPrice.getExpDate()) == 1){
+						addDupObj.setNewIconIndication(true);
+						addDupObj.setDeleteIcon(true);
+						ctItemPrice.setExpDate(currentAmendEffDate);
+						addDupObj.setEffDate(nextDate.getTime());
+					}else{
+						ctItemPrice.setExpDate(previousDate.getTime());
+						addDupObj.setNewIconIndication(false);
+					}
+					//End Fix - #33287
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
 					ctItemPrice.setChkIndexOfRow(true);
-					ctItemPrice.setExpDate(previousDate.getTime());
 					ctItemPriceList.add(addDupObj);
 				}
 			}
@@ -4734,6 +4772,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Calendar previousDate = Calendar.getInstance();
 		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 		previousDate.add(Calendar.DATE, -1);
+		
+		// Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		// End Fix - #33287
 
 		for (CtItemMaxQty ctItemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties()) {
 			ctItemMaxQtyList.add(ctItemMaxQty);
@@ -4755,8 +4801,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						addDupObj.setCtContractItem(ctItemMaxQty.getCtContractItem());
 					}
 					addDupObj.setChangeQuantity(true);
+					//Start Fix - #33287
+					if(ctItemMaxQty.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+							|| ctItemMaxQty.getEffDate().compareTo(ctItemMaxQty.getExpDate()) == 1){
+						addDupObj.setNewIconIndication(true);
+						addDupObj.setDeleteIcon(true);
+						ctItemMaxQty.setExpDate(currentAmendEffDate);
+						addDupObj.setEffDate(nextDate.getTime());
+					}else{
+						ctItemMaxQty.setExpDate(previousDate.getTime());
+						addDupObj.setNewIconIndication(false);
+					}
+					//End Fix - #33287
 					addDupObj.setAssociateCtItemMaxQty(ctItemMaxQty);
-					ctItemMaxQty.setExpDate(previousDate.getTime());
 					ctItemMaxQty.setChkIndexOfRow(true);
 					ctItemMaxQtyList.add(addDupObj);
 				}

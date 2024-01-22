@@ -6523,4 +6523,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return desc;
 	}
 	// 12471 - end
+	protected Map<String,String> getMonthNumberDtls(){//SonarQubeIssuesFixed25635-Start
+		Map<String,String> monthNumbers=new HashMap<>();
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JAN), QTConstants.MONTH_ZERO);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_FEB), QTConstants.MONTH_JAN);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_MARCH), QTConstants.MONTH_FEB);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_APRIL), QTConstants.MONTH_MARCH);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_MAY), QTConstants.MONTH_APRIL);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JUNE), QTConstants.MONTH_MAY);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JULY), QTConstants.MONTH_JUNE);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_AUG), QTConstants.MONTH_JULY);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_SEPT), QTConstants.MONTH_AUG);
+		monthNumbers.put(QTConstants.MONTH_OCT, QTConstants.MONTH_SEPT);
+		monthNumbers.put(QTConstants.MONTH_NOV, QTConstants.MONTH_OCT);
+		monthNumbers.put(QTConstants.MONTH_DEC, QTConstants.MONTH_NOV);
+		return monthNumbers;
+	}//SonarQubeIssuesFixed25635-End
 }
