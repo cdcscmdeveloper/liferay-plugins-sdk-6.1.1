@@ -10502,6 +10502,12 @@ private void retriveCommitteeRemarksList(){
 
 				}
 			}
+			//#29187 Start Vinod
+			List<String> evalstage = new ArrayList<>();
+			evalstage.add(QTConstants.COMPLIANCE_CHECK);
+			evalReqDTO.setResultStages(evalstage);
+			evalReqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
+			//#29187 End Vinod
 			evalReqDTO.setProposalChecklist(this.getManagedBean()
 					.getQtProposalChecklist());
 			evalReqDTO.setAnswersList(answers);
