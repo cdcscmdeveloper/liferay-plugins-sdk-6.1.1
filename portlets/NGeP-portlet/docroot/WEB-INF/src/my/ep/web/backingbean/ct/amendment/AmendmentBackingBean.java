@@ -4493,7 +4493,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * User allow to enter the new item price for the product item.
 	 */
 	public void editItemPriceOnIndexs() {
-		editItemPrice = true;
 		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
 		CtItemPrice addDupObj = new CtItemPrice();
 
@@ -4586,7 +4585,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * User allow to enter the new item price for the service item.
 	 */	
 	public void editServiceItemPriceOnIndexs() {
-		editItemPrice = true;
 		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
 		CtItemPrice addDupObj = new CtItemPrice();
 
@@ -4770,7 +4768,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * User allow to enter the new maximum quantity for the product item.
 	 */
 	public void editItemMaxQtyOnIndexs() {
-		editItemMaxQty = true;
 		List<CtItemMaxQty> ctItemMaxQtyList = new ArrayList<CtItemMaxQty>();
 		CtItemMaxQty addDupObj = new CtItemMaxQty();
 
