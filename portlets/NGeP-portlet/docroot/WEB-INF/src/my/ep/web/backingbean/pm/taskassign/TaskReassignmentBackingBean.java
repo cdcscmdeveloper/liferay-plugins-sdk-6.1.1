@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.pm.taskassign;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,11 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -85,7 +84,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -109,7 +107,6 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import my.ep.constant.sc.QTStatusConst;
 
 /**
  * Backing Bean for Task Reasssingment (new)
@@ -2505,10 +2502,10 @@ public class TaskReassignmentBackingBean extends
 								}else{
 									//Start Fix - #34699
 									if (moduleCode.equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)) {
-										log.info("#34699 generateUserResultBean for reassignType:" + reassignType+ " for CT only ::: ");
+										//log.info("#34699 generateUserResultBean for reassignType:" + reassignType+ " for CT only ::: ");
 										resultBean = generateUserResultBeanForCT(searchBean, task, reassignType, roleList,vo);
 									} else {
-										log.info("[#25018] generateUserResultBean for reassignType:" + reassignType);
+										//log.info("[#25018] generateUserResultBean for reassignType:" + reassignType);
 										resultBean = generateUserResultBean(searchBean, task, reassignType, roleList, vo);
 									}
 									//End Fix - #34699
@@ -2708,9 +2705,11 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			if(vo.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			// #35396 - Start
+			if (orgProfileId != null) {
+				orgProfile = PmCommonUtil.retrievePmOrgProfileDtl(orgProfileId);
 			}
+			// #35396 - End
 			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(
@@ -2740,6 +2739,7 @@ public class TaskReassignmentBackingBean extends
 				// not allow to search
 				isSearched = true;
 			}
+
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
 			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
@@ -3858,7 +3858,7 @@ public class TaskReassignmentBackingBean extends
 		Long addressId = null;
 		Integer subReassignType = null;
 		
-		log.info(":::generateUserResultBean() userId: "+ userId +", orgProfileId: "+ orgProfileId +", reassignType: "+ reassignType +".");
+		log.info(":::generateUserResultBeanForCT() userId: "+ userId +", orgProfileId: "+ orgProfileId +", reassignType: "+ reassignType +".");
 		
 		// filter by user name
 		if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
@@ -3916,7 +3916,7 @@ public class TaskReassignmentBackingBean extends
 			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 			
 			//Bug #25021 Task Reassignment Sabah & Sarawak - Finalization Comm
-			log.info(":::generateUserResultBean() userId: "+ userId +", vo.getDocId(): "+ vo.getDocId() 
+			log.info(":::generateUserResultBeanForCT() userId: "+ userId +", vo.getDocId(): "+ vo.getDocId() 
 					+", vo.getDocType(): "+ vo.getDocType() +", vo.getRoleList(): "+ vo.getRoleList() +".");	
 			
 			resultBean = generateCommitteAssigneesForCT(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
