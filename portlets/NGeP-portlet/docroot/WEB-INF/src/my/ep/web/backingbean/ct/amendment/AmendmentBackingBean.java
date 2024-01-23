@@ -5060,7 +5060,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			List<CtItemPrice> itemPriceList = selectedItem.getCtItemPrices();
 			for (int i = 0; i < itemPriceList.size(); i++) {			
 				if (itemPriceList.get(i).isChangePrice()) {
-					log.info(" changeSelectedItemPriceAmendDate ok test ");
 					//Start Fix - #33287
 					if(itemPriceList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
 						itemPriceList.get(i - 1).setExpDate(currentAmendEffDate);
@@ -5415,7 +5414,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 //			c.add(Calendar.DATE, 1);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
-			log.info(" c.getTime ::::::::::::::::::::::::::::::::::::::; "+c.getTime());
 
 			//#26076 - start
 			//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
@@ -5424,7 +5422,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//#26076 - end
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
-			log.info("ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate in onContractExtensionChecked "+ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 			spToCheck = false;
 			isUntickContractExtension = false;
 
