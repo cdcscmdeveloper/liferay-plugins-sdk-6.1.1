@@ -1832,6 +1832,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().clear();
 				//Bug #29323
+				
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
 
@@ -2000,31 +2001,38 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					amendmentRevert(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 				}
 				
-				// Start Fix - #33256
-				if(ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+				// Start Fix - #33256, #33287
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
 					if (getManagedBean().getSelectedChangeItemQuantity() != null
 							&& getManagedBean().getSelectedChangeItemQuantity().size() > 0) {
 						for (CtItemMaxQty itemMaxQty : getManagedBean().getSelectedChangeItemQuantity().values()) {
-							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew()) {
+							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew()
+									&& itemMaxQty.getPrevId() != null) {
 								contractAmendmentSO.updateExpDateItemMaxQty(itemMaxQty.getExpDate(),
 										itemMaxQty.getItemMaxQtyId());
+							} else {
+								contractAmendmentSO.updateExpDateAndEffDateItemMaxQty(itemMaxQty.getExpDate(),
+										itemMaxQty.getEffDate(), itemMaxQty.getItemMaxQtyId());
 							}
 						}
 						getManagedBean().getSelectedChangeItemQuantity().clear();
 					}
-				
 					if (getManagedBean().getSelectedChangeItemPrice() != null
 							&& getManagedBean().getSelectedChangeItemPrice().size() > 0) {
 						for (CtItemPrice ctItemPrice : getManagedBean().getSelectedChangeItemPrice().values()) {
-							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew()) {
-								contractAmendmentSO.updateExpDateItemPrice(ctItemPrice.getExpDate(),
-										ctItemPrice.getItemPriceId());
+							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew()
+									&& ctItemPrice.getPrevId() != null) {
+								contractAmendmentSO.updateExpDateItemPrice(ctItemPrice.getExpDate(),ctItemPrice.getItemPriceId());
+							} else {
+								contractAmendmentSO.updateExpDateAndEffDateItemPrice(ctItemPrice.getExpDate(),
+										ctItemPrice.getEffDate(), ctItemPrice.getItemPriceId());
 							}
 						}
-						getManagedBean().getSelectedChangeItemPrice().clear();
 					}
+					getManagedBean().getSelectedChangeItemPrice().clear();
 				}
-				// End Fix - #33256
+				
+				// End Fix - #33256, #33287
   
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
@@ -4485,6 +4493,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * User allow to enter the new item price for the product item.
 	 */
 	public void editItemPriceOnIndexs() {
+		editItemPrice = true;
 		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
 		CtItemPrice addDupObj = new CtItemPrice();
 
@@ -4525,13 +4534,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					//Start Fix - #33287
 					if(ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
 							|| ctItemPrice.getEffDate().compareTo(ctItemPrice.getExpDate()) == 1){
-						addDupObj.setNewIconIndication(true);
-						addDupObj.setDeleteIcon(true);
 						ctItemPrice.setExpDate(currentAmendEffDate);
 						addDupObj.setEffDate(nextDate.getTime());
 					}else{
 						ctItemPrice.setExpDate(previousDate.getTime());
-						addDupObj.setNewIconIndication(false);
 					}
 					//End Fix - #33287
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
@@ -4580,6 +4586,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * User allow to enter the new item price for the service item.
 	 */	
 	public void editServiceItemPriceOnIndexs() {
+		editItemPrice = true;
 		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
 		CtItemPrice addDupObj = new CtItemPrice();
 
@@ -4621,13 +4628,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					//Start Fix - #33287
 					if(ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
 							|| ctItemPrice.getEffDate().compareTo(ctItemPrice.getExpDate()) == 1){
-						addDupObj.setNewIconIndication(true);
-						addDupObj.setDeleteIcon(true);
 						ctItemPrice.setExpDate(currentAmendEffDate);
 						addDupObj.setEffDate(nextDate.getTime());
 					}else{
 						ctItemPrice.setExpDate(previousDate.getTime());
-						addDupObj.setNewIconIndication(false);
 					}
 					//End Fix - #33287
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
@@ -4766,6 +4770,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * User allow to enter the new maximum quantity for the product item.
 	 */
 	public void editItemMaxQtyOnIndexs() {
+		editItemMaxQty = true;
 		List<CtItemMaxQty> ctItemMaxQtyList = new ArrayList<CtItemMaxQty>();
 		CtItemMaxQty addDupObj = new CtItemMaxQty();
 
@@ -4804,13 +4809,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					//Start Fix - #33287
 					if(ctItemMaxQty.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
 							|| ctItemMaxQty.getEffDate().compareTo(ctItemMaxQty.getExpDate()) == 1){
-						addDupObj.setNewIconIndication(true);
-						addDupObj.setDeleteIcon(true);
 						ctItemMaxQty.setExpDate(currentAmendEffDate);
 						addDupObj.setEffDate(nextDate.getTime());
 					}else{
 						ctItemMaxQty.setExpDate(previousDate.getTime());
-						addDupObj.setNewIconIndication(false);
 					}
 					//End Fix - #33287
 					addDupObj.setAssociateCtItemMaxQty(ctItemMaxQty);
@@ -5051,17 +5053,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param selectedItem  the selected item instance
 	 */
 	private void changeSelectedItemPriceAmendDate(CtContractItem selectedItem) {
+		//Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		//End Fix - #33287
 		if (selectedItem != null && selectedItem.getCtItemPrices() != null && selectedItem.getCtItemPrices().size() > 0) {
 			List<CtItemPrice> itemPriceList = selectedItem.getCtItemPrices();
-			for (int i = 0; i < itemPriceList.size(); i++) {
+			for (int i = 0; i < itemPriceList.size(); i++) {			
 				if (itemPriceList.get(i).isChangePrice()) {
-					itemPriceList.get(i - 1).setExpDate(getPreviousDate().getTime());
-					itemPriceList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					log.info(" changeSelectedItemPriceAmendDate ok test ");
+					//Start Fix - #33287
+					if(itemPriceList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
+						itemPriceList.get(i - 1).setExpDate(currentAmendEffDate);
+						itemPriceList.get(i).setEffDate(nextDate.getTime());
+						
+					}else{
+						itemPriceList.get(i - 1).setExpDate(getPreviousDate().getTime());
+						itemPriceList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+
+					}
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 						itemPriceList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
 					} else {
 						itemPriceList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 					}
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+						getManagedBean().getSelectedChangeItemPrice().put(itemPriceList.get(i - 1).getItemPriceId(),
+								itemPriceList.get(i - 1));
+						getManagedBean().getSelectedChangeItemPrice().put(itemPriceList.get(i).getItemPriceId(),
+								itemPriceList.get(i));
+					}
+				   //End Fix - #33287
 				}
 			}
 		}
@@ -5074,17 +5098,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param selectedItem  the selected item instance
 	 */
 	private void changeSelectedItemMaxQtyAmendDate(CtContractItem selectedItem) {
+		//Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		//End Fix - #33287
 		if (selectedItem != null && selectedItem.getCtItemMaxQties() != null && selectedItem.getCtItemMaxQties().size() > 0) {
 			List<CtItemMaxQty> itemMaxQtyList = selectedItem.getCtItemMaxQties();
 			for (int i = 0; i < itemMaxQtyList.size(); i++) {
 				if (itemMaxQtyList.get(i).isChangeQuantity()) {
-					itemMaxQtyList.get(i - 1).setExpDate(getPreviousDate().getTime());
-					itemMaxQtyList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					//Start Fix - #33287
+					if(itemMaxQtyList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
+						itemMaxQtyList.get(i - 1).setExpDate(currentAmendEffDate);
+						itemMaxQtyList.get(i).setEffDate(nextDate.getTime());
+					}else{
+						itemMaxQtyList.get(i - 1).setExpDate(getPreviousDate().getTime());
+						itemMaxQtyList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					}
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 						itemMaxQtyList.get(i).setExpDate(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
 					} else {
 						itemMaxQtyList.get(i).setExpDate(this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 					}
+					
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+						getManagedBean().getSelectedChangeItemQuantity().put(itemMaxQtyList.get(i - 1).getItemMaxQtyId(),
+								itemMaxQtyList.get(i - 1));
+						getManagedBean().getSelectedChangeItemQuantity().put(itemMaxQtyList.get(i).getItemMaxQtyId(),
+								itemMaxQtyList.get(i));
+					}
+					//End Fix - #33287
 				}
 			}
 		}
@@ -5374,6 +5418,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 //			c.add(Calendar.DATE, 1);
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
+			log.info(" c.getTime ::::::::::::::::::::::::::::::::::::::; "+c.getTime());
 
 			//#26076 - start
 			//c.setTime(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
@@ -5382,6 +5427,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//#26076 - end
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+			log.info("ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate in onContractExtensionChecked "+ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 			spToCheck = false;
 			isUntickContractExtension = false;
 
@@ -5605,12 +5651,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user changed the amendment effective date.
 	 */
 	public void changeAmendmentEffDate() {
+		log.info(" changeAmendmentEffDate() check test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 ");
 		if (this.getManagedBean().getSelectedServiceItem() != null) {
 			changeSelectedItemPriceAmendDate(this.getManagedBean().getSelectedServiceItem());
 		}
 		if (this.getManagedBean().getSelectedItem() != null ){
 			if (this.getManagedBean().getSelectedItem().getCtItemPrices() != null 
 					&& this.getManagedBean().getSelectedItem().getCtItemPrices().size() > 0) {
+				log.info(" changeAmendmentEffDate() before changeSelectedItemPriceAmendDate ");
 				changeSelectedItemPriceAmendDate(this.getManagedBean().getSelectedItem());				  
 			}
 			if (this.getManagedBean().getSelectedItem().getCtItemCeilingQties() != null 
