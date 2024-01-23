@@ -86,6 +86,7 @@
 			font-style: normal;
 			line-height: 20px;
 			text-decoration: underline;
+			
 		}	
 		
 		.submenu_padding {
@@ -195,14 +196,14 @@
 				tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM. </span>
 				
 			</p>
-			<span class="text_family_small_black">(Perenggan 3 di atas adalah terpakai untuk syarikat yang berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018)</span>	
+			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018</span>	
 			<p>
 				*3. <span class="text_indent">Harga</span> kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak ..............................% cukai jualan memandangkan syarikat tuan 
 				tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat tuan telah berdaftar dengan JKDM, 
 				tuan adalah dikehendaki untuk memaklumkan nombor pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk pelarasan harga kontrak 
 				dalam tempoh tujuh (7) hari dari tarikh surat kelulusan JKDM. Pembayaran cukai jualan ini adalah dikira 
 				berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM. <br/>
-				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018.</span>
+				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018</span>
 			</p>
 			
 			<p style="margin-bottom:1px">
@@ -211,7 +212,7 @@
 				Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM.</span>
 				
 			</p>
-			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018.</span>
+			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018</span>
 			
 			<p style="margin-bottom:1px">
 				<span class="text_family">*3. <span class="text_indent">Harga</span> kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak .......% cukai
@@ -220,7 +221,7 @@
 				pendaftaran dan tarikh kuat kuasanya kepada Kerajaan untuk pelarasan harga kontrak dalam tempoh tujuh (7)
 				hari dari tarikh surat kelulusan JKDM. Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan
 				sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM.</span><br/>
-				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang tidak berdaftar di bawah JKDM bagi Perkhidmatan Yang Dikenakan Cukai di bawah Akta Cukai Perkhidmatan 2018.</span>
+				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang tidak berdaftar di bawah JKDM bagi Perkhidmatan Yang Dikenakan Cukai di bawah Akta Cukai Perkhidmatan 2018</span>
 			</p>
 			
 			<p>
@@ -302,10 +303,10 @@
 						<td><span class="text_family_medium">*Bagi tujuan pengiraan PROTÉGÉ-RTW, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span></td>
 					</tr>
 					<tr>
-						<td><span class="text_family_medium">**Elaun PROTÉGÉ (RM2,000 seorang x 12 bulan)</span> </td>
+						<td><span class="text_family_medium">**Elaun PROTÉGÉ-RTW (RM2,000 seorang x 12 bulan)</span> </td>
 					</tr>
 				</table><br/>
-				<span class="text_family_small_black">   Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK1.12.</span>
+				<span class="text_family_small_black">   Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ berdasarkan PP/PK1.12</span>
 				##26770 - end
 			</p>
 			
@@ -405,7 +406,7 @@
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(g)</td>
-								<td>syarikat tuan gagal membekalkan barang/ menyempurnakan perkhidmatan dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;</td>
+								<td>syarikat tuan gagal membekalkan barang/menyempurnakan perkhidmatan dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>;</td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(h)</td>
@@ -425,7 +426,7 @@
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(l)</td>
-								<td>syarikat gagal mematuhi spesifikasi pembekalan/skop perkhidmatan yang ditetapkan dan/atau <i>Service Level Agreement</i>;</td>
+								<td>syarikat tuan gagal mematuhi spesifikasi pembekalan/skop perkhidmatan yang ditetapkan dan/atau <i>Service Level Agreement</i>;</td>
 							</tr>
 							<tr>
 								<td align="center" style="vertical-align: top;">(m)</td>
