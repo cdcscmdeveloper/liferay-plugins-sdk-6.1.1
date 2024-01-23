@@ -26,7 +26,7 @@
 					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cTask,true)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.download']}" action="#{svoSiteVisitBackingBean.test(button.clientId, cTask)}" ajax="true" process="@this" update="buttonToClick"/>
+				<p:commandButton value="#{lbl['lbl.btn.download']}" action="#{svoSiteVisitBackingBean.validateBeforeDownloadSVReport(button.clientId, cTask, false)}" ajax="true" process="@this" update="buttonToClick"/>
 				<!-- #34166 - End  -->
 			</p:column>
 

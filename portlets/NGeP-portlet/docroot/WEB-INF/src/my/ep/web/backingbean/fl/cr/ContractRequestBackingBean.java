@@ -2332,6 +2332,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
+			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
@@ -7013,6 +7014,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//29401-end
 	
 	//35024-Start
+	/**
+	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not
+	 * @param flRequest
+	 */
 	private void validateBondComplete(FlFulfilmentRequest flRequest){
 		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		ContractReqDTO contractReqDTO = new ContractReqDTO();

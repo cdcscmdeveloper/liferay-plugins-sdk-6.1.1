@@ -195,6 +195,10 @@
 							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - START -->
+						<p:message id="#{cc.attrs.divisionId}Msg" for="#{cc.attrs.divisionId}"
+							showSummary="true" showDetail="false" display="icon" />
+						<!-- #34159 - END -->
 					</ui:fragment>
 					</p:outputPanel></td>
 					
