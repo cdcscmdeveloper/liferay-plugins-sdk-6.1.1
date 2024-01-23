@@ -5645,14 +5645,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * when user changed the amendment effective date.
 	 */
 	public void changeAmendmentEffDate() {
-		log.info(" changeAmendmentEffDate() check test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 ");
 		if (this.getManagedBean().getSelectedServiceItem() != null) {
 			changeSelectedItemPriceAmendDate(this.getManagedBean().getSelectedServiceItem());
 		}
 		if (this.getManagedBean().getSelectedItem() != null ){
 			if (this.getManagedBean().getSelectedItem().getCtItemPrices() != null 
 					&& this.getManagedBean().getSelectedItem().getCtItemPrices().size() > 0) {
-				log.info(" changeAmendmentEffDate() before changeSelectedItemPriceAmendDate ");
 				changeSelectedItemPriceAmendDate(this.getManagedBean().getSelectedItem());				  
 			}
 			if (this.getManagedBean().getSelectedItem().getCtItemCeilingQties() != null 
