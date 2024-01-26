@@ -98,6 +98,7 @@
 					disabled="#{!(typeValueObj.brandNew)}" 
 					required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"	>
+					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
 					<f:attribute name="min" value="0"/>	
 		  			<f:attribute name="max" value="9999"/>	
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -237,7 +238,7 @@
 					size="17" required="true" maxlength="4" style="text-align:right"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
 		  			<f:attribute name="min" value="0"/>
 		  			<f:attribute name="max" value="9999"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -258,7 +259,7 @@
 					size="15" required="true" maxlength="17" style="text-align:right"
 					requiredMessage="#{lbl['lbl.pm.settings.tovalue.required']}"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
 		  			<f:attribute name="min" value="0"/>
 		  			<f:attribute name="max" value="9999"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -276,13 +277,14 @@
 		       </f:facet>
 		      	#{typeValueObj.categoryL3Id.categoryName}
 		</p:column>
-			<!-- 27827, #34397, #34398 - START -->
+			<!-- 27827 - START -->
 			<p:column width="35%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
 				<f:facet name="header">
 	             	#{lbl['lbl.pm.desc']}
 		       	</f:facet>
 		      	#{typeValueObj.ruleDescription}
 			</p:column>
+			<!-- #34397, #34398 - start -->
 			<p:column width="15%" style="white-space:normal"
 				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')
 				or ruleCatalogueBackingBean.isRenewTypes(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType)}">
