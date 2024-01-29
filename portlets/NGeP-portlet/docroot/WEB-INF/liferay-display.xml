@@ -250,6 +250,7 @@
 			<portlet id="cdTrackingDiary"></portlet>
 			<portlet id="supplierDashboard"></portlet>
 			<portlet id="publicCatalogueMobile"></portlet>
+			<portlet id="CatalogueMaintenanceTemp"></portlet>
 		</category>
 		
 		<category name="CatalogueMobile">
@@ -360,6 +361,10 @@
 		<portlet id="MySoftCert"></portlet>
 		<portlet id="smDeactivateAdmin"></portlet>
 		<portlet id="supplierPromotion"></portlet>
+		<!-- #29617 start -->
+		<portlet id="updateSmeInfo"></portlet>
+		<portlet id="alertSmeInfo"></portlet>
+		<!-- #29617 end -->
 		<portlet id="updateGstInfo"></portlet>
 		<portlet id="basicAccountDeactivation"></portlet>
 		<portlet id="basicDataMaintenance"></portlet>

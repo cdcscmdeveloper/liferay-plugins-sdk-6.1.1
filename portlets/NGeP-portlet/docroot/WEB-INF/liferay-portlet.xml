@@ -2587,6 +2587,28 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>smdeactivateadmin-portlet</css-class-wrapper>
 	</portlet>
+	<!-- #29617 start -->
+	<portlet>
+		<portlet-name>updateSmeInfo</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>updatesmeinfo-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>alertSmeInfo</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>alertsmeinfo-portlet</css-class-wrapper>
+	</portlet>
+	<!-- #29617 end -->
 	<portlet>
 		<portlet-name>updateGstInfo</portlet-name>
 		<icon>/icon.png</icon>
@@ -3402,7 +3424,18 @@
 		</css-class-wrapper>
 	</portlet>
 	<!-- Enhancement 25627-end- -->
-		
+	<portlet>
+		<portlet-name>CatalogueMaintenanceTemp</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			cataloguemaintenancetemp-portlet
+		</css-class-wrapper>
+	</portlet>	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
