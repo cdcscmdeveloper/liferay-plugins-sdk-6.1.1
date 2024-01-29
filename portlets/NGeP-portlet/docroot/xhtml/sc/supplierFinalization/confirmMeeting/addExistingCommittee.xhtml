@@ -19,12 +19,11 @@
 					<ac:instructionText
 						value="#{lbl['lbl.sc.committee.add.member.search.instruction.one']}" />
 					<br />
-					<br />
 					<ac:instructionText
 						value="#{lbl['lbl.sc.committee.add.member.search.instruction.two']}" />
 					<!-- #12471 End -->
-					<table>
-						<!-- #12471 Start -->
+					<!-- #12471 Start -->
+					<table style="width:100%">
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committee.add.member.search.org.cat']}" /></td>
@@ -83,7 +82,7 @@
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
-								<td><p:selectOneMenu id="orgTypeDD"
+								<td><p:selectOneMenu id="orgTypeDD" required="true" label="#{lbl['lbl.sc.committee.add.member.search.org.type']}"
 										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgType}">
 										<p:ajax onstart="blockWidget.show()"
 											oncomplete="blockWidget.hide()" update="orgNameDD"
@@ -113,7 +112,7 @@
 									<p:message id="name1Msg" for="name1" display="icon" /></td>
 						</tr>
 						<tr>
-							<td style="width: 110px;"><p:outputLabel
+							<td><p:outputLabel
 									value="#{lbl['lbl.sc.id.type']}" /></td>
 							<td colspan="3"><p:selectOneMenu
 									value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.identificationType}"

@@ -50,11 +50,16 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					process="@form" update="@form" />
 
-				<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>					
+				<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
-					action="#{lOIDetailBackingBean.validateNegoDecisionAction}" process="@form"
-					update="@form" />
+					action="#{lOIDetailBackingBean.submitAction}" process="@form"
+					update="@form" /><ui:remove>#21692</ui:remove>
+					
+<!-- 				<p:commandButton value="#{lbl['lbl.btn.submit']}" -->
+<!-- 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}" -->
+<!-- 					action="#{lOIDetailBackingBean.validateNegoDecisionitAction}" process="@form" -->
+<!-- 					update="@form" /> -->
 				<ui:remove>#30008 - End</ui:remove>
 					
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
@@ -70,7 +75,7 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 
-							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>								
+							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>							
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									rendered="#{validityDaysExpiredQt}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

@@ -283,7 +283,7 @@
 								<p:column headerText="#{lbl['lbl.ct.action']}"  styleClass="column-align-center"
 									rendered="#{!ctBackingBean.managedBean.disableAmendDetails and 
 						           		amendmentBackingBean.managedBean.selectedItem.recordStatusFlg == 1 and !ctBackingBean.managedBean.viewSCL}"
-								     style="width:10%; white-space:normal;"><!-- Enhancement 15851 - shaqimi -->
+								     style="width:10%; white-space:normal;"><!-- Enhancement 15851 - shaqimi -->								  
 									<p:commandLink update=":form:itemId" process="@form" 
 										disabled="#{itemPriceVar.chkIndexOfRow or 
 										(ctBackingBean.managedBean.contractVer.ctAmendment.otherChange and !ctBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange) }"
@@ -295,8 +295,7 @@
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
 									</p:commandLink>
-								</p:column>
-				        
+								</p:column>			        
 				        </p:dataTable>
 				        <p:confirmDialog id="dlgItemPrices" widgetVar="dlgItemPrices" message="#{lbl['lbl.msg.confirm.delete']}" 	
                              severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
@@ -452,8 +451,7 @@
 									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
 									<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
 								</p:commandLink>
-							</p:column>
-			        
+							</p:column>		        
 			        </p:dataTable>
 			        
 			         <p:confirmDialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" message="#{lbl['lbl.msg.confirm.delete']}" 	
