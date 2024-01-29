@@ -10566,8 +10566,9 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getQtnTendertemplateSearchBean()
 				.setQtStatus(null);
 		//#29468 Start Vinod
-		for(TreeNode childTree : this.getManagedBean().getRootCategoryTree().getChildren())
+		for(TreeNode childTree : this.getManagedBean().getRootCategoryTree().getChildren()){
 			childTree.setSelected(false);
+		}
 		//#29468 End Vinod
 	}
 
@@ -15651,7 +15652,6 @@ if (null != checklist && !checklist.isEmpty()) {
 	private void populateQTSearchCriteria(
 			QtnTenderSearchBean templateQtnTenderSearchBean,
 			ISearchBean<TplSpecMaster> qtSearchBean) {
-		ICategoryCodeSO categoryCodeSO = null;//#29468 Added Vinod
 
 		if (templateQtnTenderSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
@@ -15752,38 +15752,34 @@ if (null != checklist && !checklist.isEmpty()) {
 			List<Long> l3Ids = new ArrayList<>();
 			
 			Iterator<Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>>> mapCat = getManagedBean().getMapCatCode().entrySet().iterator();
-	        while (mapCat.hasNext()) {
-	        	Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>> mainMap = mapCat.next();
-	        	if(getManagedBean().getSelectedCategories()!=null
-		        	&& getManagedBean().getSelectedCategories().size()!=0
-		            && mainMap.getKey()!=null
-		            && mainMap.getKey()!=""
-					&& getManagedBean().getSelectedCategories().contains(mainMap.getKey())){
-	        		
-	        		Iterator<Entry<Long, Map<Long, Map<Long, String>>>> l3It=(mainMap.getValue()).entrySet().iterator();
-	        		Entry<Long, Map<Long, Map<Long, String>>> l3CatMap = l3It.next();
-	        		Iterator<Map.Entry<Long, Map<Long, String>>> l2It=(l3CatMap.getValue()).entrySet().iterator();
-	        		Map.Entry<Long, Map<Long, String>> l2CatMap = l2It.next();
-	        		Iterator<Map.Entry<Long, String>> l1it=(l2CatMap.getValue()).entrySet().iterator();
-	        		Map.Entry<Long, String> l1CatMap = l1it.next();
-					
-	        		l1Ids.add(l1CatMap.getKey());
+			while (mapCat.hasNext()) {
+				Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>> mainMap = mapCat.next();
+				if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedCategories())
+						&& mainMap.getKey() != null && mainMap.getKey() != ""
+						&& getManagedBean().getSelectedCategories().contains(mainMap.getKey())) {
+
+					Iterator<Entry<Long, Map<Long, Map<Long, String>>>> l3It = (mainMap.getValue()).entrySet()
+							.iterator();
+					Entry<Long, Map<Long, Map<Long, String>>> l3CatMap = l3It.next();
+					Iterator<Map.Entry<Long, Map<Long, String>>> l2It = (l3CatMap.getValue()).entrySet().iterator();
+					Map.Entry<Long, Map<Long, String>> l2CatMap = l2It.next();
+					Iterator<Map.Entry<Long, String>> l1it = (l2CatMap.getValue()).entrySet().iterator();
+					Map.Entry<Long, String> l1CatMap = l1it.next();
+
+					l1Ids.add(l1CatMap.getKey());
 					l2Ids.add(l2CatMap.getKey());
 					l3Ids.add(l3CatMap.getKey());
 				}
-	        }
-			if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
+			}
+			if (CollectionUtils.isNotEmpty(l1Ids) && CollectionUtils.isNotEmpty(l2Ids)
+					&& CollectionUtils.isNotEmpty(l3Ids)) {
 				qtSearchBean.getDataFilterBeans().add(
-						new SearchMultiFilterBean(
-							new SearchMultiFilterBean(
-								new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL1",
-										SearchOperator.OPERATOR_IN.value(), l1Ids),
-								new SearchFilterBean(
-										"scQtDoc.scQt.scQtCategorys.pmCategoryL2",
-										SearchOperator.OPERATOR_IN.value(), l2Ids)),
-								new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL3",
-										SearchOperator.OPERATOR_IN.value(), l3Ids, 
-										SearchCondition.CONDITION_AND.value())));
+						new SearchMultiFilterBean(new SearchMultiFilterBean(new SearchFilterBean(
+								"scQtDoc.scQt.scQtCategorys.pmCategoryL1", SearchOperator.OPERATOR_IN.value(),
+								l1Ids), new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL2",
+								SearchOperator.OPERATOR_IN.value(), l2Ids)), new SearchFilterBean(
+								"scQtDoc.scQt.scQtCategorys.pmCategoryL3", SearchOperator.OPERATOR_IN.value(),
+								l3Ids, SearchCondition.CONDITION_AND.value())));
 			}
 			//#29468 Vinod End
 			// Adding search filterbeans to searchbean.
@@ -22381,29 +22377,39 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				  for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
 					  Map<Long, Map<Long, String>> l2Map=new HashMap<>();
 					  l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
-						for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
-							Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
-							TreeNode catCode = new DefaultTreeNode("catCode",pmCategoryL1.getCategoryL1Code()+
-																		 pmCategoryL2.getCategoryL2Code()+
-																		 pmCategoryL3.getCategoryL3Code(), rootNode);
-							TreeNode catDes1 = new DefaultTreeNode("catDes1",pmCategoryL1.getCategoryL1Code()+" - "+pmCategoryL1.getCategoryName(), catCode);
-							catDes1.setSelectable(false);
-							TreeNode catDes2 = new DefaultTreeNode("catDes2",pmCategoryL2.getCategoryL2Code()+" - "+pmCategoryL2.getCategoryName(), catCode);
-							catDes2.setSelectable(false);
-							TreeNode catDes3 = new DefaultTreeNode("catDes3",pmCategoryL3.getCategoryL3Code()+" - "+pmCategoryL3.getCategoryName(), catCode);
-							catDes3.setSelectable(false);
-							
-							l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
-							mapCatCode.put(pmCategoryL1.getCategoryL1Code()+
-									  	   pmCategoryL2.getCategoryL2Code()+
-									  	   pmCategoryL3.getCategoryL3Code(), l3Map);
-						}
+					  addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
 					}
 				this.getManagedBean().setRootCategoryTree(rootNode);
 				this.getManagedBean().setMapCatCode(mapCatCode);
 			}
 		}catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "ConstructTreeNodeForCategoryCodes", "docNo", "getCategoryCodesForClone", getUserIdSessionFromLoginId(), e);
+			String qtNo = this.getManagedBean().getQt() != null ? this.getManagedBean().getQt().getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	private void addCategoryL3ForMap(PmCategoryL1 pmCategoryL1, PmCategoryL2 pmCategoryL2,
+			Map<Long, Map<Long, String>> l2Map, Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode,
+			TreeNode rootNode) {
+		for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
+			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
+			TreeNode catCode = new DefaultTreeNode("catCode", pmCategoryL1.getCategoryL1Code()
+					+ pmCategoryL2.getCategoryL2Code() + pmCategoryL3.getCategoryL3Code(), rootNode);
+			TreeNode catDes1 = new DefaultTreeNode("catDes1", pmCategoryL1.getCategoryL1Code() + " - "
+					+ pmCategoryL1.getCategoryName(), catCode);
+			catDes1.setSelectable(false);
+			TreeNode catDes2 = new DefaultTreeNode("catDes2", pmCategoryL2.getCategoryL2Code() + " - "
+					+ pmCategoryL2.getCategoryName(), catCode);
+			catDes2.setSelectable(false);
+			TreeNode catDes3 = new DefaultTreeNode("catDes3", pmCategoryL3.getCategoryL3Code() + " - "
+					+ pmCategoryL3.getCategoryName(), catCode);
+			catDes3.setSelectable(false);
+
+			l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
+			mapCatCode.put(
+					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
+							+ pmCategoryL3.getCategoryL3Code(), l3Map);
 		}
 	}
 		
@@ -22422,9 +22428,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			&& !getManagedBean().getSelectedCategories().isEmpty())  
 				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
 			
-		if(selectedCatCodes!= null && !selectedCatCodes.isEmpty()){
-			if(!selectedCatCodes.contains(code)) selectedCatCodes.add(code);
-		}else{
+		if (!selectedCatCodes.isEmpty()) {
+			if (!selectedCatCodes.contains(code)) {
+				selectedCatCodes.add(code);
+			}
+		} else {
 			selectedCatCodes.add(code);
 		}
 		getManagedBean().setSelectedCategories(selectedCatCodes);
