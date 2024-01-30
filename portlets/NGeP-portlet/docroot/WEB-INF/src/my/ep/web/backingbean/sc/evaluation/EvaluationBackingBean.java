@@ -7750,7 +7750,7 @@ public class EvaluationBackingBean extends
 						) {
 					int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
 					int lcaloutputTab=Integer.MIN_VALUE;
-					if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){
+					if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex && outputTab>=QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX){//35148-33
 						retriveComplianceSample();
 						outputTab=QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
 					}
@@ -8878,10 +8878,11 @@ public class EvaluationBackingBean extends
 			}
 
 			if (getManagedBean().getTempTab() < outputTab) {
-				if(outputTab==7){
-					outputTab=1;
-				}
+				if(outputTab==QTConstants.EVALUATION_MAIN_ACTIVE_INDEX){//35148-33
+					outputTab=QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX;
+				}else{
 				getManagedBean().setTempTab(outputTab);
+				}//35148-33
 			}
 			getManagedBean().setTabActiveIndex(outputTab);
 			//6906 - start
