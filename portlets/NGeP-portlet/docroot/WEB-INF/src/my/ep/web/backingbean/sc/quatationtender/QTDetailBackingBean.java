@@ -4084,27 +4084,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		updateApprovalDetails(scQt);
 		
-		// Bug #35395 - Start - Comment cater remark by publication approval to void duplicate
-		// #14398 - Start
-		/*if (null != getManagedBean().getPublicationApproval() 
-				&& CollectionUtils.isNotEmpty(getManagedBean().getPublicationApproval().getScQtApprovalRemarks())
-				&& getManagedBean().getPublicationApproval().getScQtApprovalRemarks().size() > 0) {
-			boolean remarkNotEmpty = true;
-			for (ScQtApprovalRemark approvalRemark : getManagedBean().getPublicationApproval().getScQtApprovalRemarks()) {
-				if (StringUtils.isEmpty(approvalRemark.getRemark())) {
-					remarkNotEmpty = false;
-					break;
-				}
-			}
-			
-			if (remarkNotEmpty) {
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setApproval(getManagedBean().getPublicationApproval());
-				getQTDetailSO().updateScQtApproval(reqDTO );
-			}
-		}*/
-		// #14398 - End
-		// Bug #35395 - End
+		// Bug #35395 - Start - Remove code #14398 - cater remark by publication approval to void duplicate
+		
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			// #30435- Start.
 			if (!getManagedBean().isApproverTabLoaded()) {
