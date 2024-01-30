@@ -2649,36 +2649,41 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
                     }
             }
 		}
-		
-		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
+		// #35310 - Start
+		if (ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())) {
 			validatePpItem();
 			// PP20150108-0005
-			if(!ppPlan.isBrandNew() 
-					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))
-					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
-				if(this.getManagedBean().getVerifierModel().getTarget()==null || this.getManagedBean().getVerifierModel().getTarget().isEmpty()){
+			if (!ppPlan.isBrandNew()
+					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPP_PENDING_SUBMISSION
+							.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))
+					&& !(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action))) {
+				if (this.getManagedBean().getVerifierModel().getTarget() == null
+						|| this.getManagedBean().getVerifierModel().getTarget().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_730017);
 				}
-				if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
+				if (this.getManagedBean().getApproverModel().getTarget() == null
+						|| this.getManagedBean().getApproverModel().getTarget().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_730018);
 				}
 			}
-		
-		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())){
-//			if(ppPlan.getVotFundType().getParameterId()==null){
-//				throw new EpException(MessageConst.ERROR_730019);
-//			}
+
+		} else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(ppPlan.getPlanType().getParameterCode())) {
+			// if(ppPlan.getVotFundType().getParameterId()==null){
+			// throw new EpException(MessageConst.ERROR_730019);
+			// }
 			validateAllEpItems();
 			// PP20150108-0005
-			if(!ppPlan.isBrandNew() 
-					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPP_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))
-					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPE_PENDING_SUBMISSION.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))){
-				if(this.getManagedBean().getApproverModel().getTarget()==null || this.getManagedBean().getApproverModel().getTarget().isEmpty()){
+			if (!ppPlan.isBrandNew()
+					&& !(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(action) && ProcurementPlanConst.PPE_PENDING_SUBMISSION
+							.equals(this.getManagedBean().getPpWorkflowStatus().getPmStatus().getStatusId()))
+					&& !(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action))) {
+				if (this.getManagedBean().getApproverModel().getTarget() == null
+						|| this.getManagedBean().getApproverModel().getTarget().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_730018);
 				}
 			}
 		}
-
+		// #35310 - End
 		
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) 
 				||BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(action) ){ 
