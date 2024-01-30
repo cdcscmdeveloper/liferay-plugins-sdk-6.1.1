@@ -139,6 +139,7 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -2077,16 +2078,19 @@ public class SpecificationBackingBean extends
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2techProposal());
 				}
-				// 20231122@asyrafhaziq_25726 - Issue 14 
-				// comment this because it will reset session value for financial checkList where is not null
-				// and this method should not in this function .
-				/*this.getManagedBean().setScQtCheckSt2financeProposalList(
+			   // 20231122@asyrafhaziq_25726 - Issue 14 
+			   if (null == this.getManagedBean()
+						.getScQtCheckSt2financeProposalList()
+						|| this.getManagedBean()
+								.getScQtCheckSt2financeProposalList().isEmpty()){
+				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 				if (CollectionUtils.isNotEmpty(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList())) {
 					checklistSorting(this.getManagedBean()
 							.getScQtCheckSt2financeProposalList());
-				}*/
+				}
+			   }
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
@@ -3311,6 +3315,12 @@ public class SpecificationBackingBean extends
 
 					}
 				}
+				//20231122@asyrafhaziq_25726 - Issue 10
+				if (this.getManagedBean().getToBeRemoveSchedules() != null && !this.getManagedBean().getToBeRemoveSchedules().isEmpty()) {
+					EntityHelper.compareAndRemoveEntityFromList(this.getManagedBean().getToBeRemoveSchedules(),
+							scheduleList, "scheduleNo");
+				}
+
 				this.getManagedBean().setScheduleList(scheduleList);
 			}
 
@@ -3352,6 +3362,12 @@ public class SpecificationBackingBean extends
 					}
 
 				}
+				//20231122@asyrafhaziq_25726 - Issue 10
+				if (this.getManagedBean().getToBeRemoveProgPayments() != null && !this.getManagedBean().getToBeRemoveProgPayments().isEmpty()) {
+					EntityHelper.compareAndRemoveEntityFromList(this.getManagedBean().getToBeRemoveProgPayments(),
+							paymentList, "phaseNo");
+				}
+
 				this.getManagedBean().setProgressivePaymentList(paymentList);
 			}
 
@@ -22207,8 +22223,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */	
 	public boolean checkTemplateRequiredSample(ScQtCheckList templateChecklist){//11104_newEndorsestart
 		if (null == templateChecklist.getSampleStatus()
-				|| QTStatusConst.TS_PENDING_SUBMISSION.equals(templateChecklist
-						.getSampleStatus().getStatusId()) || templateChecklist.isCloned()) {//11104-Reenorse
+				 || templateChecklist.isCloned()) {//11104-Reenorse728
 			return Boolean.FALSE;
 		} else {
 			for (TplSpecQuestion specQuestion :  getTemplateSampleQuestions(templateChecklist)) {

@@ -1429,11 +1429,13 @@ public class CreateQtBackingBean extends
 		 */try {
 			Long type = (Long) event.getComponent().getAttributes()
 					.get("value");
+		
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
 				if(null != type){
-					if (paramDesc.getPmParameter().getParameterId() == type) {
+					//20231122@asyrafhaziq_25726 - Issue 10
+					if (paramDesc.getPmParameter().getParameterId().equals(type) ) {
 						this.getManagedBean().setFulfilmentType(
 								paramDesc.getPmParameter().getParameterCode());
 						this.getManagedBean().getQt()

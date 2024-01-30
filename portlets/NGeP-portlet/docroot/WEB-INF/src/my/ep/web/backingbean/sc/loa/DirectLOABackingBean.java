@@ -235,6 +235,10 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "directLOABackingBean")
 @RequestScoped
 public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBean> {
+	
+	//20231122@asyrafhaziq_25726 - Issue 16
+	private static final String UPLOAD_APPROVAL_LETTER_PG = "uploadApprovalLetterPg";
+	private static final String AGREEMENT_REQ_PG = "agreementReqPG";
 
 	private static final long serialVersionUID = 1L;
 	
@@ -3926,27 +3930,27 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 		// Set to default value if there is changes in fulfilment type
-		 if ( !isPK7 ){//20231122@asyrafhaziq_25726 - Issue 16
-		  if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() ) {
+		 if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() && !isPK7) {
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 				getManagedBean().getScLoa().setAgreementReq(false);
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
-				RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-		   }else {
-			   getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());			
-			   getManagedBean().getScLoa().setAgreementReq(true);
-			   getManagedBean().setAgreementReqChange(false);
-			   getManagedBean().getScLoa().setScLoaAttachment(null);
-			   RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-		  }
-		  //20231122@asyrafhaziq_25726 - Issue 16
-		 }else{
-			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
-			RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-		 }
-
+				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+			}  else if (!isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+				getManagedBean().getScLoa().setAgreementReq(true);
+				getManagedBean().setAgreementReqChange(false);
+				getManagedBean().getScLoa().setScLoaAttachment(null);
+				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+		    }else if (isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
+		    	getManagedBean().setBondReqSelectedVal(null);
+		    	getManagedBean().setAgreemetSelectedVal(null);
+		    	getManagedBean().getScLoa().setBondReq(false);
+		    	getManagedBean().getScLoa().setAgreementReq(false);
+		    	getManagedBean().setAgreementReqChange(false);
+		    	getManagedBean().getScLoa().setScLoaAttachment(null);
+		    	RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+		    }
 		// #25726 END
 
 	}
@@ -8699,14 +8703,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().getScLoa().setAgreementReq(false);
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
-				RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-			} else {
+				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+			}  else if (!isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 				getManagedBean().getScLoa().setAgreementReq(true);
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
-				RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-			}
+				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+		    }else if (isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
+		    	getManagedBean().setBondReqSelectedVal(null);
+		    	getManagedBean().setAgreemetSelectedVal(null);
+		    	getManagedBean().getScLoa().setBondReq(false);
+		    	getManagedBean().getScLoa().setAgreementReq(false);
+		    	getManagedBean().setAgreementReqChange(false);
+		    	getManagedBean().getScLoa().setScLoaAttachment(null);
+		    	RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+		    }
+
 
 			// #25726 END
 		} finally {
@@ -11251,13 +11264,13 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 					getManagedBean().getScLoa().setAgreementReq(true);
 					getManagedBean().getScLoa().setScLoaAttachment(null);
-					RequestContext.getCurrentInstance().update("agreementReqPG");
-					RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
+					RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
+					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 				} else {
 					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 					getManagedBean().getScLoa().setAgreementReq(false);				
-					RequestContext.getCurrentInstance().update("agreementReqPG");
-					RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
+					RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
+					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 				}
 			}
 		}
@@ -11266,14 +11279,14 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		public void agreementReqYes() {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 			getManagedBean().getScLoa().setAgreementReq(false);
-			RequestContext.getCurrentInstance().update("agreementReqPG");		
+			RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);		
 		}
 
 		// Cancel changes and reset the value for required agreement
 		public void agreementReqNo() {
 			getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());	
 			getManagedBean().getScLoa().setAgreementReq(true);
-			RequestContext.getCurrentInstance().update("agreementReqPG");		
+			RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);		
 		}
 
 		public boolean disabledButton() {
@@ -11369,17 +11382,24 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() && !isPK7) {
 					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 					getManagedBean().getScLoa().setAgreementReq(false);
-					getManagedBean().getScLoa().setScLoaAttachment(null);
 					getManagedBean().setAgreementReqChange(false);
-					RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-				} else {				
+					getManagedBean().getScLoa().setScLoaAttachment(null);
+					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+				}  else if (!isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
 					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 					getManagedBean().getScLoa().setAgreementReq(true);
-					getManagedBean().getScLoa().setScLoaAttachment(null);
 					getManagedBean().setAgreementReqChange(false);
-					RequestContext.getCurrentInstance().update("uploadApprovalLetterPg");
-					
-				}
+					getManagedBean().getScLoa().setScLoaAttachment(null);
+					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+			    }else if (isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
+				    getManagedBean().setBondReqSelectedVal(null);
+			    	getManagedBean().setAgreemetSelectedVal(null);
+			    	getManagedBean().getScLoa().setBondReq(false);
+			    	getManagedBean().getScLoa().setAgreementReq(false);
+			    	getManagedBean().setAgreementReqChange(false);
+			    	getManagedBean().getScLoa().setScLoaAttachment(null);
+			    	RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+			    }
 				
 			} finally {
 				parameterSO = null;
