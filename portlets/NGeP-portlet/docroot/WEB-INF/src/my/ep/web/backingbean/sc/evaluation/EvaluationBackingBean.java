@@ -197,6 +197,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -17837,24 +17838,23 @@ private void retriveCommitteeRemarksList(){
 //		}
 	}
 	
+	/**
+	 * use in xhtml, save 2 items, ScQtDemoByItemScore and ScQtProposalChecklist
+	 * 
+	 */
 	public void saveDemoScoring() {
 		
 		DemoResDTO resDto = new DemoResDTO();
-		try {
-			IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
-			DemoReqDTO demoReqDTO = new DemoReqDTO();
-			demoReqDTO.setDemoQtProposalChecklist(this.getManagedBean().getQtProposalChecklist());
-			demoReqDTO.setScQtDemoByItemScoreList(this.getManagedBean().getByItemDemoList());
-			demoReqDTO.setUserLocale(new FacesScopes().getUserLocale());
-			resDto = qtDemoSO.saveDemoByItemScore(demoReqDTO);
-			this.getManagedBean().setByItemDemoList(resDto.getByItemList());
-			this.getManagedBean().setQtProposalChecklist(resDto.getDemoQtProposalChecklist());
-			}
-		finally {
-
-		}
-		retrivePresentationDemo();
+		IQTDemoSO qtDemoSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDemoSO.class);
+		DemoReqDTO demoReqDTO = new DemoReqDTO();
+		demoReqDTO.setDemoQtProposalChecklist(this.getManagedBean().getQtProposalChecklist());
+		demoReqDTO.setScQtDemoByItemScoreList(this.getManagedBean().getByItemDemoList());
+		demoReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+		resDto = qtDemoSO.saveDemoByItemScore(demoReqDTO);
+		this.getManagedBean().setByItemDemoList(resDto.getByItemList());
+		this.getManagedBean().setQtProposalChecklist(resDto.getDemoQtProposalChecklist());
+		this.getManagedBean().getPresentationDemoSupplierListDM().reloadDataWithoutReset();//#28784 use this instead of retrieve all data
 		successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.eva.technical.presentation.demo.item.list"), " ",
 				Boolean.FALSE);
 	}
@@ -19022,6 +19022,24 @@ private void retriveCommitteeRemarksList(){
 			return QTConstants.PRESENTATION_DEMO_EVALUATION;
 		} else {
 			return QTConstants.TECHNICAL_EVALUATION;
+		}
+	}
+	/**
+	 * used in xhtml, if wip save demo
+	 */
+	public void validateBeforeSave() {
+		if (this.getManagedBean().isDemoWip()) {
+			savePresentationDemoDtls();
+		}
+	}
+	/**
+	 * used in xhtml, save page record
+	 */
+	public void retainDemoPage() {
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
+				.getViewRoot().findComponent("form:demoSupplierId");
+		if (null != dataTable) {
+			this.getManagedBean().setRetainPageNumber(dataTable.getFirst());
 		}
 	}
 	//#28784 add demo condition - End
