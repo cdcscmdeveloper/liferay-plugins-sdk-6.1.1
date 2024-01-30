@@ -198,6 +198,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -18962,10 +18963,22 @@ private void retriveCommitteeRemarksList(){
 			return QTConstants.TECHNICAL_EVALUATION;
 		}
 	}
-	
+	/**
+	 * used in xhtml, if wip save demo
+	 */
 	public void validateBeforeSave() {
 		if (this.getManagedBean().isDemoWip()) {
 			savePresentationDemoDtls();
+		}
+	}
+	/**
+	 * used in xhtml, save page record
+	 */
+	public void retainDemoPage() {
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
+				.getViewRoot().findComponent("form:demoSupplierId");
+		if (null != dataTable) {
+			this.getManagedBean().setRetainPageNumber(dataTable.getFirst());
 		}
 	}
 	//#28784 add demo condition - End
