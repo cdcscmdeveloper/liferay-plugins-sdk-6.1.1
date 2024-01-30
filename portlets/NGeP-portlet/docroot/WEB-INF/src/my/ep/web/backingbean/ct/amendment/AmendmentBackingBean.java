@@ -9222,36 +9222,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//End Fix - #33287
 	
-	//Start Fix - #34110
+	// Start Fix - #34110
 	/**
 	 * The method used to pick-up new item price.
 	 * 
-	 * @param ctItemPrice   object of CtItemPrice item
+	 * @param ctItemPrice
+	 *            object of CtItemPrice item
 	 */
-	public void onChangeCtItemPrice (CtItemPrice ctItemPrice) {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {			
-				
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-					getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(), ctItemPrice);			
-			}
-		}
+	public void onChangeCtItemPrice(CtItemPrice ctItemPrice) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+			getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(), ctItemPrice);
+		  }
+	}
 
-			}
-
-		/**
-		 * The method used to pick-up new item max qty.
-		 * 
-		 * @param ctItemPrice   object of CtItemMaxQty item
-		 */
-		public void onChangeCtItemMaxQty (CtItemMaxQty ctItemPMaxQty) {
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {			
-					
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-						getManagedBean().getSelectedChangeItemQuantity().put(ctItemPMaxQty.getItemMaxQtyId(), ctItemPMaxQty);			
-				}
-			}
-
-				}
-		//End Fix - #34110
+	/**
+	 * The method used to pick-up new item max qty.
+	 * 
+	 * @param ctItemPrice
+	 *            object of CtItemMaxQty item
+	 */
+	public void onChangeCtItemMaxQty(CtItemMaxQty ctItemPMaxQty) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+			getManagedBean().getSelectedChangeItemQuantity().put(ctItemPMaxQty.getItemMaxQtyId(), ctItemPMaxQty);
+		  }
+	}
+	// End Fix - #34110
 	
 	}
