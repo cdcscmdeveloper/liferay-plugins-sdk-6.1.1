@@ -7715,7 +7715,7 @@ public void saveComplianceSample() {
 		int initialOutputTab = isForwardNav ? currentTab + 1 : currentTab - 1;
 		int initialCurrentTab = currentTab;
 		String committeeType = this.getManagedBean().getCommitteeType();
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType)) {
+		if (null != committeeType && ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType)) {
 			boolean stop = false;
 			boolean init = true;
 			int count = 0;
@@ -7728,7 +7728,7 @@ public void saveComplianceSample() {
 					Integer contextOutputTab = (Integer) context.get(SourcingConstants.MAP_PROPERTY_OUTPUTTAB);
 					Object contextError = context.get(SourcingConstants.MAP_PROPERTY_ERROR);
 
-					if(contextError != null){
+					if (null != contextError || null == contextOutputTab) {
 						return;
 					}
 					if (initialOutputTab == contextOutputTab && contextOutputTab != outputTab) {
