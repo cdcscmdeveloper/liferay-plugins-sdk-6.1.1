@@ -19024,12 +19024,17 @@ private void retriveCommitteeRemarksList(){
 			return QTConstants.TECHNICAL_EVALUATION;
 		}
 	}
-	
+	/**
+	 * used in xhtml, if wip save demo
+	 */
 	public void validateBeforeSave() {
 		if (this.getManagedBean().isDemoWip()) {
 			savePresentationDemoDtls();
 		}
 	}
+	/**
+	 * used in xhtml, save page record
+	 */
 	public void retainDemoPage() {
 		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
 				.getViewRoot().findComponent("form:demoSupplierId");
