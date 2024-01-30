@@ -60,7 +60,6 @@ public class TrustGateHelper {
 		try {
 			client = KMCClientFactory.getInstance(f);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			log.info("Error while getKMCClient");
 			e.printStackTrace();
 		}

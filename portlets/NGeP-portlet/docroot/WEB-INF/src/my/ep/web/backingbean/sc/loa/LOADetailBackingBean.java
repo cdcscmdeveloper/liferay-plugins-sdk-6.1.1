@@ -610,6 +610,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// getQtProposalValidExpiredMessage(scQt);
 
 			prepareSupplierSignerInfo();
+			
+			// Bug #35078@Syazani -- 22/09/2023 -- Start
+			if (isQtAudit()) {
+				this.getManagedBean().setDownloadLOADisabled(false);
+				this.getManagedBean().setReadOnlyLOADownload(false);
+			} else {
+				this.getManagedBean().setDownloadLOADisabled(!this.getManagedBean().getEnableDownloadAllDocuments());
+				this.getManagedBean().setReadOnlyLOADownload(this.getManagedBean().isReadOnly());
+			}
+			// Bug #35078@Syazani -- 22/09/2023 -- End
 
 			return QTConstants.SUPPLIER_LOA_PAGE;
 
@@ -7373,7 +7383,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return validDate;	
 	}
 	
-	
 	//Bug #33674@Syazani -- Start 14/09/2022
 	private void retrieveValBankAccNoDropdown() {
 		List<SmSupplierBank> lstSupplierBank = getManagedBean().getBankList();
@@ -7389,18 +7398,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//Bug #33674@Syazani -- End 14/09/2022
+	
 	// #32648 populate lampiran 7 if LOA at supplier - start
-		public boolean isDpAuditOrQtAuditOrQtMaint() {
-			return QTConstants.PORTLET_NAME_QT_MAINTENANCE
-					.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-					|| QTConstants.PORTLET_NAME_QT_SEARCH
-							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-						|| SourcingConstants.PORTLET_NAME_DP_SEARCH
-							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-							|| SourcingConstants.PORTLET_NAME_DP_LOA_LIST
-							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-							|| QTConstants.PORTLET_NAME_QT_LIST
-							.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-		}
-		// #32648 populate lampiran 7 if LOA at supplier - end
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_LOA_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
+	
+	// Bug #35078@Syazani -- Start 14/09/2023
+	public boolean isQtAudit() {
+		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// Bug #35078@Syazani -- End 14/09/2023
 }
