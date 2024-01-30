@@ -197,6 +197,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -17850,11 +17851,12 @@ private void retriveCommitteeRemarksList(){
 			resDto = qtDemoSO.saveDemoByItemScore(demoReqDTO);
 			this.getManagedBean().setByItemDemoList(resDto.getByItemList());
 			this.getManagedBean().setQtProposalChecklist(resDto.getDemoQtProposalChecklist());
+			this.getManagedBean().getPresentationDemoSupplierListDM().reloadDataWithoutReset();//#28784 use this instead of retrieve all data
 			}
 		finally {
 
 		}
-		retrivePresentationDemo();
+//		retrivePresentationDemo();//#28784 use reloadWithoutReset instead of this
 		successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.eva.technical.presentation.demo.item.list"), " ",
 				Boolean.FALSE);
 	}
@@ -19028,6 +19030,13 @@ private void retriveCommitteeRemarksList(){
 	public void validateBeforeSave() {
 		if (this.getManagedBean().isDemoWip()) {
 			savePresentationDemoDtls();
+		}
+	}
+	public void retainDemoPage() {
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance()
+				.getViewRoot().findComponent("form:demoSupplierId");
+		if (null != dataTable) {
+			this.getManagedBean().setRetainPageNumber(dataTable.getFirst());
 		}
 	}
 	//#28784 add demo condition - End
