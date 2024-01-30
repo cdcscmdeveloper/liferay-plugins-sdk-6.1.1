@@ -3652,7 +3652,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
 				
-				if(!isMofAccEffDatePassedCurrDate(supplier) 
+				if(smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)
+						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+					getManagedBean().getPersonnelsRole().add(personnel);
+				} else if(!isMofAccEffDatePassedCurrDate(supplier) 
 						&& isPersonnelAdminRole(personnel)
 						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
 					getManagedBean().getPersonnelsRole().add(personnel);
