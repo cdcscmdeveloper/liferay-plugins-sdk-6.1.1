@@ -8763,10 +8763,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onChangeCtItemPrice(CtItemPrice ctItemPrice) {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
 				getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(), ctItemPrice);
-			}
 		}
 
 	}
@@ -8779,10 +8776,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onChangeCtItemMaxQty(CtItemMaxQty ctItemPMaxQty) {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
 				getManagedBean().getSelectedChangeItemQuantity().put(ctItemPMaxQty.getItemMaxQtyId(), ctItemPMaxQty);
-			}
 		}
 
 	}
