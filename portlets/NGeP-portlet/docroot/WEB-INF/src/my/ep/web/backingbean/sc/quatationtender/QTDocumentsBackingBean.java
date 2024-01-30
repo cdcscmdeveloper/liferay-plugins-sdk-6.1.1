@@ -2413,7 +2413,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		title=title.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-		context.put("title", StringUtil.upperCase(title));
+
+		context.put("title", title); // #32648 remove uppercase
 		context.put("qtNo", qt.getQtNo());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(

@@ -963,6 +963,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
+		
+		//#29417 start
+		Date signDate = getManagedBean().getAgreementContractVer()!=null ? getManagedBean().getAgreementContractVer().getSignedDate() : null;
+		Date expDate = getManagedBean().getCtAgreement().getExpDate();
+		getManagedBean().setButtonProcess(outcome);
+		//#29417 end
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			validateAgreement(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -984,17 +991,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#29417 start
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
+				RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
+			}else{
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#29417 end
 			return null;
 		}
 		// 29417 - START
-		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
-			getManagedBean().setButtonProcess(outcome);
-			Date signDate = getManagedBean().getAgreementContractVer().getSignedDate();
-			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
-			if(signDate != null && expDate != null && signDate.after(expDate)){
-				
-				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){			
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
+				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");				
 			}
 			else {
 				return this.saveAgreement(outcome);
@@ -1289,7 +1299,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			abb.getManagedBean().setTrackingDairyView(true);
 			ctBB.getManagedBean().setViewSCL(true);
-			abb.getManagedBean().setViewSclFromAgreement(true);
+			ctBB.getManagedBean().setViewSclFromAgreement(true); //#15851
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
