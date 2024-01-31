@@ -11831,9 +11831,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												// supplier offer
 												answerRemark = answer.getNewSupplierOffer();
 												map.put(SSTConstant.answerRemark, answerRemark);
-												log.info("zaim scLoiLoaItem"+ zoneCount +" == "+ scLoiLoaItem.getZoneNameList().size());
 												if (indi == scLoiLoaItem.getZoneNameList().size()){
-													log.info("lastindexzaim");
 													map.put(SSTConstant.LAST_INDEX_WIP, "true");
 												}
 												break;
@@ -11845,9 +11843,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												answerRemark = answer.getAnswerRemark();
 												map.put(SSTConstant.answerRemark, answerRemark);
 												map.put(SSTConstant.IS_WIP, "true");
-												log.info("zaim scLoiLoaItem"+ zoneCount +" == "+ scLoiLoaItem.getZoneNameList().size());
 												if (indi == scLoiLoaItem.getZoneNameList().size()){
-													log.info("lastindexzaim");
 													map.put(SSTConstant.LAST_INDEX_WIP, "true");
 												}
 												break;
@@ -11918,9 +11914,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												// respond
 												map.put(SSTConstant.answerRemark, SSTConstant.TB);
 											}
-											log.info("zaim scLoiLoaItem"+ zoneCount +" == "+ scLoiLoaItem.getZoneNameList().size());
 											if (indi == scLoiLoaItem.getZoneNameList().size()){
-												log.info("lastindexzaim");
 												map.put(SSTConstant.LAST_INDEX_WIP, "true");
 											}
 										}
