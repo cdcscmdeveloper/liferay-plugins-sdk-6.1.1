@@ -1717,6 +1717,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				//26238 -  Disciplinary action - 28146 - start
 				/*getManagedBean().setCancelRegistration(true);
 				getManagedBean().setFlagBlacklistCancel(true);*/
+				getManagedBean().setSelectedOwnerAndDirectorList(getManagedBean().getOwnerAndDirectorList());
 				//26238 -  Disciplinary action - 28146 - end
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
@@ -1773,7 +1774,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 			} else {
-				getManagedBean().setEditDisciplinaryActionCheckBox(false);
+				getManagedBean().setEditDisciplinaryActionCheckBox(true);
 				getManagedBean().setEditDisciplinaryAction(true);
 			}
 			//29181: Disciplinary Action - end - 26238
