@@ -2325,8 +2325,7 @@ public class LOIDetailBackingBean extends
 			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
 		//#30008 - Start
-		getManagedBean().setDecision(new PmParameter());
-		getManagedBean().setDecision(scLoi.getNegoDecision());
+		this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId()));
 		getManagedBean().setJustification(scLoi.getDecisionJustification());
 		//#30008 - End
 		
