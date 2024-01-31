@@ -7715,7 +7715,65 @@ public class EvaluationBackingBean extends
 		}
 
 	}
+	//34748 - start
+	/**
+	 * Evaluate and chain the multiple invocations of the
+	 * evaluationMaintainPreviousNextTabIndex method to navigate from current
+	 * tab to output tab. EDIT WITH CAUTION!
+	 * 
+	 * @param currentTab
+	 * @param outputTab
+	 * @throws Exception
+	 */
+	public void evaluationMaintainPreviousNextTrainIndex(int currentTab, int outputTab) throws Exception {
+		if (currentTab == outputTab)
+			return;
+		
+		boolean isForwardNav = currentTab < outputTab;
+		int initialOutputTab = isForwardNav ? currentTab + 1 : currentTab - 1;
+		int initialCurrentTab = currentTab;
+		String committeeType = this.getManagedBean().getCommitteeType();
+		if (null != committeeType && ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType)) {
+			boolean stop = false;
+			boolean init = true;
+			int count = 0;
+			while ((init || !stop) && count < SourcingConstants.LOOP_SAFETY_LIMIT) {
+				init = false;
+				Map<String, Object> context = this.getManagedBean().getEvaluationContext();
+				context.put(SourcingConstants.MAP_PROPERTY_ERROR, null);
+				try {
+					this.evaluationMaintainPreviousNextTabIndex(initialCurrentTab, initialOutputTab);
+					Integer contextOutputTab = (Integer) context.get(SourcingConstants.MAP_PROPERTY_OUTPUTTAB);
+					Object contextError = context.get(SourcingConstants.MAP_PROPERTY_ERROR);
 
+					if (null != contextError || null == contextOutputTab) {
+						return;
+					}
+					if (initialOutputTab == contextOutputTab && contextOutputTab != outputTab) {
+						if (isForwardNav) {
+							initialCurrentTab++;
+							initialOutputTab++;
+						} else {
+							initialCurrentTab--;
+							initialOutputTab--;
+						}
+						init = true;
+					} else if (contextOutputTab == outputTab) {
+						stop = true;
+					}
+				} catch (Exception e) {
+					throw e;
+				}
+				count++;
+			}
+			this.getManagedBean().setComplianceActiveIndex(0);
+			this.getManagedBean().setEvaluatioStageActiveIndex(0);
+			this.getManagedBean().setOneTierFinancialActiveIndex(0);
+		} else {
+			evaluationMaintainPreviousNextTabIndex(currentTab, outputTab);
+		}
+	}
+	//34748 - end
 	/**
 	 * evaluation maintain previous nextTabIndex.check current tab and next tab for chain.
 	 * 
@@ -8965,10 +9023,11 @@ public class EvaluationBackingBean extends
 			
 			outputTab=currentTab;
 			getManagedBean().setTabActiveIndex(outputTab);
-			
+			this.getManagedBean().getEvaluationContext().put(SourcingConstants.MAP_PROPERTY_ERROR, e);//34748
 			handleException(e);
 		}
 		finally {
+			this.getManagedBean().getEvaluationContext().put(SourcingConstants.MAP_PROPERTY_OUTPUTTAB, Integer.valueOf(outputTab));//34748
 			this.getManagedBean().setFecIndexPreRender(false);
 			evaluationSo = null;
 		}
@@ -16170,7 +16229,7 @@ private void retriveCommitteeRemarksList(){
 					List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
 					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, ParameterConst.PAGINATOR_ROW_TEN));
 				}
-				
+				this.getManagedBean().setFinancialSummaryGenerated(false);//34748 - trigger recalculate
 				if (evalResDTO.isSuccessful()) {
 					successMessage(MessageConst.INFO_700004,
 							getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
