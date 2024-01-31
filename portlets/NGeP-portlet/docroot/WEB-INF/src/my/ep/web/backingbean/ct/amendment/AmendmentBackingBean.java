@@ -1972,7 +1972,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getManagedBean().getSelectedChangeItemQuantity() != null
 							&& getManagedBean().getSelectedChangeItemQuantity().size() > 0) {
 						for (CtItemMaxQty itemMaxQty : getManagedBean().getSelectedChangeItemQuantity().values()) {
-							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew()) {
+							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew() && !itemMaxQty.isChangeQuantity()) {
 								contractAmendmentSO.updateExpDateItemMaxQty(itemMaxQty.getExpDate(),
 										itemMaxQty.getItemMaxQtyId());
 							}else if(itemMaxQty.isChangeQuantity()){
@@ -1986,7 +1986,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					if (getManagedBean().getSelectedChangeItemPrice() != null
 							&& getManagedBean().getSelectedChangeItemPrice().size() > 0) {
 						for (CtItemPrice ctItemPrice : getManagedBean().getSelectedChangeItemPrice().values()) {
-							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew()) {
+							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew() && !ctItemPrice.isChangePrice()) {
 								contractAmendmentSO.updateExpDateItemPrice(ctItemPrice.getExpDate(),
 										ctItemPrice.getItemPriceId());
 							}else if(ctItemPrice.isChangePrice()) {
