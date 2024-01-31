@@ -100,4 +100,13 @@ public class SSTConstant {
 	public static final String BREAKLINE ="<br />";
 	
 	//25025 - end
+	//29006 start
+	public static final String CL_FULFILMENT_TYPE_CODE = "clFulfilmentTypeCode";
+	public static final String CL_DURATION_MONTH = "clDurationMonth";
+	public static final String SUPPLIER_OFFER = "supplierOffer";
+	public static final String ZONE_SIZE = "ZoneSize";
+	public static final String SPEC_SIZE = "sizeSpec";
+	public static final String IS_WIP = "isWip";
+	public static final String LAST_INDEX_WIP = "lastIndexWip";
+	//29006 end
 }
