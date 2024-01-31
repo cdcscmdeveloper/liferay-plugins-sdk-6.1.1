@@ -590,6 +590,9 @@ public class SmSideMenuIconUtil {
 	public static String getSideMenuVerificationIcon(
 			SmApplicationManagedBean bean, String sectionType) {
 		String retVal = StringUtils.EMPTY;
+		String applStatus = bean.getSmAppl().getPmStatus().getStatusId().toString();
+		log.info("Appl status: "+applStatus);
+		log.info("appl no: "+ bean.getSmAppl().getApplNo());
 		if (!bean.isSupplierUser()) {
 			retVal = ICON_UNTICK;
 			SmApplSectionReview rev = bean.isPoUser() ? bean.getPoSecReview()
@@ -651,8 +654,11 @@ public class SmSideMenuIconUtil {
 					//#31043
 					bean.setCategoryCodeVerified(true);
 				} else {
-					if(bean.isReviewSiteVisit()){
+					//#31043
+					if(bean.isApproverUser() || bean.isReviewSiteVisit()
+							|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
 						retVal = ICON_TICK;
+						bean.setCategoryCodeVerified(true);
 					}
 					
 					boolean isAllCatcodeVerified = true;
@@ -678,12 +684,16 @@ public class SmSideMenuIconUtil {
 							//#31043 start
 							// #26528 - start
 							// Checkbox 'Registered Category' section not ticked for Renewal MOF application
-							if (bean.getApprovedCategoryList()!=null) {
-								isAllCatcodeVerified = true;
+							//#31043 start
+							if(!applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION)){
+								if (bean.getApprovedCategoryList()!=null) {
+									isAllCatcodeVerified = true;
 								
-							} else {
-								isAllCatcodeVerified = false;
+								} else {
+									isAllCatcodeVerified = false;
+								}
 							}
+							//#31043 end
 							// #26528 - end
 							//#31043 end
 						}
@@ -696,6 +706,10 @@ public class SmSideMenuIconUtil {
 						}
 						else{
 							//#31043
+							if(bean.isApproverUser() || bean.isReviewSiteVisit()
+									|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
+								retVal = ICON_UNTICK;
+							}
 							bean.setCategoryCodeVerified(false);
 						}
 					}
@@ -735,8 +749,11 @@ public class SmSideMenuIconUtil {
 				boolean nonMandatoryDocVerified = false; 
 				boolean licenseMandatoryDocVerified = false; 
 				
+				log.info("SmAppl revise: "+bean.getSmAppl().getPmStatus().getStatusId());
+				
 				//#31043 start
-				if(bean.isApproverUser() || bean.isReviewSiteVisit()){
+				if(bean.isApproverUser() || bean.isReviewSiteVisit()
+						|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
 					retVal = ICON_TICK;
 					bean.setDocumentVerified(true);
 					mandatoryDocVerified = true; 
@@ -826,7 +843,9 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_TICK;
 				}
 				else{
-					if(bean.isApproverUser()){
+					//#31043
+					if(bean.isApproverUser() || bean.isReviewSiteVisit()
+							|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
 						retVal = ICON_UNTICK;
 					}
 					bean.setDocumentVerified(false);
@@ -836,12 +855,10 @@ public class SmSideMenuIconUtil {
 			//#31043 - start
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)){
-				if(bean.isApproverUser())
+				if(bean.isApproverUser() && rev.isSitevisitVerified()){
 					rev.setSitevisitVerified(true);
-				
-				if(rev.isSitevisitVerified())
 					retVal = ICON_TICK;
-				
+				}
 			}
 			//#31043 - end
 		}

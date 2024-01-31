@@ -64,8 +64,9 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<!-- #28784 -->
+				<ui:remove> #28784 include demo WIP </ui:remove>
 				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"									
-					disabled="#{(stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and specificationBackingBean.managedBean.qt.demoRequired eq 'true') or (specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) and !specificationBackingBean.managedBean.isChecklist()}"
+					disabled="#{(stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and specificationBackingBean.managedBean.qt.demoRequired eq 'true' and specificationBackingBean.managedBean.newVersion) or (specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()) and !specificationBackingBean.managedBean.isChecklist()}"
 					rendered="#{stageTwoTechnical.manditory !='true' and (stageTwoTechnical.definationType.parameterCode ne 'TS' and stageTwoTechnical.definationType.parameterCode ne 'SP')}"><!-- #15391 -->
 					<p:ajax partialSubmit="true" process="@this" update="@this,@([id$=deleteTechnicalChecklist])"
 						listener="#{specificationBackingBean.updateSelectedCheckListIndx(stageTwoTechnical,index)}" />
@@ -341,8 +342,8 @@
 				</f:facet>
               <h:panelGroup id="technicalChecklistEditActionView">
 				<p:commandLink
-					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SP' or ((stageTwoTechnical.pmDocument ne null) and (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TG' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'TN' or stageTwoTechnical.pmDocument.docDefinitionKey eq 'NE' or (stageTwoTechnical.pmDocument.docDefinitionKey eq 'TL' and stageTwoTechnical.scoringReq)))}"
-					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
+					rendered="#{stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or (stageTwoTechnical.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and specificationBackingBean.checkISSampleExistWIPChecklist())  or ((stageTwoTechnical.pmDocument ne null) and (stageTwoTechnical.pmDocument.docDefinitionKey eq SourcingConstants.TECHNICAL_GOV_CODE or stageTwoTechnical.pmDocument.docDefinitionKey eq SourcingConstants.TECHNICAL_PRIVATE_CODE or stageTwoTechnical.pmDocument.docDefinitionKey eq SourcingConstants.TECHNICAL_NUMBER_EMPLOYEES or (stageTwoTechnical.pmDocument.docDefinitionKey eq SourcingConstants.TECHNICAL_STAFF_LIST and stageTwoTechnical.scoringReq)))}"
+					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,SourcingConstants.TECHNICAL_TEMPLATE)}"><!-- #11104 Reendorse -->
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}"><ui:remove><!-- 1873 note 74 --></ui:remove>
 						<h:graphicImage value="/css/images/design/edit.png" />
@@ -357,7 +358,8 @@
 				
 				<!-- START #26784 -->
 				<p:commandLink
-					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD'}"
+					rendered="#{specificationBackingBean.managedBean.demoAction and stageTwoTechnical.definationType.parameterCode eq 'PD' and
+					specificationBackingBean.managedBean.newVersion}"
 					action="#{specificationBackingBean.demoTechnicalTemplatelist()}"
 					update="@([id$=demoSpecTempId])"
 					disabled="#{specificationBackingBean.isTSChecklistCompleted()}"> <!--#28784--> 		 			

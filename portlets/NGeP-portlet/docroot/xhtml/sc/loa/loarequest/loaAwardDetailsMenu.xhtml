@@ -162,6 +162,7 @@
 				<c:if
 					test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
 					<p:commandLink id="itemName"
+						rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}"
 						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
@@ -482,7 +483,7 @@
 	<p:dialog id="specAndSupplierOfferDlg"
 		widgetVar="specAndSupplierOfferDlgVar"
 		header="#{lbl['lbl.sc.spec.and.supplier.offer']}"
-		styleClass="pop_up_top" modal="true" width="500" resizable="false">
+		styleClass="pop_up_top" modal="true" width="630" resizable="false">
 		<p:spacer height="20" />
 		<table>
 			<tr valign="top">

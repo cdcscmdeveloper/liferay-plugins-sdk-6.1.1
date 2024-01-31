@@ -611,7 +611,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
+	private int retainPageNumber;//#28784 WIP @Idham
 	//#28784 - end
+	private boolean fecIndexPreRender;//#10542
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -4374,5 +4376,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setDemoWip(boolean demoWip) {
 		this.demoWip = demoWip;
+	}
+	//#10542
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
+	}
+
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
 	}
 }
