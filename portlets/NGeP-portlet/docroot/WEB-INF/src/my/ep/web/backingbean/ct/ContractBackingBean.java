@@ -4991,8 +4991,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return boolean
 	 */
 	public boolean isAlreadyAmendment() {
-
-		if (getManagedBean().getContractVer().getCtContract().getLoa().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+		
+		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
 			return true;
 		}
 		return false;
