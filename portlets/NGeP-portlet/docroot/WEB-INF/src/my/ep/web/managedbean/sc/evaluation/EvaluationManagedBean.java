@@ -12,7 +12,9 @@ package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -675,6 +677,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//34528-uat 4serangkai 
 	private Paginator financialPackagePaginator;
+	
+	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 		
 	/**tabIndex
 	 * Gets the today.
@@ -4392,5 +4396,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setRetainPageNumber(int retainPageNumber) {
 		this.retainPageNumber = retainPageNumber;
+	}
+
+	public Map<String, Object> getEvaluationContext() {
+		return evaluationContext;
+	}
+
+	public void setEvaluationContext(Map<String, Object> evaluationContext) {
+		this.evaluationContext = evaluationContext;
 	}
 }
