@@ -91,6 +91,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -15775,10 +15776,10 @@ if (null != checklist && !checklist.isEmpty()) {
 					&& CollectionUtils.isNotEmpty(l3Ids)) {
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchMultiFilterBean(new SearchMultiFilterBean(new SearchFilterBean(
-								"scQtDoc.scQt.scQtCategorys.pmCategoryL1", SearchOperator.OPERATOR_IN.value(),
-								l1Ids), new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL2",
+								QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_SCQTCATEGORYS_PMCATEGORYL1, SearchOperator.OPERATOR_IN.value(),
+								l1Ids), new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_SCQTCATEGORYS_PMCATEGORYL2,
 								SearchOperator.OPERATOR_IN.value(), l2Ids)), new SearchFilterBean(
-								"scQtDoc.scQt.scQtCategorys.pmCategoryL3", SearchOperator.OPERATOR_IN.value(),
+								QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_SCQTCATEGORYS_PMCATEGORYL3, SearchOperator.OPERATOR_IN.value(),
 								l3Ids, SearchCondition.CONDITION_AND.value())));
 			}
 			//#29468 Vinod End
