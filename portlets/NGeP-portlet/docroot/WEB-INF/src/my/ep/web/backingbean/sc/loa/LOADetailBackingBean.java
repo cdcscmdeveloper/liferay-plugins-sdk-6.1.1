@@ -11785,6 +11785,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// Bug #35078@Syazani -- End 14/09/2023
 	
 	//29006 start @zaim
+	/**
+	 * @param scLoiLoaItem
+	 * @param scLoa
+	 * @param currentSupplier
+	 */
 	public void ConstructTplSpecAnswerForLampiranA3(ScLoiLoaItem scLoiLoaItem, ScLoa scLoa, Long currentSupplier){
 		List<Map<String, String>> listItem = new ArrayList<>();
 		String answerRemark = SSTConstant.EMPTY_STRING;
