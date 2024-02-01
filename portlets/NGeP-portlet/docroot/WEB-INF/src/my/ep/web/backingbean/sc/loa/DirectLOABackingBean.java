@@ -5423,6 +5423,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
 					updateReviseBPMTaskAction(outcome);					
 				}else{
+
+					//Reopen #25726 note 187 - issue 9
+        			validateDuration(this.getManagedBean().getScLoa());
 					//IF REVISE BUT NOT REVISE DOCUMENT STAGE
 					updateBpmTaskAction(outcome);
 				}
