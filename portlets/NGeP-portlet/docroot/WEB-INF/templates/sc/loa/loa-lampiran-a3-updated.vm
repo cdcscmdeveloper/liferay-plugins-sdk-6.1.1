@@ -558,7 +558,6 @@ u {
 										#set($suppRespon = $tplSpecAnswer.answerRemark)
 										#set($suppRespon = $suppRespon.replace("<", "&#60;"))
 										#set($suppRespon = $suppRespon.replace(">", "&#62;"))
-										#set($specification = $specification.replace("&", "&amp;"))
 										$suppRespon
 									#else
 										$defaultValue

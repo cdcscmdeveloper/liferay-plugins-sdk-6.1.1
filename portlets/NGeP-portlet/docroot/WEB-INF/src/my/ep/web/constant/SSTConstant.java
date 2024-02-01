@@ -4,14 +4,6 @@ package my.ep.web.constant;
  * Contain Surat Setuju Terima Constant variable
  * 
  * **/
-/**
- * @author zaim
- *
- */
-/**
- * @author zaim
- *
- */
 public class SSTConstant {
 	
 
