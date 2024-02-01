@@ -24,6 +24,7 @@ public class SLALogConstant {
 	//12471 - start
 	public static final String QT_COMMITTEE_BACKINGBEAN = "QTCommitteBackingBean";
 	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
+	public static final String QT_SOURCING_BACKINGBEAN = "SourcingBaseBackingBean";
 	//12471 - end
 
 	//#29187 Start Vinod
