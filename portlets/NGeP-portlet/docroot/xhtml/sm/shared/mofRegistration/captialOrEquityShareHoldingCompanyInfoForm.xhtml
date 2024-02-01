@@ -470,9 +470,11 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionCapitalDropdownPanelId" >
+					<!-- #34159 - START -->
 						<p:selectOneMenu id="equiDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.divisionId}"
+						required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 						style="width: 207px;margin-bottom: 5px;background-color:white;"
 						rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
@@ -484,6 +486,7 @@
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 							update="equiDist,equiCity"/>
 					</p:selectOneMenu>
+					<!-- #34159 - END -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId}" 
