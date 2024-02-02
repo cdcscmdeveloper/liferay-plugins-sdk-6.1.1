@@ -2325,8 +2325,7 @@ public class LOIDetailBackingBean extends
 			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
 		//#30008 - Start
-		getManagedBean().setDecision(new PmParameter());
-		getManagedBean().setDecision(scLoi.getNegoDecision());
+		this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId()));
 		getManagedBean().setJustification(scLoi.getDecisionJustification());
 		//#30008 - End
 		
@@ -6992,12 +6991,12 @@ public class LOIDetailBackingBean extends
 	public void validateNegoDecisionAction() {
 		try {
 
-			String decision = String.valueOf(this.getManagedBean().getDecisionCode());
+			String decision = this.getManagedBean().getDecisionCode();
 			String justification = this.getManagedBean().getJustification();
 			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
 			if (decision == null) {
-				throw new EpException(MessageConst.ERROR_775192);
+				throw new EpException(MessageConst.ERROR_775194);
 			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
 				throw new EpException(MessageConst.ERROR_775193);
 			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {

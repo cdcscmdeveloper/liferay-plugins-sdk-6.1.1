@@ -2894,7 +2894,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}				
 		}
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
-		
+		// 35311 - Start
+		for (SmFacility facility : getManagedBean().getSmAppl().getSmFacilities()) {
+			if (facility.getFacilityId() != null) {
+				assignApplicationSupportingDocs();
+				break;
+			}
+		}
+		// 35311 - end
 		subStartTime = System.currentTimeMillis();
 		// set Personnel List Count
 		calcPersonnelListCount();
