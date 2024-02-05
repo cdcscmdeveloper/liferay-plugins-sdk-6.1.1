@@ -6553,6 +6553,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(QTSearchBeanConst.SEARCH_ORGTYPECODE_PARAMETERCODE,
 								SearchOperator.OPERATOR_EQUALS.value(), orgType));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTSearchBeanConst.SEARCH_PMORGVALIDITY_ORGNAME,
+								SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));	
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
