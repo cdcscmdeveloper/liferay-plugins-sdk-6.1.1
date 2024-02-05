@@ -1022,9 +1022,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setDisableFields(false);
 				
 				return ctDT.gotoAmendPage(contractId);
-			} else if((ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
-					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null) 
-					&& !ctBackingBean.getManagedBean().isViewSCLFromContract()){
+			} else if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
+					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null){
 				if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null && 
 						(ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) || 
 								ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || 
@@ -1059,6 +1058,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else if(ctBackingBean.getManagedBean().isAmendFromTaskList()){//tasklist
 					if(!ctBackingBean.getManagedBean().isViewSclFromAgreement() && !ctBackingBean.getManagedBean().isViewSCLFromContract()){ //#15851
 						getManagedBean().setViewOnly(false);
+						ctBackingBean.getManagedBean().setViewContract(false);
 						ctBackingBean.getManagedBean().setAmendFromTaskList(false);
 						ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
 						
@@ -1077,7 +1077,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			ctBackingBean.getManagedBean().setViewContract(false); //35467
 			ctBackingBean.getManagedBean().setViewSCL(false);
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
@@ -9222,36 +9221,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//End Fix - #33287
 	
-	//Start Fix - #34110
+	// Start Fix - #34110
 	/**
 	 * The method used to pick-up new item price.
 	 * 
-	 * @param ctItemPrice   object of CtItemPrice item
+	 * @param ctItemPrice
+	 *            object of CtItemPrice item
 	 */
-	public void onChangeCtItemPrice (CtItemPrice ctItemPrice) {
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {			
-				
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-					getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(), ctItemPrice);			
-			}
-		}
+	public void onChangeCtItemPrice(CtItemPrice ctItemPrice) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+			getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(), ctItemPrice);
+		  }
+	}
 
-			}
-
-		/**
-		 * The method used to pick-up new item max qty.
-		 * 
-		 * @param ctItemPrice   object of CtItemMaxQty item
-		 */
-		public void onChangeCtItemMaxQty (CtItemMaxQty ctItemPMaxQty) {
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {			
-					
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-						getManagedBean().getSelectedChangeItemQuantity().put(ctItemPMaxQty.getItemMaxQtyId(), ctItemPMaxQty);			
-				}
-			}
-
-				}
-		//End Fix - #34110
+	/**
+	 * The method used to pick-up new item max qty.
+	 * 
+	 * @param ctItemPrice
+	 *            object of CtItemMaxQty item
+	 */
+	public void onChangeCtItemMaxQty(CtItemMaxQty ctItemPMaxQty) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+			getManagedBean().getSelectedChangeItemQuantity().put(ctItemPMaxQty.getItemMaxQtyId(), ctItemPMaxQty);
+		  }
+	}
+	// End Fix - #34110
 	
 	}
