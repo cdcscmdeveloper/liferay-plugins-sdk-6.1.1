@@ -924,7 +924,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
@@ -1352,6 +1353,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setStoreFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
+		//34303 - Start
+		getManagedBean().getStoreFacilitiesVOList()
+				.addAll(getCategoryFacilityVO(getManagedBean().getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
+		//34303 - End
 		getManagedBean().setFactoryFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
