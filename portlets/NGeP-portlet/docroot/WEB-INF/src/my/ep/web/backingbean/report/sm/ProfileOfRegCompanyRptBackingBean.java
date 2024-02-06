@@ -111,6 +111,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		// #29712 & #30824, #32564 - start
 		this.getManagedBean().setSelectedSupplier(null);
 		this.getManagedBean().setSelectedMofAccount(null);
+		this.getManagedBean().setSelectedBasicAccount(null);
 		// #29712 & #30824, #32564 - end
 	}
 	
