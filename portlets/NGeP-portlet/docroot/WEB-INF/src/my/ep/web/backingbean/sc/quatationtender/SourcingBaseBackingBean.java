@@ -846,7 +846,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				user = resDTO.getPmUser();
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e); //SQUBE QT MINOR 60
 		}
 
 		return user;
