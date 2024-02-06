@@ -2607,9 +2607,10 @@ public class CreateQtBackingBean extends
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			
+			ScQt scQt = getManagedBean().getQt();
 			//Start Reopen 9019 #note-289 remove the alert message while save
 			if(null != parameterId){
-				ScQt scQt = getManagedBean().getQt();
+				
 				
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(parameterId);
@@ -2622,6 +2623,8 @@ public class CreateQtBackingBean extends
 							getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
 									ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));	
 				}
+			}else{
+				scQt.setContractType(new PmParameter());
 			}
 			//End Reopen 9019 #note-289 remove the alert message while save
 	
