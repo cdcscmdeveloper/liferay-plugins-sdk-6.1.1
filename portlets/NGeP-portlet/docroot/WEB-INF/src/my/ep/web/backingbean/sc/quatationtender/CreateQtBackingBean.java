@@ -2609,21 +2609,18 @@ public class CreateQtBackingBean extends
 			
 			//Start Reopen 9019 #note-289 remove the alert message while save
 			if(null != parameterId){
+				ScQt scQt = getManagedBean().getQt();
+				
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(parameterId);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-				this.getManagedBean().getQt()
-						.setContractType(resDTO.getPmParameter());
-				if(null!=this.getManagedBean().getQt()
-						.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
-						.getContractType().getParameterCode())){
-					ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
-					fulfilMentAsandWhen
-							.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-					fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-					ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO
-							.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
-					this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
+				scQt.setContractType(resDTO.getPmParameter());
+				
+				if(null!=scQt.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(scQt.getContractType().getParameterCode())){			
+					
+					scQt.setFulfilmentType(
+							getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
+									ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));	
 				}
 			}
 			//End Reopen 9019 #note-289 remove the alert message while save
