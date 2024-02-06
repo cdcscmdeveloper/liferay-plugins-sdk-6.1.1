@@ -4579,8 +4579,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-				|| getManagedBean().isViewContract() == true
-				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+				|| getManagedBean().isViewContract() == true)
+				&& isAlreadyAmendment() //#35137
+				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			isContractExtendOrIsBond = true;
 			getManagedBean().setDisableOriginalBond(true);
 			if(currentPeriod != null && extendPeriod != null) {
@@ -4609,14 +4610,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
 	 * */
 	public boolean isPendingSupplementalContractLetter(){
-		if(getManagedBean().getContractVer().getStatus().getStatusId() 
+		if(getManagedBean().getContractVer().getStatus() != null && //#25956
+				(getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue()){								
+				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue())){								
 			return true;
 		}
 		return false;
@@ -4903,4 +4905,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return Boolean.FALSE;
 	}
 	// End Fix - #35202
+	
+	//#35137 - Start
+	/**
+	 * Method to Checking Amendment process
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAlreadyAmendment() {
+		
+		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+			return true;
+		}
+		return false;
+	}
+	//#35137 - End
 }

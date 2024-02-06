@@ -221,6 +221,14 @@
 												target="#{supplierDetailBackingBean.scQtProposal}" />
 											<h:outputText value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
+										
+										<ui:remove> #28777#29729 - Start </ui:remove>
+										 <p:spacer width="15" height="15"/>
+						                     <p:commandLink  process="@this"  action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
+								         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+												<h:graphicImage value="/css/images/exclam-info.png" />
+							         		</p:commandLink> 
+										<ui:remove> #28777#29729 - End </ui:remove>	
 										<br />
 									</p:column>
 								</p:dataList>
