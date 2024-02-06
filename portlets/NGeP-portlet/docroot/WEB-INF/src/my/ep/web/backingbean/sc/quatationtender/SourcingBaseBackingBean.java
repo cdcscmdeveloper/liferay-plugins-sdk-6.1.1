@@ -846,7 +846,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				user = resDTO.getPmUser();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		return user;
