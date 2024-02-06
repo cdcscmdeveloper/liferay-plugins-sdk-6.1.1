@@ -12,7 +12,9 @@ package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -611,7 +613,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
+	private int retainPageNumber;//#28784 WIP @Idham
 	//#28784 - end
+	private boolean fecIndexPreRender;//#10542
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -673,6 +677,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//34528-uat 4serangkai 
 	private Paginator financialPackagePaginator;
+	
+	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 		
 	/**tabIndex
 	 * Gets the today.
@@ -4374,5 +4380,29 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setDemoWip(boolean demoWip) {
 		this.demoWip = demoWip;
+	}
+	//#10542
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
+	}
+
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+
+	public Map<String, Object> getEvaluationContext() {
+		return evaluationContext;
+	}
+
+	public void setEvaluationContext(Map<String, Object> evaluationContext) {
+		this.evaluationContext = evaluationContext;
 	}
 }

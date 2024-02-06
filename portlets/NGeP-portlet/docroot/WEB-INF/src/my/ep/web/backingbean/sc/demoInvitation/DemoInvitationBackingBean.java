@@ -75,6 +75,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDemoSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtDemoSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -682,7 +683,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					for (ScQtCheckList t : resDTO.getTechnicalCheckList()) {
 						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 						specReqDTO.setSpecMaster(t.getScQtDoc() != null ? t.getScQtDoc().getTplSpecMaster() : null);
-						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);//#28784 remove supplier without spec answer
 						specReqDTO.setDemoSpecView(true);
 						TemplateSpecResDTO templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
 						specQuestionList.addAll(templateresDTO.getSpecMaster().getTplSpecQuestions());
@@ -691,6 +692,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					pmParam = getParameterByTypeAndCode(ParameterTypeConst.ALL_BY_ITEM, SourcingConstants.ALL_ITEM);
 
 					qualifiedSupp = checkQualifiedSupplier();
+					
+					qualifiedSupp = checkQualifiedSupplierZoneAndItem(qualifiedSupp, specQuestionList);//#28784 remove supplier without spec answer
 
 					qtDemo.setQtId(this.getManagedBean().getQt());
 					qtDemo.setDemoCategoryId(pmParam);
@@ -751,7 +754,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					for (ScQtCheckList t : resDTO.getTechnicalCheckList()) {
 						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 						specReqDTO.setSpecMaster(t.getScQtDoc() != null ? t.getScQtDoc().getTplSpecMaster() : null);
-						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);//#28784 remove supplier without spec answer
 						specReqDTO.setDemoSpecView(true);
 						specReqDTO.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);//#28784
 						TemplateSpecResDTO templateresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
@@ -762,6 +765,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					qtDemo.setQtId(this.getManagedBean().getQt());
 					qtDemo.setDemoCategoryId(pmParam);
 					qualifiedSupp = checkQualifiedSupplier();
+					
+					qualifiedSupp = checkQualifiedSupplierZoneAndItem(qualifiedSupp, specQuestionList);//#28784 remove supplier without spec answer
 
 					for (ScQtProposal p : qualifiedSupp) {
 						demoSupplier = new ScQtDemoSupplier();
@@ -1493,4 +1498,32 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		return demoInvalid;
 	}
 	//#28784 reeval bug - End
+	
+	//#28784 remove supplier without spec answer - Start
+	private List<ScQtProposal> checkQualifiedSupplierZoneAndItem(List<ScQtProposal> qualifiedSupp, List<TplSpecQuestion> specQuestionList) {
+		List<Long> supplierWithAnswer = new ArrayList<>();
+		List<ScQtProposal> supplierWithoutAnswer = new ArrayList<>();
+		
+		for (TplSpecQuestion ques : specQuestionList) {
+			for (TplSpecAnswer ans : ques.getTplSpecAnswers()) {
+				if (!supplierWithAnswer.contains(ans.getTplSpecSuppAnswer().getSmSupplier().getSupplierId())) {
+					supplierWithAnswer.add(ans.getTplSpecSuppAnswer().getSmSupplier().getSupplierId());
+					log.info("supp Id: " + ans.getTplSpecSuppAnswer().getSmSupplier().getSupplierId());
+				}
+			}
+		}
+		
+		for (ScQtProposal proposal : qualifiedSupp) {
+			if (!supplierWithAnswer.contains(proposal.getScQtSupplier().getSmSupplier().getSupplierId())) {
+				supplierWithoutAnswer.add(proposal);
+			}
+		}
+		
+		if (CollectionUtils.isNotEmpty(supplierWithoutAnswer)) {
+			qualifiedSupp.removeAll(supplierWithoutAnswer);
+		}
+		
+		return qualifiedSupp;
+	}
+	//#28784 remove supplier without spec answer - End
 }

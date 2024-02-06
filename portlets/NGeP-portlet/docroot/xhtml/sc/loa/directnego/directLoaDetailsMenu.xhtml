@@ -359,7 +359,7 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />
@@ -484,7 +484,8 @@
 						<tr>
 							<td>
 								<c:choose>
-									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
+									<!-- 20231122@asyrafhaziq_25726 - Issue 17 -->
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral}">
 									<p:selectOneMenu id="fulfilId"
 										required="true"
 										label="#{lbl['lbl.sc.fullfillent.type']}"
@@ -516,10 +517,13 @@
 											size="35" disabled="true" />							
 									</c:otherwise>
 								</c:choose>
-							</td>
-							<td style="margin-top: -3px">
+							</td>	
+							<!-- Reopen #25726 note 187 - issue 10 -->	
+							<c:if test="#{!isContractTypeAsCentral}">
+							  <td style="margin-top: -3px">
 								<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
 							</td>
+							</c:if>
 						</tr>
 					</table>
 				</td>
@@ -638,7 +642,7 @@
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 															<c:choose>
-															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+															<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 																<p:inputText 
 																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 																size="28" disabled="true" />
@@ -666,7 +670,7 @@
 												</c:when>
 												<c:otherwise>
 													<c:choose>
-													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+													<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 														<p:inputText 
 														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 														size="28" disabled="true" />
@@ -735,7 +739,9 @@
 				</td>
 				<td>
 					<p:outputLabel style="width:145%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
-					<p:outputLabel style="width: 151%;text-align:left;margin-top: -40px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					<!-- 26770 start -->
+					<p:outputLabel style="width: 151%;text-align:left;margin-top: -63px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					<!-- 26770 end -->
 				</td>
 				<td>
 					<table>
@@ -1019,10 +1025,18 @@
 								</h:panelGroup>
 							</td>
 							<td style="margin-top: -3px">
-								<!-- #25726 START -->
-								<ac:iconTooltip
+							<c:choose>
+								<c:when test="#{isContractTypeAsCentral}">
+								  <ac:iconTooltip
+									value="#{lbl['lbl.sc.required.agreement.qt.central.tooltip']}" />
+								</c:when>
+								<c:otherwise>
+								 <!-- #25726 START -->
+								  <ac:iconTooltip
 									value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
 								<!-- #25726 END -->
+								</c:otherwise>
+							</c:choose>
 							</td>
 						</tr>
 					</table>

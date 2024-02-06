@@ -3019,7 +3019,7 @@ public class NoticeBoardBackingBean extends
 							.equals(finalizationMethod.getParameterCode()) && !isRefinalized) {
 					awardedItem.setPriceByBidding(TemplateSpecHelper.getInstance()
 						.calcTotalAmount(reqItem.getTplSpecQuestion(),
-								scQtRecommendDtl.getScQtProposalItem().getFinalPrice(), 
+								scQtRecommendDtl != null ?scQtRecommendDtl.getScQtProposalItem().getFinalPrice():null, //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 									scLoiLoaItem.getQty()));
 					}
 					awardedItemList.add(awardedItem);
