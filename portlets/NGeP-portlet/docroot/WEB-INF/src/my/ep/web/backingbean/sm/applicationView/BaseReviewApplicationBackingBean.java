@@ -4666,6 +4666,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//27915: Disciplinary Action - end - 26238
 		
 		if(discList != null && discList.size() > 0){
+			//26238 - START
+			this.getManagedBean().setNoDisciplinary(false);
+			//26238 - END
 			for(SmDisciplinaryAction disc : discList){
 				if(disc.isWarning() || disc.isCancelCategory() || disc.isSuspendRegistration() 
 						|| disc.isCancelRegistration() || disc.isBlacklistOwner()
