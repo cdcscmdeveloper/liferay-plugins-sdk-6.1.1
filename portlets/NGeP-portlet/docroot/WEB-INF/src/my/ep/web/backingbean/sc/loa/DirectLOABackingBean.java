@@ -1842,7 +1842,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				reqDTO.setParameterId(scLoa.getContractType().getParameterId());
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				scLoa.setContractType(resDTO.getPmParameter());
-			} 
+			}else{//Reopen #25726 note 187 - issue 10
+				scLoa.setContractType(new PmParameter());
+			}
 			
 			// to reset Contract Admin User
 			if(getManagedBean().getContractTypeId() != null) {

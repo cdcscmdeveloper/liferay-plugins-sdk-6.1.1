@@ -519,11 +519,9 @@
 								</c:choose>
 							</td>	
 							<!-- Reopen #25726 note 187 - issue 10 -->	
-							<c:if test="#{!isContractTypeAsCentral}">
 							  <td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-							</td>
-							</c:if>
+							  <ac:iconTooltip  rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+							  </td>
 						</tr>
 					</table>
 				</td>
