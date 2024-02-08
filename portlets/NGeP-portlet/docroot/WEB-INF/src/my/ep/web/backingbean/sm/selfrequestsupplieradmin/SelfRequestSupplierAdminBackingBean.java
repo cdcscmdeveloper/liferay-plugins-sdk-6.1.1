@@ -260,6 +260,11 @@ public class SelfRequestSupplierAdminBackingBean extends
 					.getSmAddress());
 			onChangeState(getManagedBean().getSelectedAdminPermAddr()
 					.getSmAddress());
+			//#34159 - START
+			if(getManagedBean().getSelectedAdminPermAddr().getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+				onChangeDivision(getManagedBean().getSelectedAdminPermAddr().getSmAddress());
+			}
+			//#34159 - END
 			onChangeDistrict(getManagedBean().getSelectedAdminPermAddr()
 					.getSmAddress());
 			onChangeCity(getManagedBean().getSelectedAdminPermAddr()

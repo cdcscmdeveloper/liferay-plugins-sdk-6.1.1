@@ -1090,7 +1090,11 @@ public class TemplateSpecBackingBean extends
 			calcGrandTotalAmount(templateSpecBean);
 			log.info("calc===============================================calcTotalAmount");
 		}catch(Exception e){
-			e.printStackTrace();
+			//06022024@Sonarqube QT#58 - haziq
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
+					this.getManagedBean().getQt().getQtNo(), SLALogConstant.QT_CALC_TOTAL_AMOUNT,
+					getUserIdSessionFromLoginId(), e);
+	
 		}
 		
 	}
