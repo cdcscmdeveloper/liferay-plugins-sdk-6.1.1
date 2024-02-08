@@ -608,14 +608,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	private Paginator financialPackagePaginator; // 34528-uat 4serangkai
 
-	//#10542 - start
+	// #10542 - start
 	private String downloadBy;
 	private byte[] technicalZipFileDownloadByDocument;
 	private byte[] technicalZipFileDownloadBySupplier;
 	private byte[] financialZipFileDownloadByDocument;
 	private byte[] financialZipFileDownloadBySupplier;
 	private String mainDocumentTitle;
-	//#10542 - end
+	private boolean fecIndexPreRender; // #35286
+	// #10542 - end
 	
 	//#6906 start
 	private boolean noProposalSubmitted;
@@ -4041,55 +4042,65 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	//34528-uat 4serangkai - end
 	
-	//#10542 - start
-	public void setDownloadBy(String downloadBy){
+	// #10542 - start
+	public void setDownloadBy(String downloadBy) {
 		this.downloadBy = downloadBy;
 	}
-	
-	public String getDownloadBy(){
+
+	public String getDownloadBy() {
 		return downloadBy;
 	}
-	
+
 	public byte[] getTechnicalZipFileDownloadByDocument() {
 		return technicalZipFileDownloadByDocument;
 	}
-	
-	public void setTechnicalZipFileDownloadByDocument(byte[] technicalZipFileDownloadByDocument){
+
+	public void setTechnicalZipFileDownloadByDocument(byte[] technicalZipFileDownloadByDocument) {
 		this.technicalZipFileDownloadByDocument = technicalZipFileDownloadByDocument;
 	}
-	
+
 	public byte[] getTechnicalZipFileDownloadBySupplier() {
 		return technicalZipFileDownloadBySupplier;
 	}
-	
-	public void setTechnicalZipFileDownloadBySupplier(byte[] technicalZipFileDownloadBySupplier){
+
+	public void setTechnicalZipFileDownloadBySupplier(byte[] technicalZipFileDownloadBySupplier) {
 		this.technicalZipFileDownloadBySupplier = technicalZipFileDownloadBySupplier;
 	}
-	
-	public byte[] getFinancialZipFileDownloadByDocument(){
+
+	public byte[] getFinancialZipFileDownloadByDocument() {
 		return financialZipFileDownloadByDocument;
 	}
-	
-	public void setFinancialZipFileDownloadByDocument(byte[] financialZipFileDownloadByDocument){
+
+	public void setFinancialZipFileDownloadByDocument(byte[] financialZipFileDownloadByDocument) {
 		this.financialZipFileDownloadByDocument = financialZipFileDownloadByDocument;
 	}
-	
-	public byte[] getFinancialZipFileDownloadBySupplier(){
+
+	public byte[] getFinancialZipFileDownloadBySupplier() {
 		return financialZipFileDownloadBySupplier;
 	}
-	
-	public void setFinancialZipFileDownloadBySupplier(byte[] financialZipFileDownloadBySupplier){
+
+	public void setFinancialZipFileDownloadBySupplier(byte[] financialZipFileDownloadBySupplier) {
 		this.financialZipFileDownloadBySupplier = financialZipFileDownloadBySupplier;
 	}
-	
-	public void setMainDocumentTitle(String mainDocumentTitle){
+
+	public void setMainDocumentTitle(String mainDocumentTitle) {
 		this.mainDocumentTitle = mainDocumentTitle;
 	}
-	
-	public String getMainDocumentTitle(){
+
+	public String getMainDocumentTitle() {
 		return mainDocumentTitle;
 	}
-	//#10542 - end
+
+	// #35286 -start-
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
+	}
+	// #35286 -end-
+	// #10542 - end
 
 	//#6906 - start
 	public boolean isNoProposalSubmitted() {
