@@ -140,6 +140,12 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
 
+	//#34711 - START
+	// Facility Ownership
+	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
+	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
+	//#34711 - END
+		
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
@@ -1405,4 +1411,13 @@ public class SupplierManagementConst {
 		return PM_STATUS_REGISTRATION_STATUS_FOREIGN;
 	}
 	// #28175 Reopen End
+	
+	//#34711 - START
+	public String getSM_FACILITY_OWNERSHIP_OWN(){
+		return SM_FACILITY_OWNERSHIP_OWN;
+	}
+	public String getSM_FACILITY_OWNERSHIP_RENTED(){
+		return SM_FACILITY_OWNERSHIP_RENTED;
+	}
+	//#34711 - END
 }
