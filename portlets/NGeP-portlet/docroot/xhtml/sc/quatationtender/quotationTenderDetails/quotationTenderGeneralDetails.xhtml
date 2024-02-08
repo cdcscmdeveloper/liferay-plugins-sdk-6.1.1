@@ -897,9 +897,8 @@
 					</c:choose>
 					</td>
 					<!-- #25726 start -->
-				    <c:if test="#{!isContractTypeAsCentral}"> 
 					 <td style="margin-top: -3px"> <!-- Reopen #25726 note 144 - issue 7 start -->
-						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+						<ac:iconTooltip rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
 							<!-- #29521 - start --><!-- #28784 - start -->
 							<p:spacer width="10" height="5"/>
 								<p:graphicImage id="abc123" rendered="#{qTDetailBB.managedBean.isFulfilmentTypeChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
@@ -909,7 +908,6 @@
 							<!-- #29521 - end --><!-- #28784 - end -->
 					  <!-- Reopen #25726 note 144 - issue 7 end -->
 					 </td>
-					</c:if>
 					</tr></table></td>
 					<!-- #25726 end -->
 										
