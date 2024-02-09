@@ -12767,9 +12767,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							}
 						}
 					}
-					if (null != toBeRemovedList && !toBeRemovedList.isEmpty()) {
+					// Bug #34926@Syazani 17/07/2023 -- Start
+					//1873 -  start - note 97
+					/*if (null != toBeRemovedList && !toBeRemovedList.isEmpty()) {
 						removeDuplicateFinancialSpec(flowType, toBeRemovedList);
-					}
+					}*/
+					//1873 -  end - note 97
+					// Bug #34926@Syazani 17/07/2023 -- Start
 				}
 			}
 		} finally {
