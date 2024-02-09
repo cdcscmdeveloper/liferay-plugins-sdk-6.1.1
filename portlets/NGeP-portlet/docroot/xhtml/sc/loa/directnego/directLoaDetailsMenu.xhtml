@@ -517,10 +517,11 @@
 											size="35" disabled="true" />							
 									</c:otherwise>
 								</c:choose>
-							</td>
-							<td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-							</td>
+							</td>	
+							<!-- Reopen #25726 note 187 - issue 10 -->	
+							  <td style="margin-top: -3px">
+							  <ac:iconTooltip  rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+							  </td>
 						</tr>
 					</table>
 				</td>
@@ -1022,10 +1023,18 @@
 								</h:panelGroup>
 							</td>
 							<td style="margin-top: -3px">
-								<!-- #25726 START -->
-								<ac:iconTooltip
+							<c:choose>
+								<c:when test="#{isContractTypeAsCentral}">
+								  <ac:iconTooltip
+									value="#{lbl['lbl.sc.required.agreement.qt.central.tooltip']}" />
+								</c:when>
+								<c:otherwise>
+								 <!-- #25726 START -->
+								  <ac:iconTooltip
 									value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
 								<!-- #25726 END -->
+								</c:otherwise>
+							</c:choose>
 							</td>
 						</tr>
 					</table>
