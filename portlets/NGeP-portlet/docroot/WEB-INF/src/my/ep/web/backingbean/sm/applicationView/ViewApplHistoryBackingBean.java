@@ -1979,5 +1979,22 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	// #32628 - end
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 
 }
