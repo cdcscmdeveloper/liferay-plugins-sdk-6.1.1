@@ -1263,7 +1263,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						this.getManagedBean().getQt().getFulfilmentType()
 								.getParameterCode());
 			}
-			this.getManagedBean().setGenInfo(true);
+			//Reopen #25726 note 187 - issue 2,4,5
+			this.getManagedBean().setGenInfo(editable);
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
