@@ -849,9 +849,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setDisableFields(false);
 				
 				return ctDT.gotoAmendPage(contractId);
-			} else if((ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
-					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null) 
-					&& !ctBackingBean.getManagedBean().isViewSCLFromContract()){
+			} else if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
+					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null){
 				if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null && 
 						(ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) || 
 								ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || 
@@ -7764,9 +7763,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		setAmendmentContractVer(reqDTO);
 					
-		if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
+//		if(ctBackingBean.getManagedBean().isViewContractFromAgreement()){
 			ctBackingBean.getManagedBean().setViewContract(true);
+//		}
+			
+		//retrieve approver from CtActor
+		String roleCode = null;
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+				ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			roleCode = RoleCode.CT_APPROVER.value();
+		} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+				ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			roleCode = RoleCode.BPK_CC_APPROVER.value();
 		}
+		CtActor approverActor = retrieveContractActor(
+				ctBackingBean.getManagedBean().getContractVer().getContractVerId(),
+				ctBackingBean.getManagedBean().getContractVer().getDocType(),
+				roleCode);
+		if (approverActor != null) {
+			getManagedBean().setApproverName(approverActor.getUserName());
+		}
+
 		//Bug 34142 - shaqimi start 16112022
 					
 		//for loa header
