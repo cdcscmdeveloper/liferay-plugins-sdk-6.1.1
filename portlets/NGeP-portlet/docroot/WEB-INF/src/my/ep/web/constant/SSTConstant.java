@@ -131,6 +131,11 @@ public class SSTConstant {
 		 * the table border missing at the bottom. 
 		 */
 		public static final String LAST_INDEX_WIP = "lastIndexWip";
+		/**
+		 * Represent HTML Entity line break.
+		 */
+		public static final String HTML_ENTITY_LINE_SEPARATOR = "<br/>";
+
 		//29006 end
 		
 }

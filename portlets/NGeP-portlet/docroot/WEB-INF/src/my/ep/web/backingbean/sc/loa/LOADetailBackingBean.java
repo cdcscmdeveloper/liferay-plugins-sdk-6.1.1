@@ -11805,7 +11805,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 													// supplier respond and make new
 													// supplier offer
 													answerRemark = answer.getNewSupplierOffer();
+													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
 													map.put(SSTConstant.answerRemark, answerRemark);
+
 													if (indi == scLoiLoaItem.getZoneNameList().size()){
 														map.put(SSTConstant.LAST_INDEX_WIP, "true");
 													}
@@ -11816,6 +11820,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 													// supplier respond but no
 													// changes
 													answerRemark = answer.getAnswerRemark();
+													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
 													map.put(SSTConstant.answerRemark, answerRemark);
 													map.put(SSTConstant.IS_WIP, "true");
 													if (indi == scLoiLoaItem.getZoneNameList().size()){
@@ -11830,6 +11837,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 													// supplier respond and make new
 													// supplier offer
 													answerRemark = answer.getNewSupplierOffer();
+													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
 													map.put(SSTConstant.answerRemark, answerRemark);
 												} else if ((answer.getNewSupplierOffer() == null || answer
 														.getNewSupplierOffer().isEmpty())
@@ -11838,6 +11848,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 													// supplier respond but no
 													// changes
 													answerRemark = answer.getAnswerRemark();
+													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
 													map.put(SSTConstant.answerRemark, answerRemark);
 												}
 											}
@@ -11883,7 +11896,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												if (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty()) {
 													// supplier respond but no
 													// changes
-													map.put(SSTConstant.answerRemark, answer.getAnswerRemark());
+													answerRemark = answer.getAnswerRemark();
+													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
+													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+													map.put(SSTConstant.answerRemark, answerRemark);
 												} else {
 													// no changes and no supplier
 													// respond
@@ -11924,12 +11941,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
 									.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 								// supplier respond and make new supplier offer
-								map.put(SSTConstant.answerRemark, answer.getNewSupplierOffer());
+								answerRemark = answer.getNewSupplierOffer();
+								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+								map.put(SSTConstant.answerRemark, answerRemark);
 								break;
 							} else if ((answer.getNewSupplierOffer() == null || answer.getNewSupplierOffer().isEmpty())
 									&& (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty())) {
 								// supplier respond but no changes
-								map.put(SSTConstant.answerRemark, answer.getAnswerRemark());
+								answerRemark = answer.getAnswerRemark();
+								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+								map.put(SSTConstant.answerRemark, answerRemark);
 							} else {
 								// no changes and no supplier respond
 								map.put(SSTConstant.answerRemark, SSTConstant.TB);
