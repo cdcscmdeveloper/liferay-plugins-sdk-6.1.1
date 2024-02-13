@@ -15460,13 +15460,15 @@ public class SmApplicationUtil {
 	// 29616-start
 	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
 		log.info("******* Validate active softcert For cancel mof account******** ");
-		boolean validPersonnels = true;
+		boolean validPersonnels = false;
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplier.getSupplierId());
 		List<SmPersonnel> latestActivePersonnels = SmServiceLookup.getPersonnelSO()
 				.retrieveLatestPersonnelBySupplierId(reqDTO).getSmPersonnelList();
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				"sm", ISupplierSearchSO.class);
 
 		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
 			for (SmPersonnel per : latestActivePersonnels) {
@@ -15474,13 +15476,19 @@ public class SmApplicationUtil {
 					sb.append(++i + ". ");
 					sb.append(per.getName());
 					sb.append(" ");
-					validPersonnels = false;
+					validPersonnels = true;
+				} else if (supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
+					if (validPersonnels) {
+						validPersonnels = true;
+						break;
+					}
 				}
 			}
 		}
-		if (!validPersonnels) {
+		if (validPersonnels) {
 			throw new EpException(MessageConst.ERROR_722707, new String[] { sb.toString() });
 		}
 		return validPersonnels;
 	}// 29616-end
+	
 }
