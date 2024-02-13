@@ -275,6 +275,7 @@
 									disabled="#{calendarBackingBean.managedBean.disabledUpdate}"
 									label="#{lbl['lbl.pm.cal.frmdate']}" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									valueChangeListener="#{calendarBackingBean.holidayStartDateValChange}"
 									value="#{calendarBackingBean.managedBean.event.startDate}">
 								</p:calendar></td>
 								<td>
@@ -287,6 +288,7 @@
 									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
 									validatorMessage="To Date should be greater than from Date"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									valueChangeListener="#{calendarBackingBean.holidayEndDateValChange}"
 									value="#{calendarBackingBean.managedBean.event.endDate}">
 									<f:attribute name="startDate"
 										value="#{calendarBackingBean.managedBean.event.startDate}" />

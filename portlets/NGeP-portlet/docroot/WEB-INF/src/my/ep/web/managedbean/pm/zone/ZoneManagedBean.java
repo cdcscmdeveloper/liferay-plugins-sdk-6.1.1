@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmZoneState;
@@ -41,6 +42,12 @@ public class ZoneManagedBean extends BaseManagedBean {
 
 	/** The pm zone. */
 	private PmZone pmZone;
+	
+	/** The pm zone OLD Value. */
+	private PmZone pmZoneOld;
+	
+	/** The pm zone. */
+	private PmZone resZone;
 
 	/** The pm zone. */
 	private boolean isLazy = false;
@@ -56,6 +63,15 @@ public class ZoneManagedBean extends BaseManagedBean {
 
 	/** The zone state list. */
 	private List<PmZoneState> zoneStateList = new ArrayList<PmZoneState>();
+	
+	/** The zone state list. */
+	private List<PmZoneState> zoneStateListNewAdded = new ArrayList<PmZoneState>();
+	
+	/** The zone state list. */
+	private List<PmZoneState> zoneStateListDeleted = new ArrayList<PmZoneState>();
+	
+//	/** The audit data enable to save. */
+//	private boolean auditEnable = false;
 
 	/** The selected zones. */
 	private List<PmZoneState> selectedZones = new ArrayList<PmZoneState>();
@@ -77,6 +93,8 @@ public class ZoneManagedBean extends BaseManagedBean {
 
 	/** The pm zones list. */
 	private List<PmZone> pmZonesList;
+	
+	private ZoneResDTO zoneResDTO ;
 
 	/**
 	 * Instantiates a new zone managed bean.
@@ -352,6 +370,54 @@ public class ZoneManagedBean extends BaseManagedBean {
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
 	}
+
+	public PmZone getPmZoneOld() {
+		return pmZoneOld;
+	}
+
+	public void setPmZoneOld(PmZone pmZoneOld) {
+		this.pmZoneOld = pmZoneOld;
+	}
+
+	public PmZone getResZone() {
+		return resZone;
+	}
+
+	public void setResZone(PmZone resZone) {
+		this.resZone = resZone;
+	}
+
+	public ZoneResDTO getZoneResDTO() {
+		return zoneResDTO;
+	}
+
+	public void setZoneResDTO(ZoneResDTO zoneResDTO) {
+		this.zoneResDTO = zoneResDTO;
+	}
+
+	public List<PmZoneState> getZoneStateListNewAdded() {
+		return zoneStateListNewAdded;
+	}
+
+	public void setZoneStateListNewAdded(List<PmZoneState> zoneStateListNewAdded) {
+		this.zoneStateListNewAdded = zoneStateListNewAdded;
+	}
+
+	public List<PmZoneState> getZoneStateListDeleted() {
+		return zoneStateListDeleted;
+	}
+
+	public void setZoneStateListDeleted(List<PmZoneState> zoneStateListDeleted) {
+		this.zoneStateListDeleted = zoneStateListDeleted;
+	}
+
+//	public boolean isAuditEnable() {
+//		return auditEnable;
+//	}
+//
+//	public void setAuditEnable(boolean auditEnable) {
+//		this.auditEnable = auditEnable;
+//	}
 
 
 }

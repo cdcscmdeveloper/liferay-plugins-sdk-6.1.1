@@ -55,8 +55,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pm.location.audit.AuditLocationBackingBean;
-import my.ep.web.backingbean.pm.location.audit.AuditPMLocationBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.location.AuditLocationBackingBean;
+import my.ep.web.backingbean.pm.audit.location.AuditPMLocationBackingBeanTemplate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.LocationSearchBean;
@@ -286,11 +286,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				state.setCreatedBy(loginSessionUserId);
 			}
 			// #32753 - END
-
 			reqDTO.setPmState(state);
 			/************ AUDIT *************/
 			reqDTO.setStateId(getManagedBean().getState().getStateId());
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 				if (getManagedBean().getState().getStateId() != null) {
 					getManagedBean().setStateOldVal(stateSO.retriveStateDetailsByID(reqDTO));
 				}
@@ -306,7 +305,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				locationId = getManagedBean().getState().getStateId();
 				/************ AUDIT *************/
 
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResState(resDTO.getPmState());
 					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}
@@ -333,10 +332,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			reqDTO.setPmDivision(division);
 			reqDTO.setStateId(division.getPmState().getStateId());
-
 			reqDTO.setDivisionId(getManagedBean().getDivision().getDivisionId());
 			/************ AUDIT *************/
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 				if (getManagedBean().getDivision().getDivisionId() != null) {
 					getManagedBean().setDivisionOldVal(divisionSO.retrieveDivisionById(reqDTO));
 				}
@@ -353,7 +351,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						this.getManagedBean().getDivision().getDivisionName() };
 				locationId = getManagedBean().getDivision().getDivisionId();
 				/************ AUDIT *************/
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResDivision(resDTO.getPmDivision());
 					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}
@@ -391,7 +389,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			reqDTO.setDistrictId(getManagedBean().getDistrict().getDistrictId());
 			/************ AUDIT *************/
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 				if (getManagedBean().getDistrict().getDistrictId() != null) {
 					getManagedBean().setDistrictOldVal(districtSO.retriveDistrictByID(reqDTO));
 				}
@@ -409,7 +407,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				locationId = getManagedBean().getDistrict().getDistrictId();
 
 				/************ AUDIT *************/
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResDistrict(resDTO.getPmDistrict());
 					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}
@@ -432,12 +430,11 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				city.setCreatedBy(loginSessionUserId);
 			}
 			// #32753 - END
-
 			reqDTO.setPmCity(city);
 			reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
 			reqDTO.setCityId(getManagedBean().getCity().getCityId());
 			/************ AUDIT *************/
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 				if (getManagedBean().getCity().getCityId() != null) {
 					getManagedBean().setCityOldVal(citySO.retriveCityById(reqDTO));
 				}
@@ -451,7 +448,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								new FacesScopes().getUserLocale()), this.getManagedBean().getCity().getCityName() };
 				locationId = getManagedBean().getCity().getCityId();
 				/************ AUDIT *************/
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_LOCDTL)) {
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResCity(resDTO.getPmCity());
 					auTemplate.auditSaveData(getManagedBean(), loginSessionUserId);
 				}

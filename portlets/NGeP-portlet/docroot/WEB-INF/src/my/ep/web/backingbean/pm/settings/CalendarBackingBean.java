@@ -16,9 +16,12 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 
+import my.ep.biz.service.pm.common.audittrail.IAuditLocationSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.audit.AuditConst;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.exception.EpException;
@@ -27,6 +30,10 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.setting.calendar.PmHoliday;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.calendar.AuditCalendarBackingBean;
+import my.ep.web.backingbean.pm.audit.calendar.AuditPMCalendarBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.supplierzone.AuditPMSupplierZoneBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.supplierzone.AuditSupplierzoneBackingBean;
 import my.ep.web.managedbean.pm.settings.CalendarManageBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -167,6 +174,9 @@ public class CalendarBackingBean extends
 		
 		Long stateId = getManagedBean().getSelectedStateId() == 0 ? null : getManagedBean().getSelectedStateId();
 		try {
+			AuditPMCalendarBackingBeanTemplate auTemplate = new AuditCalendarBackingBean();
+			IAuditLocationSO pmauditSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
 			
 			calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICalendarSO.class);
@@ -179,6 +189,7 @@ public class CalendarBackingBean extends
 			if (id == null) {
 				reqDTO.setHoliday(holiday);
 				resDTO = calendarSO.addHoliday(reqDTO);
+				getManagedBean().setResCalendarDTO(resDTO);
 			} else {
 				 String exTitle = this.getManagedBean().getEventToExTitleValueMap().get(id);
 				 if(exTitle != null && !exTitle.isEmpty()){
@@ -187,6 +198,7 @@ public class CalendarBackingBean extends
 				reqDTO.setStateId(stateId);
 				reqDTO.setHoliday(holiday);
 				resDTO = calendarSO.updateHoliday(reqDTO);
+				getManagedBean().setResCalendarDTO(resDTO);
 			}
 			
 			if (resDTO.isSuccessful()) {
@@ -198,7 +210,13 @@ public class CalendarBackingBean extends
 				RequestContext.getCurrentInstance()
 				.execute("eventDialog.hide();");
 				RequestContext.getCurrentInstance().update("schedule");				
-			
+							
+//				/************ AUDIT *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CALENDAR)) {
+					getManagedBean().setResCalendarDTO(resDTO);
+					auTemplate.auditSaveData(getManagedBean(), resDTO.getHoliday().getCreatedBy());
+				}
+//			/************ END AUDIT *************/
 //				this.getManagedBean().setEvent(new DefaultScheduleEvent());
 			}
 		} catch (Exception e) {
@@ -213,7 +231,8 @@ public class CalendarBackingBean extends
 		log.info("holidayTitleValChange");
 		log.info("event.getOldValue()="+event.getOldValue());
 		log.info("event.getNewValue()="+event.getNewValue());
-
+		this.getManagedBean().setOldTitleValue((String) event.getOldValue());
+		this.getManagedBean().setNewTitleValue((String) event.getNewValue());
 		String eventId = this.getManagedBean().getEvent().getId();
 		log.info("........getManagedBean().getEvent().getId()="+eventId);
 		if (eventId != null) {
@@ -230,6 +249,23 @@ public class CalendarBackingBean extends
 			}
 		}
 	}
+	
+	public void holidayStartDateValChange(ValueChangeEvent event){
+		log.info("holidayTitleValChange");
+		log.info("event.getOldValue()="+event.getOldValue());
+		log.info("event.getNewValue()="+event.getNewValue());
+		this.getManagedBean().setOldStartDate((Date) event.getOldValue());
+		this.getManagedBean().setNewStartDate((Date) event.getNewValue());
+	}
+	
+	public void holidayEndDateValChange(ValueChangeEvent event){
+		log.info("holidayTitleValChange");
+		log.info("event.getOldValue()="+event.getOldValue());
+		log.info("event.getNewValue()="+event.getNewValue());
+		this.getManagedBean().setOldEndDate((Date) event.getOldValue());
+		this.getManagedBean().setNewEndDate((Date) event.getNewValue());
+	}
+	
 	public void preLoadingCalendar() {
 		log.info("........preLoadingCalendar.......");
 		renewSesionObject() ;	
@@ -252,6 +288,15 @@ public class CalendarBackingBean extends
 			Date startDate = getManagedBean().getEvent().getStartDate();
 			Date endDate = getManagedBean().getEvent().getEndDate();
 			Long stateId = getManagedBean().getSelectedStateId() == 0 ? null : getManagedBean().getSelectedStateId();
+			
+			/* for Audit Detail Deleted value */
+			this.getManagedBean().setOldTitleValue(holidayName);
+			this.getManagedBean().setNewTitleValue(null);
+			this.getManagedBean().setOldStartDate(startDate);
+			this.getManagedBean().setNewStartDate(null);
+			this.getManagedBean().setOldEndDate(endDate);
+			this.getManagedBean().setNewEndDate(null);
+			
 			ICalendarSO calendarSO = null;
 			CalendarResDTO resDTO = null;
 			try {
@@ -274,15 +319,27 @@ public class CalendarBackingBean extends
 				reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 				
 				resDTO = calendarSO.removeHoliday(reqDTO);
-				
+				//// AUDIT delete action HERE!!!!
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setInitialDate(holiday.getStartDate());
+					
 					this.getManagedBean().getEventModel()
 							.deleteEvent(getManagedBean().getEvent());
 					RequestContext.getCurrentInstance()
 					.execute("myschedule.update();");
 					RequestContext.getCurrentInstance()
 					.execute("eventDialog.hide();");
+				//// AUDIT delete action HERE!!!!
+//					/************ AUDIT *************/
+					AuditPMCalendarBackingBeanTemplate auTemplate = new AuditCalendarBackingBean();
+					IAuditLocationSO pmauditSO = (IAuditLocationSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IAuditLocationSO.class);
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CALENDAR)) {
+						getManagedBean().setDeletedEvent(true);
+						getManagedBean().setResCalendarDTO(resDTO);
+						auTemplate.auditSaveData(getManagedBean(), resDTO.getHoliday().getCreatedBy());
+					}
+//				/************ END AUDIT *************/
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

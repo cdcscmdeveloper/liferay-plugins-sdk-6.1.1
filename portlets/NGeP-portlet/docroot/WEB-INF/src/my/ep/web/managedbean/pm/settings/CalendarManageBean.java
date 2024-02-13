@@ -13,7 +13,10 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
+import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
+import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.setting.calendar.PmHoliday;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -36,6 +39,17 @@ public class CalendarManageBean extends BaseManagedBean {
 	private boolean isNewEvent;
 	private Date initialDate;
 	private boolean disabledUpdate;
+	private PmHoliday resHoliday;
+	private PmHoliday oldHoliday;
+	private CalendarResDTO resCalendarDTO ;
+	private CalendarReqDTO reqCalendarDTO;
+	private String OldTitleValue;
+	private String NewTitleValue;
+	private Date oldStartDate;
+	private Date newStartDate;
+	private Date oldEndDate;
+	private Date newEndDate;
+	private boolean deletedEvent = false;;
 
 	public CalendarManageBean(){}
 
@@ -150,5 +164,92 @@ public class CalendarManageBean extends BaseManagedBean {
 	public void setDisabledUpdate(boolean disabledUpdate) {
 		this.disabledUpdate = disabledUpdate;
 	}
-	
+
+	public PmHoliday getResHoliday() {
+		return resHoliday;
+	}
+
+	public void setResHoliday(PmHoliday resHoliday) {
+		this.resHoliday = resHoliday;
+	}
+
+	public PmHoliday getOldHoliday() {
+		return oldHoliday;
+	}
+
+	public void setOldHoliday(PmHoliday oldHoliday) {
+		this.oldHoliday = oldHoliday;
+	}
+
+	public CalendarResDTO getResCalendarDTO() {
+		return resCalendarDTO;
+	}
+
+	public void setResCalendarDTO(CalendarResDTO resCalendarDTO) {
+		this.resCalendarDTO = resCalendarDTO;
+	}
+
+	public CalendarReqDTO getReqCalendarDTO() {
+		return reqCalendarDTO;
+	}
+
+	public void setReqCalendarDTO(CalendarReqDTO reqCalendarDTO) {
+		this.reqCalendarDTO = reqCalendarDTO;
+	}
+
+	public String getOldTitleValue() {
+		return OldTitleValue;
+	}
+
+	public void setOldTitleValue(String oldTitleValue) {
+		OldTitleValue = oldTitleValue;
+	}
+
+	public String getNewTitleValue() {
+		return NewTitleValue;
+	}
+
+	public void setNewTitleValue(String newTitleValue) {
+		NewTitleValue = newTitleValue;
+	}
+
+	public Date getOldStartDate() {
+		return oldStartDate;
+	}
+
+	public void setOldStartDate(Date oldStartDate) {
+		this.oldStartDate = oldStartDate;
+	}
+
+	public Date getNewStartDate() {
+		return newStartDate;
+	}
+
+	public void setNewStartDate(Date newStartDate) {
+		this.newStartDate = newStartDate;
+	}
+
+	public Date getOldEndDate() {
+		return oldEndDate;
+	}
+
+	public void setOldEndDate(Date oldEndDate) {
+		this.oldEndDate = oldEndDate;
+	}
+
+	public Date getNewEndDate() {
+		return newEndDate;
+	}
+
+	public void setNewEndDate(Date newEndDate) {
+		this.newEndDate = newEndDate;
+	}
+
+	public boolean isDeletedEvent() {
+		return deletedEvent;
+	}
+
+	public void setDeletedEvent(boolean deletedEvent) {
+		this.deletedEvent = deletedEvent;
+	}	
 }

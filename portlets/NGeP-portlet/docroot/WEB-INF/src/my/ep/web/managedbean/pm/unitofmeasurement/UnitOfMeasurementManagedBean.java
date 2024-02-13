@@ -5,6 +5,8 @@ package my.ep.web.managedbean.pm.unitofmeasurement;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -34,6 +36,10 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	private boolean isLazy = false;
 	
 	private PmUom oldPmUom;
+	
+	private PmUom resPmUom;
+	
+	private UomResDTO uomResDTO ;
 
 	public UnitOfMeasurementManagedBean(){}
 	
@@ -43,6 +49,9 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	public PmUom getPmUom() {
 		return pmUom;
 	}
+	
+	/** The pm zone OLD Value. */
+	private PmUom pmUomOld;
 
 	/**
 	 * @param pmUom
@@ -119,4 +128,27 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 		this.oldPmUom = oldPmUom;
 	}
 
+	public PmUom getPmUomOld() {
+		return pmUomOld;
+	}
+
+	public void setPmUomOld(PmUom pmUomOld) {
+		this.pmUomOld = pmUomOld;
+	}
+
+	public PmUom getResPmUom() {
+		return resPmUom;
+	}
+
+	public void setResPmUom(PmUom resPmUom) {
+		this.resPmUom = resPmUom;
+	}
+
+	public UomResDTO getUomResDTO() {
+		return uomResDTO;
+	}
+
+	public void setUomResDTO(UomResDTO uomResDTO) {
+		this.uomResDTO = uomResDTO;
+	}
 }
