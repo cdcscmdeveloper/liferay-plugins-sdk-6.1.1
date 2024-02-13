@@ -2310,13 +2310,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
-
-		// #32739 & #32738 -start-
-		// #32647 & #32648 remove uppercase -start-
-		String title = procurementMode != "" ? procurementMode + "\r\n" + scLoiLoa.getTitle() : scLoiLoa.getTitle();
-		// #32647 & #32648 remove uppercase -end-
-		// #32739 & #32738 -end-		
-
+		String title = procurementMode != "" ? procurementMode + "\r\n" + 
+				scLoiLoa.getTitle().toUpperCase() : scLoiLoa.getTitle().toUpperCase();//#32739 & #32738
 				if (title == null) {
 					title = "";
 				}
