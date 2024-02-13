@@ -174,6 +174,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -12135,6 +12136,17 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			getManagedBean().setTemplateSpecCreate(pagingData);
 		}
 		return pagingData;
+	}
+
+	/**
+	 * This method will return error message for procurement category.
+	 * 
+	 * @param .
+	 * @return String
+	 */
+	public String errorMessageForProcCat() {
+		return MessageUtils.getMessage(MessageConst.ERROR_775181, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
 	}
 
 	// #29468 Vinod End
