@@ -14572,7 +14572,7 @@ public class SmApplicationUtil {
 			apprApplSecRev.setRemarkToApprover(null);
 			apprApplSecRev.setPmRegStatus(null);
 			//#31043 start
-			apprApplSecRev.setSitevisitVerified(false);
+			apprApplSecRev.setSitevisitVerified(true);
 			//#31043 end
 			managedBean.setApprvrSecReview(apprApplSecRev);
 		}

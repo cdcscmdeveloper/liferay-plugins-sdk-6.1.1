@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -92,8 +91,10 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtBondWaiverDetail;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtDisciplinaryAction;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -149,8 +150,6 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
@@ -159,7 +158,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
-import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
@@ -1022,9 +1020,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setDisableFields(false);
 				
 				return ctDT.gotoAmendPage(contractId);
-			} else if((ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
-					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null) 
-					&& !ctBackingBean.getManagedBean().isViewSCLFromContract()){
+			} else if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
+					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null){
 				if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null && 
 						(ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) || 
 								ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || 
@@ -1059,6 +1056,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else if(ctBackingBean.getManagedBean().isAmendFromTaskList()){//tasklist
 					if(!ctBackingBean.getManagedBean().isViewSclFromAgreement() && !ctBackingBean.getManagedBean().isViewSCLFromContract()){ //#15851
 						getManagedBean().setViewOnly(false);
+						ctBackingBean.getManagedBean().setViewContract(false);
 						ctBackingBean.getManagedBean().setAmendFromTaskList(false);
 						ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
 						
@@ -1077,7 +1075,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			ctBackingBean.getManagedBean().setViewContract(false); //35467
 			ctBackingBean.getManagedBean().setViewSCL(false);
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
@@ -1669,6 +1666,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//#29549 end
 			}
 			//#29403 end
+			
+			//#13847 start
+			//check & set performance bond deferment
+			chkBondWaivedAttachment();
+			//#13847 end
 			
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >END<");
 			
@@ -9247,5 +9249,65 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		  }
 	}
 	// End Fix - #34110
+	
+	//#13847 start
+	/**
+	 * method to check all the attachment of the bond waiver (active, in progress and suspended)
+	 * and grouping the bond waiver into latest and history to show on the screen which one is the history. 
+	 */
+	private void chkBondWaivedAttachment() {
+		
+		ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
+		ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
+		if (CollectionUtils.isNotEmpty(ctBackingBean.getManagedBean().getContractVer().getCtBondWaiverDetails())){
+			for(CtBondWaiverDetail waiverDetail : ctBackingBean.getManagedBean().getContractVer().getCtBondWaiverDetails()){
+				if(!waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+					waiverDetail.setCtAttachment(new CtAttachment());
+					if(ctBackingBean.getManagedBean().getContractVer().getBondWaiverAttachments()!=null){
+						if(waiverDetail.getAttachmentId()!=null){
+							for(CtAttachment waiverAttach : ctBackingBean.getManagedBean().getContractVer().getBondWaiverAttachments()){
+								if(waiverDetail.getAttachmentId().equals(waiverAttach.getAttachmentId())){
+									waiverDetail.setCtAttachment(waiverAttach);
+									break;
+								}
+							}
+						}else if(waiverDetail.getTempAttachmentId()!=null){
+							for(CtAttachment waiverAttach : ctBackingBean.getManagedBean().getContractVer().getBondWaiverAttachments()){
+								if(waiverDetail.getTempAttachmentId().equals(waiverAttach.getTempAttachmentId())){
+									waiverDetail.setCtAttachment(waiverAttach);
+									break;
+								}
+							}
+						}
+					}
+					
+					if(waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						//SET DATA TO LATEST BOND WAIVER WITH ATTACHMENT
+						if(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
+							ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());	
+						}
+						ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentLatest(waiverDetail);
+					}else{//SET DATA TO TABLE WAIVER FOR HSTORY
+						if(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory()==null){
+							ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentHistory(new ArrayList<CtBondWaiverDetail>());
+						}
+						ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(waiverDetail);
+					}
+				}
+			}
+
+			if(CollectionUtils.isNotEmpty(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory(), new Comparator<CtBondWaiverDetail>() {
+					  @Override
+					  public int compare(CtBondWaiverDetail bwd1, CtBondWaiverDetail bwd2) {
+						  if(bwd1.getWaiverStartDate()!=null && bwd2.getWaiverStartDate()!=null){
+							  return bwd2.getWaiverStartDate().compareTo(bwd1.getWaiverStartDate());
+						  }else{return 0;}
+					  }
+					});
+			}
+		}
+	}
+	//#13847 end
 	
 	}
