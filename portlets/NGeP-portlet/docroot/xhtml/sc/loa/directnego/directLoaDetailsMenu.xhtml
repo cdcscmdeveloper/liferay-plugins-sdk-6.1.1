@@ -411,22 +411,24 @@
 						id="fileExtNoMsg" for="fileExtNo" display="icon" />
 				</td>
 				<!-- 29468 Start Vinod -->
-				<td width="160px">
-					<p:outputLabel	value="#{lbl['lbl.sc.procurement.category']}" /> 
-					<p:outputLabel	value="*" styleClass="mandatory" />
-				</td>
+				<td width="160px"><p:outputLabel
+						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><c:choose>
-							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
-							<p:selectOneMenu id="procBoCategory" 
+						<c:when
+							test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="procBoCategory"
+								required="true"
+								requiredMessage="#{directLOABackingBean.errorMessageForProcCat()}"
 								style="margin-bottom:5px;width:206px;"
 								value="#{directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory.parameterId}">
 								<f:selectItems
 									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
-							 <p:ajax event="change" 
-									process="@this" partialSubmit="true" update="procBoCategory"
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="procBoCategory"
 									listener="#{directLOABackingBean.procCategoryChanged(directLOABackingBean.managedBean.scLoa)}" />
 							</p:selectOneMenu>
-							<p:message id="procBoCategoryMsg" for="procBoCategory"
+							<p:message id="procBoCategoryMsg" for="procBoCategory" 
 								display="icon" />
 						</c:when>
 						<c:otherwise>
@@ -434,7 +436,7 @@
 								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory)}"
 								size="35" disabled="true" />
 						</c:otherwise>
-				</c:choose></td>
+					</c:choose></td>
 				<!-- 29468 End Vinod -->
 			</tr>
 			
