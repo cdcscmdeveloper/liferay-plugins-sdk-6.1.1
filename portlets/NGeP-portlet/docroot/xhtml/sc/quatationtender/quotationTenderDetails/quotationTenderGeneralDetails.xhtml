@@ -927,6 +927,7 @@
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
 								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
 								listener="#{createQtBB.ContractPeriodChange()}"/>
+								<f:converter converterId="periodIntegerConverter"/>
 							</p:inputText>
 							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
 						</c:when>
