@@ -1793,27 +1793,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()
 						};
 
-				// Start Fix - #33256
+				// Start Fix - #33256, #33287, #34110
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
-					if (getManagedBean().getSelectedChangeItemQuantity() != null && getManagedBean().getSelectedChangeItemQuantity().size() > 0) {
+					if (getManagedBean().getSelectedChangeItemQuantity() != null
+							&& getManagedBean().getSelectedChangeItemQuantity().size() > 0) {
 						for (CtItemMaxQty itemMaxQty : getManagedBean().getSelectedChangeItemQuantity().values()) {
-							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew()) {
-								contractAmendmentSO.updateExpDateItemMaxQty(itemMaxQty.getExpDate(), itemMaxQty.getItemMaxQtyId());
+							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew() && !itemMaxQty.isChangeQuantity()) {
+								contractAmendmentSO.updateExpDateItemMaxQty(itemMaxQty.getExpDate(),
+										itemMaxQty.getItemMaxQtyId());
+							}else if(itemMaxQty.isChangeQuantity()){
+								contractAmendmentSO.updateExpDateAndEffDateItemMaxQty(itemMaxQty.getMaxQuantity(), itemMaxQty.getExpDate(),
+										itemMaxQty.getEffDate(), itemMaxQty.getItemMaxQtyId());
 							}
 						}
 						getManagedBean().getSelectedChangeItemQuantity().clear();
 					}
 
-					if (getManagedBean().getSelectedChangeItemPrice() != null && getManagedBean().getSelectedChangeItemPrice().size() > 0) {
+					if (getManagedBean().getSelectedChangeItemPrice() != null
+							&& getManagedBean().getSelectedChangeItemPrice().size() > 0) {
 						for (CtItemPrice ctItemPrice : getManagedBean().getSelectedChangeItemPrice().values()) {
-							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew()) {
-								contractAmendmentSO.updateExpDateItemPrice(ctItemPrice.getExpDate(), ctItemPrice.getItemPriceId());
+							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew() && !ctItemPrice.isChangePrice()) {
+								contractAmendmentSO.updateExpDateItemPrice(ctItemPrice.getExpDate(),
+										ctItemPrice.getItemPriceId());
+							}else if(ctItemPrice.isChangePrice()) {
+								contractAmendmentSO.updateExpDateAndEffDateItemPrice(ctItemPrice.getUnitPrice(), ctItemPrice.getExpDate(),
+										ctItemPrice.getEffDate(), ctItemPrice.getItemPriceId());
 							}
 						}
 						getManagedBean().getSelectedChangeItemPrice().clear();
 					}
 				}
-				// End Fix - #33256
+				// End Fix - #33256, #33287, #34110
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
@@ -7908,4 +7918,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		});
 	}
 	// End Fix - #34110 , #34950
+	
+	// Start Fix - #34110
+	/**
+	 * The method used to pick-up new item price.
+	 * 
+	 * @param ctItemPrice
+	 *            object of CtItemPrice item
+	 */
+	public void onChangeCtItemPrice(CtItemPrice ctItemPrice) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+				getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(), ctItemPrice);
+		}
+	}
+
+	/**
+	 * The method used to pick-up new item max qty.
+	 * 
+	 * @param ctItemPrice
+	 *            object of CtItemMaxQty item
+	 */
+	public void onChangeCtItemMaxQty(CtItemMaxQty ctItemPMaxQty) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+				getManagedBean().getSelectedChangeItemQuantity().put(ctItemPMaxQty.getItemMaxQtyId(), ctItemPMaxQty);
+		}
+	}
+	// End Fix - #34110
 }
