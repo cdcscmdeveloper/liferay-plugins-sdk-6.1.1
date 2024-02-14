@@ -664,6 +664,9 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		//#21692 attachment - Start
 		Boolean oldApprovalPBM = scQt.isApprovalPBM();
 		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
+		if (!enableDateMOF) {
+			scQt.setMofDate(null);
+		}
 		scQt.setApprovalPBM(enableDateMOF);
 		resetDecisionCertPBM(enableDateMOF);
 		if ((oldApprovalPBM && !enableDateMOF)
