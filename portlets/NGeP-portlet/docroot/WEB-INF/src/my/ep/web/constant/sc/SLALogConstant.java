@@ -30,7 +30,7 @@ public class SLALogConstant {
 	//#29187 Start Vinod
 	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
-	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	/*
@@ -65,6 +65,9 @@ public class SLALogConstant {
 	public static final String QT_BUILD_ORG_NAME_DD = "buildOrgNameDD";
 	public static final String QT_BUILD_PTJ_DD = "buildPtjDD";
 	//12471 - end
+	//06022024@Sonarqube QT#58 - haziq
+	public static final String QT_CALC_TOTAL_AMOUNT = "calcTotalAmount";
+
 	private SLALogConstant(){
 		
 	}	

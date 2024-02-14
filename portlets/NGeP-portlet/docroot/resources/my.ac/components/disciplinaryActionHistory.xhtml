@@ -92,7 +92,11 @@
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" 
 					style="border: none !important; table-layout: fixed;">
 					<p:column style="border: none !important;">
-						<h:outputText value="#{remarksList.remarks}" escape="false" style="white-space:pre-line;"/>
+						<!-- 26238 - START -->
+						<p:scrollPanel style="height:300px;border:0;" mode="native">
+							<h:outputText value="#{remarksList.remarks}" escape="false" style="white-space:pre-line;"/>
+						</p:scrollPanel>
+						<!-- 26238 - END -->
 					</p:column>
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.remarksList}"/>
