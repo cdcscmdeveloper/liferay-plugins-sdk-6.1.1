@@ -2217,8 +2217,8 @@ public class SmApplicationBackingBean extends
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						log.info("THIS IS THE VALUE OF THE TOTAL SUM ////////////////////// " + sum);
 						log.info("THIS IS THE VALUE OF THE TOTAL SHARE ////////////////////// " + shareAmtSsm);
@@ -12520,7 +12520,7 @@ public class SmApplicationBackingBean extends
 	 * @throws Exception
 	 */
 	public void printDeclarationForm() throws Exception {
-		String language = new FacesScopes().getUserLocale().getLanguage();
+		String language = setFixedLanguageDisplay(true,"ms"); // 33410 set only malay language
 		if (language.equals("en")) {
 			Map<String, String> paramMap = new HashMap<String, String>();
 			paramMap.put("PAPPNO", getManagedBean().getSmAppl().getApplNo());
@@ -12530,7 +12530,7 @@ public class SmApplicationBackingBean extends
 							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
 							getManagedBean().getSmAppl().getApplType(),
 							language).getCodeName());
-			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
+			paramMap.put("PSUPPNAME", getManagedBean().getSmAppl().getSmCompanyBasic()  //33410 
 					.getCompanyName());
 			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT_EN, paramMap);
 		} else {
@@ -12542,7 +12542,7 @@ public class SmApplicationBackingBean extends
 							ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
 							getManagedBean().getSmAppl().getApplType(),
 							language).getCodeName());
-			paramMap.put("PSUPPNAME", getManagedBean().getSmSupplier()
+			paramMap.put("PSUPPNAME", getManagedBean().getSmAppl().getSmCompanyBasic()  //33410
 					.getCompanyName());
 			generateReport(ReportConst.SM_DECLARATION_FORM_REPORT, paramMap);
 		}
@@ -15496,7 +15496,7 @@ public class SmApplicationBackingBean extends
 	//#32008, #35086 - start
 	public String getSelectedBranchBank(SmSupplierBank bank){
 		//#35086 - end
-		if (SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
+		if (bank == null || SmCommonUtil.isCollectionEmpty(bank.getSmSupplierBranchBanks())) {
 			return null;
 		}
 		if (bank.getSmSupplierBranchBanks().size() == 1) {
@@ -15514,7 +15514,7 @@ public class SmApplicationBackingBean extends
 	//#35086 - start
 	public String getSelectedSignatoryBank(SmSupplierBank bank){
 		//#35086 - end
-		if (SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
+		if (bank == null || SmCommonUtil.isCollectionEmpty(bank.getSmChequeSignatories())){
 			return null;
 		}
 		if (bank.getSmChequeSignatories().size() == 1) {

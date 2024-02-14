@@ -178,6 +178,18 @@ u.underline {
 	text-decoration:underline;
 	color:red;
 }
+.tableHeaderPR{
+	text-align: left; 
+	padding-left: 5px;
+	padding-right: 5px;	
+	font-size:10px;
+}
+.tableDataPR{
+	text-align: left; 
+	padding-left: 5px;
+	padding-right: 5px;	
+	font-size:12px;
+}
 ## #25025-end
 </style>
 </head>
@@ -1211,33 +1223,33 @@ Should be product and service item display if exist
 	
 	<tr align='left'>
 				<td><span style='font-size: 10px; font-family: Times New Roman;'>
-				<table width='100%' border="1">
+				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th>Zone</th> 
+							<th  class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-							<th>Nama Item</th>
-							<th>Kuantiti</th>
-							<th>Jenis Perkhidmatan</th>
+							<th  class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
+							<th  class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
+							<th  class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach($productBean in $jadualHargaItemBean.productItemBeans)
 						<tr class="ui-content">
 							#if ($isZonal)
-								<td class="standard border-bottom left">
+								<td class="text_family">
 								#if($productBean.zonal) 
 									$productBean.zoneName
 								#end</td> 
 							#end
-							<td class="standard border-bottom left">$productBean.item</td>
-							<td class="standard border-bottom left alignRight">
+							<td class="text_family">$productBean.item</td>
+							<td class="text_family">
 								#if($productBean.tier)
 									$productBean.fromQty - $productBean.toQty
 								#else
 									$productBean.quantity 
 								#end
 							</td>
-							<td class="standard border-bottom left"></td>
+							<td class="text_family"></td>
 						</tr>
 					#end
 				</table>
@@ -1267,29 +1279,29 @@ Should be product and service item display if exist
 	</tr>
 	##26770 - end
 	<tr align='left'>
-			<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
-				<table width='100%' border="1">
+			<td><span style='font-weight: bold; font-size: 10px; font-family: Arial;'>
+				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th>Zone</th> 
+							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-						<th>Nama Item</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
 						##26770 - start
-						<th>Kuantiti</th>
-						<th>Jenis Perkhidmatan</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 						##26770 - end
 					</tr>
 					#set($String = "formatter") 
 					#foreach( $serviceBean in $jadualHargaItemBean.serviceItemBeans)
 						<tr class="ui-content">
 							#if ($isZonal)
-								<td class="standard border-bottom left">
+								<td class="text_family">
 								#if($serviceBean.zonal) 
 									 $serviceBean.zoneName
 								#end</td> 
 							#end
-							<td class="standard border-bottom left">$serviceBean.item</td>
-							<td class="standard border-bottom left alignRight">
+							<td class="text_family">$serviceBean.item</td>
+							<td class="text_family">
 									#if($serviceBean.quantity)
 									 $serviceBean.quantity
 								#else
@@ -1298,7 +1310,7 @@ Should be product and service item display if exist
 							</td>
 							
 							
-								<td class="standard border-bottom left"></td>
+								<td class="text_family"></td>
 							
 						</tr>
 					#end
@@ -1549,24 +1561,29 @@ Should be product and service item display if exist
 					##26130 - start 03032022
 					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
-					<table width="100%" border=1 cellpadding="0" cellspacing="0" style="border-top: 1px solid black;">
-					<tbody>
+					<table width="100%" border=1 cellpadding="0" cellspacing="-1">
 					##26130 - end 03032022
 					  #if ($rowCount == 0)
+					  	#if ($isZonal)
+								#set($colspanZone = 7)
+						#else
+								#set($colspanZone = 6)
+						#end
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold; border-top: none !important;"><nobr>Tajuk Templat</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; border-top: none !important;">$tplspecMaster.specName</td>
+								<td colspan="2" width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
+								<td colspan="2" width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
 							</tr>
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Barangan</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
+								<td colspan="2" width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Barangan</nobr></td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 							</tr>
 							<tr>
-								<td class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
+								<td colspan="2" class="title border left" style="text-align: left; border-right:none; border-bottom: none !important;">&nbsp;</td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; border-left:none; border-bottom: none !important;">&nbsp;</td>
 							</tr>
 							<tr>
 					            <th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
@@ -1582,7 +1599,7 @@ Should be product and service item display if exist
 								
 					            <th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
 					         	<th valign="top" width="30%" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
-								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px;">Skop Perkhidmatan<br/>/<br/> SLA</th>
 							</tr>
 							<tr>
 								#if ($isZonal)
@@ -1608,78 +1625,78 @@ Should be product and service item display if exist
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
 														#end
 														#if ($specCombine.clPriceTypeCode == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.clPriceTypeCode</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.clPriceTypeCode</td>
 														#end
 														#if ($specType == "F")
 															#if ($specCombine.zoneName) 
-															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.zoneName</td>
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 															#end
 															
 															#if ($specCombine.tplSpecZoneQty.qty) 
-															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.tplSpecZoneQty.qty</td>
+															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.tplSpecZoneQty.qty</td>
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 															#end
 															
 															#if ($specCombine.answerNumeric) 
-															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.answerNumeric</td>
+															<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.answerNumeric</td>
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 															#end
 														#else 
 															#if ($specType == "T")
 															
 																#if($specCombine.zoneName == "&nbsp")
 																#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.zoneName</td>
 																#end
 																
 																#if($specCombine.qty == "&nbsp")
 																#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qty</td>
 																#end
 																	##26130 start 01072022
 																#if($specCombine.qtyBerperingkat == "&nbsp")
 																#else
-																<td valign="top" rowspan="$rowSpanSize" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>
+																<td valign="top" rowspan="$rowSpanSize" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qtyBerperingkat</td>
 																#end
 																		##26130 end 01072022
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 															#end
 														
 														#end
 														
 														#if ($rowCount == 0)
 															#if ($specCombine.feedback == "&nbsp;" ) 
-																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
+																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whitespace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
 															#end
 														
 															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " " ) 
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#else
 																#if ($specCombine.answerRemark)
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.answerRemark</td>
 																#else 
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left; padding-left: 5px; font-size:12px;">$serviceScope</td>
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
 															#end
 														
-															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+															<td class="standard border-bottom left" style="text-align: left;" rowspan="$rowSpanSize">$whitespace</td>
 															
 															#set($rowCount = $rowCount + 1)
 														#end
@@ -1691,7 +1708,7 @@ Should be product and service item display if exist
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-																<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; font-size:12px;">$combine.specVal</td>
+																<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
 												
 															##feedback
 															
@@ -1700,10 +1717,10 @@ Should be product and service item display if exist
 
 																#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
 																			
 																#end
 																			
@@ -1711,19 +1728,18 @@ Should be product and service item display if exist
 															
 															##remark
 															#if ($combine.remark == "&nbsp;" || $combine.remark == " ") 
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>		
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 															#else
 																#if ($combine.remark)
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.remark</td>
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
 																	
 																#else 
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
 															#end
 														</tr>
 													#end
-													#end
-											
+												#end
 											#end	
 									
 							##26130 - zaim end	070220222
@@ -1738,33 +1754,33 @@ Should be product and service item display if exist
 											<tr>
 																				
 												#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 												##26130 - zaim end
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.uomName</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.clPriceTypeCode</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qtyBerperingkat</td>	
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.uomName</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.clPriceTypeCode</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qty</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qtyBerperingkat</td>	
 												#if ($specType == "T")
 													#if ($specCombine.feedback == "&nbsp" || $specCombine.feedback == " ")
-														<td class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$whitespace</td>
+														<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 													#else
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
 													#end
 												#end						
 																				
 												#if ($specCombine.remark == "&nbsp;" || $specCombine.remark == " ") 
-													<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+													<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 												#else
 													#if ($specCombine.remark)
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.remark</td>
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.remark</td>
 													#else 
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 													#end
 												#end
 																				
 																								
 												##26130 - start 03032022
-													<td class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+													<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$whitespace</td>
 												##26130 - end 03032022
 											</tr>
 											
@@ -1777,7 +1793,7 @@ Should be product and service item display if exist
 												##specval
 												#foreach($combine in $tplspecQuestion.listCombineSpec)
 												<tr style="border-bottom: 1px solid black;">
-												<td valign="top" colspan="4" class="title border left"   style="text-align: justify;  padding-left: 5px; font-size:12px;">$combine.specVal</td>
+												<td valign="top" colspan="4" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
 											
 														##feedback
 														
@@ -1785,10 +1801,10 @@ Should be product and service item display if exist
 																#set($count = 1)
 
 																	#if ($combine.feedback)
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
 																			
 																	#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
 																		
 																	#end
 																		
@@ -1796,13 +1812,13 @@ Should be product and service item display if exist
 														
 														##remark
 														#if ($combine.remark == "&nbsp;" || $combine.remark == " ") 
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>		
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 														#else
 															#if ($combine.remark)
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.remark</td>
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
 																
 															#else 
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#end
 														#end
 												#end
@@ -1818,7 +1834,6 @@ Should be product and service item display if exist
 						
 						#set($rowCount = $rowCount + 1)
 						##26130 - start 03032022		
-						</tbody>
 						</table>
 						#if ($rowCount > 0)
 							<div class="break-after"><br/></div>
@@ -2106,16 +2121,15 @@ Should be product and service item display if exist
 			#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 			#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 				#if ($itemType == "Perkhidmatan" || $itemType == "Service")
-				#if($tplspecMaster.tplSpecQuestions.size() > 0)
 				##26130 - start 03032022
-				#set($rowCount = 0)	
-				<table width="100%" border=1 cellpadding="0" cellspacing="0" style="border-top: 1px solid black;">
-				<tbody>
+				#set($rowCount = 0)
+				#if($tplspecMaster.tplSpecQuestions.size() > 0)
+				<table width="103%" border="1" cellpadding="0" cellspacing="-1">
 				##26130 - end 03032022
 						 #if ($rowCount == 0)
 							<tr>
-								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold; border-top: none !important;"><nobr>Tajuk Templat</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px; border-top: none !important;">$tplspecMaster.specName</td>
+								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
+								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
 								<td width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
@@ -2126,9 +2140,11 @@ Should be product and service item display if exist
 								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 							</tr>
 							<tr>
-								<td class="title border left" colspan="10" style="text-align: left;">&nbsp;</td>
+								<td class="title border left" style="text-align: left; border-right:none;  border-bottom: none !important;">&nbsp;</td>
+								<td class="title border left" colspan="10" style="text-align: left; border-left:none;  border-bottom: none !important;">&nbsp;</td>
 							</tr>
-						
+						</table>
+						<table width="103%" border="1" cellpadding="0" cellspacing="-1">		
 							<tr>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
@@ -2143,8 +2159,9 @@ Should be product and service item display if exist
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Kuantiti</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Maklum Balas</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Catatan</th>
-								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan / SLA</th>
+								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Skop Perkhidmatan<br/>/</br/> SLA</th>
 							</tr>
+						
 							<tr>
 								#if ($isZonal)
 									<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center;">Spesifikasi</th>
@@ -2152,6 +2169,8 @@ Should be product and service item display if exist
 									<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
 								#end
 							</tr>
+											
+						
 							#end
 							
 							#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
@@ -2169,43 +2188,43 @@ Should be product and service item display if exist
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
 														#end
 														#if ($specCombine.clUomFrequency == "&nbsp")		
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
 														#end
 														#if ($specCombine.clUomPerDay == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
 														#end
 														#if ($specCombine.clUomPerMonth == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
 														#end
 														
 														#if ($specType == "F")
 															#if ($specCombine.zoneName == "&nbsp")
 															#else
 																#if ($specCombine.zoneName) 
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.zoneName</td>
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 																#end
 															#end
 															#if ($specCombine.tplSpecZoneQty.qty) == "&nbsp" 
 																
 															#else
 																#if ($specCombine.tplSpecZoneQty.qty) 
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.tplSpecZoneQty.qty</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.tplSpecZoneQty.qty</td>
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 																#end
 															#end
 														
@@ -2214,39 +2233,39 @@ Should be product and service item display if exist
 															#if ($specType == "T")
 																#if($specCombine.zoneName == "&nbsp")
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.zoneName</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.zoneName</td>
 																#end
 																#if($specCombine.qty == "&nbsp")
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qty</td>
 																#end
 																
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 															#end
 														
 														#end
 														
 														#if ($rowCount == 0)
 															#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " " ) 
-																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whitespace</td>
+																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whitespace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.feedback</td>
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
 															#end
 															
 															
 															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#else
 																#if ($specCombine.answerRemark)
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.answerRemark</td>
 																#else 
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
 															#end
 															
-															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$whitespace</td>
 															#set($rowCount = $rowCount + 1)
 														#end
 														
@@ -2257,7 +2276,7 @@ Should be product and service item display if exist
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-																<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; font-size:12px;">$combine.specVal</td>
+																<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
 												
 															##feedback
 															
@@ -2266,10 +2285,10 @@ Should be product and service item display if exist
 
 																#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
 																			
 																#end
 																			
@@ -2277,13 +2296,13 @@ Should be product and service item display if exist
 															
 															##remark
 															#if ($combine.remark == "&nbsp;" || $combine.remark == " ") 
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>		
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 															#else
 																#if ($combine.remark)
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.remark</td>
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
 																	
 																#else 
-																	<td valign="top" class="title border left"   style="text-align: left; padding-left: 5px; font-size:12px;">$serviceScope</td>
+																	<td valign="top" class="title border left"   style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
 															#end
 														</tr>
@@ -2304,45 +2323,45 @@ Should be product and service item display if exist
 													
 													##26130- zaim start
 													#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 													##26130 - zaim end
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.uomName</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.uomName</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">
 														#if ($specCombine.clUomFrequency)
 															$specCombine.clUomFrequency
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">
 														#if ($specCombine.clUomPerDay)
 															$specCombine.clUomPerDay
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">
 														#if ($specCombine.clUomPerMonth)
 															$specCombine.clUomPerMonth
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.qty</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qty</td>
 													#if ($specType == "T")
 														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ")
-															<td class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$whitespace</td>
+															<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 														#else
-															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$specCombine.feedback</td>
+															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.feedback</td>
 														#end					
 													#end
 
 													#if ($specCombine.remark == "&nbsp;" || $specCombine.remark == " ") 
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 													#else
 														#if ($specCombine.remark)
-															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$specCombine.remark</td>
+															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.remark</td>
 														#else 
-															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 														#end
 													#end		
 													
 													##26130 - start 03032022
-													<td class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+													<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$whitespace</td>
 												##26130 - end 03032022
 											</tr>	
 											#end
@@ -2353,7 +2372,7 @@ Should be product and service item display if exist
 												##specval
 												#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-												<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; font-size:12px;">$combine.specVal</td>
+												<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
 											
 														##feedback
 														
@@ -2362,13 +2381,13 @@ Should be product and service item display if exist
 
 																	#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																			#set($count = $count + 1)
-																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$combine.feedback</td>
+																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
 																			
 																	#else
 																		#if(!$combine.feedback)
-																			<td class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$whitespace</td>
+																			<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 																		#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.feedback</td>
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
 																		#end
 																		
 																	#end
@@ -2377,13 +2396,13 @@ Should be product and service item display if exist
 														
 														##remark
 														#if ($combine.remark == "&nbsp;" || $combine.remark == " ") 
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>	
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>	
 														#else
 															#if ($combine.remark)
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$combine.remark</td>
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
 																
 															#else 
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#end
 														#end
 												#end
@@ -2398,7 +2417,6 @@ Should be product and service item display if exist
 							
 							#set($rowCount = $rowCount + 1)
 							##26130 - start 03032022		
-								</tbody>
 							</table>
 							#if ($rowCount > 0)
 							<div class="break-after"><br/></div>
@@ -2410,57 +2428,58 @@ Should be product and service item display if exist
 				
 		#end
 #else	
+	##start - 29006 note 794
 	#if ($scLoa.scLoiLoa.docType == "PR")
 	  #set($rowCount = 0)
 	  #foreach( $tplspecMaster in $masters )
 
 				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
+					#if ($itemType == "Perkhidmatan" || $itemType == "Service" || $itemType == "Produk" || $itemType == "Product")
 			      
 			       
-						<table width="100%" border="1" cellpadding="0" cellspacing="0">
+						<table width="100%" border="1" cellpadding="0" cellspacing="-1">
 							<tbody>
 					        #if ($isZonal)
 							   <tr>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Item</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">UOM</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Zon</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
+									#*-- comment out for 31552  <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th> *#
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>	
-									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="8" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
+									<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="8" style="text-align: center;">Spesifikasi</th>
 								</tr>
 							
 							#else
 									<tr>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10x;">Item</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Jenis Pemenuhan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">UOM</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kekerapan / <br/>Unit Ukuran</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sehari</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Tempoh (Bulan)</th>
-									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
+									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
 								<tr>	
-									<td valign="top"  bgcolor="#6d839b" class="title border left" colspan="7" style="text-align: center; padding-left: 5px; font-size:10px;">Spesifikasi</td>
+									<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="7" style="text-align: center;">Spesifikasi</th>
 								</tr>
 								
 							  #end
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 						#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
-						##29006 - start
 						#set($isSameItem = 'false') 
 						
 						#foreach( $scLoiLoaItem in $scLoa.scLoiLoaItems )
@@ -2472,15 +2491,11 @@ Should be product and service item display if exist
 						#if ($isZonal)
 						
 							#if ($tplspecQuestion.questionType == "I" && $isSameItem == 'true')
-							##29006 - end
+							 
 							<tr>							 
 								
-								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
-									
-										$tplspecQuestion.clItem
-									
-								</td>
-								<td valign="top" class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;" >
+								<td valign="top" class="tableDataPR" rowspan="2">$tplspecQuestion.clItem</td>
+								<td valign="top" class="tableDataPR">
 								
 									#if($tplspecQuestion.clFulfilmentTypeCode)
 										$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2489,33 +2504,33 @@ Should be product and service item display if exist
 								</td>
 							
 									
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="tableDataPR">
 								
 								#if($tplspecQuestion.clUom)
 								$tplspecQuestion.clUom.uomName
 								#end
 								
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR">
 									#if ($tplspecQuestion.clUomFrequency)
 										$tplspecQuestion.clUomFrequency
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR">
 									#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 									$serviceScope 
 									#else
 									 $tplspecQuestion.clUomPerDay
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR">
 									#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 									$serviceScope 
 									#else	
 									$tplspecQuestion.clUomPerMonth 
 									#end
 								</td>
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" class="tableDataPR">
 									#if($tplspecQuestion.clDurationMonth)
 										$tplspecQuestion.clDurationMonth
 									#else	
@@ -2531,12 +2546,12 @@ Should be product and service item display if exist
 										<tr >
 											#if ($tplSpecZoneDtls.zoneName)
 												#if ($countZoneList == $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls.size())
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+													<td valign="top" rowspan="$tplSpecZoneDtls.specCount" class="tableDataPR" style="height: 80px;">$tplSpecZoneDtls.zoneName</td>
 												#else
-													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneDtls.zoneName</td>
+													<td valign="top" rowspan="$tplSpecZoneDtls.specCount" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">$tplSpecZoneDtls.zoneName</td>
 												#end
 											#else
-												<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$serviceScope</td>
+												<td valign="top" rowspan="$tplSpecZoneDtls.specCount" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">$serviceScope</td>
 											#end
 										</tr>
 										</tbody>
@@ -2545,7 +2560,9 @@ Should be product and service item display if exist
 									#end
 								</td>
 								
-								<td valign="top"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top"  class="tableDataPR">
+									
+									#* 35295 - start
 									#set($maxQty = 0)
 									#set($minQty = 0)
 									#set($currentValue = 0)								
@@ -2588,42 +2605,69 @@ Should be product and service item display if exist
 									#else
 										<span>$maxQty</span>
 									#end
-										
+									35295 - end
+									*#
+									#set($currentValue = 0)	
+									#if($currentValue == 0)
+										   	#if($tplspecQuestion.clQuantity)
+												#set($currentValue = $tplspecQuestion.clQuantity)												
+									  	   	#else
+										   		#if($tplSpecZoneQtie.qty)
+										   			#set($currentValue = $tplSpecZoneQtie.qty) 
+												#end
+									  		#end									   
+									#end	
+									<span>$currentValue</span>
 								</td>
 
-								<td valign="top" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;">							
+								<td valign="top"  class="tableDataPR" rowspan="2">							
 										#set($rowCount = 0)							
 										#if ($isWipData)											
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											<table width="100%" border="0" cellspacing="0" cellpadding="0">
-											<tbody>
-											<tr>
-												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-													<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
-												#else
-													<td valign="top" class="standard border-bottom left" style="text-align: left; border-bottom: 1px solid black; height: 80px; font-size:12px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-													
+												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
+													<table width="100%" border="0" cellspacing="0" cellpadding="0">
+													<tbody>
+													<tr>
+														#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+															<td valign="top" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
+														#else
+															<td valign="top" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
+														#end
+													</tr>
+													</tbody>
+													</table>
+												#end	
 											#end
 										#else				
+											#set($flagShowed = 0)										
 											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											#if($rowCount == 0)											
-												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-													<span>$tplSpecAnswer.answerRemark</span>
-												#else
-													<span>$serviceScope</span>
+												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
+														#if ($flagShowed != 1 && $tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
+															#set($suppRespon = $tplSpecAnswer.answerRemark)
+															#set($suppRespon = $suppRespon.replace("<", "&#60;"))
+															#set($suppRespon = $suppRespon.replace(">", "&#62;"))
+															#set($rowCount = $rowCount + 1)
+															#set($flagShowed = 1)
+															<span> $suppRespon </span>
+														#end
 												#end
 											#end
-											#set($rowCount = $rowCount + 1)
+											#if($flagShowed == 0)
+												<span>$serviceScope</span>
 											#end
 										#end
 									
 								</td>
 								
-								<td valign="top" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+								#* -- comment out for  31552 <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+										#if(($tplspecQuestion.clReviewRemark == "" ))
+										 $serviceScope 
+										#else
+											 $tplspecQuestion.clReviewRemark							
+										#end
+								</td> *#
+								
+								<td valign="top" class="tableDataPR" rowspan="2">
 								#if($serviceScope)
 								 $serviceScope 
 								 #end
@@ -2655,14 +2699,17 @@ Should be product and service item display if exist
 																								
 											#set($countSpecList = 1)
 											#foreach( $specVal in $specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
 												
 												<table width="100%">
 													<tbody>
 													<tr>
 														#if ($countSpecList == $specList.size())
-															<td valign="top" class="title border left"   style="text-align: justify; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR" style="text-align: justify;">$specVal</td>
 														#else
-															<td valign="top" class="title border left"   style="text-align: justify; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR" style="text-align: justify; border-bottom: 1px solid black;">$specVal</td>
 														#end
 														
 													</tr>
@@ -2680,16 +2727,15 @@ Should be product and service item display if exist
 								
 							
 						#else
-							##29006 - add $isSameItem
 							#if ($tplspecQuestion.questionType == "I" && $isSameItem == 'true')
 						 
 								<tr>
 								
 								
-								<td valign="top" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td valign="top" class="tableDataPR" rowspan="2">
 										$tplspecQuestion.clItem
 								</td>
-								 <td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;" >
+								 <td valign="top" class="tableDataPR">
 									
 										#if($tplspecQuestion.clFulfilmentTypeCode)
 											$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2698,40 +2744,40 @@ Should be product and service item display if exist
 									</td>
 							
 									
-									<td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top"  class="tableDataPR">
 									
 									#if($tplspecQuestion.clUom)
 									$tplspecQuestion.clUom.uomName
 									#end
 									
 									</td>
-									<td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if ($tplspecQuestion.clUomFrequency)
 											$tplspecQuestion.clUomFrequency
 										#end
 									</td>
-									<td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 										$serviceScope 
 										#else
 										 $tplspecQuestion.clUomPerDay
 										#end
 									</td>
-									<td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 										$serviceScope 
 										#else	
 										$tplspecQuestion.clUomPerMonth 
 										#end
 									</td>
-									<td valign="top" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#if($tplspecQuestion.clDurationMonth)
 											$tplspecQuestion.clDurationMonth
 										#else	
 											$serviceScope
 										#end
 									</td>
-									<td valign="top" class="title border left"  style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR">
 										#set($currentValue = 0)										
 										#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
 												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
@@ -2752,14 +2798,18 @@ Should be product and service item display if exist
 										$currentValue								
 									</td>
 									
-									<td valign="top" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR" rowspan="2">
 										#if(($tplspecQuestion.answerRemarks == "" ))
 										 $serviceScope 
 										#else
-											 $tplspecQuestion.answerRemarks							
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks)
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace("<", "&#60;"))
+											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace(">", "&#62;"))
+											 
+											$tplspecQuestion.answerRemarks
 										#end
 									</td>
-									<td valign="top" class="title border left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+									<td valign="top" class="tableDataPR" rowspan="2">
 										#if($serviceScope)
 										 $serviceScope 
 										 #end
@@ -2771,14 +2821,17 @@ Should be product and service item display if exist
 										#if ($tplspecQuestion.specList)
 											#set($countSpecList = 1)
 											#foreach( $specVal in $tplspecQuestion.specList )
+												#set($specVal = $specVal.replace("#60;", "&#60;"))
+												#set($specVal = $specVal.replace("#62;", "&#62;"))
+												#set($specVal = $specVal.replace("#and;", "&"))
 												
 												<table width="100%">
 													<tbody>
 													<tr>
 														#if ($countSpecList == $tplspecQuestion.specList.size())
-															<td valign="top" class="title border left"   style="text-align: justify; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR"  style="text-align: justify;">$specVal</td>
 														#else
-															<td valign="top" class="title border left"   style="text-align: justify; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
+															<td valign="top" class="tableDataPR" style="text-align: justify; border-bottom: 1px solid black;">$specVal</td>
 														#end
 													</tr>
 													</tbody>
@@ -2836,6 +2889,7 @@ Should be product and service item display if exist
 			</span></td>
 		</tr>
 	#end
+	##end - 29006 note 794
 #end
 
 

@@ -478,7 +478,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				checkLastTaxFRN();//Issuance of CoGSTR
 			}
 			getAcknowledgeOfficerDropdown();
-		    
+			
+			// Set evaluation
 			if(this.getManagedBean().getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				getManagedBean().setDisableEvaluation(Boolean.TRUE);
 			}
@@ -570,6 +571,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				reqDTO.setAmount(sumReceivedAmt);
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
+				//35024-Start - for performance bond checking
+				if(!resDTOInvoice.isBondComplete() && !resDTOInvoice.isCrComplete()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					
+				}
+				else //35024-End
 				if(!resDTOInvoice.isCrComplete()){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
@@ -1047,6 +1055,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			//#34686 start
+			orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 			 

@@ -73,16 +73,16 @@
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				style="float:right;" onclick="commomSuppPopUp.hide();" />
 
-			<p:commandButton value="#{lbl['lbl.btn.ok']}" id="okBtnId"
-				disabled="#{empty suppFinalizationBackingBean.managedBean.selectedCommonSupplier}"
-				style="float:right;" process="@this" partialSubmit="true"
-				actionListener="#{suppFinalizationBackingBean.awardSupplierEvent}"
-				onclick="commomSuppPopUp.hide();"
-				update="@([id$=itemListTbl],[id$=awardSupplier])" />
-		</div>
+				<!-- 26247,35157 -start- -->
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" id="okBtnId"
+					disabled="#{empty suppFinalizationBackingBean.managedBean.selectedCommonSupplier}"
+					style="float:right;" process="@this" partialSubmit="true"
+					actionListener="#{suppFinalizationBackingBean.awardSupplierEvent}"
+					onclick="commomSuppPopUp.hide();"
+					update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" />
+				<!-- 26247,35157 -end- -->
+			</div>
 	</p:panel>
 	</p:dialog>
 
 </ui:composition>
-
-<!-- ***25201 -->
