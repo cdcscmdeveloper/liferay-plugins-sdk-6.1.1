@@ -246,6 +246,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.sc.helper.QTFieldMapper;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -11188,10 +11189,11 @@ if (null != checklist && !checklist.isEmpty()) {
 	}//11104-End
 		
 		// #29732 @idham 25/07/2023 - Start
-		if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
-						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION).contains(statusId)
+		if ((Arrays.asList(
+				new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION }).contains(statusId)
 				|| (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-						.equals(statusId))) {
+						.equals(statusId)) && !this.getManagedBean().isReadOnly())) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
@@ -13921,7 +13923,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		this.getManagedBean().setFinacialItemScoreSetting(null);
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
-		this.getManagedBean().setQtCategoryList(null);
+		//remove #29732 cat list is missing
+		//this.getManagedBean().setQtCategoryList(null);	
 		this.getManagedBean().setQtSupplierList(null);
 
 	}
@@ -14667,6 +14670,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		 * IQTSpecSO.class);
 		 */
 // #29732 Start - reOpen Fix
+		if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
 		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
 				.getTobeRemoveCategoryCodes();
 		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
@@ -14677,6 +14681,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
+		}
 //#29732 End - reOpen Fix
 		
 		// 29521 - start
@@ -23219,4 +23224,40 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return Boolean.FALSE;
 	}//11104ReendorseStart728
+	
+	/**
+	 * Enable field by status n filed name.
+	 * 
+	 * @param fieldName
+	 *            the field name
+	 * @return true, if successful
+	 */
+	public boolean enableFieldByStatusNFiledName(String fieldName) {
+		Long statusId = this.getManagedBean().getCurrentStatusId();
+		//#29732		
+		if(statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)){
+			
+			 statusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		}
+		
+		return enableFieldByStatusNFiledName(fieldName, statusId, 
+				getManagedBean().isMaintanceFlow(), 
+				!getManagedBean().isReadOnly());
+
+	}
+	
+	private boolean enableFieldByStatusNFiledName(String fieldName,
+			Long statusId, boolean isMaintance, boolean isEditable) {
+
+		List<String> values = QTFieldMapper.getEnableFieldsByStatus(statusId,
+				isMaintance, isEditable);
+		if (CollectionUtils.isNotEmpty(values)) {
+			if (values.contains(fieldName)) {
+				return false;
+			}
+
+		}
+		return true;
+
+	}
 }
