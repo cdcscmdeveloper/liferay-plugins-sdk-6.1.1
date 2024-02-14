@@ -1848,7 +1848,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
 	private ScQtEpvSupplierResponse suppResp;//#21692
-	private int originalResponsePeriod;
 				
 	// #29521 - end
 	//Bug #35061 - asyrafhaziq 
@@ -11846,14 +11845,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
 		this.committeeMembersTypeMap = committeeMembersTypeMap;
-	}
-
-	public int getOriginalResponsePeriod() {
-		return originalResponsePeriod;
-	}
-
-	public void setOriginalResponsePeriod(int originalResponsePeriod) {
-		this.originalResponsePeriod = originalResponsePeriod;
 	}
 	
 }
