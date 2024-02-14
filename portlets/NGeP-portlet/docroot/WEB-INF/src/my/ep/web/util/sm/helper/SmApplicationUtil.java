@@ -15477,11 +15477,13 @@ public class SmApplicationUtil {
 					sb.append(per.getName());
 					sb.append(" ");
 					validPersonnels = true;
-				} else if (supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
-					if (validPersonnels) {
-						validPersonnels = true;
-						break;
-					}
+				}
+				if (per.getSoftcertFlg() != DbValueConst.RECORD_STATUS_ACTIVE 
+						&& supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
+					sb.append(++i + ". ");
+					sb.append(per.getName());
+					sb.append(" ");
+					validPersonnels = true;
 				}
 			}
 		}
