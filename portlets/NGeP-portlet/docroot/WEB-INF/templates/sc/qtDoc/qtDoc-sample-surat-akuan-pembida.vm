@@ -71,77 +71,7 @@
 		.text_indent {   
 			margin-left: 40px; 
 		}
-		## #32739 & #32738 - start
-		.tab {
-            display: inline-block;
-    		margin-left: 40px;
-        }
-        
-        .tab1 {
-            display: inline-block;
-    		margin-left: 11px;
-        }
-        
-        .tab2 {
-            display: inline-block;
-    		margin-left: 3px;
-        }
-        
-        .tab3 {
-            display: inline-block;
-    		margin-left: 9px;
-        }
-        
-        .tab6 {
-            display: inline-block;
-    		margin-left: 52px;
-        }
-        
-        .tab7 {
-            display: inline-block;
-    		margin-left: 27px;
-        }
-        
-        .tab8 {
-            display: inline-block;
-    		margin-left: 42px;
-        }
-        
-        .tab9 {
-            display: inline-block;
-    		margin-left: 20px;
-        }
-        
-        .tab10 {
-            display: inline-block;
-    		margin-left: 18px;
-        }
-        
-        .tab12 {
-            display: inline-block;
-    		margin-left: 45px;
-        }
-        
-        .tab13 {
-            display: inline-block;
-    		margin-left: 13px;
-        }
-        
-        .tab14 {
-            display: inline-block;
-    		margin-left: 36px;
-        }
-		
-		.tab15 {
-            display: inline-block;
-    		margin-left: 54px;
-        }
-        
-		.underline {
-			text-decoration: underline;
-		}
-		## #32739 & #32738 -end-		
-		
+
 		.text_indent_point {
 			margin-left: 15px;
 		}
