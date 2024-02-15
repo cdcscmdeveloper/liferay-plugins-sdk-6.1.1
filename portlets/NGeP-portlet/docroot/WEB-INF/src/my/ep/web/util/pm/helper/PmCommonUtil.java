@@ -2234,6 +2234,19 @@ public class PmCommonUtil implements Serializable{
 		fc.addMessage(null, new FacesMessage(severity, null,
 				getMsgFromMsgUtils(msgId, params)));
 	}
+	
+	public static void suppressFacesMsgs(FacesContext fc) {
+		List<FacesMessage> facesMessages = fc.getMessageList();
+		log.info("[suppressFacesMsg] Retrieving FacesMessage list . . . ");
+		if (CollectionUtils.isNotEmpty(facesMessages)) {
+			for (FacesMessage fm : facesMessages) {
+				log.info("[suppressFacesMsg] FacesMessage Summary/Detail: " + fm.getSummary() + "/" + fm.getDetail());
+			}
+			facesMessages = new ArrayList<FacesMessage>();
+		} else {
+			log.info("[suppressFacesMsg] Null/Empty FacesMessage list");
+		}
+	}
 
 	/**
 	 * Get Message From Message Utils By Message Id and params
