@@ -35,7 +35,7 @@ public class PeriodIntegerConverter extends IntegerConverter{
 	        } catch (ConverterException e) {
 	        	FacesMessage fac =  e.getFacesMessage();
 				fac.setDetail(ResourceBundleUtils.getMessage("lbl.sc.settings.int.error",
-						new String[] {(String) component.getAttributes().get("label"), value}, 
+						new String[] {(String) component.getAttributes().get("label")}, 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
 						new my.ep.web.util.FacesScopes().getUserLocale()));
 				throw new ConverterException(fac, e);

@@ -9568,7 +9568,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(scLoa.getContractDuration() != null && (scLoa.getContractDuration().compareTo(BigDecimal.valueOf(1)) < 0)) {
 			throw new EpException(MessageConst.ERROR_760473);
 		} else if (scLoa.getContractDuration() != null && (scLoa.getContractDuration().doubleValue() % 1 != 0)){
-			throw new EpException(MessageConst.ERROR_760472, new String[] {scLoa.getContractDuration().toString()});
+			//Reopen #25726 note 187 - issue 3
+			throw new EpException(MessageConst.ERROR_760472);
+
 		}
 		
 		//Bug #30837
