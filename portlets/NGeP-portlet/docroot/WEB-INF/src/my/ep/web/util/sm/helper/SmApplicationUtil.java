@@ -15492,5 +15492,4 @@ public class SmApplicationUtil {
 		}
 		return validPersonnels;
 	}// 29616 -end
-	
 }
