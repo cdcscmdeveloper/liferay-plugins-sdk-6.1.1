@@ -3618,23 +3618,22 @@ public class TemplateSpecBackingBean extends
 							specAns.setAnswerCompliance(null);
 						// Bug #32015 Farid start 5/11/2021
 							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((User))){
 								specAns.setUserScore(new BigDecimal(0));
 							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((Auto))){
 								specAns.setAutoScore(new BigDecimal(0));
 							}
 							
 						}
 						else{
-							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
-								specAns.setUserScore(null);
-							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+							if (specAns.getTplSpecQuestion().getScoreTypeCode() != null
+									&& (specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId()
+											.equals((User))
+											|| specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId()
+											.equals((Auto)))) {
 								specAns.setUserScore(null);
 							}
-							
 						}
 						// Bug #32015 Farid end 5/11/2021
 					}
