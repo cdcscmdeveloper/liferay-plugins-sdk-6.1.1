@@ -1320,7 +1320,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				throw new EpException(MessageConst.ERROR_776107);
+				throw new EpException(MessageConst.ERROR_000001);//35462
 				
 			}
 			return messageSuffix;	
@@ -1825,7 +1825,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 								e.getMessage()));
 			}
 
-			getManagedBean().setDocStatusList(items); ;
+			getManagedBean().setDocStatusList(items);
 		}
 
 		/**

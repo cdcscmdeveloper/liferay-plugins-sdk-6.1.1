@@ -3332,8 +3332,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
 			//#24333 - Start
-			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+			if((ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT))
+					&& ctBB.isAlreadyAmendment()){ //#35137
 				List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
 				List<CtPerformanceBond> resultBondNew = new ArrayList<CtPerformanceBond>();
 				for(CtPerformanceBond listBond : contractAmt.getCtPerformanceBonds()){

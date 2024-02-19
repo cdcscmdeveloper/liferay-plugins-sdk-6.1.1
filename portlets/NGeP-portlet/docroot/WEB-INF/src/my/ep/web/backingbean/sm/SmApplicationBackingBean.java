@@ -2637,7 +2637,15 @@ public class SmApplicationBackingBean extends
 			}				
 		}
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
-		
+		// 35311 - Start
+		for (SmFacility facility : getManagedBean().getSmAppl()
+				.getSmFacilities()) {
+			if (facility.getFacilityId() != null) {
+				assignApplicationSupportingDocs();
+				break;
+			}
+		}
+		// 35311 - end
 		subStartTime = System.currentTimeMillis();
 		// set Personnel List Count
 		calcPersonnelListCount();
@@ -9376,9 +9384,31 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSmAppl().setResubmit(true);
 		getManagedBean().setPoInquiryRespond(true);
 		getManagedBean().getPoToSupplierInquiry().setResponseDate(new Date());
+		
+		// #34392 - start
+		for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
+				.getSmApplSupportDocs()) {
+			replaceNewFile(smDocu);
+		}
+		// #34392 - end
+				
 		return submitSmApplToBpm(applType);
 
 	}
+	
+	// #34392 - start
+	private void replaceNewFile(SmApplSupportDoc smDocu) {
+		// TODO Auto-generated method stub
+		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
+			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
+				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+					smDocFile.setFileName(smDocFileNewAdded.getFileName());
+					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
+				}
+			}
+		}
+	}
+	// #34392 - end
 
 	/**
 	 * Submit sm application to bpm and save the latest information to DB.
@@ -14628,8 +14658,15 @@ public class SmApplicationBackingBean extends
 					facility.setPurchasePrice(hq.getPurchasePrice());
 					facility.setRentalRate(hq.getRentalRate());
 					facility.setOwnershipType(hq.getOwnershipType());
-					SmApplicationUtil.getInstance().cloneAddress(
-							facility.getSmAddress(), hq.getSmAddress());
+					//#34711 - START
+					if(facility.getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+						SmApplicationUtil.getInstance().cloneAddress(
+								facility.getSmAddress(), this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+					} else {
+						SmApplicationUtil.getInstance().cloneAddress(
+								facility.getSmAddress(), hq.getSmAddress());
+					}
+					//#34711 - END	
 				}
 			} else {
 				Long branchId = Long.parseLong(getManagedBean()
@@ -16696,52 +16733,34 @@ public class SmApplicationBackingBean extends
 
 		}
 
-		if (!EntityHelper
-				.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
-			Collections.sort(getManagedBean().getMandatoryDocs(),
-					new Comparator<SmApplSupportDoc>() {
-						@Override
-						public int compare(SmApplSupportDoc doc1,
-								SmApplSupportDoc doc2) {
-							if (doc1.getPmDocument().getDisplaySeq() == null) {
-								return (doc2.getPmDocument().getDisplaySeq() == null) ? 0
-										: 1;
-							}
-							if (doc2.getPmDocument().getDisplaySeq() == null) {
-								return -1;
-							}
-							return Integer.valueOf(doc1
-									.getPmDocument()
-									.getDisplaySeq()
-									.compareTo(
-											doc2.getPmDocument()
-													.getDisplaySeq()));
-						}
-					});
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())){
+			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
 		}
-
-		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getNonMandatoryDocs())) {
-			Collections.sort(getManagedBean().getNonMandatoryDocs(),
-					new Comparator<SmApplSupportDoc>() {
-						@Override
-						public int compare(SmApplSupportDoc doc1,
-								SmApplSupportDoc doc2) {
-							if (doc1.getPmDocument().getDisplaySeq() == null) {
-								return (doc2.getPmDocument().getDisplaySeq() == null) ? 0
-										: 1;
-							}
-							if (doc2.getPmDocument().getDisplaySeq() == null) {
-								return -1;
-							}
-							return Integer.valueOf(doc1
-									.getPmDocument()
-									.getDisplaySeq()
-									.compareTo(
-											doc2.getPmDocument()
-													.getDisplaySeq()));
-						}
-					});
+		
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())){
+			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
 		}
 
 		// #34392 - End
@@ -17187,6 +17206,32 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		//#11641 - END
+		// #34392 - Start
+		if (!EntityHelper.isCollectionEmpty(this.getManagedBean()
+				.getSelectedInquiryResponse().getSmApplSupportDocInquiries())) {
+			Collections.sort(this.getManagedBean().getSelectedInquiryResponse()
+					.getSmApplSupportDocInquiries(),
+					new Comparator<SmApplSupportDocInquiry>() {
+						@Override
+						public int compare(SmApplSupportDocInquiry doc1,
+								SmApplSupportDocInquiry doc2) {
+							if (doc1.getPmDocument().getDisplaySeq() == null) {
+								return (doc2.getPmDocument().getDisplaySeq() == null) ? 0
+										: 1;
+							}
+							if (doc2.getPmDocument().getDisplaySeq() == null) {
+								return -1;
+							}
+							return Integer.valueOf(doc1
+									.getPmDocument()
+									.getDisplaySeq()
+									.compareTo(
+											doc2.getPmDocument()
+													.getDisplaySeq()));
+						}
+					});
+		}
+		// #34392 - END
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
