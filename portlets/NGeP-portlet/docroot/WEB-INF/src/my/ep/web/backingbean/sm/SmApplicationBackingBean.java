@@ -17247,13 +17247,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					reqDTO.setSelectedBranch(supplierBranch);
 					//#28777 - START
 					reqDTO.setSmAppl(managedBean.getSmAppl());
+					reqDTO.setPoSdoUser(true);
 					pendingQT = mofRegistrationSO.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 					//#28777 - END 
 					
-					if (pendingQT == true) {
-						msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
-						msg.append("<br />");
-					}
 					closedQTSubmitProposal = mofRegistrationSO
 							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
 					if (closedQTSubmitProposal == true) {
