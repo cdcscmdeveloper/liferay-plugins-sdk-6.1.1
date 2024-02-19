@@ -104,7 +104,7 @@
 				<p:fileDownload value="#{questionnaireBackingBean.downloadQuestionnaire()}"/>
 			</p:commandButton> <!-- END #12768-->
 			<p:commandButton
-				action="#{questionnaireBackingBean.test()}"
+				action="#{questionnaireBackingBean.submitQuestionnaire}"
 				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 				update="@form" value="#{lbl['lbl.btn.submit']}" />
 		</div>
