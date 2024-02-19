@@ -257,6 +257,7 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setSelectedTasksToBulkReassign(null);
 		//7465 - end reendorse
 		
+		PmCommonUtil.suppressFacesMsgs(FacesContext.getCurrentInstance()); // #35325
 		// 20231010 #7465 - Start
 		if (this.getManagedBean().isFromUserMaintenanceDetails()) {
 			reinitRedirectedTaskReassignmentSearchBean();
