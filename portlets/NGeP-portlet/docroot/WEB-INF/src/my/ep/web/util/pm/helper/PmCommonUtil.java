@@ -2234,6 +2234,16 @@ public class PmCommonUtil implements Serializable{
 		fc.addMessage(null, new FacesMessage(severity, null,
 				getMsgFromMsgUtils(msgId, params)));
 	}
+	
+	// #35325 Start
+	public static void suppressFacesMsgs(FacesContext facesContext) {
+		List<FacesMessage> facesMessages = facesContext.getMessageList();
+		// Clear all FacesMessage since current FacesMessage implementation never use clientId when adding message
+		if (CollectionUtils.isNotEmpty(facesMessages)) {
+			facesMessages.clear();
+		}
+	}
+	// #35325 End
 
 	/**
 	 * Get Message From Message Utils By Message Id and params
