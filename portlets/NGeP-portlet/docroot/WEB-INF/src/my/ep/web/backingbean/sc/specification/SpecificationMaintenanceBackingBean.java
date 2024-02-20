@@ -474,7 +474,9 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
 	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
 	/* ***25692#95 - start */
-	if(renewSessionObject){
+	//#29732 fix null pointer currentstatus id for 1st time enter
+	QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean();
+	if(renewSessionObject && !isSpecEndorsmentScreen()){
 		renewSesionObject();
 	}
 	/* ***25692#95 - end */
@@ -635,6 +637,9 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		//29464-end
+		//#29732
+		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
 		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
@@ -797,4 +802,10 @@ public boolean isSpecCommittee() {
 		editSpecificationMaintenance(scQt, isEditable, true, true, previouPageId, redirect);
 	}
 	// 29464-end
+	
+	//#29732
+	public boolean isSpecEndorsmentScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+
 }

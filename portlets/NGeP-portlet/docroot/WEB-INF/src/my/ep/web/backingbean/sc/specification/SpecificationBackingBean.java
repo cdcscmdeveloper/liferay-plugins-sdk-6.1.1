@@ -11164,11 +11164,10 @@ if (null != checklist && !checklist.isEmpty()) {
 	}//11104-End
 		
 		// #29732 @idham 25/07/2023 - Start
-		if (Arrays.asList(
-				new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
-						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION }).contains(statusId)
+	   if ((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId)
 				|| (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-						.equals(statusId))) {
+						.equals(statusId)) && !this.getManagedBean().isReadOnly())) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
@@ -13920,7 +13919,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		this.getManagedBean().setFinacialItemScoreSetting(null);
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
-		this.getManagedBean().setQtCategoryList(null);
+		//remove #29732
+		//this.getManagedBean().setQtCategoryList(null);
 		this.getManagedBean().setQtSupplierList(null);
 
 	}

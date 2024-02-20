@@ -8526,7 +8526,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public boolean enableFieldByStatusNFiledName(String fieldName) {
 		Long statusId = this.getManagedBean().getCurrentStatusId();
-
+		//#29732
+		if(statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)){
+			 statusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		}
 		return enableFieldByStatusNFiledName(fieldName, statusId, 
 				getManagedBean().isMaintanceFlow(), 
 				!getManagedBean().isReadOnly());
