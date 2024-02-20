@@ -84,11 +84,19 @@
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.incomeTaxNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.incomeTaxNo}"/></td>
+					<!-- #24819 - start -->
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 					<td>
-					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
-					</td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" 
+						rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+						&#160;
+						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" rendered="#{isSuppDataMaintenance}"/> 
+						<p:tooltip id="newRegNott" for="newRegNoti" rendered="#{isSuppDataMaintenance}">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}" />
+						</p:tooltip>&#160;
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					</td><!-- #24819 - end -->
 				</tr>
 				<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.original}">
 					<tr>

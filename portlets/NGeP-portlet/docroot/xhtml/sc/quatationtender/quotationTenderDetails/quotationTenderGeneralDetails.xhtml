@@ -930,16 +930,16 @@
 					<c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly or isGenInfo}">
-							<p:inputText id="contractBo" maxlength="3"
+							<p:inputText id="#{QTFieldConst.FIELD_QT_CONTRACT_PERIOD_ID}" maxlength="3"
 								label="#{lbl['lbl.sc.spec.complete.period']}"
 								value="#{scQt.contractDuration}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
 								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
 								listener="#{createQtBB.ContractPeriodChange()}"/>
-								<f:converter converterId="periodIntegerConverter"/>
+								<f:converter converterId="periodConverter"/>
 							</p:inputText>
-							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
+							<p:message id="completionBo" for="#{QTFieldConst.FIELD_QT_CONTRACT_PERIOD_ID}" display="icon"></p:message>
 						</c:when>
 						<c:otherwise>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
@@ -950,7 +950,7 @@
 								disabled="true">
 							</p:inputText>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>							
-							<p:inputText id="contractBo" maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
+							<p:inputText id="#{QTFieldConst.FIELD_QT_CONTRACT_PERIOD_ID}" maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
 								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
