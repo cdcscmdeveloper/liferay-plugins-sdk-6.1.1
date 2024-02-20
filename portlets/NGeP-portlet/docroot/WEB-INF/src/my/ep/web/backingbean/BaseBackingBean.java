@@ -1464,42 +1464,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param paramMap the param map
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void generateReport(String reportFile,
-			Map<String, String> paramMap) throws IOException {
+	protected void generateReport(String reportFile, Map<String, String> paramMap) throws IOException {
 		String reportUrl = generateReportURL(reportFile, paramMap);
 
 		HttpURLConnection urlConnection = null;
 		URL obj = new URL(reportUrl);
 		urlConnection = (HttpURLConnection) obj.openConnection();
 
-		BufferedInputStream buf = new BufferedInputStream(
-				urlConnection.getInputStream());
+		BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
 
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = PortalUtil
-				.getHttpServletResponse(portletResponse);
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
 		int position = reportFile.lastIndexOf(".jsp");
 		if (position != -1) {
 			reportFile = reportFile.substring(0, position);
 		}
 
-		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
-			res.setHeader("Content-Disposition",
-					"attachment; filename=\"" + reportFile + "_"
-							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ".rtf\"");//
+		if (paramMap.containsKey(ReportConst.DOC_TYPE_RTF)) {
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".rtf\"");//
 			res.setContentType("application/octet-stream");
-		}else{
-			res.setHeader("Content-Disposition",
-					"attachment; filename=\"" + reportFile + "_"
-							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ".pdf\"");//
+		} else {
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".pdf\"");//
 			res.setContentType("application/pdf");
 		}
-		
+
 		res.setHeader("Content-Transfer-Encoding", "binary");
-		
+
 		res.flushBuffer();
 
 		OutputStream out = res.getOutputStream();
@@ -1509,8 +1499,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		while ((size = buf.read(b, 0, b.length)) != -1) {
 			out.write(b, 0, size);
 		}
+		
 		buf.close();
 		out.close();
+		urlConnection.disconnect();
 	}
 
 	/**
@@ -1521,19 +1513,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return the string
 	 * @throws IOException 
 	 */
-	protected String generateReportURL(String reportFile,
-			Map<String, String> paramMap) throws IOException {
+	protected String generateReportURL(String reportFile, Map<String, String> paramMap) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
-		String excPrevUrl = propertiesUtils
-				.getProperty(EpPropertiesConst.EXC_PREV_URL);
-		String excNextUrl = propertiesUtils
-				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
-		
-		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
-			excNextUrl = propertiesUtils
-					.getProperty(EpPropertiesConst.EXC_NEXT_URL_RTF);
+		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+
+		if (paramMap.containsKey(ReportConst.DOC_TYPE_RTF)) {
+			excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL_RTF);
 		}
-		
+
 		if (paramMap.containsKey(ReportConst.PARAM_REPORT_OUTPUT_FORMAT)) {
 			int fromIndex = excNextUrl.indexOf(ReportConst.PARAM_REPORT_OUTPUT_FORMAT);
 			int endIndex = excNextUrl.indexOf(ReportConst.PARAM_SEPARATOR, fromIndex);
@@ -1541,7 +1529,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if (fromIndex >= 0 && endIndex >= 0) {
 				excEndUrl = excNextUrl.substring(endIndex);
 			}
-			excNextUrl = excNextUrl.substring(0, fromIndex-1) + excEndUrl;
+			excNextUrl = excNextUrl.substring(0, fromIndex - 1) + excEndUrl;
 		}
 
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
@@ -1551,7 +1539,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reportUrl.append(reportFile);
 
 		for (Entry<String, String> params : paramMap.entrySet()) {
-			if(!params.getKey().equals(ReportConst.DOC_TYPE_RTF)){
+			if (!params.getKey().equals(ReportConst.DOC_TYPE_RTF)) {
 				reportUrl.append(ReportConst.PARAM_SEPARATOR);
 				reportUrl.append(params.getKey());
 				reportUrl.append(ReportConst.VALUE_SEPARATOR);
@@ -3892,62 +3880,56 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param paramMap the param map
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void generateReportPDF(String contractNo, List<String> reportFiles,
-			Map<String, Map<String, String>> paramMaps) throws IOException { 
-		
-		PortletResponse portalresponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = PortalUtil
-				.getHttpServletResponse(portalresponse);
+	protected void generateReportPDF(String contractNo, List<String> reportFiles, Map<String, Map<String, String>> paramMaps) throws IOException {
+
+		PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(portalresponse);
 		response.setContentType("Content-type: text/zip");
-		response.setHeader("Content-Disposition",
-				"attachment; filename="+ contractNo + "_Amendment Update.zip");
-		
+		response.setHeader("Content-Disposition", "attachment; filename=" + contractNo + "_Amendment Update.zip");
+
 		Map<String, String> paramMap;
-		
-		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-				response.getOutputStream()));
-		
-		for(String reportFile : reportFiles){
+
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+
+		for (String reportFile : reportFiles) {
 			String fileType = "";
 
 			paramMap = paramMaps.get(reportFile);
-			
-			if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL)){
+
+			if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL)) {
 				fileType = "_Amendment Detail";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE)) {
 				fileType = "_Zone";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)) {
 				fileType = "_Agency";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL) ||
-					reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL) || reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL)) {
 				fileType = "_Item";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION)) {
 				fileType = "_Deduction";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE)) {
 				fileType = "_Schedule";
 			}
-			
+
 			zos.putNextEntry(new ZipEntry(contractNo + fileType + ".pdf"));
-			
+
 			String reportUrl = generateReportURL(reportFile, paramMap);
-	
+
 			HttpURLConnection urlConnection = null;
 			URL obj = new URL(reportUrl);
 			urlConnection = (HttpURLConnection) obj.openConnection();
-	
-			BufferedInputStream buf = new BufferedInputStream(
-					urlConnection.getInputStream());
-			
+
+			BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
+
 			int size = 0;
 			while ((size = buf.read()) != -1) {
 				zos.write(size);
 			}
 			buf.close();
+			urlConnection.disconnect();
 		}
 		zos.closeEntry();
 		zos.close();
-		response.flushBuffer();		
+		response.flushBuffer();
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	//Enhancement 29418 - end
