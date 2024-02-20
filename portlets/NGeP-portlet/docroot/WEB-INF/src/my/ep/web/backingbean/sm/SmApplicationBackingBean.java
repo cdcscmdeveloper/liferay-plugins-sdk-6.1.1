@@ -17352,7 +17352,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			break;
 		default:
-			getManagedBean().setDeleteBranchMsg("testinggg");
 			if (managedBean.isPoUser()) {
 				if (process.equalsIgnoreCase("approveDialog")) {
 					assignFinalApproveOrReject(process);
