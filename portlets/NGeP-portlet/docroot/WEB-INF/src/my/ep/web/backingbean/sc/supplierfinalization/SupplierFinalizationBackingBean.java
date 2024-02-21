@@ -2638,14 +2638,23 @@ public class SupplierFinalizationBackingBean extends
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
 			
-			log.info("test Iskandar");
-			//#12487 - start Notification to prepare LOA (without LOI)
-			if (getManagedBean().getCurrentStatusId() != null
-					&& (getManagedBean().getCurrentStatusId().equals(QTStatusConst.SF_PENDING_SIGN_OFF) || getManagedBean()
-							.getCurrentStatusId().equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK))){				
-				prepareLOANotification();
-			}
-			log.info("Check");		
+			//#12487 
+			if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(this.getManagedBean().getFinalizationMethod())){
+				
+				if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION) || currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)){				
+					//send prepare LOI
+					prepareNotification(CommonConstants.LOI);
+				}else if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || currentStatusId.equals(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION)){				
+					//send prepare LOA
+					prepareNotification(CommonConstants.LOA);
+				}
+			}else{
+				//#12487 - start Notification to prepare LOA (without LOI)
+				if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)){				
+					//send prepare LOI/LOA
+					prepareNotification(CommonConstants.LOILOA);
+				}
+			}		
 			//#12487 - end
 			
 			// #25638 - Start.
@@ -11643,8 +11652,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 	//35157 - end
 	
-	//#12487 - start Prepare LOA Notification
-	public void prepareLOANotification(){
+	//#12487 - start Prepare LOI/LOA Notification
+	public void prepareNotification(String docType){
 		FacesScopes facesScopes = new FacesScopes();
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
 		suppFinalizationReqDTO.setScQt(this.getManagedBean().getScQt());
@@ -11656,8 +11665,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		String ministryName = "";
 		long currentUser = new FacesScopes().getUserSessionBean().getUserId();
 		long assignUser = 12345678910L;
-		ScQt scqt = this.getManagedBean().getScQt();
-		String userEmail = "";
+		
+		//ScQt scqt = this.getManagedBean().getScQt();
+		//String userEmail = "";
 		
 		if (getManagedBean().getScQtFinalization() != null) {
 			if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
@@ -11684,8 +11694,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
 //		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
 //		getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
-		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser);
-		getQTSuppFinalizationSO().sendPrepareLOILOAEmailNotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser);
+		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser,docType,CommonConstants.DASHBOARD);
+		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser,docType,CommonConstants.EMAIL);
+		
+		//getQTSuppFinalizationSO().sendPrepareLOILOAEmailNotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser);
 		log.info("Test");
 	}
 	//#12487 - end

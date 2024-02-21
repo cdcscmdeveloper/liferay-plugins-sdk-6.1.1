@@ -76,6 +76,7 @@ import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
@@ -1316,13 +1317,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Acknowledge Date
 		//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
-		if (scLoa != null && (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
+		//20230111@Haziq - #12487
+		/*if (scLoa != null && (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
 				.getPmStatus().getStatusId()) ||
 				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
 						.getPmStatus().getStatusId()))) {
 			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
-		}
+		}*/
 
 		// check whether loa from s1 or s2.
 		if(scLoa != null && scLoa.getScLoiLoa() != null){ //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -3932,9 +3934,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
 				//#29693 - START
-				if(!scLoa.getScLoiLoa().getLoiRequired() == true){
-					sendNotification(); 
-				}								
+//				if(!scLoa.getScLoiLoa().getLoiRequired() == true){
+//					sendNotification(); 
+//				}								
 				//#29693 - END
 				if (resDTO.isSuccessful()) {
 					scLoa = resDTO.getScLoa();
@@ -4902,8 +4904,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		scLoa.setIssueDate(scLoa.getContractEffDate());
 
 		// Acknowledge Date
-		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
-			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) 
+		   //|| BpmOutcomeConst.BPM_SUBMIT.equals(outcome) //20230111@Haziq - #12487
+				){
+			//20230111@Haziq - #12487
+			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			Integer loaRespPeriod = scLoa.getLoaResponsePeriod();
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
@@ -11771,7 +11777,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// Bug #35078@Syazani -- End 14/09/2023
 
 	// #29693 - start
-			public void sendNotification() {
+			/*public void sendNotification() {
 				FacesScopes facesScopes = new FacesScopes();
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();			
 				reqDTO.setScLoa(getManagedBean().getScLoa());
@@ -11826,34 +11832,77 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
 //				getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
 //				getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, userEmail, ptjName, ministryName);
-			}
+			}*/
 			
-			public String retrieveDueDate(Integer days){
-				
-				List<PmConfigRuleValue> ruleValueList = new ArrayList<PmConfigRuleValue>();
-				
-				if (days != 0) {
-					getManagedBean().getScLoa().setRespPeriod(days);
-					IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-					RuleReqDTO ruleReqDTO = new RuleReqDTO();
-					ruleReqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
-					ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
-							.getRuleValueList();
-				} else
-				getManagedBean().getScLoa().setRespPeriod(null);
-				
-				Date currentDate = DateUtils.getCurrentDateWithoutTime();
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-				String dateBefore = sdf.format(currentDate);
-				
-				Calendar cal = Calendar.getInstance();	    
-			    cal.add(Calendar.DAY_OF_MONTH, days);
-			    
-			    String date = sdf.format(cal.getTime());
-				
-				return date;
+	public void validateResponsePeriod(Integer days){
+		ScLoa scLoa = getManagedBean().getScLoa();
+		
+		if (days != 0) {
+			scLoa.setRespPeriod(days);		
+			scLoa.setLoaResponsePeriod(days);
+			BigDecimal fromValue = retrieveResponsePeriod(ParameterConst.FROM_VALUE);
+			BigDecimal toValue = retrieveResponsePeriod(ParameterConst.TO_VALUE);
+			if (fromValue != null && days < fromValue.intValue()) {
+				throw new EpException(MessageConst.ERROR_775304,
+						new String[] { fromValue.toString() });
 			}
+			if (toValue != null && days > toValue.intValue()) {
+				throw new EpException(MessageConst.ERROR_775305,
+						new String[] { toValue.toString() });
+			}	
+								
+		} else{				
+			throw new EpException(MessageConst.ERROR_775303);
+		}
+	}
+	
+    public Date retrieveDueDate(){
+    	ScLoa scLoa = getManagedBean().getScLoa();
+    	Date dueDate = null;
+    	
+    	//String date = "";
+    	//Date dueDate = null;
+       if (scLoa != null && scLoa.getLoaResponsePeriod() != null && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
+				.getPmStatus().getStatusId()) ||
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(scLoa
+						.getPmStatus().getStatusId()))) {
+    	   dueDate = DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), scLoa.getLoaResponsePeriod());
+		   scLoa.setAckDueDate(dueDate);
+		} else if (scLoa != null && (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
+				.getPmStatus().getStatusId()) ||
+				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
+						.getPmStatus().getStatusId()))) {
+    	   scLoa.setAckDueDate(null);
+       }
+		
+	  return dueDate;
+	}
+	
+	private BigDecimal retrieveResponsePeriod(String value) {
+		
+		BigDecimal result = null;
+		RuleReqDTO reqDTO = new RuleReqDTO();
+		reqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+		IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+		RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
+		if (roleResDTO.isSuccessful()
+				&& CollectionUtils.isNotEmpty(roleResDTO.getRuleValueList())) {
+			if (value.equals(ParameterConst.FROM_VALUE)) {
+				result = roleResDTO.getRuleValueList()
+						.get(0).getFromValue();
+			}
+			if (value.equals(ParameterConst.TO_VALUE)) {
+				result = roleResDTO.getRuleValueList()
+						.get(0).getToValue();
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222,
+					new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
+		}
+		
+		return result;
+	}
 			// #29693 - end
 }
 

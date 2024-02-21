@@ -5920,8 +5920,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// List<String> loginIdAssignees =
 		// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
-		getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, userEmail, ptjName, ministryName);
+		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser,userEmail, ptjName, ministryName,CommonConstants.DASHBOARD);
+		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser,userEmail, ptjName, ministryName,CommonConstants.EMAIL);
+		//getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, userEmail, ptjName, ministryName);
 	}
 	// #29693 - end
 }

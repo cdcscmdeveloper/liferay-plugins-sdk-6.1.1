@@ -2338,6 +2338,10 @@ public class LOIDetailBackingBean extends
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
+		//20230111@Haziq - #12487
+		getManagedBean().setMinistryOrgProfile(retrieveMinistryOrgProfile(
+				scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
+						.getOrgProfileId():null));
 		if (scLoi != null) // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3 s
 			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
@@ -6987,7 +6991,8 @@ public class LOIDetailBackingBean extends
 			
 			
 			Map loiObj = new HashMap<>();
-			loiObj.put("language", new FacesScopes().getUserLocale());
+			loiObj.put("userLocale", new FacesScopes().getUserLocale());
+			loiObj.put("language", new FacesScopes().getUserLocale().getLanguage());
 			if (getManagedBean().getScQtFinalization() != null) {
 				if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
 					loiObj.put("assignUser", getManagedBean().getScQtFinalization().getLoiLoaById());									
@@ -7008,8 +7013,9 @@ public class LOIDetailBackingBean extends
 		} finally {
 
 		}		
-		getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt());
-		getQtAwardSO().sendLoiEmailNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt());
+		getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.DASHBOARD);
+		getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.EMAIL);
+		//getQtAwardSO().sendLoiEmailNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt());
 	}
 	//#12487 end
 
@@ -7162,4 +7168,20 @@ public class LOIDetailBackingBean extends
 		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
 	}
 	// #12471 End
+	//20230111@Haziq - #12487
+	public void userPtjListener(PmUserOrg userOrg) {
+		if (userOrg != null) {
+			this.getManagedBean().setSelectedUserPtj(userOrg);
+			this.getManagedBean().setContractSignerUser(userOrg.getPmUser());
+			
+			log.info("signerUserListener");
+		
+			ScLoi scLoi = getManagedBean().getScLoi();
+			scLoi.setContractSigner(userOrg.getPmUser());
+			scLoi.setLoiSignerDesig(userOrg.getPmUser().getDesignation());
+		
+			
+			RequestContext.getCurrentInstance().update("userOrgCcId");
+		}
+	}
 }

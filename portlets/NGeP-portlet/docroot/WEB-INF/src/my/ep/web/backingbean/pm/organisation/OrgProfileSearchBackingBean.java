@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.organisation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.el.MethodExpression;
@@ -16,6 +17,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.exception.EpException;
@@ -179,6 +181,17 @@ public class OrgProfileSearchBackingBean extends
 	
 	public void searchOrgProfiles(String orgType){
 		getManagedBean().setOrgType(orgType);
+		
+		//20230111@Haziq - #12487
+		if((getManagedBean().getPtjCodeNameSearchValues() != null && StringUtils.isNotBlank(getManagedBean().getPtjCodeNameSearchValues()))||
+			getManagedBean().getUserCodeNameSearchValues() != null && StringUtils.isNotBlank(getManagedBean().getUserCodeNameSearchValues())){
+
+			if(getManagedBean().getPtjCodeNameSearchValues().trim().length()<3 || 
+			   getManagedBean().getUserCodeNameSearchValues().trim().length()<3){
+				throw new EpException(MessageConst.ERROR_716019);
+			}
+		}
+		
 		getOrgProfileDataModel().reloadData();
 	}
 	
@@ -236,8 +249,8 @@ public class OrgProfileSearchBackingBean extends
 					FacesContext.getCurrentInstance().getELContext(), 
 					new Object[]{getManagedBean().getSelectedPtj()});
 			}
-			
-			RequestContext.getCurrentInstance().execute("ptjPopup.hide();");
+			//20230111@Haziq - #12487
+			RequestContext.getCurrentInstance().execute("userPtjPopup.hide();");
 		}
 	}
 	
@@ -267,6 +280,22 @@ public class OrgProfileSearchBackingBean extends
 					new FacesScopes().getUserLocale()));
 		}
 		
+		return items;
+	}
+	//20230111@Haziq - #12487
+	public static SelectItem[] getUserDropDown() {
+		SelectItem[] items = new SelectItem[3];
+		
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
+			items[1] = new SelectItem(ProfileManagementConst.USER_IC, ResourceBundleUtils.getMessage(
+					"lbl.pm.profiles.search.ic", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			items[2] = new SelectItem(ProfileManagementConst.USER_NAME, ResourceBundleUtils.getMessage(
+					"lbl.pm.profiles.search.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+	
 		return items;
 	}
 	
@@ -301,6 +330,42 @@ public class OrgProfileSearchBackingBean extends
 				searchBean.getDataFilterBeans().add(filterBean);
 			}
 		}
+
+		//20230111@Haziq - #12487
+		
+		if (StringUtils.isNotBlank(getManagedBean().getUserCodeName())
+				&& (StringUtils.isNotBlank(getManagedBean().getUserCodeNameSearchValues()))) {
+			if (getManagedBean().getPtjCodeName().equalsIgnoreCase(
+					ProfileManagementConst.USER_IC)) {
+				SearchFilterBean filterBean = new SearchFilterBean(
+						"pmUserOrg.pmUser.identificationNo",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+
+			} else if (getManagedBean().getPtjCodeName()
+					.equalsIgnoreCase(ProfileManagementConst.USER_NAME)) {
+				SearchFilterBean filterBean = new SearchFilterBean(
+						"pmUserOrg.pmUser.userName",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getPtjCodeNameSearchValues());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+	
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("bpk",
+						SearchOperator.OPERATOR_EQUALS.value(), true));
+		List<Long> zoneIds = new ArrayList<>();
+		zoneIds.add(getManagedBean().getZone());
+		zoneIds.add(new Long(SupplierManagementConst.PM_ZONE_SEMENANJUNG));
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmZone.zoneId",
+				SearchOperator.OPERATOR_IN.value(),
+				zoneIds));
+		
 		return searchBean;
 	}
 	

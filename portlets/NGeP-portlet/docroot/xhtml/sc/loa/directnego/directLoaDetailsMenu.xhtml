@@ -576,51 +576,59 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 					
-					<td><table><tr><td><p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
-							<p:inputText 
-									id="ContractAmtId2" value="#{directLOABackingBean.managedBean.scLoa.respPeriod}"
-									style="text-align:right;" partialSubmit="true">
-									<p:ajax event="change"
-									listener="#{directLOABackingBean.retrieveDueDate(directLOABackingBean.managedBean.scLoa.respPeriod)}"
+		<!-- #29693 start -->
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
+			</td>
+			<td><table>
+					<tr>
+						<td>
+						<c:choose>
+						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:inputText id="ContractAmtId2"
+								value="#{directLOABackingBean.managedBean.scLoa.loaResponsePeriod}"
+								style="text-align:right;" partialSubmit="true" size="5" >
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.validateResponsePeriod(directLOABackingBean.managedBean.scLoa.loaResponsePeriod)}"
 									partialSubmit="true" process="@this"
 									update="@([id$=ContractAmtId3])" />
-									</p:inputText>
-							<ac:iconTooltip
-									value="#{lbl['lbl.sc.resp.period.tooltip']}" /></td></tr></table></td>
-									
-									<td><p:outputLabel value="#{lbl['lbl.sc.resp.days']}" />
-									<p:outputPanel id="ContractAmtId3">
-									<h:panelGroup>
-									<p:inputText rendered="#{(directLOABackingBean.managedBean.scLoa.respPeriod != null) }"
-									value="#{directLOABackingBean.retrieveDueDate(directLOABackingBean.managedBean.scLoa.respPeriod)}"
-									style="text-align:right;" disabled="true" partialSubmit="true"/>
-									<p:inputText rendered="#{directLOABackingBean.managedBean.scLoa.respPeriod == null }"									
-									style="text-align:right;" disabled="true" partialSubmit="true"/>
-									</h:panelGroup>	
-									</p:outputPanel>
-							<ac:iconTooltip
-									value="#{lbl['lbl.sc.resp.due.date.tooltip']}" /></td>								
-				
-					
-				<!-- #29693 start -->
-				<!--td>
-					<table>
-						<tr>
-							<td><p:outputLabel value="Response Period/Due Date" /></td>
-							<td style="white-space: nowrap"><p:inputText
-									value="12/03/2023" id="ContractAmtId2"
-									style="text-align:right;" disabled="true" /></td>
-							<td style="margin-top: -3px"><ac:iconTooltip
-									value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" /></td>
-							<td><p:outputLabel value="Days" /></td>
-							<td><p:inputText value="105" id="ContractAmtId3"
-									style="text-align:right;" disabled="true" /></td>
-							<td style="margin-top: -3px"><ac:iconTooltip
-									value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" /></td>
-						</tr>
-					</table>
-				</td-->
-				<!-- #29693 end -->
+							</p:inputText> 	
+						</c:when>
+						<c:otherwise>
+						    <p:inputText id="ContractAmtId2"
+								value="#{directLOABackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.loaResponsePeriod}"
+								style="text-align:right;" partialSubmit="true" size="5"
+								disabled="true" >
+								
+							</p:inputText> 	
+						</c:otherwise>
+						</c:choose>
+						 </td>
+						 <td>
+				               <p:outputLabel value="#{lbl['lbl.sc.resp.days']}" />
+			             </td>
+						 <td style="margin-top: -5px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.resp.period.tooltip']}" />
+						 </td>
+			              <td>
+				           <p:outputPanel
+									id="ContractAmtId3">
+								<p:inputText
+									value="#{directLOABackingBean.retrieveDueDate()}"
+									style="text-align:right;" disabled="true" partialSubmit="true" >
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+								</p:inputText>
+										  
+				           </p:outputPanel>   
+			             </td>
+			             <td style="margin-top: -5px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.resp.due.date.tooltip']}" />
+						</td>
+			             
+					</tr>
+				</table></td>
+
+			<!-- #29693 end -->									
 			</tr>
 			<tr>
 				<td>
