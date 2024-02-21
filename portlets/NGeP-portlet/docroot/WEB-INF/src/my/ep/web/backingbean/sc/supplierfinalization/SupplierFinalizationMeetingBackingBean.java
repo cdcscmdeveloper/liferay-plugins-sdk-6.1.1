@@ -586,9 +586,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public void addPopupAction() {
 		debugLogger("addCommitteMember");
 		// #12471 Start
-		getManagedBean().setOrgCatPTJ(QTConstants.ORG_CATEGORY_PTJ);
-		getManagedBean().setOrgCatOther(QTConstants.ORG_CATEGORY_OTHERS);
-		getManagedBean().getUserSearchBean().setOrgCat(getManagedBean().getOrgCatPTJ());
+		getManagedBean().getUserSearchBean().setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		// #12471 End
 		resetUserAction();
 		// #12471
