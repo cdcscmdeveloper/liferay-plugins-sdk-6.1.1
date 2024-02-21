@@ -129,14 +129,10 @@
 							</p:inputText>	
 							&#160;
 							<!-- 32304 - start-->
-							<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"
-								rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType 
-								and backingBean.managedBean.smAppl.smCompanyBasic.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}" />
+							<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" />
 							<ui:param name="lblnewRegNoTlTip"
 								value="tt.sm.business.type.#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}" />
-							<p:tooltip id="newRegNott" for="newRegNoti"
-								rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType 
-								and backingBean.managedBean.smAppl.smCompanyBasic.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}">
+							<p:tooltip id="newRegNott" for="newRegNoti" >
 								<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}" />
 							</p:tooltip>&#160;
 							<!-- 32304 - end-->
