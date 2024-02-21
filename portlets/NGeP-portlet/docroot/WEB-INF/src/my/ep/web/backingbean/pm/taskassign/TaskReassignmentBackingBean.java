@@ -257,7 +257,6 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setSelectedTasksToBulkReassign(null);
 		//7465 - end reendorse
 		
-		PmCommonUtil.suppressFacesMsgs(FacesContext.getCurrentInstance()); // #35325
 		// 20231010 #7465 - Start
 		if (this.getManagedBean().isFromUserMaintenanceDetails()) {
 			reinitRedirectedTaskReassignmentSearchBean();
@@ -936,6 +935,12 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getReassigneeList().isEmpty()) {
+			// #35325 Start
+			// Workaround to reset already loaded data and error messages since  
+			// existing handling is throwing exception before performing other actions
+			reloadAllTaskList();
+			checkPendingTaskRemove();
+			// #35325 End
 			throw new EpException(MessageConst.ERROR_770208);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
