@@ -362,15 +362,7 @@
 	<!-- #29727 START -->
 	<ac:confirmationPopup id="pendingQTPopUpApprovePoId"
 		widget="pendingQTPopUpApprovePo"
-		okAction="backingBean.assignFinalApproveOrReject('approveDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
-		update=":form:tt:approveDialog"/>
-		
-	<ac:confirmationPopup id="pendingQTPopUpApprovePoTwoId"
-		widget="pendingQTPopUpApprovePoTwo"
-		okAction="backingBean.assignFinalApproveOrReject('approveDialog')"
+		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt; &lt;br&gt;

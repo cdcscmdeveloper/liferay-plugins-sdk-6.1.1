@@ -16879,10 +16879,8 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_721121, new String[] { deleteBranchName.toString() });
 					} else if (pendingQT == true || closedQTSubmitProposal == true) {
 						if (pendingQT == true && closedQTSubmitProposal == true) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprovePoTwo.show()");
-						} else if (process.equalsIgnoreCase("approveDialog")) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprovePo.show()");
-						} else if (process.equalsIgnoreCase("APPROVE")) {
+						} else if (process.equalsIgnoreCase("APPROVE") || process.equalsIgnoreCase("approveDialog")) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpRecommendApprovePo.show()");
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
