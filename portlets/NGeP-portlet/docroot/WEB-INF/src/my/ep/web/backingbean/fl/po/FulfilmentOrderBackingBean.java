@@ -1320,7 +1320,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				throw new EpException(MessageConst.ERROR_776107);
+				throw new EpException(MessageConst.ERROR_000001);//35462
 				
 			}
 			return messageSuffix;	
@@ -1470,13 +1470,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		 */
 		private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 				Long docId, String docNumber , String textBeforeSign) {
-			FacesScopes facesScope = new FacesScopes();
-			Long userId = facesScope.getUserSessionBean().getUserId();
 			Timestamp date = new Timestamp(System.currentTimeMillis());
 			pmDigiSign.setDocId(new BigDecimal(docId));
 			pmDigiSign.setDocNo(docNumber);
 			pmDigiSign.setDocType(docType);
-			pmDigiSign.setCreatedBy(userId);
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOriginalData(textBeforeSign);
 	     // spki 
@@ -1827,7 +1825,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 								e.getMessage()));
 			}
 
-			getManagedBean().setDocStatusList(items); ;
+			getManagedBean().setDocStatusList(items);
 		}
 
 		/**
@@ -2409,7 +2407,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			attachment.setFileName(item.getFileName());
 			attachment.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
 			attachment.setDocId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
-			attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			attachment.setSecId(FulfilmentConst.AP58_AL);
 			attachment.setBrandNew(this.getManagedBean().getAttachment().isBrandNew());
