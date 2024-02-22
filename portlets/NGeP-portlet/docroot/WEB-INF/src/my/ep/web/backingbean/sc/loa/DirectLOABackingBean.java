@@ -257,6 +257,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
+
+			// #34413 - Start
+			if (scLoa.getJustificationType() != null && !isPk7Periodic()) {
+				scLoa.setJustificationType(null);
+			}
+			// #34413 - End
+
 			if (!supplier) {
 				updateContractDetails(scLoa);
 			}
@@ -5035,15 +5042,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		VelocityContext context = new VelocityContext();
 		//#32738 & #32739 - start
 		String procurementMode = "";
-
-//		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-//				.getProcurementMode().getParameterCode())) {
-//			procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
-//		} else {
-//			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
-//		}
-		
-		String title = scQt.getQtTitle().toUpperCase();
+		String title = scQt.getQtTitle(); // #32648 remove uppercase
 		//#32738 & #32739 - end
 
 		if (title == null) {
@@ -5090,6 +5089,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			qtNo = scQt.getQtNo();
 		}
 		context.put("qtNo", qtNo);
+		
+		// #32648 populate lampiran 7 if LOA at supplier - start
+		int isLoa = 0;
+		if (null != pmUser) {
+			isLoa = 1;
+		}
+
+		context.put("isSupplierLoa", isLoa);
+		// #32648 populate lampiran 7 if LOA at supplier - end
 
 		String loaNo = "&#60;LOA No.&#62;";
 		if(scLoa.getLoaNo() != null){
@@ -8936,36 +8944,62 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
 		}
 		
-		public boolean isPk7Periodic() {
-			PmParameter qtType = null;
-			PmParameter fulfilmentType = null;
-			
-			if (null != getManagedBean().getScLoa().getQtType()) {
-				qtType = getManagedBean().getScLoa().getQtType(); 
-			}
-			
-			if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
-				fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType(); 
+	public boolean isPk7Periodic() {
+		PmParameter qtType = null;
+		PmParameter fulfilmentType = null;
+
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType();
+		}
+
+		if (null != getManagedBean().getScLoa().getScQt()
+				&& null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
+		}
+
+		// #34413 - Start
+		if (resetJustificatonPmReasonIfNull(qtType)) {
+			return true;
+		}
+		// #34413 - End
+
+		if (null != qtType
+				&& null != fulfilmentType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+				&& ((ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) && ParameterConst.FULFILMENT_TYPE_SCHEDULED
+						.equals(fulfilmentType.getParameterCode())) || (ParameterTypeConst.FULFILMENT_TYPE
+						.equals(fulfilmentType.getParameterType()) && ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+						.equals(fulfilmentType.getParameterCode())))) {
+
+			if (null == getManagedBean().getScLoa().getJustificationType()) {
+				getManagedBean().getScLoa().setJustificationType(new PmReason());
 			}
 
-			if (null != qtType && null != fulfilmentType 
-					&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
-					&& ((ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-							&& ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType.getParameterCode()))
-					|| (ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-							&& ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType.getParameterCode())))) {
-					
-				if (null == getManagedBean().getScLoa().getJustificationType()) {
-						getManagedBean().getScLoa().setJustificationType(new PmReason());
-					}
-					
-				return true;
-			}
-			
-			return false;
+			return true;
 		}
-		//#24540 - end -
+
+		return false;
+	}
+	// #24540 - end -
+
+	// #34413 - Start
+	/**
+	 * Method to return true, if dropdown of Special Item / Item In PK 7 is
+	 * selected
+	 * 
+	 * @param qtType
+	 * @return true or false
+	 **/
+	private Boolean resetJustificatonPmReasonIfNull(PmParameter qtType) {
+		if (null != qtType && ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+				&& null != getManagedBean().getScLoa().getJustificationType()) {
+			return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	// #34413 - End
 		
 	/* ***19336#83 - start */
 	public String getReasonDesc(String reasonCode) {
@@ -9001,4 +9035,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35078@Syazani -- End 14/09/2023	
+	
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_DL_CREATE
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
 }
