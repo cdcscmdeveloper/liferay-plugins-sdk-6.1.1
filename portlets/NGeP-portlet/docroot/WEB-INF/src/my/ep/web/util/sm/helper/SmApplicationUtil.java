@@ -15457,7 +15457,7 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
-	// 29616-start
+	// 29616 -start
 	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
 		log.info("******* Validate active softcert For cancel mof account******** ");
 		boolean validPersonnels = false;
@@ -15491,6 +15491,5 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722707, new String[] { sb.toString() });
 		}
 		return validPersonnels;
-	}// 29616-end
-	
+	}// 29616 -end
 }
