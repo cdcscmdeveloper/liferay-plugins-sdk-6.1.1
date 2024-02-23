@@ -423,9 +423,7 @@ public class EvaluationMeetingBackingBean extends
 						this.getManagedBean().getCommitteeType()));
 
 		// #12471 Start
-		getManagedBean().setOrgCatPTJ(QTConstants.ORG_CATEGORY_PTJ);
-		getManagedBean().setOrgCatOther(QTConstants.ORG_CATEGORY_OTHERS);
-		getManagedBean().setOrgCat(getManagedBean().getOrgCatPTJ());
+		getManagedBean().setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();
 		// #12471 End
 		getManagedBean().setSelectedPmUser(null);
@@ -1063,7 +1061,7 @@ public class EvaluationMeetingBackingBean extends
 	 */
 	public void reset() {
 		// #12471 Start
-		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -1078,7 +1076,7 @@ public class EvaluationMeetingBackingBean extends
 			buildPtjDD();
 			this.getManagedBean().setOrgType(null);
 			this.getManagedBean().setOrgName(null);
-		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatOther())) {
+		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
 			PmParameter categoryCodeParameter = this.getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,
 					ParameterConst.APPROVAL_CATEGORY_OTHERS);
 			if (categoryCodeParameter != null) {
@@ -1635,7 +1633,7 @@ public class EvaluationMeetingBackingBean extends
 									true));
 				}
 				// #12471 Start
-				if (getManagedBean().getOrgCat().equalsIgnoreCase(getManagedBean().getOrgCatPTJ())) {
+				if (getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 					String ministry = getManagedBean().getMinistry();
 					if (!StringUtils.isBlank(ministry)) {
 						searchBean.getDataFilterBeans().add(
@@ -1659,7 +1657,7 @@ public class EvaluationMeetingBackingBean extends
 										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 										SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
 					}
-				} else if (getManagedBean().getOrgCat().equalsIgnoreCase(getManagedBean().getOrgCatOther())) {
+				} else if (getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
 					String orgType = getManagedBean().getOrgType();
 					if (!StringUtils.isBlank(orgType)) {
 						searchBean.getDataFilterBeans().add(
@@ -2477,7 +2475,7 @@ public class EvaluationMeetingBackingBean extends
 	 * @param dropdown - Dropdown type (Organization Type)
 	 */
 	public void onChangeDD(String dropdown) {
-		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 			if (dropdown.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
 				this.getManagedBean().setPtjGroup(null);
 				buildPtjGroupDD();
@@ -2487,7 +2485,7 @@ public class EvaluationMeetingBackingBean extends
 				this.getManagedBean().setPtj(null);
 				buildPtjDD();
 			}
-		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatOther())
+		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)
 				&& dropdown.equalsIgnoreCase(ParameterTypeConst.ORGANISATION_TYPES)) {
 			this.getManagedBean().setOrgName(null);
 			buildOrgNameDD();
