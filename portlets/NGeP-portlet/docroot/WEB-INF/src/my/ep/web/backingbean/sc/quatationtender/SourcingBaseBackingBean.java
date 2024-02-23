@@ -87,6 +87,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateDocConst;
@@ -207,7 +208,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
-import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
@@ -215,6 +215,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -246,6 +247,7 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -844,7 +846,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				user = resDTO.getPmUser();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e); //SQUBE QT MINOR 60
 		}
 
 		return user;
@@ -2102,15 +2104,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if((overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) < 0) || (overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) == 0))
 						setBondReq = false;					
 				}
-			
+			//20231122@asyrafhaziq_25726 - Issue 16
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 
 					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
 					&& null != scLoa.getScQt() 
 					&& null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
+					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
+					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+                    || scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 				setBondReq = false;
 			}
 			
@@ -6459,4 +6464,140 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return Boolean.FALSE;
 	}//11104_newEndorseEnd
+	
+	//12471 Start
+	/**
+	 * Initialize member info for  
+	 * @param memberInfo
+	 * @return void
+	 */
+	public void onClickMemberInfo(PmUser memberInfo) {
+		this.getManagedBean().setMemberName(memberInfo.getUserName());
+		for (PmUserOrg org : memberInfo.getPmUserOrgs()) {
+			if (org.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (org.getPmOrgProfile().getEpPtj()) {
+					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+					reqDTO.setOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					this.getManagedBean().setMemberMinOrg(resDTO.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				} else {
+					String orgType = this.getParameterDesc(org.getPmOrgProfile().getOrgTypeCode());
+					orgType = orgType == null ? "" : orgType;
+					this.getManagedBean().setMemberMinOrg(orgType);
+				}
+				this.getManagedBean().setMemberPtjOrgCode(org.getPmOrgProfile().getPmOrgValidity().getOrgCode());
+				this.getManagedBean().setMemberPtjOrgName(org.getPmOrgProfile().getPmOrgValidity().getOrgName());
+				break;
+			}
+		}
+		RequestContext.getCurrentInstance().execute(QTConstants.MEMBER_INFO_POPUP);
+	}
+	/**
+	 * Get user organization description
+	 * @param pmUserOrgs
+	 * @param orgType
+	 * @return String - organization description
+	 */
+	public String getOrgDesc(List<PmUserOrg> pmUserOrgs, String orgType) {
+		String desc = "";
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		for (PmUserOrg org : pmUserOrgs) {
+			if (org.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				reqDTO.setOrgProfileId(org.getPmOrgProfile().getOrgProfileId());
+				if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ_GROUP)) {
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+					desc = resDTO.getPmOrgProfile().getOrgName();
+				} else if (orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+					desc = org.getPmOrgProfile().getOrgName();
+				}
+				break;
+			}
+		}
+		return desc;
+	}
+	/**
+	 * Generate organization type dropdown
+	 */
+	public void buildOrgTypeDD() {
+		ISearchBean<Object[]> searchBean = super.createSearchBean(Object[].class, QTSearchBeanConst.SEARCH_SOMOTHERORGTYPE);
+		//Limit to only OTHERS
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(QTSearchBeanConst.SEARCH_PMPARAMETER_PARAMETERCODE, SearchOperator.OPERATOR_EQUALS.value(),
+						ParameterConst.APPROVAL_CATEGORY_OTHERS));
+		SelectItem[] items = getDropdownObjectValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		this.getManagedBean().setOrgTypeDDList(items);
+	}
+	/**
+	 * Generate organization name dropdown
+	 */
+	public void buildOrgNameDD() {
+		SelectItem[] items = null;
+		try {
+			int i = 1;
+			List<PmOrgProfile> list = new ArrayList<>();
+			if (this.getManagedBean().getOrgType() != null) {
+				String orgTypeId = this.getManagedBean().getOrgType();
+				ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+				paramReqDTO.setParameterId(Long.valueOf(orgTypeId));
+				String orgType = this.getParameterSOGlobal().retrieveParameterById(paramReqDTO).getPmParameter()
+						.getParameterCode();
+				ISearchBean<PmOrgProfile> searchBean = new SearchBean<>();
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTSearchBeanConst.SEARCH_ORGTYPECODE_PARAMETERCODE,
+								SearchOperator.OPERATOR_EQUALS.value(), orgType));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTSearchBeanConst.SEARCH_PMORGVALIDITY_ORGNAME,
+								SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));	
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileSearchBean(searchBean);
+				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
+				list = resDTO.getOrgProfileResultBean().getResultList();
+				items = new SelectItem[list.size() + 1];
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (PmOrgProfile object : list) {
+				items[i++] = new SelectItem(object.getOrgProfileId(), object.getOrgName());
+			}
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getDocNo();
+			qtNo = qtNo == null ? "" : qtNo;
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					qtNo, SLALogConstant.QT_SOURCING_BACKINGBEAN.concat(SLALogConstant.QT_BUILD_ORG_NAME_DD),
+					getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		this.getManagedBean().setOrgNameDDList(items);
+	}
+
+	// 12471 - end
+	protected Map<String,String> getMonthNumberDtls(){//SonarQubeIssuesFixed25635-Start
+		Map<String,String> monthNumbers=new HashMap<>();
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JAN), QTConstants.MONTH_ZERO);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_FEB), QTConstants.MONTH_JAN);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_MARCH), QTConstants.MONTH_FEB);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_APRIL), QTConstants.MONTH_MARCH);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_MAY), QTConstants.MONTH_APRIL);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JUNE), QTConstants.MONTH_MAY);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_JULY), QTConstants.MONTH_JUNE);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_AUG), QTConstants.MONTH_JULY);
+		monthNumbers.put(QTConstants.MONTH_ZERO.concat(QTConstants.MONTH_SEPT), QTConstants.MONTH_AUG);
+		monthNumbers.put(QTConstants.MONTH_OCT, QTConstants.MONTH_SEPT);
+		monthNumbers.put(QTConstants.MONTH_NOV, QTConstants.MONTH_OCT);
+		monthNumbers.put(QTConstants.MONTH_DEC, QTConstants.MONTH_NOV);
+		return monthNumbers;
+	}//SonarQubeIssuesFixed25635-End
 }

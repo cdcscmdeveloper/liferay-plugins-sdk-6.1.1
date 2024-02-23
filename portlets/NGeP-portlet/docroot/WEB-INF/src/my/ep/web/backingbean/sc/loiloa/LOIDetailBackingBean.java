@@ -172,12 +172,6 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
-//#12471 Start
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-//#12471 End
 
 // TODO: Auto-generated Javadoc
 /**
@@ -468,7 +462,7 @@ public class LOIDetailBackingBean extends
 					
 					//#30008 - Start	
 					if(scLoi.getNegoDecision() != null){
-						this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId().toString()));
+						this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId()));
 					}
 					//#30008 - End
 					
@@ -963,47 +957,36 @@ public class LOIDetailBackingBean extends
 				if (this.getManagedBean().isItemized()) {
 					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
 					for (ScLoi scLoi : scLois) {
-						if (scLoi.getNegoDecision() != null
-								&& ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+						if (scLoi.getNegoDecision() != null && ParameterConst.NOT_REACH_AGREEMENT.
+								equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 							getManagedBean().setDecision(new PmParameter());
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
-									if (scLoi
-											.getScLoiLoa()
-											.getSmSupplier()
-											.getSupplierId()
-											.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+									if (scLoi.getScLoiLoa().getSmSupplier().getSupplierId().
+											equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
 													.getSmSupplier().getSupplierId())) {
 										recom.setNoReachAgreement(true);
 										break;
-
 									}
 								}
 							}
 						}
 					}
-				} else {
-					// List<ScQtEvaluationResultDtl> recomSuppList =
-					// this.getManagedBean().getRecommendedSupplierList();
+				} else {		
 					List<ScQtRecommend> scRecomendedList = this.getManagedBean().getRecommendList();
 					for (ScLoi scLoi : scLois) {
-						if (scLoi.getNegoDecision() != null
-								&& ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+						if (scLoi.getNegoDecision() != null	&& ParameterConst.NOT_REACH_AGREEMENT.
+								equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 							getManagedBean().setDecision(scLoi.getNegoDecision());
 							getManagedBean().setJustification(scLoi.getDecisionJustification());
-							getManagedBean().setReadOnly(true);
 							for (ScQtRecommend recom : scRecomendedList) {
 								List<ScQtEvaluationResultDtl> recomSuppList = recom.getAwardSupplierList();
 								for (ScQtEvaluationResultDtl evalDtl : recomSuppList) {
-									if (scLoi
-											.getScLoiLoa()
-											.getSmSupplier()
-											.getSupplierId()
-											.equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+									if (scLoi.getScLoiLoa().getSmSupplier().getSupplierId().
+											equals(evalDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
 													.getSmSupplier().getSupplierId())) {
 										recom.setNoReachAgreement(true);
 										break;
@@ -2346,8 +2329,7 @@ public class LOIDetailBackingBean extends
 			scLoi.setFileExtnNo("001");//Sonarqube #83
 		
 		//#30008 - Start
-		getManagedBean().setDecision(new PmParameter());
-		getManagedBean().setDecision(scLoi.getNegoDecision());
+		this.getManagedBean().setDecisionCode(String.valueOf(scLoi.getNegoDecision().getParameterId()));
 		getManagedBean().setJustification(scLoi.getDecisionJustification());
 		//#30008 - End
 		
@@ -2531,18 +2513,20 @@ public class LOIDetailBackingBean extends
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			
 			//#30008 - Start
-			Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
-			
-			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			ParameterReqDTO reqDTO2 = new ParameterReqDTO();
-			reqDTO2.setParameterId(parameterId);
-			ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
-			PmParameter pmParameter = resDTO2.getPmParameter();
-			scLoi.setNegoDecision(pmParameter);
-			scLoi.setDecisionJustification(this.getManagedBean().getJustification());
-			//#30008 - end
+			if (this.getManagedBean().getDecisionCode() != null) {
+				Long parameterId = Long.parseLong(this.getManagedBean().getDecisionCode());
+
+				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+				ParameterReqDTO reqDTO2 = new ParameterReqDTO();
+				reqDTO2.setParameterId(parameterId);
+				ParameterResDTO resDTO2 = parameterSO.retrieveParameterById(reqDTO2);
+				PmParameter pmParameter = resDTO2.getPmParameter();
+				scLoi.setNegoDecision(pmParameter);
+				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
+				
+			}// #30008 - end
 			
 			parseLOIDetails(scLoi, outcome);
 			
@@ -2799,7 +2783,7 @@ public class LOIDetailBackingBean extends
 				scLoi.setNegoDecision(pmParameter);
 				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 
-				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+				if (ParameterConst.NOT_REACH_AGREEMENT.equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 					awardDataType.setIsAgreement(false);
 				} else {
 					awardDataType.setIsAgreement(true);
@@ -2962,7 +2946,7 @@ public class LOIDetailBackingBean extends
 				scLoi.setNegoDecision(pmParameter);
 				scLoi.setDecisionJustification(this.getManagedBean().getJustification());
 
-				if (ParameterConst.NOT_REACH_AGREEMENT.equals(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
+				if (ParameterConst.NOT_REACH_AGREEMENT.equalsIgnoreCase(String.valueOf(scLoi.getNegoDecision().getParameterId()))) {
 					awardDataType.setIsAgreement(false);
 				} else {
 					awardDataType.setIsAgreement(true);
@@ -7094,24 +7078,20 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction() {
 		try {
-			
-			String decision = String.valueOf(this.getManagedBean().getDecisionCode());
+
+			String decision = this.getManagedBean().getDecisionCode();
 			String justification = this.getManagedBean().getJustification();
 			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
-//			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(bpmAction)) {
-				if (decision == null) {
-					throw new EpException(MessageConst.ERROR_775192);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
-					throw new EpException(MessageConst.ERROR_775193);
-				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
-					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
-					updateBpmTaskAction(bpmAction);
-				}
-//			} else {
-//				updateBpmTaskAction(bpmAction);
-//			}
+			if (decision == null) {
+				throw new EpException(MessageConst.ERROR_775194);
+			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+				throw new EpException(MessageConst.ERROR_775193);
+			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+				RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+			} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+				updateBpmTaskAction(bpmAction);
+			}
 
 		} finally {
 		}
@@ -7184,4 +7164,6 @@ public class LOIDetailBackingBean extends
 			RequestContext.getCurrentInstance().update("userOrgCcId");
 		}
 	}
+=======
+>>>>>>> branch 'master' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 }

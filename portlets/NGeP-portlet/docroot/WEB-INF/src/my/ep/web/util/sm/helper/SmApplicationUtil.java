@@ -91,6 +91,7 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;	//#34397, #34398
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -522,6 +523,52 @@ public class SmApplicationUtil {
 		}
 		return validSupportDocs;
 	}
+	
+	//#34392 - Start
+	/**
+	 * Validate supporting documents.For online application check whether
+	 * supplier uploaded all the files or not
+	 * 
+	 * @param suppDocs
+	 *            - List of SmApplSupportDoc
+	 * @return true, if successful
+	 */
+	public static boolean validateSupportingDocsEnquiry(List<SmApplSupportDoc> suppDocs) {
+		boolean validSupportDocs = true;
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		for (SmApplSupportDoc doc : suppDocs) {
+			if (doc.getPmDocument() != null
+					&& doc.getPmDocument().isMandatory()
+					&& !doc.getPmDocument().isHardCopyReq()
+					&& (EntityHelper.isCollectionEmpty(doc.getNewAddedFiles())
+							|| doc.getNewAddedFiles().get(0).getFileName()
+									.equalsIgnoreCase(" ") || doc
+							.getSmApplDocFiles().get(0).getFilePath()
+							.equalsIgnoreCase(" ")) //16052019 - SSM INTEGRATION CR - #27003
+							&& !sb.toString().contains(doc.getPmDocument().getDocName())) {
+				sb.append(++i + ".)");
+				sb.append(doc.getPmDocument().getDocName());
+				// sb.append(",  ");
+				sb.append("<br/>");
+				validSupportDocs = false;
+			}
+		}
+		if (!validSupportDocs) {
+			throw new EpException(MessageConst.ERROR_722686,
+					new String[] { sb.toString() });
+		} else {
+			for (SmApplSupportDoc doc : suppDocs) {
+				if (doc.getPmDocument() != null
+						&& doc.getPmDocument().isHardCopyReq()) {
+					doc.getSmApplDocFiles().clear();
+				}
+			}
+		}
+		return validSupportDocs;
+	}
+	//#34392 - End
 
 	/**
 	 * Gets the current supplier based on the login id.
@@ -3458,9 +3505,9 @@ public class SmApplicationUtil {
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
 		//#31043 start
-//		if (managedBean.isReviewSiteVisit()) {
-//			sec.setSitevisitVerified(isVerifiedAll);
-//		}
+		if (managedBean.isReviewSiteVisit()) {
+			sec.setSitevisitVerified(isVerifiedAll);
+		}
 		//#31043 end
 		if (managedBean.isShowDockyardPanel()
 				|| managedBean.isShowFactoryPanel()
@@ -5103,73 +5150,19 @@ public class SmApplicationUtil {
 				result = true;
 				throw new EpException(MessageConst.ERROR_722566);
 			}
-			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
-			int inactiveMofAcc = 0;
-			for (SmMofAccount account : accounts) {
-				if (account.getSupplierType().equalsIgnoreCase(
-						smSupplier.getSmAppl().getSupplierType())) {
-					//SSM INTEGRATION #27111
-					if(account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_ACTIVE) == 0 || account.getRecordStatusFlg().compareTo(
-										DbValueConst.RECORD_STATUS_EXPIRED) == 0){
-						Timestamp currentDate = new Timestamp(
-								System.currentTimeMillis());
-						long diff = account.getExpDate().getTime()
-								- currentDate.getTime();
-						long diffDays = diff / (24 * 60 * 60 * 1000);
-						if (!applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							Date today = new Date();
-							if (!(today.compareTo(account.getExpDate()) < 0)) {
-								result = true;
-								throw new EpException(MessageConst.ERROR_722564);
-							}
-						}
-						if (applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							if (diffDays > 90) {
-								result = true;
-								throw new EpException(MessageConst.ERROR_722501);
-							} else if (diffDays < -365) {
-								result = true;
-								throw new EpException(MessageConst.ERROR_722502);
-							}
-						} else if (applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-								&& (diffDays >= 0 && diffDays < 90)) {
-							result = true;
-							log.debug("***************MOF Account Expiry near for Ac No.: "
-									+ account.getMofNo()
-									+ "\nExp Date:"
-									+ account.getExpDate()
-									+ "\nDiff Days:"
-									+ diffDays);
-							throw new EpException(MessageConst.ERROR_722503);
-						} else if (applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-								&& smSupplier.isBumi()) {
-							result = true;
-							throw new EpException(MessageConst.ERROR_722504);
-						//#32304 - start
-						} else if (applicationType
-								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-								&& SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
-										smSupplier.getSupplierId()).getSmAppl() != null){
-							result = true;
-							throw new EpException(MessageConst.ERROR_722697);
-						}
-						//#32304 - end
-					}else if(account.getRecordStatusFlg().compareTo(
-								DbValueConst.RECORD_STATUS_DELETED) == 0){
-						inactiveMofAcc++;
-					}
-				}
+			//#34397, #34398 - start
+			checkMOFExpiryDate(smSupplier, applicationType, false);
+			
+			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI) && smSupplier.isBumi()) {
+				throw new EpException(MessageConst.ERROR_722504);
+			
+			//#32304 - start
+			} else if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+					&& SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
+							smSupplier.getSupplierId()).getSmAppl() != null){
+				throw new EpException(MessageConst.ERROR_722697);
 			}
-
-			// Only throw exception if supplier have no active mof account
-			if (inactiveMofAcc == accounts.size()) {
-				throw new EpException(MessageConst.ERROR_722502);
-			}
+			//#32304 - end, #34397, #34398 - end			
 
 			// check maximum limit 30 categories per supplier
 			if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
@@ -5209,6 +5202,83 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	
+	//#34397, #34398 - start
+	/**
+	 * Throw error if supplier cannot create the application before MOF expiration date
+	 * @param supplier
+	 * @param applType
+	 * @param isResubmit
+	 */
+	public static void checkMOFExpiryDate(SmSupplier supplier, String applType, boolean isResubmit){
+		int renewMonth = getMofRenewalPeriodAndMofAccount(supplier, applType);
+		log.info("checkMOFExpiryDate:\tappl:_"+applType+"\tperiod:_"+renewMonth);
+		if(renewMonth <= 0){
+			return;
+		}
+		if(supplier.getSmMofAccount() == null){
+			throw new EpException(MessageConst.ERROR_722502);
+		}
+		long diff = supplier.getSmMofAccount().getExpDate().getTime() 
+				- (new Timestamp(System.currentTimeMillis())).getTime();
+		final long millisecDay = 24 * 60 * 60 * 1000L;
+		checkMOFExpiryDate(applType, diff / millisecDay, renewMonth, isResubmit);
+	}
+	
+	private static int getMofRenewalPeriodAndMofAccount(SmSupplier supplier, String applType){
+		try {
+			Long zoneId = retrieveZoneByStateId(supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()
+					.get(0).getSmAddress().getPmState().getStateId()).getZoneId();
+			for (SmMofAccount account : supplier.getSmMofAccounts()){
+				int status = account.getRecordStatusFlg().intValue();
+				if(status == DbValueConst.RECORD_STATUS_ACTIVE || status == DbValueConst.RECORD_STATUS_EXPIRED){
+					supplier.setSmMofAccount(account);
+					break;
+				}
+			}
+			return SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(applType, zoneId);
+			
+		} catch (org.eclipse.persistence.exceptions.ValidationException e) {
+			log.error(e);
+			MofAccountReqDTO mofReq = new MofAccountReqDTO();
+			mofReq.setSupplierId(supplier.getSupplierId());
+			mofReq.setApplId(supplier.getSmAppl().getApplId());
+			supplier.setSmMofAccount(SmServiceLookup.getMofAccountSO().retriveMOFAccountByApplId(mofReq)
+					.getMofAccount());
+			return SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForSupplier(applType, supplier.getSupplierId());
+		
+		} catch(NullPointerException e){
+			log.error(e);
+		}
+		return -1;
+	}
+	
+	private static void checkMOFExpiryDate(String applType, long diffDays, int renewMonth, boolean isResubmit){
+		final int days = 30;
+		if(applType.equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) 
+				|| applType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI) 
+				|| applType.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			if(diffDays < renewMonth * days){
+				String error = isResubmit ? MessageConst.ERROR_722500 : MessageConst.ERROR_722499;
+				String applName = ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, applType);
+				throw new EpException(error, new String[] {applName, String.valueOf(renewMonth)});
+			}
+			
+		} else if(applType.equals(my.ep.constant.pm.RuleTypeConst.RENEW_PERIOD_CANCEL_CAT) 
+				&& diffDays < renewMonth * days){
+			throw new EpException(MessageConst.ERROR_722498, new String[] {String.valueOf(renewMonth)});
+			
+		} else if(applType.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			final int year = -365;
+			if(diffDays > renewMonth * days){
+				throw new EpException(MessageConst.ERROR_722501, new String[] {String.valueOf(renewMonth)});
+			} else if(diffDays < year){
+				throw new EpException(MessageConst.ERROR_722502);
+			}
+		}
+	}
+	//#34397, #34398 - end
 
 	public static void validateDontHavePremise(SmAppl appl) {
 		if (appl != null
@@ -14502,7 +14572,7 @@ public class SmApplicationUtil {
 			apprApplSecRev.setRemarkToApprover(null);
 			apprApplSecRev.setPmRegStatus(null);
 			//#31043 start
-			apprApplSecRev.setSitevisitVerified(false);
+			apprApplSecRev.setSitevisitVerified(true);
 			//#31043 end
 			managedBean.setApprvrSecReview(apprApplSecRev);
 		}
@@ -15387,16 +15457,18 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
-	// 29616-start
+	// 29616 -start
 	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
 		log.info("******* Validate active softcert For cancel mof account******** ");
-		boolean validPersonnels = true;
+		boolean validPersonnels = false;
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplier.getSupplierId());
 		List<SmPersonnel> latestActivePersonnels = SmServiceLookup.getPersonnelSO()
 				.retrieveLatestPersonnelBySupplierId(reqDTO).getSmPersonnelList();
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				"sm", ISupplierSearchSO.class);
 
 		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
 			for (SmPersonnel per : latestActivePersonnels) {
@@ -15404,13 +15476,20 @@ public class SmApplicationUtil {
 					sb.append(++i + ". ");
 					sb.append(per.getName());
 					sb.append(" ");
-					validPersonnels = false;
+					validPersonnels = true;
+				}
+				if (per.getSoftcertFlg() != DbValueConst.RECORD_STATUS_ACTIVE 
+						&& supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
+					sb.append(++i + ". ");
+					sb.append(per.getName());
+					sb.append(" ");
+					validPersonnels = true;
 				}
 			}
 		}
-		if (!validPersonnels) {
+		if (validPersonnels) {
 			throw new EpException(MessageConst.ERROR_722707, new String[] { sb.toString() });
 		}
 		return validPersonnels;
-	}// 29616-end
+	}// 29616 -end
 }

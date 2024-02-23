@@ -1372,6 +1372,10 @@ public class ConsolidationReportBackingBean extends
 
 			resDTO = qtSuppFinalizationSO
 					.retrieveQtEvaluationResultDtls(reqDTO);
+			
+			// #28777 & #29729 - Start
+			this.getManagedBean().setCountSupplierBranchDeleted(resDTO.getTotalQualifiedSuppliersBranchDeleted());
+			// #28777 & #29729 - End
 
 			if (resDTO.isSuccessful()) {
 				return resDTO;
@@ -1662,6 +1666,12 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
+		
+		//#28777 & #29729 - Start
+		if(this.getManagedBean().getCountSupplierBranchDeleted() > 0){
+			minRankCount -= this.getManagedBean().getCountSupplierBranchDeleted(); 
+		}
+		//#28777 & #29729 - End
 
 		if (totalRanksCount < minRankCount) {
 			setZoneAndTabIndexOnException(isItemized, specZoneDtl);
