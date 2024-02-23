@@ -2364,7 +2364,7 @@ public class SimpleQuoteBackingBean extends
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
 						
-						// Bug #35298 - start
+						// Bug #35514 - start
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
 							if (tplSpecQuestion.getCmItem() != null
@@ -2390,7 +2390,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							}
 						}
-						// Bug #35298 - end
+						// Bug #35514 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2412,7 +2412,7 @@ public class SimpleQuoteBackingBean extends
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
 						
-						// Bug #35298 - start
+						// Bug #35514 - start
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
 							if ((tplSpecQuestion.getAnswerTypeCode() != null)
@@ -2432,7 +2432,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							}
 						}
-						// Bug #35298 - end
+						// Bug #35514 - end
 						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
@@ -4364,7 +4364,7 @@ public class SimpleQuoteBackingBean extends
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
 				
-				//Bug #35298 - get value for fulfilment type one-off
+				//Bug #35514 - get value for fulfilment type one-off
 				PmParameter FTypeOneOff = getParameterByTypeAndCode(
 						ParameterTypeConst.FULFILMENT_TYPE,
 						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
@@ -4382,7 +4382,7 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
-											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35298 - Assigning value one-off to product
+											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35514 - Assigning value one-off to product
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;
