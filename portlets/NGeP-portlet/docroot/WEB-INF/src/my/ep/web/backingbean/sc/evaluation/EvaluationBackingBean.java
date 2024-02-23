@@ -2650,6 +2650,7 @@ public void saveComplianceSample() {
 							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
 									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 											.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+								//28784 - Start
 								if (this.getManagedBean().getScQt().isDemoRequired()
 										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 												.getManagedBean().getScQt().getEvaluationType())) {
@@ -2660,6 +2661,7 @@ public void saveComplianceSample() {
 									evalStageStr = StringUtils.join(
 											Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
 								}
+								//28784 - end
 							}
 							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
 							//34943 - end
