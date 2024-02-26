@@ -12567,7 +12567,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		ScLoa scLoa = getManagedBean().getScLoa();
 		
 		if (days != 0) {
-			scLoa.setRespPeriod(days);		
+			//scLoa.setRespPeriod(days);		
 			scLoa.setLoaResponsePeriod(days);
 			BigDecimal fromValue = retrieveResponsePeriod(ParameterConst.FROM_VALUE);
 			BigDecimal toValue = retrieveResponsePeriod(ParameterConst.TO_VALUE);
