@@ -591,8 +591,6 @@ public class SmSideMenuIconUtil {
 			SmApplicationManagedBean bean, String sectionType) {
 		String retVal = StringUtils.EMPTY;
 		String applStatus = bean.getSmAppl().getPmStatus().getStatusId().toString();
-		log.info("Appl status: "+applStatus);
-		log.info("appl no: "+ bean.getSmAppl().getApplNo());
 		if (!bean.isSupplierUser()) {
 			retVal = ICON_UNTICK;
 			SmApplSectionReview rev = bean.isPoUser() ? bean.getPoSecReview()
@@ -855,8 +853,9 @@ public class SmSideMenuIconUtil {
 			//#31043 - start
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)){
-				if(bean.isApproverUser() && rev.isSitevisitVerified()){
-					rev.setSitevisitVerified(true);
+				retVal = ICON_UNTICK;
+				
+				if(rev.isSitevisitVerified()){
 					retVal = ICON_TICK;
 				}
 			}

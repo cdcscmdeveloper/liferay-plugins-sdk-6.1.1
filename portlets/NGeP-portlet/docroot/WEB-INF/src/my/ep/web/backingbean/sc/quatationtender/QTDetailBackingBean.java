@@ -1262,7 +1262,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						this.getManagedBean().getQt().getFulfilmentType()
 								.getParameterCode());
 			}
-			this.getManagedBean().setGenInfo(true);
+			//Reopen #25726 note 187 - issue 2,4,5
+			this.getManagedBean().setGenInfo(editable);
+
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
@@ -8524,7 +8526,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public boolean enableFieldByStatusNFiledName(String fieldName) {
 		Long statusId = this.getManagedBean().getCurrentStatusId();
-
+		//#29732
+		if(statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)){
+			 statusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		}
 		return enableFieldByStatusNFiledName(fieldName, statusId, 
 				getManagedBean().isMaintanceFlow(), 
 				!getManagedBean().isReadOnly());

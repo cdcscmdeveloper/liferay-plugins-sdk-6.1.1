@@ -267,6 +267,152 @@
 		</h:panelGrid>
 	</p:panel>
 	
+	<!-- #13847 start -->
+	<p:panel id="performanceBondDefermentPanel" toggleable="true" toggleSpeed="500">	
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.pb.waiver.table.title']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deferment.bond.dtls']}"/>
+	   	</f:facet>
+			
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.performance.bond']}" escape="false"/><br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.bond.waiver']}" escape="false"/><br/><br/>
+		<h:panelGrid columns="2" >
+			<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}"
+				disabled="true">
+				<p:ajax event="change" update="@all" listener="#{ctBackingBean.chkBondWaiverAction}" process="@this"/>
+	  		</p:selectBooleanCheckbox>
+	   		<h:outputFormat id="bondDefermentChckbox" value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
+	   			<f:param value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
+	 		</h:outputFormat>
+	   	</h:panelGrid>
+	   	
+		<p:outputPanel id="bondDefermentGrid" rendered="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}">
+			<p:dataGrid id="defermentDataGridId" value="#{ctBackingBean.managedBean.contractVer.bondWaiverDefermentLatest}"
+				var="bondDeferment" rowIndexVar="defermentIndex" columns="1" style="width:100%" emptyMessage="">
+				<table>
+					<tr>
+						<td>
+							<p:outputLabel id="defermentStartDateLbl" value="#{lbl['lbl.ct.pb.waiver.start.date']}" styleClass="required" />
+						</td>
+						<td>
+							<p:calendar id="defermentStartDate" value="#{bondDeferment.waiverStartDate}" styleClass="calendarDateField" size="9" 
+								readonlyInput="true" navigator="true" disabled="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+							</p:calendar>
+							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
+						</td>
+						<td>
+							<p:outputLabel id="defermentEndDateLbl" value="#{lbl['lbl.ct.pb.waiver.end.date']}" styleClass="required" />
+						</td>
+						<td colspan="2">
+							<p:calendar id="defermentEndDate" value="#{bondDeferment.waiverEndDate}" styleClass="calendarDateField" size="9" 									
+								readonlyInput="true" navigator="true" disabled="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >							
+							</p:calendar>
+							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.pb.end.date']}"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p:outputLabel id="defermentReferenceNoLbl" value="#{lbl['lbl.ct.pb.waiver.reference.no']}" styleClass="required" />
+						</td>
+						<td>
+							<p:inputText id="defermentReferenceNo" maxlength="20" style="width:130px;"
+								value="#{bondDeferment.referenceNo}"
+				 				disabled="true"  >
+							</p:inputText>
+						</td>
+						<td>
+							<h:outputLabel value="#{lbl['lbl.ct.pb.waiver.letter']}"  styleClass="required" />
+						</td>
+						<td>
+							<p:outputPanel id="uploadDocDeferment">
+								<p:commandButton icon=" ui-icon-upload" partialSubmit="true"
+									rendered="#{bondDeferment.ctAttachment.fileName == null}"
+									disabled="true" 
+									/>
+								<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.pb.waiver.letter']}"/>
+							</p:outputPanel>
+						</td>
+						<td>
+							<h:commandLink value="#{bondDeferment.ctAttachment.fileName}" 
+								styleClass="blue_font" style="word-break: break-word; overflow: hidden; display: -webkit-box; 
+								max-width: 192px; -webkit-line-clamp: 2; -webkit-box-orient: vertical;" 
+								action="#{ctBackingBean.downloadFile(bondDeferment.ctAttachment)}" />
+						</td>
+						<td>
+							<p:commandButton id="addwaiverBtn" value="#{lbl['lbl.btn.add']}" disabled="true" />
+						</td>
+					</tr>
+				</table>
+			</p:dataGrid>
+		</p:outputPanel>
+	</p:panel>
+	
+	<br></br>
+	<p:panel id="defermentHistoryPanel" toggleable="true" toggleSpeed="500">	
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.menu.performanceBond.history.header']}"/>
+	   	</f:facet>
+		<p:dataTable id="deferHistoryTable" var="bondDefermentHistory" rowIndexVar="defermentHistoryIndex" widgetVar="defermentTableWidget" 
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			render="#{ctBackingBean.managedBean.bondWaiverDefermentHistory.size >0}"
+			value="#{ctBackingBean.managedBean.contractVer.bondWaiverDefermentHistory}"  rowKey="#{rowKeyObj}">
+			<ac:paginator for="deferHistoryTable" />
+			
+			<p:column style="width:25%;" styleClass="column-align-center">
+				<f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.ct.pb.waiver.start.date']}" />
+				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}"/>
+				</f:facet>
+				
+				<p:calendar id="defermentHistoryStartDate" value="#{bondDefermentHistory.waiverStartDate}"  styleClass="calendarDateField" size="9" 
+					readonlyInput="true" navigator="true" disabled = "true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+				</p:calendar>
+			</p:column>
+			
+			<p:column style="width:25%;" styleClass="column-align-center">
+				<f:facet name="header">
+				        <h:outputText value="#{lbl['lbl.ct.pb.waiver.end.date']}" />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.pb.end.date']}"/>
+				</f:facet>
+				<p:calendar id="defermentHistoryEndDate" value="#{bondDefermentHistory.waiverEndDate}"  styleClass="calendarDateField" size="9" 
+					readonlyInput="true" navigator="true"
+					disabled = "true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+				</p:calendar>
+			</p:column>
+			<p:column style="width:20%;white-space:normal;"  styleClass="column-align-center" >
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.pb.waiver.reference.no']}"  />
+				</f:facet>
+				<h:outputText value="#{bondDefermentHistory.referenceNo}" 
+				      style="float:left;text-align:left;" />
+			</p:column>	
+			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.ct.pb.waiver.letter']}" style="width:30%;">	
+				<h:panelGroup id="defermentHistoryAttachment" columns="2">
+					<h:commandLink
+						title="#{bondDefermentHistory.ctAttachment.fileName}" value="#{bondDefermentHistory.ctAttachment.fileName}"					
+						style="float:left; overflow: hidden; text-overflow: ellipsis; 
+						max-width: 192px;" styleClass="blue_font"
+						action="#{ctBackingBean.commonDownload(bondDefermentHistory.ctAttachment.filePath, bondDefermentHistory.ctAttachment.fileName)}" />
+					<p:commandButton icon=" ui-icon-upload" 
+						disabled = "true"
+						rendered="#{bondDefermentHistory.ctAttachment.fileName eq null and bondDefermentHistory.ctAttachment.filePath eq null}"
+						/>
+					<p:commandLink 
+						disabled = "true"
+						rendered="#{bondDefermentHistory.ctAttachment.fileName ne null and bondDefermentHistory.ctAttachment.filePath ne null}">
+		  					<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
+		 			</p:commandLink>
+				</h:panelGroup>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<br/>
+	<!-- #13847 end -->
+	
 </ui:composition>
 
 
