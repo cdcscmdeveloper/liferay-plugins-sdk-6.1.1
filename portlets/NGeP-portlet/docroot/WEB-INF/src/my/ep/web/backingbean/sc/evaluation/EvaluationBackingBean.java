@@ -2654,9 +2654,7 @@ public void saveComplianceSample() {
 								if (this.getManagedBean().getScQt().isDemoRequired()
 										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 												.getManagedBean().getScQt().getEvaluationType())) {
-									evalStageStr = StringUtils.join(Arrays.asList(
-											QTConstants.PRESENTATION_DEMO_EVALUATION,
-											QTConstants.TECHNICAL_EVALUATION_BY_ITEM), ",");
+									evalStageStr = QTConstants.TECHNICAL_EVALUATION_BY_ITEM;
 								} else {
 									evalStageStr = StringUtils.join(
 											Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
