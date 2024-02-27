@@ -28,6 +28,11 @@ public class ExpiredCompanyRptBackingBean extends SmReportBackingBean<ExpiredCom
 
 		addCompanyNameParam(params);
 		
+		//7754 - Start
+		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone() == null ? StringUtils.EMPTY : getManagedBean()
+				.getZone());
+		//7754 - End
+		
 		if(StringUtils.isNotBlank(getManagedBean().getApplType())){
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE,getManagedBean().getSupplierType());
 		}
@@ -43,6 +48,9 @@ public class ExpiredCompanyRptBackingBean extends SmReportBackingBean<ExpiredCom
 	}
 	
 	public void resetSearch(){
+		//7754 - Start
+		getManagedBean().setZone(null);
+		//7754 - End
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setApplType(null);
 		setDefaultDateFromAndDateTo();

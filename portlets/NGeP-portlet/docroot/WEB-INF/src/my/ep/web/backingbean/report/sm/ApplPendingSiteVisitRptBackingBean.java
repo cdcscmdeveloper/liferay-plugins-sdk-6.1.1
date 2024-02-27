@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
@@ -31,10 +32,18 @@ public class ApplPendingSiteVisitRptBackingBean extends SmReportBackingBean<Appl
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 		
+		//#7754 - Start
+		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone() == null ? StringUtils.EMPTY : getManagedBean()
+				.getZone());
+		//#7754 - End
+
 		generateSmReport(params);
 	}
 	
 	public void resetSearch(){
+		//#7754 - Start
+		getManagedBean().setZone(null);
+		//#7754 - End
 		setDefaultDateFromAndDateTo();
 		getManagedBean().setSelectedOrgProfile(null);	
 		resetCategory();
