@@ -2127,13 +2127,13 @@ public class SpecificationBackingBean extends
 						.getScQtCheckSt2techProposal());
 			}//#11104-End
 			
-			//#28784 - Include Demo WIP
+			//#28784 - Include Demo WIP - Start
 			checkDemoVersion(getManagedBean().getQt());//#28784 -  Demo WIP
 			if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 				this.getManagedBean().setDemoAction(true);
 				this.getManagedBean().setDemoType(true);
 				resetDemoSpecStatus();				
-			}
+			}//28784 - end
 		} finally {
 			specSo = null;
 		}
@@ -11093,8 +11093,9 @@ public class SpecificationBackingBean extends
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
 		
-		//#28784 - Demo WIP
+		//#28784 - Demo WIP - Start
 		checkDemoVersion(scQt);
+		//28784 - End
 		
 		// #25638 - Start
 		if (null != this.getManagedBean().getCurrentStatusId()
