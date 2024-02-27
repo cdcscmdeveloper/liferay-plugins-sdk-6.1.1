@@ -256,6 +256,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
+
+			// #34413 - Start
+			if (scLoa.getJustificationType() != null && !isPk7Periodic()) {
+				scLoa.setJustificationType(null);
+			}
+			// #34413 - End
+
 			if (!supplier) {
 				updateContractDetails(scLoa);
 			}
@@ -2312,8 +2319,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
 
-		DirectAwardResDTO resDTO = getQtDirectAwardSO()
-				.retrieveSmPersonnelDtlsBySupplierId(reqDTO);
+		DirectAwardResDTO resDTO = getQtDirectAwardSO().retrieveSmPersonnelDtlsBySupplierId(reqDTO);
 		
 		if(resDTO.getMofNo() == null){
 			throw new EpException(MessageConst.ERROR_760552);
@@ -5060,15 +5066,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		VelocityContext context = new VelocityContext();
 		//#32738 & #32739 - start
 		String procurementMode = "";
-
-//		if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-//				.getProcurementMode().getParameterCode())) {
-//			procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
-//		} else {
-//			procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
-//		}
-		
-		String title = scQt.getQtTitle().toUpperCase();
+		String title = scQt.getQtTitle(); // #32648 remove uppercase
 		//#32738 & #32739 - end
 
 		if (title == null) {
@@ -5115,6 +5113,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			qtNo = scQt.getQtNo();
 		}
 		context.put("qtNo", qtNo);
+		
+		// #32648 populate lampiran 7 if LOA at supplier - start
+		int isLoa = 0;
+		if (null != pmUser) {
+			isLoa = 1;
+		}
+
+		context.put("isSupplierLoa", isLoa);
+		// #32648 populate lampiran 7 if LOA at supplier - end
 
 		String loaNo = "&#60;LOA No.&#62;";
 		if(scLoa.getLoaNo() != null){
@@ -8334,23 +8341,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 	public void downloadViewLoa() throws Exception {
 		log.info("start downloadViewLoa");
-	List<ScLoaReport> scloaReports=	this.getManagedBean().getScLoa().getScLoaReports();
-	if(CollectionUtils.isNotEmpty(scloaReports)){
-		ScLoaReport report=null;
-		for(ScLoaReport loaReport:scloaReports){
-			if(null!=loaReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equalsIgnoreCase(loaReport.getPmDocument().getDocDefinitionKey())){
-				log.info("LoaReport Title"+loaReport.getTitle());
-				//log.info("DocDefinitionType"+loaReport.getDefinationType().getParameterCode());
-				//log.info("LoaReportAttachment"+loaReport.getScLoaReportAttachment());
-				report = loaReport;									
-			break;	
+		List<ScLoaReport> scloaReports=	this.getManagedBean().getScLoa().getScLoaReports();
+		if(CollectionUtils.isNotEmpty(scloaReports)){
+			ScLoaReport report=null;
+			for(ScLoaReport loaReport:scloaReports){
+				if(null!=loaReport.getPmDocument() && SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equalsIgnoreCase(loaReport.getPmDocument().getDocDefinitionKey())){
+					log.info("LoaReport Title"+loaReport.getTitle());
+					//log.info("DocDefinitionType"+loaReport.getDefinationType().getParameterCode());
+					//log.info("LoaReportAttachment"+loaReport.getScLoaReportAttachment());
+					report = loaReport;									
+				break;	
+				}
+			}
+			if(null!=report){
+				//log.info("report not null"+report.getScLoaReportAttachment().getFileName());
+				downloadFile(report.getScLoaReportAttachment());
 			}
 		}
-		if(null!=report){
-			//log.info("report not null"+report.getScLoaReportAttachment().getFileName());
-			downloadFile(report.getScLoaReportAttachment());
-		}
-	}
 	}
 	
 	public String constructUserConditionFields() {
@@ -8604,11 +8611,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 		
 	private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
-	log.info("validateDuplicateItems");	
+		log.info("validateDuplicateItems");	
 		List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
 		if(null!=productScQtDoc){
 			if(null!=productScQtDoc.getTplSpecMaster()){
-			productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
+				productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
 			}
 		}
 		if(null!=serviceScQtDoc){
@@ -8619,7 +8626,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (CollectionUtils.isNotEmpty(productServiceDocs)) {
 			List<TplSpecQuestion> FinancialUiSpecQuestions = new ArrayList<TplSpecQuestion>();
 			for(TplSpecMaster itemProdSerSpecMaster: productServiceDocs){
-				
+			
 				if(CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())){
 					for (TplSpecQuestion specQuestion : itemProdSerSpecMaster.getTplSpecQuestions()) {
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specQuestion.getQuestionType())) {
@@ -8642,7 +8649,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								FinancialUiSpecQuestions.add(specQuestion);
 							}
 						}
-				
+					
 					}
 				}
 			}
@@ -8783,7 +8790,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (getManagedBean().getPk7Reasons() == null) {
 			setPk7DropDownValues();
 		}
-
+			
 		// 34420-start
 		// MC
 		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
@@ -8791,6 +8798,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return false;
 		}
 		// 34420-end
+
 		if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
 			getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
 		}
@@ -8806,16 +8814,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().setBondReqSelectedVal(getManagedBean().getNoParameterId());
 			}
 		}
-		
+			
 		if (null != qtType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())) {
 			QtTypepk7 = true;
-
+				
 			if (null == getManagedBean().getScLoa().getJustificationType()) {
 				getManagedBean().getScLoa().setJustificationType(new PmReason());
 			}
 		}
-
+			
 		if (QtTypepk7 && null != fulfilmentType
 				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
 				&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
@@ -8843,7 +8851,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		} else {
 			// 17376 -start-
 			if (!getManagedBean().getScLoa().isBondReq() && !isPk7Periodic() && !this.getManagedBean().isReadOnly()) {
-				// 17376 -end-
+			// 17376 -end-
 				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
 		}
@@ -8853,24 +8861,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	private Long getParameterIdByTypeAndCode(String paramType, String paramCode) {
 		IParameterSO parameterSO = null;
-			
+		
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IParameterSO.class);
-				
+			
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterType(paramType);
 			reqDTO.setParameterCode(paramCode);
-				
+			
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				
+			
 			if (null != resDTO && resDTO.isSuccessful() && null != resDTO.getPmParameter()) {
 				return resDTO.getPmParameter().getParameterId();
 			}
 		} finally {
 			parameterSO = null;
 		}
-			
+		
 		return null;
 	}
 		
@@ -8884,15 +8892,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		PmParameter qtType = null;
 		PmParameter fulfilmentType = null;
 		PmParameter contractType = null;
-			
+		
 		if (null != getManagedBean().getScLoa().getQtType()) {
 			qtType = getManagedBean().getScLoa().getQtType();
 		}
-			
+		
 		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
 			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
 		}
-			
+		
 		if (null != getManagedBean().getScLoa().getContractType()) {
 			contractType = getManagedBean().getScLoa().getContractType();
 		}
@@ -8903,42 +8911,41 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return false;
 		}
 		// 34420-end
-
+		
 		if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
 			getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
 		}
-			
+		
 		if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
 			getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
 		}
-			
+		
 		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
 			if (getManagedBean().getScLoa().isAgreementReq()) { 
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 			} else if (getManagedBean().getScLoa().getLoaNo() != null) {
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
 			}
-		}		
+		}
 		
-			
 		if (null != qtType && null != fulfilmentType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
 				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
 				&& ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType.getParameterCode())) {
-				
+			
 			if (null == getManagedBean().getAgreemetSelectedVal()) {
 				getManagedBean().getScLoa().setAgreementReq(false);
 			} else if (getManagedBean().getNoParameterId().equals(getManagedBean().getAgreemetSelectedVal())) {
 				getManagedBean().getScLoa().setAgreementReq(false);
 			}
-				
+			
 			// If Contract Type is selected and its not 'Ministry', then return false.
 			if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType()) 
 					&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
 				return false;
 			}
-				
+			
 			return true;
 		} else {
 			// 17376 -start-
@@ -8947,7 +8954,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				setOverallCtAmount(getManagedBean().getScLoa().getLoaAmt());
 			}
 		}
-			
+		
 		return false;
 	}
 		
@@ -8963,33 +8970,58 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public boolean isPk7Periodic() {
 		PmParameter qtType = null;
 		PmParameter fulfilmentType = null;
-		
+
 		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType(); 
-		}
-		
-		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
-			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType(); 
+			qtType = getManagedBean().getScLoa().getQtType();
 		}
 
-		if (null != qtType && null != fulfilmentType 
-				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
-				&& ((ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-						&& ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType.getParameterCode()))
-				|| (ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-						&& ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType.getParameterCode())))) {
-				
-			if (null == getManagedBean().getScLoa().getJustificationType()) {
-					getManagedBean().getScLoa().setJustificationType(new PmReason());
-				}
-				
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
+		}
+
+		// #34413 - Start
+		if (resetJustificatonPmReasonIfNull(qtType)) {
 			return true;
 		}
-		
+		// #34413 - End
+
+		if (null != qtType
+				&& null != fulfilmentType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+				&& ((ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
+				&& ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType.getParameterCode()))
+				|| (ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
+				&& ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType.getParameterCode())))) {
+
+			if (null == getManagedBean().getScLoa().getJustificationType()) {
+				getManagedBean().getScLoa().setJustificationType(new PmReason());
+			}
+
+			return true;
+		}
+
 		return false;
 	}
-	//#24540 - end -
+	// #24540 - end -
+
+	// #34413 - Start
+	/**
+	 * Method to return true, if dropdown of Special Item / Item In PK 7 is
+	 * selected
+	 * 
+	 * @param qtType
+	 * @return true or false
+	 **/
+	private Boolean resetJustificatonPmReasonIfNull(PmParameter qtType) {
+		if (null != qtType && ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+				&& null != getManagedBean().getScLoa().getJustificationType()) {
+			return Boolean.TRUE;
+		}
+
+		return Boolean.FALSE;
+	}
+	// #34413 - End
 		
 	/* ***19336#83 - start */
 	public String getReasonDesc(String reasonCode) {
@@ -9024,5 +9056,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public boolean isQtAudit() {
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-	// Bug #35078@Syazani -- End 14/09/2023
+	// Bug #35078@Syazani -- End 14/09/2023	
+	
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_DL_CREATE
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
 }
