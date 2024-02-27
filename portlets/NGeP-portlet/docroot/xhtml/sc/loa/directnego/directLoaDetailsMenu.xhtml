@@ -489,7 +489,7 @@
 							<td>
 								<c:choose>
 								<!-- 20231122@asyrafhaziq_25726 - Issue 17 --><!-- #29468 Added !isPendingApprovalStatus Vinod -->
-									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and isPendingApprovalStatus}">
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and !isPendingApprovalStatus}">
 									<p:selectOneMenu id="fulfilId"
 										required="true"
 										label="#{lbl['lbl.sc.fullfillent.type']}"
