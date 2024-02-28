@@ -4246,6 +4246,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//END #29956
 	
+	//#12487 start
+	
+	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgCode();
+		} else {
+			log.info("PTJ not found : " + orgProfileId);
+			return null;
+		}
+	}
+	
+	//#12487 end
+
 	//#32304
 	/**
 	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
@@ -4261,4 +4283,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		generateReport(report, paramMap);
 	}
+	
 }
+
