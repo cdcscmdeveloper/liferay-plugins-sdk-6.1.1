@@ -163,12 +163,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * @author siew mei
@@ -327,16 +321,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String imagePath = "";
 		if (userId != null) {
 			User user = null;
-			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest()
-					.getAttribute(WebKeys.THEME_DISPLAY);
+			ThemeDisplay themeDisplay = (ThemeDisplay) facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY);
 			try {
-				user = UserLocalServiceUtil.getUserByScreenName(
-						themeDisplay.getCompanyId(), userId);
+				user = UserLocalServiceUtil.getUserByScreenName(themeDisplay.getCompanyId(), userId);
 				if (user != null) {
-					imagePath = "/.."
-							+ user.getPortraitURL((ThemeDisplay) facesScopes
-									.getRequest().getAttribute(
-											WebKeys.THEME_DISPLAY));
+					imagePath = "/.." + user.getPortraitURL((ThemeDisplay) facesScopes.getRequest().getAttribute(WebKeys.THEME_DISPLAY));
 				}
 			} catch (Exception ex) {
 				log.error(ex.getMessage(), ex);
@@ -355,8 +344,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public boolean compareUserName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
-		if (username != null
-				&& username.equals(facesScopes.getUserScreenName())) {
+		if (username != null && username.equals(facesScopes.getUserScreenName())) {
 			return true;
 		} else {
 			return false;
@@ -368,8 +356,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public void claimBpmTask() {
 
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 
 		claimTaskByTaskId(taskId);
 
@@ -379,8 +366,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * Release bpm task.
 	 */
 	public void releaseBpmTask() {
-		String taskId = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 		releaseTaskByTaskId(taskId);
 	}
 
@@ -391,8 +377,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            taskId
 	 */
 	public void claimTaskByTaskId(String taskId) {
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 
@@ -409,8 +394,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            taskId
 	 */
 	public void releaseTaskByTaskId(String taskId) {
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 
@@ -464,8 +448,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param selected the selected
 	 * @param list the list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected,
-			List<ENTITY_CLASS> list) {
+	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected, List<ENTITY_CLASS> list) {
 		if (list != null) {
 			for (ENTITY_CLASS entity : list) {
 				entity.setSelected(selected);
@@ -479,8 +462,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param <ENTITY_CLASS> the generic type
 	 * @param list the list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(
-			List<ENTITY_CLASS> list) {
+	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(List<ENTITY_CLASS> list) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteSelectedRowsAction");
 		}
@@ -513,8 +495,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param toBeRemoved the to be removed
 	 */
-	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list,
-			ENTITY_CLASS toBeRemoved) {
+	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, ENTITY_CLASS toBeRemoved) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
@@ -531,8 +512,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param toBeRemovedList the to be removed list
 	 */
-	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list,
-			List<ENTITY_CLASS> toBeRemovedList) {
+	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
@@ -549,8 +529,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param markDeletedList the mark deleted list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(
-			List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("markDeleteSelectedRowsAction");
 		}
@@ -588,10 +567,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the component id.
 	 * @return ISearchBean instance.
 	 */
-	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(
-			Class<RETURN_CLASS> classz, String componentId) {
-		return new SearchBean<RETURN_CLASS>(
-				EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
+	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {
+		return new SearchBean<RETURN_CLASS>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
 				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
 	}
 
@@ -616,29 +593,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType,
-			ISearchBean<Object[]> searchBean) {
+	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType, ISearchBean<Object[]> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<Object[]> objects = ParameterHelper
-					.getInstance().getParameterDescListDDBySearchBean(
-							parameterType, searchBean);
+			List<Object[]> objects = ParameterHelper.getInstance().getParameterDescListDDBySearchBean(parameterType, searchBean);
 
 			items = new SelectItem[objects.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
 			for (Object[] object : objects) {
-				items[i++] = new SelectItem((Long)object[1],(String)object[0]);
+				items[i++] = new SelectItem((Long) object[1], (String) object[0]);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -651,16 +621,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {
 			items = new SelectItem[pmUsers.size() + 1];
 
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
 			int i = 1;
 			for (PmUser pmUser : pmUsers) {
 				items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
@@ -674,30 +643,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownValuesBySearchBean(String parameterType,
-			ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper
-					.getInstance().getParameterDescListBySearchBean(
-							parameterType, searchBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(parameterType, searchBean);
 
 			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterId(), parameterDesc.getCodeName());
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -1224,31 +1185,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return the streamed content
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public StreamedContent commonDownload(String path, String displayFileName)
-			throws IOException {
-		
-		String filePath = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		
+	public StreamedContent commonDownload(String path, String displayFileName) throws IOException {
+
+		String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+
 		filePath += "/" + path;
 
 		commonDownloadUtil(filePath, displayFileName);
-		
+
 		return null;
 	}
 	
-	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException{
-		
-		PortletResponse resp = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
+	public void commonDownloadUtil(String filePath, String displayFileName) throws IOException {
+
+		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
 
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename=\""+ displayFileName + "\"");
-//		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + displayFileName + "\"");
+		//response.setContentType("application/octet-stream");
 		response.setContentType(getMimeType(displayFileName));
 		response.flushBuffer();
 
@@ -1259,15 +1217,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
 			docInputStream = new FileInputStream(filePath);
-			
-			log.info("Error found while downloading file "+filePath+" : "+e);
-			//log.error(e);
-//			e.printStackTrace();
-			
+
+			log.info("Error found while downloading file " + filePath + " : " + e);
+			// log.error(e);
+			// e.printStackTrace();
+
 		}
 
 		OutputStream out = null;
-		try {		
+		try {
 
 			out = response.getOutputStream();
 			byte[] buffer = new byte[4096];
@@ -1276,14 +1234,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				out.write(buffer, 0, bytesRead);
 				buffer = new byte[4096];
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			log.error(e);
 		} finally {
 			if (out != null) {
 				out.close();
 			}
 			if (docInputStream != null) {
-				docInputStream.close();	
+				docInputStream.close();
 			}
 		}
 
@@ -2132,7 +2090,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param clazz
 	 * @return Object payLoadInstance
 	 */
-	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons) {
 		// 17376#37 -start-
@@ -2141,7 +2098,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	// 17376#37 -start-
-	@SuppressWarnings("unchecked")
 	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
 			Class<BPM_DATA_TYPE> clazz, String[] additionalButtons, String theTaskId) {
 		return getBpmTaskDetails(clazz, additionalButtons, theTaskId, null);
