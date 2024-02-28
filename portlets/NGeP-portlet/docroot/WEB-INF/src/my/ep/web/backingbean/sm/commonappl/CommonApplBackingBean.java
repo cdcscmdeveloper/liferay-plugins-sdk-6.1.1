@@ -521,20 +521,17 @@ public class CommonApplBackingBean extends
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
 					// #29664 - end
-					// #28778 - Site Visit Grouping Enhancement - 28775 - Start
-					this.getManagedBean().setSpecialCategoryRechecked(specialCategoryRechecked(appl));
-					if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW ) && this.getManagedBean().isSpecialCategoryRechecked()){
+					// #28778 - Site Visit Grouping Enhancement -28775 - Start
+					if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+							&& SmApplicationUtil.hasSpecialCategory(appl)){
+						smApplBB.getManagedBean().setSpecialCategoryRechecked(true);
+					}
+					if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+							|| appl.getApplCategoryType().equals("S")
+							|| smApplBB.getManagedBean().isSpecialCategoryRechecked()) {
 						setSiteVisitView(smApplBB.getManagedBean(), appl);
 					}
-					// #28778 - Site Visit Grouping Enhancement - 28775 - End
-					if (appl.getApplType().equals(
-							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-						setSiteVisitView(smApplBB.getManagedBean(), appl);
-					} else {
-						if (appl.getApplCategoryType().equals("S")) {
-							setSiteVisitView(smApplBB.getManagedBean(), appl);
-						}
-					}
+					// #28778 - Site Visit Grouping Enhancement -28775 - End
 				}
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
@@ -870,18 +867,6 @@ public class CommonApplBackingBean extends
 	}
 
 	}
-	
-	//28778 - Site Visit Grouping Enhancement - 28775 - Start
-	private boolean specialCategoryRechecked(SmAppl Appl){
-		for(SmSupplierCategory smSuppCat : Appl.getSmSupplierCategories()){
-		    if (smSuppCat.isSpecialCategory()){
-		    	log.info("IS IT A SPECIAL CATEGORY ? ============================== " + true);
-			 return true;
-		    }
-		}
-	  return false;
-	}
-	//28778 - Site Visit Grouping Enhancement - 28775 - End
 
 	private void setSiteVisitView(SmApplicationManagedBean bean, SmAppl appl) {
 		SmWorkflowStatus workFlow = getWorkFlowStatusByMultipleStatusAndApplId(
