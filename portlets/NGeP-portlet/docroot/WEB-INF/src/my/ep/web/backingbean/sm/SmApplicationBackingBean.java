@@ -4737,7 +4737,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (!suppCats.isEmpty()){
 			List<Long> catL3Ids = new ArrayList<>();
 			for (SmSupplierCategory cat : suppCats) {
-				if (cat.getRecordStatusFlg().equals(SupplierManagementConst.PENDING_ACT_STATUS) || isRenew) {
+				int status = cat.getRecordStatusFlg();
+				if (status == SupplierManagementConst.PENDING_ACT_STATUS
+						|| (isRenew && status == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
 				}
 			}
@@ -14388,14 +14390,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		List<SmSupplierCategory> activeList = new ArrayList<>();
 		List<SmSupplierCategory> smSuppCats = getManagedBean().getSmAppl().getSmSupplierCategories();
+		boolean isRenew = getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		if (smSuppCats != null && !smSuppCats.isEmpty()){
 			for (SmSupplierCategory activeSuppCat : smSuppCats){
-				if (activeSuppCat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+				int status = activeSuppCat.getRecordStatusFlg();
+				if (status == SupplierManagementConst.PENDING_ACT_STATUS
+						|| (isRenew && status == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					activeList.add(activeSuppCat);
 				}
-			}
-			if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-				activeList = smSuppCats;
 			}
 			//28775 - Site Visit Grouping Enhancement -28775 - end
 		}

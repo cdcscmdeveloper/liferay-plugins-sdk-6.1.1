@@ -37,7 +37,8 @@
         	<p:ajax event="rowUnselect" update=":#{p:component('deleteEmpBtnId')}" />
         	<p:ajax event="toggleSelect" update=":#{p:component('deleteEmpBtnId')}" />
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{not empty backingBean.managedBean.selectedWorkShopFacility.smSvWorkers}" />
+				rendered="#{not empty backingBean.managedBean.selectedWorkShopFacility.smSvWorkers
+							and !backingBean.managedBean.upsCannotEdit}" />
 
 			<p:column style="white-space:normal;">
 				<f:facet name="header">

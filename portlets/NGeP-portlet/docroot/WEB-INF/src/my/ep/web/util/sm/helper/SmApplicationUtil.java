@@ -6434,27 +6434,6 @@ public class SmApplicationUtil {
 		docu.setReceived(false);
 
 		setDefaultSmApplDocFiles(docu);
-		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) && doc.isByCategory()){
-			IMofRegistrationSO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-			SmApplSupportDoc prevDoc = reqSO.retrievePrevSupportingDocument(
-					appl.getSmSupplier().getSupplierId(), doc.getDocumentId());
-			if(prevDoc == null){
-				return docu;
-			}
-			docu.setLicenseNo(prevDoc.getLicenseNo());
-			docu.setLicenseEffDate(prevDoc.getLicenseEffDate());
-			docu.setLicenseExpDate(prevDoc.getLicenseExpDate());
-			docu.getSmApplDocFiles().clear();
-			for(SmApplDocFile prevFile : prevDoc.getSmApplDocFiles()){
-				SmApplDocFile docFile = new SmApplDocFile();
-				docFile.setSmApplSupportDoc(docu);
-				docFile.setFileName(prevFile.getFileName());
-				docFile.setFilePath(prevFile.getFilePath());
-				docu.getSmApplDocFiles().add(docFile);
-			}
-		}
-		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		return docu;
 	}
 
@@ -7387,11 +7366,10 @@ public class SmApplicationUtil {
 	public static void setSiteVisitData(SmApplicationManagedBean bean,
 			List<SmSiteVisitFacilityVO> voList) {
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		if (SmCommonUtil.isCollectionEmpty(bean.getSvTaskList()))
+		if (SmCommonUtil.isCollectionEmpty(bean.getSvTaskList())){
 			bean.setSvTaskList(new ArrayList<SmSvTask>());
-		
+		}
 		if (!SmCommonUtil.isCollectionEmpty(voList)) {
-			//bean.setSvTaskList(new ArrayList<SmSvTask>());
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 			// only set new list if svTask is empty
@@ -7580,8 +7558,9 @@ public class SmApplicationUtil {
 		}
 		group.setSmSvTemplate(template);
 		
-		if(svTask.getSmSvTaskGroups() == null)
+		if(svTask.getSmSvTaskGroups() == null){
 			svTask.setSmSvTaskGroups(new ArrayList<SmSvTaskGroup>());
+		}
 		svTask.getSmSvTaskGroups().add(group);
 	}
 	//28775 - Site Visit Grouping Enhancement - 28775 - end

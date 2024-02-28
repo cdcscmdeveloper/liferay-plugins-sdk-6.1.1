@@ -4468,7 +4468,6 @@ public class SmCommonUtil {
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70004":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70039":
@@ -4485,6 +4484,7 @@ public class SmCommonUtil {
 			if (msg != null) {
 				throw new EpException(msg + "(ERR-"+ ex.getMessage() + ")");
 			} else {
+				log.error(ex);
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
 		}
