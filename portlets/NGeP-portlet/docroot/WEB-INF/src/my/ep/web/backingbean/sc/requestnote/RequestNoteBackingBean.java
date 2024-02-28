@@ -1107,7 +1107,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		
-		// #29693 start - uncomment when done
+		// #29693 start 
 		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
 			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 
@@ -5889,40 +5889,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 
 		long assignUser = 12345678910L;
-		if (getManagedBean().getRequestNoteDtl() != null) {
-			if (getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
+		if (getManagedBean().getRequestNoteDtl() != null &&
+			getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
 				assignUser = getManagedBean().getRequestNoteDtl().getAssignedUser().getUserId();
-			}
 		}
 		
 		String userEmail = "";
-		if (getManagedBean().getRequestNoteDtl() != null) {
-			if (getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
+		if (getManagedBean().getRequestNoteDtl() != null &&
+			getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
 				userEmail = getManagedBean().getRequestNoteDtl().getAssignedUser().getEmail();
-			}
+			
 		}
-
-		ScRequestNote scRequestNote = new ScRequestNote();
+		
 		String ptjName = "";
 		String ministryName = "";
-		PmOrgProfile pmOrgProfile = new PmOrgProfile();
-		if (requestNoteReqDTO != null) {
-			scRequestNote = requestNoteReqDTO.getRequestNote();
-			Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
-			Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
-			ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
-			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-			ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-			log.info(ptjName);
-			log.info(ministryName);
-			// return;
-		}
+	
+		ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
+		Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
+		Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
+		ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+		PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+		ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+		log.info(ptjName);
+		log.info(ministryName);
 
-		// List<String> loginIdAssignees =
-		// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
 		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser,userEmail, ptjName, ministryName,CommonConstants.DASHBOARD);
 		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser,userEmail, ptjName, ministryName,CommonConstants.EMAIL);
-		//getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, userEmail, ptjName, ministryName);
 	}
 	// #29693 - end
 }

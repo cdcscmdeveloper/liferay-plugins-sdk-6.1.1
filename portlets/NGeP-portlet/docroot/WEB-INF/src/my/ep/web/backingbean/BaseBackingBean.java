@@ -4262,7 +4262,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			return orgProfile.getOrgCode();
 		} else {
 			log.info("PTJ not found : " + orgProfileId);
-			return "";
+			return null;
 		}
 	}
 	

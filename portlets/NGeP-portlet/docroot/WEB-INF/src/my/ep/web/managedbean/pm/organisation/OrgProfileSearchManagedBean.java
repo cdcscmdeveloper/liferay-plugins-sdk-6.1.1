@@ -32,11 +32,7 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private PmOrgProfile currentActiveOrg;
 	private boolean disabledJabatan;
 	private boolean disabledMinistry;
-	private boolean disabledPegaiPengawa;
-	//20230111@Haziq - #12487
-	private String userCodeName;
-	private String userCodeNameSearchValues;
-	private Long zone;
+	private boolean disabledPegaiPengawa;	
 	
 	
 	public OrgProfileSearchManagedBean() {
@@ -209,30 +205,6 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	 */
 	public void setDisabledPegaiPengawa(boolean disabledPegaiPengawa) {
 		this.disabledPegaiPengawa = disabledPegaiPengawa;
-	}
-
-	public String getUserCodeName() {
-		return userCodeName;
-	}
-
-	public void setUserCodeName(String userCodeName) {
-		this.userCodeName = userCodeName;
-	}
-
-	public String getUserCodeNameSearchValues() {
-		return userCodeNameSearchValues;
-	}
-
-	public void setUserCodeNameSearchValues(String userCodeNameSearchValues) {
-		this.userCodeNameSearchValues = userCodeNameSearchValues;
-	}
-
-	public Long getZone() {
-		return zone;
-	}
-
-	public void setZone(Long zone) {
-		this.zone = zone;
 	}
 
 	

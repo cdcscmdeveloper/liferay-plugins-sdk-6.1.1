@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.DropDownLabelConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -245,28 +246,12 @@ public class UserOrgSearchBackingBean extends
 	
 	public static SelectItem[] getPtjOrKptjDropDown(String orgType) {
 		SelectItem[] items = new SelectItem[2];
-		/*if(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL.equals(orgType)){
-			items[0] = new SelectItem(ProfileManagementConst.PEGAWAI_CODE, ResourceBundleUtils.getMessage(
-					"lbl.pm.org.pegaiCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
-			items[1] = new SelectItem(ProfileManagementConst.PEGAWAI_NAME, ResourceBundleUtils.getMessage(
-					"lbl.pm.org.pegaiName", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
-		}
-		if(ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)){
-			items[0] = new SelectItem(ProfileManagementConst.KPTJ_CODE, ResourceBundleUtils.getMessage(
-					"lbl.pm.org.kptjCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
-			items[1] = new SelectItem(ProfileManagementConst.KPTJ_NAME, ResourceBundleUtils.getMessage(
-					"lbl.pm.org.kptjName", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()));
-		}else */
 			if(ParameterConst.ORG_TYPE_PTJ.equals(orgType)){
 			items[0] = new SelectItem(ProfileManagementConst.PTJ_CODE, ResourceBundleUtils.getMessage(
-					"lbl.pm.org.ptjCode", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					DropDownLabelConst.PM_ORG_PTJ_CODE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 			items[1] = new SelectItem(ProfileManagementConst.PTJ_NAME, ResourceBundleUtils.getMessage(
-					"lbl.pm.org.ptjName", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					DropDownLabelConst.PM_ORG_PTJ_NAME, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 		}
 		
@@ -277,22 +262,20 @@ public class UserOrgSearchBackingBean extends
 		SelectItem[] items = new SelectItem[3];
 		
 		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		    		DropDownLabelConst.TEXT_SELECT, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
 			items[1] = new SelectItem(ProfileManagementConst.USER_IC, ResourceBundleUtils.getMessage(
-					"lbl.pm.profiles.search.ic", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					DropDownLabelConst.PM_PROFILE_IC, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 			items[2] = new SelectItem(ProfileManagementConst.USER_NAME, ResourceBundleUtils.getMessage(
-					"lbl.pm.profiles.search.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					DropDownLabelConst.PM_PROFILE_NAME, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 	
-		
 		return items;
 	}
 	
 	private ISearchBean<PmUserOrg> getSearchBeanData(ISearchBean<PmUserOrg> searchBean){
 		log.info("getSearchBeanData");	
-		System.out.println("getSearchBeanData");
 		if (StringUtils.isNotBlank(getManagedBean().getPtjCodeName())
 				&& (StringUtils.isNotBlank(getManagedBean().getPtjCodeNameSearchValues()))) {
 			if (getManagedBean().getPtjCodeName().equalsIgnoreCase(

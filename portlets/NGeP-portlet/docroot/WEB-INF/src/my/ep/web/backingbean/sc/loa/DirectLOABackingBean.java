@@ -12566,8 +12566,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	public void validateResponsePeriod(Integer days){
 		ScLoa scLoa = getManagedBean().getScLoa();
 		
-		if (days != 0) {
-			//scLoa.setRespPeriod(days);		
+		if (days != 0) {		
 			scLoa.setLoaResponsePeriod(days);
 			BigDecimal fromValue = retrieveResponsePeriod(ParameterConst.FROM_VALUE);
 			BigDecimal toValue = retrieveResponsePeriod(ParameterConst.TO_VALUE);
@@ -12589,8 +12588,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
     	ScLoa scLoa = getManagedBean().getScLoa();
     	Date dueDate = null;
     	
-    	//String date = "";
-    	//Date dueDate = null;
        if (scLoa != null && scLoa.getLoaResponsePeriod() != null && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
 				.getPmStatus().getStatusId()) ||
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(scLoa

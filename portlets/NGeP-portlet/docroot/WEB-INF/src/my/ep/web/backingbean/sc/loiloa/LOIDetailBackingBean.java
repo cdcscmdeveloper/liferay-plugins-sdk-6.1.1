@@ -2812,7 +2812,7 @@ public class LOIDetailBackingBean extends
 			
 			//#12487 start
 			//LOIDetailManagedBean loiObj = new LOIDetailManagedBean();
-			Map loiObj = new HashMap<>();
+			/*Map loiObj = new HashMap<>();
 			loiObj.put("language", new FacesScopes().getUserLocale());
 			if (getManagedBean().getScQtFinalization() != null) {
 				if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
@@ -2830,7 +2830,7 @@ public class LOIDetailBackingBean extends
 					loiObj.put("ministryName", pmOrgProfile.getPmOrgValidity().getOrgName());
 				}
 			}			
-			getManagedBean().setLoiObj(loiObj);
+			getManagedBean().setLoiObj(loiObj);*/
 			//#12487 end
 
 			if (resDTO.isSuccessful()) {
@@ -3054,6 +3054,10 @@ public class LOIDetailBackingBean extends
 				
 				if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
+					 //#12487
+					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+						prepareLoiNotification();
+					}
 					supplierSuccessMessage(messageCode, scLoi.getLoiNo(), Boolean.TRUE);
 				}
 				else{
@@ -6761,7 +6765,6 @@ public class LOIDetailBackingBean extends
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-		prepareLoiNotification(); //#12487 start
 	}
 	
 	/**
@@ -6950,7 +6953,6 @@ public class LOIDetailBackingBean extends
 	
 	//#12487 start
 	public void prepareLoiNotification(){		
-		//LOIDetailManagedBean loiObj = new LOIDetailManagedBean();
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -6959,51 +6961,39 @@ public class LOIDetailBackingBean extends
 			if ((null != this.getManagedBean().getScQt()) && (null != this.getManagedBean().getScQt().getQtId())) {
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			}
-			SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
-			resDTO = qtSuppFinalizationSO.retrieveQtById(reqDTO);
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveQtById(reqDTO);
 			
 			long profileId = 1234567890L;
-			if((null != resDTO) && (null != resDTO.getScQt())){
-				if(null != resDTO.getScQt().getPmOrgProfile()){
-					profileId = resDTO.getScQt().getPmOrgProfile().getOrgProfileId();
-				}
+			if( null != resDTO.getScQt() &&
+				null != resDTO.getScQt().getPmOrgProfile()){
+					profileId = resDTO.getScQt().getPmOrgProfile().getOrgProfileId();	
 			}
-			
-			log.info(profileId);
-			
-			resDTO = null;
-			//reqDTO = null;
-			
-			//reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationByQtId(reqDTO);
 			
 			
 			Map loiObj = new HashMap<>();
-			loiObj.put("userLocale", new FacesScopes().getUserLocale());
-			loiObj.put("language", new FacesScopes().getUserLocale().getLanguage());
-			if (getManagedBean().getScQtFinalization() != null) {
-				if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
-					loiObj.put("assignUser", getManagedBean().getScQtFinalization().getLoiLoaById());									
-				}
+			loiObj.put(CommonConstants.OBJ_USER_LOCALE, new FacesScopes().getUserLocale());
+			loiObj.put(CommonConstants.OBJ_LANGUAGE, new FacesScopes().getUserLocale().getLanguage());
+			if (getManagedBean().getScQtFinalization() != null &&
+				getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
+					loiObj.put(CommonConstants.OBJ_ASSIGN_USER, getManagedBean().getScQtFinalization().getLoiLoaById());									
+				
 			}			
-			PmOrgProfile pmOrgProfile = new PmOrgProfile();
-			Long profileId2 = getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId();
+			
 			Date createdDate = this.getManagedBean().getScQtFinalization().getCreatedDate();
-			loiObj.put("PTJName", retrievePTJByOrgProfileId(profileId, createdDate));
-			loiObj.put("PTJCode", retrievePTJCodeByOrgProfileId(profileId, createdDate));
-			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-			if(null != pmOrgProfile){
-				if(null != pmOrgProfile.getPmOrgValidity()){
-					loiObj.put("ministryName", pmOrgProfile.getPmOrgValidity().getOrgName());
-				}
+			loiObj.put(CommonConstants.OBJ_PTJ_NAME, retrievePTJByOrgProfileId(profileId, createdDate));
+			loiObj.put(CommonConstants.OBJ_PTJ_CODE, retrievePTJCodeByOrgProfileId(profileId, createdDate));
+			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			if(null != pmOrgProfile && 
+			   null != pmOrgProfile.getPmOrgValidity()){
+					loiObj.put(CommonConstants.OBJ_MINISTRY_NAME, pmOrgProfile.getPmOrgValidity().getOrgName());
+				
 			}			
 			getManagedBean().setLoiObj(loiObj);
 		} finally {
-
+			getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.DASHBOARD);
+			getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.EMAIL);
 		}		
-		getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.DASHBOARD);
-		getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.EMAIL);
-		//getQtAwardSO().sendLoiEmailNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt());
+		
 	}
 	//#12487 end
 
@@ -7013,14 +7003,14 @@ public class LOIDetailBackingBean extends
 	**/
 	public void showSupplierBranchList(Long supplierId) {
 		
-		List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
+	
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 	
 	    SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
 	    suppSearchDeletedReqDTO.setSupplierId(supplierId);
     	SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
-		supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
+    	List<SmSupplierBranch>  supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
 
 		for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
 			int statusFlag = supplierBranch.getRecordStatusFlg();
@@ -7042,7 +7032,6 @@ public class LOIDetailBackingBean extends
 	
 	private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
 		
-		List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
@@ -7050,9 +7039,8 @@ public class LOIDetailBackingBean extends
 		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
 		suppSearchReqDTO.setSupplierId(supplierId);
     	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
-    	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
     	  
-    	return supplierBranchList;
+    	return suppSearchResDTO.getSmSupplierBranchList();
 	}
 	
 	/**

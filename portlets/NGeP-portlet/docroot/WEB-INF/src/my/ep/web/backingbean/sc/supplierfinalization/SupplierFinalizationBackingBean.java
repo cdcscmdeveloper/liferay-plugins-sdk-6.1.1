@@ -2637,26 +2637,6 @@ public class SupplierFinalizationBackingBean extends
 			String committeeType = getManagedBean().getCommitteeType();
 			CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 			ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
-			
-			//#12487 
-			if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(this.getManagedBean().getFinalizationMethod())){
-				
-				if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION) || currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)){				
-					//send prepare LOI
-					prepareNotification(CommonConstants.LOI);
-				}else if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || currentStatusId.equals(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION)){				
-					//send prepare LOA
-					prepareNotification(CommonConstants.LOA);
-				}
-			}else{
-				//#12487 - start Notification to prepare LOA (without LOI)
-				if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)){				
-					//send prepare LOI/LOA
-					prepareNotification(CommonConstants.LOILOA);
-				}
-			}		
-			//#12487 - end
-			
 			// #25638 - Start.
 			if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && StringUtils.isNotBlank(committeeType) && 
 					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) && 
@@ -4018,6 +3998,33 @@ return	remarksNotFound;
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 
 				} else {
+					
+					//#12487 
+					//send notification
+				
+					 if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && 
+						  ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(this.getManagedBean().getFinalizationMethod())){
+						
+						if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION) || 
+							 currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)){				
+							//send prepare LOI
+							prepareNotification(CommonConstants.LOI);
+						}else if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+								   currentStatusId.equals(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION)){				
+							//send prepare LOA
+							prepareNotification(CommonConstants.LOA);
+						}
+					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+						//#12487 - start Notification to prepare LOA (without LOI)
+						if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+							currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
+							currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)){				
+							//send prepare LOI/LOA
+							prepareNotification(CommonConstants.LOILOA);
+						}
+					 }
+					//#12487 - end
+					
 					successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
 							.getQtNo(), Boolean.TRUE);
 				}
@@ -11657,48 +11664,31 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		FacesScopes facesScopes = new FacesScopes();
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
 		suppFinalizationReqDTO.setScQt(this.getManagedBean().getScQt());
-		//requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		suppFinalizationReqDTO.setUserLocale(facesScopes.getUserLocale());
 		
-		String PTJCode = "";
-		String PTJName = "";
-		String ministryName = "";
+	
 		long currentUser = new FacesScopes().getUserSessionBean().getUserId();
 		long assignUser = 12345678910L;
+
 		
-		//ScQt scqt = this.getManagedBean().getScQt();
-		//String userEmail = "";
-		
-		if (getManagedBean().getScQtFinalization() != null) {
-			if (getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
+		if (getManagedBean().getScQtFinalization() != null && 
+			getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
 				assignUser = getManagedBean().getScQtFinalization().getLoiLoaById();				
-			}
+			
 		}		
-		
-		if(suppFinalizationReqDTO!=null){
-			PmOrgProfile pmOrgProfile = new PmOrgProfile();
+			
 			Long profileId = suppFinalizationReqDTO.getScQt().getPmOrgProfile().getOrgProfileId();
 			Date createdDate = this.getManagedBean().getScQtFinalization().getCreatedDate();
-			PTJName = retrievePTJByOrgProfileId(profileId, createdDate);
-			PTJCode = retrievePTJCodeByOrgProfileId(profileId, createdDate);
-			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-			ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-			log.info(PTJName);
-			log.info(PTJCode);
+			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+			String ptjCode = retrievePTJCodeByOrgProfileId(profileId, createdDate);
+			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+			log.info(ptjName);
+			log.info(ptjCode);
 			log.info(ministryName);
-		}
-			// return;
-
-
-		// List<String> loginIdAssignees =
-		// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-//		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
-//		getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
-		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser,docType,CommonConstants.DASHBOARD);
-		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser,docType,CommonConstants.EMAIL);
 		
-		//getQTSuppFinalizationSO().sendPrepareLOILOAEmailNotification(suppFinalizationReqDTO,assignUser,PTJName,PTJCode,ministryName,currentUser);
-		log.info("Test");
+		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.DASHBOARD);
+		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.EMAIL);
 	}
 	//#12487 - end
 }
