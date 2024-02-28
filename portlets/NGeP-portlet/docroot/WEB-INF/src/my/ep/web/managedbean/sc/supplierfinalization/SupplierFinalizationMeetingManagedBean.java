@@ -111,12 +111,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	/** The popup member ptj or organization name. */
 	private String memberPtjOrgName;
  
-	/** The organization category ptj constant. */
-	private String orgCatPTJ;
- 
-	/** The organization category others constant. */
-	private String orgCatOther;
- 
 	/** The ministry dropdown list. */
 	private SelectItem[] ministryDDList;
  
@@ -796,44 +790,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setMemberPtjOrgName(String memberPtjOrgName) {
 		this.memberPtjOrgName = memberPtjOrgName;
-	}
-
-	/**
-	 * Gets the organization category ptj constant.
-	 * 
-	 * @return the organization category ptj constant.
-	 */
-	public String getOrgCatPTJ() {
-		return orgCatPTJ;
-	}
-
-	/**
-	 * Sets the organization category ptj constant.
-	 * 
-	 * @param orgCatPTJ
-	 *            the new organization category ptj constant.
-	 */
-	public void setOrgCatPTJ(String orgCatPTJ) {
-		this.orgCatPTJ = orgCatPTJ;
-	}
-
-	/**
-	 * Gets the organization category others.
-	 * 
-	 * @return the organization category others.
-	 */
-	public String getOrgCatOther() {
-		return orgCatOther;
-	}
-
-	/**
-	 * Sets the organization category others.
-	 * 
-	 * @param orgCatOther
-	 *            the new organization category others.
-	 */
-	public void setOrgCatOther(String orgCatOther) {
-		this.orgCatOther = orgCatOther;
 	}
 
 	/**
