@@ -98,7 +98,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" ><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update=":form" process="@form"
+					<p:ajax event="change" update=":form , approverAuthorityReq" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onChangeValueByGstChecked}" /> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
@@ -343,6 +343,7 @@
 			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
+				    id ="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
 					disabled="#{!amendmentBackingBean.isContractAmountAmend() or ctBackingBean.managedBean.viewSCL}" /><!-- Enhancement 15851 - shaqimi -->
 				<p:spacer width="2" />
