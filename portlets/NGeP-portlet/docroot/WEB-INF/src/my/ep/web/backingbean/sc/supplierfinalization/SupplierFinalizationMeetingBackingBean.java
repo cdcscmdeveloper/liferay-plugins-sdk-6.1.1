@@ -677,7 +677,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 									= getManagedBean().getUserSearchBean();
 		// #12471 Start
 		if (this.getManagedBean().getUserSearchBean().getOrgCat()
-				.equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -696,7 +696,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			this.getManagedBean().getUserSearchBean().setOrgType(null);
 			this.getManagedBean().getUserSearchBean().setOrgName(null);
 		} else if (this.getManagedBean().getUserSearchBean().getOrgCat()
-				.equalsIgnoreCase(this.getManagedBean().getOrgCatOther())) {
+				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
 			PmParameter categoryCodeParameter = this.getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES, ParameterConst.APPROVAL_CATEGORY_OTHERS);
 			if(categoryCodeParameter!=null){
 				this.getManagedBean().getUserSearchBean().setOrgType(String.valueOf(categoryCodeParameter.getParameterId()));
@@ -746,7 +746,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 								idtype, true));
 			}
 			// #12471 Start
-			if (userSearchBean.getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+			if (userSearchBean.getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 				String ministry = userSearchBean.getMinistry();
 				if (!StringUtils.isBlank(ministry)) {
 					searchBean.getDataFilterBeans().add(
@@ -769,7 +769,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
 				}
 			} else if (this.getManagedBean().getUserSearchBean().getOrgCat()
-					.equalsIgnoreCase(this.getManagedBean().getOrgCatOther())) {
+					.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
 				String orgType = userSearchBean.getOrgType();
 				if (!StringUtils.isBlank(orgType)) {
 					searchBean.getDataFilterBeans().add(
@@ -2423,7 +2423,7 @@ if (CollectionUtils.isNotEmpty(
 	 */
 	public void onChangeDD(String dropdown) {
 		if (this.getManagedBean().getUserSearchBean().getOrgCat()
-				.equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 			if (dropdown.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
 				this.getManagedBean().getUserSearchBean().setPtjGroup(null);
 				buildPtjGroupDD();
@@ -2434,7 +2434,7 @@ if (CollectionUtils.isNotEmpty(
 				buildPtjDD();
 			}
 		} else if (this.getManagedBean().getUserSearchBean().getOrgCat()
-				.equalsIgnoreCase(this.getManagedBean().getOrgCatOther())
+				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)
 				&& dropdown.equalsIgnoreCase(ParameterTypeConst.ORGANISATION_TYPES)) {
 			this.getManagedBean().getUserSearchBean().setOrgName(null);
 			this.getManagedBean().setOrgType(this.getManagedBean().getUserSearchBean().getOrgType());
