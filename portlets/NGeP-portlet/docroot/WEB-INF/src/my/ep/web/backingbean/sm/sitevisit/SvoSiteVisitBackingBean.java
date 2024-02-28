@@ -3125,6 +3125,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	/**
+	 * Set template
+	 * @param svTemplate
+	 */
+	public void setSelectedTemplate(SmSvTemplate svTemplate){
+		getManagedBean().setSelectedSvTemplate(svTemplate);
+	}
+
+	
+	/**
 	 * Edit travelling software
 	 * @param machine
 	 */

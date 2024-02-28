@@ -50,6 +50,7 @@
 		<!-- dialog -->
 		<c:if test="#{code != SupplierManagementConst.CAT_TYPE_TRAVEL}">
 			<ui:include src="/xhtml/sm/svositevisit/group/machineDlg.xhtml" />
+			<ui:include src="/xhtml/sm/svositevisit/group/additional_machine_Dlg.xhtml" />
 		</c:if>
 		<c:if test="#{code == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
 			<ui:include src="/xhtml/sm/svositevisit/group/workerDlg.xhtml" />
