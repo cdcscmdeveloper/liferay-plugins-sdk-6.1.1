@@ -13,7 +13,8 @@
 		<tr>
 			<td>$velocityCount</td>
 			<td class="txtBold">$!equipMaint.pmMachine.machineDesc</td>
-			<td align="center">#if($review) #if($equipMaint.equipmentAvailable)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') #else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #else <br />#end</td>
+			<td align="center">#if($review) #if($equipMaint.equipmentAvailable)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+							#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #else <br />#end</td>
 			<td align="center">#if($review) #if($equipMaint.equipmentQty != $null) $equipMaint.equipmentQty #end #else <br />#end</td>
 		</tr>
 		#end
@@ -36,7 +37,8 @@
 		<tr>
 			<td>$velocityCount</td>
 			<td class="txtBold">$!equipBeating.pmMachine.machineDesc</td>
-			<td align="center">#if($review) #if($equipBeating.equipmentAvailable) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') #else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #else <br />#end</td>
+			<td align="center">#if($review) #if($equipBeating.equipmentAvailable) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+							#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #else <br />#end</td>
 			<td align="center">#if($review) #if($equipBeating.equipmentQty != $null) $equipBeating.equipmentQty #end #else <br />#end</td>
 		</tr>
 		#end
