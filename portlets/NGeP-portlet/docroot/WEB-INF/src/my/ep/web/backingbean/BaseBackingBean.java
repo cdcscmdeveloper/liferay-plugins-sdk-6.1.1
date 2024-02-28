@@ -24,6 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1206,13 +1207,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		
-		String fileName = URLEncoder.encode(displayFileName, "UTF-8");
-		fileName = URLDecoder.decode(fileName, "ISO8859_1");
-		
-		response.setContentType(getMimeType(fileName));
-		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		log.info("Report Name before = "+displayFileName);
+		response.setContentType(getMimeType(displayFileName));
+		//response.setHeader("Content-Disposition", "attachment; filename=" + displayFileName);
+		response.addHeader("Content-Disposition", "attachment;filename=" + new String(displayFileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
+
 		//response.setContentType("application/octet-stream");
+		log.info("Report Name after = "+displayFileName);
 		
 		response.flushBuffer();
 
