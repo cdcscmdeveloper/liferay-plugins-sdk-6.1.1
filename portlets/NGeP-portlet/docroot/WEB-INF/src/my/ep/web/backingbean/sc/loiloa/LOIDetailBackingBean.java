@@ -656,11 +656,11 @@ public class LOIDetailBackingBean extends
 				if (scLoi.getContractSigner() != null) {
 					getManagedBean().setContractSignerUser(
 							scLoi.getContractSigner());
-					//#30447 start
-					if(scLoi.getContractSigner().getSalutationCode() != null){
+					// #30447 start
+					if (scLoi.getContractSigner().getSalutationCode() != null) {
 						scLoi.getContractSigner().getSalutationCode().getSalutationName();
 					}
-					//#30447 end
+					// #30447 end
 				}
 				
 				ScQtFinalization finalization  = awardSupplierResDTO.getScQtFinalization();
@@ -3988,12 +3988,13 @@ public class LOIDetailBackingBean extends
 			
 			//#30447 start
 			String salutation = "";
-			if (getManagedBean().getContractSignerUser() != null) {
-				if (getManagedBean().getContractSignerUser().getSalutationCode()!=null) {
-					if(getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName()!=null && !getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName().isEmpty())
-						salutation =  getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
-				} 
-			}			
+			if (getManagedBean().getContractSignerUser() != null
+					&& getManagedBean().getContractSignerUser().getSalutationCode() != null
+					&& getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName() != null
+					&& !getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName().isEmpty()) {
+				salutation = getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
+
+			}		
 			context.put("salutation", salutation);	
 			//#30447 end
 
