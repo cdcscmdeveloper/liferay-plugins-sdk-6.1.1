@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -1205,9 +1206,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		response.setDateHeader("Expires", 0);
 		// response.setContentType("application/vnd.ms-excel");
 		// response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + displayFileName + "\"");
+		
+		String fileName = URLEncoder.encode(displayFileName, "UTF-8");
+		fileName = URLDecoder.decode(fileName, "ISO8859_1");
+		
+		response.setContentType(getMimeType(fileName));
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		//response.setContentType("application/octet-stream");
-		response.setContentType(getMimeType(displayFileName));
+		
 		response.flushBuffer();
 
 		InputStream docInputStream = null;
