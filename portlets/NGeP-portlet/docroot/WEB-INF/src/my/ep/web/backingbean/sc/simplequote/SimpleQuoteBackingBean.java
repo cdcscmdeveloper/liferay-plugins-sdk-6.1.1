@@ -4388,8 +4388,16 @@ public class SimpleQuoteBackingBean extends
 									if(extensionCode != null) {
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
-											isProduct = true;											
-											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35514 - Assigning value one-off to product									
+											isProduct = true;
+											//#35514 @zaim start
+											question.setClFulfilmentTypeCode(FTypeOneOff);
+											if (question.getClDurationMonth() != null){
+												question.setClDurationMonth(null);
+											}
+											if (question.getClUomFrequency() != null){
+												question.setClUomFrequency(null);
+											}
+											//#35514 @zaim end
 											prodItemQuestions.add(question);											
 										} else if (pOrS.equalsIgnoreCase(CommonConstants.SERVICE_INITIAL)) {
 											isProduct = false;

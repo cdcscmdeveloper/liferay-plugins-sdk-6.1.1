@@ -7,21 +7,29 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:param name="viewFlag" value="true" />
 	
+	<!-- #34166 - Start -->
+	<p:messages id="ErrMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>	
+	<!-- #34166 - End  -->
 	<p:tabMenu activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex" update="outPnlSiteVisitReport">
 				
-		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,viewFlag)}" />
-		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex(1,viewFlag)}" />	
+		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="outPnlSiteVisitReport,tabIndex" 
+					actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,viewFlag)}" />
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" update="outPnlSiteVisitReport,tabIndex" 
+					actionListener="#{svoSiteVisitBackingBean.changePageIndex(1,viewFlag)}" />	
 		<p:menuitem value="#{lbl['lbl.sm.sitevisit.licenseinsurance']}" update="outPnlSiteVisitReport,tabIndex" 
 					actionListener="#{svoSiteVisitBackingBean.changePageIndex('l',viewFlag)}" 
 					rendered="#{svoSiteVisitBackingBean.managedBean.licensed}"/>
-		<p:menuitem value="#{svoSiteVisitBackingBean.getParameterDesc(svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode)}" update="outPnlSiteVisitReport,tabIndex" 
+		<p:menuitem value="#{svoSiteVisitBackingBean.getParameterDesc(svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3.categoryTypeCode)}" 
+					update="outPnlSiteVisitReport,tabIndex" 
 					actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',viewFlag)}"
 					rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" />
 		<p:menuitem value="#{lbl['lbl.sm.sv.templ.bumiputera']}" update="outPnlSiteVisitReport,tabIndex" 
 					actionListener="#{svoSiteVisitBackingBean.changePageIndex('c',viewFlag)}" 
 					rendered="#{empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" />
-		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('r',viewFlag)}" />
-		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('o',viewFlag)}" />
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="outPnlSiteVisitReport,tabIndex" 
+					actionListener="#{svoSiteVisitBackingBean.changePageIndex('r',viewFlag)}" />
+		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="outPnlSiteVisitReport,tabIndex" 
+					actionListener="#{svoSiteVisitBackingBean.changePageIndex('o',viewFlag)}" />
 		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" 
 					update="outPnlSiteVisitReport,tabIndex" actionListener="#{svoSiteVisitBackingBean.changePageIndex('s',viewFlag)}" />
 	</p:tabMenu>
