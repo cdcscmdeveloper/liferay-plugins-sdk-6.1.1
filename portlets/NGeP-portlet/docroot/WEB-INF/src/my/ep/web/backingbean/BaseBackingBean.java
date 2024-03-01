@@ -3778,47 +3778,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//12492 - END
-	//29380  - Site Visit Grouping Enhancement -28775 - Start
-	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
-		boolean result=false;
-		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
-			return result;
-		}
-		if(dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
-			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) ){
-				result=true;
-			}	
-			if(dockyardCatVar.getFullCatcode().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
-					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
-					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)){
-				result=true;
-			}
-		}
-		return result;
-	}
-	
-	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
-		boolean result=false;
-		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
-			log.info("NUll Here");
-			return result;
-		}
-		if( (catFac.getPmCategoryL3().getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) &&
-				(catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
-				categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99)) ||
-				(catFac.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
-				catFac.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
-				catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)) && 
-				(categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
-					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01))) ){
-			result=true;
-		}
-		return result;
-	}
-	//29380  - Site Visit Grouping Enhancement -28775 - End
 	
 	//#29594 - START
 	public String retrieveMinistryCodeNameByOrgProfileId(Long orgProfileId) {
@@ -4141,30 +4100,48 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//#21387 - End
 	
-	//#28175 - start
+	//#28175 - start, 29380 - Site Visit Grouping Enhancement -28775
 	/**
 	 * @param catL3
 	 * @param isSupplierProfile
+	 * @param isFullName for L1, L2, L3 category names
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile) {
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName){
 		if (catL3 == null) {
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if (appl == null || isLatestCatCodeDesc(isSupplierProfile) || EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
-			return catL3.getCategoryName();
+		String pmCategoryName = catL3.getCategoryName();
+		if(isFullName){
+			pmCategoryName = catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName()+" / "
+					+ catL3.getPmCategoryL2().getCategoryName()+" / "+catL3.getCategoryName();
 		}
-		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
-		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();
+		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
+			return pmCategoryName;
+		}
+		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
+				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
+		if(sCat == null){
+			return pmCategoryName;
+		}
+		if(isFullName){
+			return sCat.getCategoryL1Name()+" / "+sCat.getCategoryL2Name()+" / "+sCat.getCategoryL3Name();
+	}
+		return sCat.getCategoryL3Name();
 	}
 	
 	/**
-	 * @param catL3
+	 * @param cat
+	 * @param appl
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3){
-		return getSupplierCategoryName(catL3, false);
+	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		return isLatestCatCodeDesc(false, appl) ?  
+				cat.getPmCategoryL1().getCategoryName()+" / "+cat.getPmCategoryL2().getCategoryName()
+				+" / "+cat.getPmCategoryL3().getCategoryName()
+				: cat.getCategoryL1Name()+" / "+cat.getCategoryL2Name()+" / "+cat.getCategoryL3Name();
 	}
 	
 	/**
@@ -4181,15 +4158,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
+		boolean isStatusNull = false;
+		try {
 		if(appl == null || appl.getPmStatus() == null){
 			return false;
+		}
+		} catch (Exception e) {
+			log.info("", e);
+			isStatusNull = true;
+		}
+		if (isStatusNull) {
+			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
 		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
 	}
-	//#28175 - end
+	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
@@ -4246,6 +4232,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//END #29956
 	
+	//#12487 start
+	
+	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgCode();
+		} else {
+			log.info("PTJ not found : " + orgProfileId);
+			return null;
+		}
+	}
+	
+	//#12487 end
+
 	//#32304
 	/**
 	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
@@ -4261,4 +4269,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		generateReport(report, paramMap);
 	}
+	
 }
+
