@@ -4075,11 +4075,11 @@ public class SmCommonUtil {
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getMachineItemsByCatTypeCode(String catTypeCode) {
-		List<SelectItem> machineItems = new ArrayList<SelectItem>();
+		List<SelectItem> machineItems = new ArrayList<>();
 		String[] categoryInMachineSection = new String[] {
 				ParameterConst.CATEGORY_TYPE_DOCKYARD,
-				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442
-				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442 - Site Visit Grouping Enhancement -28775
+				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442 - Site Visit Grouping Enhancement -28775
 				ParameterConst.CATEGORY_TYPE_TRAVEL,
 				ParameterConst.CATEGORY_TYPE_WORKSHOP };
 		if (StringUtils.isNotBlank(catTypeCode)
@@ -4468,7 +4468,6 @@ public class SmCommonUtil {
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70004":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70039":
@@ -4485,6 +4484,7 @@ public class SmCommonUtil {
 			if (msg != null) {
 				throw new EpException(msg + "(ERR-"+ ex.getMessage() + ")");
 			} else {
+				log.error(ex);
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
 		}
@@ -5557,6 +5557,13 @@ public class SmCommonUtil {
 	}
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * Retrieve supplier categories
+	 * @param applId
+	 * @param categoryL3Id
+	 * @param applType
+	 * @return
+	 */
 	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
 			Long applId, Long categoryL3Id, String applType){
 	

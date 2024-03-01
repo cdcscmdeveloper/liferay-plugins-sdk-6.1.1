@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -92,8 +91,10 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtBondWaiverDetail;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtDisciplinaryAction;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -149,8 +150,6 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
@@ -159,7 +158,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
-import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
@@ -1022,9 +1020,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setDisableFields(false);
 				
 				return ctDT.gotoAmendPage(contractId);
-			} else if((ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
-					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null) 
-					&& !ctBackingBean.getManagedBean().isViewSCLFromContract()){
+			} else if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null || 
+					ctBackingBean.getManagedBean().getDocTypeFromAgreementTaskList() != null){
 				if(ctBackingBean.getManagedBean().getDocTypeFromTaskList() != null && 
 						(ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING) || 
 								ctBackingBean.getManagedBean().getDocTypeFromTaskList().equals(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || 
@@ -1059,6 +1056,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				} else if(ctBackingBean.getManagedBean().isAmendFromTaskList()){//tasklist
 					if(!ctBackingBean.getManagedBean().isViewSclFromAgreement() && !ctBackingBean.getManagedBean().isViewSCLFromContract()){ //#15851
 						getManagedBean().setViewOnly(false);
+						ctBackingBean.getManagedBean().setViewContract(false);
 						ctBackingBean.getManagedBean().setAmendFromTaskList(false);
 						ctBackingBean.getManagedBean().setHasAmendmentLoaNo(false);
 						
@@ -1077,7 +1075,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			ctBackingBean.getManagedBean().setViewContract(false); //35467
 			ctBackingBean.getManagedBean().setViewSCL(false);
 			ctBackingBean.getManagedBean().setBackFromSCL(true);
 			return this.getManagedBean().getBackToPreviousPage();
@@ -1670,6 +1667,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#29403 end
 			
+			//#13847 start
+			//check & set performance bond deferment
+			chkBondWaivedAttachment();
+			//#13847 end
+			
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >END<");
 			
 		} finally {
@@ -1832,6 +1834,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().clear();
 				//Bug #29323
+				
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
 
@@ -2000,31 +2003,38 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					amendmentRevert(ctBackingBean.getManagedBean().getContractVer().getContractVerId());
 				}
 				
-				// Start Fix - #33256
-				if(ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
+				// Start Fix - #33256, #33287, #34110
+				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
 					if (getManagedBean().getSelectedChangeItemQuantity() != null
 							&& getManagedBean().getSelectedChangeItemQuantity().size() > 0) {
 						for (CtItemMaxQty itemMaxQty : getManagedBean().getSelectedChangeItemQuantity().values()) {
-							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew()) {
+
+							if (itemMaxQty.getItemMaxQtyId() != null && !itemMaxQty.isBrandNew() && itemMaxQty.getPrevId() != null) {
 								contractAmendmentSO.updateExpDateItemMaxQty(itemMaxQty.getExpDate(),
 										itemMaxQty.getItemMaxQtyId());
+							} else if(itemMaxQty.isChangeQuantity()){
+								contractAmendmentSO.updateExpDateAndEffDateItemMaxQty(itemMaxQty.getMaxQuantity(), itemMaxQty.getExpDate(),
+										itemMaxQty.getEffDate(), itemMaxQty.getItemMaxQtyId());
 							}
 						}
 						getManagedBean().getSelectedChangeItemQuantity().clear();
 					}
-				
 					if (getManagedBean().getSelectedChangeItemPrice() != null
 							&& getManagedBean().getSelectedChangeItemPrice().size() > 0) {
 						for (CtItemPrice ctItemPrice : getManagedBean().getSelectedChangeItemPrice().values()) {
-							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew()) {
-								contractAmendmentSO.updateExpDateItemPrice(ctItemPrice.getExpDate(),
-										ctItemPrice.getItemPriceId());
+
+							if (ctItemPrice.getItemPriceId() != null && !ctItemPrice.isBrandNew() && ctItemPrice.getPrevId() != null) {
+								contractAmendmentSO.updateExpDateItemPrice(ctItemPrice.getExpDate(),ctItemPrice.getItemPriceId());
+							} else if(ctItemPrice.isChangePrice()) {
+								contractAmendmentSO.updateExpDateAndEffDateItemPrice(ctItemPrice.getUnitPrice(), ctItemPrice.getExpDate(),
+										ctItemPrice.getEffDate(), ctItemPrice.getItemPriceId());
 							}
 						}
-						getManagedBean().getSelectedChangeItemPrice().clear();
 					}
+					getManagedBean().getSelectedChangeItemPrice().clear();
 				}
-				// End Fix - #33256
+				
+				// End Fix - #33256, #33287, #34110
   
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
@@ -4491,6 +4501,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Calendar previousDate = Calendar.getInstance();
 		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 		previousDate.add(Calendar.DATE, -1);
+		
+		//Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+		
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		//End Fix - #33287
 
 		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedItem().getCtItemPrices()) {
 			ctItemPriceList.add(ctItemPrice);
@@ -4514,12 +4532,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						addDupObj.setCtContractItem(ctItemPrice.getCtContractItem());
 					}
 					addDupObj.setChangePrice(true);
+					//Start Fix - #33287
+					if(ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+							|| ctItemPrice.getEffDate().compareTo(ctItemPrice.getExpDate()) == 1){
+						ctItemPrice.setExpDate(currentAmendEffDate);
+						addDupObj.setEffDate(nextDate.getTime());
+					}else{
+						ctItemPrice.setExpDate(previousDate.getTime());
+					}
+					//End Fix - #33287
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
-					ctItemPrice.setChkIndexOfRow(true);
-					ctItemPrice.setExpDate(previousDate.getTime());
+					ctItemPrice.setChkIndexOfRow(true);				
 					ctItemPriceList.add(addDupObj);
-					log.info("totalsize itemprices "+addDupObj.getItemPriceId());
-					log.info("totalsize itemprices "+ctItemPriceList.size());
+
+					
 				}
 			}
 			// Start fix - #33256
@@ -4567,6 +4593,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Calendar previousDate = Calendar.getInstance();
 		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 		previousDate.add(Calendar.DATE, -1);
+		
+		// Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		// End Fix - #33287
 
 		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
 			ctItemPriceList.add(ctItemPrice);
@@ -4591,9 +4625,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						addDupObj.setCtContractItem(ctItemPrice.getCtContractItem());
 					}
 					addDupObj.setChangePrice(true);
+					//Start Fix - #33287
+					if(ctItemPrice.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+							|| ctItemPrice.getEffDate().compareTo(ctItemPrice.getExpDate()) == 1){
+						ctItemPrice.setExpDate(currentAmendEffDate);
+						addDupObj.setEffDate(nextDate.getTime());
+					}else{
+						ctItemPrice.setExpDate(previousDate.getTime());
+					}
+					//End Fix - #33287
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
 					ctItemPrice.setChkIndexOfRow(true);
-					ctItemPrice.setExpDate(previousDate.getTime());
 					ctItemPriceList.add(addDupObj);
 				}
 			}
@@ -4734,6 +4776,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		Calendar previousDate = Calendar.getInstance();
 		previousDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
 		previousDate.add(Calendar.DATE, -1);
+		
+		// Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		// End Fix - #33287
 
 		for (CtItemMaxQty ctItemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties()) {
 			ctItemMaxQtyList.add(ctItemMaxQty);
@@ -4755,8 +4805,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						addDupObj.setCtContractItem(ctItemMaxQty.getCtContractItem());
 					}
 					addDupObj.setChangeQuantity(true);
+					//Start Fix - #33287
+					if(ctItemMaxQty.getEffDate().compareTo(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()) == 0
+							|| ctItemMaxQty.getEffDate().compareTo(ctItemMaxQty.getExpDate()) == 1){
+						ctItemMaxQty.setExpDate(currentAmendEffDate);
+						addDupObj.setEffDate(nextDate.getTime());
+					}else{
+						ctItemMaxQty.setExpDate(previousDate.getTime());
+					}
+					//End Fix - #33287
 					addDupObj.setAssociateCtItemMaxQty(ctItemMaxQty);
-					ctItemMaxQty.setExpDate(previousDate.getTime());
 					ctItemMaxQty.setChkIndexOfRow(true);
 					ctItemMaxQtyList.add(addDupObj);
 				}
@@ -4994,17 +5052,38 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param selectedItem  the selected item instance
 	 */
 	private void changeSelectedItemPriceAmendDate(CtContractItem selectedItem) {
+		//Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		//End Fix - #33287
 		if (selectedItem != null && selectedItem.getCtItemPrices() != null && selectedItem.getCtItemPrices().size() > 0) {
 			List<CtItemPrice> itemPriceList = selectedItem.getCtItemPrices();
-			for (int i = 0; i < itemPriceList.size(); i++) {
+			for (int i = 0; i < itemPriceList.size(); i++) {			
 				if (itemPriceList.get(i).isChangePrice()) {
-					itemPriceList.get(i - 1).setExpDate(getPreviousDate().getTime());
-					itemPriceList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					//Start Fix - #33287
+					if(itemPriceList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
+						itemPriceList.get(i - 1).setExpDate(currentAmendEffDate);
+						itemPriceList.get(i).setEffDate(nextDate.getTime());
+						
+					}else{
+						itemPriceList.get(i - 1).setExpDate(getPreviousDate().getTime());
+						itemPriceList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+
+					}
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 						itemPriceList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
 					} else {
 						itemPriceList.get(i).setExpDate(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 					}
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+						getManagedBean().getSelectedChangeItemPrice().put(itemPriceList.get(i - 1).getItemPriceId(),
+								itemPriceList.get(i - 1));
+						getManagedBean().getSelectedChangeItemPrice().put(itemPriceList.get(i).getItemPriceId(),
+								itemPriceList.get(i));
+					}
+				   //End Fix - #33287
 				}
 			}
 		}
@@ -5017,17 +5096,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @param selectedItem  the selected item instance
 	 */
 	private void changeSelectedItemMaxQtyAmendDate(CtContractItem selectedItem) {
+		//Start Fix - #33287
+		Date currentAmendEffDate = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate();
+		Calendar nextDate = Calendar.getInstance();
+		nextDate.setTime(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		nextDate.add(Calendar.DATE, 1);
+		//End Fix - #33287
 		if (selectedItem != null && selectedItem.getCtItemMaxQties() != null && selectedItem.getCtItemMaxQties().size() > 0) {
 			List<CtItemMaxQty> itemMaxQtyList = selectedItem.getCtItemMaxQties();
 			for (int i = 0; i < itemMaxQtyList.size(); i++) {
 				if (itemMaxQtyList.get(i).isChangeQuantity()) {
-					itemMaxQtyList.get(i - 1).setExpDate(getPreviousDate().getTime());
-					itemMaxQtyList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					//Start Fix - #33287
+					if(itemMaxQtyList.get(i - 1).getEffDate().compareTo(currentAmendEffDate) == 0){
+						itemMaxQtyList.get(i - 1).setExpDate(currentAmendEffDate);
+						itemMaxQtyList.get(i).setEffDate(nextDate.getTime());
+					}else{
+						itemMaxQtyList.get(i - 1).setExpDate(getPreviousDate().getTime());
+						itemMaxQtyList.get(i).setEffDate(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					}
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 						itemMaxQtyList.get(i).setExpDate(this.ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
 					} else {
 						itemMaxQtyList.get(i).setExpDate(this.ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 					}
+					
+					if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+						getManagedBean().getSelectedChangeItemQuantity().put(itemMaxQtyList.get(i - 1).getItemMaxQtyId(),
+								itemMaxQtyList.get(i - 1));
+						getManagedBean().getSelectedChangeItemQuantity().put(itemMaxQtyList.get(i).getItemMaxQtyId(),
+								itemMaxQtyList.get(i));
+					}
+					//End Fix - #33287
 				}
 			}
 		}
@@ -5468,6 +5567,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()
 				&& !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
+			
+			Calendar c = Calendar.getInstance();
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			spToCheck = true;
+		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 			Calendar c = Calendar.getInstance();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 			spToCheck = true;
@@ -9124,5 +9230,91 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//End Fix - #33287
+	
+	// Start Fix - #34110
+	/**
+	 * The method used to pick-up new item price.
+	 * 
+	 * @param ctItemPrice
+	 *            object of CtItemPrice item
+	 */
+	public void onChangeCtItemPrice(CtItemPrice ctItemPrice) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+			getManagedBean().getSelectedChangeItemPrice().put(ctItemPrice.getItemPriceId(), ctItemPrice);
+		  }
+	}
+
+	/**
+	 * The method used to pick-up new item max qty.
+	 * 
+	 * @param ctItemPrice
+	 *            object of CtItemMaxQty item
+	 */
+	public void onChangeCtItemMaxQty(CtItemMaxQty ctItemPMaxQty) {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+			getManagedBean().getSelectedChangeItemQuantity().put(ctItemPMaxQty.getItemMaxQtyId(), ctItemPMaxQty);
+		  }
+	}
+	// End Fix - #34110
+	
+	//#13847 start
+	/**
+	 * method to check all the attachment of the bond waiver (active, in progress and suspended)
+	 * and grouping the bond waiver into latest and history to show on the screen which one is the history. 
+	 */
+	private void chkBondWaivedAttachment() {
+		
+		ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
+		ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
+		if (CollectionUtils.isNotEmpty(ctBackingBean.getManagedBean().getContractVer().getCtBondWaiverDetails())){
+			for(CtBondWaiverDetail waiverDetail : ctBackingBean.getManagedBean().getContractVer().getCtBondWaiverDetails()){
+				if(!waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+					waiverDetail.setCtAttachment(new CtAttachment());
+					if(ctBackingBean.getManagedBean().getContractVer().getBondWaiverAttachments()!=null){
+						if(waiverDetail.getAttachmentId()!=null){
+							for(CtAttachment waiverAttach : ctBackingBean.getManagedBean().getContractVer().getBondWaiverAttachments()){
+								if(waiverDetail.getAttachmentId().equals(waiverAttach.getAttachmentId())){
+									waiverDetail.setCtAttachment(waiverAttach);
+									break;
+								}
+							}
+						}else if(waiverDetail.getTempAttachmentId()!=null){
+							for(CtAttachment waiverAttach : ctBackingBean.getManagedBean().getContractVer().getBondWaiverAttachments()){
+								if(waiverDetail.getTempAttachmentId().equals(waiverAttach.getTempAttachmentId())){
+									waiverDetail.setCtAttachment(waiverAttach);
+									break;
+								}
+							}
+						}
+					}
+					
+					if(waiverDetail.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						//SET DATA TO LATEST BOND WAIVER WITH ATTACHMENT
+						if(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
+							ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());	
+						}
+						ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentLatest(waiverDetail);
+					}else{//SET DATA TO TABLE WAIVER FOR HSTORY
+						if(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory()==null){
+							ctBackingBean.getManagedBean().getContractVer().setBondWaiverDefermentHistory(new ArrayList<CtBondWaiverDetail>());
+						}
+						ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(waiverDetail);
+					}
+				}
+			}
+
+			if(CollectionUtils.isNotEmpty(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getBondWaiverDefermentHistory(), new Comparator<CtBondWaiverDetail>() {
+					  @Override
+					  public int compare(CtBondWaiverDetail bwd1, CtBondWaiverDetail bwd2) {
+						  if(bwd1.getWaiverStartDate()!=null && bwd2.getWaiverStartDate()!=null){
+							  return bwd2.getWaiverStartDate().compareTo(bwd1.getWaiverStartDate());
+						  }else{return 0;}
+					  }
+					});
+			}
+		}
+	}
+	//#13847 end
 	
 	}

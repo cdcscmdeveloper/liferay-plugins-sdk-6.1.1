@@ -184,8 +184,6 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	//12471 Start
 	private String orgCat;
-	private String orgCatPTJ;
-	private String orgCatOther;
 	private SelectItem[] ministryDDList;
 	private SelectItem[] ptjGroupDDList;
 	private SelectItem[] ptjDDList;
@@ -1139,22 +1137,6 @@ public abstract class BaseManagedBean implements Serializable {
 	//25037 - end
 	
 	//12471 Start
-	public String getOrgCatPTJ() {
-		return orgCatPTJ;
-	}
-
-	public void setOrgCatPTJ(String orgCatPTJ) {
-		this.orgCatPTJ = orgCatPTJ;
-	}
-
-	public String getOrgCatOther() {
-		return orgCatOther;
-	}
-
-	public void setOrgCatOther(String orgCatOther) {
-		this.orgCatOther = orgCatOther;
-	}
-
 	public SelectItem[] getMinistryDDList() {
 		return ministryDDList;
 	}

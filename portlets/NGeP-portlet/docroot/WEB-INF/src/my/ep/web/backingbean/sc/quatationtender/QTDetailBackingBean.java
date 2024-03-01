@@ -1263,7 +1263,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						this.getManagedBean().getQt().getFulfilmentType()
 								.getParameterCode());
 			}
-			this.getManagedBean().setGenInfo(true);
+			//Reopen #25726 note 187 - issue 2,4,5
+			this.getManagedBean().setGenInfo(editable);
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
@@ -4084,27 +4085,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		updateApprovalDetails(scQt);
 		
-		// Bug #35395 - Start - Comment cater remark by publication approval to void duplicate
-		// #14398 - Start
-		/*if (null != getManagedBean().getPublicationApproval() 
-				&& CollectionUtils.isNotEmpty(getManagedBean().getPublicationApproval().getScQtApprovalRemarks())
-				&& getManagedBean().getPublicationApproval().getScQtApprovalRemarks().size() > 0) {
-			boolean remarkNotEmpty = true;
-			for (ScQtApprovalRemark approvalRemark : getManagedBean().getPublicationApproval().getScQtApprovalRemarks()) {
-				if (StringUtils.isEmpty(approvalRemark.getRemark())) {
-					remarkNotEmpty = false;
-					break;
-				}
-			}
-			
-			if (remarkNotEmpty) {
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setApproval(getManagedBean().getPublicationApproval());
-				getQTDetailSO().updateScQtApproval(reqDTO );
-			}
-		}*/
-		// #14398 - End
-		// Bug #35395 - End
+		// Bug #35395 - Start - Remove code #14398 - cater remark by publication approval to void duplicate
+		
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			// #30435- Start.
 			if (!getManagedBean().isApproverTabLoaded()) {
@@ -7531,6 +7513,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
 				}
 				//Bug 32277 - end
+				retrieveApprovalTabDtl();//12471
 				break;
 			case 3:
 				// detailSO.validateApprovalDetails(reqDTO);
@@ -8592,7 +8575,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public boolean enableFieldByStatusNFiledName(String fieldName) {
 		Long statusId = this.getManagedBean().getCurrentStatusId();
-
+		//#29732
+		if(statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)){
+			 statusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		}
+		
 		return enableFieldByStatusNFiledName(fieldName, statusId, 
 				getManagedBean().isMaintanceFlow(), 
 				!getManagedBean().isReadOnly());
