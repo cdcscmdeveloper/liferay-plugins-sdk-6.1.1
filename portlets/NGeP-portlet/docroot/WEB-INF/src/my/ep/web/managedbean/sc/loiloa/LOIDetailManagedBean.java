@@ -427,6 +427,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#12487 start
     private Map<String, Object> loiObj;
 	//#12487 end
+    
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 
 	

@@ -6431,31 +6431,9 @@ public class SmApplicationUtil {
 		docu.setPmDocument(doc);
 		docu.setSmAppl(appl);
 		docu.setVerified(true);
-		// docu.setVerifiedFlg(1);
 		docu.setReceived(false);
 
 		setDefaultSmApplDocFiles(docu);
-		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) && doc.isByCategory()){
-			IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-			SmApplSupportDoc prevDoc = reqSO.retrievePrevSupportingDocument(
-					appl.getSmSupplier().getSupplierId(), doc.getDocumentId());
-			if(prevDoc == null) return docu;
-			
-			docu.setLicenseNo(prevDoc.getLicenseNo());
-			docu.setLicenseEffDate(prevDoc.getLicenseEffDate());
-			docu.setLicenseExpDate(prevDoc.getLicenseExpDate());
-			docu.getSmApplDocFiles().clear();
-			for(SmApplDocFile prevFile : prevDoc.getSmApplDocFiles()){
-				SmApplDocFile docFile = new SmApplDocFile();
-				docFile.setSmApplSupportDoc(docu);
-				docFile.setFileName(prevFile.getFileName());
-				docFile.setFilePath(prevFile.getFilePath());
-				docu.getSmApplDocFiles().add(docFile);
-			}
-		}
-		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		return docu;
 	}
 
@@ -7382,18 +7360,16 @@ public class SmApplicationUtil {
 	/**
 	 * Construct Site visit data based on facilities and categories selected for
 	 * site visit.
-	 * 
-	 * @param SmApplicationManagedBean
-	 *            bean
+	 * @param bean
+	 * @param voList
 	 */
 	public static void setSiteVisitData(SmApplicationManagedBean bean,
 			List<SmSiteVisitFacilityVO> voList) {
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		if (SmCommonUtil.isCollectionEmpty(bean.getSvTaskList()))
+		if (SmCommonUtil.isCollectionEmpty(bean.getSvTaskList())){
 			bean.setSvTaskList(new ArrayList<SmSvTask>());
-		
+		}
 		if (!SmCommonUtil.isCollectionEmpty(voList)) {
-			//bean.setSvTaskList(new ArrayList<SmSvTask>());
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 			// only set new list if svTask is empty
@@ -7511,7 +7487,9 @@ public class SmApplicationUtil {
 				break;
 			}
 		}
-		if(isGroup) return;
+		if(isGroup){
+			return;
+		}
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		
 		// SmSvTask
@@ -7580,8 +7558,9 @@ public class SmApplicationUtil {
 		}
 		group.setSmSvTemplate(template);
 		
-		if(svTask.getSmSvTaskGroups() == null)
+		if(svTask.getSmSvTaskGroups() == null){
 			svTask.setSmSvTaskGroups(new ArrayList<SmSvTaskGroup>());
+		}
 		svTask.getSmSvTaskGroups().add(group);
 	}
 	//28775 - Site Visit Grouping Enhancement - 28775 - end
@@ -7679,7 +7658,7 @@ public class SmApplicationUtil {
 		managedBean.getAddrSameAsItems().add(item);
 		item = new SelectItem();
 		item.setValue("HQ");
-		item.setLabel(SmCommonUtil.getMessage("lbl.sm.facility.type._B", null));
+		item.setLabel(SmCommonUtil.getMessage("lbl.sm.facility.type.premise", null)); //#34711
 		managedBean.getAddrSameAsItems().add(item);
 		if (!EntityHelper.isCollectionEmpty(managedBean.getSmAppl()
 				.getSmSupplierBranches())) {
@@ -10786,8 +10765,8 @@ public class SmApplicationUtil {
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-						//Bug #26671
-						//|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+						//26671 - Site Visit Grouping Enhancement -28775
+						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -15457,7 +15436,7 @@ public class SmApplicationUtil {
 		}
 	}
 		//#31043 - END
-	// 29616 -start
+	// 29616-start
 	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
 		log.info("******* Validate active softcert For cancel mof account******** ");
 		boolean validPersonnels = false;
@@ -15491,5 +15470,45 @@ public class SmApplicationUtil {
 			throw new EpException(MessageConst.ERROR_722707, new String[] { sb.toString() });
 		}
 		return validPersonnels;
-	}// 29616 -end
+	}// 29616-end
+	
+	//28778 - Site Visit Grouping Enhancement -28775 - start
+	/**
+	 * 
+	 * @param appl
+	 * @return
+	 */
+	public static boolean hasSpecialCategory(SmAppl appl){
+		if(appl == null || appl.getSmSupplierCategories() == null){
+			return false;
+		}
+		for(SmSupplierCategory suppCat : appl.getSmSupplierCategories()){
+			if (suppCat.isSpecialCategory()){
+				return true;
+		    }
+		}
+		return false;
+	}
+	//28778 - Site Visit Grouping Enhancement -28775 - end
+	//29380 - Site Visit Grouping Enhancement -28775 -sStart
+	/**
+	 * @param suppCats
+	 * @param catL3
+	 * @return other description for category code manufacturing/dockyard
+	 */
+	public static String getCategoryCodeOtherDesc(List<SmSupplierCategory> suppCats, PmCategoryL3 catL3){
+		if(suppCats == null || suppCats.isEmpty() || catL3 == null){
+			return null;
+		}
+		String param = catL3.getCategoryTypeCode().getParameterCode();
+		if(!param.equals(SupplierManagementConst.CAT_TYPE_DOCKYARD) 
+				&& !param.equals(SupplierManagementConst.CAT_TYPE_MANUFACTURING)){
+			return null;
+		}
+		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
+				catL3.getCategoryL3Id(), suppCats, "pmCategoryL3");
+		String otherLbl = SmCommonUtil.getMessage("lbl.sm.catCodes.othDesc", null)+": ";
+		return sCat != null ? otherLbl + sCat.getOtherDesc() : null;
+	}
+	//29380 - Site Visit Grouping Enhancement -28775 - end
 }
