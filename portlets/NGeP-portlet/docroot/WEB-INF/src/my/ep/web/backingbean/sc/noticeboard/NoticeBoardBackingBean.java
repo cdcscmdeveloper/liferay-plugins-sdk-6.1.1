@@ -3446,28 +3446,31 @@ public class NoticeBoardBackingBean extends
 		return isRenderRigisterBtn;
 	}
 	
-		//#30447 - start
-		public String supplierSalutation(String identificationNo){
-			PmSalutation salutation = null;
-			String salutationName = null;
-			IQTNoticeBoardSO supplierSO = null;		
-			
-			try{
-			supplierSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTNoticeBoardSO.class);			
-			salutation = supplierSO
-					.retrieveUserByIdentificationNo(identificationNo);
-			
-			if(salutation!=null){
+	/**
+	 * #30447 - Retrieve supplier Salutation by identification No
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String supplierSalutation(String identificationNo) {
+		PmSalutation salutation = null;
+		String salutationName = null;
+		IQTNoticeBoardSO supplierSO = null;
+
+		try {
+			supplierSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTNoticeBoardSO.class);
+			salutation = supplierSO.retrieveUserByIdentificationNo(identificationNo);
+
+			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
-			}finally {
-				supplierSO = null;
-			}
-			return salutationName;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "supplierSalutation",
+					this.getManagedBean().getScQt().getQtId().toString(), "supplierSalutation",
+					getUserIdSessionFromLoginId(), e);
 		}
-		//#30447 - end
+		return salutationName;
+	}//#30447 - end
 
 		// #29732 Start
 		public void onClickHistoryIcon(String catCode, String catCodeLevel,

@@ -4816,11 +4816,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		//#32648 - start
 
 		if (pmUser != null) {
-			//#30447 - start
-			if(pmUser.getSalutationCode()!=null){
+			// #30447 - start
+			if (pmUser.getSalutationCode() != null) {
 				context.put("salutation", pmUser.getSalutationCode().getSalutationName());
 			}
-			//#30447 - end
+			// #30447 - end
 			context.put("userName", pmUser.getUserName());
 			context.put("icNo", pmUser.getIdentificationNo());			
 		}
