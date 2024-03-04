@@ -1166,6 +1166,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
+			//#21692 05/02/2024 - Start
+			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
+			if (selectedScQt.getResponsePeriod() != null &&
+					selectedScQt.getResponsePeriod() != result) {
+				selectedScQt.setResponsePeriod(result);
+			}
+			//#21692 05/02/2024 - End
 			if(!isApprovalScreen() || this.getManagedBean().getQt() == null){
 				this.getManagedBean().setQt(selectedScQt);
 			}
