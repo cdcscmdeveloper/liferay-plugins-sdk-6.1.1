@@ -839,6 +839,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtScheBB.deleteEpvAttachments();
 			}
 			if (this.getManagedBean().getQt().getResponsePeriod() != null) {
+				int responsePeriod = this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod() == null ? 
+						this.getManagedBean().getQt().getResponsePeriod() : this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
+				this.getManagedBean().getScQtApprovalRequestList().get(0).setResponsePeriod(responsePeriod);			
 				page = QTConstants.EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL;
 			}
 			//#21692 WIP - End
