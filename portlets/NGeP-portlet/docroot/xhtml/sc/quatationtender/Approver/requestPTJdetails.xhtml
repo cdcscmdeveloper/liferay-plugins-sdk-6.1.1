@@ -19,7 +19,7 @@
 	<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true" id="qtScQtReqPtjId">
 		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange and approvalBackingBean.managedBean.qt.responsePeriod != null}" >
 			<ui:remove>#21692 - start</ui:remove>
-			<p:outputLabel styleClass="blue-instruction"
+			<p:outputLabel styleClass="instruction"
 				value="#{lbl['lbl.sc.qt.supplier.accept.change.instruction']}" />
 			<br/><br/>
 		</c:if>
