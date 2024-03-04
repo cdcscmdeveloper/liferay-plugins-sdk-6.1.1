@@ -425,8 +425,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	
 	//#12487 start
-    private Map loiObj;
+    private Map<String, Object> loiObj;
 	//#12487 end
+    
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 
 	
@@ -2437,11 +2438,11 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#30008 - end
 	
 	//#12487 start
-	public Map getLoiObj() {
+	public Map <String, Object> getLoiObj() {
 		return loiObj;
 	}
 
-	public void setLoiObj(Map loiObj) {
+	public void setLoiObj(Map <String, Object> loiObj) {
 		this.loiObj = loiObj;
 	}
 	//#12487 end
