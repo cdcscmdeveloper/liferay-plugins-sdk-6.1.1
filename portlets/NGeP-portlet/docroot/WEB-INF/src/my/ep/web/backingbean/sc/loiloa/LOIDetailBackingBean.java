@@ -6957,6 +6957,7 @@ public class LOIDetailBackingBean extends
 	//#12487 start
 	public void prepareLoiNotification(){		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		Map<String, Object> loiObj = new HashMap<>();
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, IQTSuppFinalizationSO.class);
@@ -6972,8 +6973,6 @@ public class LOIDetailBackingBean extends
 					profileId = resDTO.getScQt().getPmOrgProfile().getOrgProfileId();	
 			}
 			
-			
-			Map loiObj = new HashMap<>();
 			loiObj.put(CommonConstants.OBJ_USER_LOCALE, new FacesScopes().getUserLocale());
 			loiObj.put(CommonConstants.OBJ_LANGUAGE, new FacesScopes().getUserLocale().getLanguage());
 			if (getManagedBean().getScQtFinalization() != null &&
@@ -6993,8 +6992,8 @@ public class LOIDetailBackingBean extends
 			}			
 			getManagedBean().setLoiObj(loiObj);
 		} finally {
-			getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.DASHBOARD);
-			getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.EMAIL);
+			getQtAwardSO().sendLoiNotification(loiObj, this.getManagedBean().getScQt(), CommonConstants.DASHBOARD);
+			getQtAwardSO().sendLoiNotification(loiObj, this.getManagedBean().getScQt(), CommonConstants.EMAIL);
 		}		
 		
 	}
