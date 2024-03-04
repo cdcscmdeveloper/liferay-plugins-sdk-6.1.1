@@ -63,7 +63,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constant.sc.audit.AuditConst;
+import my.ep.constant.sc.dp.audit.AuditConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -143,8 +143,8 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
-import my.ep.web.backingbean.sc.audit.AuditDpmRequestnoteBackingBean;
-import my.ep.web.backingbean.sc.audit.AuditDpmRequestnoteBackingBeanTemplate;
+import my.ep.web.backingbean.sc.audit.AuditDPRequestnoteBackingBean;
+import my.ep.web.backingbean.sc.audit.AuditDPRequestnoteBackingBeanTemplate;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -298,7 +298,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 //		auditDPRequestnoteSO = BusinessDelegate.getInstance()
 //								.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 //										IAuditDPRequestnoteSO.class);
-//		AuditDpmRequestnoteBackingBeanTemplate auTemplate = new AuditDpmRequestnoteBackingBean();
+//		AuditDPRequestnoteBackingBeanTemplate auTemplate = new AuditDPRequestnoteBackingBean();
 //		 if (auditDPRequestnoteSO.isAuditConfig(AuditConst.SC_DP_AU_RN_CONF,AuditConst.SC_DP_AU_RN_MOD)) {
 //			auTemplate.auditSaveData(getManagedBean(), (long) 1);
 //		}
@@ -3985,17 +3985,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1],
 								(String) prObj[3], Boolean.TRUE);
-						/************ AUDIT *************/
+						/************ AUDIT #28895_35492*************/
 						IAuditDPRequestnoteSO auditDPRequestnoteSO = BusinessDelegate.getInstance()
 												.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 														IAuditDPRequestnoteSO.class);
 						
-						AuditDpmRequestnoteBackingBeanTemplate auTemplate = new AuditDpmRequestnoteBackingBean();
+						AuditDPRequestnoteBackingBeanTemplate auTemplate = new AuditDPRequestnoteBackingBean();
 						 if (auditDPRequestnoteSO.isAuditConfig(AuditConst.SC_DP_AU_RN_CONF)) {
 							getManagedBean().setPurchaseRequestResDTO(response);
 							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
 						}
-					/************ END AUDIT *************/
+					/************ END AUDIT #28895_35492*************/
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
