@@ -7141,9 +7141,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			amendReqDTO.setUpdateStatusCheck(updateCheck);
 			amendReqDTO.setContractVerId(currentAmendmentVerID);
 			ContractAmendmentResDTO resDTO = contractAmendmentSO.amendmentRevertSO(amendReqDTO);
-			if (resDTO.isSuccessful()) {
-				log.info(" Done !!! ");
-			}
+
 		}
 	// End Fix - #33287
 }
