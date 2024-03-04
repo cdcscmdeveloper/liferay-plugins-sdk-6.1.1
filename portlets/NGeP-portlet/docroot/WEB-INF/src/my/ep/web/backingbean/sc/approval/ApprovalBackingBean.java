@@ -2251,7 +2251,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
-	public void updateDecisionCertPBM(ScQtApprovalRequest requestdetails) {
+	/**
+	 * Update ScQtApprovalRequest DecisionCert's data
+	 * 
+	 * @param approvalRequestdetails
+	 */
+	public void updateDecisionCertPBM(ScQtApprovalRequest approvalRequestdetails) {
+		ScQtApprovalRequest requestdetails = approvalRequestdetails;
 		if (null != requestdetails) {
 			IParameterSO parameterSO = getParameterSOGlobal();
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
