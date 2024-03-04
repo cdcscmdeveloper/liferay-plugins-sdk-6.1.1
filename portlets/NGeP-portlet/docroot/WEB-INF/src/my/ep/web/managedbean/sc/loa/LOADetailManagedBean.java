@@ -33,6 +33,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
@@ -330,6 +331,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap;
 	private Long selectedItemId;
 	private boolean multipleSuppOffer = Boolean.FALSE;
+	private List <TplSpecQuestion> listSpecAnswer;
 	//#29006 - end
 	
 	private boolean enablePBForDP;
@@ -2148,5 +2150,21 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.reqItemAssignButtonSession = reqItemAssignButtonSession;
 	}	
 	//#32280 - end
+	// 29006 @zaim start
+	/**
+	 * @return the listSpecAnswer
+	 */
+	public List<TplSpecQuestion> getListSpecAnswer() {
+		return listSpecAnswer;
+	}
+
+	/**
+	 * @param listSpecAnswer
+	 *            the listSpecAnswer to set
+	 */
+	public void setListSpecAnswer(List<TplSpecQuestion> listSpecAnswer) {
+		this.listSpecAnswer = listSpecAnswer;
+	}
+	// 29006 @zaim end
 	
 }
