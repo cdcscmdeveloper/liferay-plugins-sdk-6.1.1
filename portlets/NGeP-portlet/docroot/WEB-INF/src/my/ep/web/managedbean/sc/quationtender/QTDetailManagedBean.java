@@ -1727,11 +1727,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedICT = false;
 	private boolean flagFileAttahmentDeletedMITI = false;
 	private boolean firstPagePA = false;
+	private List<TabBean> tabOtherApproval; // #34694
 	// #25077 - End
 
 	// bug #30435, Enhancement #25077 -start-
 	private PmParameter pmParam;
-	private String scQtAppRequestRemark;
+	private String scQtAppRequestRemarkICT; // #34694
+	private String scQtAppRequestRemarkMITI; // #34694
 	private boolean approverTabLoaded = false;
 	// bug #30435, Enhancement #25077 -end-
 
@@ -1789,7 +1791,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #28784 -end-
 
 	//====#31913 bug related to #25138==== start
-	private BigDecimal totalmaxscore;
+	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 
 	/**
@@ -10877,6 +10879,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFirstPagePA(boolean firstPagePA) {
 		this.firstPagePA = firstPagePA;
 	}
+
+	// #34694 -start-
+	public List<TabBean> getTabOtherApproval() {
+		return tabOtherApproval;
+	}
+
+	public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
+		this.tabOtherApproval = tabOtherApproval;
+	}
+	// #34694 -end-
+
 	/**
 	 * @return the scQtApprovalReqAttachementICT
 	 */
@@ -10904,6 +10917,36 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setScQtApprovalReqAttachementMITI(ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
 		this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
 	}
+
+	// #34694 -start-	
+	/**
+	 * @return the scQtAppRequestRemarkICT
+	 */
+	public String getScQtAppRequestRemarkICT() {
+		return scQtAppRequestRemarkICT;
+	}
+
+	/**
+	 * @param scQtAppRequestRemarkICT the scQtAppRequestRemarkICT to set
+	 */
+	public void setScQtAppRequestRemarkICT(String scQtAppRequestRemarkICT) {
+		this.scQtAppRequestRemarkICT = scQtAppRequestRemarkICT;
+	}
+
+	/**
+	 * @return the scQtAppRequestRemarkMITI
+	 */
+	public String getScQtAppRequestRemarkMITI() {
+		return scQtAppRequestRemarkMITI;
+	}
+
+	/**
+	 * @param scQtAppRequestRemarkMITI the scQtAppRequestRemarkMITI to set
+	 */
+	public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
+		this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
+	}
+	// #34694 -end-	
 	// #25077 - End
 
 	// bug #30435, Enhancement #25077 - start
@@ -10920,21 +10963,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPmParam(PmParameter pmParam) {
 		this.pmParam = pmParam;
-	}
-
-	/**
-	 * @return the scQtAppRequestRemark
-	 */
-	public String getScQtAppRequestRemark() {
-		return scQtAppRequestRemark;
-	}
-
-	/**
-	 * @param scQtAppRequestRemark
-	 *            the scQtAppRequestRemark to set
-	 */
-	public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
-		this.scQtAppRequestRemark = scQtAppRequestRemark;
 	}
 
 	/**
