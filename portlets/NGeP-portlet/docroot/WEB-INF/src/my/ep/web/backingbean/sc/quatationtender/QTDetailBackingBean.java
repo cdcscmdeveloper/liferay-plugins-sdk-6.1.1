@@ -4511,9 +4511,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									|| approvalSettings.isEmpty()) {
 								approvalSettings = new ArrayList<ScQtApproverSettings>();
 								ScQtApproverSettings approverSettings = new ScQtApproverSettings();
-								approverSettings.setPmUser(new PmUser());
+								//#21692 Sync Approval PB with Committee Appointment PB - Start
+								approverSettings.setPmUser(scQt.getFinalizationSecratery());
 								approverSettings.setScQtApproval(qtApproval);
-								approverSettings.setCommitteeType(new PmParameter());
+								approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
+								//#21692 Sync Approval PB with Committee Appointment PB - End
 								approvalSettings.add(approverSettings);
 								qtApproval
 										.setApproverSettings(approvalSettings);
