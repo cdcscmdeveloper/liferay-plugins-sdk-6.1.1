@@ -6649,28 +6649,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportAttachment;
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End
-	
-	// Bug #35485@Syazani 08/02/2024 -- Start
-	private ScAttachment regenerateDocumentEvaAttachmentByFileName(ScQt scqt, ScAttachment reportAttachment) throws Exception {
-		String fileName = getManagedBean().getReportDownloadFileName();
-		StringBuilder fileNameSB = null;
-		String committeeType = "";
-		if (fileName.equalsIgnoreCase(QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
-			committeeType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
-		} else if (fileName.equalsIgnoreCase(QTConstants.OPENING_COMMITTEE_REPORT_ZIP_TITLE)) {
-			committeeType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
-		} else if (fileName.equalsIgnoreCase(QTConstants.TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
-			committeeType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
-		} else if (fileName.equalsIgnoreCase(QTConstants.FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
-			committeeType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
-		}
-
-		fileNameSB = new StringBuilder(fileName);
-		fileNameSB.append(".pdf");
-		if (reportAttachment != null) {
-			generateEvaluationPdf((ScAttachment) reportAttachment, scqt, committeeType, true);
-		}
-		return reportAttachment;
-	}
-	// Bug #35485@Syazani 08/02/2024 -- End
 }
