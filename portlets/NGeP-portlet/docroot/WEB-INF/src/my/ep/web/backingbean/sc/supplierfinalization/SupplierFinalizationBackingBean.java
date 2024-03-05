@@ -4324,6 +4324,18 @@ return	remarksNotFound;
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 		downloadFile(reportAttachment);
+		
+		// Bug #35485@Syazani 08/02/2024 -- Start
+		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
+		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+				.getDocDefinitionKey();
+		if (downFilesSize <= 1000 && docDefinitionKey.equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT)) {
+			String fileName = StringUtils.isNotBlank(reportAttachment.getFileName()) ? reportAttachment.getFileName() : "";
+			fileName = CustomUtils.getInstance().removeFileExtension(fileName);
+			this.getManagedBean().setReportDownloadFileName(fileName);
+			downloadAllReports(getManagedBean().getScQt(), "evaluation", reportAttachment);
+		}
+		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
 	// #18685 - Start
