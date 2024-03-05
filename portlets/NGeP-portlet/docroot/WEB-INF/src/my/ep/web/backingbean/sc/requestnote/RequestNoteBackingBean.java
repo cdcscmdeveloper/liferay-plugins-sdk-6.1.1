@@ -46,6 +46,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
+import my.ep.biz.service.sc.audit.IAuditDPRequestnoteSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
@@ -141,12 +142,15 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.backingbean.sc.audit.AuditDPRequestnoteBackingBean;
+import my.ep.web.backingbean.sc.audit.AuditDPRequestnoteBackingBeanTemplate;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.dp.audit.AuditConst;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -3982,6 +3986,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1],
 								(String) prObj[3], Boolean.TRUE);
+						
+						/************ AUDIT #28895_35492*************/
+						IAuditDPRequestnoteSO auditDPRequestnoteSO = BusinessDelegate.getInstance()
+												.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+														IAuditDPRequestnoteSO.class);
+						
+						AuditDPRequestnoteBackingBeanTemplate auTemplate = new AuditDPRequestnoteBackingBean();
+						 if (auditDPRequestnoteSO.isAuditConfig(AuditConst.SC_DP_AU_RN_CONF)) {
+							getManagedBean().setPurchaseRequestResDTO(response);
+							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
+						}
+					/************ END AUDIT #28895_35492*************/
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
