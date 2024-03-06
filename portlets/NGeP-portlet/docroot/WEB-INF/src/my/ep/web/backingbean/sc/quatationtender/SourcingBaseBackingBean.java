@@ -232,7 +232,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.output.CountingOutputStream;	// Bug #35485@Syazani 08/02/2024	
+import org.apache.commons.io.output.CountingOutputStream;	// Bug #35485@Syazani 08/02/2024
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -513,7 +513,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public File downloadFile(String filePath, String fileName, ScAttachment scAttachment)	// Bug #35485@Syazani 08/02/2024
 			throws IOException {
-		long byteSize = 0;	// Bug #35485@Syazani 08/02/2024
+        long byteSize = 0;	// Bug #35485@Syazani 08/02/2024
 		if (filePath != null) {
 			InputStream input = null;
 			try {
@@ -4784,7 +4784,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 		}
-		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		if (typeRegen.equalsIgnoreCase("evaluation")) {
 			attachments.add(regenerateDocumentEvaAttachmentByFileName(scqt, scAttachment));
