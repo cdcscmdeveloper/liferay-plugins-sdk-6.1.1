@@ -232,6 +232,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.output.CountingOutputStream;	// Bug #35485@Syazani 08/02/2024
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -481,7 +482,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					fileName = scAttachment.getTempFileName() + "." + extension;
 				}
 				file = downloadFile(getActualFilePath(scAttachment),
-						fileName);
+						fileName, scAttachment);	// Bug #35485@Syazani 08/02/2024
 			} catch (FileNotFoundException exception) {
 				// Separate the file name from absolute path
 				String splitMsg[] = StringUtils.split(exception.getMessage(),
@@ -507,12 +508,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @param filePath
 	 * @param fileName
+	 * @param scAttachment
 	 * @return File instance
 	 * @throws IOException
 	 */
-	public File downloadFile(String filePath, String fileName)
+	public File downloadFile(String filePath, String fileName, ScAttachment scAttachment)	// Bug #35485@Syazani 08/02/2024
 			throws IOException {
-
+        long byteSize = 0;	// Bug #35485@Syazani 08/02/2024
 		if (filePath != null) {
 			InputStream input = null;
 			try {
@@ -523,7 +525,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// Cannot open connection, maybe local file
 				input = new FileInputStream(filePath);
 			}
-			downloadFileByInputStream(input, fileName);
+			byteSize = downloadFileByInputStream(input, fileName);	// Bug #35485@Syazani 08/02/2024
 			
 			// #25378 revert from HEAD -start-
 //			boolean zipped=false;
@@ -538,6 +540,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
          //input has been closed in the called method bcoz here in catch they alternative 
 		// use to upload back to database
 		File file = new File(filePath);
+		scAttachment.setFileSize(byteSize);	// Bug #35485@Syazani 08/02/2024
 		return file;
 	}
 
@@ -548,8 +551,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param fileName
 	 * @throws IOException
 	 */
-	protected void downloadFileByInputStream(InputStream input, String fileName)
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	@SuppressWarnings("resource")
+	protected long downloadFileByInputStream(InputStream input, String fileName)
 			throws IOException {
+	// Bug #35485@Syazani 08/02/2024 -- End
 	// #25378 revert from HEAD -start-
 //	protected void downloadFileByInputStream(InputStream input, String fileName,boolean zipped)
 //			throws IOException {
@@ -560,6 +566,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		HttpServletResponse response = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
 		OutputStream out = null;
+		// Bug #35485@Syazani 08/02/2024 -- Start
+		CountingOutputStream countingStream = null;
+		long bytesWritten = 0;
+		// Bug #35485@Syazani 08/02/2024 -- End
 		// #25378 revert from HEAD -start-
 		//#25378 - danial
 //		GZIPInputStream gis =null;
@@ -581,13 +591,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			response.flushBuffer();
 
 			out = response.getOutputStream();
+			countingStream = new CountingOutputStream(out);	// Bug #35485@Syazani 08/02/2024
 			
 			byte[] buffer = new byte[4096];
 			int bytesRead;
 			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
+				countingStream.write(buffer, 0, bytesRead);	// Bug #35485@Syazani 08/02/2024
 				buffer = new byte[4096];
 			}
+			
+			bytesWritten = countingStream.getByteCount();	// Bug #35485@Syazani 08/02/2024
 
 			// #25378 revert from HEAD -start-
 			//#25378 - danial
@@ -622,6 +635,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				out.close();
 			}
 		}
+		return bytesWritten;	// Bug #35485@Syazani 08/02/2024
 	}
 
 	/**
@@ -4643,13 +4657,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					this.getManagedBean().setScAttachment(attachment);
 				}*/
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Evaluation-Committee-Report");
+						QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 
 			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScOpenCommitteeReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Opening-Committee-Report");
+						QTConstants.OPENING_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 
 				this.getManagedBean().setScAttachment(attachment);
 
@@ -4657,7 +4671,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScTechnicalEvaluationReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-TechnicalEvaluation-Committee-Report");
+						QTConstants.TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 
 				this.getManagedBean().setScAttachment(attachment);
 
@@ -4665,7 +4679,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScFinancialEvaluationReportAttachment();
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-FinancialEvaluation-Committee-Report");
+						QTConstants.FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 
 				this.getManagedBean().setScAttachment(attachment);
 
@@ -4744,10 +4758,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * Download all reports.download all evaluation reports.
 	 * 
+	 * @param scqt
+	 * @param typeRegen
+	 * @param scAttachment
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void downloadAllReports(ScQt scqt) throws Exception {
+	public void downloadAllReports(ScQt scqt, String typeRegen, ScAttachment scAttachment) throws Exception {	// Bug #35485@Syazani 08/02/2024
 		log.debug(this.getClass().getName() + ".downloadAllReports()");
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getNewBriefingPaperReportList();
@@ -4771,7 +4788,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 		}
-		attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
+		// Bug #35485@Syazani 08/02/2024 -- Start
+		if ("evaluation".equalsIgnoreCase(typeRegen)) {
+			attachments.add(regenerateDocumentEvaAttachmentByFileName(scqt, scAttachment));
+		} else {
+			attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
+		}
+		// Bug #35485@Syazani 08/02/2024 -- End
 		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(),
 				attachments);
 	}
@@ -4809,7 +4832,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		reportAttachment.setDocNo(scQt.getQtNo());
 		generateEvaluationPdf(
 				(ScAttachment) reportAttachment,
-				scqt, committeeType);
+				scqt, committeeType, false);	// Bug #35485@Syazani 08/02/2024
 		
 		return reportAttachment;
 	}
@@ -4818,8 +4841,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param committeeType 
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
+	 * @param committeeType
+	 * @param regen
 	 */
-	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType)
+	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType, boolean regen)	// Bug #35485@Syazani 08/02/2024
 			throws Exception {
 		log.debug(this.getClass().getName() + ".generateEvaluationPdf()");
 		//#35367 download all report, separate wip and new version
@@ -4884,6 +4909,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} else {
 			log.info("ReportName is empty");
 		}
+		
+		// Bug #35485@Syazani 08/02/2024 -- Start
+		if (regen) {
+			evaluationSO.updateScAttachment(attachment);
+		}
+		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
 	/**
@@ -6600,4 +6631,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		monthNumbers.put(QTConstants.MONTH_DEC, QTConstants.MONTH_NOV);
 		return monthNumbers;
 	}//SonarQubeIssuesFixed25635-End
+	
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	private ScAttachment regenerateDocumentEvaAttachmentByFileName(ScQt scqt, ScAttachment reportAttachment) throws Exception {
+		String fileName = getManagedBean().getReportDownloadFileName();
+		StringBuilder fileNameSB;
+		String committeeType = "";
+		if (fileName.equalsIgnoreCase(QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
+		} else if (fileName.equalsIgnoreCase(QTConstants.OPENING_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
+		} else if (fileName.equalsIgnoreCase(QTConstants.TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+		} else if (fileName.equalsIgnoreCase(QTConstants.FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
+		}
+
+		fileNameSB = new StringBuilder(fileName);
+		fileNameSB.append(".pdf");
+		if (reportAttachment != null) {
+			generateEvaluationPdf((ScAttachment) reportAttachment, scqt, committeeType, true);
+		}
+		return reportAttachment;
+	}
+	// Bug #35485@Syazani 08/02/2024 -- End
 }
