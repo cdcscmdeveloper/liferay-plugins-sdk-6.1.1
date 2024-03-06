@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sc.audit;
 
 import java.io.Serializable;
-
 import my.ep.biz.service.sc.audit.IAuditDPRequestnoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.audit.AuDPRequestnoteDTO;
@@ -11,8 +10,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * The Class AuditDPRequestnoteBackingBeanTemplate.
- * #28895_35492
+ * The Class AuditDPRequestnoteBackingBeanTemplate. #28895_35492
+ * 
  * @author Muliana
  * @since 19.02.2024
  */
@@ -52,9 +51,7 @@ public abstract class AuditDPRequestnoteBackingBeanTemplate implements Serializa
 	}
 
 	private String getRoleCode() {
-		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
-				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
-				RoleCode.RN_APPROVER.value()) ? RoleCode.RN_APPROVER.value() : null;
+		return getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value()) ? RoleCode.RN_APPROVER.value() :  null;
 	}
 
 	/**
