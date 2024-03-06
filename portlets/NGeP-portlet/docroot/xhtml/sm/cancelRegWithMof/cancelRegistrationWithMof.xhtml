@@ -66,10 +66,20 @@
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{backingBean.onDisplayConfirmCanceMofRegistration}" update="@([id$=Msg])" id="submitBtnId"/>
+				<!-- #34400 - start -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"  id="submitBtnId"
+					oncomplete="if (!args.validationFailed) confirmDlg.show()" />
 			</div>
 		</p:panel>
+		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+			bean="#{backingBean}"
+			okAction="onDisplayConfirmCanceMofRegistration"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.cancel.mof']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
