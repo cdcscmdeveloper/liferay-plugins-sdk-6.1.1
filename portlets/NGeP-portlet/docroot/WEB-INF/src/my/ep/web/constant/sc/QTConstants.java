@@ -368,4 +368,11 @@ public interface QTConstants {
 	public static final String MONTH_NOV="11";
 	public static final String MONTH_DEC="12";
 	public static final String QT_SPEC_CLONE_BACKING_BEAN="QtSpecCloneBackingBean";//SonarQubeIssuesFixed25635-End
+	
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
+	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
+	public static final String TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-TechnicalEvaluation-Committee-Report";
+	public static final String FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-FinancialEvaluation-Committee-Report";
+	// Bug #35485@Syazani 08/02/2024 -- End
 }
