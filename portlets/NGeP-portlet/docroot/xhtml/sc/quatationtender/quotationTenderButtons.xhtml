@@ -27,6 +27,10 @@
 	<ui:remove> #30477 Start </ui:remove>
 	<ui:param name="isCommitteeApprovalReviseTask" value="#{qTDetailBB.isCommitteeApprovalReviseTask(qTDetailBB.managedBean.taskName)}" />
 	<ui:remove> #30477 End </ui:remove>
+	<!-- 12471 - start -->
+	<ui:param name="isQTPendingCMTSubmissionAfterPublicationApproval"
+		value="#{qtDetailBB.isQTPendingCMTSubmissionAfterPublicationApproval()}" />
+	<!-- 12471 - end -->
 		<table width="100%">
 		<tr>
 		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
@@ -110,7 +114,7 @@
 			<!-- ***25692 - end -->
 				
 			<ui:remove>9019 Start (Harun) WIP transaction Pending QT Submission</ui:remove>
-			<c:if test="#{!qTDetailBB.getTaskByDocNoModule(qTDetailBB.managedBean.qt.qtNo, QTStatusConst.SC_WFTASK_COMPOSITENAME) and qTDetailBB.managedBean.maintanceFlow}">
+			<c:if test="#{!qTDetailBB.getTaskByDocNoModule() and qTDetailBB.managedBean.maintanceFlow}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.update.sc.wip']}" partialSubmit="true" process="@this"
 					action="#{qTDetailBB.updateWIPTransaction()}">
@@ -239,7 +243,10 @@
 				  	</c:if>
 				  	<!-- 26095@hatta - end -->
 			  	 	<ui:remove>9019 update condition to disable cancel button for QT status was pending</ui:remove>
-					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission}">
+			  	 	<!--12471 add checking if QT has been approved for publication and current committee status is Pending Submission / Revision -->
+					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission 
+					and (isQTPendingCMTSubmissionAfterPublicationApproval eq false)}">
+					<!-- 9019 & 12471 -end- -->
 					<ui:remove>9019 -end</ui:remove>
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
@@ -448,7 +455,7 @@
 		<ui:remove>#29472 - end</ui:remove>
 		
 		<ui:remove>#25077 - Start</ui:remove>	
-		    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL}">
+		    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.qtPendingPublicationApprovalReschedule ||isCommitteeApprovalTask}"> <ui:remove>#34694, #35527</ui:remove>
 				<p:dialog id="reviceApprovalDlgTemp" widgetVar="reviceApprovalDlgTemp"
 					header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 					resizable="false" width="360" height="90" modal="true"

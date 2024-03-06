@@ -3,8 +3,6 @@
  */
 package my.ep.web.constant.sc;
 
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
-
 /**
  * QTConstants for constants for sourcing.
  * 
@@ -313,5 +311,61 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
 	//#29007 End Vinod
+	// #29007 Start Vinod
+	public static final String LBL_TXT_SELECT = "lbl.txt.select";
+	public static final String LBL_TXT_YES = "lbl.txt.yes";
+	public static final String LBL_TXT_NO = "lbl.txt.no";
+	public static final String COMPLIANCE_CONFIRMATION_POPUP = "complianceConfirmPopUp.show()";
+	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
+	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
+	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
+	// #29007 End Vinod
+	public static final String CONFIRM_BRIEF_POPUP = "confirmBriefPopup.show()";//sonarQube Issue 2 #91 # Vinod #Added
 	
+	//#25726 - reopen note 110
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	//#25726 end
+	
+	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
+	// #12471 Start
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
+	// #12471 End
+	
+	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
+	
+	//#10542 Start Dayan
+	public static final String COMPLIANCE_DOCUMENT_SUPPLIER_NO = "Supplier ";
+	public static final String FINANCIAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Financial-BySupplier";
+	public static final String FINANCIAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Financial-ByTitleDocument";
+	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
+	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
+	//#10542 End Dayan
+	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148
+	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
+	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
+	public static final String FINALIZATION_COMMITTEE_SECRETARY="lbl.sc.finalization.committee.secretary.";//25635&sonarQubeIssue12#84
+	
+	public static final String SERVICE_OBJECT_CC = "cc";
+	//12471 - start
+	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
+	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	//12471 - end
+    public static final Long TREENODE_GENERAL_INFORMATION=1L;//SonarQubeIssuesFixed25635-Start
+	public static final Long TREENODE_SUPPLIER_CRITERIA=2L;
+	public static final Long TREENODE_COMMITTEE_APPOINTMENT=3L;
+	public static final Long TREENODE_COMMITTEE_APPROVAL=4L;
+	public static final String MONTH_ZERO="0";
+	public static final String MONTH_JAN="1";
+	public static final String MONTH_FEB="2";
+	public static final String MONTH_MARCH="3";
+	public static final String MONTH_APRIL="4";
+	public static final String MONTH_MAY="5";
+	public static final String MONTH_JUNE="6";
+	public static final String MONTH_JULY="7";
+	public static final String MONTH_AUG="8";
+	public static final String MONTH_SEPT="9";
+	public static final String MONTH_OCT="10";
+	public static final String MONTH_NOV="11";
+	public static final String MONTH_DEC="12";
+	public static final String QT_SPEC_CLONE_BACKING_BEAN="QtSpecCloneBackingBean";//SonarQubeIssuesFixed25635-End
 }

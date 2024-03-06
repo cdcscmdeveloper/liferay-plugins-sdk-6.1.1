@@ -19,8 +19,8 @@
 			<!-- #32963 - end -->
 			<!--28775 - Site Visit Grouping Enhancement - 28775 -->
 			<p:commandButton value="#{lbl['lbl.btn.proceed']}" 
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide();submissionConfirmDlg.hide()"
-				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide();submissionConfirmDlg.hide()"
+				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}" />
 		</div>
 	</p:dialog>
 	<!-- #12483 - END -->
@@ -45,7 +45,8 @@
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
 				<!--28775 - Site Visit Grouping Enhancement - 28775 -->
-				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" oncomplete="rptDlg.show();" id="btnPreview" 
+					action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
 			</p:column>
 			
 			<p:column>

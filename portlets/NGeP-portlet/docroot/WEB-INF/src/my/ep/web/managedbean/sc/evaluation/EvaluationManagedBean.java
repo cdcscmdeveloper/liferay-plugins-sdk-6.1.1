@@ -12,7 +12,9 @@ package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -610,7 +612,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String demoScore;
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
+	private boolean demoWip;//#28784 WIP @idham
+	private int retainPageNumber;//#28784 WIP @Idham
 	//#28784 - end
+	private boolean fecIndexPreRender;//#10542
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -647,6 +652,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//#10542 - start
 	private String downloadBy;
+	private byte[] technicalZipFileDownloadByDocument;
+	private byte[] technicalZipFileDownloadBySupplier;
+	private byte[] financialZipFileDownloadByDocument;
+	private byte[] financialZipFileDownloadBySupplier;
+	private String mainDocumentTitle;
 	//#10542 - end
 	
 	//#6906 start
@@ -667,6 +677,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//34528-uat 4serangkai 
 	private Paginator financialPackagePaginator;
 
+	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 	
 	/**tabIndex
 	 * Gets the today.
@@ -4214,6 +4225,46 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public String getDownloadBy(){
 		return downloadBy;
 	}
+	
+	public byte[] getTechnicalZipFileDownloadByDocument() {
+		return technicalZipFileDownloadByDocument;
+	}
+	
+	public void setTechnicalZipFileDownloadByDocument(byte[] technicalZipFileDownloadByDocument){
+		this.technicalZipFileDownloadByDocument = technicalZipFileDownloadByDocument;
+	}
+	
+	public byte[] getTechnicalZipFileDownloadBySupplier() {
+		return technicalZipFileDownloadBySupplier;
+	}
+	
+	public void setTechnicalZipFileDownloadBySupplier(byte[] technicalZipFileDownloadBySupplier){
+		this.technicalZipFileDownloadBySupplier = technicalZipFileDownloadBySupplier;
+	}
+	
+	public byte[] getFinancialZipFileDownloadByDocument(){
+		return financialZipFileDownloadByDocument;
+	}
+	
+	public void setFinancialZipFileDownloadByDocument(byte[] financialZipFileDownloadByDocument){
+		this.financialZipFileDownloadByDocument = financialZipFileDownloadByDocument;
+	}
+	
+	public byte[] getFinancialZipFileDownloadBySupplier(){
+		return financialZipFileDownloadBySupplier;
+	}
+	
+	public void setFinancialZipFileDownloadBySupplier(byte[] financialZipFileDownloadBySupplier){
+		this.financialZipFileDownloadBySupplier = financialZipFileDownloadBySupplier;
+	}
+	
+	public void setMainDocumentTitle(String mainDocumentTitle){
+		this.mainDocumentTitle = mainDocumentTitle;
+	}
+	
+	public String getMainDocumentTitle(){
+		return mainDocumentTitle;
+	}
 	//#10542 - end
 
 	//#6906 - start
@@ -4320,4 +4371,37 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.financialPackagePaginator = financialPackagePaginator;
 	}
 	//34528-uat 4serangkai - end
+
+	public boolean isDemoWip() {
+		return demoWip;
+	}
+
+	public void setDemoWip(boolean demoWip) {
+		this.demoWip = demoWip;
+	}
+	
+	//#10542
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
+	}
+
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+
+	public Map<String, Object> getEvaluationContext() {
+		return evaluationContext;
+	}
+
+	public void setEvaluationContext(Map<String, Object> evaluationContext) {
+		this.evaluationContext = evaluationContext;
+	}
 }

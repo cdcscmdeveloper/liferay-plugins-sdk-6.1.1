@@ -14,7 +14,6 @@ package my.ep.web.managedbean.report.qt;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 
@@ -35,6 +34,11 @@ public class QTProposalOfferSubmissionReportManagedBean extends QtReportManagedB
 	private String proposalNo;
 	private ScQt autoScQt;
 	private ScQtProposal autoScQtProposal;
+	private Long supplierId;//#14306
+	private String scPropSubmitFromMonth;//#14306
+	private String scPropSubmitFromYear;//#14306
+	private String scPropSubmitToMonth;//#14306
+	private String scPropSubmitToYear;//#14306
 	
 	
 
@@ -113,6 +117,71 @@ public class QTProposalOfferSubmissionReportManagedBean extends QtReportManagedB
 	public void setLatestApplId(Long latestApplId) {
 		this.latestApplId = latestApplId;
 	}
+	
+	//#14306 - Start
+	/**
+	 * @return the supplierId
+	 */
+	public Long getSupplierId() {
+		return supplierId;
+	}
+
+	/**
+	 * @param supplierId the supplierId to set
+	 */
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
+	}
+	
+	/**
+	 * @return the scPropSubmitFromMonth
+	 */
+	public String getScPropSubmitFromMonth() {
+		return scPropSubmitFromMonth;
+	}
+	/**
+	 * @param scPropSubmitFromMonth the scPropSubmitFromMonth to set
+	 */
+	public void setScPropSubmitFromMonth(String scPropSubmitFromMonth) {
+		this.scPropSubmitFromMonth = scPropSubmitFromMonth;
+	}
+	/**
+	 * @return the scPropSubmitFromYear
+	 */
+	public String getScPropSubmitFromYear() {
+		return scPropSubmitFromYear;
+	}
+	/**
+	 * @param scPropSubmitFromYear the scPropSubmitFromYear to set
+	 */
+	public void setScPropSubmitFromYear(String scPropSubmitFromYear) {
+		this.scPropSubmitFromYear = scPropSubmitFromYear;
+	}
+	/**
+	 * @return the scPropSubmitToMonth
+	 */
+	public String getScPropSubmitToMonth() {
+		return scPropSubmitToMonth;
+	}
+	/**
+	 * @param scPropSubmitToMonth the scPropSubmitToMonth to set
+	 */
+	public void setScPropSubmitToMonth(String scPropSubmitToMonth) {
+		this.scPropSubmitToMonth = scPropSubmitToMonth;
+	}
+	/**
+	 * @return the scPropSubmitToYear
+	 */
+	public String getScPropSubmitToYear() {
+		return scPropSubmitToYear;
+	}
+	/**
+	 * @param scPropSubmitToYear the scPropSubmitToYear to set
+	 */
+	public void setScPropSubmitToYear(String scPropSubmitToYear) {
+		this.scPropSubmitToYear = scPropSubmitToYear;
+	}
+	//#14306 - End
 
 
 }

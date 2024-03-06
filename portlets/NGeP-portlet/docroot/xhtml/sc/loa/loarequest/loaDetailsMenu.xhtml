@@ -399,7 +399,61 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
-		</tr>
+			<!-- #29693 start -->
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
+			</td>
+			<td><table>
+					<tr>
+						<td>
+						<c:choose>
+						<c:when test="#{isEditableStatus and !lOADetailBackingBean.managedBean.readOnly}">
+							<p:inputText id="ContractAmtId2"
+								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
+								style="text-align:right;" partialSubmit="true" size="5" >
+								<p:ajax event="change"
+									listener="#{lOADetailBackingBean.validateResponsePeriod(lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod)}"
+									partialSubmit="true" process="@this"
+									update="@([id$=ContractAmtId3])" />
+							</p:inputText> 	
+						</c:when>
+						<c:otherwise>
+						    <p:inputText id="ContractAmtId2"
+								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
+								style="text-align:right;" partialSubmit="true" size="5"
+								disabled="true" >
+								
+							</p:inputText> 	
+						</c:otherwise>
+						</c:choose>
+						 </td>
+						 <td>
+				               <p:outputLabel value="#{lbl['lbl.sc.resp.days']}" />
+			             </td>
+						 <td style="margin-top: -5px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.resp.period.tooltip']}" />
+						 </td>
+			              <td>
+				           <p:outputPanel
+									id="ContractAmtId3">
+								<p:inputText
+									value="#{lOADetailBackingBean.retrieveDueDate()}"
+									style="text-align:right;" disabled="true" partialSubmit="true" >
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+								</p:inputText>
+									
+									  
+				           </p:outputPanel>   
+			             </td>
+			             <td style="margin-top: -5px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.resp.due.date.tooltip']}" />
+						</td>
+					</tr>
+				</table>
+				</td>
+			<!-- #29693 end -->
+			
+			</tr>
 		<c:if test="#{isDocTypeQuotation}">
 		<tr>
 			<td>
@@ -704,10 +758,17 @@
 			 	 								</p:commandLink>
 			 	 							</p:outputPanel> 
 			 	 						</td>
-			 	 						<td style="margin-top: -3px">
-											<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+										<td style="margin-top: -3px">
+											<c:if test="#{isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
+											</c:if>
+											<c:if test="#{!isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+											</c:if>
 										</td>
-			 	 					</tr>
+									</tr>
 			 	 				</table>			 	 				
 			 	 			</h:panelGroup>	
 			 	 			<!-- #25725 note 165  --><h:panelGroup rendered="#{!isEditableStatus and !isSupplierAckStatus and !isAckReceiptSupplierActStatus and lOADetailBackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
@@ -727,7 +788,14 @@
 			 	 							</p:outputPanel> 
 			 	 						</td>
 			 	 						<td style="margin-top: -3px">
-											<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+											<c:if test="#{isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.qt.approval.letter']}" /> <ui:remove>Reopen #25726 note 110 issue 9</ui:remove>
+											</c:if>
+											<c:if test="#{!isDocTypeQuotation}">
+												<ac:iconTooltip
+													value="#{lbl['lbl.sc.tooltip.approval.letter']}" />
+											</c:if>
 										</td>
 			 	 					</tr>
 			 	 				</table>		
