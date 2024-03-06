@@ -508,6 +508,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * 
 	 * @param filePath
 	 * @param fileName
+	 * @param scAttachment
 	 * @return File instance
 	 * @throws IOException
 	 */
@@ -4757,6 +4758,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * Download all reports.download all evaluation reports.
 	 * 
+	 * @param scqt
+	 * @param typeRegen
+	 * @param scAttachment
 	 * @throws Exception
 	 *             the exception
 	 */
@@ -4785,7 +4789,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 		}
 		// Bug #35485@Syazani 08/02/2024 -- Start
-		if (typeRegen.equalsIgnoreCase("evaluation")) {
+		if ("evaluation".equalsIgnoreCase(typeRegen)) {
 			attachments.add(regenerateDocumentEvaAttachmentByFileName(scqt, scAttachment));
 		} else {
 			attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
@@ -4837,6 +4841,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param committeeType 
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
+	 * @param committeeType
+	 * @param regen
 	 */
 	private void generateEvaluationPdf(ScAttachment attachment, ScQt qt, String committeeType, boolean regen)	// Bug #35485@Syazani 08/02/2024
 			throws Exception {
@@ -6629,7 +6635,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	private ScAttachment regenerateDocumentEvaAttachmentByFileName(ScQt scqt, ScAttachment reportAttachment) throws Exception {
 		String fileName = getManagedBean().getReportDownloadFileName();
-		StringBuilder fileNameSB = null;
+		StringBuilder fileNameSB;
 		String committeeType = "";
 		if (fileName.equalsIgnoreCase(QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
 			committeeType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
