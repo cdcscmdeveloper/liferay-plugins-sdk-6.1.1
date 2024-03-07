@@ -19056,37 +19056,6 @@ private void retriveCommitteeRemarksList(){
 		return lessThanValidityEndDate;
 	}
 	// #21692 - end
-	//6906 - start
-	/**
-	 * Get warning message when no supplier participate on evaluation
-	 * @param
-	 * @return String
-	 */
-	public String getNoSupplierWarningMessage() {
-		return MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES,
-				new FacesScopes().getUserLocale());
-
-	}
-	/**
-	 * Evaluate action button disable or not when no supplier participate on evaluation
-	 * 
-	 * @param
-	 * @return boolean
-	 */
-	public boolean evaluateNoSupplierParticipateCanProceed() {
-		String taskName = this.getManagedBean().getTaskName();
-		if(taskName==null)
-			return false;
-		boolean allow = true;
-		String[] disallowed = new String[] { SCProcessNameConst.FINALISE_EC_EVALUATION,
-				SCProcessNameConst.FINALISE_OC_EVALUATION, SCProcessNameConst.ENDORSE_EC_EVALUATION,
-				SCProcessNameConst.ENDORSE_OC_EVALUATION, SCProcessNameConst.SIGNOFF_EC_EVALUATION,
-				SCProcessNameConst.SIGNOFF_OC_EVALUATION };
-		if(Arrays.asList(disallowed).contains(taskName) && this.getManagedBean().isNoProposalSubmitted())
-			allow = false;
-		return allow;
-	}
-	//6906 - end
 	
 	//#28784 add demo condition - Start
 	/**
