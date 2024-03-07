@@ -2498,7 +2498,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
-			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
@@ -4375,9 +4374,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	/**
 	 * Page navigation to FLDoc search page in CR
-	 * @throws IOException 
+	 * 
 	 */
-	public String backToPervious() throws IOException { //35357
+	public String backToPervious() {
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -4387,8 +4386,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		//35357-Start
 		else if(getManagedBean().getBackToNtf() != null){
-			FacesContext.getCurrentInstance().getExternalContext().redirect(
-					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect(
+						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			} catch (IOException e) {
+				log.error("File:ContractRequestBackingBean Method:backToPervious", e);
+			}
 			return null;
 		}
 		//35357-End

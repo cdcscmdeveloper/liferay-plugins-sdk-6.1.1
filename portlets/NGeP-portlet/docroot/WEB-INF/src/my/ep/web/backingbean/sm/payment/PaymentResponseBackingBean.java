@@ -27,6 +27,7 @@ import my.ep.constant.MessageConst;
 //#26307 start 
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
@@ -62,6 +63,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 //#26307 start 
+
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -167,7 +169,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				orderId = paymentId.toString();
 				errorDesc = "";
 				errorCode = "";
-				paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());
+				paydate = DateUtils.dateToString(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, pyPymt.getPaymentDate());
 				if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 					log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 					channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -358,7 +360,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						orderId = paymentId.toString();
 						errorDesc = "";
 						errorCode = "";
-						paydate = DateUtils.dateToString("yyyy-MM-dd HH:mm:ss", pyPymt.getPaymentDate());
+						paydate = DateUtils.dateToString(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, pyPymt.getPaymentDate());
 						if(pyPymt.getPyPaymentOrder() != null && pyPymt.getPyPaymentOrder().getPyPaymentResponses().size()>0){
 							log.info("pyPymt.getPyPaymentOrder() channel name=="+ pyPymt.getPyPaymentOrder().getChannelName());
 							channel = pyPymt.getPyPaymentOrder().getChannelName();
@@ -562,37 +564,35 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				Timestamp bankDate = new Timestamp(System.currentTimeMillis());
 				Boolean validFormat = false;
 				try {
-					if(date1.trim().equals("0000-00-00 00:00:00")){
-						log.info("Invalid Date ==== "+date1);
+					if (date1.trim().equals("0000-00-00 00:00:00")) {
+						log.info("Invalid Date ==== " + date1);
 						date1 = null;
 					}
-					if(date1 == null || date1.trim().equals("")){
+					if (date1 == null || date1.trim().equals("")) {
 						throw new Exception();
 					}
-					if(date1 != null){
-						log.info("Bank Date&Time ==== "+date1);
+					if (date1 != null) {
+						log.info("Bank Date&Time ==== " + date1);
 						SimpleDateFormat sdfrmt = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
-					    try{
-					    	log.info("In try");
-					        sdfrmt.parse(date1);
-					        log.info("Setting Valid Format to true");
-					        validFormat = true;
-					    }
-					    catch(ParseException e){
-					    	log.info("In Parse Catch");
-						    validFormat = false;
-					    }
-					    finally {
-					    	log.info("In finally");
-					    	if(validFormat){
-					    		log.info("Valid Format");
-								bankDate = DateUtils.convertStringToTimestamp("yyyy-MM-dd HH:mm:ss", date1);
+						try {
+							log.info("In try");
+							sdfrmt.parse(date1);
+							log.info("Setting Valid Format to true");
+							validFormat = true;
+						} catch (ParseException e) {
+							log.info("In Parse Catch");
+							validFormat = false;
+						} finally {
+							log.info("In finally");
+							if (validFormat) {
+								log.info("Valid Format");
+								bankDate = DateUtils.convertStringToTimestamp(CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, date1);
 								pymtReqDTO.setBankDate(bankDate);
-							}else{
+							} else {
 								log.info("Invalid Format");
 								throw new Exception();
 							}
-					    }
+						}
 					}
 				} catch (Exception e) {
 					log.info("bankDate is null");
@@ -603,7 +603,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 				Timestamp txDate = new Timestamp(System.currentTimeMillis());
 				try {
 					txDate = DateUtils.convertStringToTimestamp(
-							"yyyy-MM-dd HH:mm:ss", paydate);
+							CommonConstants.DEFAULT_DATETIME_FORMAT_WITH_DASH, paydate);
 				} catch (Exception e) {
 					txDate = new Timestamp(System.currentTimeMillis());
 					e.printStackTrace();

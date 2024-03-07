@@ -158,10 +158,15 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private boolean  committeeUpdateEnabled;
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
 	private ScQtApprovalRemark tempScQtApprovalRemark;	//25037 #568
-
-	//#25037-END
+	//#25037-END	
 	
 	private boolean hasPreviousMeeting;//#29473
+
+	//12471 - start
+	private String ministry;
+	private String ptjGroup;
+	private String ptj;
+	//12471 - end
 
 	/**
 	 * Gets the today.
@@ -940,4 +945,30 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.tempScQtApprovalRemark = tempScQtApprovalRemark;
 	}
 	//25037 #568 - end
+
+	//12471 - start
+	public String getMinistry() {
+		return ministry;
+	}
+
+	public void setMinistry(String ministry) {
+		this.ministry = ministry;
+	}
+
+	public String getPtjGroup() {
+		return ptjGroup;
+	}
+
+	public void setPtjGroup(String ptjGroup) {
+		this.ptjGroup = ptjGroup;
+	}
+
+	public String getPtj() {
+		return ptj;
+	}
+
+	public void setPtj(String ptj) {
+		this.ptj = ptj;
+	}
+	//12471 - end
 }

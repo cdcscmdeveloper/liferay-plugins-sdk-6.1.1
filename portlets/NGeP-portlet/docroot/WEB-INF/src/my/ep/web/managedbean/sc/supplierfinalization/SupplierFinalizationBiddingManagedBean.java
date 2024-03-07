@@ -1302,7 +1302,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.finalizationRemarks = finalizationRemarks;
 	}
 	//25638 - End.
-	
+		
 	//#28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
@@ -1312,5 +1312,4 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.supplierBranchList = supplierBranchList;
 	}
 	//#28777 & #29729 - End
-	
 }

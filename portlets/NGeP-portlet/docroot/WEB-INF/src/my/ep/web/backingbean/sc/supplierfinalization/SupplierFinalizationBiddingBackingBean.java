@@ -3059,8 +3059,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			this.submitBiddingEndorsement(action);
 		}
 	}
-	//#25037-END
-	
+	//#25037-END	
 	//#28777 & #29729 - Start
 	/**
 	* Method to display list of supplier branch had deleted or not with related current QT
@@ -3122,10 +3121,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 		
-		if(supplierId != null && scQt != null){
-		    if(qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
-			    return Boolean.TRUE;
-	        }
+		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
+			return Boolean.TRUE;
 	    }
 		return Boolean.FALSE;
 	}

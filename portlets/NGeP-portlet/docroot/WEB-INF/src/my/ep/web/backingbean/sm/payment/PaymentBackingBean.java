@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -697,6 +698,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			log.info("Payment bill Details "
 					+ pyPayment.getPyBill().getPyBillDtls().size());
+			
+			//#34964- start			
+			Iterator<PyBillDtl> newPyBillDtls = pyPayment.getPyBill().getPyBillDtls().iterator();
+			while (newPyBillDtls.hasNext()) {
+				PyBillDtl billDtls = newPyBillDtls.next(); 
+				for(PyBillDtl PyBillDtl : this.getManagedBean().getNewPyBillDtlLs()){
+					if(!PyBillDtl.getBillDtlId().equals(billDtls.getBillDtlId())){
+						billDtls.setRecordStatusFlg(Integer.valueOf(0));
+						billDtls.setRecordStatus(false);
+					}	
+				}
+			}
+			//#34964- end	
 
 			Long statusCode = null;
 
