@@ -19056,6 +19056,18 @@ private void retriveCommitteeRemarksList(){
 		return lessThanValidityEndDate;
 	}
 	// #21692 - end
+	//6906 - start
+	/**
+	 * Get warning message when no supplier participate on evaluation
+	 * @param
+	 * @return String
+	 */
+	public String getNoSupplierWarningMessage() {
+		return MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
+
+	}
+	//6906 - end
 	
 	//#28784 add demo condition - Start
 	/**
