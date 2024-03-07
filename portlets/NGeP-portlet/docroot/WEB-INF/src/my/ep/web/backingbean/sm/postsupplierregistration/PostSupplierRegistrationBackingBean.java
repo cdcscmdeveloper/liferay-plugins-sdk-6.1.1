@@ -339,7 +339,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						this.getManagedBean().setResubmitAppl(true);
 					}
 					log.info("pageNavigate------------"+path1);
-					checkSSMValid(supplier,this.getManagedBean());
+					//#35115 - START
+					if(MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION)){
+						checkSSMValid(supplier,this.getManagedBean());
+					}
+					//#35115 - END
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
 					if(!getManagedBean().getPersonnelsRole().isEmpty()){
 						proceed =false;
