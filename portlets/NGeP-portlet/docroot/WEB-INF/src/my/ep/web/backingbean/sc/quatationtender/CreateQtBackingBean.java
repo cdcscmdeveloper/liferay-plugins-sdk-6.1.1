@@ -346,7 +346,7 @@ public class CreateQtBackingBean extends
 						.getOrgProfileId());
 				if (ptjSpecialApproval != null) {
 					scQt.setCircularVer(null);
-					this.getManagedBean().setPanel(null);
+					this.getManagedBean().setPanel(false);//35507 defaulted to false
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
@@ -2607,24 +2607,25 @@ public class CreateQtBackingBean extends
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			
+			ScQt scQt = getManagedBean().getQt(); //Reopen #25726 note 187 - issue 7,8
 			//Start Reopen 9019 #note-289 remove the alert message while save
 			if(null != parameterId){
+				
+				
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(parameterId);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-				this.getManagedBean().getQt()
-						.setContractType(resDTO.getPmParameter());
-				if(null!=this.getManagedBean().getQt()
-						.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
-						.getContractType().getParameterCode())){
-					ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
-					fulfilMentAsandWhen
-							.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-					fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-					ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO
-							.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
-					this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
+				scQt.setContractType(resDTO.getPmParameter());
+				
+				if(null!=scQt.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(scQt.getContractType().getParameterCode())){			
+					
+					scQt.setFulfilmentType(
+							getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
+									ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));	
 				}
+			//Reopen #25726 note 187 - issue 7,8
+			}else{
+				scQt.setContractType(new PmParameter());
 			}
 			//End Reopen 9019 #note-289 remove the alert message while save
 	

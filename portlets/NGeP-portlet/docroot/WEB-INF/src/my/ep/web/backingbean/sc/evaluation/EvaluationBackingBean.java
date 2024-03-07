@@ -2650,7 +2650,16 @@ public void saveComplianceSample() {
 							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
 									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 											.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
-								evalStageStr = StringUtils.join(Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
+								//28784 - Start
+								if (this.getManagedBean().getScQt().isDemoRequired()
+										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+												.getManagedBean().getScQt().getEvaluationType())) {
+									evalStageStr = QTConstants.TECHNICAL_EVALUATION_BY_ITEM;
+								} else {
+									evalStageStr = StringUtils.join(
+											Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
+								}
+								//28784 - end
 							}
 							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
 							//34943 - end
@@ -7702,6 +7711,11 @@ public void saveComplianceSample() {
 	 * Evaluate and chain the multiple invocations of the
 	 * evaluationMaintainPreviousNextTabIndex method to navigate from current
 	 * tab to output tab. EDIT WITH CAUTION!
+	 * When in doubt, please refer
+	 * 2 Tier   Meeting - EvaluationStage - Report - Status
+	 * OC          0            1        (+2)  4        5
+	 * TEC         0   (+1)     2        (+1)  4        5
+	 * FEC         0   (+1)     2        (+1)  4        5
 	 * 
 	 * @param currentTab
 	 * @param outputTab
@@ -7715,45 +7729,51 @@ public void saveComplianceSample() {
 		int initialOutputTab = isForwardNav ? currentTab + 1 : currentTab - 1;
 		int initialCurrentTab = currentTab;
 		String committeeType = this.getManagedBean().getCommitteeType();
-		if (null != committeeType && ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(committeeType)) {
-			boolean stop = false;
-			boolean init = true;
-			int count = 0;
-			while ((init || !stop) && count < SourcingConstants.LOOP_SAFETY_LIMIT) {
-				init = false;
-				Map<String, Object> context = this.getManagedBean().getEvaluationContext();
-				context.put(SourcingConstants.MAP_PROPERTY_ERROR, null);
-				try {
-					this.evaluationMaintainPreviousNextTabIndex(initialCurrentTab, initialOutputTab);
-					Integer contextOutputTab = (Integer) context.get(SourcingConstants.MAP_PROPERTY_OUTPUTTAB);
-					Object contextError = context.get(SourcingConstants.MAP_PROPERTY_ERROR);
+		boolean stop = false;
+		boolean init = true;
+		int count = 0;
+		while ((init || !stop) && count < SourcingConstants.LOOP_SAFETY_LIMIT) {
+			init = false;
+			Map<String, Object> context = this.getManagedBean().getEvaluationContext();
+			context.put(SourcingConstants.MAP_PROPERTY_ERROR, null);
+			try {
+				this.evaluationMaintainPreviousNextTabIndex(initialCurrentTab, initialOutputTab);
+				Integer contextOutputTab = (Integer) context.get(SourcingConstants.MAP_PROPERTY_OUTPUTTAB);
+				Object contextError = context.get(SourcingConstants.MAP_PROPERTY_ERROR);
 
-					if (null != contextError || null == contextOutputTab) {
-						return;
-					}
-					if (initialOutputTab == contextOutputTab && contextOutputTab != outputTab) {
-						if (isForwardNav) {
-							initialCurrentTab++;
-							initialOutputTab++;
-						} else {
-							initialCurrentTab--;
-							initialOutputTab--;
-						}
-						init = true;
-					} else if (contextOutputTab == outputTab) {
-						stop = true;
-					}
-				} catch (Exception e) {
-					throw e;
+				if (null != contextError || null == contextOutputTab) {
+					return;
 				}
-				count++;
+
+				boolean skipIndex = false;
+				if (committeeType.equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE) && contextOutputTab == 3) {
+					skipIndex = contextOutputTab == (initialOutputTab + 2);
+				} else if (Arrays.asList(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE,
+						ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE).contains(committeeType)
+						&& (initialOutputTab == 1 || initialOutputTab == 3)) {
+					skipIndex = contextOutputTab == (initialOutputTab + 1);
+				}
+
+				if ((initialOutputTab == contextOutputTab || skipIndex) && contextOutputTab != outputTab) {
+					if (isForwardNav) {
+						initialCurrentTab++;
+						initialOutputTab++;
+					} else {
+						initialCurrentTab--;
+						initialOutputTab--;
+					}
+					init = true;
+				} else if (contextOutputTab == outputTab) {
+					stop = true;
+				}
+			} catch (Exception e) {
+				throw e;
 			}
-			this.getManagedBean().setComplianceActiveIndex(0);
-			this.getManagedBean().setEvaluatioStageActiveIndex(0);
-			this.getManagedBean().setOneTierFinancialActiveIndex(0);
-		} else {
-			evaluationMaintainPreviousNextTabIndex(currentTab, outputTab);
+			count++;
 		}
+		this.getManagedBean().setComplianceActiveIndex(0);
+		this.getManagedBean().setEvaluatioStageActiveIndex(0);
+		this.getManagedBean().setOneTierFinancialActiveIndex(0);
 	}
 	//34748 - end
 	/**
@@ -16188,7 +16208,7 @@ private void retriveCommitteeRemarksList(){
 					List<ScQtProposalAmount> proposalAmounts = evalResDTO.getProposalAmountListbyProposal()==null ? new ArrayList<ScQtProposalAmount>(): evalResDTO.getProposalAmountListbyProposal();				
 					this.getManagedBean().setFinancialPackagePaginator(new Paginator(proposalAmounts, ParameterConst.PAGINATOR_ROW_TEN));
 				}
-				
+				this.getManagedBean().setFinancialSummaryGenerated(false);//34748 - trigger recalculate
 				if (evalResDTO.isSuccessful()) {
 					successMessage(MessageConst.INFO_700004,
 							getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
