@@ -1791,7 +1791,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #28784 -end-
 
 	//====#31913 bug related to #25138==== start
-	private BigDecimal totalmaxscore;
+	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 
 	/**

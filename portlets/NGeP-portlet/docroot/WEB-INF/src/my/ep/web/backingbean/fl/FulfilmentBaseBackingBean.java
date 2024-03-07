@@ -223,6 +223,11 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				if(pmUser.getUserName().equals(approver.getUserName())){
 					match = true;
 				}
+				//34461-Start
+				else{
+					match = false;
+				}
+				//34461-False
 				if(match){
 					list2.add(pmUser);
 				}else{
