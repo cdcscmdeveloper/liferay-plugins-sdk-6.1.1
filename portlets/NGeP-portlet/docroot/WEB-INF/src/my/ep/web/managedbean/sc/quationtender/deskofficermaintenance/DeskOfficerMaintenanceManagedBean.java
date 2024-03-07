@@ -77,6 +77,10 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 	
 	private boolean disableAssign = true;
 	
+	//#28859 - 35500
+	private PmUser newTempDeskOfficer;
+	
+	
 	public DeskOfficerMaintenanceManagedBean() {
 		this.doMaintenanceSearchBean = new DeskOfficerMaintenanceSearchBean();
 	}
@@ -359,6 +363,14 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 	 */
 	public void setDisableAssign(boolean disableAssign) {
 		this.disableAssign = disableAssign;
+	}
+
+	public PmUser getNewTempDeskOfficer() {
+		return newTempDeskOfficer;
+	}
+
+	public void setNewTempDeskOfficer(PmUser newTempDeskOfficer) {
+		this.newTempDeskOfficer = newTempDeskOfficer;
 	}
 
 }
