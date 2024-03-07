@@ -137,6 +137,12 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_STORE = "S";
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
+	
+	//#34711 - START
+	// Facility Ownership
+	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
+	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
+	//#34711 - END
 
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
@@ -210,6 +216,7 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
+	public static final String IDENTIFICATION_TYPE_IC = "I";
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	//30865 Start & #34098 - START
@@ -1309,5 +1316,18 @@ public class SupplierManagementConst {
 
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
+	}
+	
+	//#34711 - START
+	public String getSM_FACILITY_OWNERSHIP_OWN(){
+		return SM_FACILITY_OWNERSHIP_OWN;
+	}
+	public String getSM_FACILITY_OWNERSHIP_RENTED(){
+		return SM_FACILITY_OWNERSHIP_RENTED;
+	}
+	//#34711 - END
+
+	public static String getIdentificationTypeIc() {
+		return IDENTIFICATION_TYPE_IC;
 	}
 }
