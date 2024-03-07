@@ -1908,7 +1908,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						.compareTo(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 0) {
 					// start date large than end date
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_750061);
+					throw new EpException(MessageConst.ERROR_750080);
 				}
 
 				if(CollectionUtils.isNotEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
@@ -3332,8 +3332,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
 			//#24333 - Start
-			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+			if((ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT))
+					&& ctBB.isAlreadyAmendment()){ //#35137
 				List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
 				List<CtPerformanceBond> resultBondNew = new ArrayList<CtPerformanceBond>();
 				for(CtPerformanceBond listBond : contractAmt.getCtPerformanceBonds()){

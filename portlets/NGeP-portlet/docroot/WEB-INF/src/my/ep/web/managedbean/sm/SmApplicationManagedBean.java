@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -651,7 +652,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#30762-Start 141123
 	private boolean poApproverPersonnelRoleMsg;
 	private String personnelRoleMsg; 
-	//#30762-end 	
+	//#30762-end
+	
+	// #34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	// #34393 - end
 		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4593,5 +4599,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 		}
 	//30762-End 
+	//#34392 - start
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+	//#34393 - end
 
 }

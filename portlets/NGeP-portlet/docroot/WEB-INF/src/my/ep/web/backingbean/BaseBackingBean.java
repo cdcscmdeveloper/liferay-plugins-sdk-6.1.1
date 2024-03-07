@@ -3156,7 +3156,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								}
 							}
 							
-							if(personnelsRole != null && personnelsRole.size() > 0) {
+							if(personnelsRole.size() > 0) {
 								postRegBean.setDontGetSsmData(false);
 								postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());	
 								postRegBean.setShowPopup(true);
@@ -4066,12 +4066,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		getManagedBean().setDowngradeRole(false);
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
 		if(!resDto.getSmPersonnelList().isEmpty() && resDto.getSmPersonnelList() != null){
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
-				if(personnelOwner == null && personnelDirector == null){
+				
+				if(smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)
+						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+					getManagedBean().getPersonnelsRole().add(personnel);
+				} else if(!isMofAccEffDatePassedCurrDate(supplier) 
+						&& isPersonnelAdminRole(personnel)
+						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+					getManagedBean().getPersonnelsRole().add(personnel);
+				} else if(isMofAccEffDatePassedCurrDate(supplier)
+						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
 			}
@@ -4089,6 +4099,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 		}
 		return getManagedBean().isDowngradeRole();
+	}
+	
+	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){
+		return smPersonnel.getEpRole() != null 
+				&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(smPersonnel.getEpRole());
+	}
+	
+	public Boolean isPersonnelOwnerDirectorNull(SmPersonnel smPersonnelOwner,SmPersonnel smPersonnelDirector){
+		Boolean isPersonnelOwnerDirectorNull = false;
+		if(isNull(smPersonnelOwner) && isNull(smPersonnelDirector)){
+			isPersonnelOwnerDirectorNull = true;
+		}
+		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
 }
