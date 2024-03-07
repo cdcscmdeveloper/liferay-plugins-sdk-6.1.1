@@ -374,5 +374,11 @@ public interface QTConstants {
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
 	public static final String TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-TechnicalEvaluation-Committee-Report";
 	public static final String FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-FinancialEvaluation-Committee-Report";
+	
+	public static final String DOC_TYPE_SC_EVALUATION_COMMITTEE_REPORT_ATTACHMENT = "ECR";
+	public static final String DOC_TYPE_SC_OPEN_COMMITTEE_REPORT_ATTACHMENT = "OCR";
+	public static final String DOC_TYPE_SC_TECHNICAL_EVALUATION_REPORT_ATTACHMENT = "TCR";
+	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
+	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
 }
