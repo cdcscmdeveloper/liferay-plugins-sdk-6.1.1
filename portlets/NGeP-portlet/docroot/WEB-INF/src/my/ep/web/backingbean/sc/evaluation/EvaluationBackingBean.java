@@ -172,6 +172,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.common.ScRemarkAndAttachmentBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -1458,11 +1459,6 @@ public class EvaluationBackingBean extends
 								throw new EpException(MessageConst.ERROR_760198);
 							}
 						}
-						if (null != proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod()
-								&& proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
-							proposalCheckList.setCompliance(new Integer(ParameterConst.COMPLIANCE_STATUS_NONCOMPLIANCE));
-							proposalCheckList.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
-						}
 					}
 
 				}
@@ -1904,7 +1900,13 @@ public class EvaluationBackingBean extends
 
 			reqDTO.setCompliance(null);
 			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
-
+			
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO);
+			}
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			/*if (null != resDTO.getCheckListResultBean().getResultList()
 					&& !resDTO.getCheckListResultBean().getResultList()
@@ -2020,6 +2022,13 @@ public class EvaluationBackingBean extends
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
 			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
+			
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO);
+			}
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
 			/*if (null != resDTO.getCheckListResultBean().getResultList()
