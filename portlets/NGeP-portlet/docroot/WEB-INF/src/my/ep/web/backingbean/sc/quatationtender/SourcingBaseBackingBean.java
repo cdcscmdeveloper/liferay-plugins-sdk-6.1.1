@@ -4806,8 +4806,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		if (StringUtils.isNotBlank(typeRegen)) {
-			scAttachment.setDocType(QTConstants.DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT);
-			updateScAttachment(fileName + ".zip", scAttachment);
+			updateScAttachment(fileName + ".zip", scAttachment, QTConstants.DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT);
 		}
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
@@ -6668,13 +6667,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportAttachment;
 	}
 
-	private boolean updateScAttachment(String fileName, ScAttachment attachment) throws FileNotFoundException,
+	private boolean updateScAttachment(String fileName, ScAttachment attachment, String docType) throws FileNotFoundException,
 			IOException {
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded");
 		populateAttachmentDetails(attachment);
+		attachment.setDocType(docType);
 		return evaluationSO.updateScAttachment(attachment);
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End

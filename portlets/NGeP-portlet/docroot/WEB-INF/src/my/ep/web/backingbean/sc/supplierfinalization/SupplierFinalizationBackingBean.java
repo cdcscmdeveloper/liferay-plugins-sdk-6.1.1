@@ -4329,7 +4329,7 @@ return	remarksNotFound;
 		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
 		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
 				.getDocDefinitionKey();
-		if (downFilesSize <= 1000 && docDefinitionKey.equals(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT)) {
+		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
 			String fileName = StringUtils.isNotBlank(reportAttachment.getFileName()) ? reportAttachment.getFileName() : "";
 			fileName = CustomUtils.getInstance().removeFileExtension(fileName);
 			this.getManagedBean().setReportDownloadFileName(fileName);
