@@ -117,7 +117,7 @@
 				</p:column>
 			</p:dataTable> -->
 			<!-- datatable for mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.mandatoryDocs}" id="InquiriesMandatoryList" 
+			<p:dataTable var="table" value="#{backingBean.managedBean.mandatoryDocs}" id="InquiriesMandatoryList" rendered="#{not empty backingBean.managedBean.mandatoryDocs}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -236,7 +236,7 @@
 				</p:columnGroup>
 			</p:dataTable>
 			<!-- datatable for non-mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.nonMandatoryDocs}" id="InquiriesNonMandatoryList" 
+			<p:dataTable var="table" value="#{backingBean.managedBean.nonMandatoryDocs}" id="InquiriesNonMandatoryList" rendered="#{not empty backingBean.managedBean.nonMandatoryDocs}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
