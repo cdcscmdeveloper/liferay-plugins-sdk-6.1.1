@@ -411,7 +411,7 @@ public String backToQtScreen(){
 	switchToOrigManagedBean();
 	FacesContext fc = FacesContext.getCurrentInstance();
 	fc.getApplication().getNavigationHandler()
-	.handleNavigation(fc, null, destPage);//29464
+	.handleNavigation(fc, null, destPage+"?faces-redirect=true");//29464 //29732 add redirect true
 	return "";
 }
 
