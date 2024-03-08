@@ -61,7 +61,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 						</td>		
 				</c:if>
 	    	</div>
-	    	<!--28760 - start -->
+	    	<!--28760,#35310 - start -->
 	    	<p:confirmDialog id="dlgProcurementCancel"
 				widgetVar="dlgProcurementCancel"
 				message="#{lbl['lbl.msg.confirm.cancel2']}" severity="alert"
@@ -70,12 +70,13 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
 						partialSubmit="true" immediate="true"
 						action="#{pPlanBackingBean.savePlan('CANCEL')}"
-						oncomplete="dlgProcurementCancel.hide();" />
+						onstart="blockWidget.show();dlgProcurementCancel.hide();"
+						oncomplete="blockWidget.hide();" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						oncomplete="dlgProcurementCancel.hide();" />
 				</div>
 			</p:confirmDialog>
-			<!--28760 - end -->
+			<!--28760, #35310 - end -->
 	  	</div>
 	</p:outputPanel>
 	<div class="clear"></div>
