@@ -647,6 +647,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						"pmDocument");
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
+		doc.setOverlapReason(null);
+		SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
