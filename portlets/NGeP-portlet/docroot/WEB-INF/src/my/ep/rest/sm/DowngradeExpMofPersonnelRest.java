@@ -60,7 +60,6 @@ public class DowngradeExpMofPersonnelRest {
 				for(SmSupplier supplier : supplierList) {
 					authReqDTO = new PersonnelAuthorizationReqDTO();
 					authReqDTO.setSmSupplier(supplier);
-					authReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_TERMINATE_BASIC);
 					reqSO2.terminateBasicAccount(authReqDTO);
 				}
 				
@@ -79,10 +78,7 @@ public class DowngradeExpMofPersonnelRest {
 		log.info("**********downgradeMOFToBasic - Start************");
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if (mofAccount.getSmSupplier().getSmAppl() != null 
-						&&	mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_EXPIRED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED
-						&&  !mofAccount.getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase("C")) {
+				if (mofAccount.getSmSupplier().getSmAppl() != null) {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
 					mofAccount.setLastCheckDate(new Date());
@@ -113,9 +109,7 @@ public class DowngradeExpMofPersonnelRest {
 		log.info("**********changeExpiredMofPersonnelToDeleted - Start************");
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if(mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED
-						&&  !mofAccount.getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase("C")){
+				if(mofAccount.getSmSupplier().getSmAppl() != null){
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
@@ -134,11 +128,11 @@ public class DowngradeExpMofPersonnelRest {
 					}
 					
 					// #28800 START
-					/*try {
+					try {
 						reqSO.sendEmailExpiredMOFToSupplier(schedulerReqDTO);
 					} catch (Exception ex){
 						log.info("sendEmailExpiredMOFToSupplier ERROR :: " +ex.getMessage());
-					}*/
+					}
 					// #28800 END
 				}
 			}
@@ -153,9 +147,7 @@ public class DowngradeExpMofPersonnelRest {
 		log.info("**********updateSupplierForMOFExpired - Start************");
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if (mofAccount.getSmSupplier().getSmAppl() != null 
-						&&	mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED) {
+				if (mofAccount.getSmSupplier().getSmAppl() != null) {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
@@ -185,9 +177,7 @@ public class DowngradeExpMofPersonnelRest {
 		log.info("**********updateForMOFExpiredMoreThanThreeYears - Start************");
 		if (!mofAccountLs.isEmpty()) {
 			for (SmMofAccount mofAccount : mofAccountLs) {
-				if (mofAccount.getSmSupplier().getSmAppl() != null 
-						&&	mofAccount.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED 
-						&&	mofAccount.getSmSupplier().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				if (mofAccount.getSmSupplier().getSmAppl() != null) {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
