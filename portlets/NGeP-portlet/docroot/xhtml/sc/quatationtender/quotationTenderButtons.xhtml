@@ -236,7 +236,7 @@
 
 	<!-- 25077, 32376, 34694 - Start -->
 	<c:if
-		test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || isCommitteeApprovalTask}">
+		test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.qtPendingPublicationApprovalReschedule || isCommitteeApprovalTask}"> <ui:remove>#35527</ui:remove>
 		<!-- #34694 -end- -->
 		<p:dialog id="reviceApprovalDlgTemp" widgetVar="reviceApprovalDlgTemp"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
