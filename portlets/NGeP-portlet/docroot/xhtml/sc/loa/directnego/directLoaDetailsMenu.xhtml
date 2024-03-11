@@ -621,14 +621,18 @@
 															
 														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+													    <!--  Reopen #25726 note 220 - issue 5	 -->
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
 													</p:selectOneMenu>
 												</c:when>
 												<c:otherwise>
 													<p:selectOneRadio id="bondReq" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
 														required="true"
-														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
-								
+														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
+														disabled="true"> <!--  Reopen #25726 note 220 - issue 4	 -->
+
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 														<p:ajax partialSubmit="true" process="@this" update="menuTab" />
@@ -658,6 +662,10 @@
 																	
 																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 																 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+															     <!--  Reopen #25726 note 220 - issue 5	 -->
+																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 		listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
+															     
 															</p:selectOneMenu>
 															</c:otherwise>
 															</c:choose>
@@ -687,6 +695,10 @@
 															
 														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+														<!--  Reopen #25726 note 220 - issue 5	 -->
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
+													
 													</p:selectOneMenu>
 													</c:otherwise>
 													</c:choose>

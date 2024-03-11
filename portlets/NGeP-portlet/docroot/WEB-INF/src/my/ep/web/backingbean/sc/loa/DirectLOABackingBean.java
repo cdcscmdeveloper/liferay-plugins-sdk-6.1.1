@@ -729,6 +729,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
 						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			}else{//Reopen #25726 note 220 - issue 5
+				getManagedBean().setBondAmountWord(null);
 			}
 
 			generateDeclarationFromVelocity(scLoa, scLoa.getScQt());
@@ -3955,65 +3957,47 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	}
 	
-    private void checkFulFilmentType(ScLoa scLoa){
-	    log.info("DirectLoacheckFulFilmentTypeContractDuration"+scLoa.getContractDuration());
-		PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
+    private void checkFulFilmentType(ScLoa scLoa){ 
+    	log.info("DirectLoacheckFulFilmentTypeContractDuration"+scLoa.getContractDuration());
+    	PmParameter fulfilMentType=scLoa.getScLoiLoa().getFulfilmentTypeCode();
+	
+    	String docType = null;
+    	if(null != scLoa.getScLoiLoa()){
+    		if(null != scLoa.getScLoiLoa().getDocType()){
+    			docType = scLoa.getScLoiLoa().getDocType();
+    		}
+    	}
+    	//#25726 - start	
+    	if(null != this.getManagedBean()
+    			.getSpecTemplateSpecBean()
+    			.getSpecMaster()){
 		
-		String docType = null;
-		if(null != scLoa.getScLoiLoa()){
-			if(null != scLoa.getScLoiLoa().getDocType()){
-				docType = scLoa.getScLoiLoa().getDocType();
-			}
-		}
-		
-		if(isFulfillmentTypeOneOffOrAsAndWhen(fulfilMentType)){
-				this.getManagedBean()
+    		if(isFulfillmentTypeOneOffOrAsAndWhen(fulfilMentType)){
+    			this.getManagedBean()
 				.getSpecTemplateSpecBean()
 				.getSpecMaster().setDurationMonth(
-					null);
-				//#25726 - start				
-				
-				if(null != this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster()){
-					if(null == this.getManagedBean()
-							.getSpecTemplateSpecBean()
-							.getSpecMaster().getFulfilmentType()){
-						this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().setFulfilmentType(fulfilMentType);
-					}
-					if(null == this.getManagedBean()
-							.getSpecTemplateSpecBean()
-							.getSpecMaster().getDocType()){
-						this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().setDocType(docType);
-					}
-				}
-		}else{
-			this.getManagedBean()
-			.getSpecTemplateSpecBean()
-			.getSpecMaster()
-			.setDurationMonth(
+					null);	
+			}else{
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster()
+				.setDurationMonth(
 					scLoa.getContractDuration());
-			if(null != this.getManagedBean()
+			}
+			
+			if(null == this.getManagedBean()
 					.getSpecTemplateSpecBean()
-					.getSpecMaster()){
-				if(null == this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().getFulfilmentType()){
-					this.getManagedBean()
+					.getSpecMaster().getFulfilmentType()){
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster().setFulfilmentType(fulfilMentType);
+			}
+			if(null == this.getManagedBean()
 					.getSpecTemplateSpecBean()
-					.getSpecMaster().setFulfilmentType(fulfilMentType);
-				}
-				if(null == this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().getDocType()){
-					this.getManagedBean()
-					.getSpecTemplateSpecBean()
-					.getSpecMaster().setDocType(docType);
-				}
+					.getSpecMaster().getDocType()){
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster().setDocType(docType);
 			}
 		}
 		  log.info("EndDirectLoacheckFulFilmentTypeContractDuration"+this.getManagedBean()
@@ -5112,6 +5096,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}else{//Reopen #25726 note 220 - issue 5
+			getManagedBean().setBondAmountWord(null);
 		}
 
 		// procurement type category
@@ -7477,6 +7463,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// bond amount in words
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			}else{//Reopen #25726 note 220 - issue 5
+				getManagedBean().setBondAmountWord(null);
 			}
 			
 			if (null != scLoa.getContractSigner() && scLoa.getContractSigner().getUserId() != null) {
@@ -7948,6 +7936,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}else{//Reopen #25726 note 220 - issue 5
+			getManagedBean().setBondAmountWord(null);
 		}
 		checkAgreementMandatory();
 	}
@@ -7955,7 +7945,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/**
 	 * Update performance bond.
 	 */
-	private void updatePerformanceBond(ScLoa scLoa ) {
+	//Reopen #25726 note 220 - issue 5
+	public void updatePerformanceBond(ScLoa scLoa ) {
+
 		// calc bond amt
 		calcBondAmountWithSST(scLoa, Boolean.TRUE);
 //		calcBondAmount(scLoa, Boolean.TRUE);
@@ -7964,6 +7956,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}else{//Reopen #25726 note 220 - issue 5
+			getManagedBean().setBondAmountWord(null);
 		}
 	}
 
@@ -10253,7 +10247,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.isBrandNew()) {
 
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
-				backingBean.retrieveTemplateSpecMaster(bean);
+				//Reopen #25726 note 220 - issue 2,3
+				//backingBean.retrieveTemplateSpecMaster(bean);
 				this.getManagedBean()
 						.getProdscQtDoc()
 						.setTplSpecMaster(
@@ -10275,7 +10270,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.isBrandNew()) {
 
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
-				backingBean.retrieveTemplateSpecMaster(serviceBean);
+				//Reopen #25726 note 220 - issue 2,3
+				//backingBean.retrieveTemplateSpecMaster(serviceBean);
 				backingBean.calcGrandTotalAmount(serviceBean);
 				this.getManagedBean()
 						.getServicescQtDoc()
