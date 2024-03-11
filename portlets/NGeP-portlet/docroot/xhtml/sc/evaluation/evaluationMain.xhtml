@@ -95,7 +95,7 @@
 		<ui:remove> #25037 #29253 - end </ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified or evaluationBackingBean.managedBean.noProposalSubmitted}"
+			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 		<ui:remove> #25037 #29253 - start</ui:remove>

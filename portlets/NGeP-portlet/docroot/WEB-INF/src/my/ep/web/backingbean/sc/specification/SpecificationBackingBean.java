@@ -1941,7 +1941,7 @@ public class SpecificationBackingBean extends
 				checksampleChecklist(this.getManagedBean().getScQtCheckSt2techProposal());
 			}
 			// #11104-End
-			//#28784 - Include Demo WIP
+			checkDemoVersion(getManagedBean().getQt());//#28784 -  Demo WIP
 			if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 				this.getManagedBean().setDemoAction(true);
 				this.getManagedBean().setDemoType(true);
@@ -19994,6 +19994,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().setOfferPricePackage(null);
 				this.getManagedBean().setPanelSpecExistedOrNot(false);
 				specCommitteeResetData();
+				checkDemoVersion(savedCheckListsDemo.get(0).getScQt());//28784 -  WIP
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 		} else {
@@ -20341,4 +20342,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	//#25138 - end
+	
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	private void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+	}
 }
