@@ -109,7 +109,7 @@
                   onExpandStart="">
                  <ac:paginator for="itemTable"/>
                  <p:ajax event="rowSelect" update="@form" listener="#{ctBackingBean.onSelectProductItem()}" 
-                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+                   process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
                  
                  <p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
                  <h:outputText value="#{index+1}" />
@@ -294,8 +294,10 @@
 			              <c:if  test="#{ctBackingBean.managedBean.selectedItem.priceType.parameterCode  eq ParameterConst.priceTypeZonalStandard}">
 			                
 			                   <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;" styleClass="column-align-center">
-			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName}"  rendered="#{!itemPrice.changeZoneLabel}"  style="float:left;"/>
-			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})"  rendered="#{itemPrice.changeZoneLabel}" style="float:left;" />
+			                   <!-- #34961 start -->
+			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName}"  rendered="#{!itemPrice1.changeZoneLabel}"  style="float:left;"/>
+			                       <h:outputText value="#{itemPrice1.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})"  rendered="#{itemPrice1.changeZoneLabel}" style="float:left;" />
+			                   <!-- #34961 end -->
 			                   </p:column>    
 			            
 			                   <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
@@ -345,10 +347,12 @@
 			                 </p:column>    
 			          
 			                 <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
-			                     <h:outputText value="#{itemPrice.unitPrice}" style="float:right;">
+			                 	<!-- #34961 start -->
+			                     <h:outputText value="#{itemPrice1.unitPrice}" style="float:right;">
 			                         <f:convertNumber
 						                pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			                     </h:outputText>
+			                     <!-- #34961 end  -->
 			                </p:column>
 			           
 			                <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;" styleClass="column-align-center">
@@ -458,10 +462,12 @@
 			                  </p:column>     
 			           
 			                  <p:column headerText="#{lbl['lbl.ct.price']}" styleClass="column-align-center">
-			                      <h:outputText value="#{itemPrice.unitPrice}" style="float:right;">
+			                  	<!-- #34961 start -->
+			                      <h:outputText value="#{itemPrice1.unitPrice}" style="float:right;">
 			                          <f:convertNumber
 						                  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			                      </h:outputText>
+			                      <!-- #34961 end -->
 			                  </p:column>
 			         
 			                  <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;" styleClass="column-align-center">
@@ -1374,7 +1380,7 @@
 		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadItemDlg.hide();" />
   		</div>
    		</f:facet>
-	</p:dialog>	
+	</p:dialog> 
 	
 	  <p:confirmDialog id="deleteItemAttachmentDlg" widgetVar="deleteItemAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
                            severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">

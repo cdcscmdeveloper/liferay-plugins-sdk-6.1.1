@@ -338,7 +338,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(pmOrgProfile.getOrgProfileId());
 				if (ptjSpecialApproval != null) {
 					scQt.setCircularVer(null);
-					this.getManagedBean().setPanel(null);
+					this.getManagedBean().setPanel(false);//35507 defaulted to false
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
@@ -2916,6 +2916,20 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ParameterResDTO parameterResDTO = getParameterSO().retrieveParameterById(parameterReqDTO);
 			this.getManagedBean().getQt().setPmProcurementCategory(parameterResDTO.getPmParameter());
 		}
+		// #35285 & #25635 - Start
+		else {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+		}
+
+		if (null != this.getManagedBean().getQt().getPmProcurementCategory()) {
+			if (!ParameterConst.PROCUREMENT_CATEGORY_ICT.equalsIgnoreCase(this.getManagedBean().getQt()
+					.getPmProcurementCategory().getParameterCode())) {
+				this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+			}
+		} else {
+			this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+		}
+		// #35285 & #25635 - End
 	}
 
 	/**
@@ -3089,16 +3103,25 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 	}
-	 
-	// #30435, #25077 -start-
-	public void otherAppValueChanged(ValueChangeEvent event) {
+
+	// #30435,#34694,#25077 -start-
+	public void otherAppValueChangedICT(ValueChangeEvent event) {
 
 		if (null != event.getNewValue()) {
-			getManagedBean().setScQtAppRequestRemark(event.getNewValue().toString());
+			getManagedBean().setScQtAppRequestRemarkICT(event.getNewValue().toString());
 		}
 	}
-	// bug #30435, Enhancement #25077 - end
-	
+	// bug #30435,#34694,Enhancement #25077 - end
+
+	// #34694, #25077 -start-
+	public void otherAppValueChangedMITI(ValueChangeEvent event) {
+
+		if (null != event.getNewValue()) {
+			getManagedBean().setScQtAppRequestRemarkMITI(event.getNewValue().toString());
+		}
+	}
+	// #34694, #25077 -end-
+
 	/**
 	 * To remove the non bumi suppliers as open for Bumi for Restricted tender
 	 * 
@@ -3605,7 +3628,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 	/**
 	 * Render Demonstration Radio button if Evaluation Method 2 Tier Selected
-	 * #28784
+	 * #28784 - Include Demo WIP
 	 * @param event
 	 *
 	 */
@@ -3613,7 +3636,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 
-		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+		if (!status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) && this.getManagedBean().isNewVersion()){
 			String type = (String) event.getComponent().getAttributes().get("value");
 			boolean demoRequired = this.getManagedBean().getQt().isDemoRequired();
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
@@ -3640,14 +3663,17 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().getQt().setDemoRequired(false);
 			}
 
+			//#28784 - Start
 			if (null != status
-					&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
-							&& !this.getManagedBean().isQtSpecMaintanance() && !this.getManagedBean().isMaintanceFlow())
-					&& !demoRequired) {
+					&& (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) && !this.getManagedBean().isQtSpecMaintanance() && !this
+							.getManagedBean().isMaintanceFlow()) && !demoRequired) {
 				this.getManagedBean().setDemoSpecialCase(true);
 				this.getManagedBean().setDemoEvalDisabled(true);
 			}
-		}
+			
+		} else if(!this.getManagedBean().isNewVersion()) {
+			this.getManagedBean().setDemoType(false);
+		}//#28784 - End		
 		
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	}

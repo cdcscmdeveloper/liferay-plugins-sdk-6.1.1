@@ -51,9 +51,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pm.ProfileManagementStatusConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
-import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
@@ -106,12 +104,11 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.PmTaskReassignmentVO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import my.ep.constant.sc.QTStatusConst;
-
 
 /**
  * Backing Bean for Task Reasssingment (new)
@@ -876,6 +873,7 @@ public class TaskReassignmentBackingBean extends
 			}
 			//7465 - end
 		}
+		
 	}
 	
 	public void searchTaskAssign() {
@@ -937,6 +935,12 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getReassigneeList().isEmpty()) {
+			// #35325 Start
+			// Workaround to reset already loaded data and error messages since  
+			// existing handling is throwing exception before performing other actions
+			reloadAllTaskList();
+			checkPendingTaskRemove();
+			// #35325 End
 			throw new EpException(MessageConst.ERROR_770208);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
@@ -1252,51 +1256,38 @@ public class TaskReassignmentBackingBean extends
 		 * 
 		 * @param worklistItem
 		 */
+		/*
 		private void markupWorklistItem(List<WorklistItemVO> worklistItem) {
 			log.info("markupWorklistItem");
 			for (WorklistItemVO worklistItemVO : worklistItem) {
 				// fl module Purchase Request Initiation Submit PR
-				//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
-				if ((worklistItemVO.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) || worklistItemVO
-						.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+				// #34178 Remove space for WIP process name to cater after
+				// upgrading to Oracle BPM 12C
+				if ((worklistItemVO.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) || worklistItemVO.getProcess().equalsIgnoreCase(
+						FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
 						&& worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PR_HT)) {
-					if (!worklistItemVO.getTitle().equalsIgnoreCase(
-							SourcingConstants.RN_TITLE)) {
-						worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-								"lbl.sc.request.note",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								getFacesScopes().getUserLocale())
+					if (!worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+						worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())
 								+ " - " + worklistItemVO.getTitle());
 					}
 				}
 				// s1 module
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.RN_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.request.note",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.PI_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.pr.inquiry",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.PD_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.purchase.in.default",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils
+							.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
 			}
 		}
+		*/
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 			log.info("pageChangeListener");
 			return getWorklistItems();
 		}
@@ -1410,8 +1401,8 @@ public class TaskReassignmentBackingBean extends
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							// #7465 Re-open issues on 24/11/2023
+							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
 								//#7465 start - missing document number to search in bpm
 								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
 								getManagedBean().setAllGroupTasks(resetWorklist);
@@ -1423,12 +1414,14 @@ public class TaskReassignmentBackingBean extends
 							} else {
 								//#7465, #29822  - START - reendorse
 								getManagedBean().setCheckAllGroupTasksEnabled(false);
+								getManagedBean().setEnableDeleteGroupTasksButton(false); // #7465 Re-open issues on 24/11/2023
 								getManagedBean().setEnableRemoveAllGroupTasksButton(false);
 								//#7465, #29822  - end - reendorse
 							}
 						}
 						//#7465 START - reendorse
-						if(getManagedBean().isShowRemoveProcessMessageGroup()==true) {
+						// #7465 Re-open issues on 24/11/2023
+						if(getManagedBean().isShowRemoveProcessMessageGroup()) {
 							//disable check box for group task
 							getManagedBean().setCheckAllGroupTasksEnabled(false);
 							//disable button for group task
@@ -1450,53 +1443,35 @@ public class TaskReassignmentBackingBean extends
 		 * 
 		 * @param worklistItem
 		 */
+		/*
 		private void markupWorklistItem(List<WorklistItemVO> worklistItem) {
 			log.info("markupWorklistItem");
 			for (WorklistItemVO worklistItemVO : worklistItem) {
 				// fl module Purchase Request Initiation Submit PR
-				//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
-				if ((worklistItemVO
-						.getProcess()
-						.equalsIgnoreCase(
-								FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) || worklistItemVO
-								.getProcess()
-								.equalsIgnoreCase(
-										FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
-						&& worklistItemVO.getTaskName().equalsIgnoreCase(
-								FLProcessNameConst.SUBMIT_PR_HT)) {
-					if (!worklistItemVO.getTitle().equalsIgnoreCase(
-							SourcingConstants.RN_TITLE)) {
-						worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-								"lbl.sc.request.note",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								getFacesScopes().getUserLocale())
+				// #34178 Remove space for WIP process name to cater after
+				// upgrading to Oracle BPM 12C
+				if ((worklistItemVO.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) || worklistItemVO.getProcess().equalsIgnoreCase(
+						FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+						&& worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PR_HT)) {
+					if (!worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+						worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())
 								+ " - " + worklistItemVO.getTitle());
 					}
 				}
 				// s1 module
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.RN_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.request.note",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.PI_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.pr.inquiry",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.PD_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.purchase.in.default",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils
+							.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
 			}
 		}
+		*/
 
 		@Override
 		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
@@ -1612,8 +1587,8 @@ public class TaskReassignmentBackingBean extends
 							resultBean.setResultList(responseDTO
 									.getWorklistVO().getWorklistItem());
 							
-							if (!responseDTO.getWorklistVO().getWorklistItem().isEmpty() && 
-									responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
+							// #7465 Re-open issues on 24/11/2023
+							if (CollectionUtils.isNotEmpty(responseDTO.getWorklistVO().getWorklistItem())) {
 								//#7465 start - missing document number to search in bpm
 								List<WorklistItemVO> resetWorklist = new ArrayList<WorklistItemVO>();
 								getManagedBean().setAllOthersTasks(resetWorklist); //7465 - wrong reset value for others
@@ -1625,12 +1600,13 @@ public class TaskReassignmentBackingBean extends
 							} else {
 								//#7465, #29822  - START - reendorse
 								getManagedBean().setCheckAllOthersTasksEnabled(false); 
+								getManagedBean().setEnableDeleteOthersTasksButton(false); // #7465 Re-open issues on 24/11/2023
 								getManagedBean().setEnableRemoveAllOthersTasksButton(false);
 //								//#7465, #29822  - end - reendorse
 							}
 						}
 						//#7465 START - reendorse
-						if(getManagedBean().isShowRemoveProcessMessageOther()==true ) {
+						if(getManagedBean().isShowRemoveProcessMessageOther()) {
 							//disable check box for group task
 							getManagedBean().setCheckAllOthersTasksEnabled(false);
 							//disable button for group task
@@ -1652,51 +1628,38 @@ public class TaskReassignmentBackingBean extends
 		 * 
 		 * @param worklistItem
 		 */
+		/*
 		private void markupWorklistItem(List<WorklistItemVO> worklistItem) {
 			log.info("markupWorklistItem");
 			for (WorklistItemVO worklistItemVO : worklistItem) {
 				// fl module Purchase Request Initiation Submit PR
-				//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
-				if ((worklistItemVO.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) || worklistItemVO
-						.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+				// #34178 Remove space for WIP process name to cater after
+				// upgrading to Oracle BPM 12C
+				if ((worklistItemVO.getProcess().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME) || worklistItemVO.getProcess().equalsIgnoreCase(
+						FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
 						&& worklistItemVO.getTaskName().equalsIgnoreCase(FLProcessNameConst.SUBMIT_PR_HT)) {
-					if (!worklistItemVO.getTitle().equalsIgnoreCase(
-							SourcingConstants.RN_TITLE)) {
-						worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-								"lbl.sc.request.note",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								getFacesScopes().getUserLocale())
+					if (!worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+						worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale())
 								+ " - " + worklistItemVO.getTitle());
 					}
 				}
 				// s1 module
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.RN_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.request.note",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.PI_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.pr.inquiry",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
-				if (worklistItemVO.getTitle().equalsIgnoreCase(
-						SourcingConstants.PD_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.purchase.in.default",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							getFacesScopes().getUserLocale()));
+				if (worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
+					worklistItemVO.setTitle(ResourceBundleUtils
+							.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
 			}
 		}
+		*/
 
 		@Override
-		protected ISearchResultBean<WorklistItemVO> pageChangeListener(
-				ISearchBean<WorklistItemVO> searchBean) {
+		protected ISearchResultBean<WorklistItemVO> pageChangeListener(ISearchBean<WorklistItemVO> searchBean) {
 			log.info("pageChangeListener");
 			return getWorklistItems();
 		}
@@ -2580,8 +2543,15 @@ public class TaskReassignmentBackingBean extends
 										}
 									}
 								}else{
-									log.info("[#25018] generateUserResultBean for reassignType:" + reassignType);
-									resultBean = generateUserResultBean(searchBean, task,reassignType,roleList,vo);
+									//Start Fix - #34699
+									if (moduleCode.equalsIgnoreCase(ModuleCodeConst.CONTRACT_MANAGEMENT)) {
+										//log.info("#34699 generateUserResultBean for reassignType:" + reassignType+ " for CT only ::: ");
+										resultBean = generateUserResultBeanForCT(searchBean, task, reassignType, roleList,vo);
+									} else {
+										//log.info("[#25018] generateUserResultBean for reassignType:" + reassignType);
+										resultBean = generateUserResultBean(searchBean, task, reassignType, roleList, vo);
+									}
+									//End Fix - #34699
 								}
 								
 								if(resultBean != null && resultBean.getResultList() != null){
@@ -3113,7 +3083,10 @@ public class TaskReassignmentBackingBean extends
 
 		try {
 			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
-			reqDTO.setTaskId(task.getTaskId());
+			// #7465 Re-open issues on 24/11/2023 Start
+			String taskId = task.getTaskId();
+			reqDTO.setTaskId(taskId);
+			// #7465 Re-open issues on 24/11/2023 End
 			reqDTO.setUserIdList(assigneeUsers);
 			reqDTO.setClaimedBy(claimedBy);
 
@@ -3125,7 +3098,7 @@ public class TaskReassignmentBackingBean extends
 
 			// isSuccess = reassignTask(pmUser, task);
 			if (resDTO != null && resDTO.isSuccessful()) {
-				reloadAllTaskList();
+				resetForRemoveReassignTask(taskId); // #7465 Re-open issues on 14/12/2023
 				PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
 						FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 			}
@@ -3134,6 +3107,32 @@ public class TaskReassignmentBackingBean extends
 		}
 
 	}
+	
+	// #7465 Re-open issues on 24/11/2023 & 14/12/2023 Start
+	private void resetForRemoveReassignTask(String taskId) {
+		boolean removedFromSelectedTask = false;
+		resetCheckAllTasks();
+		if (getManagedBean().getSelectedGroupTasks().containsKey(taskId)) {
+			getManagedBean().getAllGroupTasks().clear();
+			getManagedBean().getSelectedGroupTasks().clear();
+			getManagedBean().getSelectedGroupTasks().remove(taskId);
+			getManagedBean().setEnableDeleteGroupTasksButton(false);
+			removedFromSelectedTask = true;
+		} else if (getManagedBean().getSelectedOthersTasks().containsKey(taskId)) {
+			getManagedBean().getAllOthersTasks().clear();
+			getManagedBean().getSelectedOthersTasks().clear();
+			getManagedBean().getSelectedOthersTasks().remove(taskId);
+			getManagedBean().setEnableDeleteOthersTasksButton(false);
+			removedFromSelectedTask = true;
+		}
+
+		if (!removedFromSelectedTask) {
+			getManagedBean().setEnableDeleteGroupTasksButton(false);
+			getManagedBean().setEnableDeleteOthersTasksButton(false);
+		}
+		reloadAllTaskList();
+	}
+	// #7465 Re-open issues on 24/11/2023 & 14/12/2023 End
 
 	/**
 	 * @return the userTaskListDataModel
@@ -3248,21 +3247,22 @@ public class TaskReassignmentBackingBean extends
 		}
 	}
 	
-	private PmStatusDesc retrieveStatusDesc(Long statusId){
+	/*
+	private PmStatusDesc retrieveStatusDesc(Long statusId) {
 		IStatusSO statusSO;
 		PmStatusDesc statusDesc;
 		try {
 			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			
+
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(statusId);
 			reqDTO.setLanguageCode("en");
-			
+
 			// Get status description from db.
 			StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
-			
-			statusDesc = resDTO.getPmStatusDesc();		    
-		
+
+			statusDesc = resDTO.getPmStatusDesc();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
@@ -3272,30 +3272,30 @@ public class TaskReassignmentBackingBean extends
 
 		return statusDesc;
 	}
+	*/
 	
 	// Enhancement #25013					
 	public void checkAllGroupTasks() {
-		
-		log.info("Total number of GROUP tasks= "+this.getManagedBean().getAllGroupTasks().size());
-		
-		if (this.getManagedBean().getSelectedGroupTasks() != null && 
-				this.getManagedBean().getSelectedGroupTasks().size() > 0) {
+
+		log.info("Total number of GROUP tasks= " + this.getManagedBean().getAllGroupTasks().size());
+
+		if (this.getManagedBean().getSelectedGroupTasks() != null && this.getManagedBean().getSelectedGroupTasks().size() > 0) {
 			this.getManagedBean().getSelectedGroupTasks().clear();
 		}
-    	for ( WorklistItemVO task : this.getManagedBean().getAllGroupTasks()) {
-    		if (this.getManagedBean().isCheckAllGroupTasks()) {
-    			task.setTaskSelect(true);
-    			this.getManagedBean().getSelectedGroupTasks().put(task.getTaskId(),task);
-    		} else {
-    			task.setTaskSelect(false);
-    			if (this.getManagedBean().getSelectedGroupTasks().containsKey(task.getTaskId())) {
-	    			this.getManagedBean().getSelectedGroupTasks().remove(task.getTaskId());
-	    		}
-    		}
+		for (WorklistItemVO task : this.getManagedBean().getAllGroupTasks()) {
+			if (this.getManagedBean().isCheckAllGroupTasks()) {
+				task.setTaskSelect(true);
+				this.getManagedBean().getSelectedGroupTasks().put(task.getTaskId(), task);
+			} else {
+				task.setTaskSelect(false);
+				if (this.getManagedBean().getSelectedGroupTasks().containsKey(task.getTaskId())) {
+					this.getManagedBean().getSelectedGroupTasks().remove(task.getTaskId());
+				}
+			}
 		}
-    	this.getManagedBean().setEnableDeleteGroupTasksButton(this.getManagedBean().isCheckAllGroupTasks());
-    	log.info("getSelectedGroupTasks= "+this.getManagedBean().getSelectedGroupTasks().size());
-    	log.info("enableDeleteGroupTasksButton= "+this.getManagedBean().isEnableDeleteGroupTasksButton());
+		this.getManagedBean().setEnableDeleteGroupTasksButton(this.getManagedBean().isCheckAllGroupTasks());
+		log.info("getSelectedGroupTasks= " + this.getManagedBean().getSelectedGroupTasks().size());
+		log.info("enableDeleteGroupTasksButton= " + this.getManagedBean().isEnableDeleteGroupTasksButton());
 	}
 	
 	public void checkGroupTask(AjaxBehaviorEvent event) {
@@ -4143,6 +4143,375 @@ public class TaskReassignmentBackingBean extends
 		}		
 		return isBpkAdmin;			
 	}
+	
+	//Start Fix - #34699
+	/**
+	 * To generate user result bean based on reassignType
+	 * 
+	 * @param status
+	 * @param searchBean
+	 * @param task
+	 * @param reassignType
+	 * @param roleList
+	 * @param vo
+	 * @return ISearchResultBean<PmUser>
+	 */
+	private ISearchResultBean<PmUser> generateUserResultBeanForCT(
+			 ISearchBean<PmUser> searchBean,WorklistItemVO task ,int reassignType,List<String> roleList,PmTaskReassignmentVO vo){
+		PmOrgProfile orgProfile = null;
+		ISearchResultBean<PmUser> resultBean = null;
+		boolean isSearched = false;
+		Long orgProfileId = getManagedBean()
+						.getTaskAssignmentSearchBean().getOrgProfile()
+						.getOrgProfileId();
+		Long userId = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
+					  getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId() : 
+					  Long.valueOf(this.getManagedBean().getSelectedReassignee().get(0)).longValue();
+		Long actualOrgProfileId = null;
+		Long userGroupId = null;
+		Long addressId = null;
+		Integer subReassignType = null;
+		
+		log.info(":::generateUserResultBeanForCT() userId: "+ userId +", orgProfileId: "+ orgProfileId +", reassignType: "+ reassignType +".");
+		
+		// filter by user name
+		if(StringUtils.isNotBlank(getManagedBean().getSearchUserName())){
+			searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"userName",
+						SearchOperator.OPERATOR_LIKE.value(),
+						getManagedBean().getSearchUserName(),true));
+		}
+			//admin list to be filtered from task reassignment
+			List<String> filteredAdminRoles = new ArrayList<String>();
+			filteredAdminRoles.add("JABATAN_ADMIN");
+			filteredAdminRoles.add("MINISTRY_ADMIN");
+			filteredAdminRoles.add("PTJ_ADMIN");
+			filteredAdminRoles.add("BPK_ADMIN");
+			
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrgs.pmUserRoles.pmRole.roleCode",
+							SearchOperator.OPERATOR_NOT_IN.value(), filteredAdminRoles));
+			
+		if(roleList.isEmpty()){
+			roleList = vo.getRoleList();
+		}	
+		
+		switch (reassignType) {
+		case ProfileManagementConst.REASSIGN_TYPE_COMMON:
+			//1 - Normal Reassignment
+			
+			//check because to allow cross org profile for market research #10927
+			if(task.getDocStatus().longValue() != ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {
+				
+				// same org profile id
+				searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						"pmUserOrgs.pmOrgProfile.orgProfileId",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						orgProfileId));
+			}
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_S2:
+			// 2: S2/CT Committee Task
+			
+			// not current selected user and not current login user
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("userId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+								new ArrayList<Long>(Arrays.asList(userId,
+									getFacesScopes().getUserSessionBean()
+										.getUserId()))));			
+			// Order by user name
+			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+			
+			//Bug #25021 Task Reassignment Sabah & Sarawak - Finalization Comm
+			log.info(":::generateUserResultBeanForCT() userId: "+ userId +", vo.getDocId(): "+ vo.getDocId() 
+					+", vo.getDocType(): "+ vo.getDocType() +", vo.getRoleList(): "+ vo.getRoleList() +".");	
+			
+			resultBean = generateCommitteAssigneesForCT(searchBean, vo.getDocId(), vo.getDocType(), roleList, orgProfileId);
+			//Bug #25021
+			
+			getManagedBean().setCommitteeUpdate(true);		
+					
+			isSearched = true;
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
+			//3 - Cross PTJ
+			if(vo.getOrgProfileId() != null){
+				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			}
+			
+			if (orgProfile != null) {
+				if (OrganizationType.MINISTRY.value().equals(
+						orgProfile.getOrgTypeCode().getParameterCode())) {
+					// PTJ under same ministry
+					searchBean
+							.getDataFilterBeans()
+							.add(new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile." + OrgProfileUtil
+											.getSearchBeanParentString(OrganizationType.MINISTRY
+													.value()),
+									SearchOperator.OPERATOR_EQUALS
+											.value(), orgProfile
+											.getOrgProfileId()));
+				} else if (OrganizationType.DIVISION.value().equals(
+						orgProfile.getOrgTypeCode().getParameterCode())) {
+					// same org profile id
+					searchBean
+							.getDataFilterBeans()
+							.add(new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS
+											.value(), orgProfile
+											.getOrgProfileId()));
+				}
+			} else {
+				// not allow to search
+				isSearched = true;
+			}
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
+			//4 - Include User under Ministry, Kumpulan PTJ & PTJ
+			actualOrgProfileId = vo.getOrgProfileId();
+			if(actualOrgProfileId != null){
+				if(roleList == null || roleList.isEmpty()){
+					roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType,subReassignType);
+				}
+				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
+						actualOrgProfileId,
+						roleList,
+						false,
+						null,
+						new ArrayList<Long>(Arrays.asList(userId,
+								getFacesScopes().getUserSessionBean()
+										.getUserId())),searchBean);
+				
+			}
+			isSearched = true;
+			
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_NAIK_TARAF_PTJ:
+			//5 - Include User for Naik Taraf & PTJ
+			
+			actualOrgProfileId = vo.getOrgProfileId();
+			if(actualOrgProfileId != null){
+				if(roleList == null || roleList.isEmpty()){
+					roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType,subReassignType);
+				}
+				
+				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgType(
+						actualOrgProfileId,
+						roleList,
+						true,
+						ParameterConst.ORG_AUTH_TYPE_ORG_GROUP,
+						new ArrayList<Long>(Arrays.asList(userId,
+								getFacesScopes().getUserSessionBean()
+										.getUserId())),searchBean);
+			}
+			isSearched = true;
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_USER_GROUP:
+			//6 - User Group
+			BigDecimal approvalLimit = vo.getApprovalLimit();
+			userGroupId = vo.getUserGroupId();
+						
+			if(userGroupId != null){
+				resultBean = retrieveUserGroupUserListByUserGroupId(
+						userGroupId,
+						approvalLimit,
+						new ArrayList<Long>(Arrays.asList(userId,
+						getFacesScopes().getUserSessionBean()
+						.getUserId())),searchBean);
+			}
+			isSearched = true;
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_DEL_ADDRESS:
+			//7 - Delivery Address
+			addressId = vo.getAddressId();
+			
+			if(addressId != null){
+				// same address id
+				searchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
+								"pmAddressTypes.pmAddress.addressId",
+								SearchOperator.OPERATOR_EQUALS
+										.value(), addressId));
+				
+				searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean(
+						"pmAddressTypes.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS
+								.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean(
+						"pmAddressTypes.pmAddress.recordStatusFlg",
+						SearchOperator.OPERATOR_EQUALS
+								.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+				
+			}else{
+				// not allow to search
+				isSearched = true;
+			}
+			
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ_NAIK_TARAF:
+			//8 - Include user for Ministry, Kumpulan PTJ, PTJ & Naik Taraf
+		if(vo.getOrgProfileId() != null){
+			if(roleList == null || roleList.isEmpty()){
+					roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType,subReassignType);
+				}
+				resultBean = PmCommonUtil.retrieveUserListFromGroupOrgTypeForSourcing(
+						vo.getOrgProfileId(),
+						roleList,						
+						new ArrayList<Long>(Arrays.asList(userId,
+								getFacesScopes().getUserSessionBean()
+										.getUserId())),searchBean);
+				
+			}
+			
+			isSearched = true;
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER:
+			//9 GOVT_SELLER
+			// same org profile id
+			searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+							"pmUserOrgs.pmOrgProfile.orgProfileId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								orgProfileId));
+			break;
+		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER_OR_PTJ:
+			//10 - Supplier(multiple roles) / PTJ(single)
+		
+			// if isSupplier then PmStatusRole.reassignType = 9 else PmStatusRole.reassignType = 1
+				subReassignType = vo.isSupplier() ? 9 : 1;
+
+			// same org profile id
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+							"pmUserOrgs.pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							orgProfileId));
+				
+			
+			break;
+		default:
+			// not allow to search
+			isSearched = true;
+		}
+		
+		if(!isSearched){
+			// Filter By user status
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			// Filter By user org status
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));		
+
+			// Filter By role status
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmUserRoles.recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));	
+
+			// not current selected user and not current login user
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("userId",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							new ArrayList<Long>(Arrays.asList(userId,
+									getFacesScopes().getUserSessionBean()
+											.getUserId()))));
+
+			if (roleList == null || roleList.isEmpty()) {
+				roleList = retrieveAvailableRoles(task.getDocStatus()
+						.longValue(),reassignType,subReassignType);
+				//--10927
+				if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value())){
+					for(Iterator<String> role=roleList.listIterator();
+							role.hasNext();){
+						String a=role.next();
+						if (a.equals(RoleCode.EP_ADMIN_2.value())){
+							role.remove();
+							log.info("roleList1="+roleList.size());
+						}
+						if (a.equals(RoleCode.BPK_ADMIN.value())){
+							role.remove();
+							log.info("roleList2="+roleList.size());
+						}
+						
+					}
+				}
+				
+				if (getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+					for(Iterator<String> role=roleList.listIterator();
+							role.hasNext();){
+						String a=role.next();
+						if (a.equals(RoleCode.BPK_ADMIN.value())){
+							role.remove();
+							log.info("roleList_SYS="+roleList.size());
+						}
+						
+					}
+				}
+			}
+
+			if (!roleList.isEmpty()) {
+				// in applicable to roles
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.pmUserRoles.pmRole.roleCode",
+								SearchOperator.OPERATOR_IN.value(), roleList));
+			}
+		
+			
+			// Order by user name
+			searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+			
+			resultBean = PmCommonUtil.searchUsersResultBeanBySearchBean(searchBean);
+		}
+		log.info("isSearched:: "+isSearched);
+		return resultBean;
+		
+	}
+	
+	
+	private ISearchResultBean<PmUser> generateCommitteAssigneesForCT(ISearchBean<PmUser> searchBean,
+			Long docId, String docType, List<String> roleCodeList, Long orgProfileId){
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setDocId(docId);
+			committeReqDTO.setDocType(docType);
+			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
+			committeReqDTO.setUserSearchBean(searchBean);
+			committeReqDTO.setOrgProfileId(orgProfileId);
+			committeReqDTO.setSearchValue(getManagedBean().getSearchUserName()); //Fix - #34699
+			//return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
+			return committeSO.retrieveUserListByCommTypeForTaskReassignment(committeReqDTO).getUserResultBean(); //Fix - #34699
+		} finally {
+			committeSO = null;
+		}
+	}
+	
+	//End Fix - #34699
+
 	
 	//7465, 29822 - start
 	/**

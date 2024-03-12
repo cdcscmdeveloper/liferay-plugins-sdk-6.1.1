@@ -33,10 +33,10 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LOADetailManagedBean.
  *
@@ -130,7 +130,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	/** The approver list. */
 	private List<PmUser> approverList;
 	
-	// TODO - To be removed
 	/** The comittee users. */
 	private List<SelectItem> comitteeUsers;
 	
@@ -303,11 +302,18 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	//#11134 -start-
 	private List<ScLoaRemark> supplierRemarks;
-	//#11134 -end-		
+	//#11134 -end-	
+	
 	
 	//Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
-	//Bug #33674@Syazani - End
+	//Bug #33674@Syazani - End	
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	private Boolean downloadLOADisabled = true;
+
+	private Boolean readOnlyLOADownload = true;
+	// Bug #35078@Syazani -- 22/09/2023 -- End
 
 	//#29006 - start
 	private boolean specificationAndSupplierDialogFlag = false;
@@ -325,6 +331,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap;
 	private Long selectedItemId;
 	private boolean multipleSuppOffer = Boolean.FALSE;
+	private List <TplSpecQuestion> listSpecAnswer;
 	//#29006 - end
 	
 	private boolean enablePBForDP;
@@ -343,6 +350,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private int retainPageNumber = 0; // #34242
 	private boolean resetAll = false;
 	private boolean resetAllforNoReport = false;
+	private String firstZone; // Bug #34757
 	/* #29007 End Vinod */
 	
 	//#27797 - start
@@ -1732,7 +1740,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setLoacancelapproverUser(PmUser loacancelapproverUser) {
 		this.loacancelapproverUser = loacancelapproverUser;
 	}
-
+	
 	public String getSourcePage() {
 		return sourcePage;
 	}
@@ -1774,6 +1782,24 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	public void setSupplierBankId(Long supplierBankId) {
 		this.supplierBankId = supplierBankId;
 	}
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	public Boolean getDownloadLOADisabled() {
+		return downloadLOADisabled;
+	}
+
+	public void setDownloadLOADisabled(Boolean downloadLOADisabled) {
+		this.downloadLOADisabled = downloadLOADisabled;
+	}
+
+	public Boolean getReadOnlyLOADownload() {
+		return readOnlyLOADownload;
+	}
+
+	public void setReadOnlyLOADownload(Boolean readOnlyLOADownload) {
+		this.readOnlyLOADownload = readOnlyLOADownload;
+	}
+	// Bug #35078@Syazani -- 22/09/2023 -- End
 	
 	//#29006 - start
 	public boolean isSpecificationAndSupplierDialogFlag() {
@@ -2012,6 +2038,16 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	// 29007 - fix issue 2 search action note 347 - end
 
+	// Bug #34757, #29007 -start-
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
+	}
+	// Bug #34757, #29007 -end-
+
 	//#27797 - start
 	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
 		return highestZoneScLoiLoaItem;
@@ -2114,5 +2150,21 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.reqItemAssignButtonSession = reqItemAssignButtonSession;
 	}	
 	//#32280 - end
+	// 29006 @zaim start
+	/**
+	 * @return the listSpecAnswer
+	 */
+	public List<TplSpecQuestion> getListSpecAnswer() {
+		return listSpecAnswer;
+	}
+
+	/**
+	 * @param listSpecAnswer
+	 *            the listSpecAnswer to set
+	 */
+	public void setListSpecAnswer(List<TplSpecQuestion> listSpecAnswer) {
+		this.listSpecAnswer = listSpecAnswer;
+	}
+	// 29006 @zaim end
 	
 }

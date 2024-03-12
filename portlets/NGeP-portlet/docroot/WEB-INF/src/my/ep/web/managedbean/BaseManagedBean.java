@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -147,6 +148,7 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	//#25037-start
 	private String currentTaskDocType;
+	private Calendar currentTaskCreatedDate;// #25037
 	private boolean validFor25037;// FLAG TO IDENTIFY SUPPORTED ACTION FOR WIP
 									// DATA. PLEASE REFER 25037
 									// PMCOMPOSITEVALIDITY
@@ -159,6 +161,10 @@ public abstract class BaseManagedBean implements Serializable {
 	//27346-start 
 	// 27346
 	private StreamedContent downloadfile;
+	
+	//#28784 - Demo WIP - To display QT BPM version
+	private String bpmVersionNo;
+	private boolean newVersion;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1073,4 +1079,21 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
 	}	
+	
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
+	}
+	//25037 - start
+	public Calendar getCurrentTaskCreatedDate() {
+		return currentTaskCreatedDate;
+	}
+
+	public void setCurrentTaskCreatedDate(Calendar currentTaskCreatedDate) {
+		this.currentTaskCreatedDate = currentTaskCreatedDate;
+	}
+	//25037 - end
 }
