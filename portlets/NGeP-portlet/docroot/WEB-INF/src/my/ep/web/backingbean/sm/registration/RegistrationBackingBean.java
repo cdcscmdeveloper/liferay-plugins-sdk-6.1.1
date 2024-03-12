@@ -7,9 +7,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1288,18 +1290,101 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setSmSupp(smSupp);  //#30964
 		
 		// #27691 - Start- For supplier owner with record status 9 or 0
-		if(!this.getManagedBean().getSupplierOwnerls().isEmpty()){
+		/*if(!this.getManagedBean().getSupplierOwnerls().isEmpty()){
 			getManagedBean().getSmSupp().getSmSupplierOwners().addAll(this.getManagedBean().getSupplierOwnerls());
-		}
+		}*/
 		// #27691 - End
 
 		reqDTO.setSmSupp(getManagedBean().getSmSupp()); //#30964
 		reqDTO.setDisabledCompanyNameInMaintenance(getManagedBean().isDisabledCompanyNameInMaintenance()); //#30964
 		//27691 START
-		//retrieve latest smsupplierowner
+		// retrieve current smsupplierowner
 		IRegistrationSO reqSO1 = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
-		List<SmSupplierOwner> suppOwnerList = reqSO1.retrieveCurrentSmSupplierOwnerList(reqDTO);
+		List<SmSupplierOwner> suppOwnerList = reqSO1.retrieveCurrSmSupplierOwnerListBySupplierId(reqDTO);
+		
+		//To reactivate owner that have data in DB and
+		//Remove unnecessary list to avoid duplicate without changing actual data
+		List<SmSupplierOwner> listToRemove1 = new ArrayList<SmSupplierOwner>();
+		if(!this.getManagedBean().getSupplierOwnerls().isEmpty()){
+			for(SmSupplierOwner unactiveSuppOwner : this.getManagedBean().getSupplierOwnerls()){
+				for(SmSupplierOwner currSuppOwner : getManagedBean().getSmSupp().getSmSupplierOwners()){
+					if(unactiveSuppOwner.getIdentificationNo().equals(currSuppOwner.getIdentificationNo())
+							&& currSuppOwner.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						unactiveSuppOwner.setReactivateOwner(true);
+						unactiveSuppOwner.setRecordStatusFlg(currSuppOwner.getRecordStatusFlg());
+						listToRemove1.add(currSuppOwner);
+					}
+				}
+			}
+			if(!listToRemove1.isEmpty()){
+				getManagedBean().getSmSupp().getSmSupplierOwners().removeAll(listToRemove1);
+			}
+			getManagedBean().getSmSupp().getSmSupplierOwners().addAll(this.getManagedBean().getSupplierOwnerls());
+		}
+		//For scenario user delete owner and adding back again the same owner before declare
+		//Remove unnecessary list to avoid duplicate without changing actual data
+		List<SmSupplierOwner> listToRemove2 = new ArrayList<SmSupplierOwner>();
+		List<SmSupplierOwner> listToRemove3 = new ArrayList<SmSupplierOwner>();
+		if(!this.getManagedBean().getDelSuppOwnerLs().isEmpty()){
+			for(SmSupplierOwner delSuppOwner : this.getManagedBean().getDelSuppOwnerLs()){
+				for(SmSupplierOwner currSuppOwner : getManagedBean().getSmSuppOwners()){
+					if(delSuppOwner.getIdentificationNo().equals(currSuppOwner.getIdentificationNo())
+							&& currSuppOwner.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						delSuppOwner.setRecordStatusFlg(currSuppOwner.getRecordStatusFlg());
+						listToRemove2.add(currSuppOwner);
+						listToRemove3.add(delSuppOwner);
+					}
+				}
+			}
+			if(!listToRemove2.isEmpty()){
+				getManagedBean().getSmSuppOwners().removeAll(listToRemove2);
+			}
+			getManagedBean().getSmSuppOwners().addAll(this.getManagedBean().getDelSuppOwnerLs());
+			if(!listToRemove3.isEmpty()){
+				getManagedBean().getDelSuppOwnerLs().removeAll(listToRemove3);
+			}
+		}
+		//For scenario user add owner that currently in table supplier owner doesnt have the data of that owner
+		//Remove unnecessary list to avoid duplicate without changing actual data
+		if(!this.getManagedBean().getAddSuppOwnerLs().isEmpty()){
+			Set<String> uniqueOwners = new HashSet<String>();
+			Set<SmSupplierOwner> duplicateOwners = new HashSet<SmSupplierOwner>();
+			for(SmSupplierOwner addSuppOwners : this.getManagedBean().getAddSuppOwnerLs()){
+				for(SmSupplierOwner currSuppOwner : getManagedBean().getSmSuppOwners()){
+					if(addSuppOwners.getIdentificationNo().equals(currSuppOwner.getIdentificationNo())
+							&& currSuppOwner.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						if (!uniqueOwners.add(currSuppOwner.getIdentificationNo())) {
+							duplicateOwners.add(currSuppOwner);
+						}
+					}
+				}
+			}
+			if(!duplicateOwners.isEmpty()){
+				for(SmSupplierOwner addSuppOwners : this.getManagedBean().getAddSuppOwnerLs()){
+					for(SmSupplierOwner currSuppOwner : getManagedBean().getSmSuppOwners()){
+						if(addSuppOwners.getIdentificationNo().equals(currSuppOwner.getIdentificationNo())
+								&& currSuppOwner.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+							throw new EpException(MessageConst.ERROR_722524,
+									new String[] { currSuppOwner.getIdentificationNo() });
+						}
+					}
+				}
+			}
+			
+		}
+		//Error duplicate for entering same IC
+		if(!this.getManagedBean().getAddSuppOwnerLs().isEmpty()){
+			for(SmSupplierOwner newSuppOwner : this.getManagedBean().getAddSuppOwnerLs()){
+				for (SmSupplierOwner currSuppOwner : suppOwnerList) {
+					if(newSuppOwner.getIdentificationNo().equals(currSuppOwner.getIdentificationNo())
+							&& currSuppOwner.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						throw new EpException(MessageConst.ERROR_722524,
+								new String[] { currSuppOwner.getIdentificationNo() });
+					}
+				}
+			}
+		}
 		
 		// added business type validation for SSM
 		if(SmCommonUtil.getInstance().ssmActive() 
@@ -1312,13 +1397,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				ssmReqDTO.setBasicAcc(true);
 			}
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
+			// retrieve latest smsupplierowner
+			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IRegistrationSO.class);
+			List<SmSupplierOwner> currSuppOwnerList = reqSO.retrieveCurrentSmSupplierOwnerListBySmSupplier(reqDTO);
 			//#28888 : checking empty list
 			/*if(CollectionUtils.isNotEmpty(getManagedBean().getSmSupp().getSmSupplierOwners())){
 				SmSupplierOwner smSupplierOwners = getManagedBean().getSmSupp().getSmSupplierOwners().get(0);
 				getManagedBean().getSmSupp().getSmSupplierOwners().clear();
 				getManagedBean().getSmSupp().getSmSupplierOwners().add(smSupplierOwners);
 			}//end #28888
-*/			getManagedBean().getSmSupp().setSmSupplierOwners(suppOwnerList);
+*/			getManagedBean().getSmSupp().setSmSupplierOwners(currSuppOwnerList);
 			for(SmPersonnel personnel : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
 				if(personnel.isSsmData() && personnel.getIdentificationType() != null				//start - #30064
 						&& personnel.getIdentificationType().getParameterCode()		
@@ -1357,6 +1446,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					&& getManagedBean().getSmSuppOwners().size() > 0) {
 				for (SmSupplierOwner smSupplierOwner : getManagedBean().getSmSuppOwners()) {
 					Boolean personnelAvailable = false;
+					if (!this.getManagedBean().getDelSuppOwnerLs().isEmpty()) {
+						for (SmSupplierOwner delSuppOwner : this
+								.getManagedBean().getDelSuppOwnerLs()) {
+							if (delSuppOwner.getIdentificationNo()
+									.equalsIgnoreCase(
+											smSupplierOwner
+													.getIdentificationNo())) {
+								smSupplierOwner.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+							}
+						}
+					}
 					for (SmPersonnel smPersonnel : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()) {
 						if (smSupplierOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())) {
 							personnelAvailable = true;
@@ -1389,8 +1489,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									smPersonnel.setDirector(smSupplierOwner.isOwnerIsDirector());
 								}
 							}
-							if(smPersonnel.getRevNo() == 0){
-								smPersonnel.setRevNo(1);
+							if(smPersonnel.getRevNo() != SupplierManagementConst.DEFAULT_REV_NO){
+								smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 							}
 							if(smPersonnel.getName() != smSupplierOwner.getOwnerName()){
 								smPersonnel.setName(smSupplierOwner.getOwnerName());
@@ -1398,6 +1498,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							if(smPersonnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
 									&& smSupplierOwner.getRecordStatusFlg().intValue()== DbValueConst.RECORD_STATUS_ACTIVE){
 								smPersonnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+							}
+							//reactivate personnel thru basic maintenance
+							if (smSupplierOwner.isReactivateOwner() && smPersonnel.getRecordStatusFlg().equals(
+									DbValueConst.RECORD_STATUS_DELETED)) {
+								smPersonnel
+										.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							}
 							reqDTO.setSmPersonnel(smPersonnel);
 						}
@@ -1411,7 +1517,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
 						smPersonnel.setIdentificationNo(smSupplierOwner.getIdentificationNo());
 						smPersonnel.setPmCountry(smSupplierOwner.getNationality());
-						smPersonnel.setRevNo(1); 
+						smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO); 
 						
 						if(smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
 								|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)
@@ -1803,6 +1909,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void checkExistingBusinessRegNo(){
 		
+		// #32713 - Start
+		// to validate if there is same reg_no that has inProgress status
+		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())) {
+
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setRegNo(getManagedBean().getSmSupp().getRegNo());
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+					"sm", ISupplierSearchSO.class);
+
+			if (supplierSearchSO.checkIsSupplierRegNoAlreadyExistAndInProgress(reqDTO).isRegNoInProgress()) {
+				throw new EpException(MessageConst.ERROR_722634);
+			}
+		}
+		// #32713 - End		
+		
 		if (!StringUtils
 				.isBlank(getManagedBean().getSmSupp().getBusinessType())
 				&& SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
@@ -2121,6 +2242,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+				//#34159 - START
+				if(this.getManagedBean().getSmBusinessAdd().getPmDivision() != null && this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId() != null){
+					this.getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
+				}
+				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
 			getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(false);
@@ -2169,6 +2295,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
+				//#34159 - START
+				if(this.getManagedBean().getSmResAdd().getPmDivision() != null && this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId() != null){
+					this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
+				}
+				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
 			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
@@ -2207,6 +2338,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+				//#34159 - START
+				if(this.getManagedBean().getSmPermenantAdd().getPmDivision() != null && this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId() != null){
+					this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
+				}
+				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId()));
 			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
@@ -2354,6 +2490,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//27691 START
 		this.getManagedBean().setSmPersonnelOwners(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setSmPersonnelDirector(new ArrayList<SmPersonnel>());
+		this.getManagedBean().setDelSuppOwnerLs(new ArrayList<SmSupplierOwner>());
+		this.getManagedBean().setSupplierOwnerls(new ArrayList<SmSupplierOwner>());
+		this.getManagedBean().setAddSuppOwnerLs(new ArrayList<SmSupplierOwner>());
 		//27691 END
 		if(pmUser.getUserId().longValue() != 1 || pmUser == null){
 			
@@ -2669,8 +2808,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 						//start #29956
-						if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
-							personnelsRole.clear();
+						boolean showPopupDowngradeSSM = displayPopupDowngradeSSMOwner(getManagedBean().getSmSupp().getSmAppl(),ssmResDTO);
+
+						if(showPopupDowngradeSSM) {
+							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
+							return;								
 						}
 						//end #29956
 						if(personnelsRole != null && personnelsRole.isEmpty()){
@@ -2693,27 +2836,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									//}
 								}
 								//#29114, CR 27382: Static Code Analysis End
-							}
-							
-							// start #29956 smOwnerSsmPopup
-							String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
-
-							this.getManagedBean().setTermAndConditionCheckOwner(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
-							this.getManagedBean().setTermAndConditionCheckOwnerA(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole}));
-							this.getManagedBean().setTermAndConditionCheckOwnerC(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-							// end #29956
-
-							
-							if(personnelsRole != null && !personnelsRole.isEmpty()) {
-								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
-								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
-								return;								
 							}
 						}else{
 							//set latest role to personnel
@@ -3431,6 +3553,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupplierOwner.setOwnerIsDirector(true);
 		}
 		this.getManagedBean().getSmSuppOwners().add(smSupplierOwner);
+		this.getManagedBean().getAddSuppOwnerLs().add(smSupplierOwner);
+		this.getManagedBean().getSmSupp().setSmSupplierOwners(this.getManagedBean().getSmSuppOwners());
 	}
 	//27691 END
 	
@@ -3444,6 +3568,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						if(smSupplierOwner.getIdentificationNo().equalsIgnoreCase(smPersonnel.getIdentificationNo())
 								&& smSupplierOwner.getOwnerName().equalsIgnoreCase(smPersonnel.getName())){
 							smPersonnel.setRecordStatusFlg(9);
+							this.getManagedBean().getDelSuppOwnerLs().add(smSupplierOwner);
 						}
 					}
 				}

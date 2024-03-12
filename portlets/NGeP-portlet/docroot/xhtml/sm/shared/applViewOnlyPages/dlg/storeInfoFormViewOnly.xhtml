@@ -70,8 +70,7 @@
 				<tr>
 					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.category']}" /></td>
 					<td>
-						<!-- 28775 - Site Visit Grouping Enhancement -28775 -->
-						<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smSupplierCategoryFacilities}">
+						<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smSupplierCategoryFacilities}">
 							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
