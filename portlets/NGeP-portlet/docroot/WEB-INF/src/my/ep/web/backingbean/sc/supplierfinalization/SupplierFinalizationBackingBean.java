@@ -4330,10 +4330,7 @@ return	remarksNotFound;
 		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
 				.getDocDefinitionKey();
 		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-			String fileName = StringUtils.isNotBlank(reportAttachment.getFileName()) ? reportAttachment.getFileName() : "";
-			fileName = CustomUtils.getInstance().removeFileExtension(fileName);
-			this.getManagedBean().setReportDownloadFileName(fileName);
-			downloadAllReports(getManagedBean().getScQt(), "evaluation", reportAttachment);
+			regenEvaluationDownload(reportAttachment, true);
 		}
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
@@ -10199,6 +10196,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				scQtFinalizationReports.get(i)
 						.setScQtFinalizationReportAttachment(attachment);
 			}
+			// Bug #35485@Syazani 08/02/2024 -- Start
+			File file = new File(getActualFilePath(attachment));
+			if (file.exists() && file.length() <= 1000) {
+				regenEvaluationDownload(attachment, false);
+			}
+			// Bug #35485@Syazani 08/02/2024 -- End
+			
+			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			scAttachments.add(attachment);
 		}
 
@@ -11703,5 +11708,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.EMAIL);
 	}
 	//#12487 - end
+	
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	private void regenEvaluationDownload(ScAttachment reportAttachment, boolean downloadable) throws Exception {
+		String fileName = StringUtils.isNotBlank(reportAttachment.getFileName()) ? reportAttachment.getFileName() : "";
+		fileName = CustomUtils.getInstance().removeFileExtension(fileName);
+		this.getManagedBean().setReportDownloadFileName(fileName);
+		downloadAllReports(getManagedBean().getScQt(), "evaluation", reportAttachment, downloadable);
+	}
+	// Bug #35485@Syazani 08/02/2024 -- End
 }
 // ***19336

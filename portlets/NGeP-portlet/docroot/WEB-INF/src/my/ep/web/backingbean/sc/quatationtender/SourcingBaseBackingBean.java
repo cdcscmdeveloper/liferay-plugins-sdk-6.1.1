@@ -4769,7 +4769,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void downloadAllReports(ScQt scqt, String typeRegen, ScAttachment scAttachment) throws Exception {	// Bug #35485@Syazani 08/02/2024
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public void downloadAllReports(ScQt scqt, String typeRegen, ScAttachment scAttachment, boolean downloadable)
+			throws Exception {
+		// Bug #35485@Syazani 08/02/2024 -- End
 		log.debug(this.getClass().getName() + ".downloadAllReports()");
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getNewBriefingPaperReportList();
@@ -4796,17 +4799,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		if ("evaluation".equalsIgnoreCase(typeRegen)) {
-			attachments.add(regenerateDocumentEvaAttachmentByFileName(scqt, scAttachment, fileName));
+			ScAttachment attachment1 = regenerateDocumentEvaAttachmentByFileName(scqt, (ScAttachment) scAttachment.cloneEntity(), fileName);
+			attachments.add(attachment1);
+			scAttachment.setFileName(fileName + ".zip");
+			scAttachment.setFileDesc("File uploded");
+			scAttachment.setDocNo(scqt.getQtNo());
+			scAttachment.setDocType(attachment1.getDocType());
+			populateAttachmentDetails(scAttachment);
+			scAttachment.setDocType(QTConstants.DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT);
+			savedZipScAttachmentFiles(scAttachment, attachments);
+			if (downloadable)
+				downloadZipScAttachmentFiles(scAttachment);
+			updateScAttachment(scAttachment);
 		} else {
 			attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
-		}
-		// Bug #35485@Syazani 08/02/2024 -- End
-		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(),
-				attachments);
-		
-		// Bug #35485@Syazani 08/02/2024 -- Start
-		if (StringUtils.isNotBlank(typeRegen)) {
-			updateScAttachment(fileName + ".zip", scAttachment, QTConstants.DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT);
+			downloadAllFiles(this.getManagedBean().getReportDownloadFileName(),
+					attachments);
 		}
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
@@ -6667,15 +6675,51 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportAttachment;
 	}
 
-	private boolean updateScAttachment(String fileName, ScAttachment attachment, String docType) throws FileNotFoundException,
-			IOException {
+	private boolean updateScAttachment(ScAttachment attachment) throws IOException {
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded");
-		populateAttachmentDetails(attachment);
-		attachment.setDocType(docType);
 		return evaluationSO.updateScAttachment(attachment);
+	}
+
+	private <ATTACHMENT extends ScAttachment> void savedZipScAttachmentFiles(ScAttachment attachment,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(getActualFilePath(attachment)));
+
+		try {
+			downloadAllFilesAsZipFile(zos, scAttachments);
+
+		} catch (Exception ex) {
+			// Log the exception
+			log.error("Error while creating ZIP file for attachment: " + attachment.getFileName(), ex);
+			throw new IOException("Error while creating ZIP file", ex);
+		} finally {
+			zos.close();
+		}
+	}
+
+	private void downloadZipScAttachmentFiles(ScAttachment attachment) throws IOException {
+		PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
+
+		try (FileInputStream fileInputStream = new FileInputStream(getActualFilePath(attachment));
+				OutputStream outputStream = response.getOutputStream()) {
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+			outputStream.flush();
+		} catch (FileNotFoundException e) {
+			// Log the exception
+			log.error("Error while creating ZIP file for attachment: " + attachment.getFileName(), e);
+
+			// Rethrow the exception
+			throw e;
+		}
+		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End
 }
