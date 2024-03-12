@@ -34,7 +34,6 @@ public class DowngradeExpMofPersonnelRest {
 		log.info("Before success calling downgradeExpMofPersonnel rest api....");
 		try {
 			//33628 START
-			terminateBasicAcc();
 			downgradeMOFToBasic();
 			changeExpiredMofPersonnelToDeleted();
 			updateMOFExpiredMoreThanTwoYears();
@@ -47,29 +46,6 @@ public class DowngradeExpMofPersonnelRest {
 	}
 	
 	//33628 START
-	private void terminateBasicAcc(){
-		ISupplierSearchSO reqSO = SmServiceLookup.getSupplierSearchSO();
-		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		SupplierSearchResDTO resDTO = reqSO.retrieveExpiredBasicAccounts(reqDTO);
-		List<SmSupplier> supplierList = resDTO.getSmSuppliers();
-		IPersonnelAuthorizationSO reqSO2 = SmServiceLookup.getPersonnelAuthorizationSO();
-		PersonnelAuthorizationReqDTO authReqDTO = new PersonnelAuthorizationReqDTO();
-		log.info("**********terminateBasic - START************");
-		try{
-			if(!supplierList.isEmpty()){
-				for(SmSupplier supplier : supplierList) {
-					authReqDTO = new PersonnelAuthorizationReqDTO();
-					authReqDTO.setSmSupplier(supplier);
-					reqSO2.terminateBasicAccount(authReqDTO);
-				}
-				
-			}
-		}catch(Exception ex){
-			log.error(ex);
-		}
-		log.info("**********terminateBasic - END************");
-	}
-	
 	private void downgradeMOFToBasic(){
 		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
 		SmSchedulerResDTO resDTO = reqSO.retrieveExpiredMof();
