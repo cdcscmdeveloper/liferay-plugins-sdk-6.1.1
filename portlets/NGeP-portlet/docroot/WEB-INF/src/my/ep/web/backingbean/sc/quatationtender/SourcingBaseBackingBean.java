@@ -4769,7 +4769,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void downloadAllReports(ScQt scqt, String typeRegen, ScAttachment scAttachment) throws Exception {	// Bug #35485@Syazani 08/02/2024
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public void downloadAllReports(ScQt scqt, String typeRegen, ScAttachment scAttachment, boolean downloadable)
+			throws Exception {
+		// Bug #35485@Syazani 08/02/2024 -- End
 		log.debug(this.getClass().getName() + ".downloadAllReports()");
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getNewBriefingPaperReportList();
@@ -4805,7 +4808,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			populateAttachmentDetails(scAttachment);
 			scAttachment.setDocType(QTConstants.DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT);
 			savedZipScAttachmentFiles(scAttachment, attachments);
-			downloadZipScAttachmentFiles(scAttachment);
+			if (downloadable)
+				downloadZipScAttachmentFiles(scAttachment);
 			updateScAttachment(scAttachment);
 		} else {
 			attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
