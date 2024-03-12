@@ -10,7 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.ViewBasicAccountWithMof;
+import my.ep.persistence.entity.sm.VBasicAccountWithMof;
+import my.ep.persistence.entity.sm.VMofAccount;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.vo.CategoryRptVO;
 
@@ -75,17 +76,30 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	// #29712 - start
 	private SmSupplier selectedSupplier;
 	
-	private ViewBasicAccountWithMof selectedBasicAccount;
+	private VBasicAccountWithMof selectedBasicAccount;
 	// #29712 - end
 
 
-	public ViewBasicAccountWithMof getSelectedBasicAccount() {
+	public VBasicAccountWithMof getSelectedBasicAccount() {
 		return selectedBasicAccount;
 	}
 
-	public void setSelectedBasicAccount(ViewBasicAccountWithMof selectedBasicAccount) {
+	public void setSelectedBasicAccount(VBasicAccountWithMof selectedBasicAccount) {
 		this.selectedBasicAccount = selectedBasicAccount;
 	}
+	
+	// #30824 - START
+	private VMofAccount selectedMofAccount;
+
+	public VMofAccount getSelectedMofAccount() {
+		return selectedMofAccount;
+	}
+
+	public void setSelectedMofAccount(VMofAccount selectedMofAccount) {
+		this.selectedMofAccount = selectedMofAccount;
+	}
+
+	// #30824 - END
 
 	public String getDocumentType() {
 		return documentType;

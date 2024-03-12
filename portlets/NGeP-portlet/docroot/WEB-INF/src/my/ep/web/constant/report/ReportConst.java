@@ -1040,7 +1040,11 @@ public class ReportConst implements Serializable{
 	//Enhancement #19056 To replace Receipt document format for SPKI purchase to Tax Invoice format
 	public static final String SM_TAX_INVOICE_JSP = "SM_TAX_INVOICE.jsp";
 	//end of Enhancement #19056
-
+	
+	//START 35182
+	public static final String SM_TAX_INVOICE_SST = "SM_TAX_INVOICE_SST.jsp";
+	//END 35182
+		
 	// SM - Report Parameter Key
 	public static final String PARAM_PAYMENT_ID = "pmntid";
 	public static final String URL_NOT_CONNECTED = "lbl.rpt.search.URL_NOT_CONNECTED";
@@ -1127,6 +1131,11 @@ public class ReportConst implements Serializable{
 	public static final String SM_APPL_TRACKING_DIARY = "SM_APPLICATION_TRACKING_DIARY.jsp";
 	public static final String SM_PROFILE_TRACKING_DIARY = "SM_PROFILE_TRACKING_DIARY.jsp";
 	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - END
+	
+	// Bug #34996@Syazani 16/08/2023 -- Start
+	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";
+	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
+	// Bug #34996@Syazani 16/08/2023 -- End
 	
 	public ReportConst(){}
 	

@@ -13,6 +13,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -238,6 +240,9 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setViewApplicationHistory(true);
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setPoApprUnClaimTask(true); //#34209
+		// #28767 - START
+		getManagedBean().setTabActiveIndex(0);
+		// #28767 - END
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
@@ -378,95 +383,11 @@ public class ViewApplHistoryBackingBean extends
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			//start #29956
-			if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
-				personnelsRole.clear();
+			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
+			if(displayPopupDowngradeSSMOwner){
+				proceed = false;
 			}
-			// start #29956
-			Boolean dontShowDowngradePopup = false;
-			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDateBefore6Months(this.getManagedBean().getSmSupplier()));
-			if (this.getManagedBean().isDisAllowOwnerEdit()) {
-				PersonnelReqDTO reqDto = new PersonnelReqDTO();
-				reqDto.setApplId(this.getManagedBean().getSmAppl().getApplId());
-				PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-				if (resDto.getSmPersonnelList() != null && resDto.getSmPersonnelList().size() >= 0) {
-					for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
-						if (personnel.getEpRole() == null
-								|| (personnel.getEpRole() != null && !my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
-										.contains(personnel.getEpRole()))) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
-							if (personnelDirectorSSM == null && personnelSSM == null) {
-								dontShowDowngradePopup = true;
-							}
-						}
-					}
-					for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
-						if (personnel.getEpRole() != null
-								&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
-										.contains(personnel.getEpRole())) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
-							if (personnelDirectorSSM == null && personnelSSM == null) {
-								dontShowDowngradePopup = false;
-							}
-						}
-					}
-				}
-			}
-			
-			PersonnelReqDTO reqDto = new PersonnelReqDTO();
-			reqDto.setApplId(this.getManagedBean().getSmAppl().getApplId());
-			PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-			if (resDto.getSmPersonnelList() != null && resDto.getSmPersonnelList().size() >= 0) {
-				for(SmPersonnel personnel : resDto.getSmPersonnelList()){
-					if (personnel.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
-							if(personnelDirectorSSM == null && personnelSSM == null){
-								personnelsRole.add(personnel);
-						}
-					}
-				}
-			}
-			// end #29956
-			// start #29956 smOwnerSsmPopup
-			String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
-
-			this.getManagedBean().setTermAndConditionCheckOwner(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
-			this.getManagedBean().setTermAndConditionCheckOwnerA(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole}));
-			this.getManagedBean().setTermAndConditionCheckOwnerC(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-			this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-			// end #29956
-			
-			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
-			//#start #29956
-			if(personnelsRole != null && personnelsRole.size() > 0 && !dontShowDowngradePopup) {
-				if (this.getManagedBean().isDisAllowOwnerEdit()) {
-					this.getManagedBean().setDontGetSsmData(true);
-				} else {
-					this.getManagedBean().setDontGetSsmData(false);
-				}
-				//#end #29956
-					proceed = false;
-					getManagedBean().setPreRegistration(false);  //#29956
-					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
-					this.getManagedBean().setPersonnelsRole(personnelsRole);
-					RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-					RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-			}
-			
+			//end #29956
 		}
 		if(proceed){
 			if(resubmission){
@@ -603,6 +524,33 @@ public class ViewApplHistoryBackingBean extends
 				initSiteVisit();
 			}
 		}
+		//START 14530
+		// sort created date descendent
+		Collections.sort(this.getManagedBean().getSmAppl().getSmApplInquiries(),
+				new Comparator<SmApplInquiry>() {
+						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+							if (o1.getCreatedDate() == null
+									|| o2.getCreatedDate() == null)
+								return 0;
+								return o2.getCreatedDate().compareTo(
+											o1.getCreatedDate());
+								}
+							});
+					
+		if(this.getManagedBean().getSmAppl().getSmApplInquiries() != null){
+			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
+					.getSmApplInquiries()) {
+				if (!StringUtils.isBlank(inquiry.getInquirySubject())
+						&& inquiry
+								.getInquirySubject()
+								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+					inquiry.getSmApplSupportDocInquiries().size();
+					this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
+				}
+			}
+		}		
+		//END 14530
 		
 		/*
 		 * retrieve status from SM_APPL, not workflow status
@@ -1674,6 +1622,7 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
 	}
 	//#29482 - End
+	
 	//#29823 - START
 	public boolean isApplPORejectedAfterApprovelSV(){
 		boolean isRejected = false;
@@ -1761,5 +1710,40 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	// #32628 - end
-
+	
+	//14530
+	public boolean checkPoinquiry()
+	{
+		for(SmApplInquiry smapplinquiry : this.getManagedBean().getSmAppl().getSmApplInquiries()){
+			if(smapplinquiry.getInquirySubject().equalsIgnoreCase(SupplierManagementConst.INQUIRY_PO_SUPPLIER)){
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * inquiry row select
+	 */
+	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
+		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		RequestContext.getCurrentInstance().update("inquiryDetails");
+	}
+	//14530
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 }
