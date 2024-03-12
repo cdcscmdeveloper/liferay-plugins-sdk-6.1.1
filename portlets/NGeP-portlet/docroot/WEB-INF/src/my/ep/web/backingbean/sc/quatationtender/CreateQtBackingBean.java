@@ -508,10 +508,15 @@ public class CreateQtBackingBean extends
 			
 			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
+			//Reopen #25726 note 220 - issue 7
+             PmParameter contractType = this.getManagedBean().getQt().getContractType();
 
-			if (currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
+			if ((currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
 				currentStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) ||
-				  isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+				isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))&&
+				contractType != null &&  
+				!ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(contractType.getParameterCode())){ //Reopen #25726 note 220 - issue 7
+
 			
 			SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();
 			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
@@ -531,7 +536,7 @@ public class CreateQtBackingBean extends
 									.getParameterCode())) {
 					financialchecklist.setPmStatus(status);
 				}
-			}
+			  }
 			}
 		  }
 		}

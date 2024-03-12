@@ -313,7 +313,7 @@
 									label="#{lbl['lbl.sc.qt.publishing.period']}"
 									required="#{empty param['skipvalidation']}"
 									value="#{scQt.publishPeriod}"
-									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
+									disabled="true"
 									valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
 									style="text-align:right; width:195px;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
@@ -338,7 +338,7 @@
 									label="#{lbl['lbl.sc.qt.proposal.validity']}"
 									required="#{empty param['skipvalidation']}"
 									value="#{scQt.qtValidityPeriod}"
-									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
+									disabled="true"
 									valueChangeListener="#{createQtBB.proposalValidityChanged}"
 									style="text-align:right; width:200px;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
