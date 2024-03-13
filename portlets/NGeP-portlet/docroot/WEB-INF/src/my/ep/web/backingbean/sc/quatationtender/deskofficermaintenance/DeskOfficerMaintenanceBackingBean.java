@@ -128,7 +128,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	private static final Logger log = EpLogger.getLogger(DeskOfficerMaintenanceBackingBean.class);
 	
 	private PagingDataModel<PmUser> userListDataModel = new UserPagingDataModel();
-	
+
 	//25627 for 31303 code review start
 	private static final String PAGE_DESKOFFICER_MAINTENANCE = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
 	private static final String PAGE_DESKOFFICER_MAINTENANCE_APPROVAL = "/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApproval.xhtml";
@@ -1165,8 +1165,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
-			AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
 			
+			AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
 			int successCount = 0;
 			for (Map.Entry<Long, PmUser> entry : this.getManagedBean().getQtNoDeskOfficerMap().entrySet()){
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
