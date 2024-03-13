@@ -2171,6 +2171,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//validate duplicate Workers
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
 			validateDuplicateWorker(svTemplate.getSmSvWorkers());
+			validateWorkshopWorkers(); //29379 - Site Visit Grouping Enhancement - 28775
 		}
 		
 		try{
@@ -3407,6 +3408,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			idTypeMap.put(pmDesc.getPmParameter().getParameterCode(), pmDesc.getCodeName());
 		}
 		return idTypeMap;
+	}
+	
+	private void validateWorkshopWorkers(){
+		if(!getManagedBean().getActivePage().equals(""+CAT_TYPE_PG)){
+			return;
+		}
+		final long typeId = 115L;
+		for(SmSvTemplate template : getManagedBean().getTemplates()){
+			for(SmSvWorker worker : template.getSmSvWorkers()){
+				String idNo = worker.getIdentificationNo();
+				if(worker.getIdentificationTypeId() == typeId && idNo.length() != 12){
+					throw new EpException(MessageConst.ERROR_722532, new String[] {idNo});
+				}
+			}
+		}
 	}
 	//29379 - Site Visit Grouping Enhancement - 28775 - end
 	
