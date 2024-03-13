@@ -10188,17 +10188,23 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-					.get(i).getScQtFinalizationReportAttachment();
+			// Bug #35485@Syazani 08/02/2024 -- Start
+			ScQtFinalizationReport scQtFinalizationReport = scQtFinalizationReports.get(i);
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument() != null ? scQtFinalizationReport
+					.getPmDocument().getDocDefinitionKey() : "";
+			// Bug #35485@Syazani 08/02/2024 -- End
+					
 			if (attachment == null) {
 				attachment = generateDocumentAttachment(scQtFinalizationReports
 						.get(i));
 				scQtFinalizationReports.get(i)
 						.setScQtFinalizationReportAttachment(attachment);
 			}
+			
 			// Bug #35485@Syazani 08/02/2024 -- Start
 			File file = new File(getActualFilePath(attachment));
-			if (file.exists() && file.length() <= 1000) {
+			if (file.exists() && file.length() <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
 				regenEvaluationDownload(attachment, false);
 			}
 			// Bug #35485@Syazani 08/02/2024 -- End
