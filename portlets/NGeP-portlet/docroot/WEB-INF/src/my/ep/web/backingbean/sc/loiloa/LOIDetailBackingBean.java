@@ -94,6 +94,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -4021,17 +4022,15 @@ public class LOIDetailBackingBean extends
 			}
 			context.put("loiSigner", loiSigner);
 			
-			//#30447 start
+			// #30447 start
 			String salutation = "";
-			if (getManagedBean().getContractSignerUser() != null
-					&& getManagedBean().getContractSignerUser().getSalutationCode() != null
-					&& getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName() != null
-					&& !getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName().isEmpty()) {
+			PmSalutation salutationCode = getManagedBean().getContractSignerUser().getSalutationCode() != null ? 
+					getManagedBean().getContractSignerUser().getSalutationCode() : null;
+			if (getManagedBean().getContractSignerUser() != null && salutationCode != null) {
 				salutation = getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
-
-			}		
-			context.put("salutation", salutation);	
-			//#30447 end
+			}
+			context.put("salutation", salutation);
+			// #30447 end
 
 			String loiSignerDesignation = "";
 			if(null != scLoi.getLoiSignerDesig() && !scLoi.getLoiSignerDesig().isEmpty()){

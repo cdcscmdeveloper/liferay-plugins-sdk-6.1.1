@@ -1758,7 +1758,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						&& (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null)) {
 					DecimalFormat df = new DecimalFormat("#.00");
 					
-					if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
+					if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null) {//#35137,//#35552
 						setTabValue("PB");
 						throw new EpException(MessageConst.ERROR_750021);
 					} else {
@@ -3336,14 +3336,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
 			
-			//#35137 - Start (remove Code)
-			/**		
+			
+					
 				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
 						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 				}
-				**/ 
-			//#35137 - End (remove Code)
+				 
+			
 				//Bug #26542 -start
 			//#24333,#35137 - Start
 			contractAmt.getCtPerformanceBondsOriginal().clear();
