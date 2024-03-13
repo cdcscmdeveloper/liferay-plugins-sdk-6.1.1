@@ -101,7 +101,7 @@ import my.ep.web.bean.sc.quatationtender.DeskOfficerMaintenanceSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.QTAuditConstant;
+import my.ep.constant.sc.QTAuditConstant;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.deskofficermaintenance.DeskOfficerMaintenanceManagedBean;
 import my.ep.web.util.EpPortletUtil;
