@@ -94,6 +94,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -660,11 +661,11 @@ public class LOIDetailBackingBean extends
 				if (scLoi.getContractSigner() != null) {
 					getManagedBean().setContractSignerUser(
 							scLoi.getContractSigner());
-					//#30447 start
-					if(scLoi.getContractSigner().getSalutationCode() != null){
+					// #30447 start
+					if (scLoi.getContractSigner().getSalutationCode() != null) {
 						scLoi.getContractSigner().getSalutationCode().getSalutationName();
 					}
-					//#30447 end
+					// #30447 end
 				}
 				
 				ScQtFinalization finalization  = awardSupplierResDTO.getScQtFinalization();
@@ -4021,16 +4022,15 @@ public class LOIDetailBackingBean extends
 			}
 			context.put("loiSigner", loiSigner);
 			
-			//#30447 start
+			// #30447 start
 			String salutation = "";
-			if (getManagedBean().getContractSignerUser() != null) {
-				if (getManagedBean().getContractSignerUser().getSalutationCode()!=null) {
-					if(getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName()!=null && !getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName().isEmpty())
-						salutation =  getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
-				} 
-			}			
-			context.put("salutation", salutation);	
-			//#30447 end
+			PmSalutation salutationCode = getManagedBean().getContractSignerUser().getSalutationCode() != null ? 
+					getManagedBean().getContractSignerUser().getSalutationCode() : null;
+			if (getManagedBean().getContractSignerUser() != null && salutationCode != null) {
+				salutation = getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
+			}
+			context.put("salutation", salutation);
+			// #30447 end
 
 			String loiSignerDesignation = "";
 			if(null != scLoi.getLoiSignerDesig() && !scLoi.getLoiSignerDesig().isEmpty()){
@@ -6956,6 +6956,7 @@ public class LOIDetailBackingBean extends
 	//#12487 start
 	public void prepareLoiNotification(){		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		Map<String, Object> loiObj = new HashMap<>();
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, IQTSuppFinalizationSO.class);
@@ -6971,8 +6972,6 @@ public class LOIDetailBackingBean extends
 					profileId = resDTO.getScQt().getPmOrgProfile().getOrgProfileId();	
 			}
 			
-			
-			Map loiObj = new HashMap<>();
 			loiObj.put(CommonConstants.OBJ_USER_LOCALE, new FacesScopes().getUserLocale());
 			loiObj.put(CommonConstants.OBJ_LANGUAGE, new FacesScopes().getUserLocale().getLanguage());
 			if (getManagedBean().getScQtFinalization() != null &&
@@ -6992,8 +6991,8 @@ public class LOIDetailBackingBean extends
 			}			
 			getManagedBean().setLoiObj(loiObj);
 		} finally {
-			getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.DASHBOARD);
-			getQtAwardSO().sendLoiNotification(this.getManagedBean().getLoiObj(), this.getManagedBean().getScQt(), CommonConstants.EMAIL);
+			getQtAwardSO().sendLoiNotification(loiObj, this.getManagedBean().getScQt(), CommonConstants.DASHBOARD);
+			getQtAwardSO().sendLoiNotification(loiObj, this.getManagedBean().getScQt(), CommonConstants.EMAIL);
 		}		
 		
 	}
