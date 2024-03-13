@@ -1054,6 +1054,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						return ctDT.goToRequestCtAdmin(contractId, ctBackingBean.getManagedBean().getDocTypeFromTaskList());
 					}
 				} else if(ctBackingBean.getManagedBean().isAmendFromTaskList()){//tasklist
+					
+					//if it goes scl link first, this will be fired as ViewSCLFromContract is false
+					if(!ctBackingBean.getManagedBean().isViewSCLFromContract()){
+						ctBackingBean.getManagedBean().setViewSclFromAgreement(false); //#15851
+					}
+					//this is back button from contract link > scl link > back button. if it goes contract link > scl link > back button, 
+					//this will be fired first before going on the scl page > back button.
+					if(ctBackingBean.getManagedBean().isViewContractFromAgreement() && ctBackingBean.getManagedBean().isViewSCLFromContract()){
+						ctBackingBean.getManagedBean().setViewSCLFromContract(false);
+						return this.getManagedBean().getBackToPreviousPage();
+					}
+					
 					if(!ctBackingBean.getManagedBean().isViewSclFromAgreement() && !ctBackingBean.getManagedBean().isViewSCLFromContract()){ //#15851
 						getManagedBean().setViewOnly(false);
 						ctBackingBean.getManagedBean().setViewContract(false);
@@ -1063,15 +1075,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if(getManagedBean().getCtLetterOfAcceptance() != null){
 							getManagedBean().getCtLetterOfAcceptance().clear();
 						}
-					}
-					//if it goes scl link first, this will be fired as ViewSCLFromContract is false
-					if(!ctBackingBean.getManagedBean().isViewSCLFromContract()){
-						ctBackingBean.getManagedBean().setViewSclFromAgreement(false); //#15851
-					}
-					//this is back button from contract link > scl link > back button. if it goes contract link > scl link > back button, 
-					//this will be fired first before going on the scl page > back button.
-					if(ctBackingBean.getManagedBean().isViewContractFromAgreement() && ctBackingBean.getManagedBean().isViewSCLFromContract()){
-						ctBackingBean.getManagedBean().setViewSCLFromContract(false);
 					}
 				}
 			}
