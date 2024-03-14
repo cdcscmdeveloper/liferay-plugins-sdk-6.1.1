@@ -410,7 +410,7 @@ public String backToQtScreen(){
 	switchToOrigManagedBean();
 	FacesContext fc = FacesContext.getCurrentInstance();
 	fc.getApplication().getNavigationHandler()
-	.handleNavigation(fc, null, destPage);//29464
+	.handleNavigation(fc, null, destPage+"?faces-redirect=true");//29464 //29732 add redirect true
 	return "";
 }
 
@@ -612,7 +612,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		
 		// #29732 @idham 25/07/2023 - Start
 		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-				.equals(scQt.getQtStatus().getStatusId())) {
+				.equals(scQt.getQtStatus().getStatusId()) && !this.getManagedBean().isReadOnly()) { //#29732 add readonly #171
 			String changedCatCodeList = specBB.checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);

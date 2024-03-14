@@ -368,8 +368,9 @@ public class SvcSiteAssignBackingBean extends
 					break;
 				}
 			}
-			if(!dupe)	
+			if(!dupe){
 				getManagedBean().getCategoryLs().add(catTemp);
+			}
 		}
 		SmApplicationUtil.sortSupplierCategory(getManagedBean().getCategoryLs());
 	}
@@ -378,8 +379,8 @@ public class SvcSiteAssignBackingBean extends
 		if(appl == null || l3 == null || appl.getApplId() == null || l3.getCategoryL3Id() == null){
 			return new ArrayList<>();
 		}
-		return SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-			(appl.getApplId(), l3.getCategoryL3Id(), appl.getApplType());
+		return SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId(
+				appl.getApplId(), l3.getCategoryL3Id(), appl.getApplType());
 	}
 	//28775 - Site Visit Grouping Enhancement - 28775 - end
 	
@@ -422,15 +423,17 @@ public class SvcSiteAssignBackingBean extends
 					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
 					+ svTask.getPmCategoryL3().getCategoryL3Code());
 		}		
-		if(!getManagedBean().getSmAppl().isSiteVisitGroup()) 
+		if(!getManagedBean().getSmAppl().isSiteVisitGroup()){
 			return s;
+		}
 		
 		for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
 			String catCode = svTGroup.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTGroup.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
 					+ svTGroup.getPmCategoryL3().getCategoryL3Code();
-			if(!s.contains(catCode))
+			if(!s.contains(catCode)){
 				s = s.concat("<br/>"+catCode);
+			}
 		}
 		return s;
 	}

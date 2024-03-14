@@ -166,8 +166,12 @@ public class QuestionnaireBackingBean extends
 			}
 
 		} catch (Exception e) {
-			log.info("TESTING ERROR OUTPUT ----  " + e.getMessage());
-			throw new EpException(e.getMessage());
+			if (e.getMessage().toLowerCase().contains("arjuna")) {
+				log.info("Error Submit Question Arjuna: " + e.getMessage());
+				throw new EpException(MessageConst.ERROR_775198);
+			} else {
+				log.info("Error When Submit Question: " + e.getMessage());
+			}
 		}
 		return resDTO;
 	}

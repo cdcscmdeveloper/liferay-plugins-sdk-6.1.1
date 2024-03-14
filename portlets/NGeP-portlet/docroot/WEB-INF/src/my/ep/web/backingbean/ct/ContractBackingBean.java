@@ -2480,7 +2480,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate()
 					.compareTo(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 0) {
-				throw new EpException(MessageConst.ERROR_760164);
+				throw new EpException(MessageConst.ERROR_750080);
 			}
 		}
 	}
@@ -2827,7 +2827,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		getManagedBean().getCtContractAmount().setBondExemptedFileName(item.getFileName());
 		getManagedBean().getCtContractAmount().setBondExemptedFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
+//		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();"); //#13847
 	}
 
 	/**
@@ -4985,17 +4985,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	//End Fix - #35202
 	
 	//#35137 - Start
-	/**
-	 * Method to Checking Amendment process
-	 * 
-	 * @return boolean
-	 */
-	public boolean isAlreadyAmendment() {
-		
-		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
-			return true;
+		/**
+		 * Method to Checking Amendment process
+		 * 
+		 * @return boolean
+		 */
+		public boolean isAlreadyAmendment() {
+			if(getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null){
+				if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+					getManagedBean().setDisableOriginalBond(true);
+					return true;
+				}				
+			}
+			return false;
 		}
-		return false;
-	}
-	//#35137 - End
+		//#35137 - End
 }  

@@ -124,6 +124,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -729,6 +730,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
 						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			}else{//Reopen #25726 note 220 - issue 5
+				getManagedBean().setBondAmountWord(null);
 			}
 
 			generateDeclarationFromVelocity(scLoa, scLoa.getScQt());
@@ -3964,55 +3967,37 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				docType = scLoa.getScLoiLoa().getDocType();
 			}
 		}
-		
-		if(isFulfillmentTypeOneOffOrAsAndWhen(fulfilMentType)){
+		//#25726 - start	
+		if(null != this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster()){
+			
+			if(isFulfillmentTypeOneOffOrAsAndWhen(fulfilMentType)){
 				this.getManagedBean()
 				.getSpecTemplateSpecBean()
 				.getSpecMaster().setDurationMonth(
-					null);
-				//#25726 - start				
-				
-				if(null != this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster()){
-					if(null == this.getManagedBean()
-							.getSpecTemplateSpecBean()
-							.getSpecMaster().getFulfilmentType()){
-						this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().setFulfilmentType(fulfilMentType);
-					}
-					if(null == this.getManagedBean()
-							.getSpecTemplateSpecBean()
-							.getSpecMaster().getDocType()){
-						this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().setDocType(docType);
-					}
-				}
-		}else{
-			this.getManagedBean()
-			.getSpecTemplateSpecBean()
-			.getSpecMaster()
-			.setDurationMonth(
+					null);	
+			}else{
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster()
+				.setDurationMonth(
 					scLoa.getContractDuration());
-			if(null != this.getManagedBean()
+			}
+			
+			if(null == this.getManagedBean()
 					.getSpecTemplateSpecBean()
-					.getSpecMaster()){
-				if(null == this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().getFulfilmentType()){
-					this.getManagedBean()
+					.getSpecMaster().getFulfilmentType()){
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster().setFulfilmentType(fulfilMentType);
+			}
+			if(null == this.getManagedBean()
 					.getSpecTemplateSpecBean()
-					.getSpecMaster().setFulfilmentType(fulfilMentType);
-				}
-				if(null == this.getManagedBean()
-						.getSpecTemplateSpecBean()
-						.getSpecMaster().getDocType()){
-					this.getManagedBean()
-					.getSpecTemplateSpecBean()
-					.getSpecMaster().setDocType(docType);
-				}
+					.getSpecMaster().getDocType()){
+				this.getManagedBean()
+				.getSpecTemplateSpecBean()
+				.getSpecMaster().setDocType(docType);
 			}
 		}
 		  log.info("EndDirectLoacheckFulFilmentTypeContractDuration"+this.getManagedBean()
@@ -5126,6 +5111,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}else{//Reopen #25726 note 220 - issue 5
+			getManagedBean().setBondAmountWord(null);
 		}
 
 		// procurement type category
@@ -7521,6 +7508,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// bond amount in words
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+			}else{//Reopen #25726 note 220 - issue 5
+				getManagedBean().setBondAmountWord(null);
 			}
 			
 			if (null != scLoa.getContractSigner() && scLoa.getContractSigner().getUserId() != null) {
@@ -7992,6 +7981,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}else{//Reopen #25726 note 220 - issue 5
+			getManagedBean().setBondAmountWord(null);
 		}
 		checkAgreementMandatory();
 	}
@@ -7999,7 +7990,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/**
 	 * Update performance bond.
 	 */
-	private void updatePerformanceBond(ScLoa scLoa ) {
+	//Reopen #25726 note 220 - issue 5
+	public void updatePerformanceBond(ScLoa scLoa ) {
 		// calc bond amt
 		calcBondAmountWithSST(scLoa, Boolean.TRUE);
 //		calcBondAmount(scLoa, Boolean.TRUE);
@@ -8008,6 +8000,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}else{//Reopen #25726 note 220 - issue 5
+			getManagedBean().setBondAmountWord(null);
 		}
 	}
 
@@ -10296,7 +10290,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.isBrandNew()) {
 
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
-				backingBean.retrieveTemplateSpecMaster(bean);
+				//Reopen #25726 note 220 - issue 2,3
+				//backingBean.retrieveTemplateSpecMaster(bean);
 				this.getManagedBean()
 						.getProdscQtDoc()
 						.setTplSpecMaster(
@@ -10318,7 +10313,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.isBrandNew()) {
 
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
-				backingBean.retrieveTemplateSpecMaster(serviceBean);
+				//Reopen #25726 note 220 - issue 2,3
+				//backingBean.retrieveTemplateSpecMaster(serviceBean);
 				backingBean.calcGrandTotalAmount(serviceBean);
 				this.getManagedBean()
 						.getServicescQtDoc()
@@ -12560,4 +12556,74 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35078@Syazani -- End 14/09/2023
+	
+	//#12487 - start
+	public void validateResponsePeriod(Integer days){
+		ScLoa scLoa = getManagedBean().getScLoa();
+		
+		if (days != 0) {		
+			scLoa.setLoaResponsePeriod(days);
+			BigDecimal fromValue = retrieveResponsePeriod(ParameterConst.FROM_VALUE);
+			BigDecimal toValue = retrieveResponsePeriod(ParameterConst.TO_VALUE);
+			if (fromValue != null && days < fromValue.intValue()) {
+				throw new EpException(MessageConst.ERROR_775304,
+						new String[] { fromValue.toString() });
+			}
+			if (toValue != null && days > toValue.intValue()) {
+				throw new EpException(MessageConst.ERROR_775305,
+						new String[] { toValue.toString() });
+			}	
+								
+		} else{				
+			throw new EpException(MessageConst.ERROR_775303);
+		}	
+	}
+	
+    public Date retrieveDueDate(){
+    	ScLoa scLoa = getManagedBean().getScLoa();
+    	Date dueDate = null;
+    	
+       if (scLoa != null && scLoa.getLoaResponsePeriod() != null && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
+				.getPmStatus().getStatusId()) ||
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(scLoa
+						.getPmStatus().getStatusId()))) {
+    	   dueDate = DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), scLoa.getLoaResponsePeriod());
+		   scLoa.setAckDueDate(dueDate);
+		} else if (scLoa != null && (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
+				.getPmStatus().getStatusId()) ||
+				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
+						.getPmStatus().getStatusId()))) {
+    	   scLoa.setAckDueDate(null);
+       }
+	
+	  return dueDate;
+	}
+	
+	
+	private BigDecimal retrieveResponsePeriod(String value) {
+		
+		BigDecimal result = null;
+		RuleReqDTO reqDTO = new RuleReqDTO();
+		reqDTO.setRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+		IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+		RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
+		if (roleResDTO.isSuccessful()
+				&& CollectionUtils.isNotEmpty(roleResDTO.getRuleValueList())) {
+			if (value.equals(ParameterConst.FROM_VALUE)) {
+				result = roleResDTO.getRuleValueList()
+						.get(0).getFromValue();
+			}
+			if (value.equals(ParameterConst.TO_VALUE)) {
+				result = roleResDTO.getRuleValueList()
+						.get(0).getToValue();
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222,
+					new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
+		}
+		
+		return result;
+	}		
+	//#12487 - end
 }
