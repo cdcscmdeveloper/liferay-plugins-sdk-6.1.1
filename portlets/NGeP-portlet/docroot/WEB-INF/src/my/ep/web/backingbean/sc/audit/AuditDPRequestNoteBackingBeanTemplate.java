@@ -65,7 +65,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	public abstract AuDPRequestNoteDTO insert(BaseManagedBean managebean, Long userId, String roleCode);
 
 	private void dpAuditSO(AuDPRequestNoteDTO dtlObjList) {
-		getAuditDpmRequestNoteSO().insertAuditDPRequestNote(dtlObjList.getAuDPRequestnoteSPDTOList(),
-				dtlObjList.getAuDPRequestnoteDetailSPDTOList());
+		getAuditDpmRequestNoteSO().insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
+				dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 	}
 }
