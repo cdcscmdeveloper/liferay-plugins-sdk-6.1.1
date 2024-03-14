@@ -1,20 +1,36 @@
 package my.ep.web.bean.sc.directpurchase;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-
-public class AuditDPSearchBean implements Serializable{
+import java.math.BigInteger;
+import org.jboss.resteasy.logging.Logger;
+/**
+ * 
+ * @author normuliana
+ * #28895_35492
+ *
+ */
+public class AuditDPSearchBean implements Serializable {
 	/**
 	 * 
 	 */
+	private static Logger log = Logger.getLogger(AuditDPSearchBean.class);
 	private static final long serialVersionUID = 1L;
 	private String language;
-	private BigDecimal docId;
+	private BigInteger docId;
 	private boolean isSearching = true;
-	
-	public AuditDPSearchBean() {}
-	
-	public AuditDPSearchBean(String language, BigDecimal docId) {
+
+/**
+ * AuditDPSearchBean()
+ */
+	public AuditDPSearchBean() {
+		log.info("");
+	}
+/**
+ * 
+ * @param language
+ * @param docId
+ */
+	public AuditDPSearchBean(String language, BigInteger docId) {
 		this.language = language;
 		this.docId = docId;
 	}
@@ -25,9 +41,10 @@ public class AuditDPSearchBean implements Serializable{
 	public String getLanguage() {
 		return language;
 	}
-	
+
 	/**
-	 * @param language the language to set
+	 * @param language
+	 *            the language to set
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
@@ -36,14 +53,15 @@ public class AuditDPSearchBean implements Serializable{
 	/**
 	 * @return the docId
 	 */
-	public BigDecimal getDocId() {
+	public BigInteger getDocId() {
 		return docId;
 	}
 
 	/**
-	 * @param docId the docId to set
+	 * @param docId
+	 *            the docId to set
 	 */
-	public void setDocId(BigDecimal docId) {
+	public void setDocId(BigInteger docId) {
 		this.docId = docId;
 	}
 

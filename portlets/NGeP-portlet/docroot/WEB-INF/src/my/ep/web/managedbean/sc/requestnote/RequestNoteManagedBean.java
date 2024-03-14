@@ -21,8 +21,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.sc.audit.AuDPRequestnoteDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
@@ -405,12 +403,6 @@ public class RequestNoteManagedBean extends BaseManagedBean {
 	// 29557 - End
 
 	private PurchaseRequestResDTO purchaseRequestResDTO;
-
-	private PurchaseRequestReqDTO purchaseRequestReqDTO;
-
-	private RequestNoteReqDTO reqNoteDTO;
-	
-	private AuDPRequestnoteDTO auDPRequestnoteDTO;
 
 	/**
 	 * Instantiates a new request note managed bean.
@@ -2313,29 +2305,5 @@ public class RequestNoteManagedBean extends BaseManagedBean {
 
 	public void setPurchaseRequestResDTO(PurchaseRequestResDTO purchaseRequestResDTO) {
 		this.purchaseRequestResDTO = purchaseRequestResDTO;
-	}
-
-	public PurchaseRequestReqDTO getPurchaseRequestReqDTO() {
-		return purchaseRequestReqDTO;
-	}
-
-	public void setPurchaseRequestReqDTO(PurchaseRequestReqDTO purchaseRequestReqDTO) {
-		this.purchaseRequestReqDTO = purchaseRequestReqDTO;
-	}
-
-	public RequestNoteReqDTO getReqNoteDTO() {
-		return reqNoteDTO;
-	}
-
-	public void setReqNoteDTO(RequestNoteReqDTO reqNoteDTO) {
-		this.reqNoteDTO = reqNoteDTO;
-	}
-
-	public AuDPRequestnoteDTO getAuDPRequestnoteDTO() {
-		return auDPRequestnoteDTO;
-	}
-
-	public void setAuDPRequestnoteDTO(AuDPRequestnoteDTO auDPRequestnoteDTO) {
-		this.auDPRequestnoteDTO = auDPRequestnoteDTO;
 	}
 }
