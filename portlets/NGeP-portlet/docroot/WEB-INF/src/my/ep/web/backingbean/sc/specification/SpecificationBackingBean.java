@@ -239,6 +239,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.web.constant.sc.TreeNodeConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -22372,27 +22373,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	* @param .
 	* @return 
 	*/
-	private void getCategoryCodesForClone(){
-		
+	private void getCategoryCodesForClone() {
+
 		try {
-			
-			TreeNode rootNode = new DefaultTreeNode("root", null);
-			  Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
-			  for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class).retrieveCategoryL1List().getCategoryL1List()) {
-				  Map<Long, String> l1Map=new HashMap<>();
-				  l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
-				  for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
-					  Map<Long, Map<Long, String>> l2Map=new HashMap<>();
-					  l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
-					  addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
-					}
+
+			TreeNode rootNode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_ROOT, null);
+			Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
+			for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class)
+					.retrieveCategoryL1List().getCategoryL1List()) {
+				Map<Long, String> l1Map = new HashMap<>();
+				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
+				for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+					Map<Long, Map<Long, String>> l2Map = new HashMap<>();
+					l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
+					addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
+				}
 				this.getManagedBean().setRootCategoryTree(rootNode);
 				this.getManagedBean().setMapCatCode(mapCatCode);
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			String qtNo = this.getManagedBean().getQt() != null ? this.getManagedBean().getQt().getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
-					SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
@@ -22401,16 +22404,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			TreeNode rootNode) {
 		for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
-			TreeNode catCode = new DefaultTreeNode("catCode", pmCategoryL1.getCategoryL1Code()
-					+ pmCategoryL2.getCategoryL2Code() + pmCategoryL3.getCategoryL3Code(), rootNode);
-			TreeNode catDes1 = new DefaultTreeNode("catDes1", pmCategoryL1.getCategoryL1Code() + " - "
-					+ pmCategoryL1.getCategoryName(), catCode);
+			TreeNode catCode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATCODE,
+					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
+							+ pmCategoryL3.getCategoryL3Code(), rootNode);
+			TreeNode catDes1 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC1,
+					pmCategoryL1.getCategoryL1Code() + " - " + pmCategoryL1.getCategoryName(), catCode);
 			catDes1.setSelectable(false);
-			TreeNode catDes2 = new DefaultTreeNode("catDes2", pmCategoryL2.getCategoryL2Code() + " - "
-					+ pmCategoryL2.getCategoryName(), catCode);
+			TreeNode catDes2 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC2,
+					pmCategoryL2.getCategoryL2Code() + " - " + pmCategoryL2.getCategoryName(), catCode);
 			catDes2.setSelectable(false);
-			TreeNode catDes3 = new DefaultTreeNode("catDes3", pmCategoryL3.getCategoryL3Code() + " - "
-					+ pmCategoryL3.getCategoryName(), catCode);
+			TreeNode catDes3 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC3,
+					pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName(), catCode);
 			catDes3.setSelectable(false);
 
 			l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
