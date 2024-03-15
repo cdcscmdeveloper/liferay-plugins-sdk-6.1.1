@@ -3940,7 +3940,8 @@ public class SmApplicationUtil {
 				if (vo != null && vo.getOverlapCategoryVOList() != null
 						&& cat.getPmCategoryL1() != null
 						&& cat.getPmCategoryL2() != null
-						&& cat.getPmCategoryL3() != null) {
+						&& cat.getPmCategoryL3() != null
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 					String catcode = cat.getPmCategoryL1().getCategoryL1Code()
 							+ cat.getPmCategoryL2().getCategoryL2Code()
 							+ cat.getPmCategoryL3().getCategoryL3Code();
