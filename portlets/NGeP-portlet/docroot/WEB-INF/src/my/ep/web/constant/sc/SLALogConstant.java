@@ -45,6 +45,11 @@ public class SLALogConstant {
 	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
 	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
 	// #29187 End Vinod
+	//#29468 Start Vinod
+	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";
+	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
+	//#29468 End Vinod
+
 	
 	private SLALogConstant(){
 		

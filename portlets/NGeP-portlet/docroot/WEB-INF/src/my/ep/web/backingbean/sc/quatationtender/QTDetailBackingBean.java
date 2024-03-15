@@ -1166,6 +1166,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
+			//#21692 05/02/2024 - Start
+			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
+			if (selectedScQt.getResponsePeriod() != null &&
+					selectedScQt.getResponsePeriod() != result) {
+				selectedScQt.setResponsePeriod(result);
+			}
+			//#21692 05/02/2024 - End
 			if(!isApprovalScreen() || this.getManagedBean().getQt() == null){
 				this.getManagedBean().setQt(selectedScQt);
 			}
@@ -1262,7 +1269,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						this.getManagedBean().getQt().getFulfilmentType()
 								.getParameterCode());
 			}
-			this.getManagedBean().setGenInfo(true);
+			//Reopen #25726 note 221 - issue 8
+			if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					&& this.getManagedBean().isQtSpecMaintanance()) {
+				this.getManagedBean().setGenInfo(editable);
+			}else{
+				this.getManagedBean().setGenInfo(false);
+			}
+
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
@@ -4043,25 +4057,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		updateApprovalDetails(scQt);
 		
-		// #14398 - Start
-		if (null != getManagedBean().getPublicationApproval() 
-				&& CollectionUtils.isNotEmpty(getManagedBean().getPublicationApproval().getScQtApprovalRemarks())
-				&& getManagedBean().getPublicationApproval().getScQtApprovalRemarks().size() > 0) {
-			boolean remarkNotEmpty = true;
-			for (ScQtApprovalRemark approvalRemark : getManagedBean().getPublicationApproval().getScQtApprovalRemarks()) {
-				if (StringUtils.isEmpty(approvalRemark.getRemark())) {
-					remarkNotEmpty = false;
-					break;
-				}
-			}
-			
-			if (remarkNotEmpty) {
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setApproval(getManagedBean().getPublicationApproval());
-				getQTDetailSO().updateScQtApproval(reqDTO );
-			}
-		}
-		// #14398 - End
+		// Bug #35395 - Remove code #14398 - cater remark by publication approval to void duplicate
 		
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			// #30435- Start.
@@ -4520,9 +4516,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									|| approvalSettings.isEmpty()) {
 								approvalSettings = new ArrayList<ScQtApproverSettings>();
 								ScQtApproverSettings approverSettings = new ScQtApproverSettings();
-								approverSettings.setPmUser(new PmUser());
+								//#21692 Sync Approval PB with Committee Appointment PB - Start
+								approverSettings.setPmUser(scQt.getFinalizationSecratery());
 								approverSettings.setScQtApproval(qtApproval);
-								approverSettings.setCommitteeType(new PmParameter());
+								approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
+								//#21692 Sync Approval PB with Committee Appointment PB - End
 								approvalSettings.add(approverSettings);
 								qtApproval
 										.setApproverSettings(approvalSettings);
@@ -8542,7 +8540,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 */
 	public boolean enableFieldByStatusNFiledName(String fieldName) {
 		Long statusId = this.getManagedBean().getCurrentStatusId();
-
+		//#29732
+		if(statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)){
+			 statusId = getManagedBean().getQt().getQtStatus().getStatusId();
+		}
 		return enableFieldByStatusNFiledName(fieldName, statusId, 
 				getManagedBean().isMaintanceFlow(), 
 				!getManagedBean().isReadOnly());

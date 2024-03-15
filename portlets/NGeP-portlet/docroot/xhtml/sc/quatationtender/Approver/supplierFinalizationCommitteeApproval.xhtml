@@ -43,7 +43,7 @@
 							<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
 								disabled="#{approvalBackingBean.managedBean.readOnly}"
 								value="#{approvalBackingBean.managedBean.qt.chmnFinalizationDate}"
-								id="approvalDateChairperson" required="true"
+								id="approvalDateChairperson"
 								maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 								readonlyInput="true"
@@ -56,7 +56,6 @@
 								style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 							</p:inputText>
-							<p:message id="approvalDateChairpersonMsg" for="approvalDateChairperson" display="icon" />
 						</td>
 						<c:if test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true}"> 
 							<td style="width: 235px;">
@@ -66,7 +65,7 @@
 								<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
 									value="#{approvalBackingBean.managedBean.qt.mofDate}"
-									id="approvalDateMof" required="true"
+									id="approvalDateMof"
 									maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 									readonlyInput="true"
@@ -79,7 +78,6 @@
 									style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 								</p:inputText>
-								<p:message id="approvalDateMofMsg" for="approvalDateMof" display="icon" />
 							</td>
 						</c:if>
 					</tr>
@@ -299,7 +297,7 @@
 						<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.response.period']}" />
 					</td>
 					<td>
-						<p:inputText value="#{scQt.responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" />
+						<p:inputText value="#{approvalBackingBean.managedBean.scQtApprovalRequestList.get(0).responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip5']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
 					</td>
 					<td>

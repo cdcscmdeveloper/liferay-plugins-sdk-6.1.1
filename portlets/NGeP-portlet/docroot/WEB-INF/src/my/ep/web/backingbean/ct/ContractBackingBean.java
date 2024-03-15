@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -2455,7 +2454,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate()
 					.compareTo(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 0) {
-				throw new EpException(MessageConst.ERROR_760164);
+				throw new EpException(MessageConst.ERROR_750080);
 			}
 		}
 	}
@@ -2802,7 +2801,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		getManagedBean().getCtContractAmount().setBondExemptedFileName(item.getFileName());
 		getManagedBean().getCtContractAmount().setBondExemptedFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
+//		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
 	}
 
 	/**
@@ -4579,8 +4578,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-				|| getManagedBean().isViewContract() == true
-				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+				|| getManagedBean().isViewContract() == true)
+				&& isAlreadyAmendment() //#35137
+				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			isContractExtendOrIsBond = true;
 			getManagedBean().setDisableOriginalBond(true);
 			if(currentPeriod != null && extendPeriod != null) {
@@ -4609,14 +4609,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
 	 * */
 	public boolean isPendingSupplementalContractLetter(){
-		if(getManagedBean().getContractVer().getStatus().getStatusId() 
+		if(getManagedBean().getContractVer().getStatus() != null && //#25956
+				(getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue()){								
+				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue())){								
 			return true;
 		}
 		return false;
@@ -4903,4 +4904,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return Boolean.FALSE;
 	}
 	// End Fix - #35202
+	
+	//#35137 - Start
+	/**
+	 * Method to Checking Amendment process
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAlreadyAmendment() {
+		if(getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null){
+			if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+				getManagedBean().setDisableOriginalBond(true);
+				return true;
+			}				
+		}
+		return false;
+	}
+	//#35137 - End
 }
