@@ -13773,18 +13773,6 @@ if (null != checklist && !checklist.isEmpty()) {
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-	// #29732 Start - reOpen Fix
-			List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-					.getTobeRemoveCategoryCodes();
-			if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-				for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-					if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-						deleteCategoryCodesList.remove(i);
-					}
-				}
-			}
-			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-	//#29732 End - reOpen Fix
 
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
@@ -14669,20 +14657,6 @@ if (null != checklist && !checklist.isEmpty()) {
 		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 		 * IQTSpecSO.class);
 		 */
-// #29732 Start - reOpen Fix
-		if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
-		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-				.getTobeRemoveCategoryCodes();
-		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-					deleteCategoryCodesList.remove(i);
-				}
-			}
-		}
-		reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-		}
-//#29732 End - reOpen Fix
 		
 		// 29521 - start
 		if (null == reqDTO.getBackupScQt()) {
@@ -17390,18 +17364,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 		}
-// #29732 Start - reOpen Fix
-		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-				.getTobeRemoveCategoryCodes();
-		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-					deleteCategoryCodesList.remove(i);
-				}
-			}
-		}
-		spReqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-//#29732 End - reOpen Fix
+
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
