@@ -29,6 +29,9 @@
 	<ui:remove>Reopen #25726 note 110</ui:remove>
 	<ui:param name="StatusLOARevision" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
 	<ui:remove>#25726 end</ui:remove>
+	<ui:remove>Reopen #25726 note 220 - issue 1</ui:remove>
+	<ui:param name="StatusLOAApproval" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_APPROVAL || directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
+	<ui:remove>#25726 end</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -951,7 +954,7 @@
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{!StatusLOASubmission}">
+														disabled="#{!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 														<!-- #25726 START -->
@@ -964,7 +967,7 @@
 													<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.disabledButton() || !StatusLOASubmission}">
+														disabled="#{directLOABackingBean.disabledButton() || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
@@ -992,7 +995,7 @@
 																style="margin-bottom:5px;width:246px;"
 																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-																disabled="#{!StatusLOASubmission}">
+																disabled="#{!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval}">
 																<f:selectItems
 																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 																<!-- #25726 START -->
@@ -1022,7 +1025,7 @@
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.managedBean.disableFields || !StatusLOASubmission}">
+														disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
