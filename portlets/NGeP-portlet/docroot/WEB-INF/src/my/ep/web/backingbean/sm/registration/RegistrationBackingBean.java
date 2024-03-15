@@ -568,11 +568,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				setPersonnelToItem();
 				//Check Match identification with nationality
 				//check owner
+				//#29582 #30064 start
 				for(SmSupplierOwner owner:this.getManagedBean().getSmSuppOwners()){
 					if(owner.getNationality() == null){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC) 
-							&& !owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+							&& !owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)
+							&& owner.getIdentityResidentStatus().equals("M")
+							&& owner.getIdentityResidentStatus().equals("P")){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT) 
 							&& ((owner.getNationality().getCountryCode()
@@ -587,7 +590,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					if(director.getPmCountry() == null){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(director.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
-							&& !director.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+							&& !director.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)
+							&& director.getIdentityResidentStatus().equals("M")
+							&& director.getIdentityResidentStatus().equals("P")){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if (director.getIdentificationType().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
@@ -598,7 +603,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}
 				}
-			}
+			}//#29582 #30064 end
 		}else{
 			//STARt 27802
 			/*if(getManagedBean().getSmPersonnel()!=null){
@@ -5206,8 +5211,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
 					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-			}else{
-				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			}
+			if (!country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+				if (owner.getIdentityResidentStatus() != null) {
+					if (owner.getIdentityResidentStatus().equals("M") || owner.getIdentityResidentStatus().equals("P")) {
+						reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+					}
+				} else {
+					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+				}
 			}
 			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 		} else {
