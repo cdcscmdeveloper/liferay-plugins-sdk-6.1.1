@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -38,6 +39,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
@@ -892,9 +895,76 @@ public class FinancialOrgBackingBean extends
 //			if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
 //					&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
 		if(pmAddressType != null && !pmAddressType.isBrandNew() && pmAddressType.getAddressTypeId() != null){
-			log.info("updateMainAddress - update");			
+			log.info("updateMainAddress - update");	
+			
 			pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
 			
+			// #35489 - Start
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setAddressTypeId(pmAddressType.getAddressTypeId());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if (resDTO.getAddressTypeList() != null && !resDTO.getAddressTypeList().isEmpty()) {
+				for (PmAddressType addressType : resDTO.getAddressTypeList()) {
+					this.getManagedBean().setPmAddressClone(addressType.getPmAddress());
+					break;
+				}
+			}
+
+			if (pmAddressType.getPmAddress().getAddress2() != null
+					&& getManagedBean().getPmAddressClone().getAddress2() != null
+					&& !pmAddressType.getPmAddress().getAddress1()
+							.matches(getManagedBean().getPmAddressClone().getAddress1()) //check address 1
+					|| pmAddressType.getPmAddress().getAddress2() != null
+					&& getManagedBean().getPmAddressClone().getAddress2() != null
+					&& !pmAddressType.getPmAddress().getAddress2()
+							.matches(getManagedBean().getPmAddressClone().getAddress2()) //check address 2
+					|| pmAddressType.getPmAddress().getAddress3() != null
+					&& getManagedBean().getPmAddressClone().getAddress3() != null
+					&& !pmAddressType.getPmAddress().getAddress3()
+							.matches(getManagedBean().getPmAddressClone().getAddress3()) //check address 3
+					|| pmAddressType.getPmAddress().getPmDistrict().getDistrictId() != null
+					&& getManagedBean().getPmAddressClone().getPmDistrict().getDistrictId() != null
+					&& !pmAddressType.getPmAddress().getPmDistrict().getDistrictCode()
+							.matches(getManagedBean().getPmAddressClone().getPmDistrict().getDistrictCode()) //check district
+					|| pmAddressType.getPmAddress().getPmCity().getCityId() != null
+					&& getManagedBean().getPmAddressClone().getPmCity().getCityId() != null
+					&& !pmAddressType.getPmAddress().getPmCity().getCityCode()
+							.matches(getManagedBean().getPmAddressClone().getPmCity().getCityCode()) //check City
+					|| pmAddressType.getPmAddress().getPostcode() != null
+					&& getManagedBean().getPmAddressClone().getPostcode() != null
+					&& !pmAddressType.getPmAddress().getPostcode()
+							.matches(getManagedBean().getPmAddressClone().getPostcode()) //check Postcode
+					|| pmAddressType.getPmAddress().getPhoneCountry() != null
+					&& getManagedBean().getPmAddressClone().getPhoneCountry() != null
+					&& !pmAddressType.getPmAddress().getPhoneCountry()
+							.matches(getManagedBean().getPmAddressClone().getPhoneCountry())  //check PhoneCountry
+					|| pmAddressType.getPmAddress().getPhoneArea() != null
+					&& getManagedBean().getPmAddressClone().getPhoneArea() != null
+					&& !pmAddressType.getPmAddress().getPhoneArea()
+							.matches(getManagedBean().getPmAddressClone().getPhoneArea()) //check PhoneArea
+					|| pmAddressType.getPmAddress().getPhoneNo() != null
+					&& getManagedBean().getPmAddressClone().getPhoneNo() != null
+					&& !pmAddressType.getPmAddress().getPhoneNo()
+							.matches(getManagedBean().getPmAddressClone().getPhoneNo()) //check PhoneNo
+					|| pmAddressType.getPmAddress().getFaxCountry() != null
+					&& getManagedBean().getPmAddressClone().getFaxCountry() != null
+					&& !pmAddressType.getPmAddress().getFaxCountry()
+							.matches(getManagedBean().getPmAddressClone().getFaxCountry()) //check FaxCountry
+					|| pmAddressType.getPmAddress().getFaxArea() != null
+					&& getManagedBean().getPmAddressClone().getFaxArea() != null
+					&& !pmAddressType.getPmAddress().getFaxArea()
+							.matches(getManagedBean().getPmAddressClone().getFaxArea()) //check FaxArea
+					|| pmAddressType.getPmAddress().getFaxNo() != null
+					&& getManagedBean().getPmAddressClone().getFaxNo() != null
+					&& !pmAddressType.getPmAddress().getFaxNo()
+							.matches(getManagedBean().getPmAddressClone().getFaxNo())) { //check FaxNo
+				pmAddressType.getPmAddress().setChangedBy(getUserIdSessionFromLoginId());
+			}
+			// #35489 - End
+						
 			if(pmAddressType.getPmContacts()==null){
 				pmAddressType.setPmContacts(new ArrayList<PmContact>());
 			}
