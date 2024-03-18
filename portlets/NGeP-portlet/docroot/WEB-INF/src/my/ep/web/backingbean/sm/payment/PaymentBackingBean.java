@@ -356,6 +356,19 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			payment.setPyPaymentOrder(pymtOrder);
 			// }
+			
+			//#34964- start			
+			Iterator<PyBillDtl> newPyBillDtls = payment.getPyBill().getPyBillDtls().iterator();
+			while (newPyBillDtls.hasNext()) {
+				PyBillDtl billDtls = newPyBillDtls.next(); 
+				for(PyBillDtl PyBillDtl : this.getManagedBean().getNewPyBillDtlLs()){
+					if(!PyBillDtl.getBillDtlId().equals(billDtls.getBillDtlId())){
+						billDtls.setRecordStatusFlg(Integer.valueOf(0));
+						billDtls.setRecordStatus(false);
+					}	
+				}
+			}
+			//#34964- end
 
 			List<PyPayment> pyPaymentLs = new ArrayList<PyPayment>();
 			pyPaymentLs.add(payment);
