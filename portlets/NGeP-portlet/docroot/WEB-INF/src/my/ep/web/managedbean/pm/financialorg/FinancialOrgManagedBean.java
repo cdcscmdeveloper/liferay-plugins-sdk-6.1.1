@@ -42,10 +42,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	private PmAddress pmAddress;
 	private PmContact contactPerson;
 	private PmAddressType addressType;
-	//#35489 - Start
-	private PmAddress pmAddressClone;
-	//#35489 - End
-
 	
 	// General
 	private boolean showParentMsg;
@@ -342,15 +338,4 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 		this.facCompanyInformation = facCompanyInformation;
 	}
 	// #29487 - View bank details by factoring user_endorsed - End
-	
-	// #35489 - Start
-	public PmAddress getPmAddressClone() {
-		return pmAddressClone;
-	}
-
-	public void setPmAddressClone(PmAddress pmAddressClone) {
-		this.pmAddressClone = pmAddressClone;
-	}
-	// #35489 - End
-	
 }
