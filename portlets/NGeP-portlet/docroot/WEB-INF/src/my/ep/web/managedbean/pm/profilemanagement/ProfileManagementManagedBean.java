@@ -94,8 +94,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean isUserStatusChange = false;
 	//#35489 - End
 
-
-
 	public ProfileManagementManagedBean(){}
 	
 	/**
