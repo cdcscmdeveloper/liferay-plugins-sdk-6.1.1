@@ -3,11 +3,12 @@ package my.ep.web.backingbean.sc.audit;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
 import my.ep.dto.sc.audit.AuDPRequestNoteDetailSPDTO;
 import my.ep.dto.sc.audit.AuDPRequestNoteSPDTO;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.web.constant.sc.dp.audit.AuditDPRequestNoteConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 
