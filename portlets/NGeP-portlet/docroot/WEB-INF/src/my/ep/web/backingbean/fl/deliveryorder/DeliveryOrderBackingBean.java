@@ -753,7 +753,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
 					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
-						String[] outcome = new String[this.getManagedBean().getOutComes().length - 1];
+						String[] outcome = new String[1];
 						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
 						this.getManagedBean().setOutComes(outcome);
 					}
