@@ -6451,7 +6451,7 @@ public class SmCommonUtil {
 					fc.getUserSessionBean().getUserId(), true, true).getApplList();
 		}
 		if(list.isEmpty()){
-			return null;
+			return list;
 		}
 		
 		StatusReqDTO statReqDTO = new StatusReqDTO();

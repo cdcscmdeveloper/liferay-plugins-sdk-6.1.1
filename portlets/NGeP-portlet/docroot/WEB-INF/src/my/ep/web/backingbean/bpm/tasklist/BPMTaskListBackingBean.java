@@ -1425,10 +1425,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			getManagedBean().setRoleType("PO");
 		}
 		//29810 - start
-		//#32304 - start
-		getManagedBean().setCancelledBumiApplLs(SmCommonUtil.getCancelledBumiApplList(false));
-		RequestContext.getCurrentInstance().update("cancelledBumiList");
-		//#32304 - end
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
@@ -1870,5 +1866,12 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 
 	// 29810 - end
+	//#32304
+	public void getCancelledBumiApplList(){
+		if(getManagedBean().getCancelledBumiApplLs() == null){
+			getManagedBean().setCancelledBumiApplLs(SmCommonUtil.getCancelledBumiApplList(false));
+		}
+		getManagedBean().getBumiListDataModel().reloadDatatable();
+	}
 }
 
