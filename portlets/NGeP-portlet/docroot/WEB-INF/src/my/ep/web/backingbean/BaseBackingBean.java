@@ -761,7 +761,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getDropdownValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1269,7 +1269,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				//33849-End
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBean", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -4019,7 +4019,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(isLatestCatCodeDesc(isSupplierProfile)
+		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
 				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
 			return catL3.getCategoryName();
 		}
@@ -4041,7 +4041,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile){
-		SmAppl appl = getManagedBean().getSmAppl();
+		return isLatestCatCodeDesc(isSupplierProfile, getManagedBean().getSmAppl());
+	}
+	
+	/**
+	 * @param isSupplierProfile
+	 * @param appl
+	 * @return
+	 */
+	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
+		if(appl == null || appl.getPmStatus() == null){
+			return false;
+		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);

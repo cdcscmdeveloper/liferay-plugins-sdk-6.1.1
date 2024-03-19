@@ -70,7 +70,7 @@ public class SSTConstant {
 		public static final String SUBJECT_TITLE = "subTitle";
 		public static final String SIGN_PERCENTAGE = "%";
 		public static final String SIGN_RINGGIT = "RM";
-		public static final String UNDERLINE = "______________________________";
+		public static final String UNDERLINE = "_____________________________";
 		public static final String BOND_PERCENTAGE_TEXT = "bondPercentageText";
 		public static final String BOND_PERCENTAGE = "bondPercentage";
 		public static final String BOND_AMOUNT = "bondAmt";
@@ -89,7 +89,7 @@ public class SSTConstant {
 		public static final String LINE_BREAK = "\n";
 		public static final String BUMIPUTERA = "Bumiputera";
 		public static final String BUKAN_BUMIPUTERA = "Bukan Bumiputera";
-		public static final String UNDERLINE_BOND_AMT = "___________________________";
+		public static final String UNDERLINE_BOND_AMT = "__________________________";
 		public static final String PROTEGE_UPPERCASE_E = "&#201;";
 		public static final String PROTEGE_LOWERCASE_E = "&#233;";
 		public static final String LESS_THAN_SYMBOL = "&#60;";
@@ -97,5 +97,45 @@ public class SSTConstant {
 		public static final String AND_SYMBOL = "&#38;";
 		public static final String BREAKLINE ="<br />";
 		//25025 - end
-	
+		//29006 start
+		
+		/**
+		 * Represent fulfilment type code for Lampiran A3 
+		 */
+		public static final String CL_FULFILMENT_TYPE_CODE = "clFulfilmentTypeCode";
+		/**
+		 * Represent value for month duration in Lampiran A3
+		 */
+		public static final String CL_DURATION_MONTH = "clDurationMonth";
+		/**
+		 * Represent value for supplier offer in Lampiran A3
+		 */
+		public static final String SUPPLIER_OFFER = "supplierOffer";
+		/**
+		 * Contain total zone in Lampiran A3.
+		 * Total zone is required to merge the table data for zonal
+		 */
+		public static final String ZONE_SIZE = "ZoneSize";
+		/**
+		 * Contain total specification available for the item.
+		 *
+		 */
+		public static final String SPEC_SIZE = "sizeSpec";
+		/**
+		 * A flag to validate if the item is WIP.
+		 */
+		public static final String IS_WIP = "isWip";
+		/**
+		 * A flag to validate if the item is the last item in the list.
+		 * This flag to merge the last column for supplier offer to prevent
+		 * the table border missing at the bottom. 
+		 */
+		public static final String LAST_INDEX_WIP = "lastIndexWip";
+		/**
+		 * Represent HTML Entity line break.
+		 */
+		public static final String HTML_ENTITY_LINE_SEPARATOR = "<br/>";
+
+		//29006 end
+		
 }

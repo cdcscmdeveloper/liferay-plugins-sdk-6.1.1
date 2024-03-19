@@ -2416,36 +2416,10 @@ public class SupplierFinalizationBackingBean extends
 				// #25638 - End. 
 		        ) {
 			this.getManagedBean().setSubmit(true);
-			
-			// Bug #32682 start
-			boolean isSecretaryUser = this.getManagedBean().isSecretaryUser();
-			if (isSecretaryUser
-					&& (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId) || QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION
-							.equals(currentStatusId))) {
-				if (scQtFinalization.getLoiLoaBy() != null) {
-					if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(
-							SourcingConstants.SC_LETTER_CREATOR_SECRETARY)) {
-						scQtFinalization.setLoiLoaById(getUserIdSessionFromLoginId());
-					} else if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(
-							SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
-						scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(scQtFinalization.getScQt()
-								.getQtId()));
-					}
-				}
-			}
-			// Bug #32682 end
 		}
-		
-		// #27502 & #34921 - Start
-		if(QTStatusConst.SF_MOF_COMMITTEE .equals(currentStatusId) && 
-				scQtFinalization.getLoiLoaBy() != null && 
-				scQtFinalization.getLoiLoaBy().equalsIgnoreCase(
-						SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
-				scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(
-			    scQtFinalization.getScQt().getQtId()));
-		}
-		// #27502 & #34921 - End
-
+		// Bug #32682 #27502 & #34921 - Start
+		setUserLoiLoaPreparedBy(scQtFinalization, currentStatusId);
+		// Bug #32682 #27502 & #34921 - End
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 		// #18685-Start.
@@ -8200,6 +8174,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isAward = false;
 		boolean supplierSelected = true;
 		boolean minSuppliersExist = true;
+		int isNotSelectedRadioButton = 0;//#28834
 		TplSpecZoneDtl zoneDtl = scQtRecommend.getTplSpecZoneDtl();
 		PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
 											.getFinalizationMethod();
@@ -8237,21 +8212,24 @@ public class SupplierFinalizationBackingBean extends
 			if (!minSuppliersExist) {
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
-			} 
-			//#28834 - Start
-			else if(!supplierSelected && minSuppliersExist){ 
-				throw new EpException(MessageConst.ERROR_760206);
-			} 
-			//#28834 - End
-			else {
+			} else {
 				//#21695 allow no records validation start
 				if(CollectionUtils.isNotEmpty(
 						scQtRecommend.getRecommendDtls())){
 					throw new EpException(MessageConst.ERROR_760206);
 				}
 				//#21695 allow no records validation end
+				//#28834 - Start
+				isNotSelectedRadioButton++;
+				//#28834 - End
 			}
-		}		
+		}	
+		
+		//#28834 - Start
+		if(!supplierSelected && (isNotSelectedRadioButton > 0)){ 
+		   throw new EpException(MessageConst.ERROR_760206);
+		} 
+		//#28834 - End
 	}
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
@@ -10660,11 +10638,9 @@ public class SupplierFinalizationBackingBean extends
 					// need to set Keputusan report at time of Endorsement and signOff status
 					// #28834- Start.
 					// #34410 - Start
-					ScQt scQt = this.getManagedBean().getScQt();
 					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-					qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-					scQt = qtBackingBean.getManagedBean().getQt();
-					if (!isBpkCentralContract(scQt)) {// #34410 - End
+					qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+					if (!isBpkCentralContract(qtBackingBean.getManagedBean().getQt())) {// #34410 - End
 						this.getManagedBean().getScQtFinalization()
 						.getScQtFinalizationReports()
 						.addAll(this.getManagedBean().getEndorsementReports());
@@ -11399,30 +11375,44 @@ public class SupplierFinalizationBackingBean extends
 	}
 	//6906 note 117 - end
 	
+	// Bug #32682 #27502 & #34921 - Start
+	/**
+	 * to set user id for LoiLoaById based on LoiLoaBy
+	 * @param scQtFinalization
+	 * @param currentStatusId
+	 */
+	private void setUserLoiLoaPreparedBy(ScQtFinalization scQtFinalization, Long currentStatusId) {
+		if (scQtFinalization.getLoiLoaBy() != null
+				&& (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
+					|| QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(currentStatusId) 
+					|| QTStatusConst.SF_MOF_COMMITTEE.equals(currentStatusId))) {
+			if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(SourcingConstants.SC_LETTER_CREATOR_SECRETARY)) {
+				scQtFinalization.setLoiLoaById(getUserIdSessionFromLoginId());
+			} else if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+				scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(scQtFinalization.getScQt().getQtId()));
+			}
+		}
+	}
+	// Bug #32682 #27502 & #34921 - end
+	
 	//Bug #32682 start
 	private Long getActorUserIdByQtIdAndRoleCode(Long qtId) {
 		Long userId = null;
-		IScActorSO actorSO = null;
-		try {
-			actorSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+		IScActorSO actorSO =  EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 
-			ScActorReqDTO reqDTO = new ScActorReqDTO();
-			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-			reqDTO.setDocId(qtId);
-			reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+		ScActorReqDTO reqDTO = new ScActorReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		reqDTO.setDocId(qtId);
+		reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 
-			ScActor scActor = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO)
-					.getScActor();
+		ScActor scActor = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO)
+				.getScActor();
 
-			if (scActor != null) {
-				userId = scActor.getUserId();	
-			}
-			return userId;
-
-		} finally {
-			actorSO = null;
+		if (scActor != null) {
+			userId = scActor.getUserId();	
 		}
+		return userId;
 	}
 	//Bug #32682 end
 	

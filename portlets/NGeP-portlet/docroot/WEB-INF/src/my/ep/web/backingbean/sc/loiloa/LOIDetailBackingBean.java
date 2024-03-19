@@ -792,14 +792,14 @@ public class LOIDetailBackingBean extends
 								}
 							}
 							
-							if (!isZonal && (previousLois != null && (CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-									!previousLois.contains(scLoi)))) {
+							if (!isZonal && ((CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+									!previousLois.contains(scLoi)))) {//fixedNullpointerIssueSonarQube
 									if (supplierLoiLoaItemsMap == null) {
 										supplierLoiLoaItemsMap = new HashMap<>();
 									}
 									Long supplierId = scLoi.getScLoiLoa().getSmSupplier().getSupplierId();
-									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());								
-								
+									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());	
+																								
 							}
 						}
 					}
@@ -6713,7 +6713,7 @@ public class LOIDetailBackingBean extends
 	* @param supplier id 
 	* @return true or false
 	**/
-	public boolean disableRadioButtonIfSupplierBranchDeleted(ScQtEvaluationResult qtEvaluationResult){
+	public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(ScQtEvaluationResult qtEvaluationResult){
 	
 		Long supplierId = qtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
 		ScQt scQt = this.getManagedBean().getScQt();
@@ -6721,10 +6721,8 @@ public class LOIDetailBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 		
-		if(supplierId != null && scQt != null){
-		    if(qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
-			    return Boolean.TRUE;
-	        }
+		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
+			return Boolean.TRUE;
 	    }
 		return Boolean.FALSE;
 	}
