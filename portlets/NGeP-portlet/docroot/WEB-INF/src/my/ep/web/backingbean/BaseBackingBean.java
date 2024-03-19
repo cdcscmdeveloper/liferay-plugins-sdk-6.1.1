@@ -4128,7 +4128,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		if(isFullName){
 			return sCat.getCategoryL1Name()+" / "+sCat.getCategoryL2Name()+" / "+sCat.getCategoryL3Name();
-	}
+		}
 		return sCat.getCategoryL3Name();
 	}
 	

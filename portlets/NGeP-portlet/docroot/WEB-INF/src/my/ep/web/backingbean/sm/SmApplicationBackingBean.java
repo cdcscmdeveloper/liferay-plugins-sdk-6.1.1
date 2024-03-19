@@ -7235,9 +7235,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		for(SmSvWorker worker : selectedWorkers){
 			getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().remove(worker);
 			if(worker.getSvWorkerId() != null){
-				SmSvWorker worker2 = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
+				SmSvWorker deletedWorker = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
 						worker.getIdentificationNo(), getManagedBean().getDeletedWorkers(), "identificationNo");
-				if(worker2 == null){
+				if(deletedWorker == null){
 					getManagedBean().getDeletedWorkers().add(worker);
 				}
 			}

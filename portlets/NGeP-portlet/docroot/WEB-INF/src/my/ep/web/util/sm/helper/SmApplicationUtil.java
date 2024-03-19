@@ -15475,16 +15475,17 @@ public class SmApplicationUtil {
 	
 	//28778 - Site Visit Grouping Enhancement -28775 - start
 	/**
-	 * 
 	 * @param appl
-	 * @return
+	 * @return true if appl has special category codes
 	 */
 	public static boolean hasSpecialCategory(SmAppl appl){
 		if(appl == null || appl.getSmSupplierCategories() == null){
 			return false;
 		}
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL,
+				DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		for(SmSupplierCategory suppCat : appl.getSmSupplierCategories()){
-			if (suppCat.isSpecialCategory()){
+			if (suppCat.isSpecialCategory() && validStatus.contains(suppCat.getRecordStatusFlg())){
 				return true;
 		    }
 		}
