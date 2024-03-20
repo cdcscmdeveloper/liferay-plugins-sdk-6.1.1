@@ -1633,8 +1633,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// #26474 - end
 
 		// Acknowledge Date
-		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
-			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) 
+		   //|| BpmOutcomeConst.BPM_SUBMIT.equals(outcome) //20230111@Haziq - #12487
+				){
+			//20230111@Haziq - #12487
+			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			Integer loaRespPeriod = scLoa.getLoaResponsePeriod();
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
 
@@ -5036,14 +5040,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		scLoa.setOverallContractAmt(overallCtAmout);
 		
 		// Acknowledge Date
-		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
+		//20230111@Haziq - #12487
+		/*if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
 				.getPmStatus().getStatusId().longValue()) ||
 				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
 						.getPmStatus().getStatusId().longValue())) {
 			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
-		}
-
+		}*/
+		
 		TemplateSpecBean bean = new TemplateSpecBean(
 				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 
@@ -12583,7 +12588,18 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
     	ScLoa scLoa = getManagedBean().getScLoa();
     	Date dueDate = null;
     	
-       if (scLoa != null && scLoa.getLoaResponsePeriod() != null && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
+    	  if (scLoa != null){
+    	  	  Long statusId = scLoa.getPmStatus().getStatusId();
+    	  	  if ( QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) ||
+    					QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
+    	  		  scLoa.setAckDueDate(null);
+    	  	  }else if (scLoa.getLoaResponsePeriod() != null){
+    	  		  dueDate = DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), scLoa.getLoaResponsePeriod());
+    	 		      //scLoa.setAckDueDate(dueDate);
+    	  	  }
+    	    }
+    	  
+     /*  if (scLoa != null && scLoa.getLoaResponsePeriod() != null && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
 				.getPmStatus().getStatusId()) ||
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(scLoa
 						.getPmStatus().getStatusId()))) {
@@ -12594,7 +12610,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
 						.getPmStatus().getStatusId()))) {
     	   scLoa.setAckDueDate(null);
-       }
+       }*/
 	
 	  return dueDate;
 	}
