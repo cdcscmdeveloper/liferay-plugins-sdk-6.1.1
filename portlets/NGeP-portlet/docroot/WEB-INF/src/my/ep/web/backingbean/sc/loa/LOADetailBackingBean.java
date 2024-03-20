@@ -12118,7 +12118,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
     	
     	//String date = "";
     	//Date dueDate = null;
-       if (scLoa != null && scLoa.getLoaResponsePeriod() != null && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
+      if (scLoa != null){
+    	  Long statusId = scLoa.getPmStatus().getStatusId();
+    	  if ( QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) ||
+  				QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
+    		  scLoa.setAckDueDate(null);
+    	  }else if (scLoa.getLoaResponsePeriod() != null){
+    		  dueDate = DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), scLoa.getLoaResponsePeriod());
+   		      //scLoa.setAckDueDate(dueDate);
+    	  }
+      }
+    	
+    	
+      /* if (scLoa != null &&  && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
 				.getPmStatus().getStatusId()) ||
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(scLoa
 						.getPmStatus().getStatusId()))) {
@@ -12129,7 +12141,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
 						.getPmStatus().getStatusId()))) {
     	   scLoa.setAckDueDate(null);
-       }
+       }*/
 		
 	  return dueDate;
 	}
