@@ -389,14 +389,16 @@ u.underline {
 							</tr>
 						</table>
 						##26770 - start
+						## #25025 #478 - start
 						<table width="80%" align="center">
 							<tr>
 								<td style="margin-bottom:1px;"><span class="text_family_medium">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;-RTW, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span><br/>
-								<span class="text_family_medium">**Elaun PROT&Eacute;G&Eacute; (RM2,000 seorang x 12 bulan)</span> 
+								<span class="text_family_medium">**Elaun PROT&Eacute;G&Eacute;-RTW (RM2,000 seorang x 12 bulan)</span> 
 								</td>
 							</tr>
 						</table>
 						##26770 - end
+						## #25025 #478 - end
 					</p>
 						
 				#else
@@ -470,12 +472,14 @@ u.underline {
 						</p>
 					#end		
 					<p>
+					## #25025 #478 - start
 					## 8
 						#set ($numberCount = $numberCount+1)
-						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan Program Kolaborasi Industri (Industrial Collaboration Program (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
+						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
 					</p>
 					
 					<p>
+					## #25025 #478 - end
 					## 9
 						#set ($numberCount = $numberCount+1)
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah merujuk dan mengadakan perbincangan lebih lanjut dengan pihak Technology Depository Agency (TDA)** sebagai agensi pelaksana bagi menentu dan memuktamadkan butiran projek-projek ICP untuk dimasukkan di dalam Perjanjian Utama ICP yang akan ditandatangani antara pihak Kerajaan dengan Syarikat Tuan secara bersama dengan Kontrak Perolehan Utama.</span>
@@ -571,10 +575,12 @@ u.underline {
 					</div>
 
 					## #25025 & #26770 -start
+					## #25025 #478 - start
 					#set($numberCount = $numberCount+1)
 					#set ($prevNumberCount = $numberCount - 1)
 					<p>
-						<span class="text_family">$numberCount.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di <span class="text_family_red">*perenggan #if ($isSL1M == "true")9 #{else}8 #end (sekiranya perolehan tidak melibatkan ICP)/*perenggan #if ($isSL1M == "true")13 #{else}12 #end (sekiranya perolehan melibatkan ICP)</span>, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+						<span class="text_family" style="margin-bottom:0px">$numberCount.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di <span class="text_family_red">*perenggan #if ($isSL1M == "true")9#{else}8#end/*perenggan #if ($isSL1M == "true")13#{else}12#end</span>, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+						<br/><span class="text_family_small">*perenggan 8 sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan 12 sekiranya perolehan melibatkan ICP </span>
 					</p>
 					#set($numberCount = $numberCount+1)
 					<p>
@@ -586,6 +592,7 @@ u.underline {
 						Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
 					</p>
 				## #25025 & #26770 -end
+				## #25025 #478 - end
 			</td>
 		</tr>
 		
@@ -921,7 +928,9 @@ u.underline {
 						class="text_family_red">7.2 Formula Bon Pelaksanaan </span></td>
 					<td class="text_family_red">:</td>
 					## #34168 - start
-					<td class="text_family">Formula</td>
+					## #25025 #478 - start
+					<td class="text_family_red">2.5% atau 5% daripada nilai kontrak setahun</td>
+					## #25025 #478 - end
 					## #34168 - end
 				</tr>
 				<tr>
@@ -1250,10 +1259,10 @@ u.underline {
 						(u.p.: Pengarah Bahagian Cukai Dalam Negeri (SST)) 
 					</span>
 				</p>
-				
+				## #25025 #478 - start
 				<p style="text-align:left;">
 					<span class="text_family">
-						Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;)<br/>
+						Sekretariat Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;)<br/>
 						Aras 2, Blok E4/5, Parcel E<br/>
 						Kementerian Pembangunan Usahawan<br/>
 						Pusat Pentadbiran Kerajaan Persekutuan<br/>
@@ -1261,6 +1270,7 @@ u.underline {
 						(u.p.: Ketua Sekretariat PROT&Eacute;G&Eacute;)
 					</span>
 				</p>
+				## #25025 #478 - end
 				## #25025 - start
 				<p style="text-align:left;">
 				   <span class="text_family">
