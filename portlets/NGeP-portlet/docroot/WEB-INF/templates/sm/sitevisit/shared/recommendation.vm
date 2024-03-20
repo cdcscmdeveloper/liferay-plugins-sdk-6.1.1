@@ -111,7 +111,7 @@
 
 #if(!$svTask.smAppl.siteVisitGroup)
 	<table>
-		<tr><td class="txtBold"><u>Company Information Update(If any changes)</u></td></tr>
+		<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.officeloc.cmpny.info.update.any')</u></td></tr>
 	
 		#if($review)
 			<tr><td>$!svTask.companyInfoUpdate</td></tr>
@@ -163,11 +163,15 @@
 			#end
 			</tr>
 		#else
-			<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td></tr>
-			<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td></tr>
+			<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td></tr>
+			<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td></tr>
 		#end
 #else
-		<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td></tr>
-		<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td></tr>
+		<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td>
+			<td class="txtBold">$smVmUtil.getDescByLabel('lbl.pm.contact.name')</td></tr>
+		<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td>
+			<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date')</td></tr>
 #end
 </table>

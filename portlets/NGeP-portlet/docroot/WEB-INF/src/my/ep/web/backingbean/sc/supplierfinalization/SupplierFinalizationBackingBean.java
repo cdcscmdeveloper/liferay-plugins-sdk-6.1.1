@@ -3998,6 +3998,33 @@ return	remarksNotFound;
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 
 				} else {
+					
+					//#12487 
+					//send notification
+				
+					 if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && 
+						  ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(this.getManagedBean().getFinalizationMethod())){
+						
+						if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION) || 
+							 currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)){				
+							//send prepare LOI
+							prepareNotification(CommonConstants.LOI);
+						}else if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+								   currentStatusId.equals(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION)){				
+							//send prepare LOA
+							prepareNotification(CommonConstants.LOA);
+						}
+					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+						//#12487 - start Notification to prepare LOA (without LOI)
+						if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+							currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
+							currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)){				
+							//send prepare LOI/LOA
+							prepareNotification(CommonConstants.LOILOA);
+						}
+					 }
+					//#12487 - end
+					
 					successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
 							.getQtNo(), Boolean.TRUE);
 				}
@@ -4297,6 +4324,15 @@ return	remarksNotFound;
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 		downloadFile(reportAttachment);
+		
+		// Bug #35485@Syazani 08/02/2024 -- Start
+		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
+		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+				.getDocDefinitionKey();
+		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+			regenEvaluationDownload(reportAttachment, true);
+		}
+		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
 	// #18685 - Start
@@ -5207,38 +5243,44 @@ return	remarksNotFound;
 		
 		if (CollectionUtils.isNotEmpty(recommendedItems) && 
 								shortlistedSuppliers != null) {
-			ScQtRecommend scQtRecommend = recommendedItems.get(0);
-
-			Long specZoneId = scQtRecommend.getTplSpecZoneDtl() != null ? 
-					scQtRecommend.getTplSpecZoneDtl().getSpecZoneId() : 0L;
 			for (ScQtEvaluationResultDtl evalResDtl 
 									: shortlistedSuppliers) {
+				//35563 - start - move code to check for all recommend
+				for(ScQtRecommend scQtRecommend: recommendedItems){
+					// Disable selection for rejected supplier.
+					boolean supplierDisabled = false;
+					Long specZoneId = scQtRecommend.getTplSpecZoneDtl() != null ? 
+							scQtRecommend.getTplSpecZoneDtl().getSpecZoneId() : 0L;
+					if (scQtRecommend.getRecommendDtls() != null) {
+						Long evaZoneId = evalResDtl.getTplSpecZoneDtl() != null ? 
+								evalResDtl.getTplSpecZoneDtl().getSpecZoneId() : 0L;
+								
+								
+						for (ScQtRecommendDtl recommendDtl 
+										: scQtRecommend.getRecommendDtls()) {
+							Long recommendDtlId = recommendDtl.getRecommendDtlId();
+							Long supplierId = recommendDtl.getSupplier().getSupplierId();
+							if (recommendDtlId != null
+									&& supplierId != null
+									&& supplierId.compareTo(evalResDtl
+											.getQtEvaluationResult()
+											.getScQtProposal().getScQtSupplier()
+											.getSmSupplier().getSupplierId()) == 0
+									&& specZoneId.equals(evaZoneId)
+									&& (recommendDtl.getRecordStatusFlg().equals(
+												DbValueConst.RECORD_STATUS_REJECTED))) {
+								// 11134 - add new param
+								resetSupplierSelectionAndDisable(recommendDtl, evalResDtl);
+								supplierDisabled = true;
+								break;
+							}
+						} 
+						if(supplierDisabled)
+							break; 
+					} 
+				} 
+				//35563 - end - move code to check for all recommend
 				
-				// Disable selection for rejected supplier.
-				if (scQtRecommend.getRecommendDtls() != null) {
-					Long evaZoneId = evalResDtl.getTplSpecZoneDtl() != null ? 
-							evalResDtl.getTplSpecZoneDtl().getSpecZoneId() : 0L;
-							
-							
-					for (ScQtRecommendDtl recommendDtl 
-									: scQtRecommend.getRecommendDtls()) {
-						Long recommendDtlId = recommendDtl.getRecommendDtlId();
-						Long supplierId = recommendDtl.getSupplier().getSupplierId();
-						if (recommendDtlId != null
-								&& supplierId != null
-								&& supplierId.compareTo(evalResDtl
-										.getQtEvaluationResult()
-										.getScQtProposal().getScQtSupplier()
-										.getSmSupplier().getSupplierId()) == 0
-								&& specZoneId.equals(evaZoneId)
-								&& (recommendDtl.getRecordStatusFlg().equals(
-											DbValueConst.RECORD_STATUS_REJECTED))) {
-							// 11134 - add new param
-							resetSupplierSelectionAndDisable(recommendDtl, evalResDtl);
-							break;
-						}
-					}
-				}
 				//#33793 - start
 				if (isQTRefinalized()){
 					getManagedBean().setHaveSupplierRejection(true);
@@ -10152,14 +10194,28 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
 		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-					.get(i).getScQtFinalizationReportAttachment();
+			// Bug #35485@Syazani 08/02/2024 -- Start
+			ScQtFinalizationReport scQtFinalizationReport = scQtFinalizationReports.get(i);
+			ScQtFinalizationReportAttachment attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument() != null ? scQtFinalizationReport
+					.getPmDocument().getDocDefinitionKey() : "";
+			// Bug #35485@Syazani 08/02/2024 -- End
+					
 			if (attachment == null) {
 				attachment = generateDocumentAttachment(scQtFinalizationReports
 						.get(i));
 				scQtFinalizationReports.get(i)
 						.setScQtFinalizationReportAttachment(attachment);
 			}
+			
+			// Bug #35485@Syazani 08/02/2024 -- Start
+			File file = new File(getActualFilePath(attachment));
+			if (file.exists() && file.length() <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(attachment, false);
+			}
+			// Bug #35485@Syazani 08/02/2024 -- End
+			
+			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			scAttachments.add(attachment);
 		}
 
@@ -11631,5 +11687,47 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
 	}
 	//35157 - end
+	
+	//#12487 - start Prepare LOI/LOA Notification
+	public void prepareNotification(String docType){
+		FacesScopes facesScopes = new FacesScopes();
+		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
+		suppFinalizationReqDTO.setScQt(this.getManagedBean().getScQt());
+		suppFinalizationReqDTO.setUserLocale(facesScopes.getUserLocale());
+		
+	
+		long currentUser = new FacesScopes().getUserSessionBean().getUserId();
+		long assignUser = 12345678910L;
+
+		
+		if (getManagedBean().getScQtFinalization() != null && 
+			getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
+				assignUser = getManagedBean().getScQtFinalization().getLoiLoaById();				
+			
+		}		
+			
+			Long profileId = suppFinalizationReqDTO.getScQt().getPmOrgProfile().getOrgProfileId();
+			Date createdDate = this.getManagedBean().getScQtFinalization().getCreatedDate();
+			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+			String ptjCode = retrievePTJCodeByOrgProfileId(profileId, createdDate);
+			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+			log.info(ptjName);
+			log.info(ptjCode);
+			log.info(ministryName);
+		
+		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.DASHBOARD);
+		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.EMAIL);
+	}
+	//#12487 - end
+	
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	private void regenEvaluationDownload(ScAttachment reportAttachment, boolean downloadable) throws Exception {
+		String fileName = StringUtils.isNotBlank(reportAttachment.getFileName()) ? reportAttachment.getFileName() : "";
+		fileName = CustomUtils.getInstance().removeFileExtension(fileName);
+		this.getManagedBean().setReportDownloadFileName(fileName);
+		downloadAllReports(getManagedBean().getScQt(), "evaluation", reportAttachment, downloadable);
+	}
+	// Bug #35485@Syazani 08/02/2024 -- End
 }
 // ***19336

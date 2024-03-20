@@ -239,6 +239,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.web.constant.sc.TreeNodeConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -2127,12 +2128,13 @@ public class SpecificationBackingBean extends
 						.getScQtCheckSt2techProposal());
 			}//#11104-End
 			
-			//#28784 - Include Demo WIP
+			//#28784 - Include Demo WIP - Start
+			checkDemoVersion(getManagedBean().getQt());//#28784 -  Demo WIP
 			if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 				this.getManagedBean().setDemoAction(true);
 				this.getManagedBean().setDemoType(true);
-				resetDemoSpecStatus();
-			}
+				resetDemoSpecStatus();				
+			}//28784 - end
 		} finally {
 			specSo = null;
 		}
@@ -11092,9 +11094,9 @@ public class SpecificationBackingBean extends
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
 		
-		//#28784 - Demo WIP
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-		this.getManagedBean().setNewVersion(isQtNewVersion);
+		//#28784 - Demo WIP - Start
+		checkDemoVersion(scQt);
+		//28784 - End
 		
 		// #25638 - Start
 		if (null != this.getManagedBean().getCurrentStatusId()
@@ -13772,18 +13774,6 @@ if (null != checklist && !checklist.isEmpty()) {
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-	// #29732 Start - reOpen Fix
-			List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-					.getTobeRemoveCategoryCodes();
-			if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-				for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-					if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-						deleteCategoryCodesList.remove(i);
-					}
-				}
-			}
-			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-	//#29732 End - reOpen Fix
 
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
@@ -14668,20 +14658,6 @@ if (null != checklist && !checklist.isEmpty()) {
 		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 		 * IQTSpecSO.class);
 		 */
-// #29732 Start - reOpen Fix
-		if (!SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
-		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-				.getTobeRemoveCategoryCodes();
-		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-					deleteCategoryCodesList.remove(i);
-				}
-			}
-		}
-		reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-		}
-//#29732 End - reOpen Fix
 		
 		// 29521 - start
 		if (null == reqDTO.getBackupScQt()) {
@@ -17389,18 +17365,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 		}
-// #29732 Start - reOpen Fix
-		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-				.getTobeRemoveCategoryCodes();
-		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-					deleteCategoryCodesList.remove(i);
-				}
-			}
-		}
-		spReqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-//#29732 End - reOpen Fix
+
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -22067,6 +22032,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				this.getManagedBean().setOfferPricePackage(null);
 				this.getManagedBean().setPanelSpecExistedOrNot(false);
 				specCommitteeResetData();
+				checkDemoVersion(savedCheckListsDemo.get(0).getScQt());//28784 -  WIP
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 		} else {
@@ -22370,27 +22336,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	* @param .
 	* @return 
 	*/
-	private void getCategoryCodesForClone(){
-		
+	private void getCategoryCodesForClone() {
+
 		try {
-			
-			TreeNode rootNode = new DefaultTreeNode("root", null);
-			  Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
-			  for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class).retrieveCategoryL1List().getCategoryL1List()) {
-				  Map<Long, String> l1Map=new HashMap<>();
-				  l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
-				  for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
-					  Map<Long, Map<Long, String>> l2Map=new HashMap<>();
-					  l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
-					  addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
-					}
+
+			TreeNode rootNode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_ROOT, null);
+			Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
+			for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class)
+					.retrieveCategoryL1List().getCategoryL1List()) {
+				Map<Long, String> l1Map = new HashMap<>();
+				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
+				for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+					Map<Long, Map<Long, String>> l2Map = new HashMap<>();
+					l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
+					addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
+				}
 				this.getManagedBean().setRootCategoryTree(rootNode);
 				this.getManagedBean().setMapCatCode(mapCatCode);
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			String qtNo = this.getManagedBean().getQt() != null ? this.getManagedBean().getQt().getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
-					SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
@@ -22399,16 +22367,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			TreeNode rootNode) {
 		for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
-			TreeNode catCode = new DefaultTreeNode("catCode", pmCategoryL1.getCategoryL1Code()
-					+ pmCategoryL2.getCategoryL2Code() + pmCategoryL3.getCategoryL3Code(), rootNode);
-			TreeNode catDes1 = new DefaultTreeNode("catDes1", pmCategoryL1.getCategoryL1Code() + " - "
-					+ pmCategoryL1.getCategoryName(), catCode);
+			TreeNode catCode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATCODE,
+					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
+							+ pmCategoryL3.getCategoryL3Code(), rootNode);
+			TreeNode catDes1 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC1,
+					pmCategoryL1.getCategoryL1Code() + " - " + pmCategoryL1.getCategoryName(), catCode);
 			catDes1.setSelectable(false);
-			TreeNode catDes2 = new DefaultTreeNode("catDes2", pmCategoryL2.getCategoryL2Code() + " - "
-					+ pmCategoryL2.getCategoryName(), catCode);
+			TreeNode catDes2 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC2,
+					pmCategoryL2.getCategoryL2Code() + " - " + pmCategoryL2.getCategoryName(), catCode);
 			catDes2.setSelectable(false);
-			TreeNode catDes3 = new DefaultTreeNode("catDes3", pmCategoryL3.getCategoryL3Code() + " - "
-					+ pmCategoryL3.getCategoryName(), catCode);
+			TreeNode catDes3 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC3,
+					pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName(), catCode);
 			catDes3.setSelectable(false);
 
 			l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
@@ -23258,5 +23227,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return true;
 
+	}
+	
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	private void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
 	}
 }
