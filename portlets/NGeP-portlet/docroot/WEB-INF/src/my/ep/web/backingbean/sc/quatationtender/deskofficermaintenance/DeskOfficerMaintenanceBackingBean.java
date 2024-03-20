@@ -1161,7 +1161,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		try{
 			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			//#28859-35500
+			//#28895-35500
 			IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
@@ -1208,7 +1208,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				Long changedBy = getFacesScopes().getUserSessionBean().getUserId();
 				Long createdBy = getFacesScopes().getUserSessionBean().getUserId();
 				String groupTabSection = QTAuditConstant.AU_SECTION_DO;
-				
+
 				if(!isCommitteeApprover() && isDeskOfficer()){
 					resDTO = detailSO.submitDOReassignment(reqDTO);
 					
@@ -1355,7 +1355,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setDigiSignData(digisign);
 				QuationTenderResDTO resDTO = getQTDetailSO().updateDOReasignmentTask(reqDTO);
 				
-				//#28859-35500
+				//#28895-35500
 				AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
 				AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
 				List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
@@ -1380,7 +1380,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				Long createdBy = getFacesScopes().getUserSessionBean().getUserId();
 				String groupTabSection = QTAuditConstant.AU_SECTION_DO;
 				
-				if (newValueId.compareTo(newTempDoId)==0 && statusId.compareTo(QTStatusConst.PENDING_DESK_OFFICER_MAINTENANCE_APPROVAL)==0) {
+				if (newValueId.compareTo(newTempDoId)==0 && statusId.compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED)==0) {
 					oldValue = null;
 					oldValueId = null;
 					newValue = null;
@@ -1548,7 +1548,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		}
 	}
 	
-	//#28859-35500
+	//#28895-35500 getting the status of the QT
 		private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 			IScWorkFlowStatusSO workFlowStatusSO;
 			try {
