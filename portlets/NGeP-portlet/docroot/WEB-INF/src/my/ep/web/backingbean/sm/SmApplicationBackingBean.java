@@ -2545,13 +2545,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(), ssmResDTO);
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
-							// start #29956 smOwnerSsmPopup
-									if(this.getManagedBean().isDisAllowOwnerEdit()){
-										this.getManagedBean().setDontGetSsmData(true);
-									}else{
-										this.getManagedBean().setDontGetSsmData(false);
-									}
-									// end #29956
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 									subStartTime = System.currentTimeMillis();
 									SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
@@ -7235,9 +7228,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		for(SmSvWorker worker : selectedWorkers){
 			getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().remove(worker);
 			if(worker.getSvWorkerId() != null){
-				SmSvWorker worker2 = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
+				SmSvWorker deletedWorker = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
 						worker.getIdentificationNo(), getManagedBean().getDeletedWorkers(), "identificationNo");
-				if(worker2 == null){
+				if(deletedWorker == null){
 					getManagedBean().getDeletedWorkers().add(worker);
 				}
 			}

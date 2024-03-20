@@ -4444,7 +4444,7 @@ public class SmCommonUtil {
 	 * Verify MyIdentity with IC only
 	 * @param name
 	 * @param identificationNo
-	 * @return
+	 * @return status code
 	 */
 	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
@@ -5558,11 +5558,10 @@ public class SmCommonUtil {
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	/**
-	 * Retrieve supplier categories
 	 * @param applId
 	 * @param categoryL3Id
 	 * @param applType
-	 * @return
+	 * @return supplier categories
 	 */
 	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
 			Long applId, Long categoryL3Id, String applType){
