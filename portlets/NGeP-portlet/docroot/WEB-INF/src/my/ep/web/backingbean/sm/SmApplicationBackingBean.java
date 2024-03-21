@@ -402,6 +402,8 @@ public class SmApplicationBackingBean extends
 						"pmDocument");
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
+		doc.setOverlapReason(null);
+		SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
@@ -2045,13 +2047,6 @@ public class SmApplicationBackingBean extends
 						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(), ssmResDTO);
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
-							// start #29956 smOwnerSsmPopup
-								if(this.getManagedBean().isDisAllowOwnerEdit()){
-									this.getManagedBean().setDontGetSsmData(true);
-								}else{
-									this.getManagedBean().setDontGetSsmData(false);
-								}
-							// end #29956
 							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 							subStartTime = System.currentTimeMillis();
 							
@@ -2361,6 +2356,15 @@ public class SmApplicationBackingBean extends
 		}
 	//END 28767
 		
+		// 35311 - Start
+		for (SmFacility facility : getManagedBean().getSmAppl()
+				.getSmFacilities()) {
+			if (facility.getFacilityId() != null) {
+				assignApplicationSupportingDocs();
+				break;
+			}
+		}
+		// 35311 - end
 		subStartTime = System.currentTimeMillis();
 		// set Personnel List Count
 		calcPersonnelListCount();
@@ -13808,8 +13812,15 @@ public class SmApplicationBackingBean extends
 					facility.setPurchasePrice(hq.getPurchasePrice());
 					facility.setRentalRate(hq.getRentalRate());
 					facility.setOwnershipType(hq.getOwnershipType());
-					SmApplicationUtil.getInstance().cloneAddress(
-							facility.getSmAddress(), hq.getSmAddress());
+					//#34711 - START
+					if(facility.getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+						SmApplicationUtil.getInstance().cloneAddress(
+								facility.getSmAddress(), this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+					} else {
+						SmApplicationUtil.getInstance().cloneAddress(
+								facility.getSmAddress(), hq.getSmAddress());
+					}
+					//#34711 - END	
 				}
 			} else {
 				Long branchId = Long.parseLong(getManagedBean()
