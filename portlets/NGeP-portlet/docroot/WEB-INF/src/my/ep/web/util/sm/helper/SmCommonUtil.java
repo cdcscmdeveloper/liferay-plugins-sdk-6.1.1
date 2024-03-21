@@ -6441,13 +6441,16 @@ public class SmCommonUtil {
 	 */
 	public static List<SmAppl> getCancelledBumiApplList(boolean isSVC){
 		List<SmAppl> list;
+		FacesScopes fc = new FacesScopes();
+		Long userId = fc.getUserSessionBean().getUserId();
 		if(isSVC){
 			list = SmServiceLookup.getMofRegistrationSO().
-					retrieveAutoCancelledBumiAppl(null, false, false).getApplList();
+					retrieveAutoCancelledBumiAppl(userId, false, false).getApplList();
 		} else {
-			FacesScopes fc = new FacesScopes();
+			boolean isPOorApprover = fc.hasRoleUser(RoleCode.UPS_PO.value()) 
+					|| fc.hasRoleUser(RoleCode.UPS_APPROVER.value());
 			list = SmServiceLookup.getMofRegistrationSO().retrieveAutoCancelledBumiAppl(
-					fc.getUserSessionBean().getUserId(), true, true).getApplList();
+					userId, fc.hasRoleUser(RoleCode.UPS_SVO.value()), isPOorApprover).getApplList();
 		}
 		if(list.isEmpty()){
 			return list;
@@ -6455,7 +6458,7 @@ public class SmCommonUtil {
 		
 		StatusReqDTO statReqDTO = new StatusReqDTO();
 		statReqDTO.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
-		statReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		statReqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
 		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
 				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
 		if(statDesc == null){
