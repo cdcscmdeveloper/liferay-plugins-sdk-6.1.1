@@ -51,6 +51,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1874,9 +1875,20 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 	
 	public boolean showCancelledBumiApplList(){
+		if(getManagedBean().getShowCancelledBumiApplList() != null){
+			return getManagedBean().getShowCancelledBumiApplList();
+		}
 		FacesScopes fc = new FacesScopes();
-		return fc.hasRoleUser(RoleCode.UPS_SVO.value()) || fc.hasRoleUser(RoleCode.UPS_PO.value())
-				|| fc.hasRoleUser(RoleCode.UPS_APPROVER.value());
+		boolean isSVO = fc.hasRoleUser(RoleCode.UPS_SVO.value());
+		boolean isPOApprover = fc.hasRoleUser(RoleCode.UPS_PO.value()) || 
+				fc.hasRoleUser(RoleCode.UPS_APPROVER.value());
+		if(!isSVO && !isPOApprover){
+			getManagedBean().setShowCancelledBumiApplList(false);
+			return false;
+		}
+		getManagedBean().setShowCancelledBumiApplList(SmServiceLookup.getMofRegistrationSO()
+				.hasAutoCancelledBumiApplBPM(fc.getUserSessionBean().getUserId(), isSVO, isPOApprover));
+		return getManagedBean().getShowCancelledBumiApplList();
 	}
 	//#32304 - end
 }

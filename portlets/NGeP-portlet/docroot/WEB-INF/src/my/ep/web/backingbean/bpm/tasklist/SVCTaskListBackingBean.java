@@ -338,6 +338,8 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 			}
 			
 		}
+		//#32304
+		getManagedBean().setCancelledBumiApplLs(SmCommonUtil.getCancelledBumiApplList(true));
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
@@ -362,13 +364,5 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		}
 		
 		return zstateLs;
-	}
-	
-	//#32304
-	public void getCancelledBumiApplList(){
-		if(getManagedBean().getCancelledBumiApplLs() == null){
-			getManagedBean().setCancelledBumiApplLs(SmCommonUtil.getCancelledBumiApplList(true));
-		}
-		getManagedBean().getBumiListDataModel().reloadDatatable();
 	}
 }
