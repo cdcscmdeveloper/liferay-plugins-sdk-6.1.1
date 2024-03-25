@@ -11267,8 +11267,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								map.put(SSTConstant.zoneName, zone);
 							}
 							map.put(SSTConstant.ZONE_SIZE, String.valueOf(scLoiLoaItem.getZoneNameList().size()));
-							map.put(SSTConstant.quantity, question.getClQuantity() == null ? SSTConstant.TB : question
-									.getClQuantity().toString());
+							map.put(SSTConstant.quantity, scLoiLoaItem.getQty() == null? SSTConstant.TB : scLoiLoaItem.getQty().toString()); //35521 @zaim
 							map.put(SSTConstant.serviceScope, SSTConstant.TB);
 							// retrieve supplier offer start
 							if (answerList != null && !answerList.isEmpty()) {
@@ -11427,8 +11426,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					map.put(SSTConstant.clUomPerMonth, question.getClUomPerMonth() == null ? SSTConstant.TB : question
 							.getClUomPerMonth().toString());
 					map.put(SSTConstant.CL_DURATION_MONTH, question.getClDurationMonth().toString());
-					map.put(SSTConstant.quantity, question.getClQuantity() == null ? SSTConstant.TB : question
-							.getClQuantity().toString());
+					map.put(SSTConstant.quantity, scLoiLoaItem.getQty() == null? SSTConstant.TB : scLoiLoaItem.getQty().toString()); //35521 @zaim
 					map.put(SSTConstant.serviceScope, SSTConstant.TB);
 
 					for (TplSpecAnswer answer : answerList) {
