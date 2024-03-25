@@ -48,6 +48,7 @@ public class SLALogConstant {
 	//#29468 Start Vinod
 	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
+	public static final String QT_PROC_CATEGORY_CHANGED = "procCategoryChanged";
 	//#29468 End Vinod
 
 	
