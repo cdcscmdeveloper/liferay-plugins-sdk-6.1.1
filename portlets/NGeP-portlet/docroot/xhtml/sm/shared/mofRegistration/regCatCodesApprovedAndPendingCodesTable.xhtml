@@ -407,6 +407,7 @@
 				</h:panelGroup>
 
 				#{lbl['lbl.sm.download.categorycode']}
+				<!-- #32008 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCategoryOtherDescription}"
@@ -415,6 +416,7 @@
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					oncomplete="addtnlCatCodeDeletePopUp.show()"
 					update="@form" partialSubmit="true"
 					process=":form:tt:catCodeInfPan">
