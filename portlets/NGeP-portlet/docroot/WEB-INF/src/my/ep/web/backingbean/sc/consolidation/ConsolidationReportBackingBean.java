@@ -40,8 +40,6 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -64,7 +62,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -72,7 +69,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 // #31443 Start
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -1374,6 +1370,10 @@ public class ConsolidationReportBackingBean extends
 
 			resDTO = qtSuppFinalizationSO
 					.retrieveQtEvaluationResultDtls(reqDTO);
+			
+			// #28777 & #29729 - Start
+			this.getManagedBean().setCountSupplierBranchDeleted(resDTO.getTotalQualifiedSuppliersBranchDeleted());
+			// #28777 & #29729 - End
 
 			if (resDTO.isSuccessful()) {
 				return resDTO;
@@ -1616,6 +1616,12 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
+		
+		//#28777 & #29729 - Start
+		if(this.getManagedBean().getCountSupplierBranchDeleted() > 0){
+			minRankCount -= this.getManagedBean().getCountSupplierBranchDeleted(); 
+		}
+		//#28777 & #29729 - End
 
 		if (totalRanksCount < minRankCount) {
 			setZoneAndTabIndexOnException(isItemized, specZoneDtl);
@@ -2347,8 +2353,7 @@ public class ConsolidationReportBackingBean extends
 	
 	/**
 	* Method to return true, if branch in supplier has been deleted
-	* @param supplierId 
-	* @param scQt 
+	* @param supplier id 
 	* @return true or false
 	**/
 	public boolean disableRankIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
@@ -2357,10 +2362,8 @@ public class ConsolidationReportBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 		
 		boolean isSupplierBranchDeleted = false;
-		if(supplierId != null && scQt != null){
-			if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = true;
-		    }
+		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+			isSupplierBranchDeleted = true;
 		}
 	    return isSupplierBranchDeleted;
 	}

@@ -1909,6 +1909,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void checkExistingBusinessRegNo(){
 		
+		// #32713 - Start
+		// to validate if there is same reg_no that has inProgress status
+		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())) {
+
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setRegNo(getManagedBean().getSmSupp().getRegNo());
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+					"sm", ISupplierSearchSO.class);
+
+			if (supplierSearchSO.checkIsSupplierRegNoAlreadyExistAndInProgress(reqDTO).isRegNoInProgress()) {
+				throw new EpException(MessageConst.ERROR_722634);
+			}
+		}
+		// #32713 - End		
+		
 		if (!StringUtils
 				.isBlank(getManagedBean().getSmSupp().getBusinessType())
 				&& SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
@@ -2227,6 +2242,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+				//#34159 - START
+				if(this.getManagedBean().getSmBusinessAdd().getPmDivision() != null && this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId() != null){
+					this.getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
+				}
+				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
 			getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(false);
@@ -2275,6 +2295,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
+				//#34159 - START
+				if(this.getManagedBean().getSmResAdd().getPmDivision() != null && this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId() != null){
+					this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
+				}
+				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
 			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
@@ -2313,6 +2338,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
+				//#34159 - START
+				if(this.getManagedBean().getSmPermenantAdd().getPmDivision() != null && this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId() != null){
+					this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
+				}
+				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId()));
 			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
@@ -2778,8 +2808,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 						//start #29956
-						if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
-							personnelsRole.clear();
+						boolean showPopupDowngradeSSM = displayPopupDowngradeSSMOwner(getManagedBean().getSmSupp().getSmAppl(),ssmResDTO);
+
+						if(showPopupDowngradeSSM) {
+							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
+							return;								
 						}
 						//end #29956
 						if(personnelsRole != null && personnelsRole.isEmpty()){
@@ -2802,27 +2836,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									//}
 								}
 								//#29114, CR 27382: Static Code Analysis End
-							}
-							
-							// start #29956 smOwnerSsmPopup
-							String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
-
-							this.getManagedBean().setTermAndConditionCheckOwner(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
-							this.getManagedBean().setTermAndConditionCheckOwnerA(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole}));
-							this.getManagedBean().setTermAndConditionCheckOwnerC(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-							this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-									SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-							// end #29956
-
-							
-							if(personnelsRole != null && !personnelsRole.isEmpty()) {
-								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
-								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
-								return;								
 							}
 						}else{
 							//set latest role to personnel

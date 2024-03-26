@@ -910,7 +910,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35392
 			getManagedBean().setBackToDocument(null);
 			getManagedBean().setBackToNtf("notifications");
 			getPopulateReasonList();
