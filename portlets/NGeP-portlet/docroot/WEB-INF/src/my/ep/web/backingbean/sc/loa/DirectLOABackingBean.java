@@ -3917,6 +3917,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setTotalProgressivePayment(0);
 
 		}
+		//Reopen #25726 note 226 - issue 14
+		updateFulfilmentType();
 		checkFulFilmentType(this.getManagedBean().getScLoa());
 		calculateServiceTemplate();
 		this.getManagedBean().getScQt().setScQtSchedules(null);
@@ -4022,6 +4024,37 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					.getDurationMonth());
 	}
     
+    //Reopen #25726 note 226 - issue 14
+	//function to check and update fulfilment type in specQuestion.
+    private void updateFulfilmentType(){
+		log.info("updateFulfilmentType");	
+		
+		TplSpecMaster producSpecMaster = this.getManagedBean().getProdscQtDoc().getTplSpecMaster();
+		TplSpecMaster serviceSpecMaster = this.getManagedBean().getServicescQtDoc().getTplSpecMaster();
+		PmParameter clFulfilmentTypeCode = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode();
+		
+		if(CollectionUtils.isNotEmpty(producSpecMaster.getTplSpecQuestions())){
+			for (TplSpecQuestion specQuestion : producSpecMaster.getTplSpecQuestions()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM
+						.equalsIgnoreCase(specQuestion.getQuestionType())) {
+					specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
+				}
+				
+			 }
+		}
+		if(CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())){
+			for (TplSpecQuestion specQuestion : serviceSpecMaster.getTplSpecQuestions()) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM
+						.equalsIgnoreCase(specQuestion.getQuestionType())) {
+					String questionFulfilmentcode =  specQuestion.getClFulfilmentTypeCode().getParameterCode();
+					if (!questionFulfilmentcode.equals(clFulfilmentTypeCode.getParameterCode())){
+						specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
+					}
+				}
+			 }
+		}	
+	}
+
 	/**
 	 * Gets the dropdown location values.display the Location level dropdown
 	 * values.
