@@ -89,8 +89,10 @@
 				<!-- #30824 & #29712, #32564 - start -->
 				<ac:lov id="supplier" lovId="SM_RPT_MOF_ACCOUNT"
 					headerText="#{lbl['lbl.sm.supplov']}"
+					required="true"
+					label="#{lbl['lbl.rpt.mofRegNo']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.selectedMofAccount.mofNo}" 
-					saveObject="profileOfRegCompanyRptBB.managedBean..selectedMofAccount"
+					saveObject="profileOfRegCompanyRptBB.managedBean.selectedMofAccount"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
 					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" >
 				</ac:lov>
