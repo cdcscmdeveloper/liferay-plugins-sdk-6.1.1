@@ -11904,7 +11904,7 @@ if (null != checklist && !checklist.isEmpty()) {
 	//Reopen #25726 note 226 - issue 14
 	//function to check and update fulfilment type in specQuestion.
 	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists){
-		log.info("checkAndupdateFulfilmentType lol ");	
+		log.info("checkAndupdateFulfilmentType");	
 			
 		PmParameter clFulfilmentTypeCode =this.getManagedBean().getQt().getFulfilmentType();
 		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
@@ -11925,7 +11925,6 @@ if (null != checklist && !checklist.isEmpty()) {
 						.equalsIgnoreCase(technicalchecklist.getDefinationType()
 								.getParameterCode()) &&
 								technicalchecklist.getScQtDoc() != null) {
-					System.out.println("enter ");
 					allCheckLists.add(technicalchecklist);
 				}		
 		  }
@@ -11948,11 +11947,9 @@ if (null != checklist && !checklist.isEmpty()) {
 							if (TemplateSpecConst.QUESTION_TYPE_ITEM
 									.equalsIgnoreCase(specQuestion.getQuestionType())) {
 								String questionFulfilmentcode =  specQuestion.getClFulfilmentTypeCode().getParameterCode();
-								log.info("ClFulfilmentTypeCode before 1: " + questionFulfilmentcode);
 								if (!questionFulfilmentcode.equals(clFulfilmentTypeCode.getParameterCode())){
 									specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
 								}
-								log.info("ClFulfilmentTypeCode after 1: " + questionFulfilmentcode);
 							}							
 						 }
 					}	
