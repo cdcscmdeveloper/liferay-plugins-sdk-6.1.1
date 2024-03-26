@@ -365,10 +365,4 @@ public class SVCTaskListBackingBean extends BaseBackingBean<SVCTaskListManagedBe
 		
 		return zstateLs;
 	}
-	
-	//#32304 - start
-	public void downloadCancelledBumiAppl(){
-		SmCommonUtil.downloadCancelledBumiAppl();
-	}
-	//#32304 - end
 }

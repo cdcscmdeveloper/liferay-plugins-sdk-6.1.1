@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -620,9 +621,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//29727
 	private String deleteBranchMsg;
 	
-	// 31043 START
-	private boolean showFacilityMachine;
-	// 31043 END
 	
 	//13362
 	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
@@ -666,6 +664,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverPersonnelRoleMsg;
 	private String personnelRoleMsg; 
 	//#30762 -End 
+	
+	//#34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	//#34393 - end
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4441,15 +4444,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
-
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
 
 	//13362 START
 	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
@@ -4655,4 +4649,20 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
 	//#30762 -End 
+
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
 }
