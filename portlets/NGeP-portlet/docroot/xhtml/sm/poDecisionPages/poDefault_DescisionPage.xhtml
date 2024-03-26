@@ -383,6 +383,14 @@
 		title="#{lbl['lbl.sm.approve.application']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approveDialog"/>
+		
+	<ac:confirmationPopup id="pendingQTPopUpCloseApprovePoId"
+		widget="pendingQTPopUpCloseApprovePo"
+		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
+		update=":form:tt:approveDialog"/>
 	<!-- #29727 END -->
 		
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}"
