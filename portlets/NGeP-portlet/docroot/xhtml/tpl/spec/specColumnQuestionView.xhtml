@@ -16,6 +16,7 @@
 		<p:spacer width="5" />
 		<ui:fragment rendered="#{!empty question.cmItem.extensionCode and directLOABackingBean.managedBean.iconForDL}">
 		<p:commandLink id="itemName"
+						rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}"
 						action="#{directLOABackingBean.searchSupplierSpecification(question,true)}"
 						partialSubmit="true" process="@this">
 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" />

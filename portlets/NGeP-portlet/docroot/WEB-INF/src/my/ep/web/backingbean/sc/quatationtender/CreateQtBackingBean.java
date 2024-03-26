@@ -338,7 +338,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(pmOrgProfile.getOrgProfileId());
 				if (ptjSpecialApproval != null) {
 					scQt.setCircularVer(null);
-					this.getManagedBean().setPanel(null);
+					this.getManagedBean().setPanel(false);//35507 defaulted to false
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
@@ -2916,6 +2916,20 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ParameterResDTO parameterResDTO = getParameterSO().retrieveParameterById(parameterReqDTO);
 			this.getManagedBean().getQt().setPmProcurementCategory(parameterResDTO.getPmParameter());
 		}
+		// #35285 & #25635 - Start
+		else {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+		}
+
+		if (null != this.getManagedBean().getQt().getPmProcurementCategory()) {
+			if (!ParameterConst.PROCUREMENT_CATEGORY_ICT.equalsIgnoreCase(this.getManagedBean().getQt()
+					.getPmProcurementCategory().getParameterCode())) {
+				this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+			}
+		} else {
+			this.getManagedBean().getQt().setCloneEnabled(Boolean.FALSE);
+		}
+		// #35285 & #25635 - End
 	}
 
 	/**

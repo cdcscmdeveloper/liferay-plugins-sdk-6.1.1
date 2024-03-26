@@ -18,7 +18,8 @@
 						<li>
 							<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 							<p:commandLink value="#{lbl['lbl.sc.preparation']}"
-								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
+								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 0}"
 								disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
@@ -32,7 +33,8 @@
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 1}" />
 								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink value="#{lbl['lbl.sc.eva.compliance.stg']}"
-									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 1}"
 									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
@@ -46,7 +48,8 @@
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 2}" />
 								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink value="#{lbl['lbl.sc.eva.stage']}"
-									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
 									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
@@ -61,7 +64,8 @@
 								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink
 									value="#{lbl['lbl.sc.technical.evaluation']}"
-									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
 									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
@@ -75,7 +79,8 @@
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
 								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink value="#{lbl['lbl.sc.present.demo']}"
-									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
 									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
@@ -92,7 +97,8 @@
 								<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 								<p:commandLink
 									value="#{lbl['lbl.sc.financial.evaluation']}"
-									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
+									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
 									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
@@ -106,7 +112,8 @@
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 4}" />
 							<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 							<p:commandLink value="#{lbl['lbl.sc.report']}"
-								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
+								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 4}"
 							    disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
@@ -119,7 +126,8 @@
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 5}" />
 							<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
 							<p:commandLink value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
-								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
+								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTrainIndex(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 5}"
 								disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
