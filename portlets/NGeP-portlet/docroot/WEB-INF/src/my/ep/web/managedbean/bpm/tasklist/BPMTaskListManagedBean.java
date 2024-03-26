@@ -31,6 +31,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -78,6 +79,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -153,16 +155,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private PagingDataModel<SmAppl> bumiListDataModel = new BumiPagingDataModel();
 	private Boolean showCancelledBumiApplList;
 	//#32304 - end
-	
-	private boolean showCancelledBumiApplList;
-
-	public boolean isShowCancelledBumiApplList() {
-		return showCancelledBumiApplList;
-	}
-
-	public void setShowCancelledBumiApplList(boolean showCancelledBumiApplList) {
-		this.showCancelledBumiApplList = showCancelledBumiApplList;
-	}
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
