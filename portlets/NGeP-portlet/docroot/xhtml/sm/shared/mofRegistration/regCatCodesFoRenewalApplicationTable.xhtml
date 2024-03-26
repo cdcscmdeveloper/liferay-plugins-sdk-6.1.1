@@ -353,8 +353,9 @@
 					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}"
 					special="#{backingBean.managedBean.smAppl.supplierType}" />
 			<!-- 30865 End -->
-			
+			<!-- #32008 -->
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				oncomplete="addtnlCatCodeRenewDeletePopUp.show()"
 				update=":form:tt:catCodeInfPan" partialSubmit="true"
 				process=":form:tt:catCodeInfPan">

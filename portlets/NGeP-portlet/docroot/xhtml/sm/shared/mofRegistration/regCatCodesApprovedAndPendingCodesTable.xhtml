@@ -400,15 +400,15 @@
 					action="#{backingBean.validateCategoryOtherDescription}"
 					partialSubmit="true" process="@this"
 					>
-				<!-- Disable for UPS 32008 - END -->
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					oncomplete="addtnlCatCodeDeletePopUp.show()"
 					update="@form" partialSubmit="true"
 					process=":form:tt:catCodeInfPan">
 				</p:commandButton>
-
+				<!-- Disable for UPS 32008 - END -->
 			</div>
 		</c:if>
 	</p:outputPanel>
