@@ -2,7 +2,7 @@ package my.ep.web.bean.sc.directpurchase;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import org.jboss.resteasy.logging.Logger;
+import org.apache.log4j.Logger;
 /**
  * 
  * @author normuliana
