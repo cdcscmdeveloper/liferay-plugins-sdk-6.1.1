@@ -345,6 +345,9 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
+	/**
+	 * Get a list of all non-duplicate category codes for site visit
+	 */
 	private void getAllSiteVisitCategoryCode(){
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		
@@ -360,15 +363,15 @@ public class SvcSiteAssignBackingBean extends
 			}
 		}
 		for(SmSupplierCategory catTemp : tempL){
-			boolean dupe = false;
+			boolean duplicate = false;
 			for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
 				if(catTemp.getPmCategoryL3().getCategoryL3Id().equals(
 						catBean.getPmCategoryL3().getCategoryL3Id())){
-					dupe = true;
+					duplicate = true;
 					break;
 				}
 			}
-			if(!dupe){
+			if(!duplicate){
 				getManagedBean().getCategoryLs().add(catTemp);
 			}
 		}

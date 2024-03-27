@@ -527,7 +527,7 @@ public class CommonApplBackingBean extends
 						smApplBB.getManagedBean().setSpecialCategoryRechecked(true);
 					}
 					if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-							|| "S".equals(appl.getApplCategoryType())
+							|| appl.getApplCategoryType().equals(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL)
 							|| smApplBB.getManagedBean().isSpecialCategoryRechecked()) {
 						setSiteVisitView(smApplBB.getManagedBean(), appl);
 					}

@@ -574,8 +574,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC) 
 							&& !owner.getNationality().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)
-							&& owner.getIdentityResidentStatus().equals("M")
-							&& owner.getIdentityResidentStatus().equals("P")){
+							&& owner.getIdentityResidentStatus() !=null && (owner.getIdentityResidentStatus().equals("M") 
+									&& owner.getIdentityResidentStatus().equals("P"))){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(owner.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT) 
 							&& ((owner.getNationality().getCountryCode()
@@ -591,8 +591,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if(director.getIdentificationType().getParameterCode().equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_IC)
 							&& !director.getPmCountry().getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)
-							&& director.getIdentityResidentStatus().equals("M")
-							&& director.getIdentityResidentStatus().equals("P")){
+							&& director.getIdentityResidentStatus() !=null && (director.getIdentityResidentStatus().equals("M") 
+									&& director.getIdentityResidentStatus().equals("P"))){
 						throw new EpException(MessageConst.ERROR_SSM_70063);
 					}else if (director.getIdentificationType().getParameterCode()
 							.equalsIgnoreCase(ParameterConst.IDENTIFICATION_TYPES_PASSPORT)

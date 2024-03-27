@@ -172,7 +172,7 @@
 				<td>
 				<!-- 29398 start -->
 				<c:choose>
-                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate != null }">
+                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.voucherCancelDate != null }">
                 <p:inputText size="17" disabled="true"
 						value="#{lbl['lbl.fl.empty']}">
 					</p:inputText>
@@ -209,7 +209,7 @@
 				<td>
 				<!-- 29398 start -->
 				<c:choose>
-                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate != null }">
+                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.voucherCancelDate != null }">
                 <p:inputText size="17" disabled="true"
 						value="#{lbl['lbl.fl.empty']}">
 					</p:inputText>
@@ -232,7 +232,7 @@
 						value="#{lbl['lbl.fl.payment.match.cancel.date']}" /></td>
 				<td>
 				<c:choose>
-                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate == null 
+                <c:when test="#{paymentMatchBackingBean.managedBean.paymentAdvice.voucherCancelDate == null 
                 and paymentMatchBackingBean.managedBean.paymentAdvice.paymentDate != null}">
                 <p:inputText size="17" disabled="true"
 						value="#{lbl['lbl.fl.empty']}">
@@ -240,7 +240,7 @@
                 </c:when>
                 <c:otherwise>
                 <p:inputText size="17" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.cancellationDate}">
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.voucherCancelDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>

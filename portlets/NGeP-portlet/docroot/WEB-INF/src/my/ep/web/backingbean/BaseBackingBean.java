@@ -4128,7 +4128,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		if(isFullName){
 			return sCat.getCategoryL1Name()+" / "+sCat.getCategoryL2Name()+" / "+sCat.getCategoryL3Name();
-	}
+		}
 		return sCat.getCategoryL3Name();
 	}
 	
@@ -4204,6 +4204,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		if(!getManagedBean().getPersonnelsRole().isEmpty()){
+			getManagedBean().setDisAllowOwnerEdit(false);
+			for(SmPersonnel smPersonnel : getManagedBean().getPersonnelsRole()){
+				if(!isMofAccEffDatePassedCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
+					getManagedBean().setDisAllowOwnerEdit(true);
+				}
+			}
+			
 			getManagedBean().setDowngradeRole(true);
 			
 			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());

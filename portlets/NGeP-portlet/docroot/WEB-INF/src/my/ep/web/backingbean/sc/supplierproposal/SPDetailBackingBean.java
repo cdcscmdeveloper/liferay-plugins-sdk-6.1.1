@@ -4611,13 +4611,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
-			//#29729 - Start
+			//#28777 & #29729 - Start
 			if(checkValidationSupplierBranchDeleted()){
+				this.getManagedBean().setReadOnly(checkValidationSupplierBranchDeleted());
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
-			//#29729 - End
+			//#28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
