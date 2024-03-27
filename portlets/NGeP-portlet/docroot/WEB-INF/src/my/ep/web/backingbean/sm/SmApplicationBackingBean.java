@@ -2359,7 +2359,12 @@ public class SmApplicationBackingBean extends
 		// 35311 - Start
 		if (getManagedBean().getSmAppl().getPmStatus() != null
 				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
-			assignApplicationSupportingDocs();
+			for (SmFacility facility : getManagedBean().getSmAppl().getSmFacilities()) {
+				if (facility.getFacilityId() != null) {
+					assignApplicationSupportingDocs();
+					break;
+				}
+			}
 		}
 		// 35311 - end
 		subStartTime = System.currentTimeMillis();
