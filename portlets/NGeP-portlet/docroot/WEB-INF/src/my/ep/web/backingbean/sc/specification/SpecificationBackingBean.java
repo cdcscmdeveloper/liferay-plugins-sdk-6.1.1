@@ -14843,7 +14843,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								technicalchecklist.getScQtDoc() != null) {
 					allCheckLists.add(technicalchecklist);
 				}		
-		  }
+			}
 		}
 		
 		
@@ -14870,9 +14870,10 @@ if (null != checklist && !checklist.isEmpty()) {
 						 }
 					}	
 				}				
-		  }
+			}
 		}
-	}		
+	}
+	
 	private List<ScQtCheckList> validateDuplicateFinancialSpecs(
 			ScQtCheckList financialSpecs, String flowType,
 			ScQtCheckList technicalSpec) {
