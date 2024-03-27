@@ -11927,7 +11927,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								technicalchecklist.getScQtDoc() != null) {
 					allCheckLists.add(technicalchecklist);
 				}		
-		  }
+			}
 		}
 		
 		
@@ -11954,10 +11954,8 @@ if (null != checklist && !checklist.isEmpty()) {
 						 }
 					}	
 				}				
-		  }
+			}
 		}
-		
-	
 	}
 
 	/**

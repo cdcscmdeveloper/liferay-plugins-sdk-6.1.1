@@ -9834,7 +9834,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							.equalsIgnoreCase(specQuestion.getQuestionType())) {
 						specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
 					}
-					
 				 }
 			}
 			if(CollectionUtils.isNotEmpty(serviceSpecMaster.getTplSpecQuestions())){
@@ -9845,11 +9844,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						if (!questionFulfilmentcode.equals(clFulfilmentTypeCode.getParameterCode())){
 							specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
 						}
-						
 					}
 				 }
-			}
-				
+			}	
 		}
 	/**
 	 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
