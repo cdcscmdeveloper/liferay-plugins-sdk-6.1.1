@@ -81,13 +81,13 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.beforePendingInv']}" 
-      					itemValue="#{lbl['lbl.rpt.drpdown.beforePendingInv']}"></f:selectItem>
+      					itemValue="1"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"></f:selectItem>
+						itemValue="2"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"></f:selectItem>
+						itemValue="3"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"></f:selectItem>
+						itemValue="4"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
