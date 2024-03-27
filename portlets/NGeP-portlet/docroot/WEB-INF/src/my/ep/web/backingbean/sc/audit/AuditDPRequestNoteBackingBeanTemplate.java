@@ -1,10 +1,15 @@
 package my.ep.web.backingbean.sc.audit;
 
 import java.io.Serializable;
+
+import org.apache.log4j.Logger;
+
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
 import my.ep.type.pm.RoleCode;
+import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -17,7 +22,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  */
 public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	/** The log. */
+	private static Logger log = Logger.getLogger(AuditDPRequestNoteBackingBeanTemplate.class);
 	public AuditDPRequestNoteBackingBeanTemplate() {
 	}
 
@@ -42,7 +48,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	 * @param userId
 	 */
 	public final void auditSaveData(BaseManagedBean managebean, Long userId) {
-
+		log.info("AUDIT TEMPLATE START :::::: " + userId);
 		String roleCode = getRoleCode();
 
 		AuDPRequestNoteDTO auObj = insert(managebean, userId, roleCode);
@@ -65,6 +71,8 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	public abstract AuDPRequestNoteDTO insert(BaseManagedBean managebean, Long userId, String roleCode);
 
 	private void dpAuditSO(AuDPRequestNoteDTO dtlObjList) {
+		log.info("AUDIT TEMPLATE AuDPRequestNoteSPDTOList DETAIL SEND TO DAO :::::: " + dtlObjList.getAuDPRequestNoteSPDTOList().size());
+		log.info("AUDIT TEMPLATE AuDPRequestNoteDetailSPDTOLisT MASTER SEND TO DAO :::::: " + dtlObjList.getAuDPRequestNoteDetailSPDTOList().size());
 		getAuditDpmRequestNoteSO().insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 				dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 	}
