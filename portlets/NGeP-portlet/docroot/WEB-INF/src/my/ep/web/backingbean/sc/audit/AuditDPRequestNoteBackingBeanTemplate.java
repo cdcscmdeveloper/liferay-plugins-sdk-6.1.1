@@ -36,10 +36,10 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	 * 
 	 * @return the audit dp request note so
 	 */
-	private IAuditDPRequestNoteSO getAuditDpmRequestNoteSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IAuditDPRequestNoteSO.class);
-	}
+//	private IAuditDPRequestNoteSO getAuditDpmRequestNoteSO() {
+//		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//				IAuditDPRequestNoteSO.class);
+//	}
 
 	/**
 	 * The void auditSaveData.
@@ -73,7 +73,9 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	private void dpAuditSO(AuDPRequestNoteDTO dtlObjList) {
 		log.info("AUDIT TEMPLATE AuDPRequestNoteSPDTOList DETAIL SEND TO DAO :::::: " + dtlObjList.getAuDPRequestNoteSPDTOList().size());
 		log.info("AUDIT TEMPLATE AuDPRequestNoteDetailSPDTOLisT MASTER SEND TO DAO :::::: " + dtlObjList.getAuDPRequestNoteDetailSPDTOList().size());
-		getAuditDpmRequestNoteSO().insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
+		IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+		auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 				dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 	}
 }
