@@ -78,16 +78,7 @@
 			</td>
 			<td>
 				<p:selectOneMenu value="#{mcSumTotalNumValofPoRptBB.managedBean.purchaseOrderStatus}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.beforePendingInv']}" 
-      					itemValue="1"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"
-						itemValue="2"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"
-						itemValue="3"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"
-						itemValue="4"></f:selectItem>
+					<f:selectItems value="#{mcSumTotalNumValofPoRptBB.getStatusDropdownValuesForOrderStatusGroup()}"/>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
