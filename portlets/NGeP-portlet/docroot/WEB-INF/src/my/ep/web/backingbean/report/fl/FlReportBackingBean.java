@@ -1830,27 +1830,34 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	 * 
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getStatusDropdownValuesForOrderStatusGroup() {		
+	public SelectItem[] getGroupStatusDropdown() {		
 		
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 
 		try {
 			
-		List<String> orderStatusGroupList = new ArrayList<>();
-		orderStatusGroupList.add(ResourceBundleUtils.getMessage("lbl.rpt.drpdown.beforePendingInv", ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		orderStatusGroupList.add(ResourceBundleUtils.getMessage("lbl.rpt.drpdown.pendingPaymentMatch", ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		orderStatusGroupList.add(ResourceBundleUtils.getMessage("lbl.rpt.drpdown.pendingPaymentClosed", ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		orderStatusGroupList.add(ResourceBundleUtils.getMessage("lbl.rpt.drpdown.cancelledLabel", ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-				
-		items = new SelectItem[orderStatusGroupList.size() + 1];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
-		
-		int i = 1;
-		for (String orderStatusGroup : orderStatusGroupList) {
-				items[i] = new SelectItem(i, orderStatusGroup);
-				i++;
-		}
+			items = new SelectItem[5];
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 1:Status Before Pending Invoice: 41000,41002,41005,41010,41500,41505,41510
+			items[1] = new SelectItem("1", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.beforePendingInv", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 2:Status Pending Payment Match: 41025,41525
+			items[2] = new SelectItem("2", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.pendingPaymentMatch", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 3:Status Pending Payment and Closed: 41030,41035,41530,41535
+			items[3] = new SelectItem("3", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.pendingPaymentClosed", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 4:Status Cancelled: 41400,41900
+			items[4] = new SelectItem("4", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.cancelledLabel", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
 			
 		} catch (Exception e) {
 			log.info(e.toString());

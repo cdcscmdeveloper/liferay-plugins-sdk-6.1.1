@@ -102,8 +102,8 @@
 				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{ccSumTotalNumValofPoRptBB.managedBean.purchaseOrderStatus}">
-					<f:selectItems value="#{ccSumTotalNumValofPoRptBB.getStatusDropdownValuesForOrderStatusGroup()}"/>
+				<p:selectOneMenu value="#{ccSumTotalNumValofPoRptBB.managedBean.groupStatus}">
+					<f:selectItems value="#{ccSumTotalNumValofPoRptBB.getGroupStatusDropdown()}"/>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>

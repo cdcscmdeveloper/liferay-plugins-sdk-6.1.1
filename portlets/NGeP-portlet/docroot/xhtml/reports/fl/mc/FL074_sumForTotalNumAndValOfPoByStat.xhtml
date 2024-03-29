@@ -77,8 +77,8 @@
 				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{mcSumTotalNumValofPoRptBB.managedBean.purchaseOrderStatus}">
-					<f:selectItems value="#{mcSumTotalNumValofPoRptBB.getStatusDropdownValuesForOrderStatusGroup()}"/>
+				<p:selectOneMenu value="#{mcSumTotalNumValofPoRptBB.managedBean.groupStatus}">
+					<f:selectItems value="#{mcSumTotalNumValofPoRptBB.getGroupStatusDropdown()}"/>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
