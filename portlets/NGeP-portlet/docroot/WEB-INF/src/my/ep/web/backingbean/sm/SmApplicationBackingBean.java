@@ -10425,6 +10425,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
+			SmApplicationUtil.setFacilityTypeNotInTheSameCategoryFacType(getManagedBean());
 			SmApplicationUtil.getInstance()
 					.removeNotApplicableInformationBeforeSave(getManagedBean());
 
