@@ -4571,15 +4571,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									approverSettings.setScQtApproval(qtApproval);
 									
 									// Added to populate security if Finalization committee is same as Committee Appointment
-									PmParameter finalizationCommitee = scQt.getFinalizationCommitte();
-									PmParameter committeeSettings = approverSettings.getCommitteeType();
-									if (committeeSettings != null
-											&& finalizationCommitee != null
-											&& finalizationCommitee.getParameterId() != null
-											&& finalizationCommitee.getParameterCode()
-													.equalsIgnoreCase(committeeSettings.getParameterCode())) {
-										approverSettings.setPmUser(scQt.getFinalizationSecratery());
-									}
+									approverSettings.setPmUser(scQt.getFinalizationSecratery());
+									approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
 								}
 							}
 							tabBeans.add(new TabBean(titleName,
