@@ -17435,65 +17435,60 @@ private void retriveCommitteeRemarksList(){
 		
 	}
 	
-	/**
-	 * retrieve total score of technical item only
-	 * 
-	 * @param propId
-	 * @return
-	 */
 	public String retriveTotalTechnicalScore(ScQtEvaluationResultDtl propId) {
 		String totalTechScore = null;
 		BigDecimal divNum = new BigDecimal(0);
 		BigDecimal totalNum = new BigDecimal(0);
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
-		
-		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		
-		
-		//add technical weightage
-		for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
-			totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
-		}
-		//add demo weightage
-		totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
-		
-		reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
-		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
-		reqDTO.setDemo(false);//differentiate between item and package prop checklist
-		//calculate total tech score
-		resDTO = evaluationSO.technicalChecklistList(reqDTO);
-		for(ScQtProposalChecklist specscore : resDTO.getDemoCheckLists()){
-			BigDecimal totalScore = specscore.getTotalScore();
-			if (null == totalScore) {
-				totalScore = BigDecimal.valueOf(0);
+
+		try {
+			
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			
+			
+			//add technical weightage
+			for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
+				totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
 			}
-			//#28784 add weightage to calculation - start
-			if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
-					(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
-						!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
-				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
-				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
-				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+			//add demo weightage
+			totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
+			
+			reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
+			reqDTO.setDemo(false);//differentiate between item and package prop checklist
+			//calculate total tech score
+			resDTO = evaluationSO.technicalChecklistList(reqDTO);
+			for(ScQtProposalChecklist specscore : resDTO.getDemoCheckLists()){
+				BigDecimal totalScore = specscore.getTotalScore();
+				if (null == totalScore) {
+					totalScore = BigDecimal.valueOf(0);
+				}
+				log.info("test test");
+				//#28784 add weightage to calculation - start
+				if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
+						(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
+							!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
+					BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
+					BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
+					
+					totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				}
+				//#28784 add weightage to calculation - end
+				divNum = divNum.add(totalScore);
 			}
-			//#28784 add weightage to calculation - end
-			divNum = divNum.add(totalScore);
+			totalTechScore = String.valueOf(divNum.toPlainString());
+			
+		} finally {
+			evaluationSO = null;
 		}
-		totalTechScore = String.valueOf(divNum.toPlainString());
 		
 		return totalTechScore;
 	}
 	
-	/**
-	 * retrieve total score of other checklist (including Presentation/Demonstration)
-	 * 	
-	 * @param propId
-	 * @return
-	 */
 	public String retriveTotalDemolScore(ScQtEvaluationResultDtl propId) {
 		String totalDemoScore = ResourceBundleUtils.getMessage(
 				"lbl.sc.qt.item.spec.null",
@@ -17504,56 +17499,52 @@ private void retriveCommitteeRemarksList(){
 		BigDecimal totalNum = new BigDecimal(0);
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
-		
-		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		
-		//add technical weightage
-		for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
-			totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
-		}
-		//add demo weightage
-		totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
-		
-		reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
-		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-		reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
-		reqDTO.setDemo(true);
-		resDTO = evaluationSO.technicalChecklistList(reqDTO);
-		//calculate demo total score
-		for(ScQtProposalChecklist specscore : resDTO.getDemoCheckLists()){
-			BigDecimal totalScore = specscore.getTotalScore();
-			if (null == totalScore) {
-				totalScore = BigDecimal.valueOf(0);
+
+		try {
+			
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			
+			//add technical weightage
+			for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
+				totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
 			}
-			//#28784 add weightage to calculation - start
-			if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
-					(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
-						!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
-				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
-				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
-				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+			//add demo weightage
+			totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
+			
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
+			reqDTO.setDocDefinationKey(SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO);
+			reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
+			resDTO = evaluationSO.retrieveSpecScore(reqDTO);
+			//calculate demo total score
+			for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
+				divNum = specscore.getTotalScore();
+				//#28784 add weightage to calculation - start
+				if (null != specscore.getScQtCheckList().getQtScoreWeightage() &&
+						(null != specscore.getScQtCheckList().getQtScoreWeightage().getWeightage() &&
+							!specscore.getScQtCheckList().getQtScoreWeightage().getWeightage().equals(BigDecimal.valueOf(0)))) {
+					BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
+					BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
+					
+					divNum = weightage.multiply(divNum).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				}
+				//#28784 add weightage to calculation - end
+				totalDemoScore = String.valueOf(divNum.toPlainString());
 			}
-			divNum = divNum.add(totalScore);
-			//#28784 add weightage to calculation - end
+			
+		} finally {
+			evaluationSO = null;
 		}
-		totalDemoScore = String.valueOf(divNum.toPlainString());
 		
 		return totalDemoScore;
 	}
 	
-	/**
-	 * retrieve total score for each of technical item
-	 * 
-	 * @param propId
-	 * @return
-	 */
 	public String retrieveTotalTechnicalItemScore(ScQtEvaluationResultDtl propId) {
 		String totalTechScore = null;
 		String strDemoScore = null;
-		BigDecimal totalOtherchecklistScore = new BigDecimal(0);
+		BigDecimal technicalScore = new BigDecimal(0);
 		BigDecimal totalNum = new BigDecimal(0);
 		BigDecimal demoScore = new BigDecimal(0);
 		IQTEvaluationSO evaluationSO = null;
@@ -17583,8 +17574,6 @@ private void retriveCommitteeRemarksList(){
 					if (specscore.getTotalScore() != null) {
 						totalNum = totalNum.add(specscore.getTotalScore());
 					}
-					totalOtherchecklistScore = specscore.getScQtCheckList().getQtScoreWeightage() != null ?
-							totalOtherchecklistScore.add(specscore.getScQtCheckList().getQtScoreWeightage().getScore()) : totalOtherchecklistScore;
 					//#28784 ignore non scoring data - end
 				}
 			}
@@ -17593,8 +17582,8 @@ private void retriveCommitteeRemarksList(){
 			reqDTO.setRequestItemId(this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
 			reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
 			resDTO = evaluationSO.excludePresentationDemo(reqDTO);
-			this.getManagedBean().setOtherchecklistScore(String.valueOf(totalNum.toPlainString()));
-			totalTechScore = String.valueOf(resDTO.getTechScore());
+			technicalScore = resDTO.getTechScore().add(totalNum);
+			totalTechScore = String.valueOf(technicalScore);
 			if (resDTO.isGenerateSuppliers()) {
 				
 //				if (this.getManagedBean().getScQtDemo().getDemoCategoryId().getParameterCode().equals(SourcingConstants.BY_ITEM)) {
