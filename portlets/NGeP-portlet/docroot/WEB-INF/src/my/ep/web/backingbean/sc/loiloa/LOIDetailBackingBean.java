@@ -2734,16 +2734,16 @@ public class LOIDetailBackingBean extends
 			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
 
 			if (awardSupplierResDTO.isSuccessful()) {
-				// #33380 - Start.
+				//#33380, #6906 - Start.
 				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
 						&& getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION)) {
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 					reqDTO.setStatusId(statusId);
-					getQtAwardSO().preapareTdForRecommendation(reqDTO);
+					getQtAwardSO().prepareTdForRecommendation(reqDTO);
 				}
-				// #33380 - End.
+				//#33380, #6906 - End.
 				scLoi = awardSupplierResDTO.getScLoi();
 
 				renewSesionObject();
