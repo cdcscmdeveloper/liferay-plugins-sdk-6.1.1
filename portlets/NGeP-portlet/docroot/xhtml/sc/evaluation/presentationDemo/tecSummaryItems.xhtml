@@ -50,6 +50,69 @@
 
 				<ac:paginator for="TechnicalevaluationCommitteeSummaryItemQualifiedSuppliers"></ac:paginator>
 
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}"
+							style="text-align:right">
+						</p:column>
+
+						<ui:param name="isRejected"
+							value="#{not empty summaryqualSup.qtEvaluationResult.scQtProposal.supplierRejectionRemark}" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}"
+							style="width:20%; text-align:center;">
+						</p:column>
+
+						<p:column rowspan="1" colspan="2"
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.technical']}"
+							style="text-align:right">
+						</p:column>
+
+						<p:column rowspan="1" colspan="3"
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.header.others']}"
+							style="text-align:right">
+						</p:column>
+
+
+						<p:column rowspan="2" style="width:25%;text-align:right">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.demo.overall.score']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.demo.overall.score.tooltips']}" />
+							</f:facet>
+						</p:column>
+						<p:column rowspan="2"
+							style="width:15%;white-space: normal;text-align:center;"
+							rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.rating']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
+							</f:facet>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical']} #{passingScore}"
+							style="text-align:right">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical.percentage']} #{passingScore}"
+							style="text-align:right">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other']} #{passingScore}"
+							style="text-align:right">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.demo']} #{passingScore}"
+							style="text-align:right">
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.demo.percentage']} </br>#{passingScore} /#{evaluationBackingBean.managedBean.otherchecklistScore}"
+							style="text-align:right">
+						</p:column>
+					</p:row>
+				</p:columnGroup>
+
 				<p:column headerText="#{lbl['lbl.sc.ranking']}"
 					style="text-align:right">
 
@@ -76,12 +139,27 @@
 				</p:column> 
 				<ui:remove><!-- 6906 - end note 212 --></ui:remove>
 				
-				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical']}"
+				style="text-align:right">
+				<h:outputText value="#{evaluationBackingBean.retrieveTotalTechnicalItemScore(summaryqualSup)}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.technical.percentage']}"
 				style="text-align:right">
 				<h:outputText value="#{evaluationBackingBean.retrieveTotalTechnicalItemScore(summaryqualSup)}"></h:outputText>
 				</p:column>
 			
-				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.otherchecklistScore}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.demo']}"
+					style="text-align:right">
+					<h:outputText value="#{evaluationBackingBean.managedBean.demoScore}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.total.other.demo.percentage']}"
 					style="text-align:right">
 					<h:outputText value="#{evaluationBackingBean.managedBean.demoScore}"></h:outputText>
 				</p:column>

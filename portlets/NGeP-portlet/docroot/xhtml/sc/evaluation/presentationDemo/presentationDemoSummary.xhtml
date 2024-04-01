@@ -49,12 +49,12 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 212 --></ui:remove>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical.item']}"
 				style="text-align:right">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.other.elements']}"
 				style="text-align:right">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
@@ -140,12 +140,12 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 233--></ui:remove>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical.item']}"
 				style="text-align:right">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.other.elements']}"
 				style="text-align:right">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>

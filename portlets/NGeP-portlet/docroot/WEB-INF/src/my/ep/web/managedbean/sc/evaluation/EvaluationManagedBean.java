@@ -614,6 +614,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
 	private int retainPageNumber;//#28784 WIP @Idham
+	private String otherchecklistScore;
 	//#28784 - end
 	private boolean fecIndexPreRender;//#10542
 
@@ -4403,5 +4404,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setEvaluationContext(Map<String, Object> evaluationContext) {
 		this.evaluationContext = evaluationContext;
+	}
+
+	public String getOtherchecklistScore() {
+		return otherchecklistScore;
+	}
+
+	public void setOtherchecklistScore(String otherchecklistScore) {
+		this.otherchecklistScore = otherchecklistScore;
 	}
 }
