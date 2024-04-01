@@ -11901,6 +11901,62 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		return reqDTO;
 	}
+	//Reopen #25726 note 226 - issue 14
+	//function to check and update fulfilment type in specQuestion.
+	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists){
+		log.info("checkAndupdateFulfilmentType");	
+			
+		PmParameter clFulfilmentTypeCode =this.getManagedBean().getQt().getFulfilmentType();
+		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		
+		if (null == technicalCheckList
+				|| technicalCheckList.isEmpty()) {
+			retriveTechnicalCheckList();
+			technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+		}
+		
+		if (null != technicalCheckList
+				&& !technicalCheckList.isEmpty()) {
+			
+			for (ScQtCheckList technicalchecklist : technicalCheckList) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(technicalchecklist.getDefinationType()
+								.getParameterCode()) &&
+								technicalchecklist.getScQtDoc() != null) {
+					allCheckLists.add(technicalchecklist);
+				}		
+			}
+		}
+		
+		
+		if (null != allCheckLists
+				&& !allCheckLists.isEmpty()) {
+			
+			for (ScQtCheckList checklist : allCheckLists) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(checklist.getDefinationType()
+								.getParameterCode()) &&
+								checklist.getScQtDoc() != null) {
+					
+					TplSpecMaster specSpecMaster = checklist.getScQtDoc().getTplSpecMaster();
+					
+					if(CollectionUtils.isNotEmpty(specSpecMaster.getTplSpecQuestions())){
+						for (TplSpecQuestion specQuestion : specSpecMaster.getTplSpecQuestions()) {
+							if (TemplateSpecConst.QUESTION_TYPE_ITEM
+									.equalsIgnoreCase(specQuestion.getQuestionType())) {
+								String questionFulfilmentcode =  specQuestion.getClFulfilmentTypeCode().getParameterCode();
+								if (!questionFulfilmentcode.equals(clFulfilmentTypeCode.getParameterCode())){
+									specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
+								}
+							}							
+						 }
+					}	
+				}				
+			}
+		}
+	}
 
 	/**
 	 * Gets the to be remove list.remove technical and financial checklists.
@@ -14649,7 +14705,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				updatedCheckLists.add(scQtCheckList);
 	
 				reqDTO.setScQt(scQt);
-	
+				//Reopen #25726 note 226 - issue 14
+				checkAndupdateFulfilmentType(updatedCheckLists);
+				
 			}
 	
 			reqDTO.setCheckLists(updatedCheckLists);
