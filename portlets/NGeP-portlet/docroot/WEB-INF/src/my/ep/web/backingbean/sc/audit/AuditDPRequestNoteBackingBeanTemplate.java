@@ -24,6 +24,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	private static final long serialVersionUID = 1L;
 	/** The log. */
 	private static Logger log = Logger.getLogger(AuditDPRequestNoteBackingBeanTemplate.class);
+
 	public AuditDPRequestNoteBackingBeanTemplate() {
 	}
 
@@ -36,10 +37,11 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	 * 
 	 * @return the audit dp request note so
 	 */
-//	private IAuditDPRequestNoteSO getAuditDpmRequestNoteSO() {
-//		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-//				IAuditDPRequestNoteSO.class);
-//	}
+	// private IAuditDPRequestNoteSO getAuditDpmRequestNoteSO() {
+	// return
+	// BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+	// IAuditDPRequestNoteSO.class);
+	// }
 
 	/**
 	 * The void auditSaveData.
@@ -52,6 +54,12 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 		String roleCode = getRoleCode();
 
 		AuDPRequestNoteDTO auObj = insert(managebean, userId, roleCode);
+
+		sendListToSO(auObj);
+
+		sendToSOTest(auObj);
+
+		sendListToSO2(auObj);
 
 		dpAuditSO(auObj);
 	}
@@ -70,12 +78,64 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	 */
 	public abstract AuDPRequestNoteDTO insert(BaseManagedBean managebean, Long userId, String roleCode);
 
-	private void dpAuditSO(AuDPRequestNoteDTO dtlObjList) {
-		log.info("AUDIT TEMPLATE AuDPRequestNoteSPDTOList DETAIL SEND TO DAO :::::: " + dtlObjList.getAuDPRequestNoteSPDTOList().size());
-		log.info("AUDIT TEMPLATE AuDPRequestNoteDetailSPDTOLisT MASTER SEND TO DAO :::::: " + dtlObjList.getAuDPRequestNoteDetailSPDTOList().size());
+	private void sendListToSO(AuDPRequestNoteDTO dtlObjList) {
+		log.info("1. AUDIT TEMPLATE test send a Detail list to SO :::::: "
+				+ dtlObjList.getAuDPRequestNoteSPDTOList().size());
+		log.info("2. AUDIT TEMPLATE test send a Master list to SO :::::: "
+				+ dtlObjList.getAuDPRequestNoteDetailSPDTOList().size());
+		try {
+			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+			auditDPRequestNoteSO.sendListToSO(dtlObjList.getAuDPRequestNoteSPDTOList(),
+					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
+		} catch (Exception ex) {
+			log.info("sendListToSO Catch Exception TEMPLATE SEND TO SO : ");
+			ex.printStackTrace();
+		}
+	}
+
+	private void sendToSOTest(AuDPRequestNoteDTO dtlObjList) {
+		log.info("AUDIT TEMPLATE test send to SO :::::: ");
+		try{
 		IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-		auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
+		auditDPRequestNoteSO.sendToSOTest();
+		} catch (Exception ex) {
+			log.info("sendToSOTest Catch Exception TEMPLATE SEND TO SO : ");
+			ex.printStackTrace();
+		}
+	}
+
+	private void sendListToSO2(AuDPRequestNoteDTO dtlObjList) {
+		log.info("1. AUDIT TEMPLATE test send a Detail list to SO2 :::::: "
+				+ dtlObjList.getAuDPRequestNoteSPDTOList().size());
+		log.info("2. AUDIT TEMPLATE test send a Master list to SO2 :::::: "
+				+ dtlObjList.getAuDPRequestNoteDetailSPDTOList().size());
+		try{
+		IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+		auditDPRequestNoteSO.sendListToSO2(dtlObjList.getAuDPRequestNoteSPDTOList(),
 				dtlObjList.getAuDPRequestNoteDetailSPDTOList());
+		} catch (Exception ex) {
+			log.info("sendListToSO2 Catch Exception TEMPLATE SEND TO SO : ");
+			ex.printStackTrace();
+		}
+	}
+
+	private void dpAuditSO(AuDPRequestNoteDTO dtlObjList) {
+		log.info("AUDIT TEMPLATE AuDPRequestNoteSPDTOList DETAIL SEND TO DAO :::::: "
+				+ dtlObjList.getAuDPRequestNoteSPDTOList().size());
+		log.info("AUDIT TEMPLATE AuDPRequestNoteDetailSPDTOLisT MASTER SEND TO DAO :::::: "
+				+ dtlObjList.getAuDPRequestNoteDetailSPDTOList().size());
+		try {
+			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+			log.info("TEMPLATE!!!");
+			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
+					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
+		} catch (Exception ex) {
+			log.info("dpAuditSO Catch Exception TEMPLATE SEND TO SO : ");
+			ex.printStackTrace();
+		}
 	}
 }
