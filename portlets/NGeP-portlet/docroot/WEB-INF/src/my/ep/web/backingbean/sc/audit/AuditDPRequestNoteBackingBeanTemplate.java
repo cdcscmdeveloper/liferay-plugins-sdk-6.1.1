@@ -1,18 +1,14 @@
 package my.ep.web.backingbean.sc.audit;
 
 import java.io.Serializable;
-
-import org.apache.log4j.Logger;
-
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
 import my.ep.type.pm.RoleCode;
-import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import org.apache.log4j.Logger;
 
 /**
  * The Class AuditDPRequestNoteBackingBeanTemplate. #28895_35492
@@ -99,7 +95,8 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 		try{
 		IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-		auditDPRequestNoteSO.sendToSOTest();
+		auditDPRequestNoteSO.sendToSOTest(dtlObjList.getAuDPRequestNoteSPDTOList(),
+				dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
 			log.info("sendToSOTest Catch Exception TEMPLATE SEND TO SO : ");
 			ex.printStackTrace();
