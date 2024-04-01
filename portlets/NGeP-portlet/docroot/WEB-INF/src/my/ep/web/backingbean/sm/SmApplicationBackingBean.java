@@ -1610,7 +1610,8 @@ public class SmApplicationBackingBean extends
 				&& (getManagedBean().isPoUser() || getManagedBean()
 						.isApproverUser())) {
 			//32008 to set PO & Approver cannot edit field key in by supplier
-			getManagedBean().setUpsCannotEdit(true);
+			//32008 -- temp rollback
+			//getManagedBean().setUpsCannotEdit(true);
 			setRevUrl();
 
 			// set whether to show or not approve and recommend button because
