@@ -234,6 +234,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.web.constant.sc.TreeNodeConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -11900,6 +11901,62 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		return reqDTO;
 	}
+	//Reopen #25726 note 226 - issue 14
+	//function to check and update fulfilment type in specQuestion.
+	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists){
+		log.info("checkAndupdateFulfilmentType");	
+			
+		PmParameter clFulfilmentTypeCode =this.getManagedBean().getQt().getFulfilmentType();
+		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		
+		if (null == technicalCheckList
+				|| technicalCheckList.isEmpty()) {
+			retriveTechnicalCheckList();
+			technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+		}
+		
+		if (null != technicalCheckList
+				&& !technicalCheckList.isEmpty()) {
+			
+			for (ScQtCheckList technicalchecklist : technicalCheckList) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(technicalchecklist.getDefinationType()
+								.getParameterCode()) &&
+								technicalchecklist.getScQtDoc() != null) {
+					allCheckLists.add(technicalchecklist);
+				}		
+			}
+		}
+		
+		
+		if (null != allCheckLists
+				&& !allCheckLists.isEmpty()) {
+			
+			for (ScQtCheckList checklist : allCheckLists) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(checklist.getDefinationType()
+								.getParameterCode()) &&
+								checklist.getScQtDoc() != null) {
+					
+					TplSpecMaster specSpecMaster = checklist.getScQtDoc().getTplSpecMaster();
+					
+					if(CollectionUtils.isNotEmpty(specSpecMaster.getTplSpecQuestions())){
+						for (TplSpecQuestion specQuestion : specSpecMaster.getTplSpecQuestions()) {
+							if (TemplateSpecConst.QUESTION_TYPE_ITEM
+									.equalsIgnoreCase(specQuestion.getQuestionType())) {
+								String questionFulfilmentcode =  specQuestion.getClFulfilmentTypeCode().getParameterCode();
+								if (!questionFulfilmentcode.equals(clFulfilmentTypeCode.getParameterCode())){
+									specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
+								}
+							}							
+						 }
+					}	
+				}				
+			}
+		}
+	}
 
 	/**
 	 * Gets the to be remove list.remove technical and financial checklists.
@@ -13771,18 +13828,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-	// #29732 Start - reOpen Fix
-			List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-					.getTobeRemoveCategoryCodes();
-			if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-				for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-					if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-						deleteCategoryCodesList.remove(i);
-					}
-				}
-			}
-			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-	//#29732 End - reOpen Fix
+
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
 			try{
@@ -14659,7 +14705,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				updatedCheckLists.add(scQtCheckList);
 	
 				reqDTO.setScQt(scQt);
-	
+				//Reopen #25726 note 226 - issue 14
+				checkAndupdateFulfilmentType(updatedCheckLists);
+				
 			}
 	
 			reqDTO.setCheckLists(updatedCheckLists);
@@ -14674,18 +14722,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 			 * IQTSpecSO.class);
 			 */
-	// #29732 Start - reOpen Fix
-			List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-					.getTobeRemoveCategoryCodes();
-			if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-				for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-					if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-						deleteCategoryCodesList.remove(i);
-					}
-				}
-			}
-			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-			//#29732 End - reOpen Fix
+
 			
 			// 29521 - start
 			if (null == reqDTO.getBackupScQt()) {
@@ -17398,18 +17435,19 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 		}
-// #29732 Start - reOpen Fix
-		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
+		
+		// #29732 - start
+		List<ScQtCategory> removeCategoryCodes = this.getManagedBean()
 				.getTobeRemoveCategoryCodes();
-		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-					deleteCategoryCodesList.remove(i);
+		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
+			for (int i = 0; i < removeCategoryCodes.size(); i++) {
+				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
+					removeCategoryCodes.remove(removeCategoryCodes.get(i));
 				}
 			}
-		}
-		spReqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-//#29732 End - reOpen Fix
+		}		
+
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);//#29732
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -17679,7 +17717,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		// #1873 #34837 -start-
 		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
-		// #1873 #34837 -end-
+		//ï¿½#1873ï¿½#34837 -end-
 		
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -21649,27 +21687,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	* @param .
 	* @return 
 	*/
-	private void getCategoryCodesForClone(){
-		
+	private void getCategoryCodesForClone() {
+
 		try {
-			
-			TreeNode rootNode = new DefaultTreeNode("root", null);
-			  Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
-			  for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class).retrieveCategoryL1List().getCategoryL1List()) {
-				  Map<Long, String> l1Map=new HashMap<>();
-				  l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
-				  for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
-					  Map<Long, Map<Long, String>> l2Map=new HashMap<>();
-					  l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
-					  addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
-					}
+
+			TreeNode rootNode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_ROOT, null);
+			Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
+			for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class)
+					.retrieveCategoryL1List().getCategoryL1List()) {
+				Map<Long, String> l1Map = new HashMap<>();
+				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
+				for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+					Map<Long, Map<Long, String>> l2Map = new HashMap<>();
+					l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
+					addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
+				}
 				this.getManagedBean().setRootCategoryTree(rootNode);
 				this.getManagedBean().setMapCatCode(mapCatCode);
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			String qtNo = this.getManagedBean().getQt() != null ? this.getManagedBean().getQt().getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
-					SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
@@ -21678,16 +21718,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			TreeNode rootNode) {
 		for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
-			TreeNode catCode = new DefaultTreeNode("catCode", pmCategoryL1.getCategoryL1Code()
-					+ pmCategoryL2.getCategoryL2Code() + pmCategoryL3.getCategoryL3Code(), rootNode);
-			TreeNode catDes1 = new DefaultTreeNode("catDes1", pmCategoryL1.getCategoryL1Code() + " - "
-					+ pmCategoryL1.getCategoryName(), catCode);
+			TreeNode catCode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATCODE,
+					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
+							+ pmCategoryL3.getCategoryL3Code(), rootNode);
+			TreeNode catDes1 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC1,
+					pmCategoryL1.getCategoryL1Code() + " - " + pmCategoryL1.getCategoryName(), catCode);
 			catDes1.setSelectable(false);
-			TreeNode catDes2 = new DefaultTreeNode("catDes2", pmCategoryL2.getCategoryL2Code() + " - "
-					+ pmCategoryL2.getCategoryName(), catCode);
+			TreeNode catDes2 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC2,
+					pmCategoryL2.getCategoryL2Code() + " - " + pmCategoryL2.getCategoryName(), catCode);
 			catDes2.setSelectable(false);
-			TreeNode catDes3 = new DefaultTreeNode("catDes3", pmCategoryL3.getCategoryL3Code() + " - "
-					+ pmCategoryL3.getCategoryName(), catCode);
+			TreeNode catDes3 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC3,
+					pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName(), catCode);
 			catDes3.setSelectable(false);
 
 			l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
