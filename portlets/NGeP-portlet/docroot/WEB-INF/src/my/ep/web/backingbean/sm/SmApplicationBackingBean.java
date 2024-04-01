@@ -402,6 +402,8 @@ public class SmApplicationBackingBean extends
 						"pmDocument");
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
+		doc.setOverlapReason(null);
+		SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
@@ -2045,13 +2047,6 @@ public class SmApplicationBackingBean extends
 						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(), ssmResDTO);
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
-							// start #29956 smOwnerSsmPopup
-								if(this.getManagedBean().isDisAllowOwnerEdit()){
-									this.getManagedBean().setDontGetSsmData(true);
-								}else{
-									this.getManagedBean().setDontGetSsmData(false);
-								}
-							// end #29956
 							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 							subStartTime = System.currentTimeMillis();
 							
@@ -2362,11 +2357,13 @@ public class SmApplicationBackingBean extends
 	//END 28767
 		
 		// 35311 - Start
-		for (SmFacility facility : getManagedBean().getSmAppl()
-				.getSmFacilities()) {
-			if (facility.getFacilityId() != null) {
-				assignApplicationSupportingDocs();
-				break;
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+			for (SmFacility facility : getManagedBean().getSmAppl().getSmFacilities()) {
+				if (facility.getFacilityId() != null) {
+					assignApplicationSupportingDocs();
+					break;
+				}
 			}
 		}
 		// 35311 - end
