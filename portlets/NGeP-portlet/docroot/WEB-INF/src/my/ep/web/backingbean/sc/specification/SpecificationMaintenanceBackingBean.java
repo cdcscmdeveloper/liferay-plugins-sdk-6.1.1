@@ -476,7 +476,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	/* ***25692#95 - start */
 	//#29732 fix null pointer currentstatus id for 1st time enter
 	QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean();
-	if(renewSessionObject && !isSpecEndorsmentScreen()){
+	if(renewSessionObject){
 		renewSesionObject();
 	}
 	/* ***25692#95 - end */
