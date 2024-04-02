@@ -339,10 +339,12 @@
 					disabled="true" size="35"/>
 				<!-- #25726 START -->
 				<c:if test="#{isDocTypeQuotation}">
-					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+					<!-- Reopen #25726 note 221 - issue 12 -->			 
+					<ac:iconTooltip rendered ="#{!isContractTypeCentral}"  value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
 				</c:if>
 				<c:if test="#{!isDocTypeQuotation}">
-					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+					<!-- Reopen #25726 note 221 - issue 12 -->
+					<ac:iconTooltip rendered ="#{!isContractTypeCentral}"  value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
 				</c:if>
 				<!-- #25726 END -->								
 			</td>
@@ -425,11 +427,12 @@
 				<table>
 					<tr>
 						<td>
+						<!-- Reopen #25726 note 221 - issue 11 -->	
 							<p:selectOneRadio id="bondReq" styleClass="commonLabel"
 								value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 								required="true"
 								label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly}">
+								disabled="true">
 								<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 							</p:selectOneRadio>
@@ -647,13 +650,22 @@
 							</td>
 							<td style="margin-top: -3px">
 								<!-- #25726 START -->
-								<c:if test="#{isDocTypeQuotation}">
-									<ac:iconTooltip value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
-								</c:if>
-								<c:if test="#{!isDocTypeQuotation}">
+								<!-- Reopen #25726 note 221 - issue 13 -->	
+							<c:choose>
+								<c:when test="#{isContractTypeCentral}">
+								  <ac:iconTooltip
+									value="#{lbl['lbl.sc.required.agreement.qt.central.tooltip']}" />
+								</c:when>
+								<c:otherwise>
+							     <c:if test="#{isDocTypeQuotation}">
+									<ac:iconTooltip  value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
+								 </c:if>
+								 <c:if test="#{!isDocTypeQuotation}">
 									<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
-								</c:if>
-								<!-- #25726 END -->
+								 </c:if>
+								</c:otherwise>
+							</c:choose>	
+							<!-- #25726 END -->
 							</td>							
 						</tr>
 					</table>
