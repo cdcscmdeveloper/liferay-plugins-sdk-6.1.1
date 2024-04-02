@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -321,6 +322,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//29562 - END
 	
 	private ScQt checkCategoryCodeQt;//#29466
+	
+	//#30008 - start
+	private boolean notReachAgrm;
+	private PmParameter notReachAgreement;
 	
 	/**
 	 * @return the activeIndex
@@ -2583,5 +2588,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.lastSelectedItem = lastSelectedItem;
 	}
 	//35157 - end
+
+	public boolean isNotReachAgrm() {
+		return notReachAgrm;
+	}
+
+	public void setNotReachAgrm(boolean notReachAgrm) {
+		this.notReachAgrm = notReachAgrm;
+	}
+
+	public PmParameter getNotReachAgreement() {
+		return notReachAgreement;
+	}
+
+	public void setNotReachAgreement(PmParameter notReachAgreement) {
+		this.notReachAgreement = notReachAgreement;
+	}
 }
 // ***25201

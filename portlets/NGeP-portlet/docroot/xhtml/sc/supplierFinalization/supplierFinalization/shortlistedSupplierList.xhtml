@@ -143,8 +143,13 @@
 						</ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" style="width:15%; text-align:center;" 
-		               		rendered="#{haveSupplierRejection}"/>	               	
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
+		               		rendered="#{haveSupplierRejection}"/>
+
+						<ui:remove>	Enhancement #30008 START</ui:remove>						
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.loi.loa.remark']}" style="width:10%;white-space:normal;" />						
+						<ui:remove>Enhancement #30008 END</ui:remove>
+
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
@@ -300,8 +305,15 @@
 				
 				<p:column style="text-align:left;white-space: normal;" rendered="#{haveSupplierRejection}">
 					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
-				</p:column>			
-								
+				</p:column>
+
+				<ui:remove>	Enhancement #30008 START</ui:remove>
+				<p:column style="text-align:left;white-space: normal;"
+					rendered="true">
+					<h:outputText value="#{shortlistedSupp.noReachAgreement.parameterId}" />
+				</p:column>
+				<ui:remove>Enhancement #30008 END</ui:remove>
+
 				<p:column selectionMode="single" rendered="#{showSelectionColumn}" disabledSelection="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" /><ui:remove>#25157 - move logic to bb, #21692 <!-- #28777 & #29729 --> </ui:remove>
 
 			</p:dataTable>		 	    
@@ -398,7 +410,7 @@
 		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}" 
 		               			  style="width:10%; white-space:normal;" />
 		           	</p:row>
-		       	</p:columnGroup>
+				</p:columnGroup>
 				
 				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
@@ -544,8 +556,15 @@
 				
 				<p:column style="text-align:left;" rendered="#{haveSupplierRejection}">
 					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
-				</p:column>	
-								
+				</p:column>
+
+				<ui:remove>	Enhancement #30008 START</ui:remove>
+				<p:column style="text-align:left;white-space: normal;"
+					rendered="true">
+					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}" />
+				</p:column>
+				<ui:remove>Enhancement #30008 END</ui:remove>
+
 				<ui:remove>
 					Enhancement #19336 START #142
 				</ui:remove>				

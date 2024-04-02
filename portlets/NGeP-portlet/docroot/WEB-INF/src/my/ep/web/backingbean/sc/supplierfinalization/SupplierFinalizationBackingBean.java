@@ -5462,6 +5462,11 @@ return	remarksNotFound;
 							flattenRemarks.add(item);
 						}
 					}
+					
+					//#30008 - Start
+					if(each.getNegoDecision() != null){
+						evalResultDtl.setNoReachAgreement(each.getNegoDecision());
+					}//#30008 - end
 				}
 			} else if(CollectionUtils.isNotEmpty(loaList) && rejectedLoa){//11134
 				for(ScLoa each : loaList){
