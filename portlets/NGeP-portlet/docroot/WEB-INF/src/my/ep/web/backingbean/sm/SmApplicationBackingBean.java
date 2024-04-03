@@ -1855,7 +1855,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				&& (getManagedBean().isPoUser() || getManagedBean()
 						.isApproverUser())) {
 			//32008 to set PO & Approver cannot edit field key in by supplier
-			getManagedBean().setUpsCannotEdit(true);
+			//32008 -- temp rollback
+			//getManagedBean().setUpsCannotEdit(true);
 			setRevUrl();
 			// set whether to show or not approve and recommend button because
 			// of site visit
@@ -4249,7 +4250,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
-			//32617 START
+			//32617 && 35208 START
 			if(getManagedBean().getSmSupplier().getSmAppl() != null){
 				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmSupplier().getSmAppl());
@@ -4258,7 +4259,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmAppl());
 			}
-			//32617 END
+			//32617 && 35208 END
 
 			// init GST information
 			initGst();
