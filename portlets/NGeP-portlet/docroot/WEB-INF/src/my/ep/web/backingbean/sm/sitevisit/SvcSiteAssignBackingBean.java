@@ -414,17 +414,21 @@ public class SvcSiteAssignBackingBean extends
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	/**
-	 * Display facility type and category code(s)
 	 * @param svTask
-	 * @return
+	 * @return facility type and category code(s)
 	 */
 	public String getFacilityType(SmSvTask svTask){
-		String s = svTask.getSmSvAddress().getFacilityType();
+		if(svTask == null || svTask.getSmSvAddress() == null){
+			return "";
+		}
+		String s = "";
+		if(svTask.getSmSvAddress().getFacilityType() != null){
+			s = svTask.getSmSvAddress().getFacilityType();
+		}
 		if(svTask.getPmCategoryL3() != null){
-			s = s.concat("<br/>"
-					+ svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+			s += "<br/>" + svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
-					+ svTask.getPmCategoryL3().getCategoryL3Code());
+					+ svTask.getPmCategoryL3().getCategoryL3Code();
 		}		
 		if(!getManagedBean().getSmAppl().isSiteVisitGroup()){
 			return s;
