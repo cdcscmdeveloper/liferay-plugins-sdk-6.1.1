@@ -145,8 +145,10 @@
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" style="width:15%; text-align:center;" 
 		               		rendered="#{haveSupplierRejection}"/>
 
-						<ui:remove>	Enhancement #30008 START</ui:remove>						
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.loi.loa.remark']}" style="width:10%;white-space:normal;" />						
+						<ui:remove>	Enhancement #30008 START</ui:remove>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.loi.loa.remark']}"
+							style="width:10%;white-space:normal;"
+							rendered="#{isNotReachAgrm}" />
 						<ui:remove>Enhancement #30008 END</ui:remove>
 
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
@@ -309,8 +311,9 @@
 
 				<ui:remove>	Enhancement #30008 START</ui:remove>
 				<p:column style="text-align:left;white-space: normal;"
-					rendered="true">
-					<h:outputText value="#{shortlistedSupp.noReachAgreement.parameterId}" />
+					rendered="#{isNotReachAgrm}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.getParameterDesc(shortlistedSupp.notInAgreement)}" />
 				</p:column>
 				<ui:remove>Enhancement #30008 END</ui:remove>
 
@@ -400,7 +403,14 @@
      		            </ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" 
-		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>		               	
+		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>	
+		               			  
+		               	<ui:remove>	Enhancement #30008 START</ui:remove>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.loi.loa.remark']}"
+							style="width:10%;white-space:normal;"
+							rendered="#{isNotReachAgrm}" />
+						<ui:remove>Enhancement #30008 END</ui:remove>
+							               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
@@ -560,8 +570,9 @@
 
 				<ui:remove>	Enhancement #30008 START</ui:remove>
 				<p:column style="text-align:left;white-space: normal;"
-					rendered="true">
-					<h:outputText value="#{shortlistedSupp.deskOfficerRemark}" />
+					rendered="#{isNotReachAgrm}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.getParameterDesc(shortlistedSupp.notInAgreement)}" />
 				</p:column>
 				<ui:remove>Enhancement #30008 END</ui:remove>
 

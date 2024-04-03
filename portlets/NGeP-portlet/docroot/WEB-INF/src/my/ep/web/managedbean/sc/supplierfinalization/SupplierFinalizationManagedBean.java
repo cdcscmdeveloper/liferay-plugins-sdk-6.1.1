@@ -325,7 +325,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//#30008 - start
 	private boolean notReachAgrm;
-	private PmParameter notReachAgreement;
 	
 	/**
 	 * @return the activeIndex
@@ -2597,12 +2596,5 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.notReachAgrm = notReachAgrm;
 	}
 
-	public PmParameter getNotReachAgreement() {
-		return notReachAgreement;
-	}
-
-	public void setNotReachAgreement(PmParameter notReachAgreement) {
-		this.notReachAgreement = notReachAgreement;
-	}
 }
 // ***25201

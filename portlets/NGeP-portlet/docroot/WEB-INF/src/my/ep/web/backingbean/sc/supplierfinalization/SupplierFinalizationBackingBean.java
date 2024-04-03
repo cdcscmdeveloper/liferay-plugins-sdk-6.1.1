@@ -5464,8 +5464,10 @@ return	remarksNotFound;
 					}
 					
 					//#30008 - Start
+					this.getManagedBean().setNotReachAgrm(false);
 					if(each.getNegoDecision() != null){
-						evalResultDtl.setNoReachAgreement(each.getNegoDecision());
+						evalResultDtl.setNotInAgreement(each.getNegoDecision());
+						this.getManagedBean().setNotReachAgrm(true);
 					}//#30008 - end
 				}
 			} else if(CollectionUtils.isNotEmpty(loaList) && rejectedLoa){//11134
@@ -11733,6 +11735,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		this.getManagedBean().setReportDownloadFileName(fileName);
 		downloadAllReports(getManagedBean().getScQt(), "evaluation", reportAttachment, downloadable);
 	}
-	// Bug #35485@Syazani 08/02/2024 -- End
+	// Bug #35485@Syazani 08/02/2024 -- End	
+	
 }
 // ***19336
