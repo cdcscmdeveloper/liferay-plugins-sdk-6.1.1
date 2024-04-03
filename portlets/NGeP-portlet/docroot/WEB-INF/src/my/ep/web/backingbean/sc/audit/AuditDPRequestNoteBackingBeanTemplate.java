@@ -85,8 +85,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 			auditDPRequestNoteSO.sendListToSO(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
-			log.info("sendListToSO Catch Exception TEMPLATE SEND TO SO : ");
-			ex.printStackTrace();
+			log.info("sendListToSO Catch Exception TEMPLATE SEND TO SO : " + ex);
 		}
 	}
 
@@ -98,8 +97,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 		auditDPRequestNoteSO.sendToSOTest(dtlObjList.getAuDPRequestNoteSPDTOList(),
 				dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
-			log.info("sendToSOTest Catch Exception TEMPLATE SEND TO SO : ");
-			ex.printStackTrace();
+			log.info("sendToSOTest Catch Exception TEMPLATE SEND TO SO : " + ex);
 		}
 	}
 
@@ -114,8 +112,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 		auditDPRequestNoteSO.sendListToSO2(dtlObjList.getAuDPRequestNoteSPDTOList(),
 				dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
-			log.info("sendListToSO2 Catch Exception TEMPLATE SEND TO SO : ");
-			ex.printStackTrace();
+			log.info("sendListToSO2 Catch Exception TEMPLATE SEND TO SO : " + ex);
 		}
 	}
 
@@ -131,8 +128,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
-			log.info("dpAuditSO Catch Exception TEMPLATE SEND TO SO : ");
-			ex.printStackTrace();
+			log.info("dpAuditSO Catch Exception TEMPLATE SEND TO SO : " + ex);
 		}
 	}
 }
