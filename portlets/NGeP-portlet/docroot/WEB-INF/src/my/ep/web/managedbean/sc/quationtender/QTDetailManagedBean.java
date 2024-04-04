@@ -1801,6 +1801,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
 	private String catCodeList;
+	private boolean currentInSpecMaint;//#29732 first time spec maint
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
@@ -11845,6 +11846,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
 		this.committeeMembersTypeMap = committeeMembersTypeMap;
+	}
+
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean currentInSpecMaint) {
+		this.currentInSpecMaint = currentInSpecMaint;
 	}
 	
 }
