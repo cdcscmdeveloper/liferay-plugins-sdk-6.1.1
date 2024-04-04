@@ -75,7 +75,8 @@ import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDigiSign;														 
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.pm.OrganizationType;
@@ -1098,19 +1099,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()){
 				if ((contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
 						&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue())
-						|| contractAmt.isBrandNew()){ //#34012,#24333
+						|| (contractAmt.getCtPerformanceBondsNew().size() > 0 && contractAmt.getCtPerformanceBondsOriginal().size() > 0) ){ //#34012,#24333
 					contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
 					//#24333 - Start	
 					if(ctBB.isContractExtendOrIsBond()){
 						List<CtPerformanceBond> originalBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());
 				        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
 
-				        List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>(newBond);
-				        result.addAll(originalBond);
+				        List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
+//				        result.addAll(originalBond);
 				        result = ListUtils.union(newBond, originalBond);
 						contractAmt.setCtPerformanceBonds( result);
 					}else{
-						contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());	
+						contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds());	
 					}
 						
 				}
@@ -1757,7 +1758,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						&& (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null)) {
 					DecimalFormat df = new DecimalFormat("#.00");
 					
-					if (ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
+					if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null) {//#35137,//#35552
 						setTabValue("PB");
 						throw new EpException(MessageConst.ERROR_750021);
 					} else {
@@ -1911,7 +1912,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						.compareTo(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 0) {
 					// start date large than end date
 					setTabValue("PB");
-					throw new EpException(MessageConst.ERROR_750061);
+					throw new EpException(MessageConst.ERROR_750080);
 				}
 
 				if(CollectionUtils.isNotEmpty(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
@@ -3334,75 +3335,69 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 
 		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){
-			//#24333 - Start
-			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-				List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
-				List<CtPerformanceBond> resultBondNew = new ArrayList<CtPerformanceBond>();
-				for(CtPerformanceBond listBond : contractAmt.getCtPerformanceBonds()){
-		            if (!listBond.isBondNew()) {
-		                result.add(listBond);
-		            }
-		            //#24333
-		         if(ctBB.isContractExtendOrIsBond()){
-		            if(listBond.isBondNew()){
-		            	resultBondNew.add(listBond);			            	
-		            }
+			
+			
+					
+				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
+						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
+					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 				}
-			}
-				
-				contractAmt.getCtPerformanceBondsOriginal().clear();
-	            contractAmt.getCtPerformanceBondsOriginal().addAll(result);
-	            
-	            contractAmt.getCtPerformanceBondsNew().clear();
-	            contractAmt.getCtPerformanceBondsNew().addAll(resultBondNew);
-		            //#24333
-					if(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() && (contractAmt.getCtPerformanceBondsNew().isEmpty() || contractAmt.getCtPerformanceBondsNew().size() < 0)){
-						List<CtPerformanceBond> resultBondNewList = new ArrayList<CtPerformanceBond>();
-							for(CtPerformanceBond performanceBond : contractAmt.getCtPerformanceBonds()){
-							 CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
-							 ctPerformanceBond = (CtPerformanceBond) performanceBond.cloneEntity();
-				            if (!ctPerformanceBond.isBondNew()) {	
+				 
+			
+				//Bug #26542 -start
+			//#24333,#35137 - Start
+			contractAmt.getCtPerformanceBondsOriginal().clear();
+			contractAmt.getCtPerformanceBondsNew().clear();
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Date CurrentDate = new Date();
+				if(dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
+						&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
+
+					if((ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+							|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+							|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))
+							&& ctBB.isAlreadyAmendment()){ //#35137
+						List<CtPerformanceBond> bondNew = new ArrayList<CtPerformanceBond>();
+						List<CtPerformanceBond> bondOriginal = new ArrayList<CtPerformanceBond>();
+						for(CtPerformanceBond listBond : contractAmt.getCtPerformanceBonds()){
+							if(listBond.isBondNew()){
+								bondNew.add(listBond);
+							}else{
+								bondOriginal.add(listBond);
+							}
+							if(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() 
+									&& bondNew.size() == 0){
+								 CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
+								 PmFinancialOrg clone = null;
+								 clone = (PmFinancialOrg) listBond.getFinancialOrg().cloneEntity();
+					            if (listBond.isBrandNew()) {	
 				            		ctPerformanceBond.setPerformanceBondId(null);
 					            	ctPerformanceBond.setBondNew(true);
 					            	ctPerformanceBond.setFileName(null);
 					            	ctPerformanceBond.setFilePath(null);
-					            	ctPerformanceBond.setRefNo(performanceBond.getRefNo());
-					            	ctPerformanceBond.setFinancialOrg(performanceBond.getFinancialOrg());
-					            	ctPerformanceBond.setFinancialOrgName(performanceBond.getFinancialOrgName());
-					            	ctPerformanceBond.setBondAmount(performanceBond.getBondAmount());
+					            	ctPerformanceBond.setRefNo(listBond.getRefNo());
+					            	ctPerformanceBond.setFinancialOrg(clone);
+					            	ctPerformanceBond.setFinancialOrgName(listBond.getFinancialOrgName());
+					            	ctPerformanceBond.setBondAmount(listBond.getBondAmount());
 									Calendar cal = Calendar.getInstance();
 									cal.setTime(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
 									cal.add(Calendar.YEAR, 1);
 									ctPerformanceBond.setExpDate(cal.getTime());
 									ctPerformanceBond.setEffDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-									resultBondNewList.add(ctPerformanceBond);
-				            }						
+									bondNew.add(ctPerformanceBond);
+					            }
+							}
 						}
-							contractAmt.getCtPerformanceBondsNew().addAll(resultBondNewList);
-							ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().addAll(resultBondNewList);
-					}
-				}
-			else{
-					contractAmt.getCtPerformanceBondsOriginal().addAll(contractAmt.getCtPerformanceBonds());
-				}					
-				//#24333 - End
-				
-				
-				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
-						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-					ctBB.getManagedBean().setCtContractAmount(contractAmt);
-				}
-				//Bug #26542 -start
-				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-				Date CurrentDate = new Date();
-				if(dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
-						&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
+						contractAmt.getCtPerformanceBondsNew().addAll(bondNew);
+						contractAmt.getCtPerformanceBondsOriginal().addAll(bondOriginal);
+					}else{
+						contractAmt.getCtPerformanceBondsOriginal().addAll(contractAmt.getCtPerformanceBonds());
+					}			
+					//#24333,#35137 - End
 					ctBB.getManagedBean().setCtContractAmount(contractAmt);
 					break;
 				}
-				//Bug #26542 -end
-				
+				//Bug #26542 -end				
 			}
 		
 

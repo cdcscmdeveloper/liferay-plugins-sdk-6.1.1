@@ -423,9 +423,7 @@ public class EvaluationMeetingBackingBean extends
 						this.getManagedBean().getCommitteeType()));
 
 		// #12471 Start
-		getManagedBean().setOrgCatPTJ(QTConstants.ORG_CATEGORY_PTJ);
-		getManagedBean().setOrgCatOther(QTConstants.ORG_CATEGORY_OTHERS);
-		getManagedBean().setOrgCat(getManagedBean().getOrgCatPTJ());
+		getManagedBean().setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();
 		// #12471 End
 		getManagedBean().setSelectedPmUser(null);
@@ -1063,13 +1061,12 @@ public class EvaluationMeetingBackingBean extends
 	 */
 	public void reset() {
 		// #12471 Start
-		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileId(this.getManagedBean().getQt().getOrgProfileId());
-			OrgProfileResDTO resDTO = null;
-			resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
 			this.getManagedBean().setMinistry(resDTO.getPmOrgProfile().getOrgProfileId().toString());
 			buildMinistryDD();
 			resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
@@ -1079,8 +1076,12 @@ public class EvaluationMeetingBackingBean extends
 			buildPtjDD();
 			this.getManagedBean().setOrgType(null);
 			this.getManagedBean().setOrgName(null);
-		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatOther())) {
-			this.getManagedBean().setOrgType(QTConstants.ORG_CAT_TYPE_OTHER_ID.toString());
+		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
+			PmParameter categoryCodeParameter = this.getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,
+					ParameterConst.APPROVAL_CATEGORY_OTHERS);
+			if (categoryCodeParameter != null) {
+				this.getManagedBean().setOrgType(String.valueOf(categoryCodeParameter.getParameterId()));
+			}
 			buildOrgTypeDD();
 			this.getManagedBean().setOrgName(QTConstants.ORG_CAT_NAME_EXTERNAL_PARTIES_ID.toString());
 			buildOrgNameDD();
@@ -1632,7 +1633,7 @@ public class EvaluationMeetingBackingBean extends
 									true));
 				}
 				// #12471 Start
-				if (getManagedBean().getOrgCat().equalsIgnoreCase(getManagedBean().getOrgCatPTJ())) {
+				if (getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 					String ministry = getManagedBean().getMinistry();
 					if (!StringUtils.isBlank(ministry)) {
 						searchBean.getDataFilterBeans().add(
@@ -1656,7 +1657,7 @@ public class EvaluationMeetingBackingBean extends
 										+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 										SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
 					}
-				} else if (getManagedBean().getOrgCat().equalsIgnoreCase(getManagedBean().getOrgCatOther())) {
+				} else if (getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
 					String orgType = getManagedBean().getOrgType();
 					if (!StringUtils.isBlank(orgType)) {
 						searchBean.getDataFilterBeans().add(
@@ -2470,64 +2471,11 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	/**
-	 * Generate organization type dropdown
-	 */
-	public void buildOrgTypeDD() {
-		ISearchBean<Object[]> searchBean = super.createSearchBean(Object[].class, QTSearchBeanConst.SEARCH_SOMOTHERORGTYPE);
-		// Limit to only OTHERS
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(QTSearchBeanConst.SEARCH_PARAMETERDESCID, SearchOperator.OPERATOR_EQUALS.value(),
-						QTConstants.ORG_CAT_TYPE_OTHER_ID));
-		SelectItem[] items = getDropdownObjectValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
-		this.getManagedBean().setOrgTypeDDList(items);
-	}
-
-	/**
-	 * Generate organization name dropdown
-	 */
-	public void buildOrgNameDD() {
-		SelectItem[] items = null;
-		try {
-			int i = 1;
-			List<PmOrgProfile> list = new ArrayList<>();
-			if (this.getManagedBean().getOrgType() != null) {
-				Long orgTypeID = Long.parseLong(this.getManagedBean().getOrgType());
-				ISearchBean<PmOrgProfile> searchBean = new SearchBean<>();
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTSearchBeanConst.SEARCH_ORGTYPECODE_PARAMETERID, SearchOperator.OPERATOR_EQUALS.value(),
-								orgTypeID));
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileSearchBean(searchBean);
-				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
-				list = resDTO.getOrgProfileResultBean().getResultList();
-				items = new SelectItem[list.size() + 1];
-			} else {
-				items = new SelectItem[1];
-			}
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			for (PmOrgProfile object : list) {
-				items[i++] = new SelectItem(object.getOrgProfileId(), object.getOrgName());
-			}
-		} catch (Exception e) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt == null ? "" : scQt.getQtNo();
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-					qtNo, SLALogConstant.QT_EVALUATION_BACKINGBEAN.concat(SLALogConstant.QT_BUILD_ORG_NAME_DD), getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-		this.getManagedBean().setOrgNameDDList(items);
-	}
-
-	/**
 	 * Generate dropdown on parent change
 	 * @param dropdown - Dropdown type (Organization Type)
 	 */
 	public void onChangeDD(String dropdown) {
-		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatPTJ())) {
+		if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
 			if (dropdown.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
 				this.getManagedBean().setPtjGroup(null);
 				buildPtjGroupDD();
@@ -2537,7 +2485,7 @@ public class EvaluationMeetingBackingBean extends
 				this.getManagedBean().setPtj(null);
 				buildPtjDD();
 			}
-		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(this.getManagedBean().getOrgCatOther())
+		} else if (this.getManagedBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)
 				&& dropdown.equalsIgnoreCase(ParameterTypeConst.ORGANISATION_TYPES)) {
 			this.getManagedBean().setOrgName(null);
 			buildOrgNameDD();

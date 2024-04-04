@@ -99,6 +99,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
@@ -1839,6 +1840,10 @@ public class ViewApplHistoryBackingBean extends
 		
 		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
 		Boolean button = false;
+		//#26238 - START
+		boolean cancelCategoryCode = this.getManagedBean().isCancelCategoryCode();
+		List<DisciplinaryActionCategoryVO> cancelCategoryCodeList = this.getManagedBean().getCategoryCodeList();
+		//#26238 - END
 		if(smWorkFlowStatusResDTO != null 
 				&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
 				&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
@@ -1860,6 +1865,9 @@ public class ViewApplHistoryBackingBean extends
 						 && checkStatusMofNoBySupplierId(smAppl)== false){
 					button = false;
 				}//#32002 - end
+				else if(cancelCategoryCode && cancelCategoryCodeList.size() > 0){ //#26238
+					button = false;
+				}
 			}
 		}
 		// #32628 - start
@@ -1979,5 +1987,22 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	// #32628 - end
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 
 }

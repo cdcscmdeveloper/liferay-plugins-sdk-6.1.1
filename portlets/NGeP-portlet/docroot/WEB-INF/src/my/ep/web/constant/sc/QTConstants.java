@@ -3,8 +3,6 @@
  */
 package my.ep.web.constant.sc;
 
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
-
 /**
  * QTConstants for constants for sourcing.
  * 
@@ -299,8 +297,10 @@ public interface QTConstants {
 	//21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
-	//#29468 Added Vinod
+	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
+	public static final String CLOSE_CLONE_LOA_SPEC_POPUP = "cloneLoaSpec.hide()";
+	//#29468 End Vinod
 	
 	// #33831 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
@@ -330,9 +330,6 @@ public interface QTConstants {
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
 	// #12471 Start
-	public static final String ORG_CATEGORY_PTJ = "PTJ";
-	public static final String ORG_CATEGORY_OTHERS = "OTH";
-	public static final Long ORG_CAT_TYPE_OTHER_ID = 209L;
 	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
 	// #12471 End
 	
@@ -373,4 +370,17 @@ public interface QTConstants {
 	public static final String MONTH_NOV="11";
 	public static final String MONTH_DEC="12";
 	public static final String QT_SPEC_CLONE_BACKING_BEAN="QtSpecCloneBackingBean";//SonarQubeIssuesFixed25635-End
+	
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
+	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
+	public static final String TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-TechnicalEvaluation-Committee-Report";
+	public static final String FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-FinancialEvaluation-Committee-Report";
+	
+	public static final String DOC_TYPE_SC_EVALUATION_COMMITTEE_REPORT_ATTACHMENT = "ECR";
+	public static final String DOC_TYPE_SC_OPEN_COMMITTEE_REPORT_ATTACHMENT = "OCR";
+	public static final String DOC_TYPE_SC_TECHNICAL_EVALUATION_REPORT_ATTACHMENT = "TCR";
+	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
+	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
+	// Bug #35485@Syazani 08/02/2024 -- End
 }
