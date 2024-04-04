@@ -15524,4 +15524,22 @@ public class SmApplicationUtil {
 		return sCat != null ? otherLbl + sCat.getOtherDesc() : null;
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
+	
+	// #34303 - start
+	public static void setFacilityTypeNotInTheSameCategoryFacType(SmApplicationManagedBean smApplicationManagedBean) {
+		for (SmFacility facility : smApplicationManagedBean.getSmAppl().getSmFacilities()) {
+			if (facility.getFacilityId() != null) {
+				for (SmSupplierCategoryFacility fac : facility.getSmSupplierCategoryFacilities()) {
+					if (facility.getFacilityId() != null) {
+						if (facility.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+								&& fac.getPmCategoryL3().getFacilityType()
+										.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+							facility.setFacilityType(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+						}
+					}
+				}
+			}
+		}
+	}
+	// #34303 - end
 }
