@@ -15517,11 +15517,14 @@ public class SmApplicationUtil {
 	// #34303 - start
 	public static void setFacilityTypeNotInTheSameCategoryFacType(SmApplicationManagedBean smApplicationManagedBean) {
 		for (SmFacility facility : smApplicationManagedBean.getSmAppl().getSmFacilities()) {
-			for (SmSupplierCategoryFacility fac : facility.getSmSupplierCategoryFacilities()) {
-				if (facility.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
-						&& fac.getPmCategoryL3().getFacilityType()
-								.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-					facility.setFacilityType(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+			if (facility.getFacilityId() != null) {
+				for (SmSupplierCategoryFacility fac : facility.getSmSupplierCategoryFacilities()) {
+
+					if (facility.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+							&& fac.getPmCategoryL3().getFacilityType()
+									.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+						facility.setFacilityType(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+					}
 				}
 
 			}
