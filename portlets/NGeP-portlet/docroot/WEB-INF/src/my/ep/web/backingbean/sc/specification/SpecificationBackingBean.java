@@ -11903,7 +11903,7 @@ if (null != checklist && !checklist.isEmpty()) {
 	}
 	//Reopen #25726 note 226 - issue 14
 	//function to check and update fulfilment type in specQuestion.
-	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists){
+	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists,ScQtCheckList finChecklist, boolean isTechInsert ){
 		log.info("checkAndupdateFulfilmentType");	
 			
 		PmParameter clFulfilmentTypeCode =this.getManagedBean().getQt().getFulfilmentType();
@@ -11918,15 +11918,18 @@ if (null != checklist && !checklist.isEmpty()) {
 		}
 		
 		if (null != technicalCheckList
-				&& !technicalCheckList.isEmpty()) {
+				&& !technicalCheckList.isEmpty() && !isTechInsert) {
 			
 			for (ScQtCheckList technicalchecklist : technicalCheckList) {
-				if (QTConstants.TEMPLETE_SPEC_CODE
-						.equalsIgnoreCase(technicalchecklist.getDefinationType()
-								.getParameterCode()) &&
-								technicalchecklist.getScQtDoc() != null) {
-					allCheckLists.add(technicalchecklist);
-				}		
+				String checklistTitle = (technicalchecklist.getTitle() + "_" + (technicalchecklist.getDefinationType() != null ? technicalchecklist.getDefinationType()
+						.getParameterId() : "")).trim().replaceAll("\\s", "");
+				String finChecklistTitle = (finChecklist.getTitle() + "_" + (finChecklist.getDefinationType() != null ? finChecklist
+							.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");
+					
+					if (finChecklistTitle.equals(checklistTitle)) {	
+						allCheckLists.add(technicalchecklist);
+						break;
+					}
 			}
 		}
 		
@@ -14385,7 +14388,8 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 			// #29187 End Vinod
-	
+			//Reopen #25726 note 226 - issue 14
+			boolean isTechInsert =false;
 			Integer index = null;//1873 - note 97
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 				if (null == scQtCheckList.getTitle()
@@ -14600,6 +14604,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				checkTechnicalFinancialItemCount(scQtCheckList, qtCheckList);
 				updatedCheckLists.add(scQtCheckList);
 				updatedCheckLists.add(qtCheckList);
+				isTechInsert = true;//Reopen #25726 note 226 - issue 14
 				List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
 						.getScQtCheckSt2financeProposalList();
 				//1873 - start - note 97
@@ -14640,6 +14645,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							//1873 - start - note 97
 							updatedCheckLists.add(finChecklist); 
 							updatedCheckLists.add(scQtCheckList); 
+							isTechInsert = true;//Reopen #25726 note 226 - issue 14
 							if(CollectionUtils.isNotEmpty(finSpecMaster.getTplSpecQuestions())){
 								List<Long> idList = new ArrayList<Long>();
 								if(CollectionUtils.isNotEmpty(tecSpecMaster.getFinSpecQuestionsToDelete())){
@@ -14689,7 +14695,8 @@ if (null != checklist && !checklist.isEmpty()) {
 						if (finChecklistTitle.equals(checklistTitle) && edited) {// 1873 - note 97
 							// Bug #33249@Syazani 27/07/2022 -- End
 							checklist.setEdited(false);
-							updatedCheckLists.add(checklist);	
+							updatedCheckLists.add(checklist);
+							isTechInsert = true; //Reopen #25726 note 226 - issue 14
 							break;
 						}
 				//1873 note 86 - end
@@ -14705,11 +14712,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				updatedCheckLists.add(scQtCheckList);
 	
 				reqDTO.setScQt(scQt);
-				//Reopen #25726 note 226 - issue 14
-				checkAndupdateFulfilmentType(updatedCheckLists);
 				
 			}
-	
+			//Reopen #25726 note 226 - issue 14
+			checkAndupdateFulfilmentType(updatedCheckLists,scQtCheckList,isTechInsert);
 			reqDTO.setCheckLists(updatedCheckLists);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			resetCommitteeActivity(reqDTO);
