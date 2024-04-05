@@ -411,7 +411,7 @@ public String backToQtScreen(){
 	switchToOrigManagedBean();
 	FacesContext fc = FacesContext.getCurrentInstance();
 	fc.getApplication().getNavigationHandler()
-	.handleNavigation(fc, null, destPage);//29464
+	.handleNavigation(fc, null, destPage+"?faces-redirect=true");//29464 //29732 add redirect true
 	return "";
 }
 
@@ -476,7 +476,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	/* ***25692#95 - start */
 	//#29732 fix null pointer currentstatus id for 1st time enter
 	QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean();
-	if(renewSessionObject && !isSpecEndorsmentScreen()){
+	if(renewSessionObject){
 		renewSesionObject();
 	}
 	/* ***25692#95 - end */
