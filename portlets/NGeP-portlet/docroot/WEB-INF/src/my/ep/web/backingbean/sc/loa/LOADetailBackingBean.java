@@ -11954,8 +11954,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						map.put(SSTConstant.quantity, scLoiLoaItem.getQty() == null? SSTConstant.TB : scLoiLoaItem.getQty().toString());
 						map.put(SSTConstant.serviceScope, SSTConstant.TB);
 
-						for (TplSpecAnswer answer : answerList) {
-
+					for (TplSpecAnswer answer : answerList) {
+						//35596 @zaim start
+						if (answer.getTplSpecSuppAnswer() != null
+								&& answer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId()
+										.equals(currentSupplier)) {
+						//35596 @zaim end	
 							if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
 									.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 								// supplier respond and make new supplier offer
@@ -11977,8 +11981,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// no changes and no supplier respond
 								map.put(SSTConstant.answerRemark, SSTConstant.TB);
 							}
-						
 						}
+					//35596 @zaim start
+					}
+					//35596 @zaim end
 						// end supplier offer
 						// start retrieve spec size
 						if (getManagedBean().getListSpecAnswer() != null && !getManagedBean().getListSpecAnswer().isEmpty()) {
