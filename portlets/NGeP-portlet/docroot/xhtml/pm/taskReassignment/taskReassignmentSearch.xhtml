@@ -28,6 +28,12 @@
 		</p:outputPanel>
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}"
 		toggleable="true">
+		<!-- 7465 start -->
+		<p:blockUI block="pTaskAssignSearch" widgetVar="taskReassignconfirmPopupBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<!-- 7465 end -->
+		
 		<table class="ppTwoTable">
 			<tr>
 				<th width="15%"><p:outputLabel
@@ -133,12 +139,14 @@
 				</th>
 				<td width="60%">
 					<p:outputPanel id="opDocTypeLov">
+					<!-- 20231010 #7465 Start -->
 					<ac:lov id="lovDocType" lovId="PM_PARAMETER_DESC" size="80"
 						disabled="#{!(taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userId!=null
 						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.user.userName !='')
 						or (taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo !=''
-						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null)}" 
+						and taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docNo != null
+						and not taskReassignmentBackingBean.managedBean.fromUserMaintenanceDetails)}" 
 		            	update="@this,:form:pTaskAssignSearch,:form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult" readonly="true" 
 						headerText="#{lbl['lbl.pm.ta.document.type']}"
 						value="#{taskReassignmentBackingBean.managedBean.taskAssignmentSearchBean.docType.codeName}"
@@ -146,6 +154,7 @@
 						conditionField="#{taskReassignmentBackingBean.constuctConditionFields()}"
 						postUpdateListener="taskReassignmentBackingBean.onChangeDocType"/>
 						</p:outputPanel>
+					<!-- 20231010 #7465 End -->
 				</td>
 				
 				<td width="25%">
@@ -172,6 +181,7 @@
 					
 				</td>
 			</tr>
+			<!-- 7465, 29822 start -->
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
@@ -181,20 +191,27 @@
 							widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" 
 							action="#{taskReassignmentBackingBean.searchTasks}"
-							update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,showReassigneeList,:form:messages,:form:noReassignees"
+							update=":form:dtTaskAssignResult,:form:deleteGroupTasks,:form:deleteOthersTasks,:form:dtGroupTaskAssignResult,
+							:form:dtOthersTaskAssignResult,showReassigneeList,:form:messages,:form:noReassignees,:form:bulkReassignBtnId,
+							:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult"
 							onclick="cbSearchTask.disable();cbResetTask.disable();"
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();"
+							onstart="taskReassignconfirmPopupBlockWidget.show()"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 						/>
 						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
 							onclick="cbSearchTask.disable();cbResetTask.disable();"  
-			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();"
+							onstart="taskReassignconfirmPopupBlockWidget.show()"
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							value="#{lbl['lbl.btn.reset']}" 
 							action="#{taskReassignmentBackingBean.resetTaskAssignSearchBean}"
-							update="@form,pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,showReassigneeList,:form:messages,:form:noReassignees"
+							update="@form,pTaskAssignSearch,:form:userTaskListID,:form:groupTaskListID,:form:othersTaskListID,
+							showReassigneeList,:form:messages,:form:noReassignees,:form:deleteGroupTasks,
+							:form:deleteOthersTasks,:form:pGroupTaskAssignResult,:form:pOthersTaskAssignResult"
 						/>
 					</div>
 				</td>
 			</tr>
+			<!-- 7465,29822 end -->
 		</table>
 		
 		<ac:ptjPopup id="orgProfileCcId"
