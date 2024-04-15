@@ -22360,6 +22360,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean()
 				.getQtCategoryList();
 		String catCodeList = "";
+		Integer recordstatusInactive = 0; //#29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
 				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
@@ -22391,7 +22392,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						|| !catCodeL2.getCategoryName().equals(
 								catCode.getPmCategoryL2Name())
 						|| !catCodeL3.getCategoryName().equals(
-								catCode.getPmCategoryL3Name())) {
+								catCode.getPmCategoryL3Name())
+						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						) {
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");
 					}
