@@ -1775,10 +1775,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setEspkb(true);
 		}
 		
-		//29555 start
-		getPreparedByName();
-		//29555 end
-		
 		//Redmine #20011
 		getManagedBean().setOldGstRateFlg(checkOldGSTRate(getManagedBean().getFlRequest()));
 		getEspkbCommitmentNo();
@@ -6477,9 +6473,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
-			//29555 start
-			getPreparedByName();
-			//29555 end
 			getManagedBean().setBackToDocument(null);
 			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
