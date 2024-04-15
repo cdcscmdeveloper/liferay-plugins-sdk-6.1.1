@@ -1459,6 +1459,10 @@ public class EvaluationBackingBean extends
 								throw new EpException(MessageConst.ERROR_760198);
 							}
 						}
+						if (null != proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod()
+								&& proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
+							proposalCheckList.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+						}
 					}
 
 				}
