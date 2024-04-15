@@ -4014,14 +4014,14 @@ return	remarksNotFound;
 							//send prepare LOA
 							prepareNotification(CommonConstants.LOA);
 						}
-					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-						//#12487 - start Notification to prepare LOA (without LOI)
-						if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
-							currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
-							currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)){				
-							//send prepare LOI/LOA
-							prepareNotification(CommonConstants.LOILOA);
-						}
+					//#12487 - start Notification to prepare LOA (without LOI)
+					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)&& 
+							   (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+							   currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
+							   currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION))){				
+						//send prepare LOI/LOA
+						prepareNotification(CommonConstants.LOILOA);
+						
 					 }
 					//#12487 - end
 					
@@ -11689,6 +11689,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	//35157 - end
 	
 	//#12487 - start Prepare LOI/LOA Notification
+	/**
+	 * To send notification for email and dashboards
+	 * @param docType
+	 */
 	public void prepareNotification(String docType){
 		FacesScopes facesScopes = new FacesScopes();
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
