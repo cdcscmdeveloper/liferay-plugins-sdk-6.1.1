@@ -4571,15 +4571,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									approverSettings.setScQtApproval(qtApproval);
 									
 									// Added to populate security if Finalization committee is same as Committee Appointment
-									PmParameter finalizationCommitee = scQt.getFinalizationCommitte();
-									PmParameter committeeSettings = approverSettings.getCommitteeType();
-									if (committeeSettings != null
-											&& finalizationCommitee != null
-											&& finalizationCommitee.getParameterId() != null
-											&& finalizationCommitee.getParameterCode()
-													.equalsIgnoreCase(committeeSettings.getParameterCode())) {
-										approverSettings.setPmUser(scQt.getFinalizationSecratery());
-									}
+									approverSettings.setPmUser(scQt.getFinalizationSecratery());
+									approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
 								}
 							}
 							tabBeans.add(new TabBean(titleName,
@@ -12819,6 +12812,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				.getScQtCategorys();
 // #29732 Start - reOpen Fix
 		String catCodeList = "";
+		Integer recordstatusInactive = 0; //#29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
 				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
@@ -12850,7 +12844,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 						|| !catCodeL2.getCategoryName().equals(
 								catCode.getPmCategoryL2Name())
 						|| !catCodeL3.getCategoryName().equals(
-								catCode.getPmCategoryL3Name())) {
+								catCode.getPmCategoryL3Name())
+						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)//#29732(#221)
+						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)//#29732(#221)
+						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)//#29732(#221)
+						) {
 // #29732 reOpen Fix - remove code
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");

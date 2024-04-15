@@ -54,10 +54,13 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	 * @return
 	 */
 	public boolean getRoleCode() {
+		boolean isRole ;
 		if (isRoleCodeAuditorGeneral() || isRoleCodeEPAdmin() || isRoleCodeBPKAuditor() || isRoleCodeAuditorInternal()) {
-			return true;
+			isRole = true;
+		}else{
+			isRole = false;
 		}
-		return false;
+		return isRole;
 	}
 
 	/**

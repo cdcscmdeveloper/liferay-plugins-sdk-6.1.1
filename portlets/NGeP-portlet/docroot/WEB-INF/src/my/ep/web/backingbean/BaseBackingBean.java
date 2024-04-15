@@ -4158,16 +4158,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
-		boolean isStatusNull = false;
-		try {
-		if(appl == null || appl.getPmStatus() == null){
+		if(appl == null){
 			return false;
 		}
-		} catch (Exception e) {
-			log.info("", e);
-			isStatusNull = true;
-		}
-		if (isStatusNull) {
+		if (appl.getPmStatus() == null) {
 			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();

@@ -208,6 +208,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -3505,7 +3506,7 @@ public class SmApplicationUtil {
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
 		//#31043 start
-		if (managedBean.isReviewSiteVisit()) {
+		if (managedBean.isReviewSiteVisit()  && managedBean.isApproverUser()) {
 			sec.setSitevisitVerified(isVerifiedAll);
 		}
 		//#31043 end
@@ -4416,7 +4417,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		if (!SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 				.getSmAppl().getSmApplSupportDocs(), managedBean.getSmAppl()
-				.getSupportingDocMode(), managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+				.getSupportingDocMode(), managedBean.isApproverUser())) {
 			throw new EpException(MessageConst.ERROR_722559);
 		}
 	}
@@ -7191,17 +7192,34 @@ public class SmApplicationUtil {
 		if (valid) {
 			valid = false;
 			//#31043 start
+			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryLicenseDocs())) {
+				for (SmLicenseInfoVO docVO : managedBean.getMandatoryLicenseDocs()) {
+					licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+				}
+			}
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 					.getMandatoryDocs(), managedBean.getSmAppl()
-					.getSupportingDocMode(), managedBean.isApproverUser(),managedBean.getSmAppl().getApplNo())
+					.getSupportingDocMode(), managedBean.isApproverUser())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
 							managedBean.getNonMandatoryDocs(), managedBean
 									.getSmAppl().getSupportingDocMode(),
-							managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+							managedBean.isApproverUser())
+							&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
+									licenseMandatoryDocs, managedBean
+									.getSmAppl().getSupportingDocMode(),
+							managedBean.isApproverUser())) {
 				valid = true;
 			}
-			//#31043 end
 		}
+		if(managedBean.isPoUser() && !managedBean.getPoSecReview().isSitevisitVerified() && managedBean.getCurrentStatus() != null 
+				&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - Before Approval")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Sebelum Diluluskan"))){
+			valid = false;
+		}
+		//#31043 end
 		log.info("*** Valid For Approval Final Decision **** " + valid);
 		managedBean.setAllowedToApprove(valid);
 	}
@@ -7473,22 +7491,8 @@ public class SmApplicationUtil {
 			SmAddress addr, Long siteRefId, String siteType) {
 		
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		String addr1 = AddressUtils.getSmFullFormattedAddress(addr);
-		String param1 = bumiType.getParameterCode();
-		if(facVO.getL3() != null && facVO.getL3().getCategoryTypeCode() != null)
-			param1 = facVO.getL3().getCategoryTypeCode().getParameterCode();
-		boolean isGroup = false;
-				
-		for(SmSvTask t : bean.getSvTaskList()){
-			String addr2 = AddressUtils.getSmFullFormattedAddress(t.getSmSvAddress().getAddress());
-			String param2 = t.getSmSvTemplate().getPmParameter().getParameterCode();
-			if(addr1.equals(addr2) && param1.equals(param2)){
-				isGroup = true;
-				addSmSvTaskGroup(bean, t, bumiType, facVO);
-				break;
-			}
-		}
-		if(isGroup){
+		if(!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr)){
 			return;
 		}
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
@@ -7546,17 +7550,42 @@ public class SmApplicationUtil {
 	}
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
-	private static void addSmSvTaskGroup(SmApplicationManagedBean bean, 
-			SmSvTask svTask, PmParameter bumiType, SmSiteVisitFacilityVO facVO){
+	/**
+	 * Create SmSvTaskGroup if the address and catcode type is the same with one of the SmSvTask(s)
+	 * @param svTaskList
+	 * @param facVO
+	 * @param addr
+	 * @return true if SmSvTaskGroup has been created
+	 */
+	private static boolean checkAddressAndParamSvTask(List<SmSvTask> svTaskList, 
+			SmSiteVisitFacilityVO facVO, SmAddress addr){
+		
+		if(facVO.getL3() == null || facVO.getL3().getCategoryTypeCode() == null){
+			return false;
+			
+		}
+		String addr1 = AddressUtils.getSmFullFormattedAddress(addr);
+		String param1 = facVO.getL3().getCategoryTypeCode().getParameterCode();
+		
+		for(SmSvTask task : svTaskList){
+			String addr2 = AddressUtils.getSmFullFormattedAddress(task.getSmSvAddress().getAddress());
+			String param2 = task.getSmSvTemplate().getPmParameter().getParameterCode();
+			if(addr1.equals(addr2) && param1.equals(param2)){
+				addSmSvTaskGroup(task, facVO);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	private static void addSmSvTaskGroup(SmSvTask svTask, SmSiteVisitFacilityVO facVO){
 		SmSvTaskGroup group = new SmSvTaskGroup();
 		group.setSmSvTask(svTask);
 		SmSvTemplate template = new SmSvTemplate();
 		template.setSmSvTaskGroup(group);
-		template.setPmParameter(bumiType);
-		if (!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
-			group.setPmCategoryL3(facVO.getL3());
-			template.setPmParameter(facVO.getL3().getCategoryTypeCode());
-		}
+		group.setPmCategoryL3(facVO.getL3());
+		template.setPmParameter(facVO.getL3().getCategoryTypeCode());
 		group.setSmSvTemplate(template);
 		
 		if(svTask.getSmSvTaskGroups() == null){
@@ -11653,13 +11682,11 @@ public class SmApplicationUtil {
 	 *            appl
 	 * @return boolean
 	 */
-	//#31043 start
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver, String applNo) {
+			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
 		boolean retVal = true;
 		if (!EntityHelper.isCollectionEmpty(docs)) {
 			for (SmApplSupportDoc doc : docs) {
-				if(doc.getSmAppl().getApplNo().equals(applNo)){
 					if ((approver && (doc.getApproverVerifiedFlg() == null || doc
 							.getApproverVerifiedFlg() == 0))
 							|| (!approver && (doc.getVerifiedFlg() == null || doc
@@ -11686,11 +11713,6 @@ public class SmApplicationUtil {
 						retVal = false;
 						break;
 					}
-				} else{
-					retVal = false;
-					break;
-				}
-				//#31043 end
 			}
 		}
 
@@ -15517,13 +15539,16 @@ public class SmApplicationUtil {
 	// #34303 - start
 	public static void setFacilityTypeNotInTheSameCategoryFacType(SmApplicationManagedBean smApplicationManagedBean) {
 		for (SmFacility facility : smApplicationManagedBean.getSmAppl().getSmFacilities()) {
-			for (SmSupplierCategoryFacility fac : facility.getSmSupplierCategoryFacilities()) {
-				if (facility.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
-						&& fac.getPmCategoryL3().getFacilityType()
-								.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-					facility.setFacilityType(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+			if (facility.getFacilityId() != null) {
+				for (SmSupplierCategoryFacility fac : facility.getSmSupplierCategoryFacilities()) {
+					if (facility.getFacilityId() != null) {
+						if (facility.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+								&& fac.getPmCategoryL3().getFacilityType()
+										.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+							facility.setFacilityType(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+						}
+					}
 				}
-
 			}
 		}
 	}
