@@ -1868,6 +1868,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getSmAppl().getApplCategoryType(),
 							getManagedBean().getSmAppl().getSupplierType(),
 							getManagedBean().getBusinessTypeVal()));
+			initNonMandatoryAndMandatoryDocs(); //31043
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 				smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 			}
@@ -5181,12 +5182,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void assignDocVerified(AjaxBehaviorEvent e) {
 		log.info(" *******Docs verified******88");
-		//#31043 start
-		saveOrUpdateAppl();
-		initNonMandatoryAndMandatoryDocs();
-		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
-				getManagedBean().getCurrentPageType());
-		//#31043 end
 	}
 
 	/**
@@ -6414,12 +6409,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						for (SmApplSupportDoc doc : vo.getLicenseSuppDocs()) {
 							//#31043 start
 							if(doc.isReceived()){
-								if (getManagedBean().isPoUser()) {
+								/*if (getManagedBean().isPoUser()) {*/
 									doc.setVerifiedFlg(1);
-								}
+								/*}
 								if (getManagedBean().isApproverUser()) {
 									doc.setApproverVerifiedFlg(1);
-								}
+								}*/
 							}//#31043 end
 						}
 					}
@@ -6442,7 +6437,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}//#31043 end
 			}
 		}
-		saveOrUpdateAppl();
 		//#31043 end
 	}
 
@@ -8253,7 +8247,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// update category that record status is 1 for new mof application. This
 		// happen due to resubmit application (#23683)
 		updateCategoriesRecordStatus();
-
+		updateSuppDocApproverVerified(); //31043
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -10426,6 +10420,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
+			// #34303 - start
+			SmApplicationUtil.setFacilityTypeNotInTheSameCategoryFacType(getManagedBean());
+			// #34303 - end
 			SmApplicationUtil.getInstance()
 					.removeNotApplicableInformationBeforeSave(getManagedBean());
 
@@ -18048,4 +18045,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getSmAppl().getSmSupplierCategories(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end	
+	//31043 START
+	/**
+	 * Update supp doc verified for approver
+	 * 
+	 */
+	private void updateSuppDocApproverVerified() {
+		if (getManagedBean().isApproverUser()) {
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmApplSupportDocs())) {
+				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+						.getSmApplSupportDocs()) {
+					if (doc.getApproverVerifiedFlg() != null
+							&& doc.getVerifiedFlg() != null) {
+						doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
+					}
+				}
+			}
+		}
+	}
+	//31043 END
 }
