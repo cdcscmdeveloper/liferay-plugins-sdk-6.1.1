@@ -1246,7 +1246,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					successCount ++;
 				}
 			}  
-			auResDTO = auTrailsSO.insertAuditTrails(auReqList);
+			auTrailsSO.insertAuditTrails(auReqList);
 			
 			String msgCode = this.isCommitteeApprover() ? "INFO-760490" : "INFO-760492";
 			if(successCount ==  this.getManagedBean().getQtNoDeskOfficerMap().size()){
@@ -1394,7 +1394,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 						createdBy, null,null,groupTabSection);
 				
 				auReqList.add(auReqDTO);
-				auResDTO = auTrailsSO.insertAuditTrails(auReqList);
+				auTrailsSO.insertAuditTrails(auReqList);
 				
 				if(resDTO.isSuccessful()){
 					String msgCode = outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) ? "INFO-760490" : "INFO-760491";
@@ -1548,7 +1548,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		}
 	}
 	
-	//#28895-35500 getting the status of the QT
+	/** #28895-35500 getting the status of the QT
+	 * @param docType, docId
+	 * @return ScWorkFlowStatus
+	 */
 		private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 			IScWorkFlowStatusSO workFlowStatusSO;
 			try {

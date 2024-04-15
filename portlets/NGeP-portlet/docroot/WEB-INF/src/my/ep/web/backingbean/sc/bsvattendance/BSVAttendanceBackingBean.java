@@ -16,6 +16,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.sc.quationtender.IQTAuditTrailsSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -23,10 +24,13 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTAuditConstant;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.sc.quationtender.AuditTrailsReqDTO;
+import my.ep.dto.sc.quationtender.AuditTrailsResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -54,6 +58,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -272,7 +277,6 @@ public class BSVAttendanceBackingBean extends
 	 * @return navigationPath the String variable
 	 */
 	public String submitBsvDetails(String outCome) {
-
 		List<ScQtBsv> bsvs = new ArrayList<ScQtBsv>();
 		Date closeDate = this.getManagedBean().getScQt().getClosingDate();
 		if (DateUtils.getDaysDifference(closeDate, new Date()) > 0) {
@@ -401,7 +405,6 @@ public class BSVAttendanceBackingBean extends
 	 * @return navigationUrl the String Variable
 	 */
 	public String saveBriefingRegAttendance(String flowType) {
-
 		IQTBriefingSO qTBriefingSO = null;
 		String url = null;
 		try {
@@ -538,7 +541,7 @@ public class BSVAttendanceBackingBean extends
 	 * Override from SourcingBaseBackingBean#preRenderView()
 	 */
 	public void preRenderView() {
-
+		
 		SCQuotationTenderDataType siteVisitDatatype = getBpmTaskDetails(SCQuotationTenderDataType.class, null);
 
 		retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());		
@@ -689,7 +692,12 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(null);
 		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
-
+		//28895-35500
+		List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
+		if (newBriefingRegistrationList.contains(selectedReqistration)){
+			newBriefingRegistrationList.remove(newBriefingRegistrationList);
+			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
+		}
 	}
 
 	/**
@@ -729,6 +737,8 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
 
+		//28895-35500
+		List<ScQtBsvRegistration> newBriefingRegistrationList = getManagedBean().getNewBriefingRegistrationList() != null ? getManagedBean().getNewBriefingRegistrationList(): new ArrayList<ScQtBsvRegistration>() ;
 		log.debug("businessNatureListener");
 		if (getManagedBean().getBriefingRegistrationList() == null
 				|| getManagedBean().getBriefingRegistrationList().isEmpty()) {
@@ -762,7 +772,9 @@ public class BSVAttendanceBackingBean extends
 					}
 					setSlectedHeaderName(bsvRegistration.getSupplier()
 							.getCompanyName().concat("  ").concat(">"));
+					newBriefingRegistrationList.add(bsvRegistration);
 				}
+				this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
 			} finally {
 				bsvSo = null;
 			}
@@ -966,7 +978,7 @@ public class BSVAttendanceBackingBean extends
 	 *            the instance of AjaxBehaviorEvent
 	 */
 	public void updateAttandanceToSelectedBsvReg(AjaxBehaviorEvent event) {
-
+		
 		List<ScQtBsvAttendance> attandances = this.getManagedBean()
 				.getBriefingAttendanceList();
 		this.getManagedBean().getSelectedbriefRegistration()
@@ -1118,23 +1130,27 @@ public class BSVAttendanceBackingBean extends
 	public String saveBsvRegistarionFromMaintanceFlow() {
 
 		IQTBriefingSO qTBriefingSO = null;
-
 		try {
+			//28895 - 35500
+			AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
+			AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
+			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
+			
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			String languageCode = new FacesScopes().getUserLocale()
 					.getLanguage();
 			reqDTO.setLanguageCode(languageCode);
+			List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
 			boolean invokeBPM = false;
 			for (ScQtBsvRegistration registration : this.getManagedBean()
 					.getBriefingRegistrationList()) {
-
+				
 				List<ScQtBsvAttendance> bsvAttandance = registration
 						.getBsvAttendance();
-
 				if (getAttandanceCount(bsvAttandance) > scQtBrief
 						.getMaxNoOfAttendance()) {
 					throw new EpException(MessageConst.ERROR_760230,
@@ -1156,7 +1172,6 @@ public class BSVAttendanceBackingBean extends
 				} else {
 					throw new EpException(MessageConst.ERROR_760043);
 				}
-
 			}
 			
 			if (!invokeBPM) {
@@ -1226,6 +1241,31 @@ public class BSVAttendanceBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														locate)));
 
+				if (newBriefingRegistrationList.size() > 0){
+					Long docId = scQt.getQtId();
+					String docNo = scQt.getQtNo();
+					String roleCode = RoleCode.DESK_OFFICER.value();
+					Long orgProfileId = scQt.getOrgProfileId();
+					Long docTypeId = scQt.getProcurementMode().getParameterId();
+					String actionType = QTAuditConstant.AU_TYPE_CREATE;
+					String groupTabSection = QTAuditConstant.AU_SECTION_SL;
+					Long qtFieldId = QTAuditConstant.AU_FIELD_SL_COMPANY_NAME;
+					Long statusId = scQt.getQtStatus().getStatusId();
+					Long changedBy = new FacesScopes().getUserSessionBean().getUserId();
+					Long createdBy = new FacesScopes().getUserSessionBean().getUserId();
+					
+					IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);	
+					
+					for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
+						String newValue = newBriefingRegistration.getSupplier().getCompanyName();
+						auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, null, docTypeId, docNo, docId,
+								null, null, statusId, actionType, qtFieldId, null, null, newValue,
+								null, changedBy, createdBy, null, null, groupTabSection);
+						auReqList.add(auReqDTO);
+					}							
+					auTrailsSO.insertAuditTrails(auReqList);
+				}
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 			}
@@ -1690,6 +1730,35 @@ public class BSVAttendanceBackingBean extends
 			BriefingResDTO resDTO = briefingSO
 					.updateSupplierRegistionsNSendNotifications(briefingReqDTO);
 
+			
+			//28895 - 35500 audit trails
+			String roleCode = RoleCode.COMMITTEE_APPROVER.value();
+			Long orgProfileId = scQt.getOrgProfileId();
+			String orgName = null;
+			Long docTypeId = scQt.getProcurementMode().getParameterId();
+			String actionType = null;
+			Long docId = scQt.getQtId();
+			String docNo = scQt.getQtNo();
+			Long statusId = (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) ? 
+					QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_APPROVED : QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_REJECTED;
+			Long userId =  new FacesScopes().getUserSessionBean().getUserId();
+			String groupTabSection = QTAuditConstant.AU_SECTION_SL;
+			Long qtFieldId = QTAuditConstant.AU_FIELD_SL_COMPANY_NAME;;
+			Long changedBy = new FacesScopes().getUserSessionBean().getUserId();
+			Long createdBy = new FacesScopes().getUserSessionBean().getUserId();
+
+			AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
+			AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
+			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
+			IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+			
+			auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, orgName, docTypeId, docNo, docId,
+					null, null, statusId, actionType, qtFieldId, null, null, null,
+					null, changedBy, createdBy, null, null, groupTabSection);
+			auReqList.add(auReqDTO);
+			auTrailsSO.insertAuditTrails(auReqList);
+			
 			if (resDTO.isSuccessful()) {
 
 				renewSesionObject();

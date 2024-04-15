@@ -430,13 +430,22 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
+		//28859 - 35500
+		List<ScQtContactPerson> deletedContactList = new ArrayList<ScQtContactPerson>();
+		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
 
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
 		} else {
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
+				deletedContactList.add(contactPerson);
+				if (newDoaList != null && newDoaList.contains(contactPerson)){
+					newDoaList.remove(contactPerson);
+				}
 			}
+			this.getManagedBean().setPmuserDeletedContactpersonList(deletedContactList);
+			//28859 - 35500 end
 		}
 		this.getManagedBean().setSelectedpmuserContactpersonList(null);
 	}
@@ -488,6 +497,12 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			contactPerson.setFaxNo(newUser.getFaxNo());
 			contactPerson.setUser(newUser);
 		}
+		
+		//28895 - 35500
+		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
+		newDoaList = newDoaList == null ? new ArrayList<ScQtContactPerson>() : newDoaList;
+		newDoaList.add(contactPerson);
+		this.getManagedBean().setNewDoaList(newDoaList);
 
 //		if (list != null) {
 //			for (PmUser user : list) {
@@ -664,6 +679,9 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		//#21692 attachment - Start
 		Boolean oldApprovalPBM = scQt.isApprovalPBM();
 		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
+		if (!enableDateMOF) {
+			scQt.setMofDate(null);
+		}
 		scQt.setApprovalPBM(enableDateMOF);
 		resetDecisionCertPBM(enableDateMOF);
 		if ((oldApprovalPBM && !enableDateMOF)
@@ -673,7 +691,10 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		//#21692 attachment - End
 	}
 	//#21692 attachment - Start
-	private void deleteEpvAttachments() {
+	/**
+	 * delete existing attachment and reset decision
+	 */
+	public void deleteEpvAttachments() {
 		ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
 		
 		List<ScQtEpvApprovalReqAttachment> deletedAttachment = new ArrayList<>();
@@ -731,7 +752,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 
 				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
 				int day = (int) days;
-				if (day >= 0) {
+				if (day > 0) {//#21692
 					return Boolean.TRUE;
 				}
 			}
