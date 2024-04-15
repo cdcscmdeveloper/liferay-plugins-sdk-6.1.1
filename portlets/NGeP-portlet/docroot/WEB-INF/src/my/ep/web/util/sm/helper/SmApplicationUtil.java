@@ -208,6 +208,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -3505,7 +3506,7 @@ public class SmApplicationUtil {
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
 		//#31043 start
-		if (managedBean.isReviewSiteVisit()) {
+		if (managedBean.isReviewSiteVisit()  && managedBean.isApproverUser()) {
 			sec.setSitevisitVerified(isVerifiedAll);
 		}
 		//#31043 end
@@ -4416,7 +4417,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		if (!SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 				.getSmAppl().getSmApplSupportDocs(), managedBean.getSmAppl()
-				.getSupportingDocMode(), managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+				.getSupportingDocMode(), managedBean.isApproverUser())) {
 			throw new EpException(MessageConst.ERROR_722559);
 		}
 	}
@@ -7191,17 +7192,34 @@ public class SmApplicationUtil {
 		if (valid) {
 			valid = false;
 			//#31043 start
+			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryLicenseDocs())) {
+				for (SmLicenseInfoVO docVO : managedBean.getMandatoryLicenseDocs()) {
+					licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+				}
+			}
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 					.getMandatoryDocs(), managedBean.getSmAppl()
-					.getSupportingDocMode(), managedBean.isApproverUser(),managedBean.getSmAppl().getApplNo())
+					.getSupportingDocMode(), managedBean.isApproverUser())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
 							managedBean.getNonMandatoryDocs(), managedBean
 									.getSmAppl().getSupportingDocMode(),
-							managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+							managedBean.isApproverUser())
+							&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
+									licenseMandatoryDocs, managedBean
+									.getSmAppl().getSupportingDocMode(),
+							managedBean.isApproverUser())) {
 				valid = true;
 			}
-			//#31043 end
 		}
+		if(managedBean.isPoUser() && !managedBean.getPoSecReview().isSitevisitVerified() && managedBean.getCurrentStatus() != null 
+				&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - Before Approval")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Sebelum Diluluskan"))){
+			valid = false;
+		}
+		//#31043 end
 		log.info("*** Valid For Approval Final Decision **** " + valid);
 		managedBean.setAllowedToApprove(valid);
 	}
@@ -11664,13 +11682,11 @@ public class SmApplicationUtil {
 	 *            appl
 	 * @return boolean
 	 */
-	//#31043 start
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver, String applNo) {
+			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
 		boolean retVal = true;
 		if (!EntityHelper.isCollectionEmpty(docs)) {
 			for (SmApplSupportDoc doc : docs) {
-				if(doc.getSmAppl().getApplNo().equals(applNo)){
 					if ((approver && (doc.getApproverVerifiedFlg() == null || doc
 							.getApproverVerifiedFlg() == 0))
 							|| (!approver && (doc.getVerifiedFlg() == null || doc
@@ -11697,11 +11713,6 @@ public class SmApplicationUtil {
 						retVal = false;
 						break;
 					}
-				} else{
-					retVal = false;
-					break;
-				}
-				//#31043 end
 			}
 		}
 
