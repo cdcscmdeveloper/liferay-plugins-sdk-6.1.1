@@ -33,7 +33,7 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 		List<AuDPRequestNoteSPDTO> auDPRequestnoteSPDTOList = new ArrayList<>();
 		AuDPRequestNoteSPDTO auDPRequestNoteSPDTO = new AuDPRequestNoteSPDTO();
 		AuDPRequestNoteDTO auObj = new AuDPRequestNoteDTO();
-		List<AuDPRequestNoteDetailSPDTO> auDPRequestnoteDetailSPDTOList = new ArrayList<AuDPRequestNoteDetailSPDTO>();
+		List<AuDPRequestNoteDetailSPDTO> auDPRequestnoteDetailSPDTOList = new ArrayList<>();
 		AuDPRequestNoteDetailSPDTO data;
 		log.info("START ADD DETAIL LIST :::::: ");
 		for (ScRequestNoteDtl ri : managedBeans.getPurchaseRequestResDTO().getPurchaseRequest().getRequestNoteDtls()) {
