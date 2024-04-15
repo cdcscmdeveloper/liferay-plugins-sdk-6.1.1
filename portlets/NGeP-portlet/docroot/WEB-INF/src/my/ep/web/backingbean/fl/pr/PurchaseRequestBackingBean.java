@@ -1707,6 +1707,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setPmUserOrg(userOrg);
 	}
 	//29555 start
+	/*
+	 * set preparedby for managedbean by retrieving requistioner and docid
+	 */
 	public void getPreparedByName() {
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FlActor actor = null;

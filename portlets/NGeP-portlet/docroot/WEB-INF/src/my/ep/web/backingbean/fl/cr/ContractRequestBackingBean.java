@@ -2040,6 +2040,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	
 	//29555 start
+	/*
+	 * set preparedby for managedbean by retrieving requistioner and docid
+	 */
 	public void getPreparedByName() {
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FlActor actor = null;
