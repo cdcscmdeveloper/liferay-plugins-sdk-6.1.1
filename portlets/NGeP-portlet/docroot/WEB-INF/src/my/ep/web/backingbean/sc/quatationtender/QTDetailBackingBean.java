@@ -12766,6 +12766,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				.getScQtCategorys();
 // #29732 Start - reOpen Fix
 		String catCodeList = "";
+		Integer recordstatusInactive = 0;// #29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
 				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
@@ -12795,7 +12796,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 						|| !catCodeL2.getCategoryName().equals(
 								catCode.getPmCategoryL2Name())
 						|| !catCodeL3.getCategoryName().equals(
-								catCode.getPmCategoryL3Name())) {
+								catCode.getPmCategoryL3Name())
+								|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								) {
 // #29732 reOpen Fix - remove code
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");
