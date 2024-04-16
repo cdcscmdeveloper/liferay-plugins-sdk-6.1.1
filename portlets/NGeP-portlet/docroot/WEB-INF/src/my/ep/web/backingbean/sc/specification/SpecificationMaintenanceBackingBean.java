@@ -611,8 +611,9 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#15391 - end		
 		
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-				.equals(scQt.getQtStatus().getStatusId()) && !this.getManagedBean().isReadOnly()) { //#29732 add readonly #171
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
+				.equals(scQt.getQtStatus().getStatusId()) || QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
+				.equals(scQt.getQtStatus().getStatusId())) && !this.getManagedBean().isReadOnly()) { //#29732 add readonly #171
 			String changedCatCodeList = specBB.checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
