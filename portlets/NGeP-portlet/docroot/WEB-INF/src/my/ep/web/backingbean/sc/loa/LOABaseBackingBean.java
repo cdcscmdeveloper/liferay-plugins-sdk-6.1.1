@@ -69,6 +69,11 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		}
 	}
 	// 20230111@Haziq - #12487 
+	/**
+	 * to set detail selected PTJ
+	 * 
+	 * @param userOrg
+	 */
 	public void userPtjListener(PmUserOrg userOrg) {
 		if (userOrg != null) {
 			this.getManagedBean().setSelectedUserPtj(userOrg);

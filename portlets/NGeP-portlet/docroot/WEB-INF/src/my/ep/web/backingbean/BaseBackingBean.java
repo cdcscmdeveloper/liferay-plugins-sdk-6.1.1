@@ -4234,7 +4234,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//END #29956
 	
 	//#12487 start
-	
+	/**
+	 * To retrieve PTJ code by org profile ID and created date
+	 * @param orgProfileId
+	 * @param tranDate
+	 * @return Organization Code
+	 */
 	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()
