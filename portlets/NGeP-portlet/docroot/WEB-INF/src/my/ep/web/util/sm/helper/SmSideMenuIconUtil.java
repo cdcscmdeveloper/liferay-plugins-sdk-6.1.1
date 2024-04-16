@@ -743,7 +743,7 @@ public class SmSideMenuIconUtil {
 				
 				boolean mandatoryDocVerified = false; 
 				boolean nonMandatoryDocVerified = false; 
-				boolean licenseMandatoryDocVerified = false; 
+				boolean licenseMandatoryDocVerified = true; 
 				
 				log.info("SmAppl revise: "+bean.getSmAppl().getPmStatus().getStatusId());
 				
