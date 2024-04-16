@@ -38,7 +38,11 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-//20230111@Haziq - #12487
+/**
+ * 20230111@Haziq - #12487
+ * @author muhammadasyrafhaziq
+ * This class to retrieve user organization details information
+ */
 @ManagedBean(name = "userOrganisationSearchBackingBean")
 @ViewScoped
 public class UserOrgSearchBackingBean extends
@@ -77,6 +81,10 @@ public class UserOrgSearchBackingBean extends
 				.getPegaiPengawaProfileId());
 	}
 	
+	/**
+	 * To initiate data
+	 * @param orgProfileId
+	 */
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
 		
@@ -94,6 +102,9 @@ public class UserOrgSearchBackingBean extends
 		}
 	}
 
+	/**
+	 * To set PTJ details info
+	 */
 	public void initPtjPopup(){
 		this.renewSesionObject();
 		List<PmUserOrg> userOrgList = PmCommonUtil
@@ -178,6 +189,10 @@ public class UserOrgSearchBackingBean extends
 		}
 	}
 	
+	/**
+	 * Search user by organization type
+	 * @param orgType
+	 */
 	public void searchUserOrgs(String orgType){
 		getManagedBean().setOrgType(orgType);
 	
@@ -191,6 +206,9 @@ public class UserOrgSearchBackingBean extends
 		getUserOrgDataModel().reloadData();
 	}
 	
+	/**
+	 * reset 
+	 */
 	public void resetUserOrg(){
 		Long ministryId = this.getManagedBean().getMinistryProfileId(); //#26475
 		
@@ -226,6 +244,10 @@ public class UserOrgSearchBackingBean extends
 		return userOrgDataModel;
 	}
 	
+	/**
+	 * OK action execute
+	 * @param methodActionStr
+	 */
 	public void okAction(String methodActionStr) {
 		log.info("okAction");
 		
@@ -244,6 +266,11 @@ public class UserOrgSearchBackingBean extends
 		}
 	}
 	
+	/**
+	 * List dropdown for PTJ or KPTJ
+	 * @param orgType
+	 * @return
+	 */
 	public static SelectItem[] getPtjOrKptjDropDown(String orgType) {
 		SelectItem[] items = new SelectItem[2];
 			if(ParameterConst.ORG_TYPE_PTJ.equals(orgType)){
@@ -274,6 +301,11 @@ public class UserOrgSearchBackingBean extends
 		return items;
 	}
 	
+	/**
+	 * Search data base on searchBean
+	 * @param searchBean
+	 * @return
+	 */
 	private ISearchBean<PmUserOrg> getSearchBeanData(ISearchBean<PmUserOrg> searchBean){
 		log.info("getSearchBeanData");	
 		if (StringUtils.isNotBlank(getManagedBean().getPtjCodeName())
@@ -350,8 +382,7 @@ public class UserOrgSearchBackingBean extends
 	 * @return FacesScopes
 	 */
 	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
+		return new FacesScopes();
 	}
 	
 }

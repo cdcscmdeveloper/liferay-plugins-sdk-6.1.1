@@ -1110,8 +1110,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
 			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 
-			if (getManagedBean().getCurrentStatusId() != null
-					&& (getManagedBean().getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) || getManagedBean()
+			if ((getManagedBean().getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) || getManagedBean()
 							.getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL))
 					&& (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || fulfilmentType
 							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
@@ -6124,6 +6123,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	// #28789 - end
 	// #29693 - start
+	/**
+	 * To send notification for email and dashboard
+	 */
 	public void approvalNotification() {
 		FacesScopes facesScopes = new FacesScopes();
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -6143,15 +6145,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		}
 
-		String ptjName = "";
-		String ministryName = "";
-
 		ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
 		Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
 		Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
-		ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+		String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
 		PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-		ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+		String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
 		log.info(ptjName);
 		log.info(ministryName);
 
