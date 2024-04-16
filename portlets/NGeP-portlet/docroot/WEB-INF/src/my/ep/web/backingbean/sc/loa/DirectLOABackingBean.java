@@ -12600,6 +12600,11 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	// Bug #35078@Syazani -- End 14/09/2023
 	
 	//#12487 - start
+	/**
+	 * validate respond period
+	 * 
+	 * @param days
+	 */
 	public void validateResponsePeriod(Integer days){
 		ScLoa scLoa = getManagedBean().getScLoa();
 		
@@ -12620,39 +12625,38 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			throw new EpException(MessageConst.ERROR_775303);
 		}	
 	}
-	
-    public Date retrieveDueDate(){
+
+	/**
+	 * retreive due date
+	 * @return
+	 */
+	public Date retrieveDueDate(){
     	ScLoa scLoa = getManagedBean().getScLoa();
     	Date dueDate = null;
     	
-    	  if (scLoa != null){
-    	  	  Long statusId = scLoa.getPmStatus().getStatusId();
-    	  	  if ( QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) ||
-    					QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
-    	  		  scLoa.setAckDueDate(null);
-    	  	  }else if (scLoa.getLoaResponsePeriod() != null){
-    	  		  dueDate = DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), scLoa.getLoaResponsePeriod());
-    	 		      //scLoa.setAckDueDate(dueDate);
-    	  	  }
-    	    }
-    	  
-     /*  if (scLoa != null && scLoa.getLoaResponsePeriod() != null && (QTStatusConst.LOA_PENDING_APPROVAL.equals(scLoa
-				.getPmStatus().getStatusId()) ||
-				QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(scLoa
-						.getPmStatus().getStatusId()))) {
-    	   dueDate = DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), scLoa.getLoaResponsePeriod());
-		   scLoa.setAckDueDate(dueDate);
-		} else if (scLoa != null && (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
-				.getPmStatus().getStatusId()) ||
-				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
-						.getPmStatus().getStatusId()))) {
-    	   scLoa.setAckDueDate(null);
-       }*/
-	
+      if (scLoa != null){
+    	  Long statusId = scLoa.getPmStatus().getStatusId();
+    	  if ( QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) ||
+  			   QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
+    		  scLoa.setAckDueDate(null);
+    	  }else if (scLoa.getLoaResponsePeriod() != null){
+    		  if ( QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId) ||
+    	  		   QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)) {
+    			  dueDate = DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), scLoa.getLoaResponsePeriod());
+    			  scLoa.setAckDueDate(dueDate);
+    		  }else if (scLoa.getAckDueDate() != null){
+    			  dueDate = scLoa.getAckDueDate();
+    		  }	  
+    	  }
+      }
 	  return dueDate;
 	}
-	
-	
+	   
+	/**
+	 * retreive respond period rules
+	 * @param value
+	 * @return
+	 */
 	private BigDecimal retrieveResponsePeriod(String value) {
 		
 		BigDecimal result = null;
