@@ -4125,15 +4125,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO);
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1], (String) prObj[3], Boolean.TRUE);
-						log.info("START AUDIT DP AT REQUESTNOTE BACKINGBEAN ::::::");
 						/************ AUDIT #28895_35492 *************/
 						IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 								ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 
 						AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
 						if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
-							log.info("INSIDE AUDITCONST CHECKING IN REQUESTNOTE BACKINGBEAN :::::: "
-									+ auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF));
 							getManagedBean().setPurchaseRequestResDTO(response);
 							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
 						}
