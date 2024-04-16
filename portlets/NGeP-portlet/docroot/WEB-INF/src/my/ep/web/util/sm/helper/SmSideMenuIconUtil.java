@@ -853,9 +853,10 @@ public class SmSideMenuIconUtil {
 				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
 					for (SmApplSupportDoc doc : licenseMandatoryDocs) {
 						if(doc.getVerifiedFlg() != null){
-							if(doc.getVerifiedFlg() == 0)
+							if(doc.getVerifiedFlg() == 0){
 								licenseMandatoryDocVerified = false;
-							break;
+								break;
+							}
 						}
 					}
 				}
