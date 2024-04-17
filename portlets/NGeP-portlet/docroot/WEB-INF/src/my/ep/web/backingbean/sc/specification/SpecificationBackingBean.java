@@ -17670,7 +17670,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		//#15391 - start
 		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
 		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
-		log.info("QTID: "+scQt.getQtId());	
+		log.info("QTID: "+scQt.getQtId());
 		if(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId()) 
 				|| QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt.getQtStatus().getStatusId())){
 			this.getManagedBean().setGenInfo(true);
