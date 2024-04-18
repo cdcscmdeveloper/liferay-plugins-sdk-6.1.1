@@ -611,11 +611,10 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#15391 - end		
 		
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-				.equals(scQt.getQtStatus().getStatusId()) || QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION
-				.equals(scQt.getQtStatus().getStatusId())) && !this.getManagedBean().isReadOnly()) {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
+				.equals(scQt.getQtStatus().getStatusId()) && !this.getManagedBean().isReadOnly()) {
 			String changedCatCodeList = specBB.checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) { 
+			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
 				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
 				FacesContext.getCurrentInstance().addMessage(
