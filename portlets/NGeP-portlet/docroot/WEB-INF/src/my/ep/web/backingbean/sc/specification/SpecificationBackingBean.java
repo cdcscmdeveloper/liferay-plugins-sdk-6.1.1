@@ -17752,7 +17752,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) && !this.getManagedBean().isReadOnly()) {
+						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) 
+				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
+				&& !this.getManagedBean().isReadOnly()) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
