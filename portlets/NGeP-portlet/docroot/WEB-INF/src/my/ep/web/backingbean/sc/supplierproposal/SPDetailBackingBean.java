@@ -2864,10 +2864,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList().getScQtDoc();
 		this.getManagedBean().setScQtDoc(
 				scQtProposalChecklist.getScQtCheckList().getScQtDoc());
-		
-		//#28777 & #29729 - Start
-		updateZoneLocalityMatchSupplierBranchLocation();
-		//#28777 & #29729 - End
 
 		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 		TemplateSpecBean templateSpecBean = getManagedBean()
@@ -3277,10 +3273,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
-		
-		//#28777 & #29729 - Start
-		updateZoneLocalityMatchSupplierBranchLocation();
-		//#28777 & #29729 - End
 		
 		//REMOVE Bug #31542 
 		IQTProposalSO proposalSO = null;
@@ -6309,30 +6301,6 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			}
 		    return isSupplierBranchDeleted;
-		}
-		
-		/**
-		* Method to update record status for match branch during checklist proposal technical & financial 
-		* @param supplier id 
-		* @param qt id 
-		* @return resDTO isSuccessful
-		**/
-		private void updateZoneLocalityMatchSupplierBranchLocation(){
-			IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			ScQt scQt = getManagedBean().getQt();
-			if (scQt.isZonal()) {
-				ProposalReqDTO reqDTO = new ProposalReqDTO();
-				reqDTO.setSupplierId(getManagedBean().getSupplierId());
-				reqDTO.setQtId(scQt.getQtId());
-				ProposalResDTO resDTO = proposalSO
-						.updateZoneLocalityMatchSupplierBranchLocation(reqDTO);
-				if (resDTO.isSuccessful()) {
-					log.info("Sucess.");
-				}else{
-					log.info("Fail.");
-				}
-			}
 		}
 		//#28777 & #29729 - End
 
