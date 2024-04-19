@@ -11430,33 +11430,41 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					map.put(SSTConstant.serviceScope, SSTConstant.TB);
 
 					for (TplSpecAnswer answer : answerList) {
-
-						if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
-								.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
-							// supplier respond and make new supplier offer
-							answerRemark = answer.getNewSupplierOffer();
-							answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
-									SSTConstant.GREATER_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-									SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
-							map.put(SSTConstant.answerRemark, answerRemark);
-							break;
-						} else if ((answer.getNewSupplierOffer() == null || answer.getNewSupplierOffer().isEmpty())
-								&& (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty())) {
-							// supplier respond but no changes
-							answerRemark = answer.getAnswerRemark();
-							answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
-									SSTConstant.GREATER_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-									SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
-							map.put(SSTConstant.answerRemark, answerRemark);
-						} else {
-							// no changes and no supplier respond
-							map.put(SSTConstant.answerRemark, SSTConstant.TB);
+						// 35596 @zaim start
+						if (answer.getTplSpecSuppAnswer() != null
+								&& answer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId()
+										.equals(currentSupplier)) {
+							// 35596 @zaim end
+							if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
+									.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
+								// supplier respond and make new supplier offer
+								answerRemark = answer.getNewSupplierOffer();
+								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN,
+										SSTConstant.LESS_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
+										SSTConstant.GREATER_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+										SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+								map.put(SSTConstant.answerRemark, answerRemark);
+								break;
+							} else if ((answer.getNewSupplierOffer() == null || answer.getNewSupplierOffer().isEmpty())
+									&& (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty())) {
+								// supplier respond but no changes
+								answerRemark = answer.getAnswerRemark();
+								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN,
+										SSTConstant.LESS_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
+										SSTConstant.GREATER_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+										SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+								map.put(SSTConstant.answerRemark, answerRemark);
+							} else {
+								// no changes and no supplier respond
+								map.put(SSTConstant.answerRemark, SSTConstant.TB);
+							}
+						// 35596 @zaim start
 						}
-
+						// 35596 @zaim end
 					}
 					// end supplier offer
 					// start retrieve spec size
