@@ -11207,9 +11207,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return false;
 		}
 		// 35284 - end
-		
+
+		if (!this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
+				.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			return isShowAssignButtonIfNotPR(loiLoaItem);
+		} else {
+			return true;
+		}
+	}
+	// Bug #34757, #29007 - End
+	
+	// Bug #34757, #29007 -start-
+	private boolean isShowAssignButtonIfNotPR(ScLoiLoaItem loiLoaItem) {
 		boolean isShow = false;
-		
+
 		if (loiLoaItem.getTplSpecZoneDtl() != null) {
 			if (this.getManagedBean().getFirstZone() == null) {
 				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
@@ -11218,16 +11229,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if (this.getManagedBean().getFirstZone().equals(loiLoaItem.getTplSpecZoneDtl().getZoneName())) {
 				isShow = true;
 			}
+
+			isShow = checkItemList(loiLoaItem);
 		} else {
 			isShow = true;
 		}
-		
+
 		// 35284 - start
 		boolean isFromQty = null != loiLoaItem.getTplSpecTierQty()
 				&& null != loiLoaItem.getTplSpecTierQty().getFromQty() ? loiLoaItem.getTplSpecTierQty().getFromQty()
 				.compareTo(BigDecimal.ONE) == 0 : false;
 		boolean isSpecTierQty = null == loiLoaItem.getTplSpecTierQty() || isFromQty;
-		
 		isShow = isSpecTierQty && isShow;
 		// 35284 - end
 
