@@ -10340,6 +10340,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		IQTAwardSO iQTAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTAwardSO.class);		
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
+		List<Long> itemIds = new ArrayList<>();
 
 		populateAttachmentDetails(attachment);
 		
@@ -10490,7 +10491,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 				// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3 -end-
 				
-				scLoiLoaItemsList.add(scLoiLoaItem);
+				if(itemIds.isEmpty() || !itemIds.contains(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					scLoiLoaItemsList.add(scLoiLoaItem);
+					itemIds.add(scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
+				}
 			}
 			
 			if (this.getManagedBean().getScQt().isZonal() && scLoiLoaItemsList.size() > 1) {
