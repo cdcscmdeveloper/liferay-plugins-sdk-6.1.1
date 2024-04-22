@@ -11246,6 +11246,25 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return isShow;
 	}
 	// Bug #34757, #29007 - End
+
+	// Bug #34757, #29007 -start-
+	private boolean checkItemList(ScLoiLoaItem loiLoaItem) {
+		if (this.getManagedBean().getItemList() == null) {
+			this.getManagedBean().setItemList(new ArrayList<Long>());
+		}
+
+		if (this.getManagedBean().getLoaItemIds() == null) {
+			this.getManagedBean().setLoaItemIds(new ArrayList<Long>());
+		}
+
+		if (!this.getManagedBean().getItemList().contains(loiLoaItem.getScRequestItem().getRequestNoteItemId())) {
+			this.getManagedBean().getItemList().add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
+			this.getManagedBean().getLoaItemIds().add(loiLoaItem.getLoiLoaItemId());
+		}
+
+		return this.getManagedBean().getLoaItemIds().contains(loiLoaItem.getLoiLoaItemId());
+	}
+	// Bug #34757, #29007 - End
 	
 	// 29006 start @zaim
 	/**
