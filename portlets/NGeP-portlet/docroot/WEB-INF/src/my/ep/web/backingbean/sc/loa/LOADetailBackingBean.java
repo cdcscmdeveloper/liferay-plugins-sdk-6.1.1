@@ -6536,8 +6536,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		if(contractAmt.compareTo(limit) == 0){
 			return false;
-		}else if(contractAmt.compareTo(limit) == 1){
+		//start - Sonarqube DP Bug Minor Iskandar [12/7/2023]
+		}else if(contractAmt.compareTo(limit) > 0){
 			return true;
+		//stop - Sonarqube DP Bug Minor Iskandar [12/7/2023]
 		}else{
 			return false;
 		}		

@@ -11176,10 +11176,12 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 			if (contractAmt.compareTo(limit) == 0) {
 				getManagedBean().setAbove500K(false);
-				return false;			
-			} else if (contractAmt.compareTo(limit) == 1) {
+				return false;
+			//start - Sonarqube DP Bug Minor Iskandar [12/7/2023]
+			} else if (contractAmt.compareTo(limit) > 0) {
 				getManagedBean().setAbove500K(true);
 				return true;
+			//stop - Sonarqube DP Bug Minor Iskandar [12/7/2023] 
 			} else {
 				getManagedBean().setAbove500K(false);
 				return false;
