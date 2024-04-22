@@ -3504,7 +3504,7 @@ public class SupplierFinalizationBackingBean extends
 				if (isQTRefinalized()) {
 					disableAwardedItems(scQtFinalization.getScQtRecommends());
 					
-					// Check if the any of the suppliers has awarded LOA's TODO : To be removed [Not in use]
+					// Check if the any of the suppliers has awarded LOA's 
 					/******Start******/
 					reqDTO = new SuppFinalizationReqDTO();
 					reqDTO.setQtId(getManagedBean().getScQt().getQtId());

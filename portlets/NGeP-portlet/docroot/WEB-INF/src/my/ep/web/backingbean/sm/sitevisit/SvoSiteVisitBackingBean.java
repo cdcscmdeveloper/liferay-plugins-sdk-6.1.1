@@ -25,9 +25,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -1594,6 +1596,86 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return generateToPdf(vmEquity, context, fileName);
 	}
 	
+	//#34166 - Start
+	/**
+	 * To validate before downloading the SV Report.
+	 * @param clientId
+	 * @param svTask
+	 * @param retrieveSvInfo
+	 */
+	public void validateBeforeDownloadSVReport(String clientId, SmSvTask svTask, boolean retrieveSvInfo) {
+		String fieldsName = "";
+		SmSvTask svData = new SmSvTask();
+
+		if (retrieveSvInfo) {
+			getManagedBean().setSvTaskId(svTask.getSvTaskId());
+			retrieveSiteVisitInfo("V");
+			svData = getManagedBean().getSmSvTask();
+		} else {
+			svData = svTask;
+		}
+
+		for (SmSvBankInfo bank : svData.getSmSvBankInfos()) {
+			if (bank.getRemark() != null && (bank.getRemark().contains("<") || bank.getRemark().contains(">"))) {
+				fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.remark",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+						new String[] { fieldsName.toLowerCase() }));
+			}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null
+					&& (bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank()
+							.getSignatureInstruction().contains(">"))) {
+				fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.terms.cond",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+						new String[] { fieldsName.toLowerCase() }));
+			}
+		}
+
+		for (SmSvFinChecklist checklist : svData.getSmSvFinChecklists()) {
+			if (checklist.getRemark() != null
+					&& (checklist.getRemark().contains("<") || checklist.getRemark().contains(">"))) {
+				fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter()
+						.getParameterCode()) + " remarks";
+
+				throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+						new String[] { fieldsName.toLowerCase() }));
+			}
+		}
+
+		RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click()");
+	}
+	
+	/**
+	 * To change the character that might give error when downloading the files
+	 * @param svTask
+	 */
+	public void validatingCharacter(SmSvTask svTask) {
+		for (SmSvBankInfo bank : svTask.getSmSvBankInfos()) {
+			if (bank.getRemark() != null && (bank.getRemark().contains("<") || bank.getRemark().contains(">"))) {
+				bank.setRemark(bank.getRemark().replace("<", "&#60;").replace(">", "&#62;"));
+			}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null
+					&& (bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank()
+							.getSignatureInstruction().contains(">"))) {
+				bank.getSmSupplierBank().setSignatureInstruction(
+						bank.getSmSupplierBank().getSignatureInstruction().replace("<", "&#60;").replace(">", "&#62;"));
+			}
+		}
+
+		for (SmSvFinChecklist checklist : svTask.getSmSvFinChecklists()) {
+			if (checklist.getRemark() != null
+					&& (checklist.getRemark().contains("<") || checklist.getRemark().contains(">"))) {
+				checklist.setRemark(checklist.getRemark().replace("<", "&#60;").replace(">", "&#62;"));
+
+			}
+		}
+
+		getManagedBean().setSmSvTask(svTask);
+	}
+	//#34166 - End
+
+	
 	/**
 	 * Generate Site Visit Template - Section B
 	 * @param svTask
@@ -2140,6 +2222,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		log.info("***********saveSiteVisitReport***********");
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		SmSvTask svTask = this.getManagedBean().getSmSvTask();
+		//#34166 - Start
+		checkRepresentative();
+		//#34166 - End
 
 		SmSvTemplate svTemplate = svTask.getSmSvTemplate();
 		//for(SmSvTemplate svTemplate : svTask.getSmSvTemplates()){
@@ -2670,6 +2755,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//#32963 - end
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo(""); //28774
+		//#34166 - Start
+		validatingCharacter(getManagedBean().getSmSvTask());
+		//#34166 - End
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
 	}
 	
@@ -2999,4 +3087,42 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 		return url;
 	}
+	// #34166 - Start
+	public void validateText(FacesContext f, UIComponent c, Object obj) {
+		String remarks = (String) obj;
+		log.info("This is the remark >>>>>>> " + remarks);
+		String fieldsName = (String) c.getAttributes().get("param");
+		log.info("This is the second parameter >>>>>>> " + fieldsName);
+		if (remarks.contains("<") || remarks.contains(">")) {
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775191,
+							new String[] { fieldsName.toLowerCase() })));
+		}
+	}
+	
+	public void checkRepresentative() {
+		Locale locale = new FacesScopes().getUserLocale();
+		String Name = ResourceBundleUtils.getMessage("lbl.sm.person.composition.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		String Designation = ResourceBundleUtils.getMessage("lbl.sm.userprofile.designation",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		
+		if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees() != null){
+			
+			if(getManagedBean().getSelectedSvTemplate().getSmSvInterviewees().isEmpty()){
+				String representatives = ResourceBundleUtils.getMessage("lbl.sm.companyinfo.intvw.represent",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(MessageConst.ERROR_775192, new String[] { representatives });
+			}
+			
+			for(SmSvInterviewee person : getManagedBean().getSelectedSvTemplate().getSmSvInterviewees()){
+				if(person.getName() == null || person.getName().isEmpty()){
+					String capitalizedStr = Name.substring(0, 1).toUpperCase() + Name.substring(1);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { capitalizedStr });
+				}
+				if(person.getDesignation() == null || person.getDesignation().isEmpty()){
+					String capitalizedStr = Designation.substring(0, 1).toUpperCase() + Designation.substring(1);
+					throw new EpException(MessageConst.ERROR_775192, new String[] { capitalizedStr });
+				}
+			}
+		}
+	}
+	// #34166 - End
 }

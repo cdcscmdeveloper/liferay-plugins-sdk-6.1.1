@@ -2542,6 +2542,12 @@ public class SmApplicationBackingBean extends
 	 */
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
+		
+		// #34166 - Start
+		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
+			validateText();
+		}
+		// #34166 - End
 
 		// show confirm popup to save draft before proceed to next section if
 		// still not save draft
@@ -3517,6 +3523,16 @@ public class SmApplicationBackingBean extends
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
+			// 35208 START
+			if(getManagedBean().getSmSupplier().getSmAppl() != null){
+				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
+						getManagedBean().getSmSupplier().getSmAppl());
+			}
+			if(getManagedBean().getSmAppl() != null){
+				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
+						getManagedBean().getSmAppl());
+			}
+			// 35208 END
 
 			// init GST information
 			initGst();
@@ -8026,6 +8042,17 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722616);
 		}
 		
+		// #34166 - Start
+		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
+				|| getManagedBean().getSelectedBank().getSignatureInstruction().contains(">")) {
+			StringBuilder sb = new StringBuilder();
+			Locale locale = new FacesScopes().getUserLocale();
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			throw new EpException(MessageConst.ERROR_775191, new String[] { sb.toString().toLowerCase() });
+		}
+		// #34166 - End
+		
 		if (getManagedBean().isPendingTransaction()){
 			getManagedBean().setPendingTransaction(false);			
 		}
@@ -8571,6 +8598,10 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
+		
+		// #34166 - Start
+		validateText();
+		// #34166 - End
 		
 		//30953 & 30945 - Start		
 		//add checking to make sure, supporting doc mode is not null
@@ -15230,6 +15261,29 @@ public class SmApplicationBackingBean extends
 	}
 	//#32014 - END
 	
+	// #34166 - Start
+	public void validateText() {
+		if(!getManagedBean().isPoUser()){
+			if(!getManagedBean().isApproverUser()){
+				if (getManagedBean().getSmAppl() != null) {
+					if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
+						for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+							if (banks.getSignatureInstruction().contains("<")
+									|| banks.getSignatureInstruction().contains(">")) {
+								StringBuilder sb = new StringBuilder();
+								Locale locale = new FacesScopes().getUserLocale();
+								sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+								throw new EpException(MessageConst.ERROR_775191,
+										new String[] { sb.toString().toLowerCase() });
+							}
+						}
+					}
+				}	
+			}
+		}
+	}
+	// #34166 - End
 	//#12483 - START
 	public boolean renderRevisedReason(){
 		if(currentReviseReason() != null){
