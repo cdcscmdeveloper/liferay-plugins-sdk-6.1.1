@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -6310,13 +6311,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		* @return true or false
 		**/
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-			
 			boolean isSupplierBranchDeleted = false;
-			Long supplierId = this.getManagedBean().getSupplierId();
-			ScQt scQt = this.getManagedBean().getQt();
-			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			}
