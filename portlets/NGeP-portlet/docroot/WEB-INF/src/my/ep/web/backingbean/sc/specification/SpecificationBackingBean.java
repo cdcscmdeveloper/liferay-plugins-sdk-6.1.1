@@ -17743,10 +17743,14 @@ if (null != checklist && !checklist.isEmpty()) {
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) 
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						//#29732 exclude endorsement
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)
-				&& !this.getManagedBean().isReadOnly()) {
+						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) 
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						//#29732 exclude endorsement
+				&& !this.getManagedBean().isReadOnly())  {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
