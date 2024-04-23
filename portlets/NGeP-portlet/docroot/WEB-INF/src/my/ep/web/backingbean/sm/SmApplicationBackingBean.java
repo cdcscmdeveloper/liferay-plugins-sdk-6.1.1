@@ -1610,8 +1610,7 @@ public class SmApplicationBackingBean extends
 				&& (getManagedBean().isPoUser() || getManagedBean()
 						.isApproverUser())) {
 			//32008 to set PO & Approver cannot edit field key in by supplier
-			//32008 -- temp rollback
-			//getManagedBean().setUpsCannotEdit(true);
+			getManagedBean().setUpsCannotEdit(true);
 			setRevUrl();
 
 			// set whether to show or not approve and recommend button because
@@ -10093,6 +10092,9 @@ public class SmApplicationBackingBean extends
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
+			// #34303 - start
+			SmApplicationUtil.setFacilityTypeNotInTheSameCategoryFacType(getManagedBean());
+			// #34303 - end
 			SmApplicationUtil.getInstance()
 					.removeNotApplicableInformationBeforeSave(getManagedBean());
 

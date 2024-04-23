@@ -476,7 +476,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	/* ***25692#95 - start */
 	//#29732 fix null pointer currentstatus id for 1st time enter
 	QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean();
-	if(renewSessionObject && !isSpecEndorsmentScreen()){
+	if(renewSessionObject){
 		renewSesionObject();
 	}
 	/* ***25692#95 - end */
@@ -628,6 +628,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			}
+			this.getManagedBean().setCurrentInSpecMaint(true);//#29732 first time spec maint
 		}
 		// #29732 @idham 25/07/2023 - End
 		
@@ -640,6 +641,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#29732
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
+		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
 		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
