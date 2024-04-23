@@ -723,6 +723,11 @@ public class SupplierManagementConst {
 	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
 	public static final int NOTIFICATION_ID_401189 = 401189;
 	public static final int NOTIFICATION_ID_401190 = 401190;
+	
+	//28775 - Site Visit Grouping Enhancement - 28775
+	public static final long STATE_SELANGOR = 11L;
+	public static final long STATE_KL = 15L;
+	public static List<Long> KLANG_VALLEY = Arrays.asList(STATE_SELANGOR, STATE_KL);
 
 	//9569
 	public static final String EPROLE_DELETED = "Delete";

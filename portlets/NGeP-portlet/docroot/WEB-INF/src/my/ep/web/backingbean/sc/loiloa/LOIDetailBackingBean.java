@@ -94,6 +94,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -4021,17 +4022,15 @@ public class LOIDetailBackingBean extends
 			}
 			context.put("loiSigner", loiSigner);
 			
-			//#30447 start
+			// #30447 start
 			String salutation = "";
-			if (getManagedBean().getContractSignerUser() != null
-					&& getManagedBean().getContractSignerUser().getSalutationCode() != null
-					&& getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName() != null
-					&& !getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName().isEmpty()) {
+			PmSalutation salutationCode = getManagedBean().getContractSignerUser().getSalutationCode() != null ? 
+					getManagedBean().getContractSignerUser().getSalutationCode() : null;
+			if (getManagedBean().getContractSignerUser() != null && salutationCode != null) {
 				salutation = getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
-
-			}		
-			context.put("salutation", salutation);	
-			//#30447 end
+			}
+			context.put("salutation", salutation);
+			// #30447 end
 
 			String loiSignerDesignation = "";
 			if(null != scLoi.getLoiSignerDesig() && !scLoi.getLoiSignerDesig().isEmpty()){
@@ -6955,6 +6954,10 @@ public class LOIDetailBackingBean extends
 	//#21692 - end
 	
 	//#12487 start
+	/**
+	 * To send notification for email and dashboard.
+	 * 
+	 */
 	public void prepareLoiNotification(){		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		Map<String, Object> loiObj = new HashMap<>();
@@ -7143,6 +7146,10 @@ public class LOIDetailBackingBean extends
 	}
 	// #12471 End
 	//20230111@Haziq - #12487
+	/**
+	 * to set the details for selected PTJ
+	 * @param userOrg
+	 */
 	public void userPtjListener(PmUserOrg userOrg) {
 		if (userOrg != null) {
 			this.getManagedBean().setSelectedUserPtj(userOrg);

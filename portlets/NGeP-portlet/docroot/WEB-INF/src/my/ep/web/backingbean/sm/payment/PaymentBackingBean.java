@@ -577,6 +577,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			paymentRespBB.getManagedBean().setPaymentId(paymentId);
 			paymentRespBB.getManagedBean().setPaymentStatus(true);
 			// paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
+			//#35582
+			PaymentAcknowledgeBackingBean pymtAckBB = new PaymentAcknowledgeBackingBean();
+			pymtAckBB.getManagedBean().setPaymentId(paymentId);
 		} else {
 			paymentRespBB.getManagedBean().setPaymentId(null);
 			paymentRespBB.getManagedBean().setPaymentStatus(false);
@@ -698,19 +701,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			log.info("Payment bill Details "
 					+ pyPayment.getPyBill().getPyBillDtls().size());
-			
-			//#34964- start			
-			Iterator<PyBillDtl> newPyBillDtls = pyPayment.getPyBill().getPyBillDtls().iterator();
-			while (newPyBillDtls.hasNext()) {
-				PyBillDtl billDtls = newPyBillDtls.next(); 
-				for(PyBillDtl PyBillDtl : this.getManagedBean().getNewPyBillDtlLs()){
-					if(!PyBillDtl.getBillDtlId().equals(billDtls.getBillDtlId())){
-						billDtls.setRecordStatusFlg(Integer.valueOf(0));
-						billDtls.setRecordStatus(false);
-					}	
-				}
-			}
-			//#34964- end	
 
 			Long statusCode = null;
 

@@ -4444,7 +4444,7 @@ public class SmCommonUtil {
 	 * Verify MyIdentity with IC only
 	 * @param name
 	 * @param identificationNo
-	 * @return
+	 * @return status code
 	 */
 	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
@@ -5558,11 +5558,10 @@ public class SmCommonUtil {
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	/**
-	 * Retrieve supplier categories
 	 * @param applId
 	 * @param categoryL3Id
 	 * @param applType
-	 * @return
+	 * @return supplier categories
 	 */
 	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
 			Long applId, Long categoryL3Id, String applType){
@@ -6442,21 +6441,24 @@ public class SmCommonUtil {
 	 */
 	public static List<SmAppl> getCancelledBumiApplList(boolean isSVC){
 		List<SmAppl> list;
+		FacesScopes fc = new FacesScopes();
+		Long userId = fc.getUserSessionBean().getUserId();
 		if(isSVC){
 			list = SmServiceLookup.getMofRegistrationSO().
-					retrieveAutoCancelledBumiAppl(null, false, false).getApplList();
+					retrieveAutoCancelledBumiAppl(userId, false, false).getApplList();
 		} else {
-			FacesScopes fc = new FacesScopes();
+			boolean isPOorApprover = fc.hasRoleUser(RoleCode.UPS_PO.value()) 
+					|| fc.hasRoleUser(RoleCode.UPS_APPROVER.value());
 			list = SmServiceLookup.getMofRegistrationSO().retrieveAutoCancelledBumiAppl(
-					fc.getUserSessionBean().getUserId(), true, true).getApplList();
+					userId, fc.hasRoleUser(RoleCode.UPS_SVO.value()), isPOorApprover).getApplList();
 		}
 		if(list.isEmpty()){
-			return null;
+			return list;
 		}
 		
 		StatusReqDTO statReqDTO = new StatusReqDTO();
 		statReqDTO.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
-		statReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		statReqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
 		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
 				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
 		if(statDesc == null){

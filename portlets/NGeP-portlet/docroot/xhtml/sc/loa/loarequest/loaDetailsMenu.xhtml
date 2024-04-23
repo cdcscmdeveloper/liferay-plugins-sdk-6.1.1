@@ -339,10 +339,12 @@
 					disabled="true" size="35"/>
 				<!-- #25726 START -->
 				<c:if test="#{isDocTypeQuotation}">
-					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+				<!-- Reopen #25726 note 221 - issue 12 -->			 
+					<ac:iconTooltip rendered ="#{!isContractTypeCentral}"  value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
 				</c:if>
 				<c:if test="#{!isDocTypeQuotation}">
-					<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+				<!-- Reopen #25726 note 221 - issue 12 -->
+					<ac:iconTooltip rendered ="#{!isContractTypeCentral}"  value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
 				</c:if>
 				<!-- #25726 END -->								
 			</td>
@@ -410,19 +412,20 @@
 						<c:when test="#{isEditableStatus and !lOADetailBackingBean.managedBean.readOnly}">
 							<p:inputText id="ContractAmtId2"
 								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
-								style="text-align:right;" partialSubmit="true" size="5" >
+								label="#{lbl['lbl.sc.resp.period']}"
+								style="text-align:right;" partialSubmit="true" size="5" required="true" >
 								<p:ajax event="change"
 									listener="#{lOADetailBackingBean.validateResponsePeriod(lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod)}"
 									partialSubmit="true" process="@this"
 									update="@([id$=ContractAmtId3])" />
-							</p:inputText> 	
+							</p:inputText> 
+							<p:message id="ContractAmtId2Msg" for="ContractAmtId2" display="icon" />	
 						</c:when>
 						<c:otherwise>
 						    <p:inputText id="ContractAmtId2"
 								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
 								style="text-align:right;" partialSubmit="true" size="5"
-								disabled="true" >
-								
+								disabled="true" >					
 							</p:inputText> 	
 						</c:otherwise>
 						</c:choose>
@@ -479,11 +482,12 @@
 				<table>
 					<tr>
 						<td>
+						<!-- Reopen #25726 note 221 - issue 11 -->	
 							<p:selectOneRadio id="bondReq" styleClass="commonLabel"
 								value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 								required="true"
 								label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-								disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory or lOADetailBackingBean.managedBean.readOnly}">
+								disabled="true">
 								<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 							</p:selectOneRadio>
@@ -701,12 +705,21 @@
 							</td>
 							<td style="margin-top: -3px">
 								<!-- #25726 START -->
-								<c:if test="#{isDocTypeQuotation}">
-									<ac:iconTooltip value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
-								</c:if>
-								<c:if test="#{!isDocTypeQuotation}">
+							<!-- Reopen #25726 note 221 - issue 13 -->	
+							<c:choose>
+								<c:when test="#{isContractTypeCentral}">
+								  <ac:iconTooltip
+									value="#{lbl['lbl.sc.required.agreement.qt.central.tooltip']}" />
+								</c:when>
+								<c:otherwise>
+							     <c:if test="#{isDocTypeQuotation}">
+									<ac:iconTooltip  value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
+								 </c:if>
+								 <c:if test="#{!isDocTypeQuotation}">
 									<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
-								</c:if>
+								 </c:if>
+								</c:otherwise>
+							</c:choose>								
 								<!-- #25726 END -->
 							</td>							
 						</tr>
