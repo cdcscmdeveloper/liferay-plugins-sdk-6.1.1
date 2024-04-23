@@ -4478,7 +4478,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			Collections.sort(currentCtAgreementList, new Comparator<CtAgreement>() {
 			  @Override
 			  public int compare(CtAgreement cta1, CtAgreement cta2) {
-				  return cta2.getAgreementId().compareTo(cta1.getAgreementId());
+				  return cta1.getCreatedDate().compareTo(cta2.getCreatedDate());
 			  }
 			});
 		}
