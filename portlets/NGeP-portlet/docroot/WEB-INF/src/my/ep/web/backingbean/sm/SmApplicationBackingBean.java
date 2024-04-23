@@ -3715,7 +3715,8 @@ public class SmApplicationBackingBean extends
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
-			//32617 && 35208 START
+			
+			// 35208 START
 			if(getManagedBean().getSmSupplier().getSmAppl() != null){
 				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmSupplier().getSmAppl());
@@ -3724,7 +3725,7 @@ public class SmApplicationBackingBean extends
 				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmAppl());
 			}
-			//32617 && 35208 END
+			// 35208 END
 
 			// init GST information
 			initGst();
@@ -8928,6 +8929,10 @@ public class SmApplicationBackingBean extends
 	 * @return the redirect page
 	 */
 	public String submitSmApplToBpm(String applType) {
+		
+		// #34166 - Start
+		validateText();
+		// #34166 - End
 		
 		// #34166 - Start
 		validateText();
@@ -15770,7 +15775,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	// #34166 - End
-
+	
 	//#12483 - START
 	public boolean renderRevisedReason(){
 		if(currentReviseReason() != null){
@@ -15796,6 +15801,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setDisplayBranches(displayBranches);
 	}
 	//#34135 END
+	
 	//#34799 - start
 	public void onTickSameAsAddress(SmAddress srcAddr,
 			SmPersonnelAddress destAddr, String componentId, boolean isTick) {

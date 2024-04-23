@@ -940,10 +940,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		int cheqNonMalaysian = 0;
 		
 		// #14055 - start
-		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> totalCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet<String>();
 		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
@@ -2343,6 +2343,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * check wheather user has svo role
 	 * @return
 	 */
+	/*
 	private String getUserRole() {	
 		FacesScopes fs = new FacesScopes();
 		if(fs.hasRoleUser(RoleCode.UPS_SVO.value()))
@@ -2350,6 +2351,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		else 
 			return null;
 	}
+	*/
 	
 	/**
 	 * Listener when check the site visit equipment
@@ -2893,10 +2895,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 	
+	/*
 	private SmAddress getSmAddressById(Long addressId){
 		SmAddress address = SmCommonUtil.getInstance().getSmAddressById(addressId);
 		return address;
 	}
+	*/
 	
 	private void retrieveAndSetSmSvDocLicense(){
 		DocumentReqDTO reqDTO = new DocumentReqDTO();
@@ -3108,7 +3112,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							new String[] { fieldsName.toLowerCase() })));
 		}
 	}
-	
+		
 	public void checkRepresentative() {
 		Locale locale = new FacesScopes().getUserLocale();
 		String Name = ResourceBundleUtils.getMessage("lbl.sm.person.composition.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);

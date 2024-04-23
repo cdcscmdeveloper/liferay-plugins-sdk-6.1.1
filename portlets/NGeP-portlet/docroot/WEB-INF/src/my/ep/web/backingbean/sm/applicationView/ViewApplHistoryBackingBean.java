@@ -46,8 +46,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
@@ -1729,6 +1727,7 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
+	
 	//35336 START
 	/**
 	 * Check whether the rejected application was expired
