@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -54,7 +53,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
@@ -77,6 +75,10 @@ import com.liferay.portal.theme.ThemeDisplay;
 @ManagedBean (name = "postSupplierRegBB")
 @RequestScoped
 public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSupplierRegistrationManagedBean>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
 	private static final String CATALOGUE_UPLOAD_PATH = "supptemp-codification-search";
 	private static final String CATALOGUE_MAINT = "supptemp-catalogue-maint";
@@ -140,7 +142,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Self Request Supplier Admin
-			if(supplier.getRecordStatusFlg()==SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS){
+			if (supplier.getRecordStatusFlg() == SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS) {
 				path = basicAccountFlow(supplier);
 			}else{
 				//Active Appl
@@ -304,6 +306,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, pageRedirect);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void pageNavigate() throws Exception{
 		SmSupplier supplier = getSupplierProfileByUserId();
 		//START 27264
@@ -319,9 +322,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						this.getManagedBean().setResubmitAppl(true);
 					}
 					log.info("pageNavigate------------"+path1);
+					
+					//#35115 - START
 					if(MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION)){
 						checkSSMValid(supplier,this.getManagedBean());
 					}
+					//#35115 - END
+
 					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
 					if(!getManagedBean().getPersonnelsRole().isEmpty()){
@@ -333,9 +340,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							this.getManagedBean().setPreRegistration(false);
 						}
 						//End 27951
-						SmCommonUtil.redirectToPage(
-								CONTENT_PAGE,
-								"",new String[] {""});
+						SmCommonUtil.redirectToPage(CONTENT_PAGE, "",new String[] {""});
 					}
 				}				
 			}catch(Exception w){
@@ -343,14 +348,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				proceed =false;
 				RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 				if(this.getManagedBean() != null && this.getManagedBean().getStatusDescFromSSM()!=null){
-					SmCommonUtil.redirectToPage(
-							CONTENT_PAGE,
-							w.getMessage(),
-							new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });
+					SmCommonUtil.redirectToPage(CONTENT_PAGE, w.getMessage(), new String[] { SmCommonUtil.getMessage(this.getManagedBean().getStatusDescFromSSM(),null) });
 				}else{
-					SmCommonUtil.redirectToPage(
-							CONTENT_PAGE,
-							w.getMessage(),new String[] {""});
+					SmCommonUtil.redirectToPage(CONTENT_PAGE, w.getMessage(),new String[] {""});
 				}
 								
 			}
@@ -533,13 +533,14 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @param labelStr
 	 * @return String
 	 */
+	/*
 	private String getLabelFromProperties(String labelStr){
 		Locale locale = new FacesScopes().getUserLocale();
 		String label = ResourceBundleUtils.getMessage(labelStr, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		
 		return label;
 	}
-	
+	*/	
 	
 	/**
 	 * show/ Hide the hyperlink based on statusCode
@@ -909,35 +910,34 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		try {
 			pageRedirect(SOFT_CERT_PATH);
 		} catch (PortalException | SystemException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 	
 	/**
 	 * preRender of supplier promotion banner
 	 */
-	public void supplierPromotion(){
+	public void supplierPromotion() {
 		SmSupplier userSupplier = getSupplierProfileByUserId();
-		if(userSupplier != null){
+		if (userSupplier != null) {
 			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
 			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
 			suppSearchReqDTO.setSupplierId(userSupplier.getSupplierId());
 			SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
-			
-			if(validMofUser()){
+
+			if (validMofUser()) {
 				log.info("MOF_SUPPLIER_ADMIN>>>>");
 				mofUserAction(suppSearchResDTO.getSmSupplier());
 				setMofExpiryMsg(userSupplier);
 
-			}else
-				if(validBasicSupplier()){
-				basicSupplierAction(userSupplier.getSupplierId());
+			} else {
+				if (validBasicSupplier()) {
+					basicSupplierAction(userSupplier.getSupplierId());
 
+				}
 			}
 		}
-		
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROMO_PAGE);
 	}
