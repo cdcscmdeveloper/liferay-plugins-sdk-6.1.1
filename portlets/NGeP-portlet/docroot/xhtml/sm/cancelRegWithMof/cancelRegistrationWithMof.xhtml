@@ -45,7 +45,13 @@
 						</p:inputTextarea> <p:message id="cancelResonMsg" for="cancelReson" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.suppdoc.attach']}" />
+					<!-- 35619 Start -->
+					<td><p:outputLabel value="#{lbl['lbl.sm.suppdoc.attach']}">
+							<p:spacer width="5" />
+							<p:graphicImage id="suppDocAttach" value="/css/images/design/tooltips.png"/>
+							<p:tooltip for="suppDocAttach" value="#{lbl['lbl.sm.suppdoc.attach.tooltip']}"/>
+						</p:outputLabel>
+					<!-- 35619 End -->
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:commandLink style="float: left;padding-right: 10px;"
 							onclick="excelDialog.show();return false;">
