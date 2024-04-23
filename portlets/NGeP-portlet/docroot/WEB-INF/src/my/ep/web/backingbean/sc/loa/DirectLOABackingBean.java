@@ -4770,7 +4770,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				    String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
 				    File file = new File(filePath);
 				    mergePdf(file, filePath, tempFilePath, context);
-				    file.renameTo(new File(filePath.replace(".pdf", "_merged.pdf")));
+				    //start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+				    boolean isRename = file.renameTo(new File(filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf)));
+					   if (isRename){
+						   log.info("rename successful");
+					   }
+					   else{
+						   log.info("rename failed");
+					   }
+					 //stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
 				    scLoaReportAttachment.setFilePath(scLoaReportAttachment.getFilePath().replace(".pdf", "_merged.pdf"));
 				  }
 				  // #26130 - End.

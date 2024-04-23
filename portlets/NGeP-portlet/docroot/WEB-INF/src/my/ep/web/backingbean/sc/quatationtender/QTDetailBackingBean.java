@@ -365,9 +365,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public static final String TEMP_MB_KEY = "___823452381_76";
 	
 	//#29521 - start
-	public static Long tempProcurementTypeCategory = 0L;
-	public static String tempOpenFor = "";
-	public static String tempEvalType = "";
+	//start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+	Long tempProcurementTypeCategory = 0L;
+	String tempOpenFor = "";
+	String tempEvalType = "";
+	//stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
 	//#29521 - end
 	
 	public String getMenuItemDetails() {

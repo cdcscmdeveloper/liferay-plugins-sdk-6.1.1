@@ -4774,7 +4774,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
-			e.printStackTrace();
+			//start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
+			//stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
 		}
 	}
 	
