@@ -10340,6 +10340,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		IQTAwardSO iQTAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTAwardSO.class);		
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
+		List<Long> itemIds = new ArrayList<>();
 
 		populateAttachmentDetails(attachment);
 		
@@ -10490,7 +10491,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 				// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3 -end-
 				
-				scLoiLoaItemsList.add(scLoiLoaItem);
+				if(itemIds.isEmpty() || !itemIds.contains(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					scLoiLoaItemsList.add(scLoiLoaItem);
+					itemIds.add(scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
+				}
 			}
 			
 			if (this.getManagedBean().getScQt().isZonal() && scLoiLoaItemsList.size() > 1) {
@@ -11203,9 +11207,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return false;
 		}
 		// 35284 - end
-		
+
+		if (!this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
+				.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			return isShowAssignButtonIfNotPR(loiLoaItem);
+		} else {
+			return true;
+		}
+	}
+	// Bug #34757, #29007 - End
+	
+	// Bug #34757, #29007 -start-
+	private boolean isShowAssignButtonIfNotPR(ScLoiLoaItem loiLoaItem) {
 		boolean isShow = false;
-		
+
 		if (loiLoaItem.getTplSpecZoneDtl() != null) {
 			if (this.getManagedBean().getFirstZone() == null) {
 				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
@@ -11214,20 +11229,40 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if (this.getManagedBean().getFirstZone().equals(loiLoaItem.getTplSpecZoneDtl().getZoneName())) {
 				isShow = true;
 			}
+
+			isShow = checkItemList(loiLoaItem);
 		} else {
 			isShow = true;
 		}
-		
+
 		// 35284 - start
 		boolean isFromQty = null != loiLoaItem.getTplSpecTierQty()
 				&& null != loiLoaItem.getTplSpecTierQty().getFromQty() ? loiLoaItem.getTplSpecTierQty().getFromQty()
 				.compareTo(BigDecimal.ONE) == 0 : false;
 		boolean isSpecTierQty = null == loiLoaItem.getTplSpecTierQty() || isFromQty;
-		
 		isShow = isSpecTierQty && isShow;
 		// 35284 - end
 
 		return isShow;
+	}
+	// Bug #34757, #29007 - End
+
+	// Bug #34757, #29007 -start-
+	private boolean checkItemList(ScLoiLoaItem loiLoaItem) {
+		if (this.getManagedBean().getItemList() == null) {
+			this.getManagedBean().setItemList(new ArrayList<Long>());
+		}
+
+		if (this.getManagedBean().getLoaItemIds() == null) {
+			this.getManagedBean().setLoaItemIds(new ArrayList<Long>());
+		}
+
+		if (!this.getManagedBean().getItemList().contains(loiLoaItem.getScRequestItem().getRequestNoteItemId())) {
+			this.getManagedBean().getItemList().add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
+			this.getManagedBean().getLoaItemIds().add(loiLoaItem.getLoiLoaItemId());
+		}
+
+		return this.getManagedBean().getLoaItemIds().contains(loiLoaItem.getLoiLoaItemId());
 	}
 	// Bug #34757, #29007 - End
 	
