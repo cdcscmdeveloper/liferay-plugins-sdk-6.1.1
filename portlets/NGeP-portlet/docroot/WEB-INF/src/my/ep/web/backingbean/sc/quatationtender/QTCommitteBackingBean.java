@@ -118,12 +118,15 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "qTCommitteBackingBean")
 @RequestScoped
-public class QTCommitteBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant logger. */
-	private static final Logger logger = EpLogger
-			.getLogger(QTCommitteBackingBean.class);
+	private static final Logger logger = EpLogger.getLogger(QTCommitteBackingBean.class);
 	
 	private ScWorkFlowStatus ocWorkFlowStatus;
 	private ScWorkFlowStatus tecWorkFlowStatus;
@@ -606,6 +609,7 @@ public class QTCommitteBackingBean extends
 						member1.setCommitteeMemberId(null);
 						setUserDetails(member1);
 						setCommitteeMemberOrgProfile(member1);
+						resetUserDetail(member1);//Bug #35176 
 						member1.setChangedDate(null);
 						if (member1.isConsolidate()) {
 							this.getManagedBean().setSelectScCommitteMember(
@@ -627,6 +631,7 @@ public class QTCommitteBackingBean extends
 						} else {
 							committeeMember.setCommitteeMemberId(null);
 							setUserDetails(committeeMember);
+							resetUserDetail(committeeMember);//Bug #35176 
 							committeeMember.setChangedDate(null);
 							committeeMember.setScCommittee(scCommittee);
 							memberList.add(committeeMember);
@@ -647,6 +652,26 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setAutoUpdate(true);
 	}
 
+	// Bug #35176 - start
+	/**
+	 * Reset Clone Committee Member Detail - get latest user info from PM
+	 * 
+	 * @param scMember
+	 */
+	public void resetUserDetail(ScCommitteeMember scMember){
+		if(scMember.getPmUser() != null) {
+			Long userId = scMember.getPmUser().getUserId();
+			PmUser user = retrieveUserDtlById(userId);
+			if (user != null){
+				scMember.setEmail(user.getEmail());
+				scMember.setGrade(user.getGrade());
+				scMember.setDesignation(user.getDesignation());
+				scMember.setPNP(user.isPMP());
+			}
+		}
+	}
+	// Bug #35176 - end
+	
 	/**
 	 * On row clone action.
 	 * 
@@ -834,6 +859,7 @@ public class QTCommitteBackingBean extends
 								setUserDetails(member1);
 								member1.setChangedDate(null);
 								setCommitteeMemberOrgProfile(member1);
+								resetUserDetail(member1);//Bug #35176 
 								member1.setScCommittee(cloneCommitte);
 								// tabs.get(beanCount).getMembers().add(member1);
 								memberList.add(member1);
@@ -1328,6 +1354,7 @@ public class QTCommitteBackingBean extends
 	/**
 	 * Ok committee action.
 	 */
+	@SuppressWarnings("deprecation")
 	public void okCommitteeAction() {
 		debugLogger("okCommitteeAction");
 
@@ -1626,7 +1653,7 @@ public class QTCommitteBackingBean extends
 		 * originalServletRequest.getParameter("taskId");
 		 * this.getManagedBean().setTaskId(taskId); log.info("taskId : " +
 		 * taskId); IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-		 * .getServiceObject(IBpmSO.class); // TODO FacesScopes facesScopes =
+		 * .getServiceObject(IBpmSO.class);
 		 * new FacesScopes(); String ctx =
 		 * facesScopes.getBPMAuthenticationCtxToken(); // String ctx =
 		 * bpmSO.authenticate("roslan", "welcome1"); BpmRequestDTO reqDTO = new
