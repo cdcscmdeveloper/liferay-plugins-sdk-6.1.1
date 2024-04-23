@@ -4014,14 +4014,14 @@ return	remarksNotFound;
 							//send prepare LOA
 							prepareNotification(CommonConstants.LOA);
 						}
-					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-						//#12487 - start Notification to prepare LOA (without LOI)
-						if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
-							currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
-							currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)){				
-							//send prepare LOI/LOA
-							prepareNotification(CommonConstants.LOILOA);
-						}
+					//#12487 - start Notification to prepare LOA (without LOI)
+					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)&& 
+							   (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+							   currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
+							   currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION))){				
+						//send prepare LOI/LOA
+						prepareNotification(CommonConstants.LOILOA);
+						
 					 }
 					//#12487 - end
 					
@@ -5462,6 +5462,13 @@ return	remarksNotFound;
 							flattenRemarks.add(item);
 						}
 					}
+					
+					//#30008 - Start
+					this.getManagedBean().setNotReachAgrm(false);
+					if(each.getNegoDecision() != null){
+						evalResultDtl.setNotInAgreement(each.getNegoDecision());
+						this.getManagedBean().setNotReachAgrm(true);
+					}//#30008 - end
 				}
 			} else if(CollectionUtils.isNotEmpty(loaList) && rejectedLoa){//11134
 				for(ScLoa each : loaList){
@@ -11689,6 +11696,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	//35157 - end
 	
 	//#12487 - start Prepare LOI/LOA Notification
+	/**
+	 * To send notification for email and dashboards
+	 * @param docType
+	 */
 	public void prepareNotification(String docType){
 		FacesScopes facesScopes = new FacesScopes();
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
@@ -11728,6 +11739,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		this.getManagedBean().setReportDownloadFileName(fileName);
 		downloadAllReports(getManagedBean().getScQt(), "evaluation", reportAttachment, downloadable);
 	}
-	// Bug #35485@Syazani 08/02/2024 -- End
+	// Bug #35485@Syazani 08/02/2024 -- End	
+	
 }
 // ***19336

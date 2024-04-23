@@ -51,6 +51,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -1867,6 +1868,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getSmAppl().getApplCategoryType(),
 							getManagedBean().getSmAppl().getSupplierType(),
 							getManagedBean().getBusinessTypeVal()));
+			initNonMandatoryAndMandatoryDocs(); //31043
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 				smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 			}
@@ -2545,13 +2547,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(), ssmResDTO);
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
-							// start #29956 smOwnerSsmPopup
-									if(this.getManagedBean().isDisAllowOwnerEdit()){
-										this.getManagedBean().setDontGetSsmData(true);
-									}else{
-										this.getManagedBean().setDontGetSsmData(false);
-									}
-									// end #29956
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
 									subStartTime = System.currentTimeMillis();
 									SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
@@ -3357,10 +3352,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 												.getStateId());
 					}
 				}
-				//#31043 start
-				if(getManagedBean().isDocumentVerified())
-					getManagedBean().setUpdateSuppDoc(true);
-				//#31043 end
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& getManagedBean().isSupplierUser()) {
@@ -4256,7 +4247,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean()
 					.getLatestAppl(), getManagedBean().getSmAppl(),
 					getManagedBean().getCurrentPageType());
-			//32617 START
+			//32617 && 35208 START
 			if(getManagedBean().getSmSupplier().getSmAppl() != null){
 				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmSupplier().getSmAppl());
@@ -4265,7 +4256,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				SmServiceLookup.getPersonnelSO().updatePersonnelByLatestApplId(
 						getManagedBean().getSmAppl());
 			}
-			//32617 END
+			//32617 && 35208 END
 
 			// init GST information
 			initGst();
@@ -5187,12 +5178,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public void assignDocVerified(AjaxBehaviorEvent e) {
 		log.info(" *******Docs verified******88");
-		//#31043 start
-		saveOrUpdateAppl();
-		initNonMandatoryAndMandatoryDocs();
-		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
-				getManagedBean().getCurrentPageType());
-		//#31043 end
 	}
 
 	/**
@@ -6420,12 +6405,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						for (SmApplSupportDoc doc : vo.getLicenseSuppDocs()) {
 							//#31043 start
 							if(doc.isReceived()){
-								if (getManagedBean().isPoUser()) {
+								/*if (getManagedBean().isPoUser()) {*/
 									doc.setVerifiedFlg(1);
-								}
+								/*}
 								if (getManagedBean().isApproverUser()) {
 									doc.setApproverVerifiedFlg(1);
-								}
+								}*/
 							}//#31043 end
 						}
 					}
@@ -6448,7 +6433,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}//#31043 end
 			}
 		}
-		saveOrUpdateAppl();
 		//#31043 end
 	}
 
@@ -7235,9 +7219,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		for(SmSvWorker worker : selectedWorkers){
 			getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().remove(worker);
 			if(worker.getSvWorkerId() != null){
-				SmSvWorker worker2 = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
+				SmSvWorker deletedWorker = (SmSvWorker) EntityHelper.getEntityBySinglePropertyFromList(
 						worker.getIdentificationNo(), getManagedBean().getDeletedWorkers(), "identificationNo");
-				if(worker2 == null){
+				if(deletedWorker == null){
 					getManagedBean().getDeletedWorkers().add(worker);
 				}
 			}
@@ -8259,7 +8243,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// update category that record status is 1 for new mof application. This
 		// happen due to resubmit application (#23683)
 		updateCategoriesRecordStatus();
-
+		updateSuppDocApproverVerified(); //31043
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -10432,6 +10416,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
+			// #34303 - start
+			SmApplicationUtil.setFacilityTypeNotInTheSameCategoryFacType(getManagedBean());
+			// #34303 - end
 			SmApplicationUtil.getInstance()
 					.removeNotApplicableInformationBeforeSave(getManagedBean());
 
@@ -11099,6 +11086,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
+		//#28777 - START
+		/*
+		 * CALLING FUNCTION QT
+		 */
+		if(decision.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)){
+			ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate .getInstance().getServiceObject("sc", ISourcingIntegrationSO.class);
+			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),  getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
+		}
+		//#28777 - END
 		return submitPOorApproverReviewToBPM(decision);
 
 	}
@@ -17136,18 +17132,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					 * check if QT notice been closed and supplier submitted
 					 * proposal.
 					 */
-					if (pendingQT == true) {
-						msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
-						msg.append("<br />");
-					}
 					closedQTSubmitProposal = mofRegistrationSO
 							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-					if (closedQTSubmitProposal == true) {
-						msg.append("<br />");
-						msg.append(SmCommonUtil.getMessage(
-								"lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal", null));
-					}
-					getManagedBean().setDeleteBranchMsg(msg.toString());
 					
 					/**
 					 * #29727 FL Module had selected the branch information,
@@ -17159,8 +17145,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 					if (deletedBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deletedBranchName.toString() });
-					} else if (pendingQT == true || closedQTSubmitProposal == true) {
+					} else if(pendingQT && closedQTSubmitProposal) {
+						RequestContext.getCurrentInstance().execute("pendingQTPopUpAll.show()");
+					} else if(pendingQT) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
+					} else if(closedQTSubmitProposal) {
+						RequestContext.getCurrentInstance().execute("closeandsubmitQTPopUp.show()");
 					} else {
 						RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
 					}
@@ -17200,11 +17190,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					
 					if (deleteBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721121, new String[] { deleteBranchName.toString() });
-					} else if (pendingQT == true || closedQTSubmitProposal == true) {
-						if (pendingQT == true && closedQTSubmitProposal == true) {
+					} else if (pendingQT || closedQTSubmitProposal) {
+						if (pendingQT && closedQTSubmitProposal) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprovePo.show()");
-						} else if (process.equalsIgnoreCase("APPROVE") || process.equalsIgnoreCase("approveDialog")) {
+						} else if (pendingQT) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpRecommendApprovePo.show()");
+						} else if(closedQTSubmitProposal) {
+							RequestContext.getCurrentInstance().execute("pendingQTPopUpCloseApprovePo.show()");
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
 						}
@@ -17257,18 +17249,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					closedQTSubmitProposal = mofRegistrationSO
 							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
 
-					getManagedBean().setDeleteBranchMsg(msg.toString());
-
 					StringBuilder deleteBranchName = checkingDeletedBranchPendingFL(managedBean.getSmSupplier()
 							.getSupplierId(), supplierBranch);
 
 					if (deleteBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deleteBranchName.toString() });
-					} else if (pendingQT == true || closedQTSubmitProposal == true) {
-						if (pendingQT == true && closedQTSubmitProposal == true) {
+					} else if (pendingQT || closedQTSubmitProposal) {
+						if (pendingQT && closedQTSubmitProposal) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverTwo.show()");
-						} else if(process.equalsIgnoreCase("approverAppDialog")) {
+						} else if(pendingQT) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
+						} else if(closedQTSubmitProposal) {
+							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverClose.show()");
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
 						}
@@ -18058,4 +18050,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getSmAppl().getSmSupplierCategories(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end	
+	//31043 START
+	/**
+	 * Update supp doc verified for approver
+	 * 
+	 */
+	private void updateSuppDocApproverVerified() {
+		if (getManagedBean().isApproverUser()) {
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmApplSupportDocs())) {
+				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+						.getSmApplSupportDocs()) {
+					if (doc.getApproverVerifiedFlg() != null
+							&& doc.getVerifiedFlg() != null) {
+						doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
+					}
+				}
+			}
+		}
+	}
+	//31043 END
 }

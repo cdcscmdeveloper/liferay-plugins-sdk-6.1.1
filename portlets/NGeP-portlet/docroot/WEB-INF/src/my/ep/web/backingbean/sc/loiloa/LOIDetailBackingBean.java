@@ -6954,6 +6954,10 @@ public class LOIDetailBackingBean extends
 	//#21692 - end
 	
 	//#12487 start
+	/**
+	 * To send notification for email and dashboard.
+	 * 
+	 */
 	public void prepareLoiNotification(){		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		Map<String, Object> loiObj = new HashMap<>();
@@ -7142,6 +7146,10 @@ public class LOIDetailBackingBean extends
 	}
 	// #12471 End
 	//20230111@Haziq - #12487
+	/**
+	 * to set the details for selected PTJ
+	 * @param userOrg
+	 */
 	public void userPtjListener(PmUserOrg userOrg) {
 		if (userOrg != null) {
 			this.getManagedBean().setSelectedUserPtj(userOrg);
