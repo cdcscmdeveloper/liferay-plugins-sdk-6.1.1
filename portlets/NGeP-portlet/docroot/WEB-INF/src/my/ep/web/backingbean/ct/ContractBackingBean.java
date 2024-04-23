@@ -134,9 +134,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
-//start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
 import my.ep.util.SLAUtils;
-//stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
 import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
