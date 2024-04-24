@@ -761,11 +761,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getDropdownValuesBySearchBeanForPartial", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -1269,11 +1268,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				//33849-End
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Basebackingbean", "docNo", "getRadioButtonCodeValuesBySearchBean", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "",
+					SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+
 		}
 
 		return items;
@@ -1303,11 +1300,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+
 		}
 
 		return items;
