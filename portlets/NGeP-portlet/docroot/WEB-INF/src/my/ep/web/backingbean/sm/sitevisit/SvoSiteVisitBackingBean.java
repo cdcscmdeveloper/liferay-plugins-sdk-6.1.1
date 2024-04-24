@@ -163,12 +163,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	private Locale locale = new FacesScopes().getUserLocale();
 	private static final String LANG_CODE = new FacesScopes().getUserLocale().getLanguage();
-	public static final char LICENSE_PG = 'l';
-	public static final char CAT_TYPE_PG = 'c';
-	public static final char REGISTERED_PG = 'r';
-	public static final char LOCATION_PG = 'o';
-	public static final char SUBMIT_PG = 's';
-	private static final String CHANGE_PG = "t";
+	public static final char LICENSE_PG = 'L';
+	public static final char CAT_TYPE_PG = 'C';
+	public static final char REGISTERED_PG = 'R';
+	public static final char LOCATION_PG = 'O';
+	public static final char SUBMIT_PG = 'S';
+	private static final String CHANGE_PG = "T";
+	private static final String acknowledgement = "/xhtml/common/acknowledge.xhtml";
+	private static final String vmPath = "/sm/sitevisit/group/";
 	//28775 - Site Visit Grouping Enhancement - 28775 - end
 	private static final String attachmentType = "SVD";
 	private DecimalFormat formatter = new DecimalFormat("###,##0.00");
@@ -470,7 +472,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setSelectedSvTemplate(getManagedBean().getSmSvTask().getSmSvTemplate());
 		getManagedBean().setActivePage(page);
 		int n = getManagedBean().getLicensed() ? 1 : 0;
-		switch(page.charAt(0)){
+		switch(page.toUpperCase().charAt(0)){
 		case '0':
 			changeActiveIndex(0, null);
 			break;
@@ -1289,13 +1291,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		Long stateId = svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
-				.getSmAddress().getPmState().getStateId();
-		if(stateId != null){
-			final long stateSelangor = 11L;
-			final long stateKL = 15L;
-			context.put("isKlang", stateId.equals(stateSelangor) || stateId.equals(stateKL));
+		Long stateId = -1L;
+		try {
+			stateId = svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0)
+					.getSmAddress().getPmState().getStateId();
+		} catch (Exception e){
+			log.info("", e);
 		}
+		context.put("isKlang", SupplierManagementConst.KLANG_VALLEY.contains(stateId));
 		context.put("smVmUtil", new VmUtil());
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
 		context.put("hostUrl", getLogoHeaderPath());
@@ -2159,14 +2162,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 
 			}
-			//#28775 - Site Visit Grouping Enhancement - 28775
-			/*
-			if (!svTemplate.getSmSvTask().getSmAppl().getSmManufacturingDtls().isEmpty()) {
-				MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-				mofReqDTO.setSmAppl(getManagedBean().getSmSvTask().getSmAppl());
-				SmServiceLookup.getMofRegistrationSO().updateSmAppl(mofReqDTO);
-			}
-			*/
+			
 		}
 		//validate duplicate Workers
 		if(svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP)){
@@ -2240,7 +2236,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							new FacesScopes().getUserLocale())));
 					//End 25294  - Site Visit Grouping Enhancement -28775
 					//9608 - Site Visit Grouping Enhancement - 28775 - start, 30550
-					return "/xhtml/common/acknowledge.xhtml";
+					return acknowledgement;
 				}else if (!action.equals(CHANGE_PG)){
 					String msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_721222, 
 							new String[]{SmCommonUtil.getMessage("lbl.sm.application.no", null), 
@@ -2971,6 +2967,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	// #28175 end	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * Set template list without duplicate of category codes
+	 */
 	private void setTemplateList(){
 		if(getManagedBean().getSmSvTask().getPmCategoryL3() == null){
 			return;
@@ -3003,6 +3002,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		getManagedBean().setTemplates(templates);
 	}
 	
+	/**
+	 * Initialize templates for dockyard/workshop/printing/manufacturing/travel category codes
+	 */
 	private void prepareSvTaskGroup(){
 		SmSvTask svTask = getManagedBean().getSmSvTask();
 		setTemplateList();
@@ -3072,13 +3074,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	
+	/**
+	 * @param categoryL3Id
+	 * @return SmSupplierCategory based on L3 id
+	 */
 	private SmSupplierCategory retrieveSupplierCategory(Long categoryL3Id){
 		if(categoryL3Id == null){
 			return null;
 		}
 		for(SmSupplierCategory sCat : getManagedBean().getCategoryApplicable()){
-			if(sCat.getPmCategoryL3().getCategoryL3Id().equals(categoryL3Id))
+			if(sCat.getPmCategoryL3().getCategoryL3Id().equals(categoryL3Id)){
 				return sCat;
+			}
 		}
 		List<SmSupplierCategory> catL = retrieveSupplierCategoryByApplIdAndCategoryL3Id(
 				getManagedBean().getSmSvTask().getSmAppl().getApplId(), categoryL3Id);
@@ -3209,7 +3216,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			VelocityContext contextC = new VelocityContext();
 			commonHeaderTemplate(review, contextC, section++);
 			commonLicenseTemplate(review, contextC);
-			File f1 = new File(generateToPdf("/sm/sitevisit/group/license.vm", contextC, fileInitName+"C.pdf"));
+			File f1 = new File(generateToPdf(vmPath+"license.vm", contextC, fileInitName+"C.pdf"));
 			files.add(f1);
 			streams.add(new FileInputStream(f1));
 			
@@ -3219,7 +3226,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				VelocityContext contextD = new VelocityContext();
 				commonHeaderTemplate(review, contextD, section);
 				commonEquipmentTemplate(tmp, review, contextD);
-				File f2 = new File(generateToPdf("/sm/sitevisit/group/equipment.vm", contextD, fileInitName+i+"D.pdf"));
+				File f2 = new File(generateToPdf(vmPath+"equipment.vm", contextD, fileInitName+i+"D.pdf"));
 				files.add(f2);
 				streams.add(new FileInputStream(f2));
 				i++;
@@ -3230,7 +3237,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		VelocityContext contextE = new VelocityContext();
 		commonHeaderTemplate(review, contextE, section++);
 		commonCategoryTemplate(contextE);
-		File f3 = new File(generateToPdf("/sm/sitevisit/group/category.vm", contextE, fileInitName+"E.pdf"));
+		File f3 = new File(generateToPdf(vmPath+"category.vm", contextE, fileInitName+"E.pdf"));
 		files.add(f3);
 		streams.add(new FileInputStream(f3));
 		
@@ -3238,7 +3245,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		VelocityContext contextF = new VelocityContext();
 		commonHeaderTemplate(review, contextF, section++);
 		commonLocationTemplate(review, contextF);
-		File f4 = new File(generateToPdf("/sm/sitevisit/group/location.vm", contextF, fileInitName+"F.pdf"));
+		File f4 = new File(generateToPdf(vmPath+"location.vm", contextF, fileInitName+"F.pdf"));
 		files.add(f4);
 		streams.add(new FileInputStream(f4));
 

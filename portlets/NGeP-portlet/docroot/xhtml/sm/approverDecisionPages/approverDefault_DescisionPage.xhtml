@@ -38,7 +38,7 @@
 						partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
 						update=":form:tt:approverAppDialog"
-						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
+						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 						action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approverAppDialog')}" /> <!-- 29727 -->
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
@@ -57,7 +57,7 @@
 						</ui:repeat>
 					<!-- #12483 - END -->
 				</div> <c:if
-					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}">
+					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
 					<table style="width: 100%">
 						<tr>
 							<td><h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
@@ -238,7 +238,15 @@
 		title="#{lbl['lbl.sm.approve.application']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approverAppDialog"/>
-		
+	
+	<ac:confirmationPopup id="pendingQTPopUpApproverCloseId"
+		widget="pendingQTPopUpApproverClose"
+		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
+		update=":form:tt:approverAppDialog"/>
+			
 	<ac:confirmationPopup id="pendingQTPopUpApproverTwoId"
 		widget="pendingQTPopUpApproverTwo"
 		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"

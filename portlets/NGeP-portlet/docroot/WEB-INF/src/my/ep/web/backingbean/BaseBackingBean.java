@@ -4128,7 +4128,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		if(isFullName){
 			return sCat.getCategoryL1Name()+" / "+sCat.getCategoryL2Name()+" / "+sCat.getCategoryL3Name();
-	}
+		}
 		return sCat.getCategoryL3Name();
 	}
 	
@@ -4158,16 +4158,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
-		boolean isStatusNull = false;
-		try {
-		if(appl == null || appl.getPmStatus() == null){
+		if(appl == null){
 			return false;
 		}
-		} catch (Exception e) {
-			log.info("", e);
-			isStatusNull = true;
-		}
-		if (isStatusNull) {
+		if (appl.getPmStatus() == null) {
 			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();
@@ -4204,6 +4198,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		if(!getManagedBean().getPersonnelsRole().isEmpty()){
+			getManagedBean().setDisAllowOwnerEdit(false);
+			for(SmPersonnel smPersonnel : getManagedBean().getPersonnelsRole()){
+				if(!isMofAccEffDatePassedCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
+					getManagedBean().setDisAllowOwnerEdit(true);
+				}
+			}
+			
 			getManagedBean().setDowngradeRole(true);
 			
 			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
@@ -4233,7 +4234,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//END #29956
 	
 	//#12487 start
-	
+	/**
+	 * To retrieve PTJ code by org profile ID and created date
+	 * @param orgProfileId
+	 * @param tranDate
+	 * @return Organization Code
+	 */
 	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
 				.getInstance()

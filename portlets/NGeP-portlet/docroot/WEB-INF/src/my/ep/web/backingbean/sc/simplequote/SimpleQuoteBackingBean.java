@@ -7567,7 +7567,9 @@ public class SimpleQuoteBackingBean extends
 				minMinutes = ruleValue.getFromValue();
 				maxMinutes = ruleValue.getToValue();
 				minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				//start - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
+				//stop - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
 			}
 			if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
 				maxiDays = maxiDays + maxDays.intValue();
@@ -7580,7 +7582,9 @@ public class SimpleQuoteBackingBean extends
 				}
 
 				BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
-				diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+				//start - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+				diff = diff.divide(BigDecimal.valueOf(60L*1000), 2, RoundingMode.HALF_UP);
+				//stop - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
 				/*
 				
 				BigDecimal twentyFour = BigDecimal.valueOf(24);
