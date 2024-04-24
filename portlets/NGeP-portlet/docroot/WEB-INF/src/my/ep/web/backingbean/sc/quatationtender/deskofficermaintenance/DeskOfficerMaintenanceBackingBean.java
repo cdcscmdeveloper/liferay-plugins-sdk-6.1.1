@@ -1166,7 +1166,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
 			
-			AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
 			int successCount = 0;
 			for (Map.Entry<Long, PmUser> entry : this.getManagedBean().getQtNoDeskOfficerMap().entrySet()){
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
@@ -1191,23 +1190,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setDeskOfficer(entry.getValue());
 				resDTO = null;
 				
-				AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
-				String roleCode = RoleCode.DESK_OFFICER.value();
-				Long orgProfileId = this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId();
-				String orgName = this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgName();
-				Long docTypeId = qt.getProcurementMode().getParameterId();
-				String docNo = qt.getQtNo();
-				Long docId = qt.getQtId();
-				Long statusId = qt.getQtStatus().getStatusId();
-				String actionType = QTAuditConstant.AU_TYPE_MODIFY;
-				Long qtFieldLabelId = QTAuditConstant.AU_FIELD_DO_NEW_ASSIGNED_DESK_OFFICER;
+				AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();				
 				String oldValue = null;
 				Long oldValueId = null;
 				String newValue = entry.getValue().getUserName();
 				Long newValueId = entry.getValue().getUserId();
-				Long changedBy = getFacesScopes().getUserSessionBean().getUserId();
-				Long createdBy = getFacesScopes().getUserSessionBean().getUserId();
-				String groupTabSection = QTAuditConstant.AU_SECTION_DO;
 
 				if(!isCommitteeApprover() && isDeskOfficer()){
 					resDTO = detailSO.submitDOReassignment(reqDTO);
@@ -1236,11 +1223,23 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					oldValue = originalDO.getUserName();
 					oldValueId = originalDO.getUserId();
 				}
-				
-				auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, orgName, docTypeId, docNo, docId,null,null,
-						statusId, actionType, qtFieldLabelId, oldValue, oldValueId, newValue, newValueId, changedBy,
-						createdBy, null, null,groupTabSection);
-				auReqList.add(auReqDTO);
+				if (auTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+					String roleCode = getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())? RoleCode.COMMITTEE_APPROVER.value():RoleCode.DESK_OFFICER.value();
+					Long orgProfileId = this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId();
+					Long docTypeId = qt.getProcurementMode().getParameterId();
+					String docNo = qt.getQtNo();
+					Long docId = qt.getQtId();
+					Long statusId = qt.getQtStatus().getStatusId();
+					String actionType = QTAuditConstant.AU_TYPE_MODIFY;
+					Long qtFieldLabelId = QTAuditConstant.AU_FIELD_DO_NEW_ASSIGNED_DESK_OFFICER;
+					Long createdBy = getFacesScopes().getUserSessionBean().getUserId();	
+					String groupTabSection = QTAuditConstant.AU_SECTION_DO;
+					
+					auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId, null,
+							null, statusId, actionType, qtFieldLabelId, oldValue, oldValueId, newValue, newValueId,
+							createdBy, null, null, groupTabSection);
+					auReqList.add(auReqDTO);
+				}
 				
 				if(resDTO.isSuccessful()){
 					successCount ++;
@@ -1356,45 +1355,50 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				QuationTenderResDTO resDTO = getQTDetailSO().updateDOReasignmentTask(reqDTO);
 				
 				//#28895-35500
-				AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
-				AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
-				List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
-				ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(
-						ParameterConst.DOCTYPE_DO_REASSIGN,this.getManagedBean().getCurrentApproval().getScQt().getQtId());
-				
-				String roleCode = RoleCode.DESK_OFFICER.value();
-				Long orgProfileId = this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId();
-				String orgName = this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgName();
-				Long docTypeId = this.getManagedBean().getCurrentApproval().getScQt().getProcurementMode().getParameterId();
-				String docNo = this.getManagedBean().getCurrentApproval().getScQt().getQtNo();
-				Long docId = this.getManagedBean().getCurrentApproval().getScQt().getQtId();
-				Long statusId = workFlowStatus.getPmStatus().getStatusId();
-				String actionType = QTAuditConstant.AU_TYPE_MODIFY;
-				Long qtFieldLabelId = QTAuditConstant.AU_FIELD_DO_NEW_ASSIGNED_DESK_OFFICER;
-				String oldValue = this.getManagedBean().getOriginalDeskOfficer().getUserName();
-				Long oldValueId = this.getManagedBean().getOriginalDeskOfficer().getUserId();
-				String newValue = this.getManagedBean().getNewDeskOfficer().getUserName();
-				Long newValueId = this.getManagedBean().getNewDeskOfficer().getUserId();
-				Long newTempDoId = this.getManagedBean().getNewTempDeskOfficer().getUserId();
-				Long changedBy = getFacesScopes().getUserSessionBean().getUserId();
-				Long createdBy = getFacesScopes().getUserSessionBean().getUserId();
-				String groupTabSection = QTAuditConstant.AU_SECTION_DO;
-				
-				if (newValueId.compareTo(newTempDoId)==0 && statusId.compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED)==0) {
-					oldValue = null;
-					oldValueId = null;
-					newValue = null;
-					newValueId = null;
-					actionType = null;
-				}
 				IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
-				auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, orgName, docTypeId, docNo, docId,null,null,
-						statusId, actionType, qtFieldLabelId, oldValue, oldValueId, newValue, newValueId, changedBy,
-						createdBy, null,null,groupTabSection);
-				
-				auReqList.add(auReqDTO);
-				auTrailsSO.insertAuditTrails(auReqList);
+				if (auTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+					AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
+					List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
+					ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_DO_REASSIGN,
+							this.getManagedBean().getCurrentApproval().getScQt().getQtId());
+
+					String roleCode = getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value()) ? RoleCode.COMMITTEE_APPROVER
+							.value() : RoleCode.DESK_OFFICER.value();
+					Long orgProfileId = this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile()
+							.getOrgProfileId();
+					Long docTypeId = this.getManagedBean().getCurrentApproval().getScQt().getProcurementMode()
+							.getParameterId();
+					String docNo = this.getManagedBean().getCurrentApproval().getScQt().getQtNo();
+					Long docId = this.getManagedBean().getCurrentApproval().getScQt().getQtId();
+					Long statusId = workFlowStatus.getPmStatus().getStatusId();
+					String actionType = QTAuditConstant.AU_TYPE_MODIFY;
+					Long qtFieldLabelId = QTAuditConstant.AU_FIELD_DO_NEW_ASSIGNED_DESK_OFFICER;
+					String oldValue = this.getManagedBean().getOriginalDeskOfficer().getUserName();
+					Long oldValueId = this.getManagedBean().getOriginalDeskOfficer().getUserId();
+					String newValue = this.getManagedBean().getNewDeskOfficer().getUserName();
+					Long newValueId = this.getManagedBean().getNewDeskOfficer().getUserId();
+					Long newTempDoId = this.getManagedBean().getNewTempDeskOfficer().getUserId();
+					Long createdBy = getFacesScopes().getUserSessionBean().getUserId();
+					String groupTabSection = QTAuditConstant.AU_SECTION_DO;
+
+					if (newValueId.compareTo(newTempDoId) == 0
+							&& statusId.compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED) == 0) {
+						oldValue = null;
+						oldValueId = null;
+						newValue = null;
+						newValueId = null;
+						actionType = null;
+					}
+
+					auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId, null,
+							null, statusId, actionType, qtFieldLabelId, oldValue, oldValueId, newValue, newValueId,
+							createdBy, null, null, groupTabSection);
+
+					auReqList.add(auReqDTO);
+					auTrailsSO.insertAuditTrails(auReqList);
+
+				}
 				
 				if(resDTO.isSuccessful()){
 					String msgCode = outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) ? "INFO-760490" : "INFO-760491";
