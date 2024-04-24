@@ -3,14 +3,13 @@ package my.ep.web.backingbean.sc.audit;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
 import my.ep.dto.sc.audit.AuDPRequestNoteDetailSPDTO;
 import my.ep.dto.sc.audit.AuDPRequestNoteSPDTO;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.web.constant.sc.dp.audit.AuditDPRequestNoteConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
-
 /**
  * The Class AuditDPRequestNoteBackingBean. #28895_35492
  * 
@@ -23,7 +22,6 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 	@Override
 	public AuDPRequestNoteDTO insert(BaseManagedBean managedBean, Long userId, String roleCode) {
 		RequestNoteManagedBean managedBeans = (RequestNoteManagedBean) managedBean;
-
 		List<AuDPRequestNoteSPDTO> auDPRequestnoteSPDTOList = new ArrayList<>();
 		AuDPRequestNoteSPDTO auDPRequestNoteSPDTO = new AuDPRequestNoteSPDTO();
 		AuDPRequestNoteDTO auObj = new AuDPRequestNoteDTO();
@@ -35,7 +33,7 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 			data.setSubDocNo(ri.getRequestItem().getItemName());
 			auDPRequestnoteDetailSPDTOList.add(data);
 		}
-		auObj.setAuDPRequestnoteDetailSPDTOList(auDPRequestnoteDetailSPDTOList);
+		auObj.setAuDPRequestNoteDetailSPDTOList(auDPRequestnoteDetailSPDTOList);
 		auDPRequestNoteSPDTO.setDocTypeId(AuditDPRequestNoteConst.SC_DP_AU_RN_DOCTYPEID);
 		auDPRequestNoteSPDTO.setRoleCode(roleCode);
 		auDPRequestNoteSPDTO.setOrgProfileId(BigInteger.valueOf(managedBeans.getRequestNote().getPmOrgProfile()
@@ -50,7 +48,7 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 				.getPurchaseRequest().getPurchaseRequestId()));
 
 		auDPRequestnoteSPDTOList.add(auDPRequestNoteSPDTO);
-		auObj.setAuDPRequestnoteSPDTOList(auDPRequestnoteSPDTOList);
+		auObj.setAuDPRequestNoteSPDTOList(auDPRequestnoteSPDTOList);
 		return auObj;
 	}
 }

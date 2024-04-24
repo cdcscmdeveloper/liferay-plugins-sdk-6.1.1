@@ -8,6 +8,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import org.apache.log4j.Logger;
 
 /**
  * The Class AuditDPRequestNoteBackingBeanTemplate. #28895_35492
@@ -17,6 +18,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  */
 public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializable {
 	private static final long serialVersionUID = 1L;
+	/** The log. */
+	private static Logger log = Logger.getLogger(AuditDPRequestNoteBackingBeanTemplate.class);
 
 	public AuditDPRequestNoteBackingBeanTemplate() {
 	}
@@ -30,11 +33,6 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	 * 
 	 * @return the audit dp request note so
 	 */
-	private IAuditDPRequestNoteSO getAuditDpmRequestNoteSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IAuditDPRequestNoteSO.class);
-	}
-
 	/**
 	 * The void auditSaveData.
 	 * 
@@ -42,7 +40,6 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	 * @param userId
 	 */
 	public final void auditSaveData(BaseManagedBean managebean, Long userId) {
-
 		String roleCode = getRoleCode();
 
 		AuDPRequestNoteDTO auObj = insert(managebean, userId, roleCode);
@@ -65,7 +62,13 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	public abstract AuDPRequestNoteDTO insert(BaseManagedBean managebean, Long userId, String roleCode);
 
 	private void dpAuditSO(AuDPRequestNoteDTO dtlObjList) {
-		getAuditDpmRequestNoteSO().insertAuditDPRequestNote(dtlObjList.getAuDPRequestnoteSPDTOList(),
-				dtlObjList.getAuDPRequestnoteDetailSPDTOList());
+		try {
+			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
+					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
+		} catch (Exception ex) {
+			log.info("Catch Exception from TEMPLATE Send TO SO : " + ex);
+		}
 	}
 }
