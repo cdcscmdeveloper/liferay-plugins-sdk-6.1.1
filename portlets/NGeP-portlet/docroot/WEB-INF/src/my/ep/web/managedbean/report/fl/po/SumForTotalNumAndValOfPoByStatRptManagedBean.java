@@ -27,6 +27,10 @@ public class SumForTotalNumAndValOfPoByStatRptManagedBean extends FlReportManage
 	
 	private Date poGenDateFrom;
 	private Date poGenDateTo;
+	
+	//29550 start
+	private String groupStatus;
+	//29550 end
 
 	public String getReportUrl() {
 		return reportUrl;
@@ -58,6 +62,14 @@ public class SumForTotalNumAndValOfPoByStatRptManagedBean extends FlReportManage
 
 	public void setPoGenDateTo(Date poGenDateTo) {
 		this.poGenDateTo = poGenDateTo;
+	}
+
+	public String getGroupStatus() {
+		return groupStatus;
+	}
+
+	public void setGroupStatus(String groupStatus) {
+		this.groupStatus = groupStatus;
 	}
 	
 	

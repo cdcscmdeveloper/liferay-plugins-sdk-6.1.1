@@ -510,7 +510,10 @@
 			toggleable="true" id="smPersonnelParentPan">
 			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
 			<ui:param name="lblPersonnelInstruction" value="lbl.sm.personnel.composistion.#{backingBean.managedBean.smAppl.supplierType}#{backingBean.managedBean.smSupplier.businessType}" />
-			
+			<!-- 34587 START -->
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.instruction.personnel.declare']}" escape="false" 
+				rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}"/>
+			<!-- 34587 END -->
 			<h:outputText styleClass="instruction" value="#{lbl[lblShareholderInstruction]}" escape="false" 
 				rendered="#{backingBean.managedBean.smSupplier.businessType ne 'K' and backingBean.managedBean.smSupplier.businessType ne 'L'
 					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
@@ -520,8 +523,8 @@
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" id="reachAuthLimitMsgId"
 				escape="false" rendered="#{backingBean.managedBean.validSmUserLimit}"/>
 			<!-- Disable for ups 32008 -->
-			<!-- table style="width: 100%">
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<table style="width: 100%">
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{backingBean.managedBean.poSecReview.personnelVerified}"
@@ -536,7 +539,8 @@
 
 					</tr>
 				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<!-- #32008 -->
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{backingBean.managedBean.apprvrSecReview.personnelVerified}"
@@ -550,7 +554,7 @@
 								title="For Approver to highlight the verified section " /></td>
 					</tr>
 				</p:outputPanel>
-			</table-->
+			</table>
 
 			<p:outputPanel id="persInfPan" layout="block">
 				<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:persInfPan" widgetVar="buiPoPers"

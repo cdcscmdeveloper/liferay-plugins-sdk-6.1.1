@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -620,18 +621,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//29727
 	private String deleteBranchMsg;
 	
-	// 31043 START
-	private boolean showFacilityMachine;
-	// 31043 END
 	
 	//13362
 	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
-	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
 	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
@@ -661,6 +653,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmAppl pendingBumiAppl;
 	//32008
 	private boolean upsCannotEdit;
+	
+	//#30762 -Start 021123
+	private boolean poApproverPersonnelRoleMsg;
+	private String personnelRoleMsg; 
+	//#30762 -End 
+	
+	//#34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	//#34393 - end
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4436,15 +4438,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
-
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
 
 	//13362 START
 	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
@@ -4473,32 +4466,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
 	}
 	//30974 - end
-
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;
@@ -4632,4 +4599,38 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.upsCannotEdit = upsCannotEdit;
 	}
 	//end 32008
+	
+	//#30762 -Start 021123
+	public boolean isPoApproverPersonnelRoleMsg() {
+		return poApproverPersonnelRoleMsg;
+	}
+
+	public void setPoApproverPersonnelRoleMsg(boolean poApproverPersonnelRoleMsg) {
+		this.poApproverPersonnelRoleMsg = poApproverPersonnelRoleMsg;
+	}
+
+	public String getPersonnelRoleMsg() {
+		return personnelRoleMsg;
+	}
+
+	public void setPersonnelRoleMsg(String personnelRoleMsg) {
+		this.personnelRoleMsg = personnelRoleMsg;
+	}
+	//#30762 -End 
+
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
 }

@@ -11,6 +11,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -83,150 +86,41 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		     rptGenBean.setGenerateButton(true);
 		switch (getManagedBean().getReportValue().trim()) {
 		 	case ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL:
-		 		rptGenBean.setScQuotationNoView(true);	
-		 		rptGenBean.setExtraTwoColumnView(true);
-	            break; 
 	        case ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.PDDW_OC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.SPPSAP2_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.AKPT_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.TECSPEC_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.SPPSAP2_FEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.AKPT_FEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.HARGA_TAWARAN_FEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.OVRL_FINRS_FEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.PDW_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.SPPSAP2_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.AKPTPH_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.TECSPEC_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.HARGA_TAWARAN_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.OVRL_FINRS_EC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.ANLSIS_EVALUATION_FC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
-	            
 	        case ReportConst.PSDAK_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.PSDABK_TEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	            break;
 	        case ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
@@ -236,12 +130,12 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
 				}
-	        	if((approverNayakTarafList.size()>0)){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	        	rptGenBean.setScStatusView(true);
@@ -253,43 +147,29 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size())>0||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
 				}
-	        	if((approverNayakTarafList.size()>0)){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	        	rptGenBean.setScCreatedFromView(true);	
 	        	rptGenBean.setScPublishDateView(true);
 	            break;
 	        case ReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setScProcureAllChkView(true);
-	        	rptGenBean.setScQuotationChkView(true);
-	        	rptGenBean.setScTenderChkView(true);
-	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
-	        		rptGenBean.setScDeskOfficerView(true);
-				}
-	        	if((approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}
-	        	rptGenBean.setScStatusView(true);
-	        	rptGenBean.setScCreatedFromView(true);	
-	        	rptGenBean.setScPublishDateView(true);
-	            break;
 	        case ReportConst.SC_QUOT_TENDER_MONITOR_OR_RPT_VAL:
+	        case ReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);
 	        	rptGenBean.setScProcureAllChkView(true);
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
-	        	if((approverNayakTarafList.size()>0)){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	        	rptGenBean.setScStatusView(true);
@@ -302,29 +182,13 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
-	        	if((approverNayakTarafList.size()>0)){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	        	//rptGenBean.setScStatusView(true);
-	        	rptGenBean.setScCreatedFromView(true);	
-	        	rptGenBean.setScPublishDateView(true);
-	            break;
-	        case ReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setScProcureAllChkView(true);
-	        	rptGenBean.setScQuotationChkView(true);
-	        	rptGenBean.setScTenderChkView(true);
-	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
-	        		rptGenBean.setScDeskOfficerView(true);
-				}
-	        	if((approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}
-	        	rptGenBean.setScStatusView(true);
 	        	rptGenBean.setScCreatedFromView(true);	
 	        	rptGenBean.setScPublishDateView(true);
 	            break;
@@ -333,46 +197,20 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationChkView(true);
 	        	rptGenBean.setScTenderChkView(true);
 	        	rptGenBean.setScRstrctdChkView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
 				}
-	        	if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	        	if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	        	rptGenBean.setScStatusView(true);
 	        	rptGenBean.setScCreatedFromView(true);	
 	        	rptGenBean.setScPublishDateView(true);
 	            break;
-	        case ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL:
-	        	rptGenBean.setScCommitteQuotationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-	        	/*if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
-	        		rptGenBean.setScDeskOfficerView(true);
-				}else{
-					rptGenBean.setExtraTwoColumnView(true);
-				}
-	        	if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}*/        	
-	            break;
+
 	        case ReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);
-	        	rptGenBean.setScProcureAllChkView(true);
-	        	rptGenBean.setScQuotationChkView(true);
-	        	rptGenBean.setScTenderChkView(true);
-	        	rptGenBean.setScRstrctdChkView(true);       	
-	        	rptGenBean.setScStatusView(true);
-	        	rptGenBean.setScCreatedFromView(true);	
-	        	rptGenBean.setScPublishDateView(true);  
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
-	        		rptGenBean.setScDeskOfficerView(true);
-				}
-	        	if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}
-	            break;
 	        case ReportConst.SC_PROPOSAL_DTLS_SERVICE_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);
 	        	rptGenBean.setScProcureAllChkView(true);
@@ -382,32 +220,37 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScStatusView(true);
 	        	rptGenBean.setScCreatedFromView(true);	
 	        	rptGenBean.setScPublishDateView(true);  
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}
-	        	if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	        	if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	            break;
 	            
 		    case ReportConst.SC_BRIEFING_PAPER_RPT_VAL:
+		    case ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP:
+	        case ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL:
+	        case ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP:
+	        case ReportConst.SC_OPENING_COMMITTEE_RPT_VAL:
+			case ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP:
+			case ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL:
+			case ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP:
+			case ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL:
+			case ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP:
+	        case ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL:
 		        	rptGenBean.setScCommitteQuotationNoView(true);
 			        rptGenBean.setExtraTwoColumnView(true);
-			break;	
-			
-		    case ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScCommitteQuotationNoView(true);
-		        rptGenBean.setExtraTwoColumnView(true);
-		     break;	
+			     break;
 			
 	        case ReportConst.SC_PURCHASE_ITEM_INQUIRY_FINAL_S1_RPT_VAL:
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);
@@ -420,10 +263,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	  rptGenBean.setGenerateButton(false);
 	        	  rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);
@@ -431,35 +274,14 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScCommonStatusView(true);	    		
 	            break;  
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_SUPPLIER_S1_RPT_VAL:
-	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
-	        		rptGenBean.setScRequisenerIdView(true);
-	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}
-	    		rptGenBean.setScSupplierView(true);
-	    		rptGenBean.setScPInoView(true);
-	    		rptGenBean.setScCommonStatusView(true);	    		
-	            break;
+	        case ReportConst.SC_PURCHASE_INQ_DTL_S1_RPT_VAL:
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_REQUISITIONER_S1_RPT_VAL:
-	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
-	        		rptGenBean.setScRequisenerIdView(true);
-	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}
-	    		rptGenBean.setScSupplierView(true);
-	    		rptGenBean.setScPInoView(true);
-	    		rptGenBean.setScCommonStatusView(true);	    		
-	            break;
 	        case ReportConst.SC_PURCHASE_SUMMURY_ITEM_INQUIRY_PINO_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);
@@ -470,10 +292,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		//rptGenBean.setScSupplierView(true);	    		
@@ -487,10 +309,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);	    		
@@ -501,10 +323,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_REQUEST_NOTE_PROCUREMENT_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);	    		
@@ -516,10 +338,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);	    		
@@ -527,53 +349,29 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScProcurementTypeView(true);
 	    		rptGenBean.setScRequestQuoteNoView(true);
 	            break;
-	        case ReportConst.SC_PURCHASE_INQ_DTL_S1_RPT_VAL:
-	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
-	        		rptGenBean.setScRequisenerIdView(true);
-	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}
-	    		rptGenBean.setScSupplierView(true);
-	    		rptGenBean.setScPInoView(true);
-	    		rptGenBean.setScCommonStatusView(true);	    		
-	            break;  
-	        case ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL:
-	        	rptGenBean.setGenerateButton(false);
-	        	rptGenBean.setConditionGenerateButton(true);
-	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
-	        		rptGenBean.setScRequisenerIdView(true);
-	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
-	        		rptGenBean.setScPtjView(true);
-	        	}
-	    		rptGenBean.setScSupplierView(true);
-	    		rptGenBean.setScProcurementTypeView(true);
-	    		rptGenBean.setScSimpleQuoteStatusView(true);	
-	    		rptGenBean.setScProcessRptQuotationNoView(true);
-	            break; 
+
 	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_REQUSNR_S1_RPT_VAL:	        	
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScProcurementTypeView(true);
 	    		rptGenBean.setScCommonStatusView(true);	
 	    		rptGenBean.setScProcessRptQuotationNoView(true);
 	            break;
+	            
+	        case ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL:
 	        case ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL:
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);
@@ -584,10 +382,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_LAPORAN_PERICIAN_SQ_DTL_ITM_EST_PRICE_STS_S1_RPT_VAL:
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);
@@ -599,10 +397,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);	    		
@@ -633,10 +431,10 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setGenerateButton(false);
 	        	rptGenBean.setConditionGenerateButton(true);
 	        	rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	if((CollectionUtils.isNotEmpty(approverNayakTarafList))||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
-	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
+	    		if((authoriztionList!=null)&&(CollectionUtils.isNotEmpty(approverNayakTarafList))){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSupplierView(true);
@@ -651,21 +449,6 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		     	rptGenBean.setScLOAContentView(true);
 
 			break;
-			
-		   case ReportConst.SC_OPENING_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScCommitteQuotationNoView(true);
-		        rptGenBean.setExtraTwoColumnView(true);
-		     break;	
-		     
-		   case ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScCommitteQuotationNoView(true);
-		        rptGenBean.setExtraTwoColumnView(true);
-		     break;	
-		     
-		   case ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL:
-	        	rptGenBean.setScCommitteQuotationNoView(true);
-		        rptGenBean.setExtraTwoColumnView(true);
-		     break;	
 			
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            
