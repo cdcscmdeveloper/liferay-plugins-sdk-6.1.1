@@ -835,7 +835,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
 		searchReqDTO.setDocType(docType);
-		searchReqDTO.setDocId(Long.valueOf(docId));
+		//start - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+		searchReqDTO.setDocId(docId);
+		//stop - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+
 
 		Long groupDocId = docId;
 		String groupDocType = docType;
