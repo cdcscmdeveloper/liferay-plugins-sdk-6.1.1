@@ -121,8 +121,8 @@
 				<td><p:selectOneMenu label="#{lbl['lbl.sm.person.race']}"
 						id="equiPerRace" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.pmRace ne null and backingBean.managedBean.selectedShareHolder.pmRace.raceId ne null and backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.raceSsmNull)}"
-						style="width: 207px;margin-bottom: 5px;">
+						disabled="#{backingBean.isRaceDisabled()}"
+						style="width: 207px;margin-bottom: 5px;"> <!-- #35145 -->
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="select"
 							value="#{backingBean.managedBean.raceSelectItems}"
