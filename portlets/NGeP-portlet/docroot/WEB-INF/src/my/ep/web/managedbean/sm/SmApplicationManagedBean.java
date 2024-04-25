@@ -621,18 +621,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//29727
 	private String deleteBranchMsg;
 	
-	// 31043 START
-	private boolean showFacilityMachine;
-	// 31043 END
 	
 	//13362
 	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
-	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
 	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
@@ -4447,15 +4438,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
-
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
 
 	//13362 START
 	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
@@ -4484,32 +4466,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
 	}
 	//30974 - end
-
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;

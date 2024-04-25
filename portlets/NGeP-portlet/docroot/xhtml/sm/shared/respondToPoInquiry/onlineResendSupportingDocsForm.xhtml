@@ -22,8 +22,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:messages id="messages" showDetail="true" showSummary="false"
-			autoUpdate="true" closable="true" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!backingBean.managedBean.claimTask}"/><br />
 		<table style="width: 100%">
 			<tr>
@@ -118,7 +117,7 @@
 				</p:column>
 			</p:dataTable> -->
 			<!-- datatable for mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.mandatoryDocs}" id="InquiriesMandatoryList" 
+			<p:dataTable var="table" value="#{backingBean.managedBean.mandatoryDocs}" id="InquiriesMandatoryList" rendered="#{not empty backingBean.managedBean.mandatoryDocs}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -130,7 +129,7 @@
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
 							style="width:48% !important; overflow: hidden !important;" />
-						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"	
 							style="width:11% !important; overflow: hidden !important;"/>
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
 							style="width:23% !important; overflow: hidden !important;" />
@@ -150,9 +149,6 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
 				rendered="#{table.pmDocument.mandatory and table.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-					<h:outputText value="#{table.smApplDocFiles[0].fileName}"
-						rendered="#{table.verifiedFlg != 1}"
-						style="float: left;white-space: normal;" />
 					<ui:repeat var="applDocsFile" value="#{table.smApplDocFiles}">
 						<ui:remove>
 							<p:commandLink value="#{applDocsFile.fileName}"
@@ -240,7 +236,7 @@
 				</p:columnGroup>
 			</p:dataTable>
 			<!-- datatable for non-mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.nonMandatoryDocs}" id="InquiriesNonMandatoryList" 
+			<p:dataTable var="table" value="#{backingBean.managedBean.nonMandatoryDocs}" id="InquiriesNonMandatoryList" rendered="#{not empty backingBean.managedBean.nonMandatoryDocs}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
