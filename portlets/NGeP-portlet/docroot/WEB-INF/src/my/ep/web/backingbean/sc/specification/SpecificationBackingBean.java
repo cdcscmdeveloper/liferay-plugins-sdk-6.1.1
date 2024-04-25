@@ -17747,13 +17747,17 @@ if (null != checklist && !checklist.isEmpty()) {
 						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) 
-						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
+								&& !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action)
+								&& !BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action))
 						//#29732 exclude endorsement
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) 
-						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
+								&& !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action)
+								&& !BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action))
 						//#29732 exclude endorsement
-				&& !this.getManagedBean().isReadOnly())  {
+				&& !this.getManagedBean().isReadOnly()) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
