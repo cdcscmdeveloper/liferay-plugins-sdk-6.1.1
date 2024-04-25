@@ -17,6 +17,10 @@ import my.ep.web.managedbean.BaseManagedBean;
  * 
  */
 //20230111@Haziq - #12487
+/**
+ * @author muhammadasyrafhaziq
+ *
+ */
 @ManagedBean(name = "userOrgSearchMB")
 @SessionScoped
 public class UserOrgSearchManagedBean extends BaseManagedBean{
@@ -41,7 +45,7 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	
 	
 	public UserOrgSearchManagedBean() {
-
+      //Do nothing
 	}
 
 	/**
@@ -103,6 +107,7 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	/**
 	 * @return the orgType
 	 */
+	@Override
 	public String getOrgType() {
 		return orgType;
 	}
@@ -110,6 +115,7 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	/**
 	 * @param orgType the orgType to set
 	 */
+	@Override
 	public void setOrgType(String orgType) {
 		this.orgType = orgType;
 	}
@@ -170,58 +176,100 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 		this.disabledPegaiPengawa = disabledPegaiPengawa;
 	}
 
+	/**
+	 * @return userCodeName
+	 */
 	public String getUserCodeName() {
 		return userCodeName;
 	}
 
+	/**
+	 * @param userCodeName the userCodeName to set
+	 */
 	public void setUserCodeName(String userCodeName) {
 		this.userCodeName = userCodeName;
 	}
 
+	/**
+	 * @return userCodeNameSearchValues
+	 */
 	public String getUserCodeNameSearchValues() {
 		return userCodeNameSearchValues;
 	}
 
+	/**
+	 * @param userCodeNameSearchValues
+	 */
 	public void setUserCodeNameSearchValues(String userCodeNameSearchValues) {
 		this.userCodeNameSearchValues = userCodeNameSearchValues;
 	}
 
+	/**
+	 * @return zone
+	 */
 	public Long getZone() {
 		return zone;
 	}
 
+	/**
+	 * @param zone
+	 */
 	public void setZone(Long zone) {
 		this.zone = zone;
 	}
 
+	/**
+	 * @return userOrgDataModel
+	 */
 	public IPagingDataModel<PmUserOrg> getUserOrgDataModel() {
 		return userOrgDataModel;
 	}
 
+	/**
+	 * @param userOrgDataModel
+	 */
 	public void setUserOrgDataModel(IPagingDataModel<PmUserOrg> userOrgDataModel) {
 		this.userOrgDataModel = userOrgDataModel;
 	}
 
+	/**
+	 * @return selectedUser
+	 */
 	public PmUserOrg getSelectedUser() {
 		return selectedUser;
 	}
 
+	/**
+	 * @param selectedUser
+	 */
 	public void setSelectedUser(PmUserOrg selectedUser) {
 		this.selectedUser = selectedUser;
 	}
 
+	/**
+	 * @return currentActiveUserOrg
+	 */
 	public PmUserOrg getCurrentActiveUserOrg() {
 		return currentActiveUserOrg;
 	}
 
+	/**
+	 * @param currentActiveUserOrg
+	 */
 	public void setCurrentActiveUserOrg(PmUserOrg currentActiveUserOrg) {
 		this.currentActiveUserOrg = currentActiveUserOrg;
 	}
 
+	/**
+	 * @return currentActiveOrg
+	 */
 	public PmOrgProfile getCurrentActiveOrg() {
 		return currentActiveOrg;
 	}
 
+	/**
+	 * @param currentActiveOrg
+	 */
 	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
 		this.currentActiveOrg = currentActiveOrg;
 	}

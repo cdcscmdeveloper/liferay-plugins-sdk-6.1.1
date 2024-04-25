@@ -1318,13 +1318,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// Acknowledge Date
 		//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 		//20230111@Haziq - #12487
-		/*if (scLoa != null && (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
-				.getPmStatus().getStatusId()) ||
-				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
-						.getPmStatus().getStatusId()))) {
-			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
-			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
-		}*/
+		//Remove this because it will not be use to set ackduedate in this function.
 
 		// check whether loa from s1 or s2.
 		if(scLoa != null && scLoa.getScLoiLoa() != null){ //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -4905,10 +4899,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) 
-		   //|| BpmOutcomeConst.BPM_SUBMIT.equals(outcome) //20230111@Haziq - #12487
+		   //20230111@Haziq - #12487 - remove because this logic not applicable during submit/creation
 				){
 			//20230111@Haziq - #12487
-			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			// remove this because loa respond period are get from UI not from PM rule
 			Integer loaRespPeriod = scLoa.getLoaResponsePeriod();
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
@@ -12112,8 +12106,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void validateResponsePeriod(Integer days){
 		ScLoa scLoa = getManagedBean().getScLoa();
 		
-		if (days != 0) {
-			//scLoa.setRespPeriod(days);		
+		if (days != 0) {		
 			scLoa.setLoaResponsePeriod(days);
 			BigDecimal fromValue = retrieveResponsePeriod(ParameterConst.FROM_VALUE);
 			BigDecimal toValue = retrieveResponsePeriod(ParameterConst.TO_VALUE);
