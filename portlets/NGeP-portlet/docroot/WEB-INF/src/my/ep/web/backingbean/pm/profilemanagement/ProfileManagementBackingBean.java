@@ -1161,7 +1161,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					throw new EpException(MessageConst.ERROR_770170);
 				}
 			}
-
+			// #35489 - Start
+			addressType.setChangedBy(getUserIdSessionFromLoginId());
+			// #35489 - End
 		}
 		getManagedBean().setRoleTabActiveIndex(1);
 
@@ -1220,7 +1222,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 				}
 			}
-
+			// #35489 - Start
+			this.getManagedBean().setOrgUnitStatusChange(true);
+			// #35489 - End
 		}
 	}
 
@@ -1253,6 +1257,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 			}
 		}
+		// #35489 - Start
+		this.getManagedBean().setUserStatusChange(true);
+		// #35489 - End
 	}
 
 	/*
@@ -2077,7 +2084,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				PmUserAttachment attachment = new PmUserAttachment();
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(PmCommonUtil.getUploadPath(loginId, item.getFileName()));
-				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId());//#31849 add log key
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
@@ -3694,6 +3701,22 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.setChangedBy(loginSessionUserId);
 				user.setCreatedBy(loginSessionUserId);
 			}
+			
+			// #35489 - Start
+			if (this.getManagedBean().isOrgUnitStatusChange()) {
+				for (PmAddressType addressType : this.getManagedBean()
+						.getSelectedReceivingAddrTypes()) {
+					addressType.setChangedBy(getUserIdSessionFromLoginId());
+				}
+			}
+
+			if (this.getManagedBean().isUserStatusChange()) {
+				for (PmAddressType addressType : this.getManagedBean()
+						.getSelectedReceivingAddrTypes()) {
+					addressType.setChangedBy(getUserIdSessionFromLoginId());
+				}
+			}
+			// #35489 - End
 			
 			//Redmine Bug #31541 - START
 			if (this.getManagedBean().getIsNewUser()) {

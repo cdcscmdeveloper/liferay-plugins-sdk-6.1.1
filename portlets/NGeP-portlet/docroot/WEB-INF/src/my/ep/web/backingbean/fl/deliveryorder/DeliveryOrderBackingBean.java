@@ -762,6 +762,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+				
+				//35429-Start
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
+					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
+						String[] outcome = new String[1];
+						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
+						this.getManagedBean().setOutComes(outcome);
+					}
+				}
+				//35429-End
+				
 			}
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -1352,13 +1364,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber , String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 		// spki 

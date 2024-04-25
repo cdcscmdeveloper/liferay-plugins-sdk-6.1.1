@@ -29,8 +29,8 @@
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
 			<td>
-				<!-- #12483 - START -->
-				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false"/>
+				<!-- #12483 - START, #34892 -->
+				<ac:smReviseReason bBean="#{backingBean}"/>
 				<!-- #12483 - END -->
 				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
@@ -362,10 +362,11 @@
 	<!-- #29727 START -->
 	<ac:confirmationPopup id="pendingQTPopUpApprovePoId"
 		widget="pendingQTPopUpApprovePo"
-		okAction="backingBean.assignFinalApproveOrReject('approveDialog')"
+		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{backingBean.managedBean.deleteBranchMsg}" 
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt; &lt;br&gt;
+		#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
 		update=":form:tt:approveDialog"/>
 		
 	<ac:confirmationPopup id="pendingQTPopUpRecommendApprovePoId"
@@ -373,7 +374,15 @@
 		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{backingBean.managedBean.deleteBranchMsg}" 
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
+		update=":form:tt:approveDialog"/>
+		
+	<ac:confirmationPopup id="pendingQTPopUpCloseApprovePoId"
+		widget="pendingQTPopUpCloseApprovePo"
+		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
+		width="400" height="100"
+		title="#{lbl['lbl.sm.approve.application']}"
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
 		update=":form:tt:approveDialog"/>
 	<!-- #29727 END -->
 		
