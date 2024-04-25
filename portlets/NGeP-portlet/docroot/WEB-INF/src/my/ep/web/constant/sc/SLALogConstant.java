@@ -32,6 +32,9 @@ public class SLALogConstant {
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
 	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
+	//#10141 Start Vinod
+	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
+	//#10141 End Vinod
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	/*
 	 * METHOD_NAME
@@ -54,6 +57,17 @@ public class SLALogConstant {
 	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
 	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
 	//#29187 End Vinod
+	//#10141 Start Vinod
+	public static final String QT_GENERATE_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY = "generateTechnicalChecklistPreviewPdfFromVelocity";
+	public static final String QT_GENERATE_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY = "generateFinancialChecklistPreviewPdfFromVelocity";
+	public static final String QT_GENERATE_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY = "generateSelectedTechnicalChecklistPreviewPdfFromVelocity";
+	public static final String QT_GENERATE_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW_PDF_FROM_VELOCITY = "generateSelectedFinancialChecklistPreviewPdfFromVelocity";
+	public static final String QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW = "downloadTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW = "downloadFinancialChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW = "downloadSelectedTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW = "downloadSelectedFinancialChecklistPreview";
+	public static final String QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC = "initiateInactiveChecklistProcessForDoc";
+	//#10141 End Vinod
 	//#29468 Start Vinod
 	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
