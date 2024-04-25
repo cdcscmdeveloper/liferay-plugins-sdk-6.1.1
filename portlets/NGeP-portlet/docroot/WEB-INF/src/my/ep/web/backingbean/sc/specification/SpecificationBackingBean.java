@@ -17349,12 +17349,15 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void submitSpecMaintenanceDtls(String action) {
 // #29732 Start - reOpen Fix
 		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
-				.equals((QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL))) {
+				.equals((QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL))
+				|| this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) || this.getManagedBean().getQt()
+						.getQtStatus().getStatusId().equals((QTStatusConst.QT_REVISION_PUBLICATION)))) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
 				return;
 			}
 		}
