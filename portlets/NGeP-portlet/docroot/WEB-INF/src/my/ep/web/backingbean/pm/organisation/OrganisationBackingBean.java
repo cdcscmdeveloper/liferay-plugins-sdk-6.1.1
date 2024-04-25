@@ -3505,6 +3505,10 @@ public class OrganisationBackingBean extends
 					&& addressType.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 				log.info(":::onChangeAddressStatus()...yes u should appear bro!");
 				throw new EpException(MessageConst.ERROR_775139);
+			} else {
+				// #35489 - Start
+				addressType.setChangedBy(getUserIdSessionFromLoginId());
+				// #35489 - End
 			}
 		}
 	}
