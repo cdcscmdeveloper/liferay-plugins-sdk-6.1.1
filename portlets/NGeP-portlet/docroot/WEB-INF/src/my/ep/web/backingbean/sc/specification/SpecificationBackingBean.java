@@ -89,6 +89,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -233,6 +234,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
+import my.ep.web.constant.sc.TreeNodeConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -2100,12 +2102,13 @@ public class SpecificationBackingBean extends
 						.getScQtCheckSt2techProposal());
 			}//#11104-End
 			
-			//#28784 - Include Demo WIP
+			//#28784 - Include Demo WIP - Start
+			checkDemoVersion(getManagedBean().getQt());//#28784 -  Demo WIP
 			if(this.getManagedBean().getQt().isDemoRequired() && this.getManagedBean().isNewVersion()){
 				this.getManagedBean().setDemoAction(true);
 				this.getManagedBean().setDemoType(true);
-				resetDemoSpecStatus();
-			}
+				resetDemoSpecStatus();				
+			}//28784 - end
 		} finally {
 			specSo = null;
 		}
@@ -2316,12 +2319,11 @@ public class SpecificationBackingBean extends
 						}
 					}
 
-					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) { 
-							if (null == this.getManagedBean().getTechnicalItemScoreSetting()) { 
-								this.getManagedBean().setTechnicalItemScoreSetting(recommnendationSetting);
-							} 
-						} 
+					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							&& recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+						this.getManagedBean().setTechnicalItemScoreSetting(
+								recommnendationSetting);
 					} 
 				} 
 			} 
@@ -10542,8 +10544,9 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getQtnTendertemplateSearchBean()
 				.setQtStatus(null);
 		//#29468 Start Vinod
-		for(TreeNode childTree : this.getManagedBean().getRootCategoryTree().getChildren())
+		for(TreeNode childTree : this.getManagedBean().getRootCategoryTree().getChildren()){
 			childTree.setSelected(false);
+		}
 		//#29468 End Vinod
 	}
 
@@ -11064,9 +11067,9 @@ public class SpecificationBackingBean extends
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
 		ScQt scQt = this.getManagedBean().getQt();
 		
-		// #28784 - Demo WIP
-		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
-		this.getManagedBean().setNewVersion(isQtNewVersion);
+		//#28784 - Demo WIP - Start
+		checkDemoVersion(scQt);
+		//28784 - End			
 		
 		// #25638 - Start
 		if (null != this.getManagedBean().getCurrentStatusId()
@@ -11162,11 +11165,10 @@ if (null != checklist && !checklist.isEmpty()) {
 	}//11104-End
 		
 		// #29732 @idham 25/07/2023 - Start
-		if (Arrays.asList(
-				new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
-						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION }).contains(statusId)
+	   if ((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId)
 				|| (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-						.equals(statusId))) {
+						.equals(statusId)) && !this.getManagedBean().isReadOnly())) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
@@ -11897,6 +11899,65 @@ if (null != checklist && !checklist.isEmpty()) {
 		 */
 
 		return reqDTO;
+	}
+	//Reopen #25726 note 226 - issue 14
+	//function to check and update fulfilment type in specQuestion.
+	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists,ScQtCheckList finChecklist, boolean isTechInsert ){
+		log.info("checkAndupdateFulfilmentType");	
+			
+		PmParameter clFulfilmentTypeCode =this.getManagedBean().getQt().getFulfilmentType();
+		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		
+		if (null == technicalCheckList
+				|| technicalCheckList.isEmpty()) {
+			retriveTechnicalCheckList();
+			technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+		}
+		
+		if (null != technicalCheckList
+				&& !technicalCheckList.isEmpty() && !isTechInsert) {
+			
+			for (ScQtCheckList technicalchecklist : technicalCheckList) {
+				String checklistTitle = (technicalchecklist.getTitle() + "_" + (technicalchecklist.getDefinationType() != null ? technicalchecklist.getDefinationType()
+						.getParameterId() : "")).trim().replaceAll("\\s", "");
+				String finChecklistTitle = (finChecklist.getTitle() + "_" + (finChecklist.getDefinationType() != null ? finChecklist
+							.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");
+					
+					if (finChecklistTitle.equals(checklistTitle)) {	
+						allCheckLists.add(technicalchecklist);
+						break;
+					}
+			}
+		}
+		
+		
+		if (null != allCheckLists
+				&& !allCheckLists.isEmpty()) {
+			
+			for (ScQtCheckList checklist : allCheckLists) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(checklist.getDefinationType()
+								.getParameterCode()) &&
+								checklist.getScQtDoc() != null) {
+					
+					TplSpecMaster specSpecMaster = checklist.getScQtDoc().getTplSpecMaster();
+					
+					if(CollectionUtils.isNotEmpty(specSpecMaster.getTplSpecQuestions())){
+						for (TplSpecQuestion specQuestion : specSpecMaster.getTplSpecQuestions()) {
+							if (TemplateSpecConst.QUESTION_TYPE_ITEM
+									.equalsIgnoreCase(specQuestion.getQuestionType())) {
+								String questionFulfilmentcode =  specQuestion.getClFulfilmentTypeCode().getParameterCode();
+								if (!questionFulfilmentcode.equals(clFulfilmentTypeCode.getParameterCode())){
+									specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
+								}
+							}							
+						 }
+					}	
+				}				
+			}
+		}
 	}
 
 	/**
@@ -13769,18 +13830,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			reqDTO.setSpecChanged(getSpecMaintenance().equalsIgnoreCase(
 					this.getManagedBean().getSpecMaintenanceScreen()));
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
-	// #29732 Start - reOpen Fix
-			List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-					.getTobeRemoveCategoryCodes();
-			if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-				for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-					if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-						deleteCategoryCodesList.remove(i);
-					}
-				}
-			}
-			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-	//#29732 End - reOpen Fix
+
 			//1873 - start - note 97
 			SpecificationResDTO resDTO  = new SpecificationResDTO(); 
 			try{
@@ -13918,7 +13968,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		this.getManagedBean().setFinacialItemScoreSetting(null);
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
-		this.getManagedBean().setQtCategoryList(null);
+		//remove #29732
+		//this.getManagedBean().setQtCategoryList(null);
 		this.getManagedBean().setQtSupplierList(null);
 
 	}
@@ -14336,7 +14387,8 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 			// #29187 End Vinod
-	
+			//Reopen #25726 note 226 - issue 14
+			boolean isTechInsert =false;
 			Integer index = null;//1873 - note 97
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 				if (null == scQtCheckList.getTitle()
@@ -14551,6 +14603,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				checkTechnicalFinancialItemCount(scQtCheckList, qtCheckList);
 				updatedCheckLists.add(scQtCheckList);
 				updatedCheckLists.add(qtCheckList);
+				isTechInsert = true;//Reopen #25726 note 226 - issue 14
 				List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
 						.getScQtCheckSt2financeProposalList();
 				//1873 - start - note 97
@@ -14591,6 +14644,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							//1873 - start - note 97
 							updatedCheckLists.add(finChecklist); 
 							updatedCheckLists.add(scQtCheckList); 
+							isTechInsert = true;//Reopen #25726 note 226 - issue 14
 							if(CollectionUtils.isNotEmpty(finSpecMaster.getTplSpecQuestions())){
 								List<Long> idList = new ArrayList<Long>();
 								if(CollectionUtils.isNotEmpty(tecSpecMaster.getFinSpecQuestionsToDelete())){
@@ -14640,7 +14694,8 @@ if (null != checklist && !checklist.isEmpty()) {
 						if (finChecklistTitle.equals(checklistTitle) && edited) {// 1873 - note 97
 							// Bug #33249@Syazani 27/07/2022 -- End
 							checklist.setEdited(false);
-							updatedCheckLists.add(checklist);	
+							updatedCheckLists.add(checklist);
+							isTechInsert = true; //Reopen #25726 note 226 - issue 14
 							break;
 						}
 				//1873 note 86 - end
@@ -14656,9 +14711,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				updatedCheckLists.add(scQtCheckList);
 	
 				reqDTO.setScQt(scQt);
-	
+				
 			}
-	
+			//Reopen #25726 note 226 - issue 14
+			checkAndupdateFulfilmentType(updatedCheckLists,scQtCheckList,isTechInsert);
 			reqDTO.setCheckLists(updatedCheckLists);
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			resetCommitteeActivity(reqDTO);
@@ -14671,18 +14727,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 			 * IQTSpecSO.class);
 			 */
-	// #29732 Start - reOpen Fix
-			List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
-					.getTobeRemoveCategoryCodes();
-			if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-				for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-					if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-						deleteCategoryCodesList.remove(i);
-					}
-				}
-			}
-			reqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-			//#29732 End - reOpen Fix
+
 			
 			// 29521 - start
 			if (null == reqDTO.getBackupScQt()) {
@@ -15665,7 +15710,6 @@ if (null != checklist && !checklist.isEmpty()) {
 	private void populateQTSearchCriteria(
 			QtnTenderSearchBean templateQtnTenderSearchBean,
 			ISearchBean<TplSpecMaster> qtSearchBean) {
-		ICategoryCodeSO categoryCodeSO = null;//#29468 Added Vinod
 
 		if (templateQtnTenderSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
@@ -15766,38 +15810,34 @@ if (null != checklist && !checklist.isEmpty()) {
 			List<Long> l3Ids = new ArrayList<>();
 			
 			Iterator<Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>>> mapCat = getManagedBean().getMapCatCode().entrySet().iterator();
-	        while (mapCat.hasNext()) {
-	        	Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>> mainMap = mapCat.next();
-	        	if(getManagedBean().getSelectedCategories()!=null
-		        	&& getManagedBean().getSelectedCategories().size()!=0
-		            && mainMap.getKey()!=null
-		            && mainMap.getKey()!=""
-					&& getManagedBean().getSelectedCategories().contains(mainMap.getKey())){
-	        		
-	        		Iterator<Entry<Long, Map<Long, Map<Long, String>>>> l3It=(mainMap.getValue()).entrySet().iterator();
-	        		Entry<Long, Map<Long, Map<Long, String>>> l3CatMap = l3It.next();
-	        		Iterator<Map.Entry<Long, Map<Long, String>>> l2It=(l3CatMap.getValue()).entrySet().iterator();
-	        		Map.Entry<Long, Map<Long, String>> l2CatMap = l2It.next();
-	        		Iterator<Map.Entry<Long, String>> l1it=(l2CatMap.getValue()).entrySet().iterator();
-	        		Map.Entry<Long, String> l1CatMap = l1it.next();
-					
-	        		l1Ids.add(l1CatMap.getKey());
+			while (mapCat.hasNext()) {
+				Map.Entry<String, Map<Long, Map<Long, Map<Long, String>>>> mainMap = mapCat.next();
+				if (CollectionUtils.isNotEmpty(getManagedBean().getSelectedCategories())
+						&& mainMap.getKey() != null && mainMap.getKey() != ""
+						&& getManagedBean().getSelectedCategories().contains(mainMap.getKey())) {
+
+					Iterator<Entry<Long, Map<Long, Map<Long, String>>>> l3It = (mainMap.getValue()).entrySet()
+							.iterator();
+					Entry<Long, Map<Long, Map<Long, String>>> l3CatMap = l3It.next();
+					Iterator<Map.Entry<Long, Map<Long, String>>> l2It = (l3CatMap.getValue()).entrySet().iterator();
+					Map.Entry<Long, Map<Long, String>> l2CatMap = l2It.next();
+					Iterator<Map.Entry<Long, String>> l1it = (l2CatMap.getValue()).entrySet().iterator();
+					Map.Entry<Long, String> l1CatMap = l1it.next();
+
+					l1Ids.add(l1CatMap.getKey());
 					l2Ids.add(l2CatMap.getKey());
 					l3Ids.add(l3CatMap.getKey());
 				}
-		}
-			if(l1Ids.size()!=0 && l2Ids.size()!=0 && l3Ids.size()!=0){
-					qtSearchBean.getDataFilterBeans().add(
-							new SearchMultiFilterBean(
-								new SearchMultiFilterBean(
-									new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL1",
-											SearchOperator.OPERATOR_IN.value(), l1Ids),
-									new SearchFilterBean(
-											"scQtDoc.scQt.scQtCategorys.pmCategoryL2",
-											SearchOperator.OPERATOR_IN.value(), l2Ids)),
-									new SearchFilterBean("scQtDoc.scQt.scQtCategorys.pmCategoryL3",
-											SearchOperator.OPERATOR_IN.value(), l3Ids, 
-											SearchCondition.CONDITION_AND.value())));
+			}
+			if (CollectionUtils.isNotEmpty(l1Ids) && CollectionUtils.isNotEmpty(l2Ids)
+					&& CollectionUtils.isNotEmpty(l3Ids)) {
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchMultiFilterBean(new SearchFilterBean(
+								QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_SCQTCATEGORYS_PMCATEGORYL1, SearchOperator.OPERATOR_IN.value(),
+								l1Ids), new SearchFilterBean(QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_SCQTCATEGORYS_PMCATEGORYL2,
+								SearchOperator.OPERATOR_IN.value(), l2Ids)), new SearchFilterBean(
+								QTSearchBeanConst.SEARCH_SCQTDOC_SCQT_SCQTCATEGORYS_PMCATEGORYL3, SearchOperator.OPERATOR_IN.value(),
+								l3Ids, SearchCondition.CONDITION_AND.value())));
 			}
 			//#29468 Vinod End
 			// Adding search filterbeans to searchbean.
@@ -17400,18 +17440,19 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 		}
-// #29732 Start - reOpen Fix
-		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean()
+		
+		// #29732 - start
+		List<ScQtCategory> removeCategoryCodes = this.getManagedBean()
 				.getTobeRemoveCategoryCodes();
-		if (null != deleteCategoryCodesList && !deleteCategoryCodesList.isEmpty()) {
-			for (int i = 0; i < deleteCategoryCodesList.size(); i++) {
-				if (null == deleteCategoryCodesList.get(i).getQtCategoryId()) {
-					deleteCategoryCodesList.remove(i);
+		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
+			for (int i = 0; i < removeCategoryCodes.size(); i++) {
+				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
+					removeCategoryCodes.remove(removeCategoryCodes.get(i));
 				}
 			}
-		}
-		spReqDTO.setTobeRemoveCategoryCodes(deleteCategoryCodesList);
-//#29732 End - reOpen Fix
+		}		
+
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);//#29732
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -17633,6 +17674,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		retrieveStatusByTypeAndId(scQt);
 		// Bug #33661@Syazani 06/10/2022 -- End
 		
+		Long statusId = scQt != null ? scQt.getQtStatus().getStatusId():null;//#29732(#232)
 		//#15391 - start
 		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
 		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
@@ -17658,6 +17700,32 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		//#15391 - end
+
+		// #29732(#232) reuse existing code
+		if ((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId) || (this.getManagedBean()
+				.getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
+				.equals(statusId) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)))
+				&& !this.getManagedBean().isReadOnly())) {
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+				this.getManagedBean().setActiveIndex(1);
+				retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.1", null,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			}
+		}
+		// #29732(#232) - End
+
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 
@@ -17677,11 +17745,32 @@ if (null != checklist && !checklist.isEmpty()) {
 	 */
 	public void specCommitteMaintenanceBpmTask(String action) {
 		log.debug("start specCommitteMaintenanceBpmTask");
-		
+		// #29732(#232) reuse existing code- start
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+				.equals((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))
+				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) 
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						//#29732 exclude endorsement
+				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) 
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						//#29732 exclude endorsement
+				&& !this.getManagedBean().isReadOnly()) {
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setCatCodeList(changedCatCodeList);
+				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				return;
+			}
+		}
+		// #29732(#232) End
 		// #1873 #34837 -start-
 		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
-		// #1873 #34837 -end-
+		//ï¿½#1873ï¿½#34837 -end-
 		
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -17870,6 +17959,19 @@ if (null != checklist && !checklist.isEmpty()) {
 				}
 			}
 		}
+
+		// #29732(#232) - start
+		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
+			for (int i = 0; i < removeCategoryCodes.size(); i++) {
+				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
+					removeCategoryCodes.remove(removeCategoryCodes.get(i));
+				}
+			}
+		}
+		// #29732(#232) - end
+		
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);// #29732(#232)
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -19743,16 +19845,10 @@ public String saveSampleTemplateSpecDetails(boolean actionRender){//11104-Reendo
 	}
 	specReqDTO.setTobeRemoveList(checklistRemoveList);// 11104-End
 	specReqDTO=checkSampleSpecQuestionChange(specReqDTO);//11104_ReendorseNew
-	List<TplSpecQuestion> sampleQuestions = specReqDTO
-			.getScQtCheckList().getScQtDoc().getTplSpecMaster()
-			.getTplSpecQuestions();//11104_ReendorseNew728
-if(checkAtLeastOneSampleExist(sampleQuestions)){//11104_ReendorseNew728
+	
 specReqDTO.getScQtCheckList().setSampleStatus(
-		 getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));//11104_ReendorseNew
-}else{
-specReqDTO.getScQtCheckList().setSampleStatus(
-		 getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-}//11104_ReendorseNew728
+		 getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));//11104_ReendorseNewStart757
+
 	SpecificationResDTO specresDTO = specSO
 			.saveSampleTemplateSpecs(specReqDTO);
 	if (specresDTO.isSuccessful()) {
@@ -19864,7 +19960,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				sampleChecklist = true;
 			}
 		}
-		checkAtleastOneSampleComplete(allTechnicalChecklist);//11104ReendorseStart728
 		if (!sampleChecklist) {
 			createsampleChecklist();
 		}
@@ -21596,6 +21691,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean()
 				.getQtCategoryList();
 		String catCodeList = "";
+		Integer recordstatusInactive = 0; // #29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
 				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
@@ -21627,7 +21723,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						|| !catCodeL2.getCategoryName().equals(
 								catCode.getPmCategoryL2Name())
 						|| !catCodeL3.getCategoryName().equals(
-								catCode.getPmCategoryL3Name())) {
+								catCode.getPmCategoryL3Name()) 
+								|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								) {
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");
 					}
@@ -21651,41 +21751,54 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	* @param .
 	* @return 
 	*/
-	private void getCategoryCodesForClone(){
-			
+	private void getCategoryCodesForClone() {
+
 		try {
-				
-				TreeNode rootNode = new DefaultTreeNode("root", null);
-			  Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
-			  for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class).retrieveCategoryL1List().getCategoryL1List()) {
-				  Map<Long, String> l1Map=new HashMap<>();
-				  l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
-					for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
-					  Map<Long, Map<Long, String>> l2Map=new HashMap<>();
-					  l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
-						for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
-							Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
-							TreeNode catCode = new DefaultTreeNode("catCode",pmCategoryL1.getCategoryL1Code()+
-																			 pmCategoryL2.getCategoryL2Code()+
-																			 pmCategoryL3.getCategoryL3Code(), rootNode);
-							TreeNode catDes1 = new DefaultTreeNode("catDes1",pmCategoryL1.getCategoryL1Code()+" - "+pmCategoryL1.getCategoryName(), catCode);
-							catDes1.setSelectable(false);
-							TreeNode catDes2 = new DefaultTreeNode("catDes2",pmCategoryL2.getCategoryL2Code()+" - "+pmCategoryL2.getCategoryName(), catCode);
-							catDes2.setSelectable(false);
-							TreeNode catDes3 = new DefaultTreeNode("catDes3",pmCategoryL3.getCategoryL3Code()+" - "+pmCategoryL3.getCategoryName(), catCode);
-							catDes3.setSelectable(false);
-							
-							l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
-							mapCatCode.put(pmCategoryL1.getCategoryL1Code()+
-									  	   pmCategoryL2.getCategoryL2Code()+
-									  	   pmCategoryL3.getCategoryL3Code(), l3Map);
-						}
-					}
+
+			TreeNode rootNode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_ROOT, null);
+			Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
+			for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class)
+					.retrieveCategoryL1List().getCategoryL1List()) {
+				Map<Long, String> l1Map = new HashMap<>();
+				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
+				for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+					Map<Long, Map<Long, String>> l2Map = new HashMap<>();
+					l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
+					addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
+				}
 				this.getManagedBean().setRootCategoryTree(rootNode);
 				this.getManagedBean().setMapCatCode(mapCatCode);
 			}
-		}catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "ConstructTreeNodeForCategoryCodes", "docNo", "getCategoryCodesForClone", getUserIdSessionFromLoginId(), e);
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt() != null ? this.getManagedBean().getQt().getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_GET_CATEGORYCODES_FOR_CLONE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	private void addCategoryL3ForMap(PmCategoryL1 pmCategoryL1, PmCategoryL2 pmCategoryL2,
+			Map<Long, Map<Long, String>> l2Map, Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode,
+			TreeNode rootNode) {
+		for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
+			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
+			TreeNode catCode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATCODE,
+					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
+							+ pmCategoryL3.getCategoryL3Code(), rootNode);
+			TreeNode catDes1 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC1,
+					pmCategoryL1.getCategoryL1Code() + " - " + pmCategoryL1.getCategoryName(), catCode);
+			catDes1.setSelectable(false);
+			TreeNode catDes2 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC2,
+					pmCategoryL2.getCategoryL2Code() + " - " + pmCategoryL2.getCategoryName(), catCode);
+			catDes2.setSelectable(false);
+			TreeNode catDes3 = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATDESC3,
+					pmCategoryL3.getCategoryL3Code() + " - " + pmCategoryL3.getCategoryName(), catCode);
+			catDes3.setSelectable(false);
+
+			l3Map.put(pmCategoryL3.getCategoryL3Id(), l2Map);
+			mapCatCode.put(
+					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
+							+ pmCategoryL3.getCategoryL3Code(), l3Map);
 		}
 	}
 		
@@ -21700,13 +21813,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		selectedTreeNode.setSelected(true);
 		List<String> selectedCatCodes = new ArrayList<>();
 		String code=(String) selectedTreeNode.getData();
-		if(getManagedBean().getSelectedCategories()!=null
+		if(getManagedBean().getSelectedCategories()!=null 
 			&& !getManagedBean().getSelectedCategories().isEmpty())  
 				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
 			
-		if(selectedCatCodes!= null && !selectedCatCodes.isEmpty()){
-			if(!selectedCatCodes.contains(code)) selectedCatCodes.add(code);
-		}else{
+		if (!selectedCatCodes.isEmpty()) {
+			if (!selectedCatCodes.contains(code)) {
+				selectedCatCodes.add(code);
+			}
+		} else {
 			selectedCatCodes.add(code);
 		}
 		getManagedBean().setSelectedCategories(selectedCatCodes);
@@ -21723,7 +21838,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		selectedTreeNode.setSelected(false);
 		List<String> selectedCatCodes = new ArrayList<>();
 			
-		if(getManagedBean().getSelectedCategories()!=null
+		if(getManagedBean().getSelectedCategories()!=null 
 			&& !getManagedBean().getSelectedCategories().isEmpty())  
 				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
 			
@@ -22246,6 +22361,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			int sampleExist = 0;
 			boolean isTemplateSamplePending = Boolean.FALSE;
 			for (ScQtCheckList sampleSpecs : sampleTemplateSpecs) {
+				if (null == sampleSpecs.getSampleStatus()
+						|| QTStatusConst.TS_PENDING_SUBMISSION
+								.equals(sampleSpecs.getSampleStatus()
+										.getStatusId()) || sampleSpecs.isCloned()) {//11104-ReendorsenewStart757
+					isTemplateSamplePending = Boolean.TRUE;
+				}//11104-ReendorsenewEnd757 
 				if(!sampleSpecs.isCloned()){//11104-ReendorsenewStart
 				sampleExist = validateSampleItems(getTemplateSampleQuestions(sampleSpecs), sampleExist);
 				}//11104-ReendorsenewEnd
@@ -22257,7 +22378,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& sampleExist >= 1) {
 				completeSampleDetails();
 				return SPECIFICATION_CHECKLIST_MAIN_PAGE;
-			}
+			}else {//11104-ReendorsenewStart757
+				throw new EpException(MessageConst.ERROR_760550);
+
+			}//11104-ReendorsenewEnd757
 
 		}
 	
@@ -22491,6 +22615,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return Boolean.FALSE;
 	}//11104ReendorseStart728
+	
+	/**
+	 * #28784 - Check Demo BPM Version and set true or false to QTDetailManagedBean,
+	 * @param
+	 * @return void
+	 */
+	private void checkDemoVersion(ScQt scQt) {
+		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
+	}
 
 
 }

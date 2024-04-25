@@ -1023,6 +1023,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 					getManagedBean().getMailAddr().getSmAddress().getPmDivision().setDivisionId(null);
 				}
 				getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getMailAddr().getSmAddress().getPmDistrict().setDistrictId(null);
 				getManagedBean().setMailCities(null);
 			}
 		}
@@ -1067,6 +1068,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 					getManagedBean().getPermAddr().getSmAddress().getPmDivision().setDivisionId(null);
 				}
 				getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getPermAddr().getSmAddress().getPmDistrict().setDistrictId(null);
 				getManagedBean().setPermCities(null);
 			}
 		}
