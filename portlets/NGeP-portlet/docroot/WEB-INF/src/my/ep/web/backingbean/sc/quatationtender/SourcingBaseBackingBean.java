@@ -77,6 +77,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
@@ -4730,6 +4731,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+	
+	//#35473 11104_start
+	public String replaceWithBR(String specDetails) {
+		
+		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+	}//#35473 11104_end
 	
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	private ScAttachment regenerateDocumentEvaAttachmentByFileName(ScQt scqt, ScAttachment reportAttachment,
