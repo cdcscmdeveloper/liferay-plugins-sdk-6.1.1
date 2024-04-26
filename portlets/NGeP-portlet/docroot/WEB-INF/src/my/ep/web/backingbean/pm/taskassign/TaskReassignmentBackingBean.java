@@ -88,7 +88,6 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
 import my.ep.persistence.logging.LogKey;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -113,7 +112,6 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import my.ep.constant.sc.QTStatusConst;
 
 /**
  * Backing Bean for Task Reasssingment (new)
@@ -144,9 +142,11 @@ public class TaskReassignmentBackingBean extends
 	private ISearchBean<PmParameterDesc> orgTypeSearchBean;
 
 	// List for Paging
-	private PagingDataModel<WorklistItemVO> userTaskListDataModel = new userTaskListDataModel();	
-	private PagingDataModel<WorklistItemVO> groupTaskListDataModel = new groupTaskListDataModel();
-	private PagingDataModel<WorklistItemVO> othersTaskListDataModel = new othersTaskListDataModel();
+	// 20231010 #7465 - Start
+	private PagingDataModel<WorklistItemVO> userTaskListDataModel = new UserTaskListDataModel();	
+	private PagingDataModel<WorklistItemVO> groupTaskListDataModel = new GroupTaskListDataModel();
+	private PagingDataModel<WorklistItemVO> othersTaskListDataModel = new OthersTaskListDataModel();
+	// 20231010 #7465 - End
 	private PagingDataModel<PmUser> userListDataModel = new userPagingDataModel();
 	
 	//[#25018] - start	
@@ -1134,11 +1134,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class userTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class UserTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public userTaskListDataModel() {
+		public UserTaskListDataModel() {
 			super("dtTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1316,11 +1316,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class groupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class GroupTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public groupTaskListDataModel() {
+		public GroupTaskListDataModel() {
 			super("dtGroupTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1518,11 +1518,11 @@ public class TaskReassignmentBackingBean extends
 	 * @author Ken
 	 *
 	 */
-	private class othersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
+	private class OthersTaskListDataModel extends PagingDataModel<WorklistItemVO> {
 
 		private static final long serialVersionUID = 1L;
 
-		public othersTaskListDataModel() {
+		public OthersTaskListDataModel() {
 			super("dtOthersTaskAssignResult",getManagedBean().isTaskLazy());
 		}
 
@@ -1628,7 +1628,7 @@ public class TaskReassignmentBackingBean extends
 								getManagedBean().setCheckAllOthersTasksEnabled(false); 
 								getManagedBean().setEnableDeleteOthersTasksButton(false); // #7465 Re-open issues on 24/11/2023
 								getManagedBean().setEnableRemoveAllOthersTasksButton(false);
-//								//#7465, #29822  - end - reendorse
+								//#7465, #29822  - end - reendorse
 							}
 						}
 						//#7465 START - reendorse
@@ -3204,6 +3204,7 @@ public class TaskReassignmentBackingBean extends
 		this.getManagedBean().setFromUserMaintenanceDetails(true);
 		reinitRedirectedTaskReassignmentSearchBean();
 		// 20231010 #7465 - End
+		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/pm/taskReassignment/taskReassignment.xhtml");
 	}
@@ -3522,7 +3523,6 @@ public class TaskReassignmentBackingBean extends
 		} finally {
 			log.info("==============finsh pm_pending_remove task to DB ==============");
 		}
-		
 		
 		if (resDTO != null && resDTO.isSuccessful()) {
 			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
