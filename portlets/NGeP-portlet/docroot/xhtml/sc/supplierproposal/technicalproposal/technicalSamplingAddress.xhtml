@@ -106,12 +106,17 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
-			<p:column headerText="#{lbl['lbl.sc.item']}">
-				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
+			<!--#11104 Bug #35473 start-->
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;width:85%;">
+				<h:outputText
+				value="#{supplierProposalDetailBackingBean.replaceWithBR(sampleitemdtl.scRequestItem.itemName)}"
+				escape="false"
+				style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}" style="width:15%;">
 					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
 				</p:column>
+			<!--#11104 Bug #35473  end-->
 		</p:dataTable>
 	</p:panel>
 
