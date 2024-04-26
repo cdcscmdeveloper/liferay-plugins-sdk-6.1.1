@@ -181,6 +181,21 @@ public abstract class BaseManagedBean implements Serializable {
 	//#28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
 	private boolean newVersion;
+	
+	//12471 Start
+	private String orgCat;
+	private SelectItem[] ministryDDList;
+	private SelectItem[] ptjGroupDDList;
+	private SelectItem[] ptjDDList;
+	private SelectItem[] orgTypeDDList;
+	private SelectItem[] orgNameDDList;
+	private String memberName;
+	private String memberMinOrg;
+	private String memberPtjOrgCode;
+	private String memberPtjOrgName;
+	private String orgType;
+	private String orgName;
+	//12471 End
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1120,7 +1135,102 @@ public abstract class BaseManagedBean implements Serializable {
 		this.currentTaskCreatedDate = currentTaskCreatedDate;
 	}
 	//25037 - end
-}
+	
+	//12471 Start
+	public SelectItem[] getMinistryDDList() {
+		return ministryDDList;
+	}
 
-// ***25201
-// ***25692
+	public void setMinistryDDList(SelectItem[] ministryDDList) {
+		this.ministryDDList = ministryDDList;
+	}
+
+	public SelectItem[] getPtjGroupDDList() {
+		return ptjGroupDDList;
+	}
+
+	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
+		this.ptjGroupDDList = ptjGroupDDList;
+	}
+
+	public SelectItem[] getPtjDDList() {
+		return ptjDDList;
+	}
+
+	public void setPtjDDList(SelectItem[] ptjDDList) {
+		this.ptjDDList = ptjDDList;
+	}
+
+	public SelectItem[] getOrgTypeDDList() {
+		return orgTypeDDList;
+	}
+
+	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
+		this.orgTypeDDList = orgTypeDDList;
+	}
+
+	public SelectItem[] getOrgNameDDList() {
+		return orgNameDDList;
+	}
+
+	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
+		this.orgNameDDList = orgNameDDList;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	public String getMemberMinOrg() {
+		return memberMinOrg;
+	}
+
+	public void setMemberMinOrg(String memberMinOrg) {
+		this.memberMinOrg = memberMinOrg;
+	}
+
+	public String getMemberPtjOrgCode() {
+		return memberPtjOrgCode;
+	}
+
+	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
+		this.memberPtjOrgCode = memberPtjOrgCode;
+	}
+
+	public String getMemberPtjOrgName() {
+		return memberPtjOrgName;
+	}
+
+	public void setMemberPtjOrgName(String memberPtjOrgName) {
+		this.memberPtjOrgName = memberPtjOrgName;
+	}
+
+	public String getOrgCat() {
+		return orgCat;
+	}
+
+	public void setOrgCat(String orgCat) {
+		this.orgCat = orgCat;
+	}
+
+	public String getOrgType() {
+		return orgType;
+	}
+
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	//12471 end
+}

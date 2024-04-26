@@ -4666,6 +4666,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//27915: Disciplinary Action - end - 26238
 		
 		if(discList != null && discList.size() > 0){
+			//26238 - START
+			this.getManagedBean().setNoDisciplinary(false);
+			//26238 - END
 			for(SmDisciplinaryAction disc : discList){
 				if(disc.isWarning() || disc.isCancelCategory() || disc.isSuspendRegistration() 
 						|| disc.isCancelRegistration() || disc.isBlacklistOwner()
@@ -5309,4 +5312,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 	//#32008 - end
+	//29380 - Site Visit Grouping Enhancement -28775 - start
+	/**
+	 * @param catL3
+	 * @return other description for category code
+	 */
+	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		return SmApplicationUtil.getCategoryCodeOtherDesc(
+				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
+	}
+	//29380 - Site Visit Grouping Enhancement -28775 - end
+	
 }
