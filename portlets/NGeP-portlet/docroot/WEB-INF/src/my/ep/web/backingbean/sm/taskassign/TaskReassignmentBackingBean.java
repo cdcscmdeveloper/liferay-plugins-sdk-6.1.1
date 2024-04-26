@@ -1511,7 +1511,9 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	 */
 	public void resetAvailableUser(){
 		getManagedBean().setSearchUserName(null);
-		getManagedBean().setTaskReassignmentVO(null);
+		//#29822 - START
+		getManagedBean().setTasksReassignmentVO(null);
+		//#29822 - END
 		userListDataModel.resetData();
 	}
 	

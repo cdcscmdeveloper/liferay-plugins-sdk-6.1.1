@@ -651,7 +651,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	public void setBpkAdminUser(boolean bpkAdminUser) {
 		this.bpkAdminUser = bpkAdminUser;
 	}
-	
+
 	// #29822 - start
 	public boolean isEnableRemoveAllGroupTasksButton() {
 		return enableRemoveAllGroupTasksButton;
@@ -712,4 +712,5 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 		this.pmUser = pmUser;
 	}
 	// 20231010 #7465 - End
+
 }

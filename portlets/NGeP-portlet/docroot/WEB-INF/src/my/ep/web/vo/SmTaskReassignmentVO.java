@@ -252,11 +252,12 @@ public class SmTaskReassignmentVO implements Serializable {
 		this.trackingDiaryList = trackingDiaryList;
 	}
 	
+
 	public PmStatus getStatus() {
 		return status;
 	}
 
 	public void setStatus(PmStatus status) {
 		this.status = status;
-	}	
+	}
 }

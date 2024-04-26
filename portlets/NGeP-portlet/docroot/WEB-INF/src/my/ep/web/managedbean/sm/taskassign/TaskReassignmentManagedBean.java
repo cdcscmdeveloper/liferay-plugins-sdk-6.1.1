@@ -43,11 +43,10 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private String searchUserName;
 	private boolean isTaskLazy;
 	private int taskType;
-	
+
 	private String backURL;
 	private SmSupplier smSupplier;
 	private String docType;
-	
 	//#29822 - START
 	private List<SmTaskReassignmentVO> taskReassignmentVO;
 	private List<WorklistItemVO> selectedTasksToBulkReassign;
@@ -268,7 +267,7 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 		this.taskReassignmentVO = tasksReassignmentVO;
 	}
 	//#29822 - END
-
+	
 	/**
 	 * @return the backURL
 	 */
