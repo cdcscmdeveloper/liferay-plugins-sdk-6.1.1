@@ -4727,7 +4727,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
 				.getStateCode());
 		rqDto.setAppTypeCode(getManagedBean().getSmAppl().getApplType());
-		//28775 - Site Visit Grouping Enhancement - 28775 & 32726 - start
+		//28775 - Site Visit Grouping Enhancement - 28775 & 32726 & 35419 - start
 		List<SmSupplierCategory> suppCats = getManagedBean().getSmAppl().getSmSupplierCategories();
 		boolean isRenew = getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		if (!suppCats.isEmpty()){
@@ -4744,7 +4744,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if (catL3Ids.isEmpty()) {
 				catL3Ids.add(0L);
 			}
-			//28775 - Site Visit Grouping Enhancement - 28775 & 32726 - end
+			//28775 - Site Visit Grouping Enhancement - 28775 & 32726 & 35419 - end
 
 			rqDto.setCategoryL3Ids(catL3Ids);
 			log.info(" **** Total categories sent to Doc So ***"
