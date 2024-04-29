@@ -2319,12 +2319,11 @@ public class SpecificationBackingBean extends
 						}
 					}
 
-					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) { 
-							if (null == this.getManagedBean().getTechnicalItemScoreSetting()) { 
-								this.getManagedBean().setTechnicalItemScoreSetting(recommnendationSetting);
-							} 
-						} 
+					if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							&& recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+						this.getManagedBean().setTechnicalItemScoreSetting(
+								recommnendationSetting);
 					} 
 				} 
 			} 
@@ -17350,12 +17349,15 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void submitSpecMaintenanceDtls(String action) {
 // #29732 Start - reOpen Fix
 		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
-				.equals((QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL))) {
+				.equals((QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL))
+				|| this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (this.getManagedBean().getQt().getQtStatus().getStatusId()
+						.equals((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) || this.getManagedBean().getQt()
+						.getQtStatus().getStatusId().equals((QTStatusConst.QT_REVISION_PUBLICATION)))) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
 				return;
 			}
 		}
@@ -17753,11 +17755,15 @@ if (null != checklist && !checklist.isEmpty()) {
 						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) 
-						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
+								&& !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action)
+								&& !BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action))
 						//#29732 exclude endorsement
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) 
-						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) && !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action))
+						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
+								&& !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action)
+								&& !BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action))
 						//#29732 exclude endorsement
 				&& !this.getManagedBean().isReadOnly()) {
 			String changedCatCodeList = checkCatCodeChange();
