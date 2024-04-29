@@ -210,11 +210,17 @@ u.underline {
 		</tr>
 		<tr>
 			<table align="right" class="text_family">
+				## #25025 #509 -start
 				<tr style="margin-bottom:1px;">
 					<td valign="top"> Rujukan Kami</td>
 					<td valign="top">:</td>
+					#if($fileNo == "PROTÉGÉ")
+					<td valign="top">PROT&Eacute;G&Eacute;</td>
+					#else
 					<td valign="top">$fileNo</td>
+					#end
 				</tr>
+				## #25025 #509 -end
 				<tr>
 					<td valign="top">Tarikh</td>
 					<td valign="top">:</td>

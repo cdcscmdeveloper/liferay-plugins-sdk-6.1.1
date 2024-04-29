@@ -662,6 +662,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#34392 - start
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	private List<SmApplSupportDoc> missinDocsMandatory;
+	private List<SmApplSupportDoc> missinDocsNonMandatory;
 	//#34393 - end
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
@@ -4632,5 +4634,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
 		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsNonMandatory() {
+		return missinDocsNonMandatory;
+	}
+
+	public void setMissinDocsNonMandatory(List<SmApplSupportDoc> missinDocsNonMandatory) {
+		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsMandatory() {
+		return missinDocsMandatory;
+	}
+
+	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
+		this.missinDocsMandatory = missinDocsMandatory;
 	}
 }
