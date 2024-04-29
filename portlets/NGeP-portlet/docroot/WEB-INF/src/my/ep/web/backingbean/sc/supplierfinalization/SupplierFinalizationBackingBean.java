@@ -2626,18 +2626,15 @@ public class SupplierFinalizationBackingBean extends
 				// need to set Keputusan report at time of Endorsement and signOff status
 				// #28834- Start.
 				// #34410 - Start
-				// ScQt scQt = this.getManagedBean().getScQt();
-				// QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-				// qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-				// scQt = qtBackingBean.getManagedBean().getQt();
-				// if (!isBpkCentralContract(scQt)) { // #34410 - End
-			    // #28834- End.
-					this.getManagedBean().getScQtFinalization()
-					.getScQtFinalizationReports()
-					.addAll(this.getManagedBean().getEndorsementReports());
-				// #28834- Start.
+				//QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				//qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
+				//if (!isBpkCentralContract(qtBackingBean.getManagedBean().getQt())) {
+					// #34410 - End
+					this.getManagedBean().getScQtFinalization().getScQtFinalizationReports()
+							.addAll(this.getManagedBean().getEndorsementReports());
 				//}
-			    // #28834- End.
+				// #28834- End.
+
 			}
 			
 			// Disabling kertas taklimat as per Bug #16172
