@@ -4366,6 +4366,7 @@ public class LOIDetailBackingBean extends
 		Object payLoadData = getManagedBean().getPayLoad();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
+		String taskName = getManagedBean().getTaskName();//33380
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
@@ -4384,6 +4385,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setSourceId(sourceId);
 		getManagedBean().setPayLoad(payLoadData);
 		getManagedBean().setTaskId(taskId);
+		getManagedBean().setTaskName(taskName);//33380
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setBackToPreviousPage(backToPreviousPage);
