@@ -1224,7 +1224,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							.getParameterCode()
 							.equals(SupplierManagementConst.IDENTIFICATION_TYPE_IC) ? false
 							: true);
-					// #35314 END
+					// #35314 END 
 					softcertSuppDocList = SmServiceLookup.getDocumentSO()
 							.retrieveSoftcertSuppDocuments(reqDTO)
 							.getDocumentList();
