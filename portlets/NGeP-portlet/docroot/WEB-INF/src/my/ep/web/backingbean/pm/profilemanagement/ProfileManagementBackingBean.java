@@ -641,6 +641,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				// PmParameter()
 				// : pmUser.getOrgTypeCode());
 				// // for the initial load
+				
+				// #35562- Start
+				pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// #35562- End
+				
 				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
 				pmUserOrg.setPmUser(pmUser);
 				pmUser.getPmUserOrgs().add(pmUserOrg);
@@ -4191,8 +4196,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode()));
 
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
-					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+			//#35562 - Start
+			/*searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
+					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));*/
+			//#35562 - End
 
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserSearchBean(searchBean);
