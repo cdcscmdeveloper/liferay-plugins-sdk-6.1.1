@@ -1560,9 +1560,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//Redmine Enhancement #12177
 	    addButton();
 	    log.info("end - addButton");
-	    //29555 start
-	    getPreparedByName();
-	    //29555 end
+
 	    MDC.clear();
 	    if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -1709,6 +1707,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setPmUserOrg(userOrg);
 	}
 	//29555 start
+	/*
+	 * set preparedby for managedbean by retrieving requistioner and docid
+	 */
 	public void getPreparedByName() {
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FlActor actor = null;
@@ -4473,9 +4474,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prRenderer?faces-redirect=true");
-			//29555 start
-			getPreparedByName();
-		    //29555 end
 		}
 	}
 	

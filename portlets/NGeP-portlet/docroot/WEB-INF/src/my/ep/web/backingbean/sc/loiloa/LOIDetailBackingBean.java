@@ -3008,16 +3008,6 @@ public class LOIDetailBackingBean extends
 			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
 
 			if (awardSupplierResDTO.isSuccessful()) {
-				// #33380 - Start.
-				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
-						&& getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION)) {
-					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-					reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-					reqDTO.setStatusId(statusId);
-					getQtAwardSO().preapareTdForRecommendation(reqDTO);
-				}
-				// #33380 - End.
 				scLoi = awardSupplierResDTO.getScLoi();
 
 				renewSesionObject();
@@ -6954,6 +6944,10 @@ public class LOIDetailBackingBean extends
 	//#21692 - end
 	
 	//#12487 start
+	/**
+	 * To send notification for email and dashboard.
+	 * 
+	 */
 	public void prepareLoiNotification(){		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		Map<String, Object> loiObj = new HashMap<>();
@@ -7142,6 +7136,10 @@ public class LOIDetailBackingBean extends
 	}
 	// #12471 End
 	//20230111@Haziq - #12487
+	/**
+	 * to set the details for selected PTJ
+	 * @param userOrg
+	 */
 	public void userPtjListener(PmUserOrg userOrg) {
 		if (userOrg != null) {
 			this.getManagedBean().setSelectedUserPtj(userOrg);

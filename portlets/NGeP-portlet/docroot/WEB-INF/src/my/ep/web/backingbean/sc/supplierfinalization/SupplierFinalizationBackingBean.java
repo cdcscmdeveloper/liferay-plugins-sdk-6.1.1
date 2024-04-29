@@ -4014,14 +4014,14 @@ return	remarksNotFound;
 							//send prepare LOA
 							prepareNotification(CommonConstants.LOA);
 						}
-					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-						//#12487 - start Notification to prepare LOA (without LOI)
-						if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
-							currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
-							currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)){				
-							//send prepare LOI/LOA
-							prepareNotification(CommonConstants.LOILOA);
-						}
+					//#12487 - start Notification to prepare LOA (without LOI)
+					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)&& 
+							   (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+							   currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
+							   currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION))){				
+						//send prepare LOI/LOA
+						prepareNotification(CommonConstants.LOILOA);
+						
 					 }
 					//#12487 - end
 					
@@ -11049,23 +11049,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	    	  
 	    	return supplierBranchList;
 		}
-		
-		/**
-		* Method to return true, if branch in supplier has been deleted
-		* @param supplier id 
-		* @return true or false
-		**/
-		public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
-			
-			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-			
-			boolean isSupplierBranchDeleted = false;
-			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = true;
-			}
-		    return isSupplierBranchDeleted;
-		}
 		//#28777 & #29729 - End
 		
 		//#32400 - Start
@@ -11689,13 +11672,16 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						isBidding,
 						(supplier.isDisciplinaryActions() && !supplier.isWarningDA()),
 						periodExtensionRejected,
-						this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(),
-								getManagedBean().getScQt()), this.isQTMaintenanceScreen(),
-						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
+						proposal.getScQtSupplier().isRecordStatus(),this.isQTMaintenanceScreen(),
+						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE); //#28777 & #29729 
 	}
 	//35157 - end
 	
 	//#12487 - start Prepare LOI/LOA Notification
+	/**
+	 * To send notification for email and dashboards
+	 * @param docType
+	 */
 	public void prepareNotification(String docType){
 		FacesScopes facesScopes = new FacesScopes();
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();

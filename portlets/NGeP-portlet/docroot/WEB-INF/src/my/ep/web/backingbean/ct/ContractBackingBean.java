@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -4429,11 +4430,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return false;
 	}
 	
+	//#29418 start
+	/**
+	 * This function is used to filter and sort the agreement, but has been changed to only sort agreementList
+	 * 
+	 * @return currentCtAgreementList
+	 */
 	public List<CtAgreement> filterAgreementList() {
-		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
+		//List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 
-		CtAgreement tempCtAgreement = null;
+		/*CtAgreement tempCtAgreement = null;
 		int index = 0;
 
 		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
@@ -4465,10 +4472,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	
+		}*/
+		
+		if(CollectionUtils.isNotEmpty(currentCtAgreementList)){
+			Collections.sort(currentCtAgreementList, new Comparator<CtAgreement>() {
+			  @Override
+			  public int compare(CtAgreement cta1, CtAgreement cta2) {
+				  return cta1.getCreatedDate().compareTo(cta2.getCreatedDate());
+			  }
+			});
 		}
 
-		return newCtAgreementList;
+		return currentCtAgreementList;
 	}
+	//#29418 end
 	
 	public String getAgreementLoaPhysicalNo(CtAgreement ctAgreement) {
 		IContractSO contractSO = null;
