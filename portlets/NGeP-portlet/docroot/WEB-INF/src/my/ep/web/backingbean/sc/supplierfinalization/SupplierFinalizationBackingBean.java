@@ -2624,20 +2624,9 @@ public class SupplierFinalizationBackingBean extends
 				}
 			} else {
 				// need to set Keputusan report at time of Endorsement and signOff status
-				// #28834- Start.
-				// #34410 - Start
-				// ScQt scQt = this.getManagedBean().getScQt();
-				// QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-				// qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-				// scQt = qtBackingBean.getManagedBean().getQt();
-				// if (!isBpkCentralContract(scQt)) { // #34410 - End
-			    // #28834- End.
-					this.getManagedBean().getScQtFinalization()
-					.getScQtFinalizationReports()
-					.addAll(this.getManagedBean().getEndorsementReports());
-				// #28834- Start.
-				//}
-			    // #28834- End.
+				this.getManagedBean().getScQtFinalization()
+						.getScQtFinalizationReports()
+						.addAll(this.getManagedBean().getEndorsementReports());
 			}
 			
 			// Disabling kertas taklimat as per Bug #16172
@@ -7320,6 +7309,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isAward = false;
 		boolean supplierSelected = true;
 		boolean minSuppliersExist = true;
+		int isNotSelectedRadioButton = 0;//#28834
 		TplSpecZoneDtl zoneDtl = scQtRecommend.getTplSpecZoneDtl();
 		PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
 											.getFinalizationMethod();
@@ -7357,20 +7347,23 @@ public class SupplierFinalizationBackingBean extends
 			if (!minSuppliersExist) {
 				throw new EpException(MessageConst.ERROR_760243,
 						new String[] { recommendByDesc });
-			} 
-			//#28834 - Start
-			else if(!supplierSelected && minSuppliersExist){ 
-				throw new EpException(MessageConst.ERROR_760206);
-			} 
-			//#28834 - End
-			else {
+			} else {
 				// #21695 allow no records validation start
 				if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls())) {
 					throw new EpException(MessageConst.ERROR_760206);
 				}
 				// #21695 allow no records validation end
+				// #28834 - Start
+				isNotSelectedRadioButton++;
+				// #28834 - End				
 			}
-		}		
+		}
+
+		// #28834 - Start
+		if (!supplierSelected && (isNotSelectedRadioButton > 0)) {
+			throw new EpException(MessageConst.ERROR_760206);
+		}
+		// #28834 - End
 	}
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
@@ -10318,10 +10311,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					}
 				}
 			} else {
-				// need to set Keputusan report at time of Endorsement and
-				// signOff status
-				this.getManagedBean().getScQtFinalization().getScQtFinalizationReports()
-						.addAll(this.getManagedBean().getEndorsementReports());
+				    // need to set Keputusan report at time of Endorsement and
+				    // signOff status
+					this.getManagedBean().getScQtFinalization()
+					.getScQtFinalizationReports()
+					.addAll(this.getManagedBean().getEndorsementReports());
 			}
 
 			// #27364 Start
