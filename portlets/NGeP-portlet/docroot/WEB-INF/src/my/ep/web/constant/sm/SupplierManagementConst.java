@@ -1319,10 +1319,10 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
-	
-	//#35314 START
+
+	// #35314 - START 
 	public static String getIdentificationTypeIc() {
 		return IDENTIFICATION_TYPE_IC;
 	}
-	//#35314 END
+	// #35314 - END 
 }
