@@ -3155,8 +3155,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		if (getManagedBean().isContinuityCircularAuditSearch()) {
 
-			if (getManagedBean().isFromConractViewPage()) {
-				getManagedBean().setFromConractViewPage(false);
+			if (getManagedBean().isFromContractViewPage()) {
+				getManagedBean().setFromContractViewPage(false);
 				return CONTRACT_VIEW_AUDIT;
 			} else if (getManagedBean().isFromResultViewAudit()) {
 				getManagedBean().setFromResultViewAudit(false);
