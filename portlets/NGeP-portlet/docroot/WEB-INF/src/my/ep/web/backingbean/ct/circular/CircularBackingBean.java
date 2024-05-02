@@ -44,7 +44,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.pm.common.PmParameter;
-
+// End - #30866
 /**
  * Backing Bean for Circular
  * 
@@ -317,6 +317,13 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 		getManagedBean().resetCircularListingPagingDataModel();
 		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
 		FacesContext fc = FacesContext.getCurrentInstance();
+		// Start - #30866
+		String fullViewRootPath = null;
+		fullViewRootPath = fc.getViewRoot().getViewId();
+		if (fullViewRootPath.contains("trackingDiarySearch.xhtml")) {
+			getManagedBean().setContinuityCircularAuditSearch(true);
+		}
+		// End - #30866
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "search.xhtml");
 	}
 	//Start - #30866
