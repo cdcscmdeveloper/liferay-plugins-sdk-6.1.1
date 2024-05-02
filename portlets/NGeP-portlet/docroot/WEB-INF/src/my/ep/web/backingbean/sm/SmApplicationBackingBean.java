@@ -1625,6 +1625,7 @@ public class SmApplicationBackingBean extends
 							.getSmAppl().getApplCategoryType(),
 							getManagedBean().getSmAppl().getSupplierType(),
 							getManagedBean().getBusinessTypeVal()));
+			initNonMandatoryAndMandatoryDocs(); //31043
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 				smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 			}
@@ -3108,10 +3109,6 @@ public class SmApplicationBackingBean extends
 												.getStateId());
 					}
 				}
-				//#31043 start
-				if(getManagedBean().isDocumentVerified())
-					getManagedBean().setUpdateSuppDoc(true);
-				//#31043 end
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& getManagedBean().isSupplierUser()) {
@@ -4893,9 +4890,8 @@ public class SmApplicationBackingBean extends
 		}
 		category.setApprovedDate(new Date());
 		//#31043 start
-		//saveOrUpdateAppl();
 		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
-		getManagedBean().getCurrentPageType());
+				getManagedBean().getCurrentPageType());
 		//#31043 end
 	}
 
@@ -4936,12 +4932,6 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignDocVerified(AjaxBehaviorEvent e) {
 		//log.info(" *******Docs verified******88");
-		//#31043 start
-		saveOrUpdateAppl();
-		initNonMandatoryAndMandatoryDocs();
-		SmSideMenuIconUtil.getSideMenuVerificationIcon(getManagedBean(), 
-				getManagedBean().getCurrentPageType());
-		//#31043 end
 	}
 
 	/**
@@ -6168,12 +6158,12 @@ public class SmApplicationBackingBean extends
 						for (SmApplSupportDoc doc : vo.getLicenseSuppDocs()) {
 							//#31043 start
 							if(doc.isReceived()){
-								if (getManagedBean().isPoUser()) {
+								/*if (getManagedBean().isPoUser()) {*/
 									doc.setVerifiedFlg(1);
-								}
+								/*}
 								if (getManagedBean().isApproverUser()) {
 									doc.setApproverVerifiedFlg(1);
-								}
+								}*/
 							}//#31043 end
 						}
 					}
@@ -6196,7 +6186,6 @@ public class SmApplicationBackingBean extends
 				}//#31043 end
 			}
 		}
-		saveOrUpdateAppl();
 		//#31043 end
 	}
 
@@ -7917,7 +7906,7 @@ public class SmApplicationBackingBean extends
 		// update category that record status is 1 for new mof application. This
 		// happen due to resubmit application (#23683)
 		updateCategoriesRecordStatus();
-
+		updateSuppDocApproverVerified(); //31043
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -17639,4 +17628,24 @@ public class SmApplicationBackingBean extends
 				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm"};
 	}
 	//#35145 - end
+	//31043 START
+	/**
+	 * Update supp doc verified for approver
+	 * 
+	 */
+	private void updateSuppDocApproverVerified() {
+		if (getManagedBean().isApproverUser()) {
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+					.getSmApplSupportDocs())) {
+				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+						.getSmApplSupportDocs()) {
+					if (doc.getApproverVerifiedFlg() != null
+							&& doc.getVerifiedFlg() != null) {
+						doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
+					}
+				}
+			}
+		}
+	}
+	//31043 END
 }
