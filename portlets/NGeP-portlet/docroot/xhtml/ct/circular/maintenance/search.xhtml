@@ -67,10 +67,10 @@
 			</div>		
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
+		<h:outputText rendered="#{circularBackingBean.isAuditCheck()}"
+				styleClass="instruction" value="#{lbl['lbl.ct.instruction.audit.contractsearch']}" escape="false" style="color: blue"/><br /><br />	<!-- #30866 -->
 			<p:dataTable id="circularVerDt" value="#{circularBackingBean.managedBean.circularListingPagingDataModel}"
 				var="data" lazy="true" rows="10" rowIndexVar="index" >
-				<h:outputText rendered="#{circularBackingBean.isAuditCheck()}"
-				styleClass="instruction" value="#{lbl['lbl.ct.instruction.audit.contractsearch']}" escape="false" style="color: blue"/><br /><br />	<!-- #30866 -->
 				<ac:paginator for="circularVerDt" />
 				<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:15%;white-space:normal;" styleClass="column-align-center" >
 					<h:outputText value="#{data.ctCircular.circularNo}" style="text-align:left;float:left;"/>
