@@ -2002,6 +2002,7 @@ public class SmApplicationBackingBean extends
 									personnel.setShareAmtSsmNull(true);
 									//SSM CHANGE 11012020
 									//#27315
+									
 									//#27315, #35145
 									EntityHelper.copyEntityPropertiesOnly(personnelSSM,personnel,getEquityOwnerField(true));
 								}else{
