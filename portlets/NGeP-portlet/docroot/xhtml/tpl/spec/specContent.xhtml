@@ -69,13 +69,14 @@
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
+			<ui:param name="isWeightageReq" value="#{templateSpecBean.specMaster.weightageReq}" />	<!-- Bug #35307@Syazani 12/12/2023 -->
 			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial eq null ? 'false': templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
-		<!-- 25138 -start- -->
-		<ui:param name="isPackageItemSpec"
-			value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
-		<!-- 25138 -end- -->
+			<!-- 25138 -start- -->
+			<ui:param name="isPackageItemSpec"
+				value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
+			<!-- 25138 -end- -->
 
-		<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
+			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
 				<tr>
 					<td width="16%" class="TableFieldLeft">

@@ -817,8 +817,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param clazz
 	 * @return ScRemark instance
 	 */
-	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
-			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
+	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
 			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
 		// 25037 note 284 - start
 		return initializeRemarks(parent, workFlowStatus, scRemarks, clazz, false);
