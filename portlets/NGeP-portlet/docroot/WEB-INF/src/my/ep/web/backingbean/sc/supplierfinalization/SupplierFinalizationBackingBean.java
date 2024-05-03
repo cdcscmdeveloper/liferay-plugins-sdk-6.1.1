@@ -1292,10 +1292,17 @@ public class SupplierFinalizationBackingBean extends
 						&& (this.getManagedBean().getFinalizationMethod()
 								.equals(ParameterConst.RECOMMEND_BY_AWARD) || this
 								.getManagedBean().getFinalizationMethod()
-								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))) {
-					if (this.getManagedBean().getJustification() == null
-							|| this.getManagedBean().getJustification()
-									.getReasonId() == null) {
+								.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD))
+								// #28834 - Start.
+								&& !getManagedBean().isDisableJustifications()
+								// #28834 - End.
+						         ) {
+					// #35205, #28834 -start-
+					if ((this.getManagedBean().getJustification() == null || this.getManagedBean().getJustification()
+							.getReasonId() == null)
+							&& this.getManagedBean().isSubmit())
+					// #35205, #28834 -end-
+					{
 						navigateToEndorsementReportTab();
 						throw new EpException(MessageConst.ERROR_100061,
 								new String[] { ResourceBundleUtils.getMessage(
@@ -1303,8 +1310,12 @@ public class SupplierFinalizationBackingBean extends
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 										new FacesScopes().getUserLocale()) });
 					}
+					
+					setNullSelectionForJustification(reqDTO); // #35205 & #28834
 				}
 			}
+			
+			setNullSelectionForJustification(reqDTO); // #35205 & #28834
 						
 			if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 				reqDTO.setDeletedMeetingsList(
@@ -1341,9 +1352,22 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
+	// #35205 & #28834 - Start
+	/**
+	 * Allow save data for justification dropdown is empty to null value       
+	 */
+	public void setNullSelectionForJustification(SuppFinalizationReqDTO reqDTO) {
+		if (this.getManagedBean().getJustification() != null
+				&& this.getManagedBean().getJustification().getReasonId() == null && !this.getManagedBean().isSubmit()) {
+			reqDTO.getScQtFinalization().setJustification(null);
+		}
+	}
+	// #35205 & #28834 - End
+	
 	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO) {
 		log.info("validateFinalizationReports");
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		boolean isSubmit = this.getManagedBean().isSubmit(); // #35205, #28834
 		List<ScQtFinalizationReport> finalizationReports = 
 					scQtFinalization.getScQtFinalizationReports();
 		finalizationReports.addAll(this.getManagedBean()
@@ -1369,6 +1393,15 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
+			
+			// #28834, #35205 - Start
+			if (CollectionUtils.isNotEmpty(toBeRemovedReports) && isSubmit)
+			// #35205 -end-
+			{
+				navigateToEndorsementReportTab();
+			    throw new EpException(MessageConst.ERROR_770271);
+			}
+			//#28834 - End
 			
 			if (toBeRemovedReports.size() > 0) {
 				finalizationReports.removeAll(
