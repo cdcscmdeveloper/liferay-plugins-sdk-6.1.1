@@ -1258,6 +1258,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getTemplateSpecBean());
 				}
 				
+				//28777 - start
+				List<Long> deactivatedZones = new ArrayList<>();
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
+					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
+						if(zoneDtl.isBranchDeactivated())
+							deactivatedZones.add(zoneDtl.getSpecZoneId());
+					}
+				}
+				//28777 - end
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1278,10 +1287,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
-				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
+				if (templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
+						//28777 - start
+						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+							continue;
+						//28777 - end
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -4605,8 +4618,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
 			//#28777 & #29729 - Start
-			if(checkValidationSupplierBranchDeleted()){
-				this.getManagedBean().setReadOnly(checkValidationSupplierBranchDeleted());
+			boolean branchDeleted = checkValidationSupplierBranchDeleted();
+			if(branchDeleted){
+				this.getManagedBean().setReadOnly(branchDeleted);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
