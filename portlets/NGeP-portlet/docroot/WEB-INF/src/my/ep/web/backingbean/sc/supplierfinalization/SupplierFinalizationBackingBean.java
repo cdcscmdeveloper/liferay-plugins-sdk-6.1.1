@@ -1255,27 +1255,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 				reqDTO = validateInfo(2);
 			}
-			
-			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-			}
-		
-			// #18685 - Start
-			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
-			
-			if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
-				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
-			}
-			
-			if (CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
-					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
-				getManagedBean().getNewBriefingPaperReportList().addAll(
-					getManagedBean().getConsolidationBriefingPaperReportList());
-			}
-			
-			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
-			// #18685-End
-				
+
 			validateFinalizationReports(reqDTO);
 			
 			if (this.getManagedBean().getEndorsementReportActiveIndex() == activeIndex) {
@@ -1328,6 +1308,19 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setInitialDecisionFwdHighAuth(
 					getManagedBean().isInitialDecisionFwdHighAuth());
 			reqDTO.setRefinalize(isQTRefinalized());
+			
+			// #18685 - Start
+			resetUnSavedReportContent(this.getManagedBean().getNewBriefingPaperReportList());
+			if(CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+				scQtFinalization.getScQtFinalizationReports().addAll(getManagedBean().getEvaluationReportList());
+			}
+			if(CollectionUtils.isNotEmpty(getManagedBean().getNewBriefingPaperReportList())
+					&& CollectionUtils.isNotEmpty(getManagedBean().getConsolidationBriefingPaperReportList())) {
+				getManagedBean().getNewBriefingPaperReportList().addAll(
+					getManagedBean().getConsolidationBriefingPaperReportList());
+			}
+			reqDTO.setAddNewBriefingPaperReportList(getManagedBean().getNewBriefingPaperReportList());
+			// #18685-End
 			
 			saveAndReloadFinalizationDetails(qtSuppFinalizationSO, reqDTO);
 
