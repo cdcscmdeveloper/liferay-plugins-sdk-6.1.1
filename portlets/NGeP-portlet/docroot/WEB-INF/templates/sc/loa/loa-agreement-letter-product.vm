@@ -2503,7 +2503,8 @@ u.underline {
 		#end
 #else	
 	##start - 29006 note 794	
-	##35295 - @zaim start
+	#if ($scLoa.scLoiLoa.docType == "PR")
+	  ##35295 - @zaim start
 	 #if($PRSSTList.size() > 0)
 		<table width="100%" border="1" cellpadding="0" cellspacing="-1">
 			<tbody>
@@ -2652,6 +2653,8 @@ u.underline {
 			</tbody>
 		</table>
 	#end
+	## 35295 - end
+ 
 	 #else
      
 	 
