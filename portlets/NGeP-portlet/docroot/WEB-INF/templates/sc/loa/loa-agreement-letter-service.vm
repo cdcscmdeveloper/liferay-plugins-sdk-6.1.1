@@ -2630,7 +2630,7 @@ u.underline {
 								</tr>	
 							#else 
 								<tr>
-									<td colspan="7" valign="top" class="tableDataPR" style="text-align: justify;">$map.specVal</td>
+									<td colspan="7" valign="top" class="tableDataPR">$map.specVal</td>
 								</tr>
 							#end		
 						#end
