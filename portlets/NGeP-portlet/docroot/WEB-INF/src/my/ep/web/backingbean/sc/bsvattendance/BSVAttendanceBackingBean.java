@@ -1133,7 +1133,6 @@ public class BSVAttendanceBackingBean extends
 		try {
 			//28895 - 35500
 			AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
-			AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
 			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
 			
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1251,7 +1250,6 @@ public class BSVAttendanceBackingBean extends
 					String groupTabSection = QTAuditConstant.AU_SECTION_SL;
 					Long qtFieldId = QTAuditConstant.AU_FIELD_SL_COMPANY_NAME;
 					Long statusId = scQt.getQtStatus().getStatusId();
-					Long changedBy = new FacesScopes().getUserSessionBean().getUserId();
 					Long createdBy = new FacesScopes().getUserSessionBean().getUserId();
 					
 					IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1259,9 +1257,9 @@ public class BSVAttendanceBackingBean extends
 					
 					for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
 						String newValue = newBriefingRegistration.getSupplier().getCompanyName();
-						auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, null, docTypeId, docNo, docId,
+						auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId,
 								null, null, statusId, actionType, qtFieldId, null, null, newValue,
-								null, changedBy, createdBy, null, null, groupTabSection);
+								null,createdBy, null, null, groupTabSection);
 						auReqList.add(auReqDTO);
 					}							
 					auTrailsSO.insertAuditTrails(auReqList);
@@ -1734,28 +1732,24 @@ public class BSVAttendanceBackingBean extends
 			//28895 - 35500 audit trails
 			String roleCode = RoleCode.COMMITTEE_APPROVER.value();
 			Long orgProfileId = scQt.getOrgProfileId();
-			String orgName = null;
 			Long docTypeId = scQt.getProcurementMode().getParameterId();
 			String actionType = null;
 			Long docId = scQt.getQtId();
 			String docNo = scQt.getQtNo();
 			Long statusId = (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) ? 
 					QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_APPROVED : QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_REJECTED;
-			Long userId =  new FacesScopes().getUserSessionBean().getUserId();
 			String groupTabSection = QTAuditConstant.AU_SECTION_SL;
 			Long qtFieldId = QTAuditConstant.AU_FIELD_SL_COMPANY_NAME;;
-			Long changedBy = new FacesScopes().getUserSessionBean().getUserId();
 			Long createdBy = new FacesScopes().getUserSessionBean().getUserId();
 
 			AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
-			AuditTrailsResDTO auResDTO = new AuditTrailsResDTO();
 			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
 			IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 			
-			auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, orgName, docTypeId, docNo, docId,
+			auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId,
 					null, null, statusId, actionType, qtFieldId, null, null, null,
-					null, changedBy, createdBy, null, null, groupTabSection);
+					null,createdBy, null, null, groupTabSection);
 			auReqList.add(auReqDTO);
 			auTrailsSO.insertAuditTrails(auReqList);
 			

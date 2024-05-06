@@ -538,6 +538,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The selected sc qt committee. */
 	private ScQtCommittee selectedScQtCommittee;
+	
+	//28895 - 35500
+	/** The newly added sc qt committee */
+	private List<ScCommitteeMember> newScCommitteeMemberList;
 
 	/** The clone business owner data model. */
 	private IPagingDataModel<ScQt> cloneBusinessOwnerDataModel;
@@ -746,6 +750,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The selectedpmuser contactperson list. */
 	private List<ScQtContactPerson> selectedpmuserContactpersonList;
+	
+	//28895 - 35500
+	/** The pmuser contactperson list that had been deleted */
+	private List<ScQtContactPerson> pmuserDeletedContactpersonList;
 
 	/** The pm users list. */
 	private List<PmUser> pmUsersList;
@@ -1860,7 +1868,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
-	
 	//Bug #35061 - asyrafhaziq 
 	private String msgConfirmBelowIndi;
 	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;//11104
@@ -3435,6 +3442,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public List<SmSupplier> getPanelSuppliers() {
 		return panelSuppliers;
 	}
+	
 
 	/**
 	 * Gets the tab list.
@@ -11811,6 +11819,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
+	public List<ScQtContactPerson> getPmuserDeletedContactpersonList() {
+		return pmuserDeletedContactpersonList;
+	}
+
+	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmuserDeletedContactpersonList) {
+		this.pmuserDeletedContactpersonList = pmuserDeletedContactpersonList;
+	}
+
+	public List<ScCommitteeMember> getNewScCommitteeMemberList() {
+		return newScCommitteeMemberList;
+	}
+
+	public void setNewScCommitteeMemberList(List<ScCommitteeMember> newScCommitteeMemberList) {
+		this.newScCommitteeMemberList = newScCommitteeMemberList;
+	}
+
 }
 
 // ***25201
