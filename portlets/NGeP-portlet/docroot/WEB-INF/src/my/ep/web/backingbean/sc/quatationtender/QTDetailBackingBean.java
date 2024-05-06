@@ -12879,12 +12879,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	//#11299 End Vinod
 	// #10141 Start Vinod
 	/**
-	* this method will check inactive checklist and show the confirmation to remove those checklist.
+	* this method will check inactive checklist and display the warning to send notification onload.
 	* 
 	* @param status.
 	* @return 
 	*/
-	public void checkInactiveChecklistProcessForDoc(String status) {
+	private void checkInactiveChecklistProcessForDoc(String status) {
 		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
 		if (SCProcessNameConst.PREPARE_QT_SCHEDULE.equals(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -12908,10 +12908,28 @@ public void retrieveDemoQtDetails(Long qtId) {
 			
 			String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
 			
-			this.getManagedBean().setShowInactiveChecklistPopup(true);
-			this.getManagedBean().setInActiveChecklistNotificationText(
-					getMessage(QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
-							new String[] { confirmationMsg }));
+			this.getManagedBean().setShowInactiveChecklistWarning(true);
+			this.getManagedBean().setInActiveChecklistNotificationText(confirmationMsg);
+			
+			if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
+								.getMessage(
+										QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
+										new String[] {confirmationMsg},
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())));
+			}else{
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
+								.getMessage(
+										QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
+										new String[] {confirmationMsg},
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())));
+			}
 		}
 	}
 	
@@ -12940,12 +12958,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 
 	/**
-	* this method will delete inactive checklist and submit.
+	* this method will send notification to secratry to remove inactive checklists.
 	* 
 	* @param status.
 	* @return 
 	*/
-	public void initiateInactiveChecklistProcessForDoc() {
+	public void sendNotificationForInactiveChecklistProcessForDoc() {
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -12974,12 +12992,29 @@ public void retrieveDemoQtDetails(Long qtId) {
 		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
 		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
-		qtResDTO = detailSO.updateChecklist(qtReqDTO);
+		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
 
 		if (qtResDTO.isSuccessful()) {
-			successMessage(MessageConst.INFO_700012,
-					getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION),
-					this.getManagedBean().getQt().getQtNo(), Boolean.TRUE);
+			QuationTenderReqDTO qtreqDTO = prepareQTInfo();
+			reqDTO.setSaveFlow(true);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setToken(facesScopes
+					.getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			
+			ScQt qt = this.getManagedBean().getQt();
+			qt.setInactiveChecklistNotified(true);
+			QuationTenderResDTO qtresDTO = detailSO.saveQTDtl(qtreqDTO);
+			this.getManagedBean().setQt(qtresDTO.getQtDetail());
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
+							.getMessage(
+									QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
+									new String[] {this.getManagedBean().getInActiveChecklistNotificationText()},
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
 		}
 	}
 	// #10141 End Vinod

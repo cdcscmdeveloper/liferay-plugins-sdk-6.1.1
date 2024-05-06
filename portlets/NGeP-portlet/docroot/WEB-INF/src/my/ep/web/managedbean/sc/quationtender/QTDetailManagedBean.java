@@ -1667,6 +1667,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> inActiveChecklist;
 	private int inActiveChecklistCount;
 	private boolean disableButtonForInactiveChecklist = false;
+	private boolean showInactiveChecklistWarning = false;
 	private boolean showInactiveChecklistPopup = false;
 	private List<ScQtCheckList> techChecklistPreview;
 	private List<ScQtCheckList> finChecklistPreview;
@@ -11371,6 +11372,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.disableButtonForInactiveChecklist = disableButtonForInactiveChecklist;
 		}
 
+		public boolean isShowInactiveChecklistWarning() {
+			return showInactiveChecklistWarning;
+		}
+
+		public void setShowInactiveChecklistWarning(boolean showInactiveChecklistWarning) {
+			this.showInactiveChecklistWarning = showInactiveChecklistWarning;
+		}
+		
 		public boolean isShowInactiveChecklistPopup() {
 			return showInactiveChecklistPopup;
 		}

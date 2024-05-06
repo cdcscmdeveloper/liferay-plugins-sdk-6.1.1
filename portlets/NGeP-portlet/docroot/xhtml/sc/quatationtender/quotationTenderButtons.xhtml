@@ -124,7 +124,7 @@
 			<ui:remove>9019 end</ui:remove>
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
-			  	
+			
 			 <!-- danial #25635 - rollback 22/11/2020-->
 			 <p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
 											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
@@ -161,6 +161,7 @@
 								styleClass="ui-button"
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
 								
 							<ui:remove> #30477 Start </ui:remove>	
@@ -252,6 +253,16 @@
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
 					</c:if>
+					<!-- #10141 Start Vinod -->
+					<p:commandButton
+						value="#{lbl['lbl.sc.spec.inactive.btn.send.notification']}"
+						id="sendNotification" process="@this" style="float:right;"
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+						action="#{qTDetailBB.sendNotificationForInactiveChecklistProcessForDoc()}"
+						rendered="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
+						disabled="#{qTDetailBB.managedBean.qt.inactiveChecklistNotified}"
+						title="#{lbl['lbl.sc.spec.inactive.btn.send.notification.mouseover']}" />
+					<!-- #10141 End Vinod -->
 				</c:if>
 			</td>
 		</tr>
@@ -485,25 +496,4 @@
 			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
 			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />
 			
-		<!-- #10141 Start Vinod -->
-		<p:dialog id="inActiveChecklistNotificationDocId" widgetVar="inActiveChecklistNotificationDoc" 
-			showHeader="false" resizable="false" width="30%" closable="false" visible="#{qTDetailBB.managedBean.showInactiveChecklistPopup}">
-			<p:outputPanel name="inActiveChecklistNotificationDocPanel" id="inActiveChecklistNotificationDocPanel">
-				<h:outputText escape="false" value="#{qTDetailBB.managedBean.inActiveChecklistNotificationText}"  />
-			</p:outputPanel>
-			
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					partialSubmit="true" process="@form" update="@form"
-					action="#{qTDetailBB.initiateInactiveChecklistProcessForDoc()}"  rendered="#{!qTDetailBB.managedBean.readOnly}"/>
-					
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" 
-					onclick="inActiveChecklistNotificationDoc.hide();" rendered="#{qTDetailBB.managedBean.readOnly}"/>
-			</div>
-		</p:dialog>
-		<!-- #10141 End Vinod -->
-		
 </ui:composition>

@@ -345,6 +345,8 @@ public interface QTConstants {
 	public static final String WEB_FORM_DEFTYPE = "WebForm";
 	public static final String SAMPLE_DEFTYPE = "Sample";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.techfin.checklist";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE = "lbl.sc.spec.confirm.inactive.techfin.checklist.specprepare";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED = "lbl.sc.spec.confirm.inactive.techfin.checklist.notified";
 	public static final String LBL_TECHNICAL_CHECKLIST_PREVIEW_PRINTING = "lbl.sc.spec.technical.checklist.preview.printing";
 	public static final String LBL_FINANCIAL_CHECKLIST_PREVIEW_PRINTING = "lbl.sc.spec.financial.checklist.preview.printing";
 	public static final String LBL_TECHNICAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING = "lbl.sc.spec.technical.checklist.element.details.preview.printing";

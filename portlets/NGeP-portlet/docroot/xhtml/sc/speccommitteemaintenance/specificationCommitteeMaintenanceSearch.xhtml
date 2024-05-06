@@ -117,6 +117,10 @@
 								styleClass="tasklist_title1"
 								title="#{lbl['lbl.sc.qt.search.view.tooltip']}" />
 						</p:commandLink>
+						<!-- #10141 Start Vinod -->
+						<p:graphicImage id="inactiveCheckList"  rendered="#{scQt.inactiveChecklistNotified}"
+							value="#{CommonUIConstant.imagePath}/msgerror.png"/>
+						<!-- #10141 End Vinod -->
 					</p:column>
 				</p:dataTable>
 			</h:panelGroup>
