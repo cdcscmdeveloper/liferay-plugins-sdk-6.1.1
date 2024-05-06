@@ -3309,7 +3309,8 @@ public class SpecificationBackingBean extends
 							scQtSchedule.setEndMonth(endMonth);
 							scQtSchedule.setStartYear(startYear);
 							scQtSchedule.setEndYear(endYear);
-
+							// Reopen 25726 note 271- Issue 4 
+							scQtSchedule.setScheduleType(this.getManagedBean().getQt().getFulfilmentType());
 							scheduleList.add(scQtSchedule);
 
 						}
@@ -17459,6 +17460,9 @@ if (null != checklist && !checklist.isEmpty()) {
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
+		// Reopen 25726 note 271- Issue 4 
+		spReqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveSchedules());
+		spReqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgPayments());
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
