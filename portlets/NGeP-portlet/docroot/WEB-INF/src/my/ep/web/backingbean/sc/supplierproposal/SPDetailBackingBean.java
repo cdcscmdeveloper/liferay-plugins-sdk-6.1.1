@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -1257,6 +1258,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getTemplateSpecBean());
 				}
 				
+				//28777 - start
+				List<Long> deactivatedZones = new ArrayList<>();
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
+					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
+						if(zoneDtl.isBranchDeactivated())
+							deactivatedZones.add(zoneDtl.getSpecZoneId());
+					}
+				}
+				//28777 - end
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1277,10 +1287,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
-				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
+				if (templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
+						//28777 - start
+						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+							continue;
+						//28777 - end
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -3280,6 +3294,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
+		
 		//REMOVE Bug #31542 
 		IQTProposalSO proposalSO = null;
 
@@ -4602,13 +4617,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
-			//#29729 - Start
-			if(checkValidationSupplierBranchDeleted()){
+			//#28777 & #29729 - Start
+			boolean branchDeleted = checkValidationSupplierBranchDeleted();
+			if(branchDeleted){
+				this.getManagedBean().setReadOnly(branchDeleted);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
-			//#29729 - End
+			//#28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -4816,11 +4833,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		//#32648 - start
 
 		if (pmUser != null) {
-			//#30447 - start
-			if(pmUser.getSalutationCode()!=null){
+			// #30447 - start
+			if (pmUser.getSalutationCode() != null) {
 				context.put("salutation", pmUser.getSalutationCode().getSalutationName());
 			}
-			//#30447 - end
+			// #30447 - end
 			context.put("userName", pmUser.getUserName());
 			context.put("icNo", pmUser.getIdentificationNo());			
 		}
@@ -6294,18 +6311,17 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 //#28785-End
 
         //#28777 & #29729 - Start
+		/**
+		* Method to return true, if branch in supplier has been deleted
+		* @param supplier id 
+		* @return true or false
+		**/
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-			
 			boolean isSupplierBranchDeleted = false;
-			Long supplierId = this.getManagedBean().getSupplierId();
-			ScQt scQt = this.getManagedBean().getQt();
-			if(supplierId != null && scQt != null){
-				if(qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
-			    }
 			}
 		    return isSupplierBranchDeleted;
 		}
@@ -6643,6 +6659,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					}
 				}
 			}
+		}
+		if(CollectionUtils.isEmpty(asnwerList)){
+			templateSpecBean.setSpecAnswerList(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList());
+		}else{
 			templateSpecBean.setSpecAnswerList(asnwerList);
 		}
 	}

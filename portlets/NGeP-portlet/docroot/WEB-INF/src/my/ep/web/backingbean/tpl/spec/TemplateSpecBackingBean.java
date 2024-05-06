@@ -1090,7 +1090,11 @@ public class TemplateSpecBackingBean extends
 			calcGrandTotalAmount(templateSpecBean);
 			log.info("calc===============================================calcTotalAmount");
 		}catch(Exception e){
-			e.printStackTrace();
+			//06022024@Sonarqube QT#58 - haziq
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
+					this.getManagedBean().getQt().getQtNo(), SLALogConstant.QT_CALC_TOTAL_AMOUNT,
+					getUserIdSessionFromLoginId(), e);
+	
 		}
 		
 	}
@@ -2956,9 +2960,13 @@ public class TemplateSpecBackingBean extends
 	}
 	
 	public String replaceWithBR(String specDetails) {
-		
-		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+		// 35521 @zaim - start
+		String spec = specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
 				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		spec = spec.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		return spec;
+		// 35521 @zaim - end
 	}
 	
 	/**

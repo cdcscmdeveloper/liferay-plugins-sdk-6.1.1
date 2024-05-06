@@ -20,6 +20,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -65,6 +66,25 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		if (orgProfile != null) {
 			this.getManagedBean().setSelectedPtj(orgProfile);
 			RequestContext.getCurrentInstance().update("usergrouping");
+		}
+	}
+	// 20230111@Haziq - #12487 
+	/**
+	 * to set detail selected PTJ
+	 * 
+	 * @param userOrg
+	 */
+	public void userPtjListener(PmUserOrg userOrg) {
+		if (userOrg != null) {
+			this.getManagedBean().setSelectedUserPtj(userOrg);
+			
+			log.info("signerUserListener");
+		
+			ScLoa scLoa = getManagedBean().getScLoa();
+			scLoa.setContractSigner(userOrg.getPmUser());
+			scLoa.setLoaSignerDesig(userOrg.getPmUser().getDesignation());
+			
+			RequestContext.getCurrentInstance().update("userOrgCcId");
 		}
 	}
 	
@@ -161,7 +181,9 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		} else {
 			getManagedBean().getScLoa().setBondReq(false);
 		}
-		calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
+		// Reopen #25726 note 220 - issue 5	
+		//calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
+		
 	}
 	
 	/**
