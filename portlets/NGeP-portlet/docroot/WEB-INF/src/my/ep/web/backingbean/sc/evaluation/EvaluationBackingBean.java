@@ -1459,6 +1459,10 @@ public class EvaluationBackingBean extends
 								throw new EpException(MessageConst.ERROR_760198);
 							}
 						}
+						if (null != proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod()
+								&& proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
+							proposalCheckList.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+						}
 					}
 
 				}
@@ -3319,43 +3323,21 @@ public class EvaluationBackingBean extends
 					// #25638 - End.
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
-					/*
-					 * evaluationSo
-					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
-					 * );
-					 */
+					
 					financialCheckListStatusCheck();//32426
 					/*
 					 * 32066 
 					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
 					 */
 					//#25138(wip 4serangkai) bug -Start 8/6/2023
-					if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (!this.getManagedBean().getSingleSpecQuestion()) {
+					if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+							&& !this.getManagedBean().getSingleSpecQuestion()) {
 							financialCheckListStatusCheckPackage();
-						}
 					}
 					//#25138(wip 4serangkai) bug -End 8/6/2023
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
-				}else{//#25138-start
-					financialCheckListStatusCheck();//32426
-					/*
-					 * 32066 
-					 * FIX BUG REGARDING TAB PACKAGE IS SELECTED EVEN THOUGHT THE ITEM ONLY SINGLE
-					 */
-					//#25138(wip 4serangkai) bug -Start 8/6/2023
-					if (wipstatus > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-						if (!this.getManagedBean().getSingleSpecQuestion()) {
-							financialCheckListStatusCheckPackage();
-						}
-					//#25138(wip 4serangkai) bug -End 8/6/2023
-					}
-					evaluationSo
-							.prepareFinancialEvaluationSummary(summaryReqDTO);
-					getManagedBean().setFinancialSummaryGenerated(true);
-					//#25138-end
 				}
 			}
 		} finally {
@@ -18107,7 +18089,6 @@ private void retriveCommitteeRemarksList(){
 			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			log.info(portalresponse);
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(portalresponse);
-			log.info(response.getStatus());
 			response.setContentType("application/zip");
 			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
 			

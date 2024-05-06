@@ -2734,16 +2734,6 @@ public class LOIDetailBackingBean extends
 			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
 
 			if (awardSupplierResDTO.isSuccessful()) {
-				//#33380, #6906 - Start.
-				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
-						&& getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION)) {
-					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-					reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-					reqDTO.setStatusId(statusId);
-					getQtAwardSO().prepareTdForRecommendation(reqDTO);
-				}
-				//#33380, #6906 - End.
 				scLoi = awardSupplierResDTO.getScLoi();
 
 				renewSesionObject();
@@ -4089,6 +4079,7 @@ public class LOIDetailBackingBean extends
 		Object payLoadData = getManagedBean().getPayLoad();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
+		String taskName = getManagedBean().getTaskName();//33380
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
@@ -4107,6 +4098,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setSourceId(sourceId);
 		getManagedBean().setPayLoad(payLoadData);
 		getManagedBean().setTaskId(taskId);
+		getManagedBean().setTaskName(taskName);//33380
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setBackToPreviousPage(backToPreviousPage);

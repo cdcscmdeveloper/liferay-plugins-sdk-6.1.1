@@ -303,6 +303,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		
 		if (taskId == null) {
+			//#35156 - Start
+			log.info("**Start preRenderView from Maintenance** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 			if (getManagedBean().getWarningPercentage() != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
@@ -348,6 +351,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());
 			}
 			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			//#35156
+			log.info("**End preRenderView from Maintenance** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
  			return;
 		}
 		
@@ -410,6 +416,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(new Long(dataType.getDocId()));
 			reqDTO.setDocType(dataType.getDocType());
 		}
+		//#35156 - Start
+				log.info("**Start preRenderView from TaskList** Check Bug #35156 :"+" ContractVer :"+reqDTO.getContractVerId() 
+						+", Contract Id :"+reqDTO.getContractId());
 		
 		//Bug 34030 - shaqimi start
 		ctBB.getManagedBean().setTaskNameFromTaskList(reqDTO.getTaskName());
@@ -433,6 +442,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.getManagedBean().setNotificationSetting(false); //#28320 - related to #26083
 		}
 		setValidateContractField(reqDTO);
+		
+		//#35156 - End
+		log.info("**END preRenderView from TaskList** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+				+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		//#25406
@@ -470,6 +483,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
+			
+			//#35156 - Start
+			log.info("**Start setValidateContractField** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 			
 			//Retrieve agreement list
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
@@ -794,6 +811,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			chkBondWaivedAttachment();
 			sortDeductions();
 			
+			//#35156 - End
+			log.info("**END setValidateContractField** Check Bug #35156 :"+"ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId()
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
@@ -1015,6 +1036,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public String saveContract(String action) throws Exception {
 		IContractSO contractSO = null;
 		try {
+			
+			//#35156 - Start
+			log.debug("**Start** Check Bug #35156 :"+"***saveContract** "+"ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId());
 			/*Validation for login user's org profile before initiate contract task*/
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
 					&& ctBB.getManagedBean().getContractVer().getStatus() != null/*#26083 start - basri*/
@@ -1147,6 +1171,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
 			ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
+			
+			//#35156 - End
+			log.debug("**END** Check Bug #35156 :"+"***saveContract** "+"ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId());
 
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
@@ -2801,6 +2828,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(contractId);
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			
+			//#35156 - Start
+			log.info("**Start gotoNotificationSetting From Contract Maintenance** Check Bug #35156 :"+" ContractVer :"+reqDTO.getContractVerId() 
+					+", Contract id :"+reqDTO.getContractId());
 				
 			reqDTO.setUpdateAction(true);
 			reqDTO.setViewOnly(true);//Bug 34142, 15851 - shaqimi start 04/12/2022
@@ -2814,7 +2845,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
 			getManagedBean().setExternalPageUrl(null);
-			getManagedBean().setSelectedTabIndex(0);	
+			getManagedBean().setSelectedTabIndex(0);
+			
+			//#35156 - End
+			log.info("**END gotoNotificationSetting From Contract Maintenance** Check Bug #35156 :"+" ContractVer :"+reqDTO.getContractVerId() 
+					+", Contract id :"+reqDTO.getContractId());
+			
 			return CONTRACT_PAGE;
 		}finally{
 			contractSO = null;

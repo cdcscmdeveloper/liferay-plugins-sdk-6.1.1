@@ -614,13 +614,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 31043 START
 	private boolean showFacilityMachine;
 	// 31043 END
-	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
-	
+		
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
 	private boolean emptyMandatoryDocHistory;
@@ -657,7 +651,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #34392 - start
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
-	// #34393 - end
+	private List<SmApplSupportDoc> missinDocsMandatory;
+	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	//#34393 - end
 		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4434,31 +4430,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	//30974 - end
 
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;
@@ -4615,6 +4586,23 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
 		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
 	}
-	//#34393 - end
+	
+	public List<SmApplSupportDoc> getMissinDocsMandatory() {
+		return missinDocsMandatory;
+	}
+
+	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
+		this.missinDocsMandatory = missinDocsMandatory;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsNonMandatory() {
+		return missinDocsNonMandatory;
+	}
+
+	public void setMissinDocsNonMandatory(
+			List<SmApplSupportDoc> missinDocsNonMandatory) {
+		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+	//#34392 - end
 
 }

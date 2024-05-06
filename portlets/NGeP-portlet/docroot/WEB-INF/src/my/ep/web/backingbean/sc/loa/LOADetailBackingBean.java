@@ -6536,8 +6536,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		if(contractAmt.compareTo(limit) == 0){
 			return false;
-		}else if(contractAmt.compareTo(limit) == 1){
+		//start - Sonarqube DP Bug Minor Iskandar [12/7/2023]
+		}else if(contractAmt.compareTo(limit) > 0){
 			return true;
+		//stop - Sonarqube DP Bug Minor Iskandar [12/7/2023]
 		}else{
 			return false;
 		}		
@@ -9013,7 +9015,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							// END
 							clonedAnswerList.add(tpaClone);
 						} catch (Exception e) {
-							e.printStackTrace();
+							//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+							log.error(e);
+							//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 						}
 					}
 					// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9029,7 +9033,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// Save and update new supplier offer into each related TplSpecAnswer in DB
 						getTemplateSpecSO().updateNewSupplierOffer(null, tpaIdList);
 					} catch (Exception e) {
-						e.printStackTrace();
+						//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+						log.error(e);
+						//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 					}
 					try {
 						// Save and update new supplier offer into related ScLoiLoaItem in DB
@@ -9047,7 +9053,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 						
 					} catch (Exception e) {
-						e.printStackTrace();
+						//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+						log.error(e);
+						//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 					}
 					List<String> nsoJustList = new ArrayList<String>();
 					nsoJustList.add("NSO_" + null);
@@ -9098,7 +9106,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							// END
 							clonedAnswerList.add(tpaClone);
 						} catch (Exception e) {
-							e.printStackTrace();
+							//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+							log.error(e);
+							//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 						}
 					}
 					// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9355,7 +9365,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						try {
 							loadScLoaReport(scLoaReport);
 						} catch (Exception e) {
-							e.printStackTrace();
+							//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+							log.error(e);
+							//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 						}
 					}
 				}
@@ -9398,7 +9410,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// END
 								clonedAnswerList.add(tpaClone);
 							} catch (Exception e) {
-								e.printStackTrace();
+								//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+								log.error(e);
+								//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 							}
 						}
 						// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9417,7 +9431,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								getTemplateSpecSO().updateNewSupplierOffer(getManagedBean().getNewSupplierOffered(),
 										tpaIdList);
 						} catch (Exception e) {
-							e.printStackTrace();
+							//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+							log.error(e);
+							//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 						}
 						try {
 							// Save and update new supplier offer into related
@@ -9438,7 +9454,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							}
 
 						} catch (Exception e) {
-							e.printStackTrace();
+							//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+							log.error(e);
+							//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 						}
 						List<String> nsoJustList = new ArrayList<String>();
 						nsoJustList.add("NSO_" + getManagedBean().getNewSupplierOffered());
@@ -9487,7 +9505,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// END
 								clonedAnswerList.add(tpaClone);
 							} catch (Exception e) {
-								e.printStackTrace();
+								//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+								log.error(e);
+								//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 							}
 						}
 						// Put into scLoiLoaItemAnswerMap for use in generating
@@ -9520,7 +9540,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					try {
 						loadScLoaReport(scLoaReport);
 					} catch (Exception e) {
-						e.printStackTrace();
+						//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+						log.error(e);
+						//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 					}
 				}
 			}
@@ -10228,7 +10250,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			generateUpdatedLampiranA3FromVelocity((ScAttachment) scLoaReport.getScLoaReportAttachment(),
 					getManagedBean().getScLoa(), this.getManagedBean().getScQt());
 		} catch (Exception e) {
-			e.printStackTrace();
+			//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+			log.error(e);
+			//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 		}
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
 
@@ -10725,6 +10749,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		IQTAwardSO iQTAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 		TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
+		List<Long> itemIds = new ArrayList<>();
 		
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
@@ -10829,7 +10854,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoiLoaItem.setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 				}//29007-End
 				
-				scLoiLoaItemsList.add(scLoiLoaItem);
+				if(itemIds.isEmpty() || !itemIds.contains(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					scLoiLoaItemsList.add(scLoiLoaItem);
+					itemIds.add(scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
+				}
 			}
 			if(this.getManagedBean().getScQt().isZonal() && scLoiLoaItemsList.size()>1){//29007-start
 				checkItemSortingLatest(scLoiLoaItemsList);
@@ -11950,8 +11978,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						map.put(SSTConstant.quantity, scLoiLoaItem.getQty() == null? SSTConstant.TB : scLoiLoaItem.getQty().toString());
 						map.put(SSTConstant.serviceScope, SSTConstant.TB);
 
-						for (TplSpecAnswer answer : answerList) {
-
+					for (TplSpecAnswer answer : answerList) {
+						//35596 @zaim start
+						if (answer.getTplSpecSuppAnswer() != null
+								&& answer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId()
+										.equals(currentSupplier)) {
+						//35596 @zaim end	
 							if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
 									.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 								// supplier respond and make new supplier offer
@@ -11973,8 +12005,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								// no changes and no supplier respond
 								map.put(SSTConstant.answerRemark, SSTConstant.TB);
 							}
-						
 						}
+					//35596 @zaim start
+					}
+					//35596 @zaim end
 						// end supplier offer
 						// start retrieve spec size
 						if (getManagedBean().getListSpecAnswer() != null && !getManagedBean().getListSpecAnswer().isEmpty()) {
