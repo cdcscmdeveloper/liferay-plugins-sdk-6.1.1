@@ -11,7 +11,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.sc.audit.VAuditDPRequestNoteDTO;
+import my.ep.dto.sc.audit.AuDPRequestNoteSPDTO;
 import my.ep.exception.EpException;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -39,7 +39,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditSearchDPRequestNoteBackingBean.class);
-	private IPagingDataModel<VAuditDPRequestNoteDTO> searchDP = new SearchDPPagingDataModel();
+	private IPagingDataModel<AuDPRequestNoteSPDTO> searchDP = new SearchDPPagingDataModel();
 	private String requestNoneView = "/xhtml/sc/directpurchase/requestnote/audit/auditDPRequestNoteView.xhtml";
 
 	public AuditSearchDPRequestNoteBackingBean() {
@@ -131,7 +131,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	 * search DP list
 	 * 
 	 */
-	private class SearchDPPagingDataModel extends PagingDataModel<VAuditDPRequestNoteDTO> {
+	private class SearchDPPagingDataModel extends PagingDataModel<AuDPRequestNoteSPDTO> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -146,17 +146,17 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		 * @param searchBean
 		 * @return SearchResultBean
 		 */
-		public ISearchResultBean<VAuditDPRequestNoteDTO> pageChangeListener(
-				ISearchBean<VAuditDPRequestNoteDTO> searchBean) {
+		public ISearchResultBean<AuDPRequestNoteSPDTO> pageChangeListener(
+				ISearchBean<AuDPRequestNoteSPDTO> searchBean) {
 
-			SearchResultBean<VAuditDPRequestNoteDTO> searchResult = new SearchResultBean<>();
+			SearchResultBean<AuDPRequestNoteSPDTO> searchResult = new SearchResultBean<>();
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
 				IAuditDPRequestNoteSO auditSO = (IAuditDPRequestNoteSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 
-				ISearchResultBean<VAuditDPRequestNoteDTO> resDTO = auditSO.searchDPCancelRNResultList(languageCode,
+				ISearchResultBean<AuDPRequestNoteSPDTO> resDTO = auditSO.searchDPCancelRNResultList(languageCode,
 						dpSearchBean.getDocId(), searchBean);
 				searchResult.setTotalRecord(resDTO.getResultList().size());
 				searchResult.setResultList(resDTO.getResultList());
@@ -169,11 +169,11 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		}
 	}
 
-	public IPagingDataModel<VAuditDPRequestNoteDTO> getSearchDP() {
+	public IPagingDataModel<AuDPRequestNoteSPDTO> getSearchDP() {
 		return searchDP;
 	}
 
-	public void setSearchDP(IPagingDataModel<VAuditDPRequestNoteDTO> searchDP) {
+	public void setSearchDP(IPagingDataModel<AuDPRequestNoteSPDTO> searchDP) {
 		this.searchDP = searchDP;
 	}
 }
