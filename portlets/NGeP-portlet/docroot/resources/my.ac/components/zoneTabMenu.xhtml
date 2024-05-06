@@ -32,16 +32,11 @@
 			    float: right;
 			    max-width: 10%;
 			}
-		</style>
-		<script>
-			window.onload = function() {
-				$( ".qt-zone-menu li:not(.ui-state-active)" ).hover(
-				  function() {
-					  $(this).toggleClass('ui-state-hover');  
-				  }
-				);
+			.qt-zone-menu li.ui-tabmenuitem:hover{
+				background: #b4df7d !important;
+				cursor: pointer;
 			}
-		</script>
+		</style>
 		<div class="qt-zone-menu ui-tabmenu ui-widget ui-widget-content ui-corner-all sidemenu">
 			<ul class="ui-tabmenu-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
 				<ui:repeat varStatus="status" var="tab" value="#{cc.attrs.tabList}">
