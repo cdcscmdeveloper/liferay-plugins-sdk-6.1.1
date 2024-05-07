@@ -11571,10 +11571,10 @@ public class SmApplicationBackingBean extends
 	private void setValueForInquiryRemarks(SmApplSupportDoc smApplSupportDoc) {
 
 		if (!EntityHelper
-				.isCollectionEmpty(getManagedBean().getMandatoryDocs())
+				.isCollectionEmpty(getManagedBean().getMissinDocsMandatory())
 				&& smApplSupportDoc.getPmDocument().isMandatory()) {
 			for (SmApplSupportDoc smApplSupportDocMandatory : getManagedBean()
-					.getMandatoryDocs()) {
+					.getMissinDocsMandatory()) {
 				if (smApplSupportDoc.getApplSupportDocId().equals(
 						smApplSupportDocMandatory.getApplSupportDocId())) {
 					smApplSupportDoc.setPoRemarks(smApplSupportDocMandatory
@@ -11584,10 +11584,10 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getNonMandatoryDocs())
+				.getMissinDocsNonMandatory())
 				&& !smApplSupportDoc.getPmDocument().isMandatory()) {
 			for (SmApplSupportDoc smApplSupportDocNonMandatory : getManagedBean()
-					.getNonMandatoryDocs()) {
+					.getMissinDocsNonMandatory()) {
 				if (smApplSupportDoc.getApplSupportDocId().equals(
 						smApplSupportDocNonMandatory.getApplSupportDocId())) {
 					smApplSupportDoc.setPoRemarks(smApplSupportDocNonMandatory
