@@ -564,8 +564,10 @@ u.underline {
 					#set ($numberCount = $numberCount+1)				
 					#set ($prevNumberCount = $numberCount - 1)		
 					<p>
-						<span class="text_family">$numberCount.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di <span class="text_family_red">*perenggan #if ($isSL1M == "true")9/#{else} 8/#end*perenggan #if ($isSL1M == "true")13#{else} 12#end</span> Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+						## #25025 #509 - start
+						<span class="text_family">$numberCount.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di <span class="text_family_red">*perenggan #if ($isSL1M == "true")9/#{else} 8/#end*perenggan #if ($isSL1M == "true")13#{else} 12#end</span>, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
 						<br/><span class="text_family_small">*perenggan #if ($isSL1M == "true")9#{else} 8#end sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan #if ($isSL1M == "true")13#{else} 12#end sekiranya perolehan melibatkan ICP </span>
+						## #25025 #509 - end
 					</p>
 
 					#set ($numberCount = $numberCount+1)
