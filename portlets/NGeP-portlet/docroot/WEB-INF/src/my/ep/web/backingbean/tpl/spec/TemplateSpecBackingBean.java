@@ -3230,7 +3230,7 @@ public class TemplateSpecBackingBean extends
 				// #34656 add checking not null
 				if(tplSpecEstimation.getEstimatedCost() != null && 
 						tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
-					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
+					tplSpecEstimation.setIndicativeUnitPrice(BigDecimal.valueOf(0.00));
 				}
 				// #21695 fix #32130 - end
 				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {

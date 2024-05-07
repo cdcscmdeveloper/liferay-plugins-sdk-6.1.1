@@ -1317,10 +1317,10 @@ public class SupplierFinalizationBackingBean extends
 
 								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = "SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE";
 								} else {
 									evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-									evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+									evaluationHeader = "SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE";
 									if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
 										selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 									} else {
@@ -1332,7 +1332,7 @@ public class SupplierFinalizationBackingBean extends
 								//35087
 							} else {
 						 evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage";
+						 evaluationHeader = "SourcingConstants.EVAL_QUALIFIED_SUP_LIST_TEC_EVAL_STAGE";
 						}
 					 }
 					 break;
@@ -10820,23 +10820,6 @@ public class SupplierFinalizationBackingBean extends
 	    	  
 	    	return supplierBranchList;
 		}
-		
-		/**
-		* Method to return true, if branch in supplier has been deleted
-		* @param supplier id 
-		* @return true or false
-		**/
-		public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
-			
-			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-			
-			boolean isSupplierBranchDeleted = false;
-			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = true;
-			}
-		    return isSupplierBranchDeleted;
-		}
 		//#28777 & #29729 - End
 		
 		//#32400 - Start
@@ -11509,10 +11492,8 @@ public class SupplierFinalizationBackingBean extends
 						this.getManagedBean().isDisableSupplierSelection(),
 						isBidding,
 						(supplier.isDisciplinaryActions() && !supplier.isWarningDA()),
-						periodExtensionRejected,
-						this.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplier.getSupplierId(),
-								getManagedBean().getScQt()), this.isQTMaintenanceScreen(),
-						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
+						periodExtensionRejected, this.isQTMaintenanceScreen(),
+						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE); //#28777 & #29729 
 	}
 	//35157 - end
 	
