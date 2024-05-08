@@ -867,7 +867,7 @@ public class NoticeBoardBackingBean extends
 		managedBean.setBriefingDtls(null);
 		
 		//#28777 & #29729 - Start
-		if(checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
+		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(MessageConst.INFO_760522, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
