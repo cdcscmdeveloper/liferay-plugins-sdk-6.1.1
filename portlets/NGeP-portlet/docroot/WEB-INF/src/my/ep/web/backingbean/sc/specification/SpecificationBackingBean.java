@@ -11906,6 +11906,7 @@ if (null != checklist && !checklist.isEmpty()) {
 	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists,ScQtCheckList finChecklist, boolean isTechInsert, boolean isSample){//11104-778&25726 ){
 		log.info("checkAndupdateFulfilmentType");	
 		String financialDoccategory=	finChecklist.getDocCategory();//11104-778&25726		
+		log.info("===mainChecklistSaveDocType========="+financialDoccategory);
 		PmParameter clFulfilmentTypeCode =this.getManagedBean().getQt().getFulfilmentType();
 		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
@@ -11939,13 +11940,18 @@ if (null != checklist && !checklist.isEmpty()) {
 			
 			for (ScQtCheckList checklist : allCheckLists) {
 				String technicalDoccategory=	checklist.getDocCategory();//11104-778&25726
+				log.info("===subChecklistSaveDocType========="+technicalDoccategory);
+				log.info("===subChecklistisSample========="+isSample);
 				if (QTConstants.TEMPLETE_SPEC_CODE
 						.equalsIgnoreCase(checklist.getDefinationType()
 								.getParameterCode()) &&
 								checklist.getScQtDoc() != null) {
 					boolean isDatafetch=SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory) &&  SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDoccategory) && isSample;//11104-778&25726
+					log.info("===subChecklistisDatafetch========="+isDatafetch);
 					if(isDatafetch){
+						log.info("===subChecklistBeforeFetchQuestionSize========="+checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size());
 						this.setTemplateSpecMaster(checklist);
+						log.info("===subChecklistAfterFetchQuestionSize========="+checklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions().size());
 					}//11104-778&25726
 					TplSpecMaster specSpecMaster = checklist.getScQtDoc().getTplSpecMaster();
 					
