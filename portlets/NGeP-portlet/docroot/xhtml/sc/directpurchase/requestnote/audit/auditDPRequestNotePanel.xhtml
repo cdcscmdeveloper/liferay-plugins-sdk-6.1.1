@@ -14,7 +14,7 @@
 			<p:column headerText="#{lbl['lbl.dp.audit.action.date']}"
 				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.createdDate}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIMESECOND_FORMAT}" />									   
+					<f:convertDateTime pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />									   
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.dp.audit.action.type']}"
