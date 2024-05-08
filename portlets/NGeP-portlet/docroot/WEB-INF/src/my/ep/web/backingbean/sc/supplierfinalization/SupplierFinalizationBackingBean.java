@@ -11671,8 +11671,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						this.getManagedBean().isDisableSupplierSelection(),
 						isBidding,
 						(supplier.isDisciplinaryActions() && !supplier.isWarningDA()),
-						periodExtensionRejected,
-						proposal.getScQtSupplier().isRecordStatus(),this.isQTMaintenanceScreen(),
+						periodExtensionRejected,this.isQTMaintenanceScreen(),
 						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE); //#28777 & #29729 
 	}
 	//35157 - end
