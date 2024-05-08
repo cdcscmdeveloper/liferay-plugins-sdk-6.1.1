@@ -2,6 +2,9 @@ package my.ep.web.backingbean.sc.audit;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -18,6 +21,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.directpurchase.AuditDPSearchBean;
+import my.ep.web.constant.report.AuditReportConst;
 import my.ep.web.managedbean.sc.dp.requestnote.audit.AuDPRequestNoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -176,4 +180,21 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	public void setSearchDP(IPagingDataModel<AuDPRequestNoteSPDTO> searchDP) {
 		this.searchDP = searchDP;
 	}
+	
+	//SECTION: Generate Report (PDF & EXCEL)
+	
+	/**
+	 * Generate Report: PDF Format
+	 * @param docId	,referring to selected REQUEST_NOTE_ID
+	 * @throws IOException 
+	 */
+	public void generateReport(BigInteger docId) throws IOException{
+		
+		Map<String, String> paramMap = new HashMap<>();
+		paramMap.put(AuditReportConst.PARAM_USER_ID, getUserIdSessionFromLoginId().toString());
+		paramMap.put(AuditReportConst.PARAM_DOC_ID, docId.toString());//P_DOCID
+		
+		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_DP, paramMap);
+	}
+	
 }
