@@ -216,7 +216,7 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
-	public static final String IDENTIFICATION_TYPE_IC = "I";
+	public static final String IDENTIFICATION_TYPE_IC = "I";//#35314
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	//30865 Start & #34098 - START
@@ -1327,7 +1327,9 @@ public class SupplierManagementConst {
 	}
 	//#34711 - END
 
+	// #35314 - START 
 	public static String getIdentificationTypeIc() {
 		return IDENTIFICATION_TYPE_IC;
 	}
+	// #35314 - END 
 }
