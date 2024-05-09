@@ -96,8 +96,13 @@
 						</p:tooltip>&#160;
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
 						rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
-					</td><!-- #24819 - end -->
+					</td>
 				</tr>
+				<tr>
+					<td colspan="3" /><td>
+						<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" rendered="#{isSuppDataMaintenance}" />
+					</td>
+				</tr><!-- #24819 - end -->
 				<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.original}">
 					<tr>
 						<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
