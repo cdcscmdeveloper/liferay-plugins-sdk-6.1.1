@@ -2412,7 +2412,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				fileNo = splitLongLengthString(fileNo, 29);
 			}
 		}
+		// ##25025 #509 -start
+		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
+		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
+		// ##25025 #509 -start
 		context.put("loaNo", scLoa.getLoaNo());
 
 		String issueDate = "______________";
@@ -9184,7 +9188,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					try {
 						loadScLoaReport(scLoaReport);
 					} catch (Exception e) {
-						e.printStackTrace();
+						//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [23/4/2024]
+						log.error("Error : " + e.getMessage());
+						//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [23/4/2024]
 					}
 				}
 			}

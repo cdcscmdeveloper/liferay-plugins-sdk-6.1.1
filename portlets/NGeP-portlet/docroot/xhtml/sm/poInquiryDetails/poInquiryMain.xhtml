@@ -27,8 +27,8 @@
 			<td>
 				<!-- #12483 - START, #34892 -->
 				<ac:smReviseReason bBean="#{backingBean}"/>
-				<!-- #12483 - END -->
 				<div style="width: 100%" align="right">
+				<!-- #12483 - END -->
 					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
@@ -75,9 +75,9 @@
 		
 				</p:dataTable> -->
 				<p:dataTable var="table"
-					value="#{backingBean.managedBean.mandatoryDocs}"
+					value="#{backingBean.managedBean.missinDocsMandatory}"
 					id="onlineMandatoryListMain" rowIndexVar="index"
-					rendered="#{not empty backingBean.managedBean.mandatoryDocs}"
+					rendered="#{not empty backingBean.managedBean.missinDocsMandatory}"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 					<p:columnGroup type="header">
@@ -118,7 +118,7 @@
 				</p:dataTable>
 				<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
 				<p:dataTable var="" value="" id="EmptyOnlineMandatoryListMain"
-					rendered="#{empty backingBean.managedBean.mandatoryDocs}"
+					rendered="#{empty backingBean.managedBean.missinDocsMandatory}"
 					rowIndexVar="index"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -149,9 +149,9 @@
 				</p:dataTable>
 				<!-- datatable for non-mandatory support doc with record to display -->
 				<p:dataTable var="table"
-					value="#{backingBean.managedBean.nonMandatoryDocs}"
+					value="#{backingBean.managedBean.missinDocsNonMandatory}"
 					id="onlineNonMandatoryListMain" rowIndexVar="index"
-					rendered="#{not empty backingBean.managedBean.nonMandatoryDocs}"
+					rendered="#{not empty backingBean.managedBean.missinDocsNonMandatory}"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
@@ -193,7 +193,7 @@
 				</p:dataTable>
 				<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
 				<p:dataTable var="" value="" id="EmptyOnlineNonMandatoryListMain"
-					rendered="#{empty backingBean.managedBean.nonMandatoryDocs}"
+					rendered="#{empty backingBean.managedBean.missinDocsNonMandatory}"
 					rowIndexVar="index"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">

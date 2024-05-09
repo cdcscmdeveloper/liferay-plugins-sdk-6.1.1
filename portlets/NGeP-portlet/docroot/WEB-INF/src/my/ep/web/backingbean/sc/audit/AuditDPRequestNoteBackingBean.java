@@ -38,8 +38,8 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 		auDPRequestNoteSPDTO.setRoleCode(roleCode);
 		auDPRequestNoteSPDTO.setOrgProfileId(BigInteger.valueOf(managedBeans.getRequestNote().getPmOrgProfile()
 				.getOrgProfileId()));
-		auDPRequestNoteSPDTO.setDocId((managedBeans.getRequestNote().getRequestNoteId()).intValue());
 		auDPRequestNoteSPDTO.setDocNo(managedBeans.getRequestNote().getRequestNoteNo());
+		auDPRequestNoteSPDTO.setDocId((managedBeans.getRequestNote().getRequestNoteId()).intValue());
 		auDPRequestNoteSPDTO.setActionType(AuditDPRequestNoteConst.AUD_ACTION_TYPE_DEL);
 		auDPRequestNoteSPDTO.setDpFieldLabelId(AuditDPRequestNoteConst.SC_DP_AU_RN_FIELDLABELID);
 		auDPRequestNoteSPDTO.setNewValue(null);

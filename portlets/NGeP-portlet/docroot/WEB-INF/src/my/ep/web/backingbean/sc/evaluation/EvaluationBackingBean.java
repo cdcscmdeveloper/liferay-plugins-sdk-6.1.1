@@ -3295,8 +3295,15 @@ public void saveComplianceSample() {
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
-				//sonarqube issue (#34)
-				if (!this.getManagedBean().isReadOnly()
+				if (// #25638 -Start.
+						(this.getManagedBean()
+						.getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+						|| this.getManagedBean()
+						.getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+					// #25638 - End.
+						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()) {
 
 					financialCheckListStatusCheck();//32426

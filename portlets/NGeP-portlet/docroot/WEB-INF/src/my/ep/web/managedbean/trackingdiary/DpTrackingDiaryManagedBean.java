@@ -112,7 +112,9 @@ public class DpTrackingDiaryManagedBean extends BaseManagedBean {
 				SourcingIntegrationResDTO resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 				return resDTO.getSourcingDocSearchResultBean();
 			} catch (Exception e) {
-				e.printStackTrace();
+				//start - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
+				log.error("Error : " + e.getMessage());
+				//stop - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
 			}
 			return null;
 		}
