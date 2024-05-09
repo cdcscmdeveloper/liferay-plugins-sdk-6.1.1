@@ -365,10 +365,16 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 		this.disableAssign = disableAssign;
 	}
 
+	/**
+	 * @return the newTempDeskOfficer
+	 */
 	public PmUser getNewTempDeskOfficer() {
 		return newTempDeskOfficer;
 	}
 
+	/**
+	 * @param newTempDeskOfficer the newTempDeskOfficer to set
+	 */
 	public void setNewTempDeskOfficer(PmUser newTempDeskOfficer) {
 		this.newTempDeskOfficer = newTempDeskOfficer;
 	}

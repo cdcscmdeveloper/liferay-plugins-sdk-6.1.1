@@ -1162,7 +1162,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			//#28895-35500
-			IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
+			IQTAuditTrailsSO auTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 			List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
 			
@@ -1189,8 +1189,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setQtdetail(qt);
 				reqDTO.setDeskOfficer(entry.getValue());
 				resDTO = null;
-				
-				AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();				
+					
+				//#28895-35500
 				String oldValue = null;
 				Long oldValueId = null;
 				String newValue = entry.getValue().getUserName();
@@ -1235,7 +1235,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					Long createdBy = getFacesScopes().getUserSessionBean().getUserId();	
 					String groupTabSection = QTAuditConstant.AU_SECTION_DO;
 					
-					auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId, null,
+					AuditTrailsReqDTO auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId, null,
 							null, statusId, actionType, qtFieldLabelId, oldValue, oldValueId, newValue, newValueId,
 							createdBy, null, null, groupTabSection);
 					auReqList.add(auReqDTO);
@@ -1322,7 +1322,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			this.getManagedBean().setOriginalDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getOriginalValue())));
 			this.getManagedBean().setNewDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getChangedValue())));
 			this.getManagedBean().setNewTempDeskOfficer(
-					this.retrivePmUser(Long.parseLong(currentApprovalRequest.getChangedValue())));
+					this.retrivePmUser(Long.parseLong(currentApprovalRequest.getChangedValue()))); //28895-35500
 			page = PAGE_DESKOFFICER_MAINTENANCE_APPROVAL;//25627 for 31303 code review
 			
 		}
@@ -1355,10 +1355,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				QuationTenderResDTO resDTO = getQTDetailSO().updateDOReasignmentTask(reqDTO);
 				
 				//#28895-35500
-				IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
+				IQTAuditTrailsSO auTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 				if (auTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-					AuditTrailsReqDTO auReqDTO = new AuditTrailsReqDTO();
+					
 					List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
 					ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_DO_REASSIGN,
 							this.getManagedBean().getCurrentApproval().getScQt().getQtId());
@@ -1383,7 +1383,8 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					String groupTabSection = QTAuditConstant.AU_SECTION_DO;
 
 					if (newValueId.compareTo(newTempDoId) == 0
-							&& statusId.compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED) == 0) {
+							&& (statusId.compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED) == 0
+							|| statusId.compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_REJECTED) == 0)) {
 						oldValue = null;
 						oldValueId = null;
 						newValue = null;
@@ -1391,7 +1392,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 						actionType = null;
 					}
 
-					auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId, null,
+					AuditTrailsReqDTO auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId, null,
 							null, statusId, actionType, qtFieldLabelId, oldValue, oldValueId, newValue, newValueId,
 							createdBy, null, null, groupTabSection);
 
