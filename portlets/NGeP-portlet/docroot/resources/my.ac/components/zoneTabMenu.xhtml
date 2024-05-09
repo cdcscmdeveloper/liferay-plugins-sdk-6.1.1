@@ -48,7 +48,7 @@
 							<ui:fragment rendered="#{tab.branchDeactivated}">
 								<span class="disabled-zone-tooltip">
 							    	<p:graphicImage id="zoneTabImgId" value="/css/images/design/icon_error.png" />
-									<p:tooltip id="#{tab.zoneName}TtId" for="zoneTabImgId">
+									<p:tooltip id="disabledZoneTooltipId" for="zoneTabImgId">
 										<p:outputLabel escape="false" value="#{lbl['lbl.sc.branch.deactivated']}"/>
 									</p:tooltip>
 								</span>
