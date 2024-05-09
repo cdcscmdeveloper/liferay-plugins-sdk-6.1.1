@@ -211,13 +211,17 @@
 									</td>
 									<td width="70%">
 										<table width="15%" style="margin-left:3px; border: 1px solid #ddd; text-align: right; font-size: 10px;">
+											#if($techChecklist.scQtCheckListValue.year !=$null)
 											<tr>
-											#if($techChecklist.pmDocument.docDefinitionKey == "TG")
-											$techChecklist.scQtCheckListValue.year
-											#elseif($techChecklist.pmDocument.docDefinitionKey == "TN")
-											$techChecklist.scQtCheckListValue.year
-											#end
+												#if($techChecklist.pmDocument.docDefinitionKey == "TG")
+												$techChecklist.scQtCheckListValue.year
+												#elseif($techChecklist.pmDocument.docDefinitionKey == "TN" && $techChecklist.scQtCheckListValue.year !=$null)
+												$techChecklist.scQtCheckListValue.year
+												#end
 											</tr>
+											#else
+											<tr rowspan="5"></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+											#end
 										</table>
 									</td>
 								</tr>
@@ -386,15 +390,19 @@
 								</td>
 								<td width="13%" style="border: 1px solid #ddd;font-size: 13px;">
 									<table width="5%">
+										#if($scoreType==0)
+										<tr rowspan="5"></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+										#else
 										<tr>
 											<td>
 											#if($scoreType==1)
 											$bean.getMessageCommon("lbl.sc.checklist.user.score")
-											#else
+											#else if($scoreType==2)
 											$bean.getMessageCommon("lbl.sc.checklist.auto.score")
 											#end
 											</td>
 										</tr>
+										#end
 									</table>
 								</td>
 								<td width="72%">
@@ -427,7 +435,8 @@
 						</table>
 					</td>
 				</tr>
-				#else
+				#end
+				#if($scoreType==2)
 				<tr>
 					<td width="100%">
 						<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:5px; border: 1px solid #ddd;">

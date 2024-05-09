@@ -9,6 +9,7 @@
 <p:dialog id="technicalChecklistPreviewId" widgetVar="technicalChecklistPreview"
 	resizable="false" position="top" styleClass="pop_up_top"
 	header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650" height="650">
+	<p:ajax event="close" update="@([id$=stageTwotechProposal])" actionListener="#{specificationBackingBean.closeTechChecklistPreview()}" />
 		
 	<p:panel id="technicalChecklistPreviewPanel1Id" header="#{lbl['lbl.sc.spec.technical.checklist.preview.printing']}" toggleable="true">
 		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
@@ -64,8 +65,8 @@
 		</div>
 	</p:panel>
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" 
-			onclick="technicalChecklistPreview.hide();"
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" update="@([id$=stageTwotechProposal])"
+			onclick="technicalChecklistPreview.hide();" action="#{specificationBackingBean.closeTechChecklistPreview()}"
 			styleClass="BtnSpacing" process="@this"  />
 	</div>
 		

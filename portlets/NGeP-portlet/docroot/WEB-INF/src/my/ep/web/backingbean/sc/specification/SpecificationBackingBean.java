@@ -180,6 +180,7 @@ import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
@@ -17503,9 +17504,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
 				return;
 			}
-			if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
-				this.getManagedBean().getQt().setInactiveChecklistNotified(false);
-			}
+		}
+		if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
+			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
 		}
 		// #10141 End Vinod
 		if(!popupShown){
@@ -23269,9 +23270,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		this.getManagedBean().setTechChecklistSelect(null);
 		this.getManagedBean().setSelectAllTechPreview(false);
 		for (ScQtCheckList techChecklist : this.getManagedBean().getScQtCheckSt2techProposal()) {
-			if (null!=techChecklist.getDefinationType() &&
-				null!=techChecklist.getDefinationType().getParameterId() &&
-				Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(techChecklist.getDefinationType().getParameterId())) {
+			Long defType = null!=techChecklist.getDefinationType() && null!=techChecklist.getDefinationType().getParameterId() ? techChecklist.getDefinationType().getParameterId() : new Long(0);
+			String docDefKey = null!=techChecklist.getPmDocument() && null!=techChecklist.getPmDocument().getDocDefinitionKey() ? techChecklist.getPmDocument().getDocDefinitionKey() : "";
+			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
+				|| Arrays.asList(QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
 				techChecklist.setSelected(false);
 				techCheckListforPreview.add(techChecklist);
 			}
@@ -23290,9 +23292,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		this.getManagedBean().setFinChecklistSelect(null);
 		this.getManagedBean().setSelectAllFinPreview(false);
 		for (ScQtCheckList finChecklist : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
-			if (null!=finChecklist.getDefinationType() &&
-				null!=finChecklist.getDefinationType().getParameterId() &&
-				Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(finChecklist.getDefinationType().getParameterId())) {
+			Long defType = null!=finChecklist.getDefinationType() && null!=finChecklist.getDefinationType().getParameterId() ? finChecklist.getDefinationType().getParameterId() : new Long(0);
+			String docDefKey = null!=finChecklist.getPmDocument() && null!=finChecklist.getPmDocument().getDocDefinitionKey() ? finChecklist.getPmDocument().getDocDefinitionKey() : "";
+			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
+				|| Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
 				finChecklist.setSelected(false);
 				finCheckListforPreview.add(finChecklist);
 			}
@@ -23704,6 +23707,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 
 		return attachment;
+	}
+	public void closeTechChecklistPreview(){
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())) {
+			for (ScQtCheckList techCL : this.getManagedBean().getScQtCheckSt2techProposal()) {
+				techCL.setSelected(Boolean.FALSE);	
+			}
+		}
 	}
 	// #10141 End Vinod
 	
