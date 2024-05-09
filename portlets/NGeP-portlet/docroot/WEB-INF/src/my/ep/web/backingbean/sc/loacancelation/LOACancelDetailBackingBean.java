@@ -307,7 +307,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoad();
 
-			if (awardDataType != null) 
+			if (awardDataType != null){ //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 				letterCreator = awardDataType.getLetterCreator();
 				
 				if (scLoa != null && ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
@@ -344,7 +344,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 						}
 					}
 				}
-			
+			}//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 			getManagedBean().setPayLoad(awardDataType);
 			
 			String language = new FacesScopes().getUserLocale().getLanguage();
@@ -811,9 +811,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
 	
-				scLoa.setScLoaWorkFlowStatuses(null);
+				//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
+				if(scLoa!=null) 
+				   scLoa.setScLoaWorkFlowStatuses(null);
+
 				// To avoid insert workflow status when direct submit without save.
-				if (scLoa.isBrandNew()) {
+				if (scLoa != null && scLoa.isBrandNew()) {//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 					List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
 					if (CollectionUtils.isNotEmpty(remarks)) {
 						for (ScLoaRemark remark : remarks) {
@@ -827,7 +830,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				reqDTO.setPayLoad(getManagedBean().getPayLoad());
 				reqDTO.setOutcome(outcome);
 				reqDTO.setSourceId(getManagedBean().getSourceId());
-				reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+				reqDTO.setRoleCode(getUserRoleCode(scLoa != null ? scLoa.getScLoiLoa().getDocType():null));//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -2123,7 +2126,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 							ScQtProgressivePayment payment = new ScQtProgressivePayment();
 							payment.setStartYear(String.valueOf(year));
 							payment.setEndYear(String.valueOf(year));
-							payment.setPhaseNo(BigDecimal.valueOf(i + 1));
+							//start - Sonarqube DP Bug Minor Zairul Rizwan [12/7/2023]
+							payment.setPhaseNo(BigDecimal.valueOf((long)i + 1));
+							//stop - Sonarqube DP Bug Minor Zairul Rizwan [12/7/2023]
 							payment.setScLoa(scLoa);
 							setUserDetails(payment);
 							progressivePayList.add(payment);

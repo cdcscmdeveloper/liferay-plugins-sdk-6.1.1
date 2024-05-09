@@ -42,6 +42,7 @@ import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
@@ -72,6 +73,8 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -107,6 +110,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -788,15 +792,14 @@ public class LOIDetailBackingBean extends
 								}
 							}
 							
-							if (!isZonal) { 
-								if (CollectionUtils.isEmpty(previousLois) || 
-										!previousLois.contains(scLoi)) {
+							if (!isZonal && ((CollectionUtils.isEmpty(previousLois) || //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+									!previousLois.contains(scLoi)))) {//fixedNullpointerIssueSonarQube
 									if (supplierLoiLoaItemsMap == null) {
-										supplierLoiLoaItemsMap = new HashMap<Long,List<ScLoiLoaItem>>();
+										supplierLoiLoaItemsMap = new HashMap<>();
 									}
 									Long supplierId = scLoi.getScLoiLoa().getSmSupplier().getSupplierId();
-									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());								
-								}
+									supplierLoiLoaItemsMap.put(supplierId, scLoi.getScLoiLoaItems());	
+																								
 							}
 						}
 					}
@@ -988,7 +991,8 @@ public class LOIDetailBackingBean extends
                     && null != qtProposal.getScQtSupplier().getScQt()) {
                   qtId = qtProposal.getScQtSupplier().getScQt().getQtId();
                 }
-				qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier(), qtId));
+				if (null != qtProposal)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				   qtProposal.getScQtSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(qtProposal.getScQtSupplier().getSmSupplier(), qtId));
 				// #26247 - 32802 - End.
 			}
 		} finally {
@@ -1278,7 +1282,11 @@ public class LOIDetailBackingBean extends
 		if(event != null){			
 			debugLogger(" onRowRecSupplierAction : " + event.toString() + "    class : " + event.getClass());
 		}
-		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		ScLoiLoa scLoiLoa = null;
+		if(event != null)			
+			scLoiLoa = (ScLoiLoa) event.getObject();
+
 		// #32757- Start.
 		if (null != scLoiLoa) {
 			try {
@@ -1980,12 +1988,13 @@ public class LOIDetailBackingBean extends
 		}
 		// #26247 - #33073 - End.
 		getManagedBean().setScLoi(scLoi);
-		ScWorkFlowStatus currentStatus = scLoi.getScWorkFlowStatus();
+		//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+		ScWorkFlowStatus currentStatus = scLoi != null ?scLoi.getScWorkFlowStatus():null;
 		Long statusId = currentStatus.getPmStatus().getStatusId()
 				.longValue();
 
 		// online bidding
-		if (scLoi.getRecommendBy() != null) {
+		if (scLoi != null && scLoi.getRecommendBy() != null) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			PmParameter recommendedBy = scLoi.getRecommendBy();
 			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(recommendedBy.getParameterCode())) {
@@ -2020,7 +2029,7 @@ public class LOIDetailBackingBean extends
 		}
 
 		// calc total items in award details
-		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
+		if (scLoi != null && scLoi.getScLoiLoaItems() != null && !scLoi.getScLoiLoaItems().isEmpty()) { //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			BigDecimal offerPrice = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
@@ -2105,40 +2114,41 @@ public class LOIDetailBackingBean extends
 		}
 
 		// Supplier Branch
-		getManagedBean().setBranchName(scLoi.getSupplierBranch());
+		getManagedBean().setBranchName(scLoi != null ? scLoi.getSupplierBranch():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 		getManagedBean()
 				.setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
 		getManagedBean().setScQt(resDTO.getScQt());
 
-		if (scLoi.isBrandNew()) {
+		if (scLoi != null && scLoi.isBrandNew()) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 			setUserDetails(scLoi);
 			handleBranchDetailsChanged();
 		}
 			
 		Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOI_RESPONSE_PERIOD);
-		// Issue & Acknowledge Date
-		if(scLoi.getIssueDate() == null){
+		if (scLoi != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+		 // Issue & Acknowledge Date
+		 if(scLoi.getIssueDate() == null){
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
-		}
-		if(scLoi.getAckDueDate() != scLoi.getIssueDate() && scLoi.getAckDueDate() != null){
+		 }
+		 if(scLoi.getAckDueDate() != scLoi.getIssueDate() && scLoi.getAckDueDate() != null){
 			long days = DateUtils.getDaysDifference(scLoi.getIssueDate(), scLoi.getAckDueDate());
 			scLoi.setLoiResponseDate((int) days);
 		}
 		else{
 			scLoi.setLoiResponseDate(loaRespPeriod);
-		}
+	    }
 		
-		scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), scLoi.getLoiResponseDate()));
-		
+		 scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), scLoi.getLoiResponseDate()));
+	   }
 		// approvers
-		ScLoiApproval scLoiApproval = scLoi.getScLoiApproval();
+		ScLoiApproval scLoiApproval = scLoi != null ? scLoi.getScLoiApproval():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		PmUser approverUser = null;
 		if (scLoiApproval != null) {
 			approverUser = scLoiApproval.getApprover();
 
-			if (!QTStatusConst.LOI_PENDING_SUBMISSION.equals(scLoi
-					.getScWorkFlowStatus().getPmStatus().getStatusId()
-					.longValue())) {
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (scLoi != null && !QTStatusConst.LOI_PENDING_SUBMISSION.equals(scLoi
+					.getScWorkFlowStatus().getPmStatus().getStatusId())) {
 				getManagedBean().setScLoiApproval(scLoi.getScLoiApproval());
 			}
 		}
@@ -2168,11 +2178,11 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSupplierRemarks(supplierRemarks);
 		}
 		// status
-		getCurrentStatus(currentStatus.getPmStatus()
-				.getStatusId());
+		getCurrentStatus(currentStatus != null ?currentStatus.getPmStatus() 
+				.getStatusId():null);//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 
 		// Contract Signer
-		PmUser contractSignerUser = scLoi.getContractSigner();
+		PmUser contractSignerUser = scLoi != null ?scLoi.getContractSigner():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		if (contractSignerUser == null) {
 			contractSignerUser = new PmUser();
 		}
@@ -2189,15 +2199,16 @@ public class LOIDetailBackingBean extends
 		//userReqDTO.setOrgProfileId(scLoi.getScLoiLoa().getPmOrgProfile()
 		//	.getOrgProfileId());
 		userReqDTO.setMinisterOrgProfileId(retrieveMinistryOrgProfile(
-											scLoi.getScLoiLoa().getPmOrgProfile()
-						.getOrgProfileId()).getOrgProfileId());
+											scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
+											.getOrgProfileId():null).getOrgProfileId()); //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+
 		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
-
-		scLoi.setFileExtnNo("001");
+		if (scLoi != null) //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+		  scLoi.setFileExtnNo("001");
 		
 		/*
 		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
@@ -2478,8 +2489,8 @@ public class LOIDetailBackingBean extends
 					}
 				}
 				// #33325 - End.
-				
-				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization != null ?scQtFinalization.getScQt().getQtNo():null, Boolean.FALSE);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
@@ -2723,16 +2734,6 @@ public class LOIDetailBackingBean extends
 			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
 
 			if (awardSupplierResDTO.isSuccessful()) {
-				// #33380 - Start.
-				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
-						&& getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION)) {
-					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-					reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-					reqDTO.setStatusId(statusId);
-					getQtAwardSO().preapareTdForRecommendation(reqDTO);
-				}
-				// #33380 - End.
 				scLoi = awardSupplierResDTO.getScLoi();
 
 				renewSesionObject();
@@ -4078,6 +4079,7 @@ public class LOIDetailBackingBean extends
 		Object payLoadData = getManagedBean().getPayLoad();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
+		String taskName = getManagedBean().getTaskName();//33380
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
@@ -4096,6 +4098,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setSourceId(sourceId);
 		getManagedBean().setPayLoad(payLoadData);
 		getManagedBean().setTaskId(taskId);
+		getManagedBean().setTaskName(taskName);//33380
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setBackToPreviousPage(backToPreviousPage);
@@ -4856,7 +4859,7 @@ public class LOIDetailBackingBean extends
 		if (getManagedBean().isZonal()) {
 			for (TplSpecZoneDtl specZone
 						: getManagedBean().getZoneMap().values()) {
-				if (!zoneDetailsMap.containsKey(
+				if (zoneDetailsMap != null && !zoneDetailsMap.containsKey( //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 						specZone)) {
 					NegotiationRecommendationReportDTO tempDTO
 							= new NegotiationRecommendationReportDTO();
@@ -6436,7 +6439,7 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().setAction(outcome);
 		
 		String loi = getMessage("lbl.sc.loiloa.loi.letter", null);
-		String procurementMode = null; 
+		String procurementMode = ""; //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		String mode = this.getManagedBean().getScQt().getProcurementMode().getParameterCode();
 		
 		if (mode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
@@ -6572,36 +6575,6 @@ public class LOIDetailBackingBean extends
 	}
 	// #29007	Vinod End
 	
-	//#28777 & #29729 - Start
-    /**
-	* Method to return true, if branch in supplier has been deleted (LOI)
-	* @param supplier id 
-	* @return	true or false
-	**/
-	public boolean displaySupplierBranchListDeletedForLOI(Long supplierId){
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		boolean isSupplierBranchDeleted = false;
-		ScQt scQt = this.getManagedBean().getScQt();
-		if(supplierId != null && scQt != null){
-			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
-				isSupplierBranchDeleted = true;
-		    }
-		}
-	    return isSupplierBranchDeleted;
-	}
-	
-	/**
-	* Method to display message info for supplier branch has been deleted (LOI)
-	**/
-	public void infoBranchSupplierListDeletedForLOI(){
-		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_760523, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-	}
-	//#28777 & #29729 - End
-	
 	/**
 	 * 29007-start
 	* Method to Reset NegotiationTerms
@@ -6678,4 +6651,72 @@ public class LOIDetailBackingBean extends
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #21692 - end
+	
+	//#28777 & #29729 - Start
+	/**
+	* Method to display list of supplier branch had deleted or not with related current QT
+	**/
+	public void showSupplierBranchList(Long supplierId) {
+		
+		List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+	
+	    SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
+	    suppSearchDeletedReqDTO.setSupplierId(supplierId);
+    	SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
+		supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
+
+		for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+			int statusFlag = supplierBranch.getRecordStatusFlg();
+			if(statusFlag == DbValueConst.RECORD_STATUS_DELETED){
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+			}else{
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+			}
+		}
+		
+		if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
+    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
+    	}else{
+    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
+    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+    	}
+		
+	}
+	
+	private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
+		
+		List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
+
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		
+		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+		suppSearchReqDTO.setSupplierId(supplierId);
+    	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
+    	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
+    	  
+    	return supplierBranchList;
+	}
+	
+	/**
+	* Method to return true, if branch in supplier has been deleted
+	* @param supplier id 
+	* @return true or false
+	**/
+	public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(ScQtEvaluationResult qtEvaluationResult){
+	
+		Long supplierId = qtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
+		ScQt scQt = this.getManagedBean().getScQt();
+	
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
+		
+		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
+			return Boolean.TRUE;
+	    }
+		return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
 }
