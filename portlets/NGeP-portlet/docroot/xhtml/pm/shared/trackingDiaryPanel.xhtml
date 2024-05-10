@@ -23,12 +23,14 @@
 				</f:facet>
 			#{pmTrackingDiaryBackingBean.getUserName(trackingDiaryObj.actionedBy)}
 			</p:column>
-				<p:column width="15%"> 
-			<f:facet name="header">
+			<!-- 28834 -start- -->
+			<p:column style="white-space: normal!important;" width="15%">
+				<!-- 28834 -end- -->
+				<f:facet name="header">
 			#{lbl['lbl.td.view.role']}
 			</f:facet> 
 		   #{pmTrackingDiaryBackingBean.getRoleDescByRoleCode(trackingDiaryObj.roleCode)}
-            	</p:column> 
+            	</p:column>
 			<p:column style="white-space: normal!important;" width="25%">
 				<f:facet name="header">
 			#{lbl['lbl.td.view.action.desc']}
