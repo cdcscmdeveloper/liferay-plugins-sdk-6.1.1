@@ -746,11 +746,12 @@ public class ConsolidationReportBackingBean extends
 				String qtNo = getManagedBean().getScQt().getQtNo().toString();
 
 				// #25638 -start-
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_QUOTATION, qtNo, Boolean.FALSE);
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, qtNo, Boolean.FALSE);
 				// #25638 -end-
 			}
-		} finally {
+		} catch(Exception e) {
+			log.error(e.getMessage(), e);
+		}finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
@@ -1325,38 +1326,29 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	private void validateConsolidationReport() {
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		ScQtFinalizationReport kertasTaklimatReport = null;
-		if (CollectionUtils.isNotEmpty(scQtFinalization
-				.getScQtFinalizationReports())) {
-			for (ScQtFinalizationReport report : scQtFinalization
-					.getScQtFinalizationReports()) {
+		if (CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
+			for (ScQtFinalizationReport report : scQtFinalization.getScQtFinalizationReports()) {
 				if (report.getPmDocument() != null
-						&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-								.equals(report.getPmDocument()
-										.getDocDefinitionKey())) {
+						&& SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(report.getPmDocument().getDocDefinitionKey())) {
 					kertasTaklimatReport = report;
 				}
 				if (report.getScQtFinalizationReportAttachment() == null
-						&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
-								.equals(report.getDefinationType()
-										.getParameterCode())) {
+						&& ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD.equals(report.getDefinationType().getParameterCode())) {
 					navigateToBriefingPaperTab();
-					throw new EpException(MessageConst.ERROR_760415,
-							new String[] { report.getTitle() });
+					throw new EpException(MessageConst.ERROR_760415, new String[] { report.getTitle() });
 				}
 			}
 		}
 
 		boolean isZonal = getManagedBean().getScQt().isZonal();
-		Map<Long, List<ScQtRecommend>> itemsByZone = scQtFinalization
-				.getScQtRecommendsByZone();
+		Map<Long, List<ScQtRecommend>> itemsByZone = scQtFinalization.getScQtRecommendsByZone();
 
 		if (isZonal) {
 			for (TplSpecZoneDtl specZoneDtl : getManagedBean().getZoneDetails()) {
 				Long specZoneId = specZoneDtl.getSpecZoneId();
-				if(itemsByZone!= null && CollectionUtils.isNotEmpty(itemsByZone.get(specZoneId))){
+				if (itemsByZone != null && CollectionUtils.isNotEmpty(itemsByZone.get(specZoneId))) {
 					validateDORanking(specZoneDtl, itemsByZone.get(specZoneId));
 				}
 			}
@@ -1580,45 +1572,35 @@ public class ConsolidationReportBackingBean extends
 		return reqDTO;
 	}
 
-	private ScQtFinalizationReportAttachment generateDocumentAttachment(
-			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
+	private ScQtFinalizationReportAttachment generateDocumentAttachment(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
 		ScQtFinalizationReportAttachment reportAttachment = null;
 
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
+		String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
 		ScQt scQt = getManagedBean().getScQt();
 		reportAttachment = new ScQtFinalizationReportAttachment();
 		reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
 		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
 		StringBuilder filename = new StringBuilder();
 		// replace white space due to firefox
-		filename.append(scQtFinalizationReport
-				.getTitle()
-				.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,
-						SourcingConstants.UNDER_SCORE)
-				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,
-						SourcingConstants.UNDER_SCORE));
+		filename.append(scQtFinalizationReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, SourcingConstants.UNDER_SCORE)
+				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH, SourcingConstants.UNDER_SCORE));
 
-		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-				.equals(docDefinitionKey)) {
+		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 			filename.append(".rtf");
 			reportAttachment.setFileName(filename.toString());
 			generateKertasTaklimatPdf(scQt, reportAttachment);
 			// scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		} else {
-			debugLogger("No document type exists with the key "
-					+ docDefinitionKey);
+			debugLogger("No document type exists with the key " + docDefinitionKey);
 			reportAttachment = null;
 		}
 
 		return reportAttachment;
 	}
 
-	private void generateKertasTaklimatPdf(ScQt qt,
-			ScQtFinalizationReportAttachment attachment) throws Exception {
+	private void generateKertasTaklimatPdf(ScQt qt, ScQtFinalizationReportAttachment attachment) throws Exception {
 		debugLogger("generateKertasTaklimatPdf");
 		populateAttachmentDetails(attachment);
 
@@ -1633,10 +1615,8 @@ public class ConsolidationReportBackingBean extends
 		} else {
 			IQTDetailSO qtDetailSO = null;
 			try {
-				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				BigDecimal estimatedAmount = qtDetailSO
-						.getdecryptedEstAmount(qtId);
+				qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
 				estimatedAmountStr = estimatedAmount.toPlainString();
 			} finally {
 				qtDetailSO = null;
@@ -1644,13 +1624,11 @@ public class ConsolidationReportBackingBean extends
 		}
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
-		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
-				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
-		paramMap.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.BUFFER_SIZE)); //Bug #33714
+		paramMap.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.BUFFER_SIZE)); // Bug #33714
 		StringBuilder ulasan = new StringBuilder();
-		List<ScQtRecommendationUlasanRemarks> ulasanRemarks = this
-				.getManagedBean().getFinalizationUlasanremarks();
+		List<ScQtRecommendationUlasanRemarks> ulasanRemarks = this.getManagedBean().getFinalizationUlasanremarks();
 		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
 			log.info("ulasanremarknotempty");
 			for (ScQtRecommendationUlasanRemarks remark : ulasanRemarks) {
@@ -1660,8 +1638,7 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		paramMap.put(ReportConst.PARAM_REMARK,
-				ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
+		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
 		// #18685 - Start
 		paramMap.put("flowType", "tasklist");

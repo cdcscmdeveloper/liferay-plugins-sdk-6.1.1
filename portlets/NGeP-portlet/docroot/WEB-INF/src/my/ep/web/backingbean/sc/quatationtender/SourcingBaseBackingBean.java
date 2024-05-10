@@ -930,45 +930,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return File instance
 	 * @throws IOException
 	 */
-	protected File generatePdfFromOracle(String reportName,
-			Map<String, String> paramMap, ScAttachment attachment,
-			boolean isDirectDownload) throws IOException {
-	/*	EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
-		String excPrevUrl = propertiesUtils
-				.getProperty(EpPropertiesConst.EXC_PREV_URL);
-		String excNextUrl = propertiesUtils
-				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+	protected File generatePdfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment, boolean isDirectDownload)
+			throws IOException {
 
-		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
-		reportUrl.append(ReportConst.AMP_REPORT_NAME);
-		reportUrl.append(reportName);
-
-		for (Entry<String, String> params : paramMap.entrySet()) {
-			reportUrl.append(ReportConst.PARAM_SEPARATOR);
-			reportUrl.append(params.getKey());
-			reportUrl.append(ReportConst.VALUE_SEPARATOR);
-			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
-		}
-		reportUrl.append(excNextUrl);*/
-		String reportUrl= generateReportURL(reportName,paramMap);
+		String reportUrl = generateReportURL(reportName, paramMap);
 		log.info("reportUrl: " + reportUrl);
 
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
 		OutputStream out = null;
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
-		try{
+		try {
 			if (!isDirectDownload) {
-				res.setHeader("Content-Disposition", "attachment; filename="
-						+ attachment.getFileName());
+				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				res.setContentType("application/octet-stream");
+				//res.setContentType("application/octet-stream");
+				res.setContentType("text/rtf");
 				res.flushBuffer();
 				out = res.getOutputStream();
 			}
@@ -999,21 +980,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			if (!isDirectDownload) {
 				out.flush();
-				
+
 			}
 			return localFile;
-		}finally{
-			if(fos != null){
+		} finally {
+			if (fos != null) {
 				fos.close();
 			}
-			if(input != null){
+			if (input != null) {
 				input.close();
 			}
-			if(out != null){
+			if (out != null) {
 				out.close();
 			}
 		}
-		
+
 	}
 
 	/**
