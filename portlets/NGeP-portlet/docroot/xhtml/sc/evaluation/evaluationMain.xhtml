@@ -39,11 +39,13 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+				<ui:remove> #28834 - start </ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					rendered="#{validityDaysExpiredQt}" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" style="float:right;"
-					process="@all" partialSubmit="true"
+					rendered="#{validityDaysExpiredQt and bpmAction != 'REVISEBP'}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					style="float:right;" process="@all" partialSubmit="true"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
+				<ui:remove> #28834 - end </ui:remove>
 			</ui:repeat>
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.btn.save']}"
