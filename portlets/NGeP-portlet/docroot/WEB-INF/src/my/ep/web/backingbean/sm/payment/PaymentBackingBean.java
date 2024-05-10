@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -522,6 +523,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			paymentRespBB.getManagedBean().setPaymentId(paymentId);
 			paymentRespBB.getManagedBean().setPaymentStatus(true);
 			//paymentAckBB.getManagedBean().setPaymentMessage(fsMsg);
+			//#35582
+			PaymentAcknowledgeBackingBean pymtAckBB = new PaymentAcknowledgeBackingBean();
+			pymtAckBB.getManagedBean().setPaymentId(paymentId);
 		}else{
 			paymentRespBB.getManagedBean().setPaymentId(null);
 			paymentRespBB.getManagedBean().setPaymentStatus(false);

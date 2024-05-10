@@ -141,6 +141,69 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
      /** The supplier item prices. */
      private List<ScSupplierItemPrice>	supplierItemPrices;
      
+    //29557 - start
+	private ScSupplierItemPrice supplierItemStandardPrice;
+
+	private ScSupplierItemPrice supplierItemPromotionPrice;
+
+	private List<ScSupplierItemPrice> supplierItemNormalPrices;
+
+	private List<ScSupplierItemPrice> supplierItemPromoPrices;
+
+	private List<ScSupplierItemPrice> supplierItemTierStandardPrices;
+
+	private List<ScSupplierItemPrice> supplierItemTierPromotionPrices;
+
+	private List<ScSupplierItemPrice> supplierItemZonalStandardPrices;
+
+	private List<ScSupplierItemPrice> supplierItemZonalPromotionPrices;
+
+	private List<ScSupplierItemPrice> supplierItemZonalTierStandardPrices;
+
+	private List<ScSupplierItemPrice> supplierItemZonalTierPromotionPrices;
+
+	private List<ScSupplierItemPrice> deleteSupplierItemTierStandardPrices;
+
+	private List<ScSupplierItemPrice> deleteSupplierItemTierPromotionPrices;
+
+	private List<ScSupplierItemPrice> deleteSupplierItemZonalStandardPrices;
+
+	private List<ScSupplierItemPrice> deleteSupplierItemZonalPromotionPrices;
+
+	private List<ScSupplierItemPrice> deleteSupplierItemZonalTierStandardPrices;
+
+	private List<ScSupplierItemPrice> deleteSupplierItemZonalTierPromotionPrices;
+
+	private boolean enableTierNormalDel = Boolean.FALSE;
+
+	private boolean enableTierPromoDel = Boolean.FALSE;
+
+	private boolean enableZonalTierNormalDel = Boolean.FALSE;
+
+	private boolean enableZonalTierPromoDel = Boolean.FALSE;
+
+	private boolean enableZonalNormalDel = Boolean.FALSE;
+
+	private boolean enableZonalPromoDel = Boolean.FALSE;
+
+	private List<TplSpecZoneDtl> supplierZoneList;
+
+	/** The pricing tab index. */
+	private Integer pricingTabIndex = 0;
+
+	/** The normal pricing index. */
+	private Integer normalPricingIndex = 0;
+
+	/** The tier pricing index. */
+	private Integer tierPricingIndex = 0;
+
+	/** The zonal pricing index. */
+	private Integer zonalPricingIndex = 0;
+
+	/** The zonal tier pricing index. */
+	private Integer zonalTierPricingIndex = 0;
+    //29557 - end
+     
      /** The auto update. */
  	private boolean autoUpdate = Boolean.TRUE;
  	
@@ -767,4 +830,568 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setDisProcTyp(boolean disProcTyp) {
 		this.disProcTyp = disProcTyp;
 	}
+	
+	// 29557 - start
+	/**
+	 * Get supplier item standard price.
+	 * 
+	 * @return the supplierItemStandardPrice
+	 */
+	public ScSupplierItemPrice getSupplierItemStandardPrice() {
+		return supplierItemStandardPrice;
+	}
+
+	/**
+	 * Sets the supplier item standard price.
+	 * 
+	 * @param supplierItemStandardPrice
+	 *            the supplierItemStandardPrice to set
+	 */
+	public void setSupplierItemStandardPrice(ScSupplierItemPrice supplierItemStandardPrice) {
+		this.supplierItemStandardPrice = supplierItemStandardPrice;
+	}
+
+	/**
+	 * Get supplier item promotion price.
+	 * 
+	 * @return the supplierItemPromotionPrice
+	 */
+	public ScSupplierItemPrice getSupplierItemPromotionPrice() {
+		return supplierItemPromotionPrice;
+	}
+
+	/**
+	 * Sets the supplier item promotion price.
+	 * 
+	 * @param supplierItemPromotionPrice
+	 *            the supplierItemPromotionPrice to set
+	 */
+	public void setSupplierItemPromotionPrice(ScSupplierItemPrice supplierItemPromotionPrice) {
+		this.supplierItemPromotionPrice = supplierItemPromotionPrice;
+	}
+
+	/**
+	 * Get list of supplier item tier standard prices.
+	 * 
+	 * @return the supplierItemTierStandardPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemTierStandardPrices() {
+		if (supplierItemTierStandardPrices == null)
+			supplierItemTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemTierStandardPrices;
+	}
+
+	/**
+	 * Sets the supplier item tier standard prices.
+	 * 
+	 * @param supplierItemTierStandardPrices
+	 *            the supplierItemTierStandardPrices to set
+	 */
+	public void setSupplierItemTierStandardPrices(List<ScSupplierItemPrice> supplierItemTierStandardPrices) {
+		this.supplierItemTierStandardPrices = supplierItemTierStandardPrices;
+	}
+
+	/**
+	 * Get list of supplier item tier promotion prices.
+	 * 
+	 * @return the supplierItemTierPromotionPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemTierPromotionPrices() {
+		if (supplierItemTierPromotionPrices == null)
+			supplierItemTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemTierPromotionPrices;
+	}
+
+	/**
+	 * Sets the supplier item tier promotion prices.
+	 * 
+	 * @param supplierItemTierPromotionPrices
+	 *            the supplierItemTierPromotionPrices to set
+	 */
+	public void setSupplierItemTierPromotionPrices(List<ScSupplierItemPrice> supplierItemTierPromotionPrices) {
+		this.supplierItemTierPromotionPrices = supplierItemTierPromotionPrices;
+	}
+
+	/**
+	 * Get list of supplier item zonal standard prices.
+	 * 
+	 * @return the supplierItemZonalStandardPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemZonalStandardPrices() {
+		if (supplierItemZonalStandardPrices == null)
+			supplierItemZonalStandardPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemZonalStandardPrices;
+	}
+
+	/**
+	 * Sets the supplier item zonal standard prices.
+	 * 
+	 * @param supplierItemZonalStandardPrices
+	 *            the supplierItemZonalStandardPrices to set
+	 */
+	public void setSupplierItemZonalStandardPrices(List<ScSupplierItemPrice> supplierItemZonalStandardPrices) {
+		this.supplierItemZonalStandardPrices = supplierItemZonalStandardPrices;
+	}
+
+	/**
+	 * Get list of supplier item zonal promotion prices.
+	 * 
+	 * @return the supplierItemZonalPromotionPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemZonalPromotionPrices() {
+		if (supplierItemZonalPromotionPrices == null)
+			supplierItemZonalPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemZonalPromotionPrices;
+	}
+
+	/**
+	 * Sets the supplier item zonal promotion prices.
+	 * 
+	 * @param supplierItemZonalPromotionPrices
+	 *            the supplierItemZonalPromotionPrices to set
+	 */
+	public void setSupplierItemZonalPromotionPrices(List<ScSupplierItemPrice> supplierItemZonalPromotionPrices) {
+		this.supplierItemZonalPromotionPrices = supplierItemZonalPromotionPrices;
+	}
+
+	/**
+	 * Get list of supplier item zonal tier standard prices.
+	 * 
+	 * @return the supplierItemZonalTierStandardPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemZonalTierStandardPrices() {
+		if (supplierItemZonalTierStandardPrices == null)
+			supplierItemZonalTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemZonalTierStandardPrices;
+	}
+
+	/**
+	 * Sets the supplier item zonal tier standard prices.
+	 * 
+	 * @param supplierItemZonalTierStandardPrices
+	 *            the supplierItemZonalTierStandardPrices to set
+	 */
+	public void setSupplierItemZonalTierStandardPrices(List<ScSupplierItemPrice> supplierItemZonalTierStandardPrices) {
+		this.supplierItemZonalTierStandardPrices = supplierItemZonalTierStandardPrices;
+	}
+
+	/**
+	 * Get list of supplier item zonal tier promotion prices.
+	 * 
+	 * @return the supplierItemZonalTierPromotionPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemZonalTierPromotionPrices() {
+		if (supplierItemZonalTierPromotionPrices == null)
+			supplierItemZonalTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemZonalTierPromotionPrices;
+	}
+
+	/**
+	 * Sets the supplier item zonal tier promotion prices.
+	 * 
+	 * @param supplierItemZonalTierPromotionPrices
+	 *            the supplierItemZonalTierPromotionPrices to set
+	 */
+	public void setSupplierItemZonalTierPromotionPrices(List<ScSupplierItemPrice> supplierItemZonalTierPromotionPrices) {
+		this.supplierItemZonalTierPromotionPrices = supplierItemZonalTierPromotionPrices;
+	}
+
+	/**
+	 * Get pricing tab index.
+	 * 
+	 * @return the pricingTabIndex
+	 */
+	public Integer getPricingTabIndex() {
+		return pricingTabIndex;
+	}
+
+	/**
+	 * Sets the pricing tab index.
+	 * 
+	 * @param pricingTabIndex
+	 *            the pricingTabIndex to set
+	 */
+	public void setPricingTabIndex(Integer pricingTabIndex) {
+		this.pricingTabIndex = pricingTabIndex;
+	}
+
+	/**
+	 * Get normal pricing index.
+	 * 
+	 * @return the normalPricingIndex
+	 */
+	public Integer getNormalPricingIndex() {
+		return normalPricingIndex;
+	}
+
+	/**
+	 * Sets the normal pricing index.
+	 * 
+	 * @param normalPricingIndex
+	 *            the normalPricingIndex to set
+	 */
+	public void setNormalPricingIndex(Integer normalPricingIndex) {
+		this.normalPricingIndex = normalPricingIndex;
+	}
+
+	/**
+	 * Get tier pricing index.
+	 * 
+	 * @return the tierPricingIndex
+	 */
+	public Integer getTierPricingIndex() {
+		return tierPricingIndex;
+	}
+
+	/**
+	 * Sets the tier pricing index.
+	 * 
+	 * @param tierPricingIndex
+	 *            the tierPricingIndex to set
+	 */
+	public void setTierPricingIndex(Integer tierPricingIndex) {
+		this.tierPricingIndex = tierPricingIndex;
+	}
+
+	/**
+	 * Get zonal pricing index.
+	 * 
+	 * @return the zonalPricingIndex
+	 */
+	public Integer getZonalPricingIndex() {
+		return zonalPricingIndex;
+	}
+
+	/**
+	 * Sets the zonal pricing index.
+	 * 
+	 * @param zonalPricingIndex
+	 *            the zonalPricingIndex to set
+	 */
+	public void setZonalPricingIndex(Integer zonalPricingIndex) {
+		this.zonalPricingIndex = zonalPricingIndex;
+	}
+
+	/**
+	 * Get zonal tier pricing index.
+	 * 
+	 * @return the zonalTierPricingIndex
+	 */
+	public Integer getZonalTierPricingIndex() {
+		return zonalTierPricingIndex;
+	}
+
+	/**
+	 * Sets the zonal tier pricing index.
+	 * 
+	 * @param zonalTierPricingIndex
+	 *            the zonalTierPricingIndex to set
+	 */
+	public void setZonalTierPricingIndex(Integer zonalTierPricingIndex) {
+		this.zonalTierPricingIndex = zonalTierPricingIndex;
+	}
+
+	/**
+	 * Get deletion list of supplier item tier standard prices.
+	 * 
+	 * @return the deleteSupplierItemTierStandardPrices
+	 */
+	public List<ScSupplierItemPrice> getDeleteSupplierItemTierStandardPrices() {
+		return deleteSupplierItemTierStandardPrices;
+	}
+
+	/**
+	 * Sets the deletion on supplier item tier standard prices.
+	 * 
+	 * @param deleteSupplierItemTierStandardPrices
+	 *            the deleteSupplierItemTierStandardPrices to set
+	 */
+	public void setDeleteSupplierItemTierStandardPrices(List<ScSupplierItemPrice> deleteSupplierItemTierStandardPrices) {
+		this.deleteSupplierItemTierStandardPrices = deleteSupplierItemTierStandardPrices;
+	}
+
+	/**
+	 * Get deletion list of supplier item tier promotion prices.
+	 * 
+	 * @return the deleteSupplierItemTierPromotionPrices
+	 */
+	public List<ScSupplierItemPrice> getDeleteSupplierItemTierPromotionPrices() {
+		return deleteSupplierItemTierPromotionPrices;
+	}
+
+	/**
+	 * Sets the deletion on supplier item tier promotion prices.
+	 * 
+	 * @param deleteSupplierItemTierPromotionPrices
+	 *            the deleteSupplierItemTierPromotionPrices to set
+	 */
+	public void setDeleteSupplierItemTierPromotionPrices(List<ScSupplierItemPrice> deleteSupplierItemTierPromotionPrices) {
+		this.deleteSupplierItemTierPromotionPrices = deleteSupplierItemTierPromotionPrices;
+	}
+
+	/**
+	 * Get deletion list of supplier item zonal standard prices.
+	 * 
+	 * @return the deleteSupplierItemZonalStandardPrices
+	 */
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalStandardPrices() {
+		return deleteSupplierItemZonalStandardPrices;
+	}
+
+	/**
+	 * Sets the deletion on supplier item zonal standard prices.
+	 * 
+	 * @param deleteSupplierItemZonalStandardPrices
+	 *            the deleteSupplierItemZonalStandardPrices to set
+	 */
+	public void setDeleteSupplierItemZonalStandardPrices(List<ScSupplierItemPrice> deleteSupplierItemZonalStandardPrices) {
+		this.deleteSupplierItemZonalStandardPrices = deleteSupplierItemZonalStandardPrices;
+	}
+
+	/**
+	 * Get deletion list of supplier item zonal promotion prices.
+	 * 
+	 * @return the deleteSupplierItemZonalPromotionPrices
+	 */
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalPromotionPrices() {
+		return deleteSupplierItemZonalPromotionPrices;
+	}
+
+	/**
+	 * Sets the deletion on supplier item zonal promotion prices.
+	 * 
+	 * @param deleteSupplierItemZonalPromotionPrices
+	 *            the deleteSupplierItemZonalPromotionPrices to set
+	 */
+	public void setDeleteSupplierItemZonalPromotionPrices(
+			List<ScSupplierItemPrice> deleteSupplierItemZonalPromotionPrices) {
+		this.deleteSupplierItemZonalPromotionPrices = deleteSupplierItemZonalPromotionPrices;
+	}
+
+	/**
+	 * Get deletion list of supplier item zonal tier standard prices.
+	 * 
+	 * @return the deleteSupplierItemZonalTierStandardPrices
+	 */
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalTierStandardPrices() {
+		return deleteSupplierItemZonalTierStandardPrices;
+	}
+
+	/**
+	 * Sets the deletion on supplier item zonal tier standard prices.
+	 * 
+	 * @param deleteSupplierItemZonalTierStandardPrices
+	 *            the deleteSupplierItemZonalTierStandardPrices to set
+	 */
+	public void setDeleteSupplierItemZonalTierStandardPrices(
+			List<ScSupplierItemPrice> deleteSupplierItemZonalTierStandardPrices) {
+		this.deleteSupplierItemZonalTierStandardPrices = deleteSupplierItemZonalTierStandardPrices;
+	}
+
+	/**
+	 * Get deletion list of supplier item zonal tier promotion prices.
+	 * 
+	 * @return the deleteSupplierItemZonalTierPromotionPrices
+	 */
+	public List<ScSupplierItemPrice> getDeleteSupplierItemZonalTierPromotionPrices() {
+		return deleteSupplierItemZonalTierPromotionPrices;
+	}
+
+	/**
+	 * Sets the deletion on supplier item zonal tier promotion prices.
+	 * 
+	 * @param deleteSupplierItemZonalTierPromotionPrices
+	 *            the deleteSupplierItemZonalTierPromotionPrices to set
+	 */
+	public void setDeleteSupplierItemZonalTierPromotionPrices(
+			List<ScSupplierItemPrice> deleteSupplierItemZonalTierPromotionPrices) {
+		this.deleteSupplierItemZonalTierPromotionPrices = deleteSupplierItemZonalTierPromotionPrices;
+	}
+
+	/**
+	 * Checks if is enable tier normal deletion.
+	 * 
+	 * @return the enableTierNormalDel
+	 */
+	public boolean isEnableTierNormalDel() {
+		return enableTierNormalDel;
+	}
+
+	/**
+	 * Sets the enable tier normal deletion.
+	 * 
+	 * @param enableTierNormalDel
+	 *            the enableTierNormalDel to set
+	 */
+	public void setEnableTierNormalDel(boolean enableTierNormalDel) {
+		this.enableTierNormalDel = enableTierNormalDel;
+	}
+
+	/**
+	 * Checks if is enable tier promo deletion.
+	 * 
+	 * @return the enableTierPromoDel
+	 */
+	public boolean isEnableTierPromoDel() {
+		return enableTierPromoDel;
+	}
+
+	/**
+	 * Sets the enable tier promo deletion.
+	 * 
+	 * @param enableTierPromoDel
+	 *            the enableTierPromoDel to set
+	 */
+	public void setEnableTierPromoDel(boolean enableTierPromoDel) {
+		this.enableTierPromoDel = enableTierPromoDel;
+	}
+
+	/**
+	 * Checks if is enable zonal tier normal deletion.
+	 * 
+	 * @return the enableZonalTierNormalDel
+	 */
+	public boolean isEnableZonalTierNormalDel() {
+		return enableZonalTierNormalDel;
+	}
+
+	/**
+	 * Sets the enable zonal tier normal deletion.
+	 * 
+	 * @param enableZonalTierNormalDel
+	 *            the enableZonalTierNormalDel to set
+	 */
+	public void setEnableZonalTierNormalDel(boolean enableZonalTierNormalDel) {
+		this.enableZonalTierNormalDel = enableZonalTierNormalDel;
+	}
+
+	/**
+	 * Checks if is enable zonal tier promo deletion.
+	 * 
+	 * @return the enableZonalTierPromoDel
+	 */
+	public boolean isEnableZonalTierPromoDel() {
+		return enableZonalTierPromoDel;
+	}
+
+	/**
+	 * Sets the enable zonal tier promo deletion.
+	 * 
+	 * @param enableZonalTierPromoDel
+	 *            the enableZonalTierPromoDel to set
+	 */
+	public void setEnableZonalTierPromoDel(boolean enableZonalTierPromoDel) {
+		this.enableZonalTierPromoDel = enableZonalTierPromoDel;
+	}
+
+	/**
+	 * Checks if is enable zonal normal deletion.
+	 * 
+	 * @return the enableZonalNormalDel
+	 */
+	public boolean isEnableZonalNormalDel() {
+		return enableZonalNormalDel;
+	}
+
+	/**
+	 * Sets the enable zonal normal deletion.
+	 * 
+	 * @param enableZonalNormalDel
+	 *            the enableZonalNormalDel to set
+	 */
+	public void setEnableZonalNormalDel(boolean enableZonalNormalDel) {
+		this.enableZonalNormalDel = enableZonalNormalDel;
+	}
+
+	/**
+	 * Get list of enable zonal promo deletion.
+	 * 
+	 * @return the enableZonalPromoDel
+	 */
+	public boolean isEnableZonalPromoDel() {
+		return enableZonalPromoDel;
+	}
+
+	/**
+	 * Sets the enable zonal promo deletion.
+	 * 
+	 * @param enableZonalPromoDel
+	 *            the enableZonalPromoDel to set
+	 */
+	public void setEnableZonalPromoDel(boolean enableZonalPromoDel) {
+		this.enableZonalPromoDel = enableZonalPromoDel;
+	}
+
+	/**
+	 * Get list of supplier zone list.
+	 * 
+	 * @return the supplierZoneList
+	 */
+	public List<TplSpecZoneDtl> getSupplierZoneList() {
+		if (supplierZoneList == null)
+			supplierZoneList = new ArrayList<TplSpecZoneDtl>();
+
+		return supplierZoneList;
+	}
+
+	/**
+	 * Sets the supplier zone list.
+	 * 
+	 * @param supplierZoneList
+	 *            the list of TplSpecZoneDtl to set
+	 */
+	public void setSupplierZoneList(List<TplSpecZoneDtl> supplierZoneList) {
+		this.supplierZoneList = supplierZoneList;
+	}
+
+	/**
+	 * Get list of supplier item normal prices.
+	 * 
+	 * @return the supplierItemNormalPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemNormalPrices() {
+		if (supplierItemNormalPrices == null)
+			supplierItemNormalPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemNormalPrices;
+	}
+
+	/**
+	 * Sets the supplier item normal prices.
+	 * 
+	 * @param supplierItemNormalPrices
+	 *            the list of ScSupplierItemPrice to set
+	 */
+	public void setSupplierItemNormalPrices(List<ScSupplierItemPrice> supplierItemNormalPrices) {
+		this.supplierItemNormalPrices = supplierItemNormalPrices;
+	}
+
+	/**
+	 * Get list of supplier item promo prices.
+	 * 
+	 * @return the supplierItemPromoPrices
+	 */
+	public List<ScSupplierItemPrice> getSupplierItemPromoPrices() {
+		if (supplierItemPromoPrices == null)
+			supplierItemPromoPrices = new ArrayList<ScSupplierItemPrice>();
+
+		return supplierItemPromoPrices;
+	}
+
+	/**
+	 * Sets the supplier item promo prices.
+	 * 
+	 * @param supplierItemPromoPrices
+	 *            the list of ScSupplierItemPrice to set
+	 */
+	public void setSupplierItemPromoPrices(List<ScSupplierItemPrice> supplierItemPromoPrices) {
+		this.supplierItemPromoPrices = supplierItemPromoPrices;
+	}
+	// 29557 - end
 }

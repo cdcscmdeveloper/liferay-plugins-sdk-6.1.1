@@ -253,6 +253,9 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().setViewApplicationHistory(true);
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setPoApprUnClaimTask(true); //#34209
+		// #28767 - START
+		getManagedBean().setTabActiveIndex(0);
+		// #28767 - END
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
@@ -388,92 +391,14 @@ public class ViewApplHistoryBackingBean extends
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
-		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
-			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){
 			//start #29956
-			if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
-				personnelsRole.clear();
+			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
+			if(displayPopupDowngradeSSMOwner){
+				proceed = false;
 			}
-			// start #29956
-			Boolean dontShowDowngradePopup = false;
-			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDateBefore6Months(this.getManagedBean().getSmSupplier()));
-			if (this.getManagedBean().isDisAllowOwnerEdit()) {
-				if (personnelsRole != null && personnelsRole.size() <= 0) {
-					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
-						if (personnel.getEpRole() == null
-								|| (personnel.getEpRole() != null && !my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
-										.contains(personnel.getEpRole()))) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
-							if (personnelDirectorSSM == null && personnelSSM == null) {
-								dontShowDowngradePopup = true;
-							}
-						}
-					}
-					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
-						if (personnel.getEpRole() != null
-								&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
-										.contains(personnel.getEpRole())) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
-							if (personnelDirectorSSM == null && personnelSSM == null) {
-								dontShowDowngradePopup = false;
-							}
-						}
-					}
-				}
-			}
-			// end #29956
-			//end #29956
-			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
-				if (personnel.isEquityOwner() || personnel.isDirector()) {
-						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
-						SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
-						if(personnelDirectorSSM == null && personnelSSM == null){
-							personnelsRole.add(personnel);
-					}
-				}
-			}
-			
-			// start #29956 smOwnerSsmPopup
-			String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
-
-			this.getManagedBean().setTermAndConditionCheckOwner(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
-			this.getManagedBean().setTermAndConditionCheckOwnerA(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole}));
-			this.getManagedBean().setTermAndConditionCheckOwnerC(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-			this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-			// end #29956
-			
-			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
-			//#start #29956
-			if(personnelsRole != null && personnelsRole.size() > 0 && !dontShowDowngradePopup) {
-				if (this.getManagedBean().isDisAllowOwnerEdit()) {
-					this.getManagedBean().setDontGetSsmData(true);
-				} else {
-					this.getManagedBean().setDontGetSsmData(false);
-				}
-				//#end #29956
-					proceed = false;
-					getManagedBean().setPreRegistration(false);  //#29956
-					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
-					this.getManagedBean().setPersonnelsRole(personnelsRole);
-					RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-					RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-			}
-			
 		}
+		//end #29956
 		if(proceed){
 			if(resubmission){
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
@@ -724,9 +649,17 @@ public class ViewApplHistoryBackingBean extends
 		if (resDTO.getPoApproverRemarksList() != null) {
 			log.info("PoApproverRemarksList() size:"
 					+ resDTO.getPoApproverRemarksList().size());
+			//#32424 START--03032023--
+			boolean isMoreThanOneRemark = false; 	
+			
+			if(resDTO.getPoApproverRemarksList().size()> 1){
+				isMoreThanOneRemark = true; 
+			}//#32424 END--03032023--
+			
 			for (Object[] obj : resDTO.getPoApproverRemarksList()) {
 				boolean isPoUser = false;
 				boolean isApproverUser = false;
+				boolean isBothPoApproverHaveRemark = false; //#32424 --03032023--
 
 				String userName = (String) obj[0];
 				Date remarkCreatedDate = (Date) obj[1];
@@ -737,6 +670,12 @@ public class ViewApplHistoryBackingBean extends
 				log.info("userName:" + userName + ",remarkCreatedDate:"
 						+ remarkCreatedDate + ",roleType:" + roleType
 						+ ",docType:" + docType + ",remark:" + remark);
+				
+				//#32424 START--03032023--
+				if (roleType.equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO) && 
+						roleType.equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_APP)){
+					isBothPoApproverHaveRemark = true;
+				} //#32424 END--03032023--
 
 				if (roleType != null) {
 					if (roleType
@@ -768,16 +707,23 @@ public class ViewApplHistoryBackingBean extends
 							}
 						}
 					}
-
-					if (docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)) {
-						remark = "";
-					}
+					 //#32424 START--03032023--
+					//To handle a condition for scenario PO1 rejecting the application. 
+					if (docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)
+							&& !isMoreThanOneRemark
+							&& !isBothPoApproverHaveRemark) {
+						remark = "";  
+					} //#32424 END--03032023--
 					// 30974 - end
 					setPORemarksInfo(docType, remark, remarkCreatedDate);
 				}
 				// 25930
 				if (isApproverUser) {
 					getManagedBean().setApproverUserName(userName);
+					//#32424 START--03032023--
+					if (docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)) {
+						remark = "";
+					} //#32424 END--03032023--
 					setApproverRemarksInfo(docType, remark, remarkCreatedDate);
 				}
 			}
@@ -785,67 +731,71 @@ public class ViewApplHistoryBackingBean extends
 		
 		// #29664 - start
 		SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
-		remarksReqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE);
+		//remarksReqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE); //#32424 --03032023--
 		remarksReqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
-
-		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarksReqDTO);
-
+		//#32424 START--03032023--
+		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocIdSiteVisitAfterApproval(remarksReqDTO);
+		
 		if (remaksResDTO.getRemarksList().size() > 0) {
-			SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
-					.getSmAppl().getApplId()); //#32424 --050822--
 			log.info("getRemarksList().size():: " + remaksResDTO.getRemarksList().size());
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
+				boolean isDifferentFirstAndSecondPoForApprovedAppl = false; 
+				boolean isDifferentFirstAndSecondPoForRejectedAppl = false; 
+				
 				// #32424 - start
-				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value()))
-					//#32424 --comment code-- 
-						/*|| (poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())
-								&& getManagedBean().getSmAppl().getPmStatus().getStatusId() != SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
-								.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)*/ {				
+				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())){				
 					System.out.println("getDocId:: " + poRemark.getDocId() + " || getRoleCode:: "
-							+ poRemark.getRoleCode() + " || getCreatedDate:: " + poRemark.getCreatedDate()
+							+ poRemark.getRoleCode() + " || getChangedDate:: " + poRemark.getChangedDate()
 							+ " || getRemark:: " + poRemark.getRemark());
 				// #32424 - end
 					getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
-					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
-
-					if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
-						PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
-						getManagedBean().setSecondPoUserName(user.getUserName());
+					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getChangedDate());
+					
+					for (SmApplSectionReview smApplSectionreview : getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+						if(smApplSectionreview.getRoleType().equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+								&& (!smApplSectionreview.getChangedBy().equals(poRemark.getChangedBy())
+										||!poRemark.getChangedBy().equals(getManagedBean().getSmAppl().getPoUserId()))){
+								isDifferentFirstAndSecondPoForApprovedAppl = true;
+							}
 					}
-					// #32424 - start
+					if (isDifferentFirstAndSecondPoForApprovedAppl) {  
+						PmUser user = SmCommonUtil.getUserByUserId(poRemark.getChangedBy());
+						getManagedBean().setSecondPoUserName(user.getUserName());
+					} 
 					break;
-				} else if (StringUtils.isEmpty(poRemark.getRoleCode())) {
+				} else if (StringUtils.isEmpty(poRemark.getRoleCode())
+						&& poRemark.getDocType().equals(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE)) {
 					// #32424 - start
-					//#32424 --050822--comment below line   
-					//SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl().getApplId());					
+					SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
+							.getSmAppl().getApplId());					
 					SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-					String poCreatedDate = sdf.format(poRemark.getCreatedDate());
+					String poChangedDate = sdf.format(poRemark.getChangedDate());
 					String wFlowCreatedDate = sdf.format(currWorkflowStatus.getCreatedDate());
 					
 					System.out.println("getPoUserId== " + getManagedBean().getSmAppl().getPoUserId()
-							+ " || poRemark.getCreatedBy()==" + poRemark.getCreatedBy() + wFlowCreatedDate
+							+ " || poRemark.getChangedBy()==" + poRemark.getChangedBy() 
 							+ " || wFlow CreatedBy==" + currWorkflowStatus.getCreatedBy() + " || applStatusId=="
 							+ getManagedBean().getSmAppl().getPmStatus().getStatusId() + " || wFlowStatusId=="
-							+ currWorkflowStatus.getPmStatus().getStatusId() + " || poCreatedDate==" + poCreatedDate
-							+ " || wFlowCreatedDate==");
+							+ currWorkflowStatus.getPmStatus().getStatusId() + " || poChangedDate==" + poChangedDate
+							+ " || wFlowCreatedDate==" + wFlowCreatedDate);
 					
 					if ((getManagedBean().getSmAppl().getPoUserId() != null && ((getManagedBean().getSmAppl()
-							.getPoUserId().equals(poRemark.getCreatedBy())) || poRemark.getCreatedBy().equals(
+							.getPoUserId().equals(poRemark.getChangedBy())) || poRemark.getChangedBy().equals(
 							currWorkflowStatus.getCreatedBy())))
 							&& (getManagedBean().getSmAppl().getPmStatus().getStatusId() != null
 									&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
 									.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)
-							&& poCreatedDate.equals(wFlowCreatedDate)) {
-							getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
-							getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
+							&& poChangedDate.equals(wFlowCreatedDate)) {
+						getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
+						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getChangedDate());
 
-						if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
-							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
+						if (!(poRemark.getChangedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
+							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getChangedBy());
 							getManagedBean().setSecondPoUserName(user.getUserName());
 						}
 
-						if (getManagedBean().getSmAppl().getPoUserId().equals(poRemark.getCreatedBy())
-								|| poRemark.getCreatedBy().equals(currWorkflowStatus.getCreatedBy())) {
+						if (getManagedBean().getSmAppl().getPoUserId().equals(poRemark.getChangedBy())
+								|| poRemark.getChangedBy().equals(currWorkflowStatus.getCreatedBy())) {
 							// update roleCode in smRemark
 							log.info("getRemarkId:: " + poRemark.getRemarkId());
 							updateRoleCode(getManagedBean().getSmAppl().getApplId(), poRemark.getRemarkId(),
@@ -853,8 +803,25 @@ public class ViewApplHistoryBackingBean extends
 						}
 					}
 				// #32424 - end
-				}
-			}
+				} else if (StringUtils.isEmpty(poRemark.getRoleCode()) && remaksResDTO.getRemarksList().size()>1
+								&& poRemark.getDocType().equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)) {
+						
+						for (SmApplSectionReview smApplSectionreview : getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+							if(smApplSectionreview.getRoleType().equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+									&& (!smApplSectionreview.getChangedBy().equals(poRemark.getChangedBy())
+											||!poRemark.getChangedBy().equals(getManagedBean().getSmAppl().getPoUserId()))){
+									isDifferentFirstAndSecondPoForRejectedAppl = true;
+								}
+						}
+						if (isDifferentFirstAndSecondPoForRejectedAppl) {  
+							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getChangedBy());
+							getManagedBean().setSecondPoUserName(user.getUserName());
+						}
+						
+						getManagedBean().setPoRemarkAfterSiteVisit("N/A");
+						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getChangedDate());
+					}
+			} //#32424 END--03032023--
 		}
 		// #29664 - end
 	}
@@ -1976,4 +1943,21 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		// #32628 - end
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 }

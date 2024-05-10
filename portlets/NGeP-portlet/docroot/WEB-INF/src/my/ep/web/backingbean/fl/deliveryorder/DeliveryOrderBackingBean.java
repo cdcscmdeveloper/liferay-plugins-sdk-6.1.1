@@ -194,6 +194,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		try {
 			String actionName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
 			Long flOrderId;
+			BigDecimal delAmtCal= BigDecimal.ZERO; //34881
 			if(actionName != null && actionName != ""){
 				flOrderId = this.getManagedBean().getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId();
 			}else{
@@ -245,6 +246,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
 								//26338-end								
 								flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
+								
+								//34881-start
+								if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+									delAmtCal =itemAddress.getDeliveredQty().multiply(itemAddress.getDoGstUnitPrice());
+									flDelOrderItem.setDeliveredAmt(delAmtCal.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP));
+								}								
+								//34881-end	
+								
 								flDelOrderItem.setGstAmount(itemAddress.getDoGstAmt());
 								flDelOrderItem.setGstUnitPrice(itemAddress.getDoGstUnitPrice());
 								delOrderList.add(flDelOrderItem);
@@ -270,6 +279,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
 						//26338-end		
 						itemAddress.getFlTempDoItem().setDeliveryAmt(itemAddress.getDeliveredAmt());
+						
+						//34881-start
+						if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+							delAmtCal =itemAddress.getDeliveredQty().multiply(itemAddress.getDoGstUnitPrice());
+							itemAddress.getFlTempDoItem().setDeliveryAmt(delAmtCal.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP));
+						}								
+						//34881-end	
+						
 					}
 				}
 			}
@@ -745,6 +762,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+				
+				//35429-Start
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
+					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
+						String[] outcome = new String[1];
+						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
+						this.getManagedBean().setOutComes(outcome);
+					}
+				}
+				//35429-End
+				
 			}
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -1335,13 +1364,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 */
 	private void updateSpkiDigiSignData(PmDigiSign pmDigiSign, String docType,
 			Long docId, String docNumber , String textBeforeSign) {
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
-		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 		// spki 

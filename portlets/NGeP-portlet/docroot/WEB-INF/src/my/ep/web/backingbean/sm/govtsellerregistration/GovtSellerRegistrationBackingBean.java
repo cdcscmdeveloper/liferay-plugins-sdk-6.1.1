@@ -20,6 +20,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -65,6 +67,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import org.apache.log4j.Logger;
+
 @ManagedBean(name = "govtSellerBackingBean")
 @RequestScoped
 public class GovtSellerRegistrationBackingBean extends
@@ -76,6 +80,8 @@ public class GovtSellerRegistrationBackingBean extends
 	private static final long serialVersionUID = -6832474515383643924L;
 	public static RegistrationBackingBean instance;
 	private static Map<Long, Object> identityType;
+	
+	public static Logger log = Logger.getLogger(GovtSellerRegistrationBackingBean.class);
 
 	/**
 	 * Pre-render G2G page
@@ -250,9 +256,15 @@ public class GovtSellerRegistrationBackingBean extends
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
 				//#28765 - Start add OR DbValueConst.RECORD_STATUS_REJECTED
-				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED || 
-						orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED) {
+				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+						|| orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED
+						|| orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) { //#34319
 				//#28765 - End
+					//#34319 - Start
+					if(orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+						getManagedBean().setCancelApp(true);
+					}
+					//#34319 - End
 					supplier = orgProfile.getSmSupplier();
 					getManagedBean().setDeletedNotActivatedSupplier(true);
 				} else {
@@ -796,6 +808,11 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().setAdoptDivision(false);
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDivision(null);
+				//#34159 - START - Reset District when change state
+				if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId() !=null){
+					this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().setDistrictId(null);
+				}
+				//#34159 - END
 			} 
 			if(states !=null && states.getAdoptDivision()) {
 				getManagedBean().setDivisionBox(false);	
@@ -828,6 +845,11 @@ public class GovtSellerRegistrationBackingBean extends
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSmPermenantAdd().setPmDivision(null);
 				getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
+				//#34159 - START - Reset District when change state
+				if(getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId() !=null){
+					getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
+				}
+				//#34159 - END
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -854,7 +876,14 @@ public class GovtSellerRegistrationBackingBean extends
 				
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(true);
 			}else{
+				//#34159 - remove division for non-Sarawak
+				this.getManagedBean().getSmResAdd().setPmDivision(null);
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
+				//#34159 - START - Reset District when change state
+				if(getManagedBean().getSmResAdd().getPmDistrict().getDistrictId() !=null){
+					getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
+				}
+				//#34159 - END
 
 			}if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -883,6 +912,11 @@ public class GovtSellerRegistrationBackingBean extends
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(null);
 				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
+				//#34159 - START - Reset District when change state
+				if(this.getManagedBean().getSelectedBranch().getSmAddress().getPmDistrict().getDistrictId() !=null){
+					this.getManagedBean().getSelectedBranch().getSmAddress().setPmDistrict(new PmDistrict());
+				}
+				//#34159 - END
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -1032,6 +1066,9 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Submit maintenance
 	 */
 	public void submitMaintenance() {
+		//#34771 - Start
+		log.info("#34771 - checking time");
+		//#34771 - End
 		validateHqBranchBank();
 		// validate bank
 		if (getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1) {
@@ -1605,6 +1642,23 @@ public class GovtSellerRegistrationBackingBean extends
 		getManagedBean().getSmSupp().setSmAppls(new ArrayList<SmAppl>());
 		getManagedBean().getSmSupp().getSmAppls()
 				.add(getManagedBean().getSmAppl());
+		//#34319 - Start
+		if(getManagedBean().isCancelApp()){
+			log.info(">>>> Into cancel application that want to create new <<<<");
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setSupplierId(getManagedBean().getSmSupp().getSupplierId());
+			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierSmApplById(supplierSearchReqDTO);
+			if(resDTO.getSmSupplier().getSmAppls() != null){
+				log.info("Not Null + Size >> " + resDTO.getSmSupplier().getSmAppls().size());
+				supplierSearchReqDTO.setSmSupplier(resDTO.getSmSupplier());
+				//checking if the application has a record in smPersonnelAuthLog
+				SupplierSearchResDTO resDTO1 = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
+				if(resDTO1.isRecord()){
+					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO.getSmSupplier().getSmAppls());
+				}
+			}
+		}
+		//#34319 - End
 	}
 
 	private void setBranchBankBeforeSubmit() {
@@ -1699,6 +1753,9 @@ public class GovtSellerRegistrationBackingBean extends
 	 * Initialized bank branches transient object
 	 */
 	private void initBankBranches() {
+		//#34771 - Start
+		log.info("#34771 - checking time");
+		//#34771 - End
 		if (getManagedBean().getBankBranches() == null) {
 			getManagedBean().setBankBranches(
 					new ArrayList<SmSupplierBranchBank>());
@@ -1727,8 +1784,9 @@ public class GovtSellerRegistrationBackingBean extends
 										.getSmSupplierBranch().getBranchCode(),
 										bk.getBranches(), "branchCode");
 						if (brTmp == null) {
-							SmSupplierBranch brDb = (SmSupplierBranch) SerializationUtils
-									.clone(brBnk.getSmSupplierBranch());
+							//#34771 - Start
+							SmSupplierBranch brDb = (SmSupplierBranch) brBnk.getSmSupplierBranch().cloneEntity();
+							//#34771 - End
 							brDb.setSelected(true);
 							bk.getBranches().add(brDb);
 						}

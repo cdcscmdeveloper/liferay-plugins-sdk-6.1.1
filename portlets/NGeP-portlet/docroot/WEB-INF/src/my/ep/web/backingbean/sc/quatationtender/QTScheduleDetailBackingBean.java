@@ -55,6 +55,7 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
@@ -303,7 +304,8 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			}
 			
 			PmOrgProfile OwnerPmOrgProfile = getManagedBean().getQt().getOwnerOrgProfile();			
-			if (OwnerPmOrgProfile != null && pmOrgProfile.getOrgProfileId() != OwnerPmOrgProfile.getOrgProfileId()) {
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (OwnerPmOrgProfile != null && pmOrgProfile != null &&pmOrgProfile.getOrgProfileId() != OwnerPmOrgProfile.getOrgProfileId()) {
 				orgProfileIds.add(OwnerPmOrgProfile.getOrgProfileId());	
 			}
 			
@@ -653,10 +655,53 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		if (chmnFinalizationDate != null) {
 			scQt.setChmnFinalizationDate(DateUtils.setDefaultDateTime(chmnFinalizationDate));
 		}
+		//#21692 attachment - Start
+		Boolean oldApprovalPBM = scQt.isApprovalPBM();
 		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
+		if (!enableDateMOF) {
+			scQt.setMofDate(null);
+		}
 		scQt.setApprovalPBM(enableDateMOF);
 		resetDecisionCertPBM(enableDateMOF);
+		if ((oldApprovalPBM && !enableDateMOF)
+				|| (!oldApprovalPBM && enableDateMOF)) {
+			deleteEpvAttachments();
+		}
+		//#21692 attachment - End
 	}
+	
+	// #21692 attachment - Start
+	/**
+	 * delete existing attachment and reset decision
+	 */
+	public void deleteEpvAttachments() {
+		ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
+
+		List<ScQtEpvApprovalReqAttachment> deletedAttachment = new ArrayList<>();
+		List<ScQtEpvApprovalReqAttachment> attachmentList = apprvRequest.getEpvApprovalReqAttachment();
+
+		for (ScQtEpvApprovalReqAttachment att : attachmentList) {
+			deletedAttachment.add(att);
+		}
+
+		if (deletedAttachment != null) {
+			attachmentList.removeAll(deletedAttachment);
+		}
+		apprvRequest.setEpvApprovalReqAttachment(attachmentList);
+		apprvRequest.setDecisionCertPBM(null);
+		apprvRequest.setDecessionType(null);
+
+		ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
+
+		List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+		if (this.getManagedBean().getQt().isApprovalPBM()) {
+			apprvReq.setDecisionCertPBM(new PmParameter());
+		}
+		apprvReq.setDecessionType(new PmParameter());
+		newApprovalReqList.add(apprvReq);
+		this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
+	}
+	// #21692 attachment - End
 
 	private void resetDecisionCertPBM(Boolean enableDateMOF) {
 		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();
@@ -687,7 +732,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 
 				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
 				int day = (int) days;
-				if (day >= 0) {
+				if (day > 0) {//#21692
 					return Boolean.TRUE;
 				}
 			}
