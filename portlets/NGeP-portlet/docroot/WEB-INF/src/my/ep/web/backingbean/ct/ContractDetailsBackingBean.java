@@ -809,8 +809,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		
-			
-			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+			//#35642 start
+			/*if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 				for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
 					if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
@@ -819,7 +819,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						break;
 					}
 				}
-			}
+			}*/
+			//#35642 end
+			
 			chkBondWaivedAttachment();
 			sortDeductions();
 			
@@ -1829,7 +1831,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}	
 			//LOG : 13847, by Fahmi 22032019 start
-			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
+			//#35642 start
+			/*if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
 					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 				boolean isEqual = ctBB.getManagedBean().getCtContractAmount().isBondWaived()==ctBB.getManagedBean().getCtTestBondWaiverAmount().isBondWaived();
 				if(!isEqual){
@@ -1850,7 +1853,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						throw new EpException(MessageConst.ERROR_750044);
 					}    
 				}
-			}
+			}*/
+			//#35642 end
 		}
 		validationPerformanceBond(action);
 		//#13847 end
