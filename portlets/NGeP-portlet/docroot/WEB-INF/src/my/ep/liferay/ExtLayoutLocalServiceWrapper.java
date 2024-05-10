@@ -28,24 +28,19 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 
 public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 
-	public static Logger log = Logger.getLogger(ExtLayoutLocalServiceWrapper.class);
+	private static final Logger log = Logger.getLogger(ExtLayoutLocalServiceWrapper.class);
 	
-	public final String RENEW_MOF_URL = "/renew-mof-account";
-	public final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
+	public static final String RENEW_MOF_URL = "/renew-mof-account";
+	public static final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
 	
-	public final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
-	public final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
+	public static final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
+	public static final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
 	
-	public final String USER_ROLE_SESSION_KEY = "USER_ROLE_SESSION_KEY";
+	public static final String USER_ROLE_SESSION_KEY = "USER_ROLE_SESSION_KEY";
 	
 	public ExtLayoutLocalServiceWrapper(LayoutLocalService layoutLocalService) {
 		super(layoutLocalService);
-		// TODO Auto-generated constructor stub
 	}
-
-	/*public List<Layout>	getLayouts(int start, int end) throws SystemException {
-		return super.getLayouts(start, end);
-	}*/
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout) throws SystemException {
 		
@@ -159,13 +154,11 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			}
 		}
 		
-//		return SupplierManagementConst.BASIC_ONLY;
 		return SupplierManagementConst.MOF_CAN_RENEW;
 	}	
 	
 	public long getLoggedInUserId() {
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-//		long logedInUserId = 0;
 		if(serviceContext != null) {
 			return serviceContext.getUserId();
 		}
@@ -174,24 +167,15 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public boolean isBasicSupplier(long userId) {
 		boolean isBasic = false;
-        try {
-			isBasic = UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-					userId,
-					Long.valueOf(
-							EpPropertiesUtils.getInstance().getProperty(
-									EpPropertiesConst.PORTAL_SITE_ID))
-							.longValue(), BASIC_SUPPLIER_ADMIN, true)
-					|| UserGroupRoleLocalServiceUtil
-							.hasUserGroupRole(
-									userId,
-									Long.valueOf(
-											EpPropertiesUtils.getInstance().getProperty(
-															EpPropertiesConst.PORTAL_SITE_ID))
-											.longValue(), BASIC_SUPPLIER_USER, true);
-        } catch(Exception e) {
-        	System.err.println(e);
-        } 
-        return isBasic;
+		try {
+			isBasic = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, Long.valueOf(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_SITE_ID)).longValue(),
+					BASIC_SUPPLIER_ADMIN, true)
+					|| UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, Long.valueOf(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_SITE_ID)).longValue(),
+							BASIC_SUPPLIER_USER, true);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return isBasic;
 	}
 	
 }

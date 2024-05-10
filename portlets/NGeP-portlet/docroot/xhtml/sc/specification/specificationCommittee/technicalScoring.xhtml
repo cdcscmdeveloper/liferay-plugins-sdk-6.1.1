@@ -371,8 +371,8 @@
 			<tr>
 				<td style="width: 260px;">					
 				<c:choose>
-					<c:when	test="#{specificationBackingBean.managedBean.qt.demoRequired and specificationBackingBean.managedBean.demoType eq 'true'}">
-						<p:outputLabel value="#{lbl['lbl.sc.passing.score']}" /> 
+					<c:when	test="#{specificationBackingBean.managedBean.qt.demoRequired}">
+						<p:outputLabel value="#{lbl['lbl.sc.passing.score.demo']}" /> 
 						<p:outputLabel value="*" styleClass="mandatory" />					
 					</c:when>
 					<c:otherwise>

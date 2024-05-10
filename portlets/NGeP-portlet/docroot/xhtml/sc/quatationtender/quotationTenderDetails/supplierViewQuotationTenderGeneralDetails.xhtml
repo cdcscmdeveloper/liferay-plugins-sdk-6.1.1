@@ -37,6 +37,9 @@
 		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
 	<ac:lovPopup />
 	<!-- START #28784 -->
+	<!-- 20231122@asyrafhaziq_25726 - Issue 15 -->
+	<ui:param name="isGenInfo" value="#{specificationBackingBean.managedBean.genInfo}" />
+	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI><!-- END #28784 -->
@@ -652,10 +655,12 @@
 						</c:otherwise>
 					</c:choose>
 					</td>
-					<!-- #25726 start -->
-					<td style="margin-top: -3px">
-						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-					</td>
+					 <c:if test="#{!scQt.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
+						<!-- #25726 start -->
+						<td style="margin-top: -3px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+						</td>
+					  </c:if>	
 					</tr></table></td>
 					<!-- #25726 end -->
 										

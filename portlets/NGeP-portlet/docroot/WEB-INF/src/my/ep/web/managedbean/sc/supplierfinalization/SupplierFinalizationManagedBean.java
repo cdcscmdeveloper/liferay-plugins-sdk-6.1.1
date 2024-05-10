@@ -330,6 +330,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<PmAuthority> listApprovalAuthority;
 	private List<PmAuthorityCommittee> listApprovalAuthCommittee;
 	
+	//#30008 - start
+	private boolean notReachAgrm;
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2627,5 +2630,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	
 	//#27502 - New DO MOF Role and Process - End
+
+	public boolean isNotReachAgrm() {
+		return notReachAgrm;
+	}
+
+	public void setNotReachAgrm(boolean notReachAgrm) {
+		this.notReachAgrm = notReachAgrm;
+	}
+
 }
 // ***25201

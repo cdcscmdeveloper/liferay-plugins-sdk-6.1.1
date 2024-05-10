@@ -40,6 +40,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
+import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -69,6 +70,8 @@ import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
 import my.ep.dto.ct.dtl.ContractZoneResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -2478,7 +2481,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate()
 					.compareTo(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 0) {
-				throw new EpException(MessageConst.ERROR_760164);
+				throw new EpException(MessageConst.ERROR_750080);
 			}
 		}
 	}
@@ -2825,7 +2828,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		getManagedBean().getCtContractAmount().setBondExemptedFileName(item.getFileName());
 		getManagedBean().getCtContractAmount().setBondExemptedFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
+//		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();"); //#13847
 	}
 
 	/**
@@ -3283,8 +3286,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
 						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-					itemPriceZoneLabelList(getManagedBean().getSelectedItem());
-					itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem());
+					
+					//#34961 start
+					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+					ContractItemResDTO resDTO = new ContractItemResDTO();
+					IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+					reqDTO.setCtContactItem(getManagedBean().getSelectedItem());
+					resDTO = contractItemSO.getPreviousCtContractItemByCtContractItem(reqDTO);
+					
+					if(resDTO.getCtContractItem()!=null && getManagedBean().getSelectedItem()!=null){
+						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemPrices())
+								&& getManagedBean().getSelectedItem().getCtItemPrices().size()>resDTO.getCtContractItem().getCtItemPrices().size()){
+							itemPriceZoneLabelList(getManagedBean().getSelectedItem(), resDTO.getCtContractItem());
+						}
+						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemMaxQties())
+								&& getManagedBean().getSelectedItem().getCtItemMaxQties().size()>resDTO.getCtContractItem().getCtItemMaxQties().size()){
+							itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem(), resDTO.getCtContractItem());
+						}
+					}
+					//#34961 end
 				}
 			}
 		}
@@ -3323,8 +3343,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
 						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-					itemPriceZoneLabelList(getManagedBean().getServiceselectedItem());
-					itemMaxQtyZoneLabelList(getManagedBean().getServiceselectedItem());
+					
+					//#34961 start
+					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+					ContractItemResDTO resDTO = new ContractItemResDTO();
+					IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+					reqDTO.setCtContactItem(getManagedBean().getServiceselectedItem());
+					resDTO = contractItemSO.getPreviousCtContractItemByCtContractItem(reqDTO);
+					
+					if(resDTO.getCtContractItem()!=null && getManagedBean().getServiceselectedItem()!=null){
+						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemPrices())
+								&& getManagedBean().getServiceselectedItem().getCtItemPrices().size()>resDTO.getCtContractItem().getCtItemPrices().size()){
+							itemPriceZoneLabelList(getManagedBean().getServiceselectedItem(), resDTO.getCtContractItem());
+						}
+						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemMaxQties())
+								&& getManagedBean().getServiceselectedItem().getCtItemMaxQties().size()>resDTO.getCtContractItem().getCtItemMaxQties().size()){
+							itemMaxQtyZoneLabelList(getManagedBean().getServiceselectedItem(), resDTO.getCtContractItem());
+						}
+					}
+					//#34961 end
 				}
 			}
 		}
@@ -3400,119 +3437,97 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to indicate the label flag for new price of contract item.  
 	 */
 	@SuppressWarnings("unchecked")
-	private void itemPriceZoneLabelList(CtContractItem ctContractItem) {
+	private void itemPriceZoneLabelList(CtContractItem ctContractItem, CtContractItem preCtContractItem) {
 		
-		try{
-			//set zoneName, fromQty, toQty and unitPrice into hashmap
-			Map<String, BigDecimal> itemPriceZone = new HashMap<>();
-			
-			if (!ctContractItem.getCtItemPrices().isEmpty()) {
-				for(final CtItemPrice itemPrice : ctContractItem.getCtItemPrices()){
+		try{			
+			if (CollectionUtils.isNotEmpty(ctContractItem.getCtItemPrices())) {
+				if(preCtContractItem.getScRequestItem()!=null 
+						&& preCtContractItem.getScRequestItem().getRequestNoteItemId()!=null
+						&& preCtContractItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())){						
 					
-					Predicate conditionPredicate = null;
-					List<CtItemPrice> itemPriceSelect = null;
-					
-					if (ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-							|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-
-						String fromQty = itemPrice.getFromQty()!=null ? itemPrice.getFromQty().toString() : null;
-						String toQty = itemPrice.getToQty()!=null ? itemPrice.getToQty().toString() : null;
-						String zoneQty = itemPrice.getCtContractZone().getZoneName().trim() + fromQty + toQty;
-						
-						//checking whether zone and quantity has been select
-						if(!itemPriceZone.containsKey(zoneQty)){
-							
-							//selecting the same zone and quantity
+					Predicate conditionPredicate;
+					for(final CtItemPrice currentCtItemPrice : ctContractItem.getCtItemPrices()){
+						List<CtItemPrice> itemPriceSelect;
+						currentCtItemPrice.setChangeZoneLabel(false);
+						if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
 							conditionPredicate = new Predicate() {
 								@Override
-								   public boolean evaluate(final Object object) {
+								public boolean evaluate(Object object) {
 									CtItemPrice itemPricePredicate = (CtItemPrice) object;
-									   return itemPricePredicate.getFromQty().equals(itemPrice.getFromQty()) &&
-											   itemPricePredicate.getToQty().equals(itemPrice.getToQty()) &&
-											   itemPricePredicate.getCtContractZone().getZoneName() != null &&
-											   itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
-								   }
-							};
-							itemPriceZone.put(zoneQty, itemPrice.getUnitPrice());
-						}
-					}else{
-						//checking whether zone has been select
-						if(!itemPriceZone.containsKey(itemPrice.getCtContractZone().getZoneName())){
-							conditionPredicate = new Predicate() {
-								@Override
-								public boolean evaluate(final Object object) {
-									CtItemPrice itemPricePredicate = (CtItemPrice) object;
-									return  itemPricePredicate.getCtContractZone().getZoneName() != null &&
-											itemPricePredicate.getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice.getCtContractZone().getZoneName());
+									return itemPricePredicate.getFromQty().equals(currentCtItemPrice.getFromQty())
+											&& itemPricePredicate.getToQty().equals(currentCtItemPrice.getToQty())
+											&& itemPricePredicate.getUnitPrice().equals(currentCtItemPrice.getUnitPrice())
+											&& itemPricePredicate.getEffDate().equals(currentCtItemPrice.getEffDate())
+											&& itemPricePredicate.getCtContractZone().getZoneName() != null
+											&& itemPricePredicate.getCtContractZone().getZoneName().trim()
+											.equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName().trim());
 								}
 							};
-							
-							itemPriceZone.put(itemPrice.getCtContractZone().getZoneName(), itemPrice.getUnitPrice());
 						}
-					}
-					
-					if(conditionPredicate!=null){
-						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(ctContractItem.getCtItemPrices(), conditionPredicate);
-					}
-				
-					//sorting the selection by date to get max date and set change label (only record more than 1) 
-					if(CollectionUtils.isNotEmpty(itemPriceSelect) && itemPriceSelect.size()>1){
-						Comparator<CtItemPrice> cip = new Comparator<CtItemPrice>() {
-						    @Override
-						    public int compare(CtItemPrice cip1, CtItemPrice cip2) {
-						    	return cip1.getExpDate().compareTo(cip2.getExpDate());
-						    }
-						};
-						Collections.sort(itemPriceSelect, cip);
-						CtItemPrice priceOfItem = itemPriceSelect.get(itemPriceSelect.size()-1);
-						priceOfItem.setChangeZoneLabel(true);
+						else{
+							conditionPredicate = new Predicate() {
+								@Override
+								public boolean evaluate(Object object) {
+									CtItemPrice itemPricePredicate = (CtItemPrice) object;
+									return itemPricePredicate.getUnitPrice().equals(currentCtItemPrice.getUnitPrice())
+											&& itemPricePredicate.getEffDate().equals(currentCtItemPrice.getEffDate())
+											&& itemPricePredicate.getCtContractZone().getZoneName() != null
+											&& itemPricePredicate.getCtContractZone().getZoneName()
+											.equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName());
+								}
+							};
+						}
+						 
+						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(preCtContractItem.getCtItemPrices(), conditionPredicate);
+						if(CollectionUtils.isEmpty(itemPriceSelect) && itemPriceSelect.isEmpty()){
+							currentCtItemPrice.setChangeZoneLabel(true);
+						}
 					}
 				}
 			}
-		}catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}catch(Exception e){
+			log.info(e);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
-	//#34961 end
 
 	/**
 	 * The method used to indicate the label flag for new max qty of contract item.
 	 */
-	private void itemMaxQtyZoneLabelList(CtContractItem ctContractItem) {
-		if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
-			for (CtItemMaxQty zonelOfItem : ctContractItem.getCtItemMaxQties()) {
-				zonelOfItem.setChangeZoneLabel(false);
-			}
-			for (int temp = 0; temp < ctContractItem.getCtItemMaxQties().size(); temp++) {
-				Date date = ctContractItem.getCtItemMaxQties().get(temp).getEffDate();
-				int counter =0;
-				int index = 0;
-				int countRow =0;
-				for (CtItemMaxQty itemMaxQty1 : ctContractItem.getCtItemMaxQties()) {
-					countRow++;
-					if (ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone() != null
-							&& ctContractItem.getCtItemMaxQties().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
-									itemMaxQty1.getCtContractZone().getZoneName())) {
-						counter++;
-						if (counter >= 2) {
-							if (date.before(itemMaxQty1.getEffDate())) {
-								index = countRow;
-								date = itemMaxQty1.getEffDate();
-							}
+	@SuppressWarnings("unchecked")
+	private void itemMaxQtyZoneLabelList(CtContractItem ctContractItem, CtContractItem preCtContractItem) {
+		try{			
+			if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
+				Predicate conditionPredicate;
+				for(final CtItemMaxQty currentCtItemMaxQty : ctContractItem.getCtItemMaxQties()){
+					List<CtItemMaxQty> itemMaxQtySelect;
+					currentCtItemMaxQty.setChangeZoneLabel(false);
+					conditionPredicate = new Predicate() {
+						@Override
+						public boolean evaluate(Object object) {
+							CtItemMaxQty itemMaxQtyPredicate = (CtItemMaxQty) object;
+							return itemMaxQtyPredicate.getEffDate().equals(currentCtItemMaxQty.getEffDate())
+									&& itemMaxQtyPredicate.getCtContractZone().getZoneName() != null
+									&& itemMaxQtyPredicate.getCtContractZone().getZoneName()
+									.equalsIgnoreCase(currentCtItemMaxQty.getCtContractZone().getZoneName());
 						}
+					};
+					 
+					itemMaxQtySelect = (List<CtItemMaxQty>) CollectionUtils.select(preCtContractItem.getCtItemMaxQties(), conditionPredicate);
+					if(CollectionUtils.isEmpty(itemMaxQtySelect) && itemMaxQtySelect.isEmpty()){
+						currentCtItemMaxQty.setChangeZoneLabel(true);
 					}
 				}
-				if (index > 0) {
-					CtItemMaxQty maxQtyOfItem = ctContractItem.getCtItemMaxQties().get(index-1);
-					maxQtyOfItem.setChangeZoneLabel(true);
-					ctContractItem.getCtItemMaxQties().remove(index-1);
-					ctContractItem.getCtItemMaxQties().add(index-1, maxQtyOfItem);
-				}
 			}
+		}catch(Exception e){
+			log.info(e);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
+	//#34961 end
 
 	/**
 	 * The method used to render the selected product item information.
@@ -4415,11 +4430,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return false;
 	}
 	
+	//#29418 start
+	/**
+	 * This function is used to filter and sort the agreement, but has been changed to only sort agreementList
+	 * 
+	 * @return currentCtAgreementList
+	 */
 	public List<CtAgreement> filterAgreementList() {
-		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
+		//List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 
-		CtAgreement tempCtAgreement = null;
+		/*CtAgreement tempCtAgreement = null;
 		int index = 0;
 
 		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
@@ -4451,10 +4472,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	
+		}*/
+		
+		if(CollectionUtils.isNotEmpty(currentCtAgreementList)){
+			Collections.sort(currentCtAgreementList, new Comparator<CtAgreement>() {
+			  @Override
+			  public int compare(CtAgreement cta1, CtAgreement cta2) {
+				  return cta1.getCreatedDate().compareTo(cta2.getCreatedDate());
+			  }
+			});
 		}
 
-		return newCtAgreementList;
+		return currentCtAgreementList;
 	}
+	//#29418 end
 	
 	public String getAgreementLoaPhysicalNo(CtAgreement ctAgreement) {
 		IContractSO contractSO = null;
@@ -4596,8 +4627,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-				|| getManagedBean().isViewContract() == true
-				)&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+				|| getManagedBean().isViewContract() == true)
+				&& isAlreadyAmendment()
+				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
 			isContractExtendOrIsBond = true;
 			getManagedBean().setDisableOriginalBond(true);
 			if(currentPeriod != null && extendPeriod != null) {
@@ -4626,14 +4658,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
 	 * */
 	public boolean isPendingSupplementalContractLetter(){
-		if(getManagedBean().getContractVer().getStatus().getStatusId() 
+		if(getManagedBean().getContractVer().getStatus() != null &&
+				(getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
 				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue()){								
+				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue())){								
 			return true;
 		}
 		return false;
@@ -4967,4 +5000,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return Boolean.FALSE;
 	}
 	//End Fix - #35202
+	
+	//#35137 - Start
+		/**
+		 * Method to Checking Amendment process
+		 * 
+		 * @return boolean
+		 */
+		public boolean isAlreadyAmendment() {
+			if(getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null){
+				if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+					getManagedBean().setDisableOriginalBond(true);
+					return true;
+				}				
+			}
+			return false;
+		}
+		//#35137 - End
 }  
