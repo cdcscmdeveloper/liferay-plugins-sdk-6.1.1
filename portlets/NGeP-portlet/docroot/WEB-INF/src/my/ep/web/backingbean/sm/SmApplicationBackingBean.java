@@ -7906,7 +7906,6 @@ public class SmApplicationBackingBean extends
 		// update category that record status is 1 for new mof application. This
 		// happen due to resubmit application (#23683)
 		updateCategoriesRecordStatus();
-		updateSuppDocApproverVerified(); //31043
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -17654,24 +17653,4 @@ public class SmApplicationBackingBean extends
 				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm"};
 	}
 	//#35145 - end
-	//31043 START
-	/**
-	 * Update supp doc verified for approver
-	 * 
-	 */
-	private void updateSuppDocApproverVerified() {
-		if (getManagedBean().isApproverUser()) {
-			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
-					.getSmApplSupportDocs())) {
-				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-						.getSmApplSupportDocs()) {
-					if (doc.getApproverVerifiedFlg() != null
-							&& doc.getVerifiedFlg() != null) {
-						doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
-					}
-				}
-			}
-		}
-	}
-	//31043 END
 }
