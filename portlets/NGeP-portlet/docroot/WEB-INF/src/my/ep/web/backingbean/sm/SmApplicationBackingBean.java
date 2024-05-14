@@ -11571,10 +11571,10 @@ public class SmApplicationBackingBean extends
 	private void setValueForInquiryRemarks(SmApplSupportDoc smApplSupportDoc) {
 
 		if (!EntityHelper
-				.isCollectionEmpty(getManagedBean().getMandatoryDocs())
+				.isCollectionEmpty(getManagedBean().getMissinDocsMandatory())
 				&& smApplSupportDoc.getPmDocument().isMandatory()) {
 			for (SmApplSupportDoc smApplSupportDocMandatory : getManagedBean()
-					.getMandatoryDocs()) {
+					.getMissinDocsMandatory()) {
 				if (smApplSupportDoc.getApplSupportDocId().equals(
 						smApplSupportDocMandatory.getApplSupportDocId())) {
 					smApplSupportDoc.setPoRemarks(smApplSupportDocMandatory
@@ -11584,10 +11584,10 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getNonMandatoryDocs())
+				.getMissinDocsNonMandatory())
 				&& !smApplSupportDoc.getPmDocument().isMandatory()) {
 			for (SmApplSupportDoc smApplSupportDocNonMandatory : getManagedBean()
-					.getNonMandatoryDocs()) {
+					.getMissinDocsNonMandatory()) {
 				if (smApplSupportDoc.getApplSupportDocId().equals(
 						smApplSupportDocNonMandatory.getApplSupportDocId())) {
 					smApplSupportDoc.setPoRemarks(smApplSupportDocNonMandatory
@@ -17438,8 +17438,9 @@ public class SmApplicationBackingBean extends
 				if (getManagedBean().getSmAppl() != null) {
 					if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
 						for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
-							if (banks.getSignatureInstruction().contains("<")
-									|| banks.getSignatureInstruction().contains(">")) {
+							//#35635 - start
+							if ((banks.getSignatureInstruction() != null) && (banks.getSignatureInstruction().contains("<")
+									|| banks.getSignatureInstruction().contains(">"))) {
 								StringBuilder sb = new StringBuilder();
 								Locale locale = new FacesScopes().getUserLocale();
 								sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
@@ -17447,6 +17448,7 @@ public class SmApplicationBackingBean extends
 								throw new EpException(MessageConst.ERROR_775191,
 										new String[] { sb.toString().toLowerCase() });
 							}
+							//#35635 - end
 						}
 					}
 				}	
