@@ -68,7 +68,6 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
-import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -94,10 +93,9 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -3004,6 +3002,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
+						resDTO.getSmPersonnel().setSsmData(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -3435,6 +3434,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return retVal;
 	}	
+	
+	//29956 START
+	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
+		Boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
+		}
+		return retVal;
+	}
+	//29956 END
+		
 	public static void checkEquityOwnerUpdateAllowance(
 			BaseManagedBean managedBean) {
 		//#27165
@@ -4064,23 +4076,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
 		getManagedBean().getPersonnelsRole().clear();
 		getManagedBean().setDowngradeRole(false);
+		
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
 		if(!resDto.getSmPersonnelList().isEmpty() && resDto.getSmPersonnelList() != null){
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
 				
-				if(smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(!isMofAccEffDatePassedCurrDate(supplier) 
+				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
 						&& isPersonnelAdminRole(personnel)
 						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
 					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(isMofAccEffDatePassedCurrDate(supplier)
+				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
 						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
@@ -4089,8 +4100,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(!getManagedBean().getPersonnelsRole().isEmpty()){
 			getManagedBean().setDisAllowOwnerEdit(false);
 			for(SmPersonnel smPersonnel : getManagedBean().getPersonnelsRole()){
-				if(!isMofAccEffDatePassedCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
+				if(isMofAccEffDatePassed6MonthCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
 					getManagedBean().setDisAllowOwnerEdit(true);
+					break;
 				}
 			}
 			
