@@ -23441,7 +23441,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @return boolean
 	 */
 	public boolean renderPtintButtonForSpecCommittee() {
-		if (Arrays.asList(QTConstants.ACTIVE_INDEX_LIST).contains(this.getManagedBean().getActiveIndex())) {
+		if (QTConstants.ACTIVE_INDEX_4==this.getManagedBean().getActiveIndex() 
+				|| QTConstants.ACTIVE_INDEX_5==this.getManagedBean().getActiveIndex() 
+				|| QTConstants.ACTIVE_INDEX_6==this.getManagedBean().getActiveIndex()) {
 			return true;
 		}
 
