@@ -643,7 +643,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				// // for the initial load
 				
 				// #35562- Start
-				pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				if (!pmUser.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
+
+				logger.info("check login id sama kh1 " + getManagedBean().getSelectedUser().getIdentificationNo()
+						+ pmUser.getLoginId());
+				if (getManagedBean().getSelectedUser().getIdentificationNo().compareTo(pmUser.getLoginId()) < 0) {
+					logger.info("check login id sama kh2 " + getManagedBean().getSelectedUser().getIdentificationNo()
+							+ pmUser.getLoginId());
+					pmUser.setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+				}
 				// #35562- End
 				
 				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
