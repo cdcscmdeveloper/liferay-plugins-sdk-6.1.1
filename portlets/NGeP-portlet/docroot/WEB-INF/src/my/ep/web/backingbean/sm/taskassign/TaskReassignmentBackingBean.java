@@ -135,10 +135,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	 */
 	public void resetTaskAssignSearchBean() {
 		log.info("resetTaskAssignSearchBean");
-		this.getManagedBean().setTaskAssignmentSearchBean(
-				new TaskAssignmentSearchBean());
-		this.getManagedBean().getTaskAssignmentSearchBean()
-				.setExcludeUser(getFacesScopes().getUserSessionBean());
+		this.getManagedBean().setTaskAssignmentSearchBean(new TaskAssignmentSearchBean());
+		this.getManagedBean().getTaskAssignmentSearchBean().setExcludeUser(getFacesScopes().getUserSessionBean());
 		this.getManagedBean().setTaskLazy(false);
 		resetAllTaskList();
 		
@@ -924,20 +922,17 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		this.othersTaskListDataModel = othersTaskListDataModel;
 	}
 	
-	public void redirectToTaskReassignment(PmOrgProfile orgProfile, PmUser user) {		
+	public void redirectToTaskReassignment(PmOrgProfile orgProfile, PmUser user) {
 		log.info("redirectToTaskReassignment");
 		FacesContext fc = FacesContext.getCurrentInstance();
-		getManagedBean().setBackURL(fc.getViewRoot().getViewId());		
+		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
 		resetTaskAssignSearchBean();
-		
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.setOrgType(orgProfile.getOrgTypeCode());
-		this.getManagedBean().getTaskAssignmentSearchBean()
-			.getUser().setPmUser(user);
+
+		this.getManagedBean().getTaskAssignmentSearchBean().setOrgType(orgProfile.getOrgTypeCode());
+		this.getManagedBean().getTaskAssignmentSearchBean().getUser().setPmUser(user);
 		this.getManagedBean().setOrgProfileRequired(false);
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/taskReassignment/taskReassignment.xhtml");
 
-		
 	}
 	
 	public void redirectToPmUserPage(){
@@ -1229,13 +1224,10 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 		IContractIntegrationSO ctIntegrationSO = null;
 		try {
 			ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
-			ctIntegrationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT,
-					IContractIntegrationSO.class);
+			ctIntegrationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setDocType(task.getDocType());
-			ContractIntegrationResDTO resDTO = ctIntegrationSO
-					.retrieveTaskAssignmentRole(reqDTO);
+			ContractIntegrationResDTO resDTO = ctIntegrationSO.retrieveTaskAssignmentRole(reqDTO);
 			if (resDTO.isSuccessful()) {
 				vo.setRoleList(resDTO.getRoleCodeList());
 				vo.setGroupDocId(resDTO.getGroupDocId());
@@ -1243,12 +1235,12 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				vo.setDocId(resDTO.getDocId());
 				vo.setDocNo(resDTO.getDocNo());
 				vo.setDocType(resDTO.getDocType());
-				//For Tracking Diary 
-				if(resDTO.getCircularList() != null && !resDTO.getCircularList().isEmpty()){
+				// For Tracking Diary
+				if (resDTO.getCircularList() != null && !resDTO.getCircularList().isEmpty()) {
 					vo.setTrackingDiaryList(resDTO.getCircularList());
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw new EpException("unable to get task reassignment details from Contract Management Module.");
 		} finally {
 			ctIntegrationSO = null;
@@ -1262,32 +1254,28 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	 * @param task
 	 * @return SmTaskReassignmentVO
 	 */
-	private SmTaskReassignmentVO retrieveFLTaskReassignmentDetail(
-			WorklistItemVO task) {
+	private SmTaskReassignmentVO retrieveFLTaskReassignmentDetail(WorklistItemVO task) {
 		log.info("retrieveFLTaskReassignmentDetail");
 		IFulfilmentSO fulfilmentSO = null;
 		SmTaskReassignmentVO vo = new SmTaskReassignmentVO();
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.ORDER_FULFILLMENT,
-					IFulfilmentSO.class);
+			fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 			reqDTO.setDocType(task.getDocType());
 			reqDTO.setFlDocNo(task.getDocNumber());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
 			reqDTO.setTaskName(task.getTaskName());
 			reqDTO.setTaskId(task.getTaskId());
-			if(getManagedBean().getTaskAssignmentSearchBean() != null &&
-					getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser() != null &&
-					getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId() != null){
+			if (getManagedBean().getTaskAssignmentSearchBean() != null && getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser() != null
+					&& getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId() != null) {
 				reqDTO.setUserLoginId(getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId());
 			}
-			
+
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveTaskReassignmentDetail(reqDTO);
-			if(resDTO != null){
+			if (resDTO != null) {
 				vo.setOrderAmount(resDTO.getOrderAmount());
 				vo.setApprovalLimit(resDTO.getOrderAmount());
-//				vo.setOrgProfileId(resDTO.getOrgProfileId());
+				// vo.setOrgProfileId(resDTO.getOrgProfileId());
 				vo.setDocId(resDTO.getDocId());
 				vo.setDocNo(resDTO.getDocNo());
 				vo.setDocType(resDTO.getDocType());
@@ -1297,7 +1285,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				vo.setGroupDocId(resDTO.getGroupDocId());
 				vo.setGroupDocType(resDTO.getGroupDocType());
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw new EpException("unable to get task reassignment details from Fulfilment Module.");
 		} finally {
 			fulfilmentSO = null;
@@ -1642,6 +1630,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
     			this.getManagedBean().getSelectedTasksToBulkReassign().add(task);
     		} else {
     			task.setTaskSelect(false);
+
     			if (this.getManagedBean().getSelectedTasksToBulkReassign() != null && 
     					this.getManagedBean().getSelectedTasksToBulkReassign().size() > 0) {
     				this.getManagedBean().getSelectedTasksToBulkReassign().clear();
@@ -2047,54 +2036,52 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	 * 
 	 */	
 	public void removeReassignOthersTasks() {
-	
+
 		log.info("removeReassignOthersTasks");
-	
+
 		String claimedBy = null;
 		ISmTaskAssignmentSO taskAssignmentSO = null;
 		int reassignWorkListType = getManagedBean().getTaskType();
 		List<String> assigneeUsers = new ArrayList<>();
-		
+
 		TaskAssignmentResDTO resDTO = new TaskAssignmentResDTO();
-		
-		if (this.getManagedBean().getSelectedOthersTasks() != null && 
-				!this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
-			
-			log.info("Number of task(s) to be deleted= "+this.getManagedBean().getSelectedOthersTasks().size());
-			
+
+		if (this.getManagedBean().getSelectedOthersTasks() != null && !this.getManagedBean().getSelectedOthersTasks().isEmpty()) {
+
+			log.info("Number of task(s) to be deleted= " + this.getManagedBean().getSelectedOthersTasks().size());
+
 			for (Entry<String, WorklistItemVO> selectedTask : this.getManagedBean().getSelectedOthersTasks().entrySet()) {
-				
+
 				String taskId = selectedTask.getKey();
 				WorklistItemVO task = selectedTask.getValue();
-				log.info("Task(s) to be deleted: "+taskId);
-				
+				log.info("Task(s) to be deleted: " + taskId);
+
 				if (!task.getAssignees().isEmpty()) {
 					assigneeUsers = task.getAssignees();
 				}
-				
+
 				if (assigneeUsers != null && !assigneeUsers.isEmpty()) {
-					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ?
-							  getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser().getLoginId() : 
-							  this.getManagedBean().getSelectedReassignee().get(0);
-					
+					String currentUser = getManagedBean().getTaskAssignmentSearchBean().getUser() != null ? getManagedBean().getTaskAssignmentSearchBean()
+							.getUser().getPmUser().getLoginId() : this.getManagedBean().getSelectedReassignee().get(0);
+
 					if (assigneeUsers.contains(currentUser)) {
 						assigneeUsers.remove(currentUser);
 					}
-					if (assigneeUsers != null && assigneeUsers.size() > 1 && 
-							ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
+					if (assigneeUsers != null && assigneeUsers.size() > 1 && ProfileManagementConst.REASSIGN_WORKLIST_TYPE_OTHERS == reassignWorkListType) {
 						claimedBy = task.getAcquiredBy();
 					}
 				}
-				
+
 				try {
 					TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
 					reqDTO.setTaskId(task.getTaskId());
 					reqDTO.setUserIdList(assigneeUsers);
 					reqDTO.setClaimedBy(claimedBy);
-	
-					taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmTaskAssignmentSO.class);
+
+					taskAssignmentSO = (ISmTaskAssignmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISmTaskAssignmentSO.class);
 					resDTO = taskAssignmentSO.removeGroupOrOthersTask(reqDTO);
-	
+
 				} finally {
 					taskAssignmentSO = null;
 				}
@@ -2108,8 +2095,7 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 			this.getManagedBean().getSelectedOthersTasks().clear();
 			this.getManagedBean().setEnableDeleteOthersTasksButton(false);
 			reloadAllTaskList();
-			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), 
-			FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
+			PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO, MessageConst.INFO_770105, null);
 		}
 	}
 	
@@ -2229,12 +2215,11 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	 */	
 	public void checkPendingTaskRemove() {
 		PmUser pmUser = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getPmUser();
-		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-		List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser
-				.getLoginId());
-		
-		if(hasActivePendingList != null){
+		ISupplierDataMaintenanceSO iSupplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				ISupplierDataMaintenanceSO.class);
+		List<PmPendingRemoveTask> hasActivePendingList = iSupplierDataMaintenanceSO.checkActivePendingTaskRemove(pmUser.getLoginId());
+
+		if (hasActivePendingList != null) {
 			for (PmPendingRemoveTask hasActivePending : hasActivePendingList) {
 				if (hasActivePending != null) {
 					if (hasActivePending.getParamTask().equalsIgnoreCase("GROUP")) {
@@ -2247,8 +2232,8 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 				}
 			}
 		}
-		
-		if(hasActivePendingList == null || hasActivePendingList.size() == 0){
+
+		if (hasActivePendingList == null || hasActivePendingList.size() == 0) {
 			// no pending
 			this.getManagedBean().setEnableRemoveAllGroupTasksButton(true);
 			this.getManagedBean().setEnableRemoveAllOthersTasksButton(true);
@@ -2260,22 +2245,19 @@ public class TaskReassignmentBackingBean extends BaseBackingBean<TaskReassignmen
 	 * To get user id
 	 * 
 	 */	
-	public Long getUserByLoginId(){
+	public Long getUserByLoginId() {
 		Long loginSessionUserId = 1L;
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-	
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 		if (pmUser == null) {
 			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-		}
-		else{
+		} else {
 			loginSessionUserId = pmUser.getUserId();
 		}
-		
+
 		return loginSessionUserId;
 	}
 	//#29822 - end

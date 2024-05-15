@@ -80,17 +80,19 @@
 				</ui:fragment>
 				<ui:fragment
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
-						<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
-							popupWidgetVar="evaluationManualReportUploadWidget"
-							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
-							readonly="#{consolidationReportBackingBean.managedBean.readOnly}"
-							deleteFileUploadListener="consolidationReportBackingBean.deleteReportsUploadFile"
-							rowIndex="#{index}">
-							<f:setPropertyActionListener for="actionEvent"
-								value="#{scQtEvaluationReport}"
-								target="#{consolidationReportBackingBean.managedBean.selectedBriefingReport}" />
-						</ac:scSingleFileUploadButton>
-					</ui:fragment>
+					<!-- 28834 -start- -->
+					<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
+						popupWidgetVar="evaluationManualReportUploadWidget"
+						attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
+						readonly="#{consolidationReportBackingBean.managedBean.readOnly}"
+						deleteFileUploadListener="consolidationReportBackingBean.deleteReportsUploadFile"
+						rowIndex="#{rowIndex}">
+						<!-- 28834 -end- -->
+						<f:setPropertyActionListener for="actionEvent"
+							value="#{scQtEvaluationReport}"
+							target="#{consolidationReportBackingBean.managedBean.selectedBriefingReport}" />
+					</ac:scSingleFileUploadButton>
+				</ui:fragment>
 			</p:column>
 		</p:dataTable>
 
