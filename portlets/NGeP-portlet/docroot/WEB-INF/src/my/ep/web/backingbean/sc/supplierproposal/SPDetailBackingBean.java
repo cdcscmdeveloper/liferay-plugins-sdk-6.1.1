@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -1257,6 +1258,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getTemplateSpecBean());
 				}
 				
+				//28777 - start
+				List<Long> deactivatedZones = new ArrayList<>();
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
+					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
+						if(zoneDtl.isBranchDeactivated())
+							deactivatedZones.add(zoneDtl.getSpecZoneId());
+					}
+				}
+				//28777 - end
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1277,10 +1287,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
-				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
+				if (templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
+						//28777 - start
+						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+							continue;
+						//28777 - end
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -2871,10 +2885,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList().getScQtDoc();
 		this.getManagedBean().setScQtDoc(
 				scQtProposalChecklist.getScQtCheckList().getScQtDoc());
-		
-		//#28777 & #29729 - Start
-		updateZoneLocalityMatchSupplierBranchLocation();
-		//#28777 & #29729 - End
 
 		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 		TemplateSpecBean templateSpecBean = getManagedBean()
@@ -3284,10 +3294,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
-		
-		//#28777 & #29729 - Start
-		updateZoneLocalityMatchSupplierBranchLocation();
-		//#28777 & #29729 - End
 		
 		//REMOVE Bug #31542 
 		IQTProposalSO proposalSO = null;
@@ -4612,8 +4618,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
 			//#28777 & #29729 - Start
-			if(checkValidationSupplierBranchDeleted()){
-				this.getManagedBean().setReadOnly(checkValidationSupplierBranchDeleted());
+			boolean branchDeleted = checkValidationSupplierBranchDeleted();
+			if(branchDeleted){
+				this.getManagedBean().setReadOnly(branchDeleted);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
@@ -6310,41 +6317,13 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		* @return true or false
 		**/
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-			
 			boolean isSupplierBranchDeleted = false;
-			Long supplierId = this.getManagedBean().getSupplierId();
-			ScQt scQt = this.getManagedBean().getQt();
-			if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
+			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			}
 		    return isSupplierBranchDeleted;
-		}
-		
-		/**
-		* Method to update record status for match branch during checklist proposal technical & financial 
-		* @param supplier id 
-		* @param qt id 
-		* @return resDTO isSuccessful
-		**/
-		private void updateZoneLocalityMatchSupplierBranchLocation(){
-			IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			ScQt scQt = getManagedBean().getQt();
-			if (scQt.isZonal()) {
-				ProposalReqDTO reqDTO = new ProposalReqDTO();
-				reqDTO.setSupplierId(getManagedBean().getSupplierId());
-				reqDTO.setQtId(scQt.getQtId());
-				ProposalResDTO resDTO = proposalSO
-						.updateZoneLocalityMatchSupplierBranchLocation(reqDTO);
-				if (resDTO.isSuccessful()) {
-					log.info("Sucess.");
-				}else{
-					log.info("Fail.");
-				}
-			}
 		}
 		//#28777 & #29729 - End
 
