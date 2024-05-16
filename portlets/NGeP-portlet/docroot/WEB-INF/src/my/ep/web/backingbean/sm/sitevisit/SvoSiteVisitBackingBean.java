@@ -3493,20 +3493,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return false;
 	}
 	
-	/**
-	 * Cancel Bumi application if supplier has other active application
-	 */
-	public void checkCancelBumiApplFromNewAppl(){
-		if(SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmSvTask().getSmAppl())){
+	public void validateBeforeSubmitDialog(){
+		if(SmCommonUtil.checkCancelBumiApplFromBumiStatus(getManagedBean().getSmSvTask().getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
-		} else {
-			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
-		}
+			return;
+		} 	
+		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
 	}
 	
-	/**
-	 * Redirect to task list
-	 */
 	public void redirectToTaskList(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");
