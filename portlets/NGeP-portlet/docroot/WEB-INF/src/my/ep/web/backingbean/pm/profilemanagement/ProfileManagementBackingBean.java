@@ -641,6 +641,21 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				// PmParameter()
 				// : pmUser.getOrgTypeCode());
 				// // for the initial load
+				
+				// #35562- Start
+				if (!pmUser.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
+
+				logger.info("check login id sama kh1 " + getManagedBean().getSelectedUser().getIdentificationNo()
+						+ pmUser.getLoginId());
+				if (getManagedBean().getSelectedUser().getIdentificationNo().compareTo(pmUser.getLoginId()) < 0) {
+					logger.info("check login id sama kh2 " + getManagedBean().getSelectedUser().getIdentificationNo()
+							+ pmUser.getLoginId());
+					pmUser.setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+				}
+				// #35562- End
+				
 				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
 				pmUserOrg.setPmUser(pmUser);
 				pmUser.getPmUserOrgs().add(pmUserOrg);
@@ -1161,7 +1176,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					throw new EpException(MessageConst.ERROR_770170);
 				}
 			}
-
+			//#35489 - Start
+            addressType.setChangedBy(getUserIdSessionFromLoginId());
+            //#35489 - End
 		}
 		getManagedBean().setRoleTabActiveIndex(1);
 
@@ -1220,7 +1237,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 				}
 			}
-
+			//#35489 - Start
+			this.getManagedBean().setOrgUnitStatusChange(true);
+			//#35489 - End
 		}
 	}
 
@@ -1253,6 +1272,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 			}
 		}
+		//#35489 - Start
+		this.getManagedBean().setUserStatusChange(true);
+		//#35489 - End
 	}
 
 	/*
@@ -3691,6 +3713,21 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.setCreatedBy(loginSessionUserId);
 			}
 			
+			// #35489 - Start
+			if (this.getManagedBean().isOrgUnitStatusChange()) {
+				for (PmAddressType addressType : this.getManagedBean().getSelectedReceivingAddrTypes()) {
+					addressType.setChangedBy(getUserIdSessionFromLoginId());
+				}
+			}
+
+			if (this.getManagedBean().isUserStatusChange()) {
+				for (PmAddressType addressType : this.getManagedBean().getSelectedReceivingAddrTypes()) {
+					addressType.setChangedBy(getUserIdSessionFromLoginId());
+				}
+			}
+			// #35489 - End
+			
+			
 			//Redmine Bug #31541 - START
 			if (this.getManagedBean().getIsNewUser()) {
 				logger.info("Tracking diary for user profile: create new user :saveUserProfile");
@@ -4169,8 +4206,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode()));
 
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
-					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+			//#35562 - Start
+			/*searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
+					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));*/
+			//#35562 - End
 
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserSearchBean(searchBean);

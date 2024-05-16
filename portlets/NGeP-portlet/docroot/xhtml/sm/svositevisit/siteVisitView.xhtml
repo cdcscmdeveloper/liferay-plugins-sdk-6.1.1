@@ -39,31 +39,12 @@
 		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
 		<p:dataTable var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<!-- #28175 start -->
-			<c:choose>
-				<!-- #28175 Reopen #94 Start -->
-				<c:when test="#{!svoSiteVisitBackingBean.isLatestCatCodeDesc(false,
-							svoSiteVisitBackingBean.managedBean.smSvTask.smAppl)}">
-		        <!-- #28175 Reopen #94 End -->
-					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
-				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
-						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
-						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
-					</p:column>
-				</c:when>
-				<c:otherwise>
-					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						<!-- #28175 ReOpen start -->
-						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code} 
-				 			- #{tmp.suppCategory.pmCategoryL1.categoryName} / #{tmp.suppCategory.pmCategoryL2.categoryName}"/><br/>
-						<h:outputText value="/ #{tmp.suppCategory.pmCategoryL3.categoryName}"/>
-						<!-- #28175 ReOpen start -->
-						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
-					</p:column>
-				</c:otherwise>
-			</c:choose>
-			<!-- #28175 end -->
+			<p:column headerText="#{lbl['lbl.sm.category.description']}">
+				<!-- #28175 start -->
+				<h:outputText value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(tmp)}" />
+				<!-- #28175 end -->
+				<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}" />
+			</p:column>
 		</p:dataTable>
 	</p:panel>
 
@@ -114,24 +95,7 @@
 					escape="false" style="float : left" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">
-				<ui:remove><table>
-					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.latitude']}" style="float:left"
-							styleClass="outputLabel-view-label" /></td>
-						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
-							value="#{svTask.smSvAddress.address.mapLatitude}" /></td>
-					</tr>
-		
-					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.longitude']}" style="float:left"
-							styleClass="outputLabel-view-label" /></td>
-						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
-							value="#{svTask.smSvAddress.address.mapLongitude}" /></td>
-					</tr>
-				</table>
-				</ui:remove>
-			
+			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">			
 				<ac:gmap id="gmap" disabled="#{viewFlag}"
 					locationName="#{task.smAppl.smCompanyBasic.companyName}"
 					latitude="#{task.smSvAddress.address.mapLatitude}" 

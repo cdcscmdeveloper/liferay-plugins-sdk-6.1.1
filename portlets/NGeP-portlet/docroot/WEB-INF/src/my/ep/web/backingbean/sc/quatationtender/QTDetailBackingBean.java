@@ -252,6 +252,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -1167,6 +1168,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
+			//#21692 05/02/2024 - Start
+			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
+			if (selectedScQt.getResponsePeriod() != null &&
+					selectedScQt.getResponsePeriod() != result) {
+				selectedScQt.setResponsePeriod(result);
+			}
+			//#21692 05/02/2024 - End
 			if(!isApprovalScreen() || this.getManagedBean().getQt() == null){
 				this.getManagedBean().setQt(selectedScQt);
 			}
@@ -1264,7 +1272,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								.getParameterCode());
 			}
 			//Reopen #25726 note 187 - issue 2,4,5
-			this.getManagedBean().setGenInfo(editable);
+			//Reopen #25726 note 221 - issue 8
+			if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					&& this.getManagedBean().isQtSpecMaintanance()) {
+				this.getManagedBean().setGenInfo(editable);
+			}else{
+				this.getManagedBean().setGenInfo(false);
+			}
+			
 			//#29474 - end
 			
 			//9019 - Start (Harun) WIP Transaction add information message
@@ -4544,9 +4559,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									|| approvalSettings.isEmpty()) {
 								approvalSettings = new ArrayList<ScQtApproverSettings>();
 								ScQtApproverSettings approverSettings = new ScQtApproverSettings();
-								approverSettings.setPmUser(new PmUser());
+								//#21692 Sync Approval PB with Committee Appointment PB - Start
+								approverSettings.setPmUser(scQt.getFinalizationSecratery());
 								approverSettings.setScQtApproval(qtApproval);
-								approverSettings.setCommitteeType(new PmParameter());
+								approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
+								//#21692 Sync Approval PB with Committee Appointment PB - End
 								approvalSettings.add(approverSettings);
 								qtApproval
 										.setApproverSettings(approvalSettings);
@@ -4555,15 +4572,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									approverSettings.setScQtApproval(qtApproval);
 									
 									// Added to populate security if Finalization committee is same as Committee Appointment
-									PmParameter finalizationCommitee = scQt.getFinalizationCommitte();
-									PmParameter committeeSettings = approverSettings.getCommitteeType();
-									if (committeeSettings != null
-											&& finalizationCommitee != null
-											&& finalizationCommitee.getParameterId() != null
-											&& finalizationCommitee.getParameterCode()
-													.equalsIgnoreCase(committeeSettings.getParameterCode())) {
-										approverSettings.setPmUser(scQt.getFinalizationSecratery());
-									}
+									approverSettings.setPmUser(scQt.getFinalizationSecratery());
+									approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
 								}
 							}
 							tabBeans.add(new TabBean(titleName,
@@ -12803,6 +12813,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				.getScQtCategorys();
 // #29732 Start - reOpen Fix
 		String catCodeList = "";
+		Integer recordstatusInactive = 0; //#29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
 				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
@@ -12834,7 +12845,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 						|| !catCodeL2.getCategoryName().equals(
 								catCode.getPmCategoryL2Name())
 						|| !catCodeL3.getCategoryName().equals(
-								catCode.getPmCategoryL3Name())) {
+								catCode.getPmCategoryL3Name())
+						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)//#29732(#221)
+						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)//#29732(#221)
+						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)//#29732(#221)
+						) {
 // #29732 reOpen Fix - remove code
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");
@@ -13342,6 +13357,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 		scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		scWorkFlowreqDTO.setDocId(scQt.getQtId());
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			currentWorkFlowStatus = null;
+			bpmExistFlag = true;
+		}
+		// End - #30866
 		if(null != currentWorkFlowStatus){
 			if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)){
 				bpmExistFlag = false;

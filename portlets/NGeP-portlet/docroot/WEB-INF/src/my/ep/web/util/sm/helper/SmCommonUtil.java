@@ -4075,11 +4075,11 @@ public class SmCommonUtil {
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getMachineItemsByCatTypeCode(String catTypeCode) {
-		List<SelectItem> machineItems = new ArrayList<SelectItem>();
+		List<SelectItem> machineItems = new ArrayList<>();
 		String[] categoryInMachineSection = new String[] {
 				ParameterConst.CATEGORY_TYPE_DOCKYARD,
-				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442
-				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442 - Site Visit Grouping Enhancement -28775
+				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442 - Site Visit Grouping Enhancement -28775
 				ParameterConst.CATEGORY_TYPE_TRAVEL,
 				ParameterConst.CATEGORY_TYPE_WORKSHOP };
 		if (StringUtils.isNotBlank(catTypeCode)
@@ -4444,7 +4444,7 @@ public class SmCommonUtil {
 	 * Verify MyIdentity with IC only
 	 * @param name
 	 * @param identificationNo
-	 * @return
+	 * @return status code
 	 */
 	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
@@ -4468,7 +4468,6 @@ public class SmCommonUtil {
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70004":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70039":
@@ -4485,6 +4484,7 @@ public class SmCommonUtil {
 			if (msg != null) {
 				throw new EpException(msg + "(ERR-"+ ex.getMessage() + ")");
 			} else {
+				log.error(ex);
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
 		}
@@ -5557,6 +5557,12 @@ public class SmCommonUtil {
 	}
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * @param applId
+	 * @param categoryL3Id
+	 * @param applType
+	 * @return supplier categories
+	 */
 	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
 			Long applId, Long categoryL3Id, String applType){
 	
@@ -6435,21 +6441,24 @@ public class SmCommonUtil {
 	 */
 	public static List<SmAppl> getCancelledBumiApplList(boolean isSVC){
 		List<SmAppl> list;
+		FacesScopes fc = new FacesScopes();
+		Long userId = fc.getUserSessionBean().getUserId();
 		if(isSVC){
 			list = SmServiceLookup.getMofRegistrationSO().
-					retrieveAutoCancelledBumiAppl(null, false, false).getApplList();
+					retrieveAutoCancelledBumiAppl(userId, false, false).getApplList();
 		} else {
-			FacesScopes fc = new FacesScopes();
+			boolean isPOorApprover = fc.hasRoleUser(RoleCode.UPS_PO.value()) 
+					|| fc.hasRoleUser(RoleCode.UPS_APPROVER.value());
 			list = SmServiceLookup.getMofRegistrationSO().retrieveAutoCancelledBumiAppl(
-					fc.getUserSessionBean().getUserId(), true, true).getApplList();
+					userId, fc.hasRoleUser(RoleCode.UPS_SVO.value()), isPOorApprover).getApplList();
 		}
 		if(list.isEmpty()){
-			return null;
+			return list;
 		}
 		
 		StatusReqDTO statReqDTO = new StatusReqDTO();
 		statReqDTO.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
-		statReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		statReqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
 		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
 				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
 		if(statDesc == null){
@@ -6476,16 +6485,16 @@ public class SmCommonUtil {
 	 */
 	public static boolean checkCancelBumiApplFromNewAppl(SmAppl smAppl){
 		if(smAppl == null || smAppl.isActiveAppl() || 
-				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)) 
+				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)){
 			return false;
-		
+		}
 		SmAppl activeAppl = SmServiceLookup.getReviewApplicationSO()
 				.retrieveActiveSmApplBySupp(smAppl.getSmSupplier().getSupplierId()).getSmAppl();
-		if(activeAppl == null) return false;
-		if(!activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
+		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW, ParameterConst.NEW_SM_APPLN_FOR_UPDATE);
+		if(activeAppl == null || !applTypes.contains(activeAppl.getApplType())){
 			return false;
+		}
 		
 		//cancel bumi if sv after approval && supplier create new KR/KU/KA
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
