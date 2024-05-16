@@ -646,14 +646,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if (!pmUser.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				}
-
-				logger.info("check login id sama kh1 " + getManagedBean().getSelectedUser().getIdentificationNo()
-						+ pmUser.getLoginId());
-				if (getManagedBean().getSelectedUser().getIdentificationNo().compareTo(pmUser.getLoginId()) < 0) {
-					logger.info("check login id sama kh2 " + getManagedBean().getSelectedUser().getIdentificationNo()
-							+ pmUser.getLoginId());
-					pmUser.setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
-				}
 				// #35562- End
 				
 				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
@@ -4222,12 +4214,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if (resDTO != null && resDTO.getUserResultBean().getResultList() != null
 						&& resDTO.getUserResultBean().getResultList().size() > 0) {
 					PmUser user = resDTO.getUserResultBean().getResultList().get(0);
+					// TODO set current user info
+					// check for any active org
 					
 					//#35562 - Start (Checking identification no same with login id)
 					if (getManagedBean().getSelectedUser().getIdentificationNo().compareTo(user.getLoginId()) == 0) {
 					
-					// TODO set current user info
-					// check for any active org
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
