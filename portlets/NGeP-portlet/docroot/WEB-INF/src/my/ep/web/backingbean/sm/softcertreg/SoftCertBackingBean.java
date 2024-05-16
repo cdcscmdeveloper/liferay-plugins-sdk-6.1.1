@@ -1196,12 +1196,13 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || softcertUploadSuppDocVO
 							.getPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) ? true : false);
 					// #31462 - end
-					reqDTO.setForeigner(softcertUploadSuppDocVO
-							.getPersonnel()
-							.getPmCountry()
-							.getCountryCode()
-							.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ? false
+					// #35314 - START
+					PmParameter paramID = SmCommonUtil.retrieveParameterById(softcertUploadSuppDocVO.getPersonnel().getIdentificationTypeId());
+					reqDTO.setForeigner(paramID
+							.getParameterCode()
+							.equals(SupplierManagementConst.IDENTIFICATION_TYPE_IC) ? false
 							: true);
+					// #35314 END 
 					softcertSuppDocList = SmServiceLookup.getDocumentSO()
 							.retrieveSoftcertSuppDocuments(reqDTO)
 							.getDocumentList();

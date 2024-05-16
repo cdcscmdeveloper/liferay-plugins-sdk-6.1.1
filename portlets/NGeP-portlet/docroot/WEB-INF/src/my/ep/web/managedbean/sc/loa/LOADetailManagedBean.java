@@ -350,7 +350,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private int retainPageNumber = 0; // #34242
 	private boolean resetAll = false;
 	private boolean resetAllforNoReport = false;
-	private String firstZone; // Bug #34757
+	// Bug #34757 -start-
+	private String firstZone;
+	private List<Long> itemList;
+	private List<Long> loaItemIds;
+	// Bug #34757 -end-
 	/* #29007 End Vinod */
 	
 	//#27797 - start
@@ -2045,6 +2049,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	public void setFirstZone(String firstZone) {
 		this.firstZone = firstZone;
+	}
+
+	public List<Long> getItemList() {
+		return itemList;
+	}
+
+	public void setItemList(List<Long> itemList) {
+		this.itemList = itemList;
+	}
+
+	public List<Long> getLoaItemIds() {
+		return loaItemIds;
+	}
+
+	public void setLoaItemIds(List<Long> loaItemIds) {
+		this.loaItemIds = loaItemIds;
 	}
 	// Bug #34757, #29007 -end-
 
