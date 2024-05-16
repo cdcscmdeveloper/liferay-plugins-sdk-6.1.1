@@ -4188,9 +4188,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
 		getManagedBean().getPersonnelsRole().clear();
 		getManagedBean().setDowngradeRole(false);
+		getManagedBean().setDisAllowOwnerEdit(false);
 		
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-
+		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
+		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
@@ -4198,25 +4201,34 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 				
-				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
-						&& isPersonnelAdminRole(personnel)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				
+				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
+				
+				if(isPersonnelAdminRole
+						&& isMofAccEffDatePassed6MonthCurrDate
+						&& !isBasicAccount){
+					getManagedBean().setDisAllowOwnerEdit(true);
+				}
+				
+//				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
+//						&& isPersonnelAdminRole(personnel)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				}
 			}
 		}
-		if(!getManagedBean().getPersonnelsRole().isEmpty()){
-			getManagedBean().setDisAllowOwnerEdit(false);
-			for(SmPersonnel smPersonnel : getManagedBean().getPersonnelsRole()){
-				if(isMofAccEffDatePassed6MonthCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
-					getManagedBean().setDisAllowOwnerEdit(true);
-					break;
-				}
-			}
+		if(getManagedBean().getPersonnelsRole() != null 
+				|| !getManagedBean().getPersonnelsRole().isEmpty()){
 			
 			getManagedBean().setDowngradeRole(true);
 			
