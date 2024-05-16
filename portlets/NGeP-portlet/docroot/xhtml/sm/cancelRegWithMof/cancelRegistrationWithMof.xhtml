@@ -45,7 +45,10 @@
 						</p:inputTextarea> <p:message id="cancelResonMsg" for="cancelReson" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.suppdoc.attach']}" />
+					<!-- 35619 Start -->
+					<td style="width:50%">
+					<p:outputLabel style="width:60%" value="#{lbl['lbl.sm.suppdoc.attach']}" />
+					<!-- 35619 End -->
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:commandLink style="float: left;padding-right: 10px;"
 							onclick="excelDialog.show();return false;">
