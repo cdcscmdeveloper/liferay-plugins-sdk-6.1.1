@@ -17121,13 +17121,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	public void validateCompanyBranch(SmApplicationManagedBean managedBean, String process) {
-		//#32304 - start
-		if(!getManagedBean().isSupplierUser() 
-				&& SmCommonUtil.checkCancelBumiApplFromNewAppl(managedBean.getSmAppl())){
-			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
-			return;
-		}
-		//#32304 - end
+		
 		switch (managedBean.getSmAppl().getApplType()) {
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
 		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
@@ -17814,6 +17808,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	//#32304 - start
 	/**
+	 * Validate application before showing approve/reject dialog
+	 * @param process
+	 */
+	public void validateBeforeSubmitDialog(String process){
+		if(!getManagedBean().isSupplierUser() 
+				&& SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmAppl())){
+			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
+			return;
+		}
+		validateCompanyBranch(getManagedBean(), process);
+	}
+	
+	/**
 	 * Delete pending bumi application & remove Bumiputera status
 	 */
 	public void changeBussTypeAlertYes(){
@@ -17823,8 +17830,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmAppl bumiAppl = getManagedBean().getPendingBumiAppl();
 		SmAppl lastAppl = getManagedBean().getLatestAppl();
 		reqDTO.setPendingKBAppl(bumiAppl);
-		if(bumiAppl != null && lastAppl != null && !bumiAppl.getApplId().equals(lastAppl.getApplId()))
+		if(bumiAppl != null && lastAppl != null && !bumiAppl.getApplId().equals(lastAppl.getApplId())){
 			reqDTO.setLastApprovedAppl(lastAppl);
+		}
 		reqDTO.setOutcome(SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setBpmPojo(getManagedBean().getPayLoad());

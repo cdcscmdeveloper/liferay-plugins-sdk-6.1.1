@@ -6485,16 +6485,16 @@ public class SmCommonUtil {
 	 */
 	public static boolean checkCancelBumiApplFromNewAppl(SmAppl smAppl){
 		if(smAppl == null || smAppl.isActiveAppl() || 
-				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)) 
+				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)){
 			return false;
-		
+		}
 		SmAppl activeAppl = SmServiceLookup.getReviewApplicationSO()
 				.retrieveActiveSmApplBySupp(smAppl.getSmSupplier().getSupplierId()).getSmAppl();
-		if(activeAppl == null) return false;
-		if(!activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
+		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES,
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW, ParameterConst.NEW_SM_APPLN_FOR_UPDATE);
+		if(activeAppl == null || !applTypes.contains(activeAppl.getApplType())){
 			return false;
+		}
 		
 		//cancel bumi if sv after approval && supplier create new KR/KU/KA
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
