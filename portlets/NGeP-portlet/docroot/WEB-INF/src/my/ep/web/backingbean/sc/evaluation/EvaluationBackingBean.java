@@ -17464,30 +17464,18 @@ private void retriveCommitteeRemarksList(){
 	 * @return
 	 */
 	public String retriveTotalTechnicalScore(ScQtEvaluationResultDtl propId) {
-		String totalTechScore = null;
 		BigDecimal divNum = new BigDecimal(0);
-		BigDecimal totalNum = new BigDecimal(0);
-		IQTEvaluationSO evaluationSO = null;
-		EvaluationResDTO resDTO = new EvaluationResDTO();
 
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		
-		
-		//add technical weightage
-		for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
-			totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
-		}
-		//add demo weightage
-		totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
 		
 		reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
 		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 		reqDTO.setDemo(false);//differentiate between item and package prop checklist
 		//calculate total tech score
-		resDTO = evaluationSO.technicalChecklistList(reqDTO);
+		EvaluationResDTO resDTO = evaluationSO.technicalChecklistList(reqDTO);
 		for(ScQtProposalChecklist specscore : resDTO.getDemoCheckLists()){
 			BigDecimal totalScore = specscore.getTotalScore();
 			if (null == totalScore) {
@@ -17504,10 +17492,8 @@ private void retriveCommitteeRemarksList(){
 			}
 			//#28784 add weightage to calculation - end
 			divNum = divNum.add(totalScore);
-		}
-		totalTechScore = String.valueOf(divNum.toPlainString());
-		
-		return totalTechScore;
+		}		
+		return  String.valueOf(divNum.toPlainString());
 	}
 	
 	/**
@@ -17517,32 +17503,17 @@ private void retriveCommitteeRemarksList(){
 	 * @return
 	 */
 	public String retriveTotalDemolScore(ScQtEvaluationResultDtl propId) {
-		String totalDemoScore = ResourceBundleUtils.getMessage(
-				"lbl.sc.qt.item.spec.null",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes()
-				.getUserLocale());//#28784 remove supplier not in demo supplier
 		BigDecimal divNum = new BigDecimal(0);
-		BigDecimal totalNum = new BigDecimal(0);
-		IQTEvaluationSO evaluationSO = null;
-		EvaluationResDTO resDTO = new EvaluationResDTO();
 
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-		evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		
-		//add technical weightage
-		for(ScQtCheckList specscore : this.getManagedBean().getEvaluationStgTechnicalCheckList()){
-			totalNum = totalNum.add(specscore.getQtScoreWeightage().getScore());
-		}
-		//add demo weightage
-		totalNum = totalNum.add(this.getManagedBean().getDemoTotalScore());
 		
 		reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
 		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 		reqDTO.setDemo(true);
-		resDTO = evaluationSO.technicalChecklistList(reqDTO);
+		EvaluationResDTO resDTO = evaluationSO.technicalChecklistList(reqDTO);
 		//calculate demo total score
 		for(ScQtProposalChecklist specscore : resDTO.getDemoCheckLists()){
 			BigDecimal totalScore = specscore.getTotalScore();
@@ -17561,7 +17532,7 @@ private void retriveCommitteeRemarksList(){
 			divNum = divNum.add(totalScore);
 			//#28784 add weightage to calculation - end
 		}
-		totalDemoScore = String.valueOf(divNum.toPlainString());
+		String totalDemoScore = String.valueOf(divNum.toPlainString());
 		
 		return totalDemoScore;
 	}
@@ -17574,10 +17545,8 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public String retrieveTotalTechnicalItemScore(ScQtEvaluationResultDtl propId) {
 		String totalTechScore = null;
-		String strDemoScore = null;
 		BigDecimal totalOtherchecklistScore = new BigDecimal(0);
 		BigDecimal totalNum = new BigDecimal(0);
-		BigDecimal demoScore = new BigDecimal(0);
 		IQTEvaluationSO evaluationSO = null;
 		EvaluationResDTO resDTO = new EvaluationResDTO();
 
@@ -17617,35 +17586,19 @@ private void retriveCommitteeRemarksList(){
 			resDTO = evaluationSO.excludePresentationDemo(reqDTO);
 			this.getManagedBean().setOtherchecklistScore(String.valueOf(totalNum.toPlainString()));
 			totalTechScore = String.valueOf(resDTO.getTechScore());
+			this.getManagedBean().setItemTsPercentage(resDTO.getTechScore().multiply(this.getManagedBean().getMaxItemTsPercentage())
+					.divide(this.getManagedBean().getMaxItemTsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
 			if (resDTO.isGenerateSuppliers()) {
-				
-//				if (this.getManagedBean().getScQtDemo().getDemoCategoryId().getParameterCode().equals(SourcingConstants.BY_ITEM)) {
-					presentationDemoItemScore(String.valueOf(propId.getQtEvaluationResult().getScQtProposal().getSupplierNo()),
-							this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
-//				} else {
-//					reqDTO.setQtproposalId(propId.getQtEvaluationResult().getScQtProposal().getQtProposalId());
-//					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-//					reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);			
-//					reqDTO.setDocDefinationKey(SourcingConstants.DOC_DEF_KEY_PRESENTATION_DEMO);
-//					resDTO = evaluationSO.retrieveSpecScore(reqDTO);
-//					//calculate demo total score
-//					for(ScQtProposalChecklist specscore : resDTO.getSpecScoreBySupplier()){
-//						demoScore = specscore.getTotalScore();
-//						strDemoScore = String.valueOf(demoScore);
-//					}
-//					this.getManagedBean().setDemoScore(strDemoScore);
-////					technicalScore = propId.getTotalScore().subtract(demoScore);
-//					
-////					totalTechScore = String.valueOf(technicalScore);
-//				
-//				}
+				presentationDemoItemScore(String.valueOf(propId.getQtEvaluationResult().getScQtProposal().getSupplierNo()),
+						this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
 			} else {
 				this.getManagedBean().setDemoScore(ResourceBundleUtils.getMessage(
 						"lbl.sc.qt.item.spec.null",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes()
 						.getUserLocale()));
-//				totalTechScore = String.valueOf(propId.getTotalScore());
+				this.getManagedBean().setItemAllOtherElementsPercentage(totalNum.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
+						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
 			}
 		} finally {
 			evaluationSO = null;
@@ -17669,8 +17622,8 @@ private void retriveCommitteeRemarksList(){
 			}
 			this.getManagedBean().setItemAllOtherElementsPercentage((new BigDecimal(this.getManagedBean().getOtherchecklistScore())
 			.add(new BigDecimal(this.getManagedBean().getDemoScore())))
-			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore())
-					.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage()));
+			.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
+			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
 		}
 		finally {
 
