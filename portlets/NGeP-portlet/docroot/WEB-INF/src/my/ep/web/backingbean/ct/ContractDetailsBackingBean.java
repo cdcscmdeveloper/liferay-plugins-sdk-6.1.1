@@ -2286,6 +2286,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 		ctBB.getManagedBean().setAmendFromViewPage(true); // #15851
 		ctBB.getManagedBean().setViewSCL(false);//34142, 15851 to reset viewSCL before anything
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("amendManagedBean", null);//#15851
 		AmendmentBackingBean amendBB = new AmendmentBackingBean();
 		amendBB.getManagedBean().setSelectedTabIndex(0);
 		/*#25956 Start*/

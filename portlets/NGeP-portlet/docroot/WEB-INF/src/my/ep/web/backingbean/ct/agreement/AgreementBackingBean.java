@@ -963,6 +963,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
+		
+		//#29417 start
+		Date signDate = getManagedBean().getAgreementContractVer()!=null ? getManagedBean().getAgreementContractVer().getSignedDate() : null;
+		Date expDate = getManagedBean().getCtAgreement().getExpDate();
+		getManagedBean().setButtonProcess(outcome);
+		//#29417 end
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			validateAgreement(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -984,17 +991,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#29417 start
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
+				RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
+			}else{
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#29417 end
 			return null;
 		}
 		// 29417 - START
-		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
-			getManagedBean().setButtonProcess(outcome);
-			Date signDate = getManagedBean().getAgreementContractVer().getSignedDate();
-			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
-			if(signDate != null && expDate != null && signDate.after(expDate)){
-				
-				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){			
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
+				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");				
 			}
 			else {
 				return this.saveAgreement(outcome);
@@ -1253,11 +1263,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctBB.getManagedBean().setViewContract(true);
 		ctBB.getManagedBean().setViewContractFromAgreement(true);//Bug 34142 - shaqimi 16112022
 		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
+		ctBB.getManagedBean().setContractVerIdFromAgreementTaskList(contractVerId); //15851
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId());
+		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 		return CONTRACT_PAGE;
 	}
 
@@ -1286,10 +1297,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			getManagedBean().setFromViewSCL(true);
 			
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 			abb.getManagedBean().setTrackingDairyView(true);
 			ctBB.getManagedBean().setViewSCL(true);
-			abb.getManagedBean().setViewSclFromAgreement(true);
+			ctBB.getManagedBean().setViewSclFromAgreement(true); //#15851
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
