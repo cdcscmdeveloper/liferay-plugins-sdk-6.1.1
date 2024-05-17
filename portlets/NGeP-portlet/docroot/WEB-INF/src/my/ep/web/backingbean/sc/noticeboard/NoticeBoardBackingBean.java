@@ -104,6 +104,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -111,6 +112,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -180,7 +182,9 @@ public class NoticeBoardBackingBean extends
 	private static final String CHECK_SUPPLIER_QUAL_PAGE = "/xhtml/sc/noticeboard/supplierqualification/nbSupplierQulificationCriteria.xhtml";
 	private static final String PRICE_SCHEDULE_PAGE ="/xhtml/sc/noticeboard/priceshedule/nbPriceSchedule.xhtml";
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
-	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml?faces-redirect=true";
+	// #28777 & #29729 - remove '?faces-redirect=true' - Start
+	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
+	// #28777 & #29729 - remove '?faces-redirect=true' - End
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
 	
@@ -859,8 +863,37 @@ public class NoticeBoardBackingBean extends
 		//managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
 		
+		//#28777 & #29729 - Start
+		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_760522, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		//#28777 & #29729 - End
+		
 		return BSV_SUPP_REGISTRATION_PAGE;
 	}
+	
+    //#28777 & #29729 - Start
+	/**
+	* Method to return true, if branch in supplier has been deleted
+	* @param qtId
+	* @param supplierId
+	* @return true or false
+	**/
+	public Boolean checkValidationSupplierBranchDeleted(Long qtId, Long supplierId){
+		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTNoticeBoardSO.class);
+		NoticeBoardReqDTO supplierReqDTO = new NoticeBoardReqDTO();
+		supplierReqDTO.setSupplierId(supplierId);
+		supplierReqDTO.setQtId(qtId);
+		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
+		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
+		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
+			return Boolean.TRUE;
+	    }
+		return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
 
 	
 	/**
@@ -1136,6 +1169,8 @@ public class NoticeBoardBackingBean extends
 				supplierReqDTO.setQtId(qtId);
 				NoticeBoardResDTO supplierResDTO = boardSO
 						.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
+				
+	
 				
 				//start Bug #26764
 				if(!supplierResDTO.isSuccessful()){			
@@ -3019,7 +3054,7 @@ public class NoticeBoardBackingBean extends
 							.equals(finalizationMethod.getParameterCode()) && !isRefinalized) {
 					awardedItem.setPriceByBidding(TemplateSpecHelper.getInstance()
 						.calcTotalAmount(reqItem.getTplSpecQuestion(),
-								scQtRecommendDtl.getScQtProposalItem().getFinalPrice(), 
+								scQtRecommendDtl != null ?scQtRecommendDtl.getScQtProposalItem().getFinalPrice():null, //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 									scLoiLoaItem.getQty()));
 					}
 					awardedItemList.add(awardedItem);
