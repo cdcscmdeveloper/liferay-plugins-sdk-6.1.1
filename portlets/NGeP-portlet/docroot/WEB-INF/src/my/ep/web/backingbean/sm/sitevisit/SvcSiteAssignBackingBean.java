@@ -222,7 +222,7 @@ public class SvcSiteAssignBackingBean extends
 			}
 		}
 		//#32304 - start
-		if(SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmAppl())){
+		if(SmCommonUtil.checkCancelBumiApplFromBumiStatus(getManagedBean().getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
 			return;
 		}
