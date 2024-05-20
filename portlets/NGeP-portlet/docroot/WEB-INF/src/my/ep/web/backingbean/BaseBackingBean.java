@@ -2861,6 +2861,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
 						resDTO.getSmPersonnel().setSsmData(false);
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -4234,7 +4236,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		if(getManagedBean().getPersonnelsRole() != null 
-				|| !getManagedBean().getPersonnelsRole().isEmpty()){
+				&& !getManagedBean().getPersonnelsRole().isEmpty()){
 			
 			getManagedBean().setDowngradeRole(true);
 			
