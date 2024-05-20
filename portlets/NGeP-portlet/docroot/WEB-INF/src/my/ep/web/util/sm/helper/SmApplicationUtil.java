@@ -5154,15 +5154,15 @@ public class SmApplicationUtil {
 			}
 			//#34397, #34398 - start
 			checkMOFExpiryDate(smSupplier, applicationType, false);
-			
-			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI) && smSupplier.isBumi()) {
-				throw new EpException(MessageConst.ERROR_722504);
-			
 			//#32304 - start
-			} else if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-					&& SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
+			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+				if(smSupplier.isBumi()){
+					throw new EpException(MessageConst.ERROR_722504);
+				}
+				if(SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
 							smSupplier.getSupplierId()).getSmAppl() != null){
-				throw new EpException(MessageConst.ERROR_722697);
+					throw new EpException(MessageConst.ERROR_722697);
+				}
 			}
 			//#32304 - end, #34397, #34398 - end			
 
