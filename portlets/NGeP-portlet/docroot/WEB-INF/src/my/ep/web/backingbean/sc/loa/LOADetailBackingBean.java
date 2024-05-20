@@ -2774,6 +2774,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else {
 			serviceBeans = new ArrayList<ItemBean>();
 			List<Long> requestItemIds = new ArrayList<Long>();
+			//#35295 #61 - start
+			String specDescription = "";
 			for(ScLoiLoaItem loiLoaItem : scLoa.getScLoiLoaItems()) {
 				ScRequestItem requestItem = loiLoaItem.getScRequestItem();
 				Long requestItemId = requestItem.getRequestNoteItemId();
@@ -2781,12 +2783,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					ItemBean itemBean = new ItemBean();
 					itemBean.setItem(requestItem.getItemName());
 					List<String> specs = new ArrayList<String>();
-					specs.add(requestItem.getItemDesc());
+					specDescription = (!requestItem.getItemDesc().isEmpty()) ? requestItem.getItemDesc().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+					specDescription = (!requestItem.getItemDesc().isEmpty()) ? requestItem.getItemDesc().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+					specs.add(specDescription);
 					itemBean.setSpecs(specs);
 					serviceBeans.add(itemBean);
 					requestItemIds.add(requestItemId);
 				}
 			}
+			//#35295 #61 - end
 		}
 
 		context.put("productAnswers", productBeans);
