@@ -128,6 +128,13 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 //#13320 - Rahim
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagmentConst;
+import my.ep.web.backingbean.sm.audit.AuditSMBasicAccountMaintananceBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 
 /*import com.liferay.portal.security.auth.AuthVerifierResult.State;*/
@@ -1547,6 +1554,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//		FacesMessage.SEVERITY_INFO,
 				//		null,
 				//		MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditSupplierManagementSO auditSMSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+				
+				if (auditSMSO.isAuditConfig(AuditSupplierManagmentConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auSMTemplate = new AuditSMBasicAccountMaintananceBackingBean();
+					log.info("Trigger");
+				}
+//		if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
+//			getManagedBean().setPurchaseRequestResDTO(response);
+//			auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
+//		}
+				// #28895_35501 End
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
