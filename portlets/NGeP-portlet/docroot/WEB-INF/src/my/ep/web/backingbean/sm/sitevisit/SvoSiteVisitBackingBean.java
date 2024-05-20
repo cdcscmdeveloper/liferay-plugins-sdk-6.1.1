@@ -3470,29 +3470,25 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private boolean isPoApproverActive(PmUser user, boolean isAfterApproval){
-		if(user == null || user.getPmUserOrgs() == null
-				|| user.getPmUserOrgs().isEmpty() || user.getPmUserOrgs().get(0) == null){
-			return false;
-		}
-		List<PmUserRole> roles = user.getPmUserOrgs().get(0).getPmUserRoles();
-		if(roles == null || roles.isEmpty()){
-			return false;
-		}
-		//#33955 - START
-		for (PmUserRole pmUserRole : roles) {
-			if(pmUserRole.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
-				continue;
+		try{
+			//#33955 - START
+			for (PmUserRole pmUserRole : user.getPmUserOrgs().get(0).getPmUserRoles()) {
+				String role = pmUserRole.getPmRole().getRoleCode();
+				if ((role.equals(SupplierManagementConst.PO_HQ) && !isAfterApproval)
+					|| (role.equals(SupplierManagementConst.APPROVER_HQ) && isAfterApproval)) {
+					return pmUserRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
 			}
-			String role = pmUserRole.getPmRole().getRoleCode();
-			if ((role.equals(SupplierManagementConst.PO_HQ) && !isAfterApproval)
-				|| (role.equals(SupplierManagementConst.APPROVER_HQ) && isAfterApproval)) {
-				return true;
-			}
+			//#33955 - END
+		} catch (NullPointerException e){
+			log.info("PO/Approver null", e);
 		}
-		//#33955 - END
 		return false;
 	}
 	
+	/**
+	 * Validate before showing submit dialog
+	 */
 	public void validateBeforeSubmitDialog(){
 		if(SmCommonUtil.checkCancelBumiApplFromBumiStatus(getManagedBean().getSmSvTask().getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
@@ -3501,6 +3497,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
 	}
 	
+	/**
+	 * Redirect
+	 */
 	public void redirectToTaskList(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "taskListView");

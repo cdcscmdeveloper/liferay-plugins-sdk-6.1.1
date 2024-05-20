@@ -17600,10 +17600,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//check category code end
 		//#32304 - start
 		SmAppl latestAppl = getManagedBean().getLatestAppl();
-		if(getManagedBean().getPendingBumiAppl() != null && getManagedBean().getPendingBumiAppl().getApplNo() != null
-				&& latestAppl != null && latestAppl.getSmCompanyBasic() != null){
-			String prevType = latestAppl.getSmCompanyBasic().getBusinessType();
-			if(!getManagedBean().getSmAppl().getSmCompanyBasic().getBusinessType().equals(prevType)){
+		String bussType = getManagedBean().getSmAppl().getSmCompanyBasic().getBusinessType();
+		if(latestAppl != null && latestAppl.getSmCompanyBasic() != null
+				&& !bussType.equals(latestAppl.getSmCompanyBasic().getBusinessType())){
+			SmAppl bumiAppl = getManagedBean().getPendingBumiAppl();
+			if(bumiAppl == null){
+				bumiAppl = SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
+						getManagedBean().getSmSupplier().getSupplierId()).getSmAppl();
+				getManagedBean().setPendingBumiAppl(bumiAppl);
+			}
+			if(bumiAppl != null && bumiAppl.getApplNo() != null){
 				RequestContext.getCurrentInstance().execute("chgBussTypeAlert.show();");
 				return;
 			}
@@ -17864,10 +17870,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		try {
 			MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO()
 					.initiateSmApplDeleteDraftTask(reqDTO);		
-			if(resDTO == null) throw new EpException(MessageConst.ERROR_722519);
-			if (!resDTO.isBpmSuccess()) throw new EpException(MessageConst.ERROR_700020);			
+			if(resDTO == null) {
+				throw new EpException(MessageConst.ERROR_722519);
+			}
+			if (!resDTO.isBpmSuccess()) {
+				throw new EpException(MessageConst.ERROR_700020);			
+			}
 		} catch (Exception e) {
-			log.info("***Error in Delete Draft  **** ");
+			log.error("***Error in Delete Draft  ****", e);
 			retriveLatestApplAfterUpdate(getManagedBean().getCurrentPageType(), "");
 			throw new EpException(e.getMessage());
 		}
