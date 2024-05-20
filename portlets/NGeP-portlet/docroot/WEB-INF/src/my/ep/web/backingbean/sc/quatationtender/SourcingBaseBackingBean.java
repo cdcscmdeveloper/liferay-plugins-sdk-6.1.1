@@ -3924,6 +3924,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			for (ScLoiLoaItem item : items) {
 				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
+				//#35295 #61 - start
+				String answerRemarks = "";
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
 					TplSpecMaster master = null;
 					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
@@ -3949,7 +3951,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 						
 						if (answer.getAnswerRemark() != null) {
-							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
+							answerRemarks = !answer.getAnswerRemark().isEmpty() ? answer.getAnswerRemark().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "" ;
+							answerRemarks = !answer.getAnswerRemark().isEmpty() ? answer.getAnswerRemark().replaceAll("É", SSTConstant.PROTEGE_LOWERCASE_E) : "" ;
+							answer.getTplSpecQuestion().setAnswerRemarks(answerRemarks);
 						} else {
 							answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
 						}
