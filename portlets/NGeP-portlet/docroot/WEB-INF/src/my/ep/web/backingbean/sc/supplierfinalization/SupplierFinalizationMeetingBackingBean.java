@@ -586,7 +586,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		UserCommitteeSearchBean userCommitteeSearchBean = getManagedBean().getUserSearchBean();
 		if (userSearchQCDataModel == null) {
 			this.getManagedBean().setUserSearchDataModel(
-					new UserQCPagingDataModel("existingMemberTbl", userCommitteeSearchBean));
+					new UserQCPagingDataModel(QTConstants.DATATABLE_EXISTINGMEMBERTBL, userCommitteeSearchBean));
 		}
 		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		resetUserAction(); 
