@@ -7906,7 +7906,6 @@ public class SmApplicationBackingBean extends
 		// update category that record status is 1 for new mof application. This
 		// happen due to resubmit application (#23683)
 		updateCategoriesRecordStatus();
-		updateSuppDocApproverVerified(); //31043
 		reCheckVerifiedSection();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
@@ -11571,10 +11570,10 @@ public class SmApplicationBackingBean extends
 	private void setValueForInquiryRemarks(SmApplSupportDoc smApplSupportDoc) {
 
 		if (!EntityHelper
-				.isCollectionEmpty(getManagedBean().getMandatoryDocs())
+				.isCollectionEmpty(getManagedBean().getMissinDocsMandatory())
 				&& smApplSupportDoc.getPmDocument().isMandatory()) {
 			for (SmApplSupportDoc smApplSupportDocMandatory : getManagedBean()
-					.getMandatoryDocs()) {
+					.getMissinDocsMandatory()) {
 				if (smApplSupportDoc.getApplSupportDocId().equals(
 						smApplSupportDocMandatory.getApplSupportDocId())) {
 					smApplSupportDoc.setPoRemarks(smApplSupportDocMandatory
@@ -11584,10 +11583,10 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getNonMandatoryDocs())
+				.getMissinDocsNonMandatory())
 				&& !smApplSupportDoc.getPmDocument().isMandatory()) {
 			for (SmApplSupportDoc smApplSupportDocNonMandatory : getManagedBean()
-					.getNonMandatoryDocs()) {
+					.getMissinDocsNonMandatory()) {
 				if (smApplSupportDoc.getApplSupportDocId().equals(
 						smApplSupportDocNonMandatory.getApplSupportDocId())) {
 					smApplSupportDoc.setPoRemarks(smApplSupportDocNonMandatory
@@ -11740,6 +11739,7 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.setVerificationValues(sec, isVerifiedAll,
 							getManagedBean().getMaxReviewCount(),
 							getManagedBean()));
+			SmApplicationUtil.checkAllowedToRecommendSiteVisit(getManagedBean()); //#31043
 		} else if (getManagedBean().isApproverUser()) {
 			sec = getManagedBean().getApprvrSecReview();
 			getManagedBean().setApprvrSecReview(
@@ -15243,10 +15243,33 @@ public class SmApplicationBackingBean extends
 	public void setVerifiedSupportDoc() {
 		for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			if (applSuppDoc.getVerifiedFlg() != null) {
+			//#31043 START
+			/*if (applSuppDoc.getVerifiedFlg() != null) {
 				applSuppDoc
 						.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
+			}*/
+			for(SmApplSupportDoc mandatoryDoc : getManagedBean().getMandatoryDocs()){
+				if(mandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+					applSuppDoc.setApproverVerifiedFlg(mandatoryDoc.getApproverVerifiedFlg());
+				}
 			}
+			for(SmApplSupportDoc nonMandatoryDoc : getManagedBean().getNonMandatoryDocs()){
+				if(nonMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+					applSuppDoc.setApproverVerifiedFlg(nonMandatoryDoc.getApproverVerifiedFlg());
+				}
+			}
+			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
+				for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
+					licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+				}
+			}
+			for(SmApplSupportDoc licenseMandatoryDoc : licenseMandatoryDocs){
+				if(licenseMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+					applSuppDoc.setApproverVerifiedFlg(licenseMandatoryDoc.getApproverVerifiedFlg());
+				}
+			}
+			//#31043 END
 		}
 	}
 
@@ -17438,8 +17461,9 @@ public class SmApplicationBackingBean extends
 				if (getManagedBean().getSmAppl() != null) {
 					if (!(getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty())) {
 						for (SmSupplierBank banks : getManagedBean().getSmAppl().getSmSupplierBanks()) {
-							if (banks.getSignatureInstruction().contains("<")
-									|| banks.getSignatureInstruction().contains(">")) {
+							//#35635 - start
+							if ((banks.getSignatureInstruction() != null) && (banks.getSignatureInstruction().contains("<")
+									|| banks.getSignatureInstruction().contains(">"))) {
 								StringBuilder sb = new StringBuilder();
 								Locale locale = new FacesScopes().getUserLocale();
 								sb.append(ResourceBundleUtils.getMessage("lbl.sm.bankDtls.chequesign.tnc",
@@ -17447,6 +17471,7 @@ public class SmApplicationBackingBean extends
 								throw new EpException(MessageConst.ERROR_775191,
 										new String[] { sb.toString().toLowerCase() });
 							}
+							//#35635 - end
 						}
 					}
 				}	
@@ -17628,24 +17653,4 @@ public class SmApplicationBackingBean extends
 				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm"};
 	}
 	//#35145 - end
-	//31043 START
-	/**
-	 * Update supp doc verified for approver
-	 * 
-	 */
-	private void updateSuppDocApproverVerified() {
-		if (getManagedBean().isApproverUser()) {
-			if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
-					.getSmApplSupportDocs())) {
-				for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-						.getSmApplSupportDocs()) {
-					if (doc.getApproverVerifiedFlg() != null
-							&& doc.getVerifiedFlg() != null) {
-						doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
-					}
-				}
-			}
-		}
-	}
-	//31043 END
 }
