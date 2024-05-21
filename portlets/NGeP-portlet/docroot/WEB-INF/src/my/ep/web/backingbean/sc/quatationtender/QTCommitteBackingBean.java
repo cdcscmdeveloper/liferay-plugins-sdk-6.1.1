@@ -84,7 +84,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -93,7 +92,6 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.DateUtils;
@@ -113,14 +111,9 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-//#12471 Start
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
-//#12471 End
 
 /**
  * The Class QTCommitteBackingBean.
@@ -201,6 +194,7 @@ public class QTCommitteBackingBean extends
 				UserCommitteeSearchBean userCommitteeSearchBean) {
 			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
+			getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);//12471
 		}
 
 		/*
@@ -270,41 +264,40 @@ public class QTCommitteBackingBean extends
 								true));
 			}
 			// #12471 Start
-			if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-					.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
+			String orgCategory = null == userCommitteeSearchBean.getOrgCat() ? "": userCommitteeSearchBean.getOrgCat();
+			if (ParameterConst.ORG_CATEGORY_PTJ.equalsIgnoreCase(orgCategory)) {
 				String ministry = userCommitteeSearchBean.getMinistry();
-				if (!StringUtils.isBlank(ministry)) {
+				if (StringUtils.isNotBlank(ministry)) {
 					userSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ministry, true));
 				}
 				String ptjGroup = userCommitteeSearchBean.getPtjGroup();
-				if (!StringUtils.isBlank(ptjGroup)) {
+				if (StringUtils.isNotBlank(ptjGroup)) {
 					userSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ptjGroup, true));
 				}
 				String ptj = userCommitteeSearchBean.getPtj();
-				if (!StringUtils.isBlank(ptj)) {
+				if (StringUtils.isNotBlank(ptj)) {
 					userSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
 				}
 
-			} else if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-					.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
+			} else if (ParameterConst.ORG_CATEGORY_OTHERS.equalsIgnoreCase(orgCategory)) {
 				String orgType = userCommitteeSearchBean.getOrgType();
-				if (!StringUtils.isBlank(orgType)) {
+				if (StringUtils.isNotBlank(orgType)) {
 					userSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE_ORGTYPECODE_PARAMETERID
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.OTHERS.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), orgType, true));
 				}
 				String orgName = userCommitteeSearchBean.getOrgName();
-				if (!StringUtils.isBlank(orgName)) {
+				if (StringUtils.isNotBlank(orgName)) {
 					userSearchBean.getDataFilterBeans().add(
 							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE_ORGPROFILEID
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.SUPPORT.value()),
@@ -320,8 +313,10 @@ public class QTCommitteBackingBean extends
 	 */
 	public void searchUserAction() {
 		// #12471 Start
-		if (this.getManagedBean().getUserCommitteeSearchBean().getName().isEmpty()
-				&& this.getManagedBean().getUserCommitteeSearchBean().getIdentificationNo().isEmpty()) {
+		UserCommitteeSearchBean searchBean = this.getManagedBean().getUserCommitteeSearchBean();
+		if (null == searchBean)
+			return;
+		if (StringUtils.isBlank(searchBean.getName()) && StringUtils.isBlank(searchBean.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_775300);
 		}
 		// #12471 End
@@ -1081,20 +1076,15 @@ public class QTCommitteBackingBean extends
 		addCommitteMember(committee, titleName, null);
 	}
 	public void addCommitteMember(ScQtCommittee committee, String titleName, String taskName) {
-		debugLogger("addCommitteMember");
-
-		IPagingDataModel<PmUser> userSearCommitteeDataModel = getManagedBean()
-				.getUserSearchCommitteeDataModel();
-		if (null == userSearCommitteeDataModel) {
+		// #12471 Start
+		IPagingDataModel<PmUser> userSearchCommitteeDataModel = getManagedBean().getUserSearchCommitteeDataModel();
+		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getUserCommitteeSearchBean();
+		if (null == userSearchCommitteeDataModel) {
 			getManagedBean().setUserSearchCommitteeDataModel(
 					new UserCommitteePagingDataModel(
-							"existingcommitteesearchid", getManagedBean()
-									.getUserCommitteeSearchBean()));
+							"existingcommitteesearchid", userCommitteeSearchBean));
 		}
-		getManagedBean().getUserSearchCommitteeDataModel().resetData();
-
-		// #12471 Start
-		getManagedBean().getUserCommitteeSearchBean().setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
+		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();
 		// #12471 End
 		getManagedBean().setSelectedPmUser(null);
@@ -1628,46 +1618,10 @@ public class QTCommitteBackingBean extends
 	 * Reset.
 	 */
 	public void reset() {
-		debugLogger("reset");
-		// #12471 Start
-		if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgProfileId(this.getManagedBean().getQt().getOrgProfileId());
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
-			this.getManagedBean().getUserCommitteeSearchBean()
-					.setMinistry(resDTO.getPmOrgProfile().getOrgProfileId().toString());
-			buildMinistryDD();
-			resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
-			this.getManagedBean().getUserCommitteeSearchBean()
-					.setPtjGroup(resDTO.getPmOrgProfile().getOrgProfileId().toString());
-			buildPtjGroupDD();
-			this.getManagedBean().getUserCommitteeSearchBean()
-					.setPtj(this.getManagedBean().getQt().getOrgProfileId().toString());
-			buildPtjDD();
-			this.getManagedBean().getUserCommitteeSearchBean().setOrgType(null);
-			this.getManagedBean().getUserCommitteeSearchBean().setOrgName(null);
-		} else if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS)) {
-			PmParameter categoryCodeParameter = this.getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES, ParameterConst.APPROVAL_CATEGORY_OTHERS);
-			if(categoryCodeParameter!=null){
-				this.getManagedBean().getUserCommitteeSearchBean().setOrgType(String.valueOf(categoryCodeParameter.getParameterId()));
-			}
-			buildOrgTypeDD();
-			this.getManagedBean().getUserCommitteeSearchBean()
-					.setOrgName(QTConstants.ORG_CAT_NAME_EXTERNAL_PARTIES_ID.toString());
-			this.getManagedBean().setOrgType(this.getManagedBean().getUserCommitteeSearchBean().getOrgType());
-			buildOrgNameDD();
-		}
+		//12471 - start
+		resetCommitteeSearchBean(this.getManagedBean().getQt());
 		getManagedBean().getUserSearchCommitteeDataModel().resetData();
-		// #12471 End
-		this.getManagedBean().getUserCommitteeSearchBean().setName(null);
-		this.getManagedBean().getUserCommitteeSearchBean()
-				.setIdentificationType(null);
-		this.getManagedBean().getUserCommitteeSearchBean()
-				.setIdentificationNo(null);
+		//12471 - end
 	}
 
 	/**
@@ -2828,89 +2782,4 @@ public class QTCommitteBackingBean extends
 		}
 		return true;
 	}
-	// #12471 Start
-	/**
-	 * Generate ministry dropdown
-	 */
-	public void buildMinistryDD() {
-		this.getManagedBean().setMinistryDDList(PmCommonUtil.getMinistryDropdown());
-	}
-
-	/**
-	 * Generate ptj group dropdown
-	 */
-	public void buildPtjGroupDD() {
-		SelectItem[] items = new SelectItem[1];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		if (null != this.getManagedBean().getUserCommitteeSearchBean().getMinistry())
-			items = PmCommonUtil.getJabatanDropdown(Long.parseLong(this.getManagedBean().getUserCommitteeSearchBean()
-					.getMinistry()));
-		this.getManagedBean().setPtjGroupDDList(items);
-	}
-
-	/**
-	 * Generate ptj dropdown
-	 */
-	public void buildPtjDD() {
-		SelectItem[] items = null;
-		IOrgProfileSO orgProfileSO = null;
-		Long ptjGroupId = null;
-		try {
-			int i = 1;
-			List<Object[]> list = new ArrayList<>();
-			if (this.getManagedBean().getUserCommitteeSearchBean().getPtjGroup() != null) {
-				ptjGroupId = Long.parseLong(this.getManagedBean().getUserCommitteeSearchBean().getPtjGroup());
-				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setParentOrgProfileId(ptjGroupId);
-				reqDTO.setOrgCode(OrganizationType.DIVISION.value());
-				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
-				list = resDTO.getOrgProfileDDList();
-				items = new SelectItem[list.size() + 1];
-			} else {
-				items = new SelectItem[1];
-			}
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LABEL_TEXT_SELECT,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-			for (Object[] object : list) {
-				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
-			}
-		} catch (Exception e) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt == null ? "" : scQt.getQtNo();
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-					qtNo, SLALogConstant.QT_COMMITTEE_BACKINGBEAN.concat(SLALogConstant.QT_BUILD_PTJ_DD), getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-		this.getManagedBean().setPtjDDList(items);
-	}
-
-	/**
-	 * Generate dropdown on parent change
-	 * @param dropdown - Dropdown type (Organization Type)
-	 */
-	public void onChangeDD(String dropdown) {
-		if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat()
-				.equalsIgnoreCase(ParameterConst.ORG_CATEGORY_PTJ)) {
-			if (dropdown.equalsIgnoreCase(ParameterConst.ORG_TYPE_MINISTRY)) {
-				this.getManagedBean().getUserCommitteeSearchBean().setPtjGroup(null);
-				buildPtjGroupDD();
-				this.getManagedBean().getUserCommitteeSearchBean().setPtj(null);
-				buildPtjDD();
-			} else if (dropdown.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ_GROUP)) {
-				this.getManagedBean().getUserCommitteeSearchBean().setPtj(null);
-				buildPtjDD();
-			}
-		} else if (this.getManagedBean().getUserCommitteeSearchBean().getOrgCat().equalsIgnoreCase(ParameterConst.ORG_CATEGORY_OTHERS) 
-				&& dropdown.equalsIgnoreCase(ParameterTypeConst.ORGANISATION_TYPES)) {
-			this.getManagedBean().getUserCommitteeSearchBean().setOrgName(null);
-			this.getManagedBean().setOrgType(this.getManagedBean().getUserCommitteeSearchBean().getOrgType());
-			buildOrgNameDD();
-		}
-	}
-	// #12471 End
-	
 }
