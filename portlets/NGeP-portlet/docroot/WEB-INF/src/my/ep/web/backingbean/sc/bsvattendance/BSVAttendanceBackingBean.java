@@ -1257,7 +1257,7 @@ public class BSVAttendanceBackingBean extends
 					
 					for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
 						String newValue = newBriefingRegistration.getSupplier().getCompanyName();
-						auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId,
+						auReqDTO = auTrailsSO.populateAuditReqDTOold(roleCode, orgProfileId, docTypeId, docNo, docId,
 								null, null, statusId, actionType, qtFieldId, null, null, newValue,
 								null,createdBy, null, null, groupTabSection);
 						auReqList.add(auReqDTO);
@@ -1747,7 +1747,7 @@ public class BSVAttendanceBackingBean extends
 			IQTAuditTrailsSO auTrailsSO = (IQTAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 			
-			auReqDTO = auTrailsSO.populateAuditReqDTO(roleCode, orgProfileId, docTypeId, docNo, docId,
+			auReqDTO = auTrailsSO.populateAuditReqDTOold(roleCode, orgProfileId, docTypeId, docNo, docId,
 					null, null, statusId, actionType, qtFieldId, null, null, null,
 					null,createdBy, null, null, groupTabSection);
 			auReqList.add(auReqDTO);
