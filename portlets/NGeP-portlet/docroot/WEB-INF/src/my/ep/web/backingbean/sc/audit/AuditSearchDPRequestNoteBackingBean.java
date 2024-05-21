@@ -118,7 +118,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	/**
 	 * loadDPRequestnote() - reload searchDP data
 	 */
-	public void loadDPRequestnote() {
+	public void loadDPRequestNote() {
 		this.getManagedBean().setLazy(true);
 		searchDP.reloadData();
 	}
@@ -137,7 +137,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		getManagedBean().setAuditDPSearchBean(auditDPSearchBean);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
-		loadDPRequestnote();
+		loadDPRequestNote();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoneView);
 	}
 
@@ -177,7 +177,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
-				IAuditDPRequestNoteSO auditSO = (IAuditDPRequestNoteSO) BusinessDelegate.getInstance()
+				IAuditDPRequestNoteSO auditSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 
 				ISearchResultBean<AuDPRequestNoteSPDTO> resDTO = auditSO.searchDPCancelRNResultList(languageCode,
@@ -188,7 +188,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 
 			} catch (Exception e) {
 				log.error(e);
-				throw new EpException(MessageConst.ERROR_770005);
+				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
 	}
