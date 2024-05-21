@@ -4299,6 +4299,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															answerRemark = answerRemark.replaceAll(
 																	QTConstants.NEW_LINE_CHARACTER,
 																	SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+															//#35295 #61 - start
+															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+															//#35295 #61 - end
 															map.put(SSTConstant.answerRemark, answerRemark);
 														}
 													}
@@ -4337,6 +4341,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																answerRemark = answerRemark.replaceAll(
 																		QTConstants.NEW_LINE_CHARACTER,
 																		SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																//#35295 #61 - start
+																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+																//#35295 #61 - end
 																map.put(SSTConstant.answerRemark, answerRemark);
 																break;
 															}
@@ -4351,6 +4359,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															SSTConstant.GREATER_THAN_SYMBOL);
 													specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
 															SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+													//#35295 #61 - start
+													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+													//#35295 #61 - end
 													map.put(SSTConstant.specValue, specVal);
 													map.put(SSTConstant.questionType, q.getQuestionType());
 													listPRQuestion.add(map);
@@ -4418,6 +4430,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														answerRemark = answerRemark.replaceAll(
 																QTConstants.NEW_LINE_CHARACTER,
 																SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+														//#35295 #61 - start
+														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+														//#35295 #61 - end
 														map.put(SSTConstant.answerRemark, answerRemark);
 													}
 												}
@@ -4441,6 +4457,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														SSTConstant.GREATER_THAN_SYMBOL);
 												specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
 														SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+												//#35295 #61 - start
+												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+												//#35295 #61 - end
 												map.put(SSTConstant.specValue, specVal);
 												map.put(SSTConstant.questionType, q.getQuestionType());
 												listPRQuestion.add(map);
