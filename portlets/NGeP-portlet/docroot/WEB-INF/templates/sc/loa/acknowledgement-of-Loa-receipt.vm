@@ -72,7 +72,9 @@ p {text-align: justify;}
 <body>
 
 	<div class='header'>
-		<span class='title-text'>No.Surat Setuju Terima :$loaNo</span>
+		## #25025 #528 -start
+		<span class='title-text'>No. Surat Setuju Terima : $loaNo</span>
+		## #25025 #528 -stop
 	</div>
 	<br />
 	<br />
@@ -87,16 +89,18 @@ p {text-align: justify;}
 		</tr>
 		<tr>
 			<td colspan="2"><p>
+			## #25025 #505 -start
 					<span class="text_family"> Dengan ini disahkan bahawa yang
 						bertandatangan di bawah ini mengakui penerimaan Surat ini dan
-						lampiran yang berkaitan yang rujukannya ialah $fileNo bertarikh
-						$govtSignDate dan bersetuju dengan terma dan syarat yang
+						lampiran yang berkaitan yang rujukannya ialah <span style="border-bottom: 1px solid;">$fileNo</span> bertarikh
+						<span style="border-bottom: 1px solid;">$govtSignDate</span> dan bersetuju dengan terma dan syarat yang
 						terkandung dalam Surat ini tanpa syarat yang mana salinan kepada
 						Surat ini telah pun disimpan, dan selanjutnya disahkan bahawa
 						tiada apa-apa terma, syarat atau stipulasi tambahan kepada yang
 						terkandung dalam dokumen $headerTitle.toLowerCase() dan Surat ini telah
 						dikenakan. </span>
 				</p></td>
+			## #25025 #505 -stop
 		</tr>
 
 	 <tr class="text_family">
@@ -111,7 +115,9 @@ p {text-align: justify;}
 					<td valign="top" style="white-space: normal;width:30%">$supplierSignerUser</td>
 					<td valign="top" style="width: 1%"> </td>
 					##26770 - start
-					<td valign="top" style ="width:19%">Nama Penuh</td>
+					## #25025 #505 -start
+					<td valign="top" style ="width:19%">Nama Penuh Saksi</td>
+					## #25025 #505 -stop
 					##26770 - end	
 					<td valign="top" style="width:1%">:</td>
 					<td valign="top" style="white-space: normal; width:30%">$supplierWitnessUser</td>

@@ -59,6 +59,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.VCtContract; //Fix - #30866
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
@@ -79,12 +80,14 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
@@ -98,6 +101,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.pm.helper.StatusHelper; //Fix - #30866
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
@@ -143,6 +147,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 //	/*#21387-basri end*/
 	//29551 - start
 	private static final String DEDUCTION_CLAUSE_PAGE = "/xhtml/fl/deductionsearch/search.xhtml?faces-redirect=true";
+	private static final String CONTRACT_VIEW_AUDIT = "/xhtml/ct/viewcontract/resultViewAudit.xhtml?faces-redirect=true"; // #30866
 	//29551 - end
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
@@ -250,7 +255,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		renewSesionObject();
 		defaultMinistryPtjSearchValue();
 		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
+		// Start - #30866
+		String fullViewRootPath = "";
 		FacesContext fc = FacesContext.getCurrentInstance();
+		fullViewRootPath = fc.getViewRoot().getViewId().toString();
+		if (fullViewRootPath.contains("trackingDiarySearch.xhtml")) {
+			getManagedBean().setContinuityCircularAuditSearch(true);
+		}
+		// End - #30866
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_MAINT_PAGE);
 	}
 
@@ -304,6 +316,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//Bug 34142, 15851 - shaqimi end 04/12/2022
 		
 		if (taskId == null) {
+			//#35156 - Start
+			log.info("**Start preRenderView from Maintenance** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 			if (getManagedBean().getWarningPercentage() != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
@@ -349,6 +364,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());
 			}
 			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			log.info("**End preRenderView from Maintenance** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
  			return;
 		}
 				
@@ -369,6 +386,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 		getManagedBean().setSelectedTabIndex(0);
+
 		
 		//#25406 - Start
 		/* re-Setting Cancel button*/
@@ -410,6 +428,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setDocType(dataType.getDocType());
 		}
 		
+		//#35156 - Start
+		log.info("**Start preRenderView from TaskList** Check Bug #35156 :"+" ContractVer :"+reqDTO.getContractVerId() 
+				+", Contract Id :"+reqDTO.getContractId());
+		
 		//Bug 34030 - shaqimi start
 		ctBB.getManagedBean().setTaskNameFromTaskList(reqDTO.getTaskName());
 		ctBB.getManagedBean().setDocTypeFromTaskList(reqDTO.getDocType());
@@ -432,6 +454,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.getManagedBean().setNotificationSetting(false); //#28320 - related to #26083
 		}
 		setValidateContractField(reqDTO);
+		
+		//#35156 - End
+				log.info("**END preRenderView from TaskList** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+						+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		//#25406
@@ -469,6 +495,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
+			
+			//#35156 - Start
+			log.info("**Start setValidateContractField** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 			
 			//Retrieve agreement list
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
@@ -779,8 +809,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		
-			
-			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+			//#35642 start
+			/*if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 				for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
 					if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
@@ -789,9 +819,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						break;
 					}
 				}
-			}
+			}*/
+			//#35642 end
+			
 			chkBondWaivedAttachment();
 			sortDeductions();
+			
+			//#35156 - End
+			log.info("**END setValidateContractField** Check Bug #35156 :"+"ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId()
+					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
 			
 		} catch(Exception e){
 			e.printStackTrace();
@@ -814,6 +850,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * and grouping the bond waiver into latest and history to show on the screen which one is the history. 
 	 */
 	private void chkBondWaivedAttachment() {
+		//#35642 start
+		/*
 		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
 				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 			ContractReqDTO reqDTO = new ContractReqDTO();
@@ -831,7 +869,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
-		}
+		}*/
+		//#35642 end
 		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
 		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
 		if (ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()!=null
@@ -1018,6 +1057,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		//#29713 -  removed try-finally clause and useless null value assignment to variable contractSO as it is not needed. 
 		//			exceptions are always thrown in main code
 		
+		//#35156 - Start
+		log.debug("**Start** Check Bug #35156 :"+"***saveContract** "+"ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId());
+		
 		/*Validation for login user's org profile before initiate contract task*/
 		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
 				&& ctBB.getManagedBean().getContractVer().getStatus() != null/*#26083 start - basri*/
@@ -1151,6 +1193,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
 		ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);			
 
+		//#35156 - End
+		log.debug("**END** Check Bug #35156 :"+"***saveContract** "+"ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId());
 		if (resDTO.isSuccessful()) {
 
 			log.debug("Record saved successfully");
@@ -1790,7 +1834,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}	
 			//LOG : 13847, by Fahmi 22032019 start
-			if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
+			//#35642 start
+			/*if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
 					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 				boolean isEqual = ctBB.getManagedBean().getCtContractAmount().isBondWaived()==ctBB.getManagedBean().getCtTestBondWaiverAmount().isBondWaived();
 				if(!isEqual){
@@ -1811,7 +1856,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						throw new EpException(MessageConst.ERROR_750044);
 					}    
 				}
-			}
+			}*/
+			//#35642 end
 		}
 		validationPerformanceBond(action);
 		//#13847 end
@@ -2711,6 +2757,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		setValidateContractField(reqDTO);
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setExternalPageUrl(null);
+		// Start - #30866
+		if (getManagedBean().isContinuityCircularAuditSearch()) {
+			getManagedBean().setFromContractViewPage(true);
+		}
+		// End - #30866
 		getManagedBean().setLoaContractVerId(ctBB.getManagedBean().getContractVer().getContractVerId());
 		reqDTO.setCtContractVer( ctBB.getManagedBean().getContractVer());
 		getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
@@ -2804,6 +2855,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractId(contractId);
 			reqDTO.setContractVerId(contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId());
+			
+			//#35156 - Start
+			log.info("**Start gotoNotificationSetting From Contract Maintenance** Check Bug #35156 :"+" ContractVer :"+reqDTO.getContractVerId() 
+					+", Contract id :"+reqDTO.getContractId());
 				
 			reqDTO.setUpdateAction(true);
 			reqDTO.setViewOnly(true);//Bug 34142, 15851 - shaqimi start 04/12/2022
@@ -2817,7 +2872,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			ctBB.chkServiceTaxAlert();
 			getManagedBean().setExternalPageUrl(null);
-			getManagedBean().setSelectedTabIndex(0);	
+			getManagedBean().setSelectedTabIndex(0);
+			
+			//#35156 - End
+			log.info("**END gotoNotificationSetting From Contract Maintenance** Check Bug #35156 :"+" ContractVer :"+reqDTO.getContractVerId() 
+					+", Contract id :"+reqDTO.getContractId());
+			
 			return CONTRACT_PAGE;
 		}finally{
 			contractSO = null;
@@ -3093,7 +3153,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
 		contractBB.getManagedBean().setResetval(true);
-	
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().getExternalPageUrlForAudit() != null) {
+			getManagedBean().getContractDataModel().reloadData();
+			getManagedBean().setExternalPageUrl(circularBB.getManagedBean().getExternalPageUrlForAudit());
+		}
+
+		if (getManagedBean().isContinuityCircularAuditSearch()) {
+
+			if (getManagedBean().isFromContractViewPage()) {
+				getManagedBean().setFromContractViewPage(false);
+				return CONTRACT_VIEW_AUDIT;
+			} else if (getManagedBean().isFromResultViewAudit()) {
+				getManagedBean().setFromResultViewAudit(false);
+				return CONTRACT_MAINT_PAGE;
+			}
+		}
+		// End - #30866
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 
@@ -4148,5 +4225,133 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 	}
 	// End Fix - #30856
+	
+	// Start - #30866
+	/**
+	 * method to display audit instruction
+	 * 
+	 * @return true if user is from audit menu (directory)
+	 */
+	public boolean isAuditCheck() {
+		boolean auditCheck = false;
+		if (getManagedBean().isContinuityCircularAuditSearch()) {
+			auditCheck = true;
+		}
+		return auditCheck;
+	}
+
+	/**
+	 * method to determine specific user roles for audit(supplier)
+	 * 
+	 * Only allow user with supplier_role and the request is only from the audit
+	 * menu
+	 * 
+	 * @return true if user has either one of the describe roles
+	 */
+	public boolean isAuditCheckForSupplier() {
+		boolean auditSupplierCheck = false;
+		if (isSupplierRole()) {
+			auditSupplierCheck = getManagedBean().isContinuityCircularAuditSearch();
+		}
+		return auditSupplierCheck;
+	}
+
+	/**
+	 * method to determine specific user roles for audit
+	 * 
+	 * Only allow user with specific designated role and the request is only
+	 * from audit menu
+	 * 
+	 * @return true if user has either one of the describe roles
+	 */
+	public boolean isAuditContinuityRoleCheck() {
+		return (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()));
+	}
+
+	/**
+	 * method to determine specific user roles that has to disable for audit
+	 * 
+	 * @return true if user has either one of described roles
+	 */
+	public boolean isAuditRoleForChairpersonAndMember() {
+		return (getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(
+				RoleCode.PPB_CHAIRPERSON.value()));
+	}
+
+	/**
+	 * method to hide FL subTable, and to check its roles combination
+	 * 
+	 * @return true to hide the table
+	 */
+	public boolean isToHideFlSubTable() {
+		boolean hide = false;
+		if (!isAuditContinuityRoleCheck() && isAuditRoleForChairpersonAndMember()) {
+			hide = true;
+		}
+		return hide;
+	}
+
+	/**
+	 * Get Status description by status id.
+	 * 
+	 * @param statusId
+	 *            the status id.
+	 * @return status description
+	 */
+	public String getStatusDescById(Long statusId) {
+		String statusDesc = null;
+
+		if (statusId != null) {
+			// Get the status description.
+			PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
+
+			if (pmStatusDesc != null) {
+				statusDesc = pmStatusDesc.getStatusName();
+			}
+		}
+
+		return statusDesc;
+	}
+
+	/**
+	 * contract search from audit maintenance screen.
+	 * 
+	 * @param contractNO
+	 *            , VCtContract
+	 * 
+	 * @return navigate to audit view page
+	 */
+	public String searchContractCtFlForAudit(String contractNO, VCtContract contractData) {
+		getManagedBean().setSearchContractNo(contractNO);
+		getManagedBean().setFromResultViewAudit(true);
+		getManagedBean().setContractDetailsAuditList(contractData);
+		getManagedBean().getContractDataModelForCtAuditViewFl().reloadData();
+		return CONTRACT_VIEW_AUDIT;
+	}
+	// End - #30866
 	
 }
