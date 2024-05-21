@@ -422,7 +422,7 @@ public class EvaluationMeetingBackingBean extends
 		if (null == userSearchCommitteeDataModel) {
 			getManagedBean().setUserSearchCommitteeDataModel(
 					new ExistingUserPagingDataModel(
-							"existingcommitteesearchid", userCommitteeSearchBean));
+							QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID, userCommitteeSearchBean));
 		}
 		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();
@@ -1592,7 +1592,7 @@ public class EvaluationMeetingBackingBean extends
 				String identificationType = userCommitteeSearchBean.getIdentificationType();
 				if (StringUtils.isNotBlank(identificationType)) {
 					searchBean.getDataFilterBeans().add( 
-							new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_IDENTIFICATIONCODE_PARAMETERCODE, SearchOperator.OPERATOR_EQUALS
 									.value(), identificationType, true));
 				} 
 				String orgCategory = null == userCommitteeSearchBean.getOrgCat() ? "": userCommitteeSearchBean.getOrgCat();
