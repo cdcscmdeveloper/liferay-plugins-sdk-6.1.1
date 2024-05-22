@@ -35,6 +35,7 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.constant.SSTConstant; //#25790
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -220,8 +221,12 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				if(getSearchDocumentNo() != null && getSearchDocumentNo() != "") {
 					if (isSearchLoaByRN()) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_IN.value(), getLoaList()));
-					}else{
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
+					} else {
+						// start - #25790
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(),
+										SSTConstant.SIGN_PERCENTAGE.concat(getSearchDocumentNo())));
+						// end - #25790
 					}
 				}
 				if(getSearchStatusId() != null) {
