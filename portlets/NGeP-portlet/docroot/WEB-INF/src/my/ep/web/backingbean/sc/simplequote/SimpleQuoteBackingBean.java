@@ -158,6 +158,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -8498,4 +8499,18 @@ public class SimpleQuoteBackingBean extends
 			return sb.toString();
 		}
 	    //29832 - end
+		
+	// start - #25790
+	/**
+	 * Redirect to purchase in default view.
+	 * 
+	 * @param purchaseInDefaultId
+	 *            the purchase in default id
+	 */
+	public void viewPurchaseInDefault(long purchaseInDefaultId) {
+		PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+		pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
+	}
+	// end - #25790
 }
