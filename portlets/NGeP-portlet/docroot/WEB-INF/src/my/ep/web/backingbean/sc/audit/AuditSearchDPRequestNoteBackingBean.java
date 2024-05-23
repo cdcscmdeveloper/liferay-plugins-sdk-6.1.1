@@ -69,7 +69,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	private String requestNoneView = "/xhtml/sc/directpurchase/requestnote/audit/auditDPRequestNoteView.xhtml";
 
 	public AuditSearchDPRequestNoteBackingBean() {
-		/**/
+
 	}
 
 	private FacesScopes getFacesScopes() {
@@ -80,10 +80,10 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	 * @return
 	 */
 	public boolean getRoleCode() {
-		boolean isRole ;
+		boolean isRole;
 		if (isRoleCodeAuditorGeneral() || isRoleCodeEPAdmin() || isRoleCodeBPKAuditor() || isRoleCodeAuditorInternal()) {
 			isRole = true;
-		}else{
+		} else {
 			isRole = false;
 		}
 		return isRole;
@@ -169,18 +169,18 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 
 		/**
 		 * pageChangeListener
+		 * 
 		 * @param searchBean
 		 * @return SearchResultBean
 		 */
-		public ISearchResultBean<AuDPRequestNoteSPDTO> pageChangeListener(
-				ISearchBean<AuDPRequestNoteSPDTO> searchBean) {
+		public ISearchResultBean<AuDPRequestNoteSPDTO> pageChangeListener(ISearchBean<AuDPRequestNoteSPDTO> searchBean) {
 
 			SearchResultBean<AuDPRequestNoteSPDTO> searchResult = new SearchResultBean<>();
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 				AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
-				IAuditDPRequestNoteSO auditSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+				IAuditDPRequestNoteSO auditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 
 				ISearchResultBean<AuDPRequestNoteSPDTO> resDTO = auditSO.searchDPCancelRNResultList(languageCode,
 						dpSearchBean.getDocId(), searchBean);
@@ -202,9 +202,9 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	public void setSearchDP(IPagingDataModel<AuDPRequestNoteSPDTO> searchDP) {
 		this.searchDP = searchDP;
 	}
-	
-	//SECTION: Generate Report (PDF & EXCEL)
-	
+
+	// SECTION: Generate Report (PDF & EXCEL)
+
 	/**
 	 * Generate Report: PDF Format
 	 * 
@@ -220,7 +220,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_DP, paramMap);
 	}
-	
+
 	/**
 	 * Retrieve audit trail detail transaction records.
 	 * 
@@ -233,7 +233,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 				ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 		return auditSO.getAuditTrailDetailsRNForExlRpt(docId);
 	}
-	
+
 	/**
 	 * Generate excel format.
 	 * 
@@ -259,8 +259,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		CellStyle cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
 
 		// Section - Setting Table Header Cell Style for each cell
-		CellStyle colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb)
-				.setHAlignment(HorizontalAlignment.CENTER)
+		CellStyle colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb).setHAlignment(HorizontalAlignment.CENTER)
 				.setVAlignment(VerticalAlignment.CENTER).buildHeaderCellStyle();
 
 		// Section - Setting Cell Style for No Records Found message.
@@ -277,9 +276,12 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		// Create Row/Cell - Report Title
 		Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
 		Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
-		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value
+		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
+																		// Cell
+																		// Value
 		cellTitleRow.setCellStyle(cellStyleTitleRpt);
-		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Cell
+		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
+																			// Cell
 
 		// Create Row/Cell - Report Header Datatable
 		Row titleHeaderRow = sheetRptAudit.createRow(3);
@@ -350,7 +352,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		// Export to Excel
 		exportExcelReportAudit(wb);
 	}
-	
+
 	/**
 	 * Set column width
 	 * 
@@ -380,7 +382,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 			sheetName.setColumnWidth(i + 1, columnWidths.get(i));
 		}
 	}
-	
+
 	/**
 	 * To create new row with cell style if record not found.
 	 * 
@@ -396,7 +398,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		cellNoRecord.setCellStyle(noRecordsStyle);
 		sheet.addMergedRegion(new CellRangeAddress(sheet.getLastRowNum(), sheet.getLastRowNum(), 1, totalCell));
 	}
-	
+
 	/**
 	 * Export/Download Document in Excel Format
 	 * 
@@ -427,5 +429,5 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 			log.error(e);
 		}
 	}
-	
+
 }

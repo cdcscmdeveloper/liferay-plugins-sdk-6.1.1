@@ -3,11 +3,11 @@ package my.ep.web.bean.sc.directpurchase;
 import java.io.Serializable;
 import java.math.BigInteger;
 import org.apache.log4j.Logger;
+
 /**
  * 
- * @author normuliana
- * #28895_35492
- *
+ * @author normuliana #28895_35492
+ * 
  */
 public class AuditDPSearchBean implements Serializable {
 	/**
@@ -19,17 +19,18 @@ public class AuditDPSearchBean implements Serializable {
 	private BigInteger docId;
 	private boolean isSearching = true;
 
-/**
- * AuditDPSearchBean()
- */
+	/**
+	 * AuditDPSearchBean()
+	 */
 	public AuditDPSearchBean() {
-		log.info("");
+
 	}
-/**
- * 
- * @param language
- * @param docId
- */
+
+	/**
+	 * 
+	 * @param language
+	 * @param docId
+	 */
 	public AuditDPSearchBean(String language, BigInteger docId) {
 		this.language = language;
 		this.docId = docId;
