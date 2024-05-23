@@ -17606,7 +17606,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#32304 - start
 		SmAppl latestAppl = getManagedBean().getLatestAppl();
 		String bussType = getManagedBean().getSmAppl().getSmCompanyBasic().getBusinessType();
-		if(latestAppl != null && latestAppl.getSmCompanyBasic() != null
+		if(latestAppl != null && latestAppl.getSmCompanyBasic() != null && bussType != null
 				&& !bussType.equals(latestAppl.getSmCompanyBasic().getBusinessType())){
 			SmAppl bumiAppl = getManagedBean().getPendingBumiAppl();
 			if(bumiAppl == null){
