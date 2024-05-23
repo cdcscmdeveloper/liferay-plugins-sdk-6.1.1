@@ -13,7 +13,6 @@ public class AuditDPSearchBean implements Serializable {
 	/**
 	 * 
 	 */
-	private static Logger log = Logger.getLogger(AuditDPSearchBean.class);
 	private static final long serialVersionUID = 1L;
 	private String language;
 	private BigInteger docId;

@@ -176,9 +176,10 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		public ISearchResultBean<AuDPRequestNoteSPDTO> pageChangeListener(ISearchBean<AuDPRequestNoteSPDTO> searchBean) {
 
 			SearchResultBean<AuDPRequestNoteSPDTO> searchResult = new SearchResultBean<>();
+			AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
-				AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
+				
 				IAuditDPRequestNoteSO auditSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 
@@ -189,6 +190,9 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 				return searchResult;
 
 			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, "AU", dpSearchBean.getDocId().toString(),
+						"AuditSearchDPRequestNoteBackingBean.SearchDPPagingDataModel",
+						getUserIdSessionFromLoginId(), e);
 				log.error(e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
