@@ -131,7 +131,7 @@ import org.primefaces.event.UnselectEvent;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sm.AuditSupplierManagmentConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.web.backingbean.sm.audit.AuditSMBasicAccountMaintananceBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 //#28895_35501 End
@@ -1558,7 +1558,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				IAuditSupplierManagementSO auditSMSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
 				
-				if (auditSMSO.isAuditConfig(AuditSupplierManagmentConst.AU_SM_CONF)) {
+				if (auditSMSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auSMTemplate = new AuditSMBasicAccountMaintananceBackingBean();
 					log.info("Trigger");
 				}
