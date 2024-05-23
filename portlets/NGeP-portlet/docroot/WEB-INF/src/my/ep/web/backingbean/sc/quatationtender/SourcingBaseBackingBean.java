@@ -993,6 +993,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
 		}
 		reportUrl.append(excNextUrl);*/
+		String mimeType = "";	// Improvement #35657@Syazani 14/05/2024
 		String reportUrl= generateReportURL(reportName,paramMap);
 		log.info("reportUrl: " + reportUrl);
 
@@ -1030,6 +1031,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					URL obj = new URL(reportUrl.toString());
 					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
 					input = new BufferedInputStream(uc.getInputStream());
+					mimeType = uc.getContentType();	// Improvement #35657@Syazani 14/05/2024
 				} catch (ConnectException e) {
 					throw new EpException(MessageConst.ERROR_100058);
 				}
@@ -1042,6 +1044,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
+				
+				// Improvement #35657@Syazani 14/05/2024 -- Start
+				if (!mimeType.equalsIgnoreCase(CommonConstants.FILE_CONTENT_TYPE_PDF)) {
+					log.info("Report server return '" + mimeType + "' Type");
+					log.info(bos.toString());
+					throw new EpException(MessageConst.ERROR_760530);
+				}
+				// Improvement #35657@Syazani 14/05/2024 -- End
+				
 				byte[] bytes = bos.toByteArray();
 				fos = new FileOutputStream(localFile);
 				fos.write(bytes);
