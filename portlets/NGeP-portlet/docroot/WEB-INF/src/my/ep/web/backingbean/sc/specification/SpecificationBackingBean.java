@@ -12518,6 +12518,11 @@ if (null != checklist && !checklist.isEmpty()) {
 						.getQtStatus()
 						.getStatusId()
 						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+		   	//#29732 check if submit with no category code before checking category code change
+			IQTSpecSO specSo = getSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -17365,6 +17370,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				&& (this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) || this.getManagedBean().getQt()
 						.getQtStatus().getStatusId().equals((QTStatusConst.QT_REVISION_PUBLICATION)))) {
+		   	//#29732 check if submit with no category code before checking category code change
+			IQTSpecSO specSo = getSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -17780,6 +17790,11 @@ if (null != checklist && !checklist.isEmpty()) {
 								&& !BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action))
 						//#29732 exclude endorsement
 				&& !this.getManagedBean().isReadOnly()) {
+		   	//#29732 check if submit with no category code before checking category code change
+			IQTSpecSO specSo = getSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
