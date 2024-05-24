@@ -626,6 +626,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
 
+			// #9019 START
+			temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION + SCProcessNameConst.SUBMIT_QUOTATION_TENDER,
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			// #9019-END
+
 			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"]");
 			temp.put(getProcessNameRemoveSpace("UNSPSC Code Request"), "review-unspsc-code");
 			temp.put(getProcessNameRemoveSpace("Extension Code Request"), "review-extension");
@@ -1126,6 +1131,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.DIRECT_PURCHASE_MAINTENANCE
 					)+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
+
+			// #9019 START
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.START_QUOTATION_TENDER_CREATION)
+					+ SCProcessNameConst.SUBMIT_QUOTATION_TENDER, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			// #9019-END
+
 			this.getManagedBean().setBpmMap(temp);
 		}
 
