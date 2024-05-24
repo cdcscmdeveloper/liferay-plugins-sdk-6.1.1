@@ -329,10 +329,6 @@ public interface QTConstants {
 	//#25726 end
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
-	// #12471 Start
-	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
-	// #12471 End
-	
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 	
 	//#10542 Start Dayan
@@ -351,6 +347,9 @@ public interface QTConstants {
 	//12471 - start
 	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
 	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	public static final String DATATABLE_EXISTINGCOMMITTEESEARCHID = "existingcommitteesearchid";
+	public static final String DATATABLE_EXISTINGMEMBERTBL = "existingMemberTbl";
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
 	//12471 - end
     public static final Long TREENODE_GENERAL_INFORMATION=1L;//SonarQubeIssuesFixed25635-Start
 	public static final Long TREENODE_SUPPLIER_CRITERIA=2L;

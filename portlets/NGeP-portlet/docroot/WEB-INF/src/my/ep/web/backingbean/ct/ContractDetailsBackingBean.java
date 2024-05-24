@@ -850,6 +850,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * and grouping the bond waiver into latest and history to show on the screen which one is the history. 
 	 */
 	private void chkBondWaivedAttachment() {
+		//#35642 start
+		/*
 		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
 				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
 			ContractReqDTO reqDTO = new ContractReqDTO();
@@ -867,7 +869,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
-		}
+		}*/
+		//#35642 end
 		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
 		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
 		if (ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()!=null
@@ -3168,6 +3171,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
 		// End - #30866
+		//#25790 - start
+		if(getManagedBean().getDpContinuitySession() != null){
+			getManagedBean().setExternalPageUrl(getManagedBean().getDpContinuitySession());
+		}			
+	    //#25790 - end
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 

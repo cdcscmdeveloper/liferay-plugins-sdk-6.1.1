@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1474,6 +1475,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							if(smPersonnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
 									&& smSupplierOwner.getRecordStatusFlg().intValue()== DbValueConst.RECORD_STATUS_ACTIVE){
 								smPersonnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+								smPersonnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+								smPersonnel.setCreatedBy(getUserIdSessionFromLoginId());
 							}
 							//reactivate personnel thru basic maintenance
 							if (smSupplierOwner.isReactivateOwner() && smPersonnel.getRecordStatusFlg().equals(
@@ -3023,7 +3026,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}
 							//#27691 END
 						}
-						
+						//24819
+						getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET SMSUPPLIEROWNER
 						//27691 START - TO HANDLE ISSUE OWNER ID NULL
 						if(ssmResDTO.getSmSupplierOwners() != null && this.getManagedBean().getSmSupp().getSmSupplierOwners() != null) {
