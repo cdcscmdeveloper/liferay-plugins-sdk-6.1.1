@@ -1868,7 +1868,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getSmAppl().getApplCategoryType(),
 							getManagedBean().getSmAppl().getSupplierType(),
 							getManagedBean().getBusinessTypeVal()));
-			initNonMandatoryAndMandatoryDocs(); //31043
+			//31043 START
+			initNonMandatoryAndMandatoryDocs();
+			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean()); 
+			//31043 END
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 				smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 			}
@@ -12340,6 +12343,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void reCheckVerifiedSection() {
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
 			SmApplicationUtil.checkAllowedToApprove(getManagedBean());
+			SmApplicationUtil.checkAllowedToRecommendSiteVisit(getManagedBean()); //31043
 			int maxReviewCount = getMaxSecCountByShowPanel();
 
 			SmApplSectionReview sec = getManagedBean().isPoUser() ? getManagedBean()
@@ -15566,29 +15570,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
 			//#31043 START
-			/*if (applSuppDoc.getVerifiedFlg() != null) {
+			if (applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null) {
 				applSuppDoc
 						.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
-			}*/
-			for(SmApplSupportDoc mandatoryDoc : getManagedBean().getMandatoryDocs()){
-				if(mandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-					applSuppDoc.setApproverVerifiedFlg(mandatoryDoc.getApproverVerifiedFlg());
+			}else{
+				for(SmApplSupportDoc mandatoryDoc : getManagedBean().getMandatoryDocs()){
+					if(mandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+						applSuppDoc.setApproverVerifiedFlg(mandatoryDoc.getApproverVerifiedFlg());
+					}
 				}
-			}
-			for(SmApplSupportDoc nonMandatoryDoc : getManagedBean().getNonMandatoryDocs()){
-				if(nonMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-					applSuppDoc.setApproverVerifiedFlg(nonMandatoryDoc.getApproverVerifiedFlg());
+				for(SmApplSupportDoc nonMandatoryDoc : getManagedBean().getNonMandatoryDocs()){
+					if(nonMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+						applSuppDoc.setApproverVerifiedFlg(nonMandatoryDoc.getApproverVerifiedFlg());
+					}
 				}
-			}
-			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
-			if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
-				for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
-					licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
+				if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
+					for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
+						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+					}
 				}
-			}
-			for(SmApplSupportDoc licenseMandatoryDoc : licenseMandatoryDocs){
-				if(licenseMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-					applSuppDoc.setApproverVerifiedFlg(licenseMandatoryDoc.getApproverVerifiedFlg());
+				for(SmApplSupportDoc licenseMandatoryDoc : licenseMandatoryDocs){
+					if(licenseMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+						applSuppDoc.setApproverVerifiedFlg(licenseMandatoryDoc.getApproverVerifiedFlg());
+					}
 				}
 			}
 			//#31043 END
