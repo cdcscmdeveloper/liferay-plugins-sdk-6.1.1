@@ -140,12 +140,12 @@
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onclick="cancel1QTDlg.show();"
 									update="@([id$=#{cancel1QTDlg}])"
-									rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}" />
+									rendered="#{qTDetailBB.isCancel(bpmAction)}" />
 
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onclick="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
-									rendered="#{!isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
+									rendered="#{!qTDetailBB.isCancel(bpmAction)}"
 									action="#{qTDetailBB.updateBpmTask(bpmAction)}">
 									<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 									<f:param name="skipsubmitvalidation" value="0" />
@@ -173,17 +173,22 @@
 						</c:otherwise>
 				</c:choose>
 
-				<!-- 26095@hatta - start -->
-				<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
-					<p:commandButton value="#{lbl['lbl.sc.qt.close']}" process="@this" style="float:right;"
-			  	       action="#{qTDetailBB.closeQTDialogPopUp}" disabled="#{isQTClosePermanently}" />	
-			  	</c:if>		
-				<c:if test="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_QT_SUBMISSION, QTStatusConst.QT_PENDING_LOA)}">
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
-						style="float:right;" 
-						action="#{qTDetailBB.checkIsQTAllowCancel}" disabled="#{qTDetailBB.managedBean.qt.brandNew}"/>
-				</c:if>
-			  	<!-- 26095@hatta - end -->
+					<!-- 26095@hatta - start -->
+					<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
+						<p:commandButton value="#{lbl['lbl.sc.qt.close']}" process="@this"
+							style="float:right;" action="#{qTDetailBB.closeQTDialogPopUp}"
+							disabled="#{isQTClosePermanently}" />
+					</c:if>
+					<ui:remove>9019 update condition to disable cancel button for QT status was pending</ui:remove>
+					<c:if
+						test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission}">
+						<ui:remove>9019 -end</ui:remove>
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
+							style="float:right;margin-right: 12px;"
+							action="#{qTDetailBB.checkIsQTAllowCancel}"
+							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
+					</c:if>
+					<!-- 26095@hatta - end -->
 			</c:if>
 					
 			</td>
