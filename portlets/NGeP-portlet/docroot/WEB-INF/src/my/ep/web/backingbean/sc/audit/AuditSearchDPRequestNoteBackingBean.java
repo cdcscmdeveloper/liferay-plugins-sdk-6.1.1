@@ -60,16 +60,16 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "auditSearchDPRequestNoteBackingBean")
 @ViewScoped
 public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPRequestNoteManagedBean> {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditSearchDPRequestNoteBackingBean.class);
-	private IPagingDataModel<AuDPRequestNoteSPDTO> searchDP = new SearchDPPagingDataModel();
+	private transient IPagingDataModel<AuDPRequestNoteSPDTO> searchDP = new SearchDPPagingDataModel();
 	private String requestNoneView = "/xhtml/sc/directpurchase/requestnote/audit/auditDPRequestNoteView.xhtml";
 
+	/**
+	 * AuditSearchDPRequestNoteBackingBean
+	 */
 	public AuditSearchDPRequestNoteBackingBean() {
-
+		log.info("AuditSearchDPRequestNoteBackingBean :::");
 	}
 
 	private FacesScopes getFacesScopes() {
@@ -173,6 +173,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		 * @param searchBean
 		 * @return SearchResultBean
 		 */
+		@Override
 		public ISearchResultBean<AuDPRequestNoteSPDTO> pageChangeListener(ISearchBean<AuDPRequestNoteSPDTO> searchBean) {
 
 			SearchResultBean<AuDPRequestNoteSPDTO> searchResult = new SearchResultBean<>();
