@@ -61,11 +61,11 @@
 					<h:outputText
 						value="#{circularBackingBean.checkProcModeValue(metadata.procurementModeCode)}"
 						style="text-align:left; float:left;"
-						rendered="#{metadata.procurementModeCode eq 'Q'}" />
+						rendered="#{metadata.procurementModeCode eq ParameterConst.procurementModeQuotation}" />
 					<h:outputText
 						value="#{circularBackingBean.checkProcModeValue(metadata.procurementModeCode)}"
 						style="text-align:left; float:left;"
-						rendered="#{metadata.procurementModeCode eq 'T'}" />
+						rendered="#{metadata.procurementModeCode eq ParameterConst.procurementModeTender}" />
 				</p:column>
 				
 				<p:column

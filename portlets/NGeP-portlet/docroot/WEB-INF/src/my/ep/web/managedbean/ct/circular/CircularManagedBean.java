@@ -23,6 +23,7 @@ import my.ep.persistence.entity.ct.circular.VCcCt; //Fix - #30866
 import my.ep.persistence.entity.ct.circular.VCcDp; //Fix - #30866
 import my.ep.persistence.entity.ct.circular.VCcQt; //Fix - #30866
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.SLAUtils; //#30866
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -235,7 +236,8 @@ public class CircularManagedBean extends BaseManagedBean {
 					return resDTO.getDpCircularVerResultBean();
 				}
 			} catch (Exception e) {
-				log.error(" Error " + e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularManagedBean", null,
+						"CircularManagedBean.CircularDpListingPagingDataModel", null, e);
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));			
 			}
@@ -269,10 +271,10 @@ public class CircularManagedBean extends BaseManagedBean {
 					return resDTO.getQtCircularVerResultBean();
 				}
 			} catch (Exception e) {
-				log.error("Error "+e); 
-				 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-//				 SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularBackingBean",
-//							null, "CircularBackingBean.CircularQtListingPagingDataModel", getUserIdSessionFromLoginId(), e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularManagedBean", null,
+						"CircularManagedBean.CircularDpListingPagingDataModel", null, e);
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 			}
 			return null;
 			}
