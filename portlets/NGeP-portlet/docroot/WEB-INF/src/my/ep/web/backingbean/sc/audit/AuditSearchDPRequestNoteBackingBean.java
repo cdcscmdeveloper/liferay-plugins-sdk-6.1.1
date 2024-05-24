@@ -194,7 +194,6 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 				SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, "AU", dpSearchBean.getDocId().toString(),
 						"AuditSearchDPRequestNoteBackingBean.SearchDPPagingDataModel",
 						getUserIdSessionFromLoginId(), e);
-				log.error(e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
