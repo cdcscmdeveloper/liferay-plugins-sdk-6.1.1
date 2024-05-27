@@ -61,6 +61,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -77,6 +78,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
@@ -96,6 +98,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sc.directpurchase.QuoteReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -125,6 +129,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -132,6 +137,7 @@ import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
@@ -161,6 +167,9 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -170,9 +179,11 @@ import my.ep.type.sc.EvaluationReport;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
@@ -226,7 +237,10 @@ import com.liferay.portal.util.PortalUtil;
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
 	private static final long serialVersionUID = 1L;
-	
+	//26226 - start
+	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
+			  SourcingConstants.MALAYSIA_COUNTRY_CODE);
+	//26226 - end
 	/**
 	 * Logger instance.
 	 */
@@ -4818,4 +4832,368 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End	
+	
+	//26226 start
+	// #26226 - Start
+		/**
+		 * @param context
+		 * @param scLoa
+		 */
+		/**  
+		 * CR Enhancement 26226  Nov 2019
+		 */
+	public void constructPRSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
+		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+		IQuoteSO quoteSO;
+		Integer days = null;
+		Long zoneId = new Long(0l);
+		boolean isSpecificationEnable = false;
+		try {
+			quoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQuoteSO.class);
+			String supplierName = scLoa.getScLoiLoa().getSupplierName();
+			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
+			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
+			quoteReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+
+			if (scLoa.getScLoiLoa().getSmSupplier() != null) {
+				quoteReqDTO.setSupplierId(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+				quoteReqDTO.setSmSupplier(scLoa.getScLoiLoa().getSmSupplier());
+			}
+			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlForLOASupplier(quoteReqDTO);
+			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
+			String dafaltValue = SSTConstant.TB;
+			if (masters.size() > 0) {
+				masters.clear();
+			}
+			for (ScLoiLoaItem item : items) {
+				Long itemId = item.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();
+
+				if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+					dafaltValue = SSTConstant.NA;
+				}
+
+				if (CollectionUtils.isNotEmpty(quoteResDTO.getServiceAnswersTpl())) {
+					TplSpecMaster master = null;
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
+					for (TplSpecAnswer answer : quoteResDTO.getServiceAnswersTpl()) {
+						if (answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone() != null) {
+							zoneId = answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone().getSpecZoneId();
+						} else {
+							zoneId = 0l; // Long Object initialization
+						}
+						if (answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null) {
+							answer.getTplSpecQuestion().setClFulfilmentTypeCode(
+									scLoa.getScLoiLoa().getFulfilmentTypeCode());
+						}
+						if (days == null) {
+							days = answer.getTplSpecQuestion().getClDeliveryTerm();
+						} else {
+
+							if (!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())
+									&& (answer.getTplSpecQuestion().getClDeliveryTerm() != null)) {
+								days = answer.getTplSpecQuestion().getClDeliveryTerm();
+							}
+						}
+						if (answer.getAnswerRemark() != null) {
+							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
+						} else {
+							answer.getTplSpecQuestion().setAnswerRemarks(dafaltValue);
+						}
+						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
+								&& (answer.getTplSpecQuestion().getClItem() != null)) {
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * Details
+								 **/
+								if (days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									if (master.getTplSpecZone() != null) {
+
+										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
+											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
+													.getTplSpecZoneDtls().get(i);
+											tplspecZoneDtls.getZoneName();
+										}
+									}
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = true;
+								}
+							}
+						} else if (isSpecificationEnable && answer.getTplSpecQuestion().getClSpecDetail() != null) {
+							/**
+							 * This code is for LOA with Single Item
+							 * specification
+							 **/
+							if (items.size() == 1) {
+								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
+										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
+												.equals(answer.getTplSpecQuestion().getParentSpecQuestion()
+														.getSpecQuestionId()))) {
+
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = false;
+								}
+							} else {
+								/**
+								 * This code is for LOA with multiple Items
+								 * specification
+								 **/
+								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
+									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
+											answer.getTplSpecQuestion());
+									// #26226 - Start
+									populateSpecAnswers(answer);
+									// #26226 - End
+									master.setTplSpecQuestions(newTplSpecQuestionsList);
+									isSpecificationEnable = false;
+								}
+							}
+						}
+					}
+					if (master != null) {
+						if (masters.size() == 0) {
+							masters.add(master);
+						} else {
+							boolean itemFound = false;
+							for (TplSpecMaster tplSpecMaster : masters) {
+								if (tplSpecMaster.getSpecMasterId() == master.getSpecMasterId()) {
+									itemFound = true;
+									break;
+								}
+							}
+							if (!itemFound) {
+								masters.add(master);
+							}
+						}
+					}
+				}
+			}
+			context.put(SSTConstant.serviceScope, dafaltValue);
+			context.put(SSTConstant.SUPPLIER_NAME, supplierName);
+			context.put(SSTConstant.ZONE_ID, zoneId);
+			context.put(SSTConstant.masters, masters);
+			context.put(SSTConstant.bean, this);
+			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
+					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
+		} finally {
+			quoteSO = null;
+			days = null;
+		}
+	}
+		// #26226 - End
+		// #26226 - Start
+		/**
+		 * @param answer
+		 */
+		private void populateSpecAnswers(TplSpecAnswer answer) {
+			try {
+				boolean itemFound = false;
+				for (TplSpecAnswer tplSpecAnswer : answer.getTplSpecQuestion().getTplSpecAnswers()) {
+					if (tplSpecAnswer.getSpecAnswerId() == answer.getSpecAnswerId()) {
+						itemFound = true;
+						break;
+					}
+				}
+				if (!itemFound) {
+					answer.getTplSpecQuestion().getTplSpecAnswers().add(answer);
+				}
+			} catch (Exception e) {
+				List<TplSpecAnswer> answers = new ArrayList<>();
+				answers.add(answer);
+				answer.getTplSpecQuestion().setTplSpecAnswers(answers);
+				SLAUtils.getInstance().logSLAError("DP", "populateSpecAnswers", answer.getSpecAnswerId().toString(),
+						"populateSpecAnswers", getUserIdSessionFromLoginId(), e);
+			}
+		}
+		// #26226 - End
+		
+		/**
+		 * @param dafaltValue
+		 * @param newTplSpecQuestionsList
+		 * @param master
+		 * @param question
+		 */
+		private void constructTplSpecQuestion(String dafaltValue,
+				List<TplSpecQuestion> newTplSpecQuestionsList,
+				TplSpecMaster master, TplSpecQuestion question) {
+			TplSpecQuestion parentQuestion = question
+					.getParentSpecQuestion();
+			if(null!=master.getSpecName()){
+	               String specTitle= master.getSpecName();
+	               specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+	               specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+	               specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+	               specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+	               master.setSpecName(specTitle);
+				
+			}
+			if (question.getClItem() == null) {
+				question.setClItem("");
+			}else{
+			    String clItem = question.getClItem();
+			//20190513@asyrafhaziq - 25812 - Start
+			// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
+			    String[] words = clItem.split(" "); //get array of words
+			    StringBuilder sb = new StringBuilder();
+			    StringBuilder subSb = new StringBuilder();//this is for perfomance
+			    for(String word : words) //affect each word in string
+			    {
+			      int length = word.length();
+			      if ( length >= 20)
+			    	{
+			    	  String subWord;
+			            for (int i = 0; i < length; i += 20) {
+			            	subWord = word.substring(i, Math.min(length, i + 20));
+			            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+			            }
+			    		word = subSb.toString();	
+			    	}
+			        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+			    }
+			    clItem =  sb.toString();
+			    //20190513@asyrafhaziq - 25812 - End
+				clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+				clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+				clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+				clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+				question.setClItem(clItem);
+				//log.info("CIItem  ----------->"+question.getClItem());
+			}
+			if (question.getClSpecDetail() == null) {
+				question.setClSpecDetail(dafaltValue);
+			} else{
+				 String clSpecDetail = question.getClSpecDetail()
+						.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
+				 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
+				 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
+				 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+				question.setClSpecDetail(clSpecDetail);
+			}
+			if (question.getClUom() != null) {
+				if (question.getClUom().getUomName() == null) {
+					question.getClUom().setUomName(dafaltValue);
+				}
+			} else {
+				question.setClUom(new PmUom());
+				question.getClUom().setUomName(dafaltValue);
+			}
+			
+			if (question.getClUomFrequency() == null) {
+				question.setClUomFrequency(new BigDecimal(0));
+			}
+			
+			if (question.getClUomPerDay() == null) {
+				question.setClUomPerDay(new BigDecimal(0));
+			}
+			
+			if (question.getClUomPerMonth() == null) {
+				question.setClUomPerMonth(new BigDecimal(0));
+			}
+			
+			if (question.getClPriceTypeCode() == null) {
+				question.setClPriceTypeCode(new PmParameter());
+				question.getClPriceTypeCode().setParameterCode(dafaltValue);
+			} else {
+				if (question.getClPriceTypeCode().getParameterCode() == null) {
+					question.getClPriceTypeCode().setParameterCode(dafaltValue);
+				}
+			}
+			if (question.getClQuantity() == null) {
+				question.setClQuantity(new BigDecimal(0));
+			}
+
+			if (question.isClAnswerRequired()) {
+				question.setClAnswerRequired(true);
+			}
+			if (question.getClReviewRemark() == null) {
+				question.setClReviewRemark(dafaltValue);
+			}
+			if (parentQuestion != null) {
+				int specCount = parentQuestion.getSpecCount();
+				if (specCount == 0) {
+					specCount = 1;
+				}
+				parentQuestion.setSpecCount(specCount + 1);
+			}
+			question.setTplSpecMaster(master);
+			// #26226 - Start
+			if(newTplSpecQuestionsList !=null)
+			{
+				if (newTplSpecQuestionsList.size() == 0) {
+					newTplSpecQuestionsList.add(question);
+				} else {
+					boolean itemFound = false;
+					for (TplSpecQuestion tplSpecQuestion : newTplSpecQuestionsList) {
+						if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+							itemFound = true;
+							break;
+						}
+					}
+					if (!itemFound) {
+						newTplSpecQuestionsList.add(question);
+					}
+				}
+				
+			}
+			
+		}
+		/**
+		 * Get Parameter description by parameter for report.
+		 * 
+		 * @param parameter
+		 *            the PmParameter instance.
+		 * @return parameter description
+		 */
+		public String getParameterDescForVelocityReport(PmParameter parameter) {
+			if (parameter != null
+					&& StringUtils.isNotBlank(parameter.getParameterType())) {
+				return getParameterDesc(
+						parameter,
+						myLocale);
+			} else {
+				return null;
+			}
+		}
+		// #26226 - End
 }
