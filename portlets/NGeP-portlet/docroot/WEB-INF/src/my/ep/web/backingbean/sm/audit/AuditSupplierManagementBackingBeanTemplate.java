@@ -1,13 +1,18 @@
 package my.ep.web.backingbean.sm.audit;
 
 import java.io.Serializable;
+import java.util.List;
 
+import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.audit.AuSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -27,13 +32,10 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	}
 
 	public final void saveAuditData(BaseManagedBean managebean, Long userId) {
-
 		String roleCode = getRoleCode();
-
+		PmUser user = retriveUser(userId);
 		PmOrgProfile org = retriveUserOrg(userId);
-
-		AuSupplierManagementDTO auObj = prepareAuditData(managebean, org, roleCode);
-
+		AuSupplierManagementDTO auObj = prepareAuditData(managebean, org, user, roleCode);
 		auditSMSO(auObj);
 	}
 
@@ -62,24 +64,28 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		return new FacesScopes();
 	}
 
-	private PmOrgProfile retriveUserOrg(Long userId) {
-
+	private PmUser retriveUser(Long userId) {
 		PmUser user = PmCommonUtil.retrieveUserById(userId, false);
-		return null;
+		return user;
 	}
 
-	public abstract AuSupplierManagementDTO prepareAuditData(BaseManagedBean managebean, PmOrgProfile org,
+	private PmOrgProfile retriveUserOrg(Long userOrgId) {
+		new PmOrgProfile();
+		List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
+		PmOrgProfile org = orgList.get(0).getPmOrgProfile();
+		return org;
+	}
+
+	public abstract AuSupplierManagementDTO prepareAuditData(BaseManagedBean managebean, PmOrgProfile org, PmUser user,
 			String roleCode);
 
-	private void auditSMSO(AuSupplierManagementDTO dtlObjList) {
-		// try {
-		// IAuditDPRequestNoteSO auditDPRequestNoteSO =
-		// BusinessDelegate.getInstance().getServiceObject(
-		// ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-		// auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
-		// dtlObjList.getAuDPRequestNoteDetailSPDTOList());
-		// } catch (Exception ex) {
-		// log.info("Catch Exception from TEMPLATE Send TO SO : " + ex);
-		// }
+	private void auditSMSO(AuSupplierManagementDTO auObj) {
+		try {
+			IAuditSupplierManagementSO auSMSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+			auSMSO.insertAudit(auObj);
+		} catch (Exception ex) {
+			log.info("Catch Exception from TEMPLATE Send TO SO : ", ex);
+		}
 	}
 }
