@@ -21,6 +21,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constants.SpecialCharacter; //#25790
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -35,7 +36,6 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.constant.SSTConstant; //#25790
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -225,7 +225,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 						// start - #25790
 						searchBean.getDataFilterBeans().add(
 								new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(),
-										SSTConstant.SIGN_PERCENTAGE.concat(getSearchDocumentNo())));
+										String.valueOf(SpecialCharacter.MODULO.getCharacter()).concat(getSearchDocumentNo())));
 						// end - #25790
 					}
 				}

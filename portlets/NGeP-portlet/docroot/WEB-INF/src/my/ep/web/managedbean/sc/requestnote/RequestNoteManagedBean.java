@@ -2228,7 +2228,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public List<Map<String, String>> getPurchaseRequestMapList() {
 		if (purchaseRequestMapList == null) {
-			purchaseRequestMapList = new ArrayList<Map<String, String>> ();
+			purchaseRequestMapList = new ArrayList<> ();
 		}
 		return purchaseRequestMapList;
 	}
@@ -2247,7 +2247,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public List<Map<String, String>> getLoaMapList() {
 		if (loaMapList == null) {
-			loaMapList = new ArrayList<Map<String, String>> ();
+			loaMapList = new ArrayList<> ();
 		}
 		return loaMapList;
 	}

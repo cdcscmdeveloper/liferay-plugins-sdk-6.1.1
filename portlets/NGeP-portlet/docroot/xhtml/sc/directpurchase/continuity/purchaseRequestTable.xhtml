@@ -14,7 +14,7 @@
 		<p:column headerText="#{lbl['lbl.rpt.prNo']}"
 			style="text-align:center;">
 			<p:commandLink value="#{map['prNo']}" style="float:left;"
-				action="#{requestNoteBackingBean.viewPr(map['prId'])}"
+				action="#{requestNoteBackingBean.viewPurchaseRequest(map['prId'])}"
 				immediate="true" />
 		</p:column>
 		<p:column headerText="#{lbl['lbl.td.status']}"
@@ -24,7 +24,7 @@
 		<p:column headerText="#{lbl['lbl.td.order.no']}"
 			style="text-align:center;">
 			<p:commandLink value="#{map['poNo']}" style="float:left;"
-				action="#{requestNoteBackingBean.viewPo(map['poId'])}"
+				action="#{requestNoteBackingBean.viewPurchaseOrder(map['poId'])}"
 				immediate="true" />
 		</p:column>
 		<p:column headerText="#{lbl['lbl.td.status']}"
