@@ -12205,7 +12205,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		FacesContext fc = FacesContext.getCurrentInstance();
 		reqNoteBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		reqNoteBB.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-		reqNoteBB.viewRequestNote(requestNoteId, false);
+		reqNoteBB.viewRequestNote(requestNoteId);
 	}
 	// #25790 - end
 }
