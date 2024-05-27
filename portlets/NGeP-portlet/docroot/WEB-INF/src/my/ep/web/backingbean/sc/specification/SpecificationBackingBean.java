@@ -12519,10 +12519,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						.getStatusId()
 						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
 		   	//#29732 check if submit with no category code before checking category code change
-			IQTSpecSO specSo = getSpecSO();
-			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
-			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
-			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+			this.getManagedBean().setIsFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -17791,10 +17788,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						//#29732 exclude endorsement
 				&& !this.getManagedBean().isReadOnly()) {
 		   	//#29732 check if submit with no category code before checking category code change
-			IQTSpecSO specSo = getSpecSO();
-			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
-			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
-			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+			this.getManagedBean().setIsFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -21720,9 +21714,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	
 	// #29732 Start - reOpen Fix
 	public String checkCatCodeChange() {
-		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())) {
-			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-			qtBackingBean.retrieveSuppQualificationTabDtl();
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
+				&& !this.getManagedBean().isFromSubmitCatChange) {
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				qtBackingBean.retrieveSuppQualificationTabDtl();
+		}else if(CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
+				&& this.getManagedBean().isFromSubmitCatChange){
+			IQTSpecSO specSo = getSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 		}
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean()
 				.getQtCategoryList();
