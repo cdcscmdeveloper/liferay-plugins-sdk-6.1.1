@@ -134,24 +134,19 @@
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+								rendered="#{!qTDetailBB.isCancel(bpmAction)}"
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+								<ui:remove>start 9019 - Reopen #note-317</ui:remove>
+								<f:param name="skipsubmitvalidation" value="0" />
+								<ui:remove>end 9019 - Reopen #note-317</ui:remove>
+							</p:commandButton>
 
-								<ui:remove>9019 -start</ui:remove>
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" onclick="cancel1QTDlg.show();"
-									update="@([id$=#{cancel1QTDlg}])"
-									rendered="#{qTDetailBB.isCancel(bpmAction)}" />
-
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" onclick="blockWidget.show();"
-									oncomplete="blockWidget.hide();"
-									rendered="#{!qTDetailBB.isCancel(bpmAction)}"
-									action="#{qTDetailBB.updateBpmTask(bpmAction)}">
-									<ui:remove>start 9019 - Reopen #note-317</ui:remove>
-									<f:param name="skipsubmitvalidation" value="0" />
-									<ui:remove>end 9019 - Reopen #note-317</ui:remove>
-								</p:commandButton>
-								<ui:remove>9019 -end</ui:remove>
+							<ui:remove>9019 -start</ui:remove>
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onclick="cancel1QTDlg.show();"
+								update="@([id$=#{cancel1QTDlg}])"
+								rendered="#{isQTStatusPendingQtSubmission and qTDetailBB.isCancel(bpmAction)}" />
+							<ui:remove>9019 -end</ui:remove>
 							</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
@@ -159,7 +154,11 @@
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
 							update="@all"
 							onclick="blockWidget.show();"
-							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
+							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}">
+							<ui:remove>9019 -start</ui:remove>
+							<f:param name="skipsubmitvalidation" value="0" />
+						</p:commandButton>
+							<ui:remove>9019 -end</ui:remove>
 					</c:when>
 					<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
