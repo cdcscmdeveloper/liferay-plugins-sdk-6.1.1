@@ -6,7 +6,7 @@
 @page {
 	size: A4 portrait;
 }
-##26130 - start
+##26130 - start 
 #include("/templates/sc/loa/footerStyle.vm")
 ##26130- end
 p {

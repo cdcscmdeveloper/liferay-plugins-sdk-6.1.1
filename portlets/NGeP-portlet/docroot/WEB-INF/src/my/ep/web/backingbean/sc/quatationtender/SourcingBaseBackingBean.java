@@ -104,6 +104,7 @@ import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -170,8 +171,10 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -5196,4 +5199,574 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		// #26226 - End
+		//Enhancement #26130 -start-
+		/**
+		 * @param context
+		 * @param scLoa
+		 */
+		public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
+			List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+			IQTSpecSO specSO;
+			
+			try {
+				specSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+				reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
+				reqDTO.setPrepareSpec(true);
+				
+				SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
+				
+				String dafaltValue = "T/B";
+				
+				if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+					dafaltValue = "N/A";
+				}
+				
+				List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
+				if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
+				// #26130 #97 - End
+					for (ScQtCheckList scQtCheckList : scQtCheckLists) {
+						List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+						
+						TplSpecMaster master = null;
+						master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+						
+						for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+							if (validateTplSpecMaster(scLoa, master)) {
+								constructSpecData(scLoa, master, question);
+								constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
+								validateSpecZoneQty(question,scLoa);
+								if (validateTplSpecQuestion(scLoa, question)) {
+									question.setListCombineZonal(getCOmbineZonalSPec(question, master));
+								}
+							}
+						}
+						
+						master.setTplSpecQuestions(newTplSpecQuestionsList);
+						
+						masters.add(master);
+					}
+				}
+				
+				context.put("isZonal", scLoa.getScLoiLoa().isZonal());
+				context.put("serviceScope", dafaltValue);
+				context.put("masters", masters);
+				context.put("bean", this);
+			} finally {
+				specSO = null;
+			}
+		}
+		
+		/**
+		 * @param context
+		 * @param scLoa
+		 * @param specMasters 
+		 */
+		public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa, List<TplSpecMaster> specMasters) {
+			List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
+			
+			String dafaltValue = "T/B";
+			
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+				dafaltValue = "N/A";
+			}
+			
+			if (CollectionUtils.isNotEmpty(specMasters)) {
+				
+				for (TplSpecMaster master : specMasters) {
+					if (CollectionUtils.isNotEmpty(master.getTplSpecQuestions())) {
+						List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+						
+						for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+							constructSpecData(scLoa, master, question);
+							constructTplSpecQuestion(dafaltValue,
+									newTplSpecQuestionsList, master, question);
+						}
+						
+						master.setTplSpecQuestions(newTplSpecQuestionsList);
+						
+						masters.add(master);
+					}
+				}
+			}
+
+			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
+			context.put("serviceScope", dafaltValue);
+			context.put("masters", masters);
+			context.put("bean", this);
+		}
+		//Enhancement #26130 -end-
+		
+		// #26130 - Start
+		/**
+		 * @param scLoa
+		 * @param master
+		 * @param question
+		 */
+		private void constructSpecData(ScLoa scLoa, TplSpecMaster master, TplSpecQuestion question) {
+			if (null != question.getClItem()) {
+				List<String> specList = null;
+				List<String> feedbackList = null;
+				List<String> answerRemarkList = null;
+				boolean addSpecList = false;
+
+				for (TplSpecQuestion tplSpecQuestion : master.getTplSpecQuestions()) {
+					if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
+						if (answerRemarkList == null) {
+							answerRemarkList = new ArrayList<>();
+						}
+
+						answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
+						addSpecList = true;
+						continue;
+					}
+					
+					if (addSpecList) {
+						if (tplSpecQuestion.getQuestionType().equals("S")) {
+							if (specList == null) {
+								specList = new ArrayList<>();
+							}
+							
+							if (feedbackList == null) {
+								feedbackList = new ArrayList<>();
+							}
+							
+							if (answerRemarkList == null) {
+								answerRemarkList = new ArrayList<>();
+							}
+							
+							specList.add(tplSpecQuestion.getClSpecDetail());
+
+							for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
+								
+								if (null != tplSpecAnswer
+										&& null != tplSpecAnswer.getTplSpecSuppAnswer()
+										&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()
+										&& tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().longValue() == scLoa
+												.getScLoiLoa().getSmSupplier().getSupplierId().longValue()) {
+									String feedback = null;
+									
+									if (null != tplSpecAnswer.getAnswerNumeric()) {
+										feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
+									} else if (null != tplSpecAnswer.getAnswerCompliance()) {
+										if (tplSpecAnswer.getAnswerCompliance()) {
+											feedback = "Yes";
+										} else {
+											feedback = "No";
+										}
+									} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
+										feedback = String.valueOf(tplSpecAnswer.getAnswerText());
+									}
+									
+									feedbackList.add(feedback);
+									
+									answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+								}
+							}
+						} else {
+							break;
+						}
+					}
+
+				}
+				
+				question.setSpecList(specList);
+				if (CollectionUtils.isNotEmpty(specList)) {
+					if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
+						for (int i=0; i < question.getTplSpecZoneQties().size(); i++) {
+							if (CollectionUtils.isNotEmpty(feedbackList)) {
+								feedbackList.add(i, "&nbsp;");
+							}
+
+							if (CollectionUtils.isNotEmpty(answerRemarkList) && answerRemarkList.size() != (question.getTplSpecZoneQties().size() + specList.size())) {
+								answerRemarkList.add(i, "&nbsp;");
+							}
+						}
+					} else {
+						if (CollectionUtils.isNotEmpty(feedbackList)) {
+							feedbackList.add(0, "&nbsp;");
+						}
+					}
+				}
+				question.setFeedbackList(feedbackList);
+				question.setAnswerRemarkList(answerRemarkList);
+				List<HashMap<String, String>> listCombine = null;
+				
+				if (listCombine == null) {
+					listCombine = new ArrayList<HashMap<String, String>>();
+				}
+			
+				if (specList != null) {
+					int tempFeedbackIndex = 0;
+					int tempRemarkIndex = 0;
+					int tempSpecZoneQty = 0;
+					int indexFeedbackStore = 0;
+					int indexRemarkStore = 0;
+					
+					if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
+						tempSpecZoneQty = question.getTplSpecZoneQties().size();
+					}
+				
+					for (String tempSpecVal : specList) {
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("specVal", tempSpecVal);
+					
+						for (String tempFeedback : feedbackList) {
+							if (tempSpecZoneQty > 0) {
+								if (tempFeedbackIndex >= tempSpecZoneQty) {
+									if (indexFeedbackStore == 0) {
+										map.put("feedback", tempFeedback);
+										indexFeedbackStore = tempFeedbackIndex;
+										break;
+									} else if (tempFeedbackIndex > indexFeedbackStore) {
+										map.put("feedback", tempFeedback);
+										indexFeedbackStore = tempFeedbackIndex;
+										break;
+									}
+								}
+								
+								tempFeedbackIndex++;
+							} else {
+								if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
+									map.put("feedback", tempFeedback);
+									indexFeedbackStore = tempFeedbackIndex;
+									break;
+								}
+								
+								tempFeedbackIndex++;
+								
+							}
+						}
+						
+						for (String tempRemark : answerRemarkList) {
+
+							if (tempRemark == null) {
+								tempRemark = getDefaultValue();
+							} else {
+								if (tempSpecZoneQty > 0) {
+									if (tempRemarkIndex >= tempSpecZoneQty) {
+										if (indexRemarkStore == 0) {
+											map.put("remark", tempRemark);
+											indexRemarkStore = tempRemarkIndex;
+											break;
+										} else if (tempRemarkIndex > indexRemarkStore) {
+											map.put("remark", tempRemark);
+											indexRemarkStore = tempRemarkIndex;
+											break;
+										}
+										
+									}
+									
+									tempRemarkIndex++;
+								} else {
+									if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
+										map.put("remark", tempRemark);
+										indexRemarkStore = tempRemarkIndex;
+										break;
+									}
+									
+									tempRemarkIndex++;
+								}
+							}
+
+						}
+						
+						tempFeedbackIndex = 0;
+						tempRemarkIndex = 0;
+						listCombine.add(map);				
+					}
+					
+					question.setListCombineSpec(listCombine);
+				}
+			}
+		}
+		// #26130 - End 
+
+		// #26130 - zaim start 
+		private String getDefaultValue() {
+			String defaultValue = "";
+			
+			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+				defaultValue = "N/A";
+			} else {
+				defaultValue = "T/B";
+			}
+
+			return defaultValue;
+		}
+		// #26130 - zaim -end-
+		
+		// #26130 start
+		private List<HashMap<String, String>> getCOmbineZonalSPec(TplSpecQuestion question, TplSpecMaster master) {
+
+			List<HashMap<String, String>> listSpec = new ArrayList<>();
+			int countIndex = 0;
+			int indi = 0;
+			String whiteSpace = "&nbsp";
+			boolean getFirstValue = true;
+
+			// 26130 - start
+			if (master.getTplSpecZone() != null) {
+				// 26130 - end
+				if (question.getTplSpecZoneQties().size() > 0) {
+					for (TplSpecZoneQty zone : question.getTplSpecZoneQties()) {
+
+						HashMap<String, String> map = new HashMap<>();
+						if (countIndex == 0) {
+							if (getFirstValue) {
+								map.put("clItem", question.getClItem());
+								map.put("uomName", question.getClUom().getUomName());
+								// #26130 - start
+								map.put("clPriceTypeCode",
+										getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+								// #26130 - end
+								map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
+								map.put("qty", zone.getQty().toString());
+								if (null != question.getTplSpecTierQties() && question.getTplSpecTierQties().size() > 0) {
+									String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+									map.put("qtyBerperingkat", tierValue);
+								} else {
+									String tierValue = "T/B";
+									map.put("qtyBerperingkat", tierValue);
+								}
+
+								if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+										|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+												"Perkhidmatan")) {
+									map.put("clUomFrequency", question.getClUomFrequency().toString());
+									map.put("clUomPerDay", question.getClUomPerDay().toString());
+									map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+								}
+								for (TplSpecAnswer answer : question.getTplSpecAnswers())
+									if (answer.getAnswerNumeric() != null) {
+										map.put("answerNumeric", answer.getAnswerNumeric().toString());
+									}
+								getFirstValue = false;
+							} else {
+								map.put("clItem", whiteSpace);
+								map.put("uomName", whiteSpace);
+								map.put("clPriceTypeCode", whiteSpace);
+								map.put("zoneName", zone.getTplSpecZoneDtl().getZoneName());
+								map.put("qtyBerperingkat", whiteSpace);
+								if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+										|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase(
+												"Perkhidmatan")) {
+									map.put("clUomFrequency", whiteSpace);
+									map.put("clUomPerDay", whiteSpace);
+									map.put("clUomPerMonth", whiteSpace);
+								}
+								map.put("qty", zone.getQty().toString());
+								for (TplSpecAnswer answer : question.getTplSpecAnswers()) {
+									if (answer.getAnswerNumeric() != null) {
+										map.put("answerNumeric", answer.getAnswerNumeric().toString());
+									}
+								}
+
+							}
+
+							for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+								map.put("feedback", question.getFeedbackList().get(i));
+								break;
+							}
+							// 26130 - start 04072022
+							for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
+								if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;")
+										&& !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
+									map.put("answerRemark", question.getAnswerRemarkList().get(i));
+									break;
+								} else {
+									map.put("answerRemark", question.getAnswerRemarkList().get(i));
+								}
+							}
+							// #26130 - end 04072022
+							indi++;
+						}
+						listSpec.add(map);
+					}
+				}
+			// 26130 - start
+			}
+			// 26130 - end
+			else {
+				// non-zonal
+
+				HashMap<String, String> map = new HashMap<>();
+				if (question.getQuestionType().equalsIgnoreCase("I")) {
+					if (countIndex == 0) {
+						if (getFirstValue) {
+							map.put("clItem", question.getClItem());
+							map.put("uomName", question.getClUom().getUomName());
+							map.put("qty", question.getClQuantity().toString());
+
+							if (getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("service")
+									|| getParameterDescForReport(master.getItemTypeCode()).equalsIgnoreCase("Perkhidmatan")) {
+								map.put("clUomFrequency", question.getClUomFrequency().toString());
+								map.put("clUomPerDay", question.getClUomPerDay().toString());
+								map.put("clUomPerMonth", question.getClUomPerMonth().toString());
+							} else {
+								// product
+								// #26130 - start
+								map.put("clPriceTypeCode",
+										getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+								// #26130 - end
+								String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
+								map.put("qtyBerperingkat", tierValue);
+
+							}
+
+							for (String feedback : question.getFeedbackList()) {
+								map.put("feedback", feedback);
+								break;
+							}
+
+							for (String remark : question.getAnswerRemarkList()) {
+								map.put("remark", remark);
+								break;
+							}
+						}
+
+						listSpec.add(map);
+					}
+				}
+			}
+			return listSpec;
+			// #26130 end
+		}
+		// #26130 - zaim end
+				
+		private void validateSpecZoneQty(TplSpecQuestion question, ScLoa scLoa) {
+			
+			if (question.getTplSpecZoneQties() != null) {
+				List<TplSpecZoneQty> specZoneQties = new ArrayList<TplSpecZoneQty>();
+				for (TplSpecZoneQty specZoneQty : question.getTplSpecZoneQties()) {
+					if (specZoneQty != null) {
+						// #21695 - Start
+						if (null != specZoneQty.getQty() && specZoneQty.getQty().intValue() == 0) {
+							continue;
+						}
+						boolean itemFound = false;
+						if (null != specZoneQty.getTplSpecZoneDtl()) {
+							log.info("zoneDtlID: is: " + specZoneQty.getTplSpecZoneDtl().getSpecZoneId());
+							log.info("spec question ID: is: " + question.getSpecQuestionId());
+							if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoiLoaItems())) {
+								for (ScLoiLoaItem loiLoaItem: scLoa.getScLoiLoaItems()) {
+									if (null !=loiLoaItem && null!= loiLoaItem.getScRequestItem() && null != loiLoaItem.getScRequestItem().getTplSpecQuestion()
+											&& null != loiLoaItem.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion()
+											&& null != loiLoaItem.getTplSpecZoneDtl()
+											&& question.getSpecQuestionId().equals(loiLoaItem.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId())
+											&& specZoneQty.getTplSpecZoneDtl().getSpecZoneId().equals(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())) {
+										log.info("request item spec zoneDtlID: " + loiLoaItem.getTplSpecZoneDtl().getSpecZoneId());
+										log.info("request item parent spec question ID: is: " + loiLoaItem.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId());
+										itemFound = true; 
+										break;
+									}
+								}
+							}
+						}
+						
+						if (!itemFound) {
+							continue;
+						}
+						// #21695 - End
+						specZoneQty.getTplSpecZoneDtl();
+						
+						specZoneQties.add(specZoneQty);
+					}
+				}
+				// To fix issue on Nullpointer for specZoneQty.
+				question.setTplSpecZoneQties(specZoneQties);	
+			}
+			
+		}
+
+		/**
+		 * Get Parameter description by parameter for report.
+		 * 
+		 * @param parameter
+		 *            the PmParameter instance.
+		 * @return parameter description
+		 */
+		public String getParameterDescForReport(PmParameter parameter) {
+			if (parameter != null
+					&& StringUtils.isNotBlank(parameter.getParameterType())) {
+				return getParameterDesc(
+						parameter,
+						new FacesScopes().getUserLocale());
+			} else {
+				return null;
+			}
+		}
+		// #26130 - End
+		
+		// #26130 start
+		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
+			StringBuffer sb = new StringBuffer();
+		
+			if (listTplSpecTierQties.size() > 0) {
+				for (TplSpecTierQty qty : listTplSpecTierQties) {
+					sb.append(qty.getFromQty() + " - " + qty.getToQty() + "<br />");
+				}
+			} else {
+				sb.append("T/B");
+			}
+
+			return sb.toString();
+		}
+		// #26130 end
+		
+		// 26130 - start
+		public boolean validateTplSpecQuestion(ScLoa scloa, TplSpecQuestion question) {
+			boolean isExist = Boolean.FALSE;
+			Long tempSpecQuestionID = null;
+			
+			if (scloa.getScLoiLoaItems() != null && !scloa.getScLoiLoaItems().isEmpty()) {
+				for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+					if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null
+							&& item.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion() != null) {
+						TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+						
+						if (question.getParentSpecQuestion() == null) {
+							tempSpecQuestionID = question.getSpecQuestionId();
+						} else {
+							tempSpecQuestionID = question.getParentSpecQuestion().getSpecQuestionId();
+						}
+						if (specQuestion.getParentSpecQuestion().getSpecQuestionId().equals(tempSpecQuestionID)) {
+							isExist = Boolean.TRUE;
+							return isExist;
+						}
+					}
+				}
+			}
+			
+			return isExist;
+		}
+		// #26130 -end-
+				
+		// #26130 -start-
+		public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master) {
+			boolean isExist = false;
+			
+			if (scloa.getScLoiLoaItems() != null) {
+				for (ScLoiLoaItem item : scloa.getScLoiLoaItems()) {
+					if (item.getScRequestItem() != null && item.getScRequestItem().getTplSpecQuestion() != null) {
+						TplSpecQuestion specQuestion = item.getScRequestItem().getTplSpecQuestion();
+						
+						if (specQuestion.getParentSpecQuestion() != null
+								&& specQuestion.getParentSpecQuestion().getTplSpecMaster() != null
+								&& master.getSpecMasterId().equals(
+										specQuestion.getParentSpecQuestion().getTplSpecMaster().getSpecMasterId())) {
+							isExist = Boolean.TRUE;
+							return isExist;
+						}
+					}
+				}
+			}
+			
+			return isExist;
+		}
+		// 26130 - end
+
 }

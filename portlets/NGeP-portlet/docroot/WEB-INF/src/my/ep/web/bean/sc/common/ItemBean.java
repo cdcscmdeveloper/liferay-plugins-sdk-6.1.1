@@ -148,6 +148,6 @@ public class ItemBean {
 	public void setClDeliveryTerm(String clDeliveryTerm) {
 		this.clDeliveryTerm = clDeliveryTerm;
 	}
-	//26226 - end
+	//26226 - end 
 
 }

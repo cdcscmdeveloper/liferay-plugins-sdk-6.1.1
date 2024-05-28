@@ -188,7 +188,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					html = html.replaceAll("&amp;amp;", "&");
 					//20220921@asyrafhaziq - 29076 - End == //#25142 - end
 					
-					// #26130 - start
+					// #26130 - start 
 					String fontPath = "";
 					String getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
 

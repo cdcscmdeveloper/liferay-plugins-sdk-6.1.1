@@ -19,7 +19,7 @@ div.footer {
     display: block;
     position: running(footer);
 }
-
+ 
 div.content {
 
     display: block;
