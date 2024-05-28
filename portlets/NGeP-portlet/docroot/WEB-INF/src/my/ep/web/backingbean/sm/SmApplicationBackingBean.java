@@ -3997,8 +3997,18 @@ public class SmApplicationBackingBean extends
 		SmFacility hq = SmApplicationUtil.getHqFacilityByAppl(getManagedBean()
 				.getSmAppl());
 		if (hq != null) {
-			rqDto.setForHomeOffice(hq.getFacilityType().equals("H") ? true
-					: false);
+			//29480 - Start
+			if (hq.getFacilityType().equalsIgnoreCase("H")) {
+				rqDto.setForHomeOffice(true);
+				rqDto.setForBusinessOffice(false);
+				//rqDto.setForHomeOffice(hq.getFacilityType().equals("H") ? true : false);
+			}
+			else if(hq.getFacilityType().equalsIgnoreCase("B")){
+				rqDto.setForBusinessOffice(true);
+				rqDto.setForHomeOffice(false);
+				//rqDto.setForHomeOffice(hq.getFacilityType().equals("B") ? true : false);
+			}
+			//29480 - End
 		}
 		DocumentResDTO rsDTO = null;
 		rsDTO = retrieveSupportingDocumentList(rqDto);
