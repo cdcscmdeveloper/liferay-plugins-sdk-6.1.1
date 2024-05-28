@@ -61,6 +61,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import com.lowagie.text.DocumentException;
 
 import my.ep.factory.EpLogger;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * Singleton Helper For Document Generator.
@@ -186,6 +187,15 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					html = html.replaceAll("&amp;nbsp;", " ");
 					html = html.replaceAll("&amp;amp;", "&");
 					//20220921@asyrafhaziq - 29076 - End == //#25142 - end
+					
+					// #26130 - start 
+					String fontPath = "";
+					String getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+
+					fontPath = getPortalBaseURL + "/NGeP-portlet/resources/fonts/Arial.ttf";
+
+					render.getFontResolver().addFont(fontPath, true);
+					// #26130 - end
 					
 		            render.setDocumentFromString(html);
 		            render.layout();

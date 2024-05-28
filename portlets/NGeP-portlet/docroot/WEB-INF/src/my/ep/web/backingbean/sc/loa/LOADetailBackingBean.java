@@ -142,6 +142,7 @@ import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -1445,23 +1446,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	private ScLoaReportAttachment generateDocumentAttachment(
 			ScLoaReport scLoaReport) {
-		ScLoa scLoa = getManagedBean().getScLoa();	
+		ScLoa scLoa = getManagedBean().getScLoa();
+		ScQt scQt = getManagedBean().getScQt();//26226
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
-
+		StringBuilder filename = new StringBuilder();//26226
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) || 
 				ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD_AND_DOWNLOAD.equals(definitionType) ||
-				ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD.equals(definitionType)) {
+				ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD.equals(definitionType) ||
+				ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE.equals(definitionType)) {
 
 			try {
 				String docDefinitionKey = scLoaReport.getPmDocument()
 						.getDocDefinitionKey();
-				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+				Long statusId = scLoa.getPmStatus().getStatusId(); //26226
 
 				if (scLoaReportAttachment == null) {
-					StringBuilder filename = new StringBuilder();
 					//replace white space due to firefox 
 					filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
 					scLoaReportAttachment = new ScLoaReportAttachment();
@@ -1474,7 +1476,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						filename.append(".docx");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateAgreementLetterDocFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
+								(ScAttachment) scLoaReportAttachment, scLoa, this.getManagedBean().getScQt());
 					}else if (SourcingConstants.DOC_DEF_KEY_ACKNOWLEDGEMENT_LOA_RECEIPT
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
@@ -1538,7 +1540,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
-						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
+						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
 					// if pending supplier acknowledgment , always regenerate 
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
@@ -2002,6 +2004,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Specification
 		formSpecification(context, scLoa);
+		
+		// #26130 - Start
+		if (scQt != null
+				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
+						.equals(scLoa.getScLoiLoa().getDocType()))
+				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())
+						|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode()) || ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+							.equals(scQt.getFulfilmentType().getParameterCode()))) {
+			constructSupplierSpecificationAndRemarks(context, scLoa);
+		}
+		// #26130 - End
+		// #26226 - Start
+		if ((ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType()))
+				&& (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode()
+						.getParameterCode()) || ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa()
+						.getFulfilmentTypeCode().getParameterCode()))) {
+
+			constructPRSupplierSpecificationAndRemarks(context, scLoa);
+		}
+		// #26226 - End
 
 		// scLoa
 		context.put("scLoa", scLoa);
@@ -2028,23 +2050,43 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		JadualHargaItemBean jadualHargaItemBean = new JadualHargaItemBean();
 		List<ItemBean> productItemBeans = new ArrayList<ItemBean>();
 		List<ItemBean> serviceItemBeans = new ArrayList<ItemBean>();
+		ItemBean itembean= new ItemBean(); // 26226
 		ItemBean jadualHarga = null;
 		String itemType = null;
+		//26226 Start 
+		String dafaltValue = SSTConstant.TB;
+		if (SSTConstant.LANGUAGE_CODE_EN.equals(new FacesScopes().getUserLocale().getLanguage())) {
+			dafaltValue = SSTConstant.TB;
+		}
+		//End
 
 		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
-			jadualHarga = mappingJadualHarga(item);
 			if(null != item.getScRequestItem().getItemType()){
 				itemType = item.getScRequestItem().getItemType().getParameterCode();
 				if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
+					jadualHarga = mappingJadualHarga(item); //26226
 					productItemBeans.add(jadualHarga);
 				} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-					serviceItemBeans.add(jadualHarga);
+					//26226 Start   
+					//serviceItemBeans.add(jadualHarga);
+					TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
+					if(tplSpecQuestion.getQuestionType().equals("I"))
+					{
+						jadualHarga = mappingJadualHarga(item);
+				
+						serviceItemBeans.add(jadualHarga);
+					}
+					//26226 end
 				}
 			}
 		}
 		jadualHargaItemBean.setProductItemBeans(productItemBeans);
 		jadualHargaItemBean.setServiceItemBeans(serviceItemBeans);
 		context.put("jadualHargaItemBean", jadualHargaItemBean);
+		// 26226 Start
+		context.put(SSTConstant.serviceScope, dafaltValue);
+		context.put(SSTConstant.itemType, itemType);
+		// End
 	}
 
 	public void formSpecification(VelocityContext context, ScLoa scLoa)
@@ -4597,7 +4639,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 
 		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item
-				.getTplSpecZoneDtl().getZoneName() : "");
+				.getTplSpecZoneDtl().getZoneName() : SSTConstant.EMPTY_STRING);
 		//20200720@asyrafhaziq  - #28609 - Start
 		String itemName = item.getScRequestItem().getItemName();
 		if (itemName == null) {
@@ -4620,7 +4662,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			itemBean.setToQty(null == item.getTplSpecTierQty().getToQty()? "" 
 					: item.getTplSpecTierQty().getToQty().toString());
 		}
-
+		//26226 Start
+				TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
+				itemBean.setItem(item.getScRequestItem().getItemName());
+				itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : SSTConstant.EMPTY_STRING);
+				
+				if (null != tplSpecQuestion.getClDeliveryTerm()) {
+					itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
+				}
+				if (null != tplSpecQuestion.getClDurationMonth()) {
+					itemBean.setClDurationMonth(tplSpecQuestion.getClDurationMonth().toString());
+				}
+				//End
 		/*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()
