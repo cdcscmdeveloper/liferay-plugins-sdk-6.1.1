@@ -1866,6 +1866,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
+	
+	//#29732
+	public boolean isFromSubmitCatChange;
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11824,6 +11827,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
 		this.categoryDescriptionChange = categoryDescriptionChange;
+	}
+	/**
+	 * @return the isCategoryCodeChange
+	 */
+	public boolean getIsFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isCategoryCodeChange
+	 *            the isCategoryCodeChange to set
+	 */
+	public void setIsFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
 	}
 }
 
