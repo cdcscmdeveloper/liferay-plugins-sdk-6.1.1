@@ -960,8 +960,9 @@ public class PurchaseInDefaultBackingBean extends
 						.getReasonId().intValue()) {
 					BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();
 					BigDecimal qtyBySupplier = getManagedBean().getPurchaseInDefault().getSuppQuantity();
-
-					if (qtyByRequisitioner.compareTo(qtyBySupplier) == -1)
+					//start - Sonarqube DP Bug Minor Zairul Rizwan [12/7/2023] 
+					if (qtyByRequisitioner.compareTo(qtyBySupplier) < 0)
+					//stop - Sonarqube DP Bug Minor Zairul Rizwan [12/7/2023]	
 						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getSuppQuantity());
 					else
 						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());

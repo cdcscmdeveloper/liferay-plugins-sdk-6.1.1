@@ -11,10 +11,12 @@
 			<h:outputText value="#{lbl['lbl.ct.agreement.detail']}" />
 			<ac:iconTooltip value="#{lbl['lbl.ct.agreement.detail.tooltip']}" />
 		</f:facet>
+				<!-- #29418 start -->
 				<p:dataTable id="contractAgreementTableID" lazy="true"
 					value="#{ctBackingBean.filterAgreementList()}"
-					var="agreement" width="100%" rows="10" rowIndexVar="index">
-
+					var="agreement" width="100%" rows="10" rowIndexVar="index"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<!-- #29418 end -->
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.ct.agreement.no']}" />

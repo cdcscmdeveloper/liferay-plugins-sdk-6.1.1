@@ -3039,6 +3039,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	//#25037-START
 	public void prepareUpdateCommitteeMember() {
+		if (StringUtils.isBlank(this.getManagedBean().getCommitteeType()))
+			return;
 		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
 		meetingBB.renewSesionObject();
 		this.getManagedBean().setMeetingBB(meetingBB);
