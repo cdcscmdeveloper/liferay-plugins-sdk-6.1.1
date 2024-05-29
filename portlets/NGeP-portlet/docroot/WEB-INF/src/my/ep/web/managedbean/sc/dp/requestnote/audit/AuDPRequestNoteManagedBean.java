@@ -4,11 +4,9 @@
 package my.ep.web.managedbean.sc.dp.requestnote.audit;
 
 import java.math.BigInteger;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
-import my.ep.dto.sc.audit.VAuditDPRequestNoteDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -39,8 +37,6 @@ public class AuDPRequestNoteManagedBean extends BaseManagedBean{
 	private AuDPRequestNoteDTO auDPRequestNoteDTO;
 	
 	private AuditDPSearchBean auditDPSearchBean;
-	
-	private List<VAuditDPRequestNoteDTO> vAuditDPRequestnoteDTOList;
 	
 	private boolean isLazy = false;
 	
@@ -101,14 +97,6 @@ public class AuDPRequestNoteManagedBean extends BaseManagedBean{
 
 	public void setAuditDPSearchBean(AuditDPSearchBean auditDPSearchBean) {
 		this.auditDPSearchBean = auditDPSearchBean;
-	}
-
-	public List<VAuditDPRequestNoteDTO> getvAuditDPRequestnoteDTOList() {
-		return vAuditDPRequestnoteDTOList;
-	}
-
-	public void setvAuditDPRequestnoteDTOList(List<VAuditDPRequestNoteDTO> vAuditDPRequestnoteDTOList) {
-		this.vAuditDPRequestnoteDTOList = vAuditDPRequestnoteDTOList;
 	}
 
 	public boolean isLazy() {
