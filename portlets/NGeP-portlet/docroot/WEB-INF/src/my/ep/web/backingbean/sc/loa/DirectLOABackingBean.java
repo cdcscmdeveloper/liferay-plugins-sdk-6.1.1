@@ -4770,7 +4770,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				    String tempFilePath = filePath.replace(".pdf", "_temp.pdf");
 				    File file = new File(filePath);
 				    mergePdf(file, filePath, tempFilePath, context);
-				    file.renameTo(new File(filePath.replace(".pdf", "_merged.pdf")));
+				    //start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+				    boolean isRename = file.renameTo(new File(filePath.replace(SSTConstant.fileTypePdf, SSTConstant.fileTypeMergedPdf)));
+					   if (isRename){
+						   log.info("rename successful");
+					   }
+					   else{
+						   log.info("rename failed");
+					   }
+					 //stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
 				    scLoaReportAttachment.setFilePath(scLoaReportAttachment.getFilePath().replace(".pdf", "_merged.pdf"));
 				  }
 				  // #26130 - End.
@@ -9052,6 +9060,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				fileNo = splitLongLengthString(fileNo, 29);
 			}
 		}
+		//#26770 Note-#548 - Start
+		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
+		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		//#26770 Note-#548 - End
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
 
@@ -11176,10 +11188,12 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 			if (contractAmt.compareTo(limit) == 0) {
 				getManagedBean().setAbove500K(false);
-				return false;			
-			} else if (contractAmt.compareTo(limit) == 1) {
+				return false;
+			//start - Sonarqube DP Bug Minor Iskandar [12/7/2023]
+			} else if (contractAmt.compareTo(limit) > 0) {
 				getManagedBean().setAbove500K(true);
 				return true;
+			//stop - Sonarqube DP Bug Minor Iskandar [12/7/2023] 
 			} else {
 				getManagedBean().setAbove500K(false);
 				return false;
