@@ -897,9 +897,8 @@
 					</c:choose>
 					</td>
 					<!-- #25726 start -->
-				    <c:if test="#{!isContractTypeAsCentral}"> 
 					 <td style="margin-top: -3px"> <!-- Reopen #25726 note 144 - issue 7 start -->
-						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+						<ac:iconTooltip rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
 							<!-- #29521 - start --><!-- #28784 - start -->
 							<p:spacer width="10" height="5"/>
 								<p:graphicImage id="abc123" rendered="#{qTDetailBB.managedBean.isFulfilmentTypeChange and (scQt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or scQt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}" value="/css/images/design/icon_alert.png" />
@@ -909,7 +908,6 @@
 							<!-- #29521 - end --><!-- #28784 - end -->
 					  <!-- Reopen #25726 note 144 - issue 7 end -->
 					 </td>
-					</c:if>
 					</tr></table></td>
 					<!-- #25726 end -->
 										
@@ -922,15 +920,16 @@
 					<c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_DURATION) and !isReadOnly or isGenInfo}">
-							<p:inputText id="contractBo" maxlength="3"
+							<p:inputText id="#{QTFieldConst.FIELD_QT_CONTRACT_PERIOD_ID}" maxlength="3"
 								label="#{lbl['lbl.sc.spec.complete.period']}"
 								value="#{scQt.contractDuration}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">
 								<p:ajax event="change" process="@this" partialSubmit="true" update="@this" 
 								listener="#{createQtBB.ContractPeriodChange()}"/>
+								<f:converter converterId="periodConverter"/>
 							</p:inputText>
-							<p:message id="completionBo" for="contractBo" display="icon"></p:message>
+							<p:message id="completionBo" for="#{QTFieldConst.FIELD_QT_CONTRACT_PERIOD_ID}" display="icon"></p:message>
 						</c:when>
 						<c:otherwise>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
@@ -941,7 +940,7 @@
 								disabled="true">
 							</p:inputText>
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>							
-							<p:inputText id="contractBo" maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
+							<p:inputText id="#{QTFieldConst.FIELD_QT_CONTRACT_PERIOD_ID}" maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
 								value="#{scQt.contractDuration}" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
 								style="text-align:right;margin-bottom:5px; width:200px;"
 								required="#{qtStatusChecklistScoring or qtStatusAfterChecklistScoring}">

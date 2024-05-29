@@ -411,7 +411,7 @@ public String backToQtScreen(){
 	switchToOrigManagedBean();
 	FacesContext fc = FacesContext.getCurrentInstance();
 	fc.getApplication().getNavigationHandler()
-	.handleNavigation(fc, null, destPage);//29464
+	.handleNavigation(fc, null, destPage+"?faces-redirect=true");//29464 //29732 add redirect true
 	return "";
 }
 
@@ -474,6 +474,8 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
 	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
 	/* ***25692#95 - start */
+	//#29732 fix null pointer currentstatus id for 1st time enter
+	QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean();
 	if(renewSessionObject){
 		renewSesionObject();
 	}
@@ -609,8 +611,11 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#15391 - end		
 		
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-				.equals(scQt.getQtStatus().getStatusId())) {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId())
+						|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())
+						&& !this.getManagedBean().isReadOnly() || QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt
+						.getQtStatus().getStatusId())) && !this.getManagedBean().isReadOnly()) {
 			String changedCatCodeList = specBB.checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setActiveIndex(1);
@@ -626,6 +631,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			}
+			this.getManagedBean().setCurrentInSpecMaint(true);//#29732 first time spec maint
 		}
 		// #29732 @idham 25/07/2023 - End
 		
@@ -635,6 +641,10 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		//29464-end
+		//#29732
+		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
+		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
 		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
@@ -797,4 +807,10 @@ public boolean isSpecCommittee() {
 		editSpecificationMaintenance(scQt, isEditable, true, true, previouPageId, redirect);
 	}
 	// 29464-end
+	
+	//#29732
+	public boolean isSpecEndorsmentScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+
 }
