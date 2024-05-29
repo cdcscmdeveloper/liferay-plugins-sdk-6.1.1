@@ -24,7 +24,7 @@
 				<ac:lov id="lovCtKumpulanPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.ct.jabatan']}" readonly="true"
-					disabled="#{ctReportBB.managedBean.disableOrgField and !ctReportBB.managedBean.factoringUser}"
+					disabled="#{ctReportBB.managedBean.selectedMinistry==null or ctReportBB.managedBean.disableOrgField}"
 					value="#{ctReportBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 					saveObject="ctReportBB.managedBean.selectedKumpulanPTJ"
 					conditionField="#{ctReportBB.constructKumpulanPTJConditionFields()}"
@@ -36,7 +36,7 @@
 				<ac:lov id="lovCtPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
 					headerText="#{lbl['lbl.ct.ptj']}" update="@form"
-					disabled="#{ctReportBB.managedBean.disableOrgField and !ctReportBB.managedBean.factoringUser}"
+					disabled="#{ctReportBB.managedBean.selectedKumpulanPTJ==null or ctReportBB.managedBean.disableOrgField}"
 					value="#{ctReportBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 					saveObject="ctReportBB.managedBean.selectedPTJ"
 					conditionField="#{ctReportBB.constructPTJConditionFields()}" /></td>
