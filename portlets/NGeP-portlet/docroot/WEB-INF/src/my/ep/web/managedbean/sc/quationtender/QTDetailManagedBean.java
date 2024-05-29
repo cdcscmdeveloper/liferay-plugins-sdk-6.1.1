@@ -1874,6 +1874,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<String, String> committeeMembersTypeMap; 
 	//12471 - end
 
+	//#29732
+	public boolean isFromSubmitCatChange;
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11890,6 +11893,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.newScCommitteeMemberList = newScCommitteeMemberList;
 	}
 
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean getIsFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setIsFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
 }
 
 // ***25201

@@ -6479,28 +6479,17 @@ public class SmCommonUtil {
 	}
 	
 	/**
-	 * Cancel Bumi application if supplier has other active application
+	 * Cancel Bumiputera application if Bumiputera status was revoked in other recently approved application.
 	 * @param smAppl bumi Appl
 	 * @return true if bumi Appl is cancelled
 	 */
-	public static boolean checkCancelBumiApplFromNewAppl(SmAppl smAppl){
-		if(smAppl == null || smAppl.isActiveAppl() || 
-				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)) 
+	public static boolean checkCancelBumiApplFromBumiStatus(SmAppl smAppl){
+		if(smAppl == null || smAppl.isActiveAppl() 
+				|| smAppl.getSmSupplier() == null || smAppl.getSmSupplier().isBumi() 
+				|| !smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)){
 			return false;
-		
-		SmAppl activeAppl = SmServiceLookup.getReviewApplicationSO()
-				.retrieveActiveSmApplBySupp(smAppl.getSmSupplier().getSupplierId()).getSmAppl();
-		if(activeAppl == null) return false;
-		if(!activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
-			return false;
-		
-		//cancel bumi if sv after approval && supplier create new KR/KU/KA
-		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
-		reqDTO.setPendingKBAppl(smAppl);
-		reqDTO.setSmAppl(activeAppl);
-		return SmServiceLookup.getReviewApplicationSO().cancelBumiApplicationFromOtherAppl(reqDTO);
+		}
+		return SmServiceLookup.getReviewApplicationSO().cancelBumiApplicationFromBumiStatus(smAppl);
 	}
 	//#32304 - end
 
