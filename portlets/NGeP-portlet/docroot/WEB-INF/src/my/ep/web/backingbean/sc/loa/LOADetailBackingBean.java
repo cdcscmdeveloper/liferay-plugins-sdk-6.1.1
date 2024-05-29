@@ -1471,8 +1471,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
 
-					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-							.equals(docDefinitionKey)) {
+					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.trim().equals(docDefinitionKey.trim())) {
 						filename.append(".docx");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateAgreementLetterDocFromVelocity(
@@ -1540,7 +1539,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
-						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
+						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
 					// if pending supplier acknowledgment , always regenerate 
 					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
 							.getLoaNo());
@@ -2004,7 +2003,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Specification
 		formSpecification(context, scLoa);
-		
+
 		// #26130 - Start
 		if (scQt != null
 				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
@@ -2015,6 +2014,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			constructSupplierSpecificationAndRemarks(context, scLoa);
 		}
 		// #26130 - End
+
 		// #26226 - Start
 		if ((ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType()))
 				&& (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode()
@@ -2519,6 +2519,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param scLoa the sc loa
 	 * @throws Exception the exception
 	 */
+	@SuppressWarnings("unused")
 	private void generateNegotiationResultPdf(ScAttachment attachment) throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
 		ScLoa scLoa = getManagedBean().getScLoa();
