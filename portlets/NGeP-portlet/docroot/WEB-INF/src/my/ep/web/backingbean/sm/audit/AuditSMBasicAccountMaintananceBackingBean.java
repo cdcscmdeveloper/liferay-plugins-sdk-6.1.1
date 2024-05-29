@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.sm.audit.AuSMDetailDTO;
@@ -30,8 +31,8 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 		List<AuSMDetailDTO> auDetails = new ArrayList<>();
 		AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
 		
-		Iterator<SmSupplierBank> oldBanks = mBean.getOldBanks().iterator();
-		Iterator<SmSupplierBank> newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().iterator();
+		ListIterator<SmSupplierBank> oldBanks = mBean.getOldBanks().listIterator();
+		ListIterator<SmSupplierBank> newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
 		
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
@@ -40,79 +41,60 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 				if (oldBank.getSupplierBankId().equals(newBank.getSupplierBankId())) {
 					if (!oldBank.getPmFinancialOrg().getFinancialOrgId()
 							.equals(newBank.getPmFinancialOrg().getFinancialOrgId())) {
-						AuSMDetailDTO auDetail = new AuSMDetailDTO();
-						auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY);
-						auDetail.setOldValueId(oldBank.getPmFinancialOrg().getFinancialOrgId());
-						auDetail.setNewValueId(newBank.getPmFinancialOrg().getFinancialOrgId());
-						auDetails.add(auDetail);
+						AuSMDetailDTO auDetailBankName = new AuSMDetailDTO();
+						auDetailBankName.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY);
+						auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
+						auDetailBankName.setOldValueId(oldBank.getPmFinancialOrg().getFinancialOrgId());
+						auDetailBankName.setNewValueId(newBank.getPmFinancialOrg().getFinancialOrgId());
+						auDetails.add(auDetailBankName);
 					}
 					if (!oldBank.getAccountNo().equals(newBank.getAccountNo())) {
-						AuSMDetailDTO auDetail = new AuSMDetailDTO();
-						auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY);
-						auDetail.setOldValue(oldBank.getAccountNo());
-						auDetail.setNewValue(newBank.getAccountNo());
-						auDetails.add(auDetail);
+						AuSMDetailDTO auDetailBankNo = new AuSMDetailDTO();
+						auDetailBankNo.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY);
+						auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
+						auDetailBankNo.setOldValue(oldBank.getAccountNo());
+						auDetailBankNo.setNewValue(newBank.getAccountNo());
+						auDetails.add(auDetailBankNo);
 					}
 					oldBanks.remove();
 					newBanks.remove();
 				}
 			}
+			newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
 		}
+		oldBanks = mBean.getOldBanks().listIterator();
+		
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
-			AuSMDetailDTO auDetail = new AuSMDetailDTO();
-			auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE);
-			auDetail.setOldValue(oldBank.getAccountNo());
-			auDetails.add(auDetail);
+			AuSMDetailDTO auDetailBankName = new AuSMDetailDTO();
+			auDetailBankName.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE);
+			auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
+			auDetailBankName.setOldValueId(oldBank.getPmFinancialOrg().getFinancialOrgId());
+			auDetails.add(auDetailBankName);
+			
+			AuSMDetailDTO auDetailBankNo = new AuSMDetailDTO();
+			auDetailBankNo.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE);
+			auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
+			auDetailBankNo.setOldValue(oldBank.getAccountNo());
+			auDetails.add(auDetailBankNo);
 		}
+		
 		while (newBanks.hasNext()) {
 			SmSupplierBank newBank = newBanks.next();
 			if(newBank.isBrandNew()){
-				AuSMDetailDTO auDetail = new AuSMDetailDTO();
-				auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
-				auDetail.setNewValue(newBank.getAccountNo());
-				auDetails.add(auDetail);
+				AuSMDetailDTO auDetailBankName = new AuSMDetailDTO();
+				auDetailBankName.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
+				auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
+				auDetailBankName.setNewValueId(newBank.getPmFinancialOrg().getFinancialOrgId());
+				auDetails.add(auDetailBankName);
+				
+				AuSMDetailDTO auDetailBankNo = new AuSMDetailDTO();
+				auDetailBankNo.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
+				auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
+				auDetailBankNo.setNewValue(newBank.getAccountNo());
+				auDetails.add(auDetailBankNo);
 			}
 		}
-
-//		for (SmSupplierBank oldBank : mBean.getOldBanks()) {
-//			boolean deleted = true;
-//			for (SmSupplierBank newBank : mBean.getSmSupp().getSmAppl().getSmSupplierBanks()) {
-//				if (oldBank.getSupplierBankId().equals(newBank.getSupplierBankId())) {
-//					deleted = false;
-//					if (!oldBank.getPmFinancialOrg().getFinancialOrgId()
-//							.equals(newBank.getPmFinancialOrg().getFinancialOrgId())) {
-//						AuSMDetailDTO auDetail = new AuSMDetailDTO();
-//						auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY);
-//						auDetail.setOldValueId(oldBank.getPmFinancialOrg().getFinancialOrgId());
-//						auDetail.setNewValueId(newBank.getPmFinancialOrg().getFinancialOrgId());
-//						auDetails.add(auDetail);
-//					}
-//					if (!oldBank.getAccountNo().equals(newBank.getAccountNo())) {
-//						AuSMDetailDTO auDetail = new AuSMDetailDTO();
-//						auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY);
-//						auDetail.setOldValue(oldBank.getAccountNo());
-//						auDetail.setNewValue(newBank.getAccountNo());
-//						auDetails.add(auDetail);
-//					}
-//				}
-//			}
-//			if (deleted) {
-//				AuSMDetailDTO auDetail = new AuSMDetailDTO();
-//				auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE);
-//				auDetail.setOldValue(oldBank.getAccountNo());
-//				auDetails.add(auDetail);
-//			}
-//		}
-//		
-//		for (SmSupplierBank newBank : mBean.getSmSupp().getSmAppl().getSmSupplierBanks()) {
-//			if(newBank.isBrandNew()){
-//				AuSMDetailDTO auDetail = new AuSMDetailDTO();
-//				auDetail.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
-//				auDetail.setNewValue(newBank.getAccountNo());
-//				auDetails.add(auDetail);
-//			}
-//		}
 		
 		auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
 		auObj.setRoleCode(roleCode);
