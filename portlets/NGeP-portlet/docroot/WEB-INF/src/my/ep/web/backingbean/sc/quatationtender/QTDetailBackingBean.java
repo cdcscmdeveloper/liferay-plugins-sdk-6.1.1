@@ -3185,9 +3185,9 @@ public class QTDetailBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		String taskName = this.getManagedBean().getTaskName();
-		
-		//9019 - Start (Harun)
-		// initializing remark fixing Approve button - for production fixing only 
+
+		// 9019;35594 note-10, note-12 - Start (Harun) - for production fixing only
+		// initializing remark fixing Approve button 
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
 			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
 					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
@@ -3199,8 +3199,8 @@ public class QTDetailBackingBean extends
 		} else {
 			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 		}
-		// 9019 - End (Harun)
-		
+		// 9019;35594 note-10, note-12 - End (Harun) - for production fixing only
+
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
 		ICommitteSO committeSO;
