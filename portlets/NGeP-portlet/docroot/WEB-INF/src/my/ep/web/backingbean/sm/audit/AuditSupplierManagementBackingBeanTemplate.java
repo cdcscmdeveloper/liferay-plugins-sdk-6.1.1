@@ -36,7 +36,9 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		PmUser user = retriveUser(userId);
 		PmOrgProfile org = retriveUserOrg(userId);
 		AuSupplierManagementDTO auObj = prepareAuditData(managebean, org, user, roleCode);
-		auditSMSO(auObj);
+		if(auObj.getAuditDetails().size() > 0){
+			auditSMSO(auObj);
+		}
 	}
 
 	private String getRoleCode() {

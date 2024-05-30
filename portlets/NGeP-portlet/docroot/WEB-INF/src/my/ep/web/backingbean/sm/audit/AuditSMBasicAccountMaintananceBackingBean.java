@@ -100,9 +100,12 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 		auObj.setRoleCode(roleCode);
 		auObj.setOrgProfileId(org.getOrgProfileId());
 		auObj.setOrgName(org.getOrgName());
-		auObj.setDocId(null);
+		auObj.setDocId(mBean.getSmSupp().getSupplierId());
 		auObj.setDocNo(mBean.getSmSupp().getEpNo());
 		auObj.setAuditDetails(auDetails);
+		auObj.setApplId(mBean.getSmSupp().getSmAppl().getApplId());
+		auObj.setApplNo(mBean.getSmSupp().getSmAppl().getApplNo());
+		auObj.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
 		
 		return auObj;
 	}
