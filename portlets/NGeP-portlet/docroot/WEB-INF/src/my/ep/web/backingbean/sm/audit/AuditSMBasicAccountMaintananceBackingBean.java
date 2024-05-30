@@ -24,6 +24,13 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @param managedBean
+	 * @param org
+	 * @param user
+	 * @param roleCode
+	 * prepare audit trail data to be saved to database
+	 */
 	@Override
 	public AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, PmOrgProfile org, PmUser user, String roleCode) {
 

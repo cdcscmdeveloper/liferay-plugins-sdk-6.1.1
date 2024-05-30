@@ -9,7 +9,9 @@ import my.ep.dto.sm.audit.AuSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -28,15 +30,23 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 
 	private static Logger log = Logger.getLogger(AuditSupplierManagementBackingBeanTemplate.class);
 
+	private LogKey logKey = new LogKey();
+
 	public AuditSupplierManagementBackingBeanTemplate() {
 	}
 
+	/**
+	 * @param managebean
+	 * @param userId
+	 * 
+	 * Save audit data to database
+	 */
 	public final void saveAuditData(BaseManagedBean managebean, Long userId) {
 		String roleCode = getRoleCode();
 		PmUser user = retriveUser(userId);
 		PmOrgProfile org = retriveUserOrg(userId);
 		AuSupplierManagementDTO auObj = prepareAuditData(managebean, org, user, roleCode);
-		if(auObj.getAuditDetails().size() > 0){
+		if (auObj.getAuditDetails().size() > 0) {
 			auditSMSO(auObj);
 		}
 	}
@@ -87,7 +97,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
 			auSMSO.insertAudit(auObj);
 		} catch (Exception ex) {
-			log.info("Catch Exception from TEMPLATE Send TO SO : ", ex);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", auObj.getDocNo(),
+					"AuditSupplierManagementSO", logKey.getUserId(), ex);
 		}
 	}
 }
