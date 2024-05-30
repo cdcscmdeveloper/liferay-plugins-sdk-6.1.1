@@ -3186,7 +3186,8 @@ public class QTDetailBackingBean extends
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		String taskName = this.getManagedBean().getTaskName();
 		
-		//9019 - Start (Harun) initializing remark fixing Approve button 
+		//9019 - Start (Harun)
+		// initializing remark fixing Approve button - for production fixing only 
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
 			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
 					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
