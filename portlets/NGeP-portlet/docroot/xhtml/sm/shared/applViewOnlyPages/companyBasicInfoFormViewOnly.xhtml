@@ -347,6 +347,14 @@
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
@@ -368,17 +376,6 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.localAuthority}" /></td>
 					</p:outputPanel>
 				<!-- 32304 - end-->
-				</tr>
-				<tr>
-				<td>
-				<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" />
-					<!-- #32008 -->
-					<ac:smFieldChangeAlertView
-						isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
-						oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}" 
-						currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}" 
-						alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}"/></td>
 				</tr>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
 					<tr>
