@@ -291,27 +291,27 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			UserGroupResDTO resDTOCheckActive = userGroupSO.checkApproverUserActive(reqDTOCheckActive);
 			isRemove = resDTOCheckActive.getCheckActive();
 			if(isRemove.equals(BigDecimal.ZERO)){
-				removeFirstUser(list2);
+				Iterator<PmUser> iterator = list2.iterator();
+	            if (iterator.hasNext()) {
+	                iterator.next();
+	                iterator.remove();
+	            }
 			}else{
 				reqDTO.setGroupId(groupId);
 				reqDTO.setUserId(approver.getUserId());
 				UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserByUserIdAndGroupId(reqDTO);
 				if(resDTO.getUserGroupUser()==null || (resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE)){
-					removeFirstUser(list2);
+					Iterator<PmUser> iterator = list2.iterator();
+		            if (iterator.hasNext()) {
+		                iterator.next();
+		                iterator.remove();
+		            }
 				}
 			}
 			list2.addAll(list1);
 		}
 		return list2;
 	}
-	
-	private void removeFirstUser(List<PmUser> list) {
-        Iterator<PmUser> iterator = list.iterator();
-        if (iterator.hasNext()) {
-            iterator.next();
-            iterator.remove();
-        }
-    }
 //End-35429 - Do cancellation	
 	
 	
