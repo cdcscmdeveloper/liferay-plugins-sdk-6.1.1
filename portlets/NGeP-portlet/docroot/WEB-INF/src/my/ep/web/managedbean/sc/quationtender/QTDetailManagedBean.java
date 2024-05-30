@@ -1808,6 +1808,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
 	private String catCodeList;
+	private boolean currentInSpecMaint;//#29732 first time spec maint
+	private boolean categoryDescriptionChange;//#29732 flag to check category has change
+
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
@@ -1863,6 +1866,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
+	
+	//#29732
+	public boolean isFromSubmitCatChange;
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11806,6 +11812,36 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
+
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean currentInSpecMaint) {
+		this.currentInSpecMaint = currentInSpecMaint;
+	}
+	
+	public boolean isCategoryDescriptionChange() {
+		return categoryDescriptionChange;
+	}
+
+	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
+		this.categoryDescriptionChange = categoryDescriptionChange;
+	}
+	/**
+	 * @return the isCategoryCodeChange
+	 */
+	public boolean getIsFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isCategoryCodeChange
+	 *            the isCategoryCodeChange to set
+	 */
+	public void setIsFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
 }
 
 // ***25201
