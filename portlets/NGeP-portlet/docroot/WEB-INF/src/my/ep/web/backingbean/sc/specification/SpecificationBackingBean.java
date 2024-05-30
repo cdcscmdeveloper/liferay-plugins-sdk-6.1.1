@@ -12113,6 +12113,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				this.getManagedBean().setQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveTechnicalCheckList();//28784 - related issue 26784
 				break;
 			case 1:
 				ScQt scQtSupplier = constructSpecCommitteDtls().getScQt();
