@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -237,6 +238,82 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		return list2;
 	}
+	
+	
+//Start-35429 - Do cancellation	
+	/**
+	 * 
+	 * Sort Approver User List
+	 * @param approver, approverGroupUserList, groupId
+	 * @return PmUser List
+	 */
+	protected List<PmUser> sortApproverUserListDO(List<PmUserGroupUser> approverGroupUserList, PmUser approver,Long groupId){
+		IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
+		ArrayList<String> names = new ArrayList<String>();
+		List<PmUser> list1 = new ArrayList<PmUser>();
+		List<PmUser> list2 = new ArrayList<PmUser>();
+		UserGroupReqDTO reqDTO = new UserGroupReqDTO();
+		UserGroupReqDTO reqDTOCheckActive = new UserGroupReqDTO();
+		BigDecimal isRemove = BigDecimal.ONE;
+		
+		List<PmUser> pmUserList = new ArrayList<PmUser>();
+		if(approver != null){
+			for(PmUserGroupUser groupUser : approverGroupUserList){
+				names.add(groupUser.getPmUser().getUserName());
+				pmUserList.add(groupUser.getPmUser());
+			}
+			if(!names.contains(approver.getUserName())){
+				names.add(approver.getUserName());
+				pmUserList.add(approver);
+			}
+			Collections.sort(pmUserList, new Comparator<PmUser>() {
+				@Override
+				public int compare(PmUser s1, PmUser s2) {
+					return s1.getUserName().compareToIgnoreCase(s2.getUserName());
+				}
+			});
+			boolean match = false;
+			for(PmUser pmUser : pmUserList){
+				if(pmUser.getUserName().equals(approver.getUserName())){
+					match = true;
+				}
+				else{
+					match = false;
+				}
+				if(match){
+					list2.add(pmUser);
+				}else{
+					list1.add(pmUser);
+				}
+			}
+			reqDTOCheckActive.setGroupId(groupId);
+			reqDTOCheckActive.setUserId(approver.getUserId());
+			UserGroupResDTO resDTOCheckActive = userGroupSO.checkApproverUserActive(reqDTOCheckActive);
+			isRemove = resDTOCheckActive.getCheckActive();
+			if(isRemove.equals(BigDecimal.ZERO)){
+				Iterator<PmUser> iterator = list2.iterator();
+	            if (iterator.hasNext()) {
+	                iterator.next();
+	                iterator.remove();
+	            }
+			}else{
+				reqDTO.setGroupId(groupId);
+				reqDTO.setUserId(approver.getUserId());
+				UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserByUserIdAndGroupId(reqDTO);
+				if(resDTO.getUserGroupUser()==null || (resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE)){
+					Iterator<PmUser> iterator = list2.iterator();
+		            if (iterator.hasNext()) {
+		                iterator.next();
+		                iterator.remove();
+		            }
+				}
+			}
+			list2.addAll(list1);
+		}
+		return list2;
+	}
+//End-35429 - Do cancellation	
+	
 	
 	/**
 	 * Checks if is supplier role.
