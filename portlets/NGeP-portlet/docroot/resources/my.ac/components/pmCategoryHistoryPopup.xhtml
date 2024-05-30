@@ -61,7 +61,9 @@
 									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="#{lbl['lbl.pm.table.history.old.desc']}">
+							<!-- #35590 - Start -->
+							<p:column headerText="#{lbl['lbl.pm.table.history.old.desc']}"
+							   style="max-width:300px;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 								<h:outputText value="#{history.oldDescription}" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.pm.table.history.action.by']}"
@@ -70,10 +72,11 @@
 							</p:column>
 							<!-- #29665 - Start -->
 							<p:column headerText="#{lbl['lbl.pm.table.history.remark']}"
-							    style="white-space: normal;">
+							   style="max-width:300px;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 								<h:outputText value="#{history.remark}"/>
 							</p:column>
 						   <!-- #29665 - End -->
+						   <!-- #35590 - End -->
 						</p:dataTable>
 					</p:panel>
 				</h:panelGrid>

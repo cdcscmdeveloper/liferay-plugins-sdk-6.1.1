@@ -3062,7 +3062,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			sb.append(ResourceBundleUtils.getMessage(
 					"lbl.sm.mof.reg.reason.delete",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			sb.append(" is mandatory </br>");
+			// #35619 Start
+			sb.append(" ");
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.mandatory",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			sb.append("</br>");
+			// #35619 End
 			valid = false;
 		}
 		if (getManagedBean().getCancellationAttachment().getFileName() == null
@@ -3070,7 +3075,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.trim() == "") {
 			sb.append(ResourceBundleUtils.getMessage("lbl.sm.suppdoc.attach",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			sb.append(" is mandatory ");
+			// #35619 Start
+			sb.append(" "); 
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.mandatory",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			// #35619 End
 			valid = false;
 		}
 		if (!valid) {
@@ -12854,6 +12863,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getCountryId() == 0){
+			addr.setPmCountry(null);
+		}
+		//#34159 - END
 		//#34799
 		addr.setPmState(null);
 		//#34135 START
@@ -12881,6 +12895,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeState(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getStateId() == 0){
+			addr.setPmState(null);
+		}
+		//#34159 - END
 		//13320-start
 		Long stateId = addr.getStateId();
 		if (stateId != null) {
@@ -12920,6 +12939,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeDistrict(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getDistrictId() == 0){
+			addr.setPmDistrict(null);
+		}
+		//#34159 - END
 		//#34799
 		addr.setPmCity(null);
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
@@ -16604,11 +16628,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//13320-Start
 	
 	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getDivisionId() == 0){
+			addr.setPmDivision(null);
+		} else {
+			//#13320 - SmCommonUtil change method
+			addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
+		}
 		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
-				panelName, getManagedBean());
+				panelName, getManagedBean()); 
 		setRoleStaffAddrReqd();
-		//#13320 - SmCommonUtil change method
-		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
+		//#34159 - END
 	}
 	//13320-End	
 	
