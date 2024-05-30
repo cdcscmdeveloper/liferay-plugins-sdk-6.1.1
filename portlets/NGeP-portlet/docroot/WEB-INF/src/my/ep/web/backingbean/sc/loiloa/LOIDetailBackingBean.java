@@ -95,6 +95,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -4366,6 +4367,7 @@ public class LOIDetailBackingBean extends
 		Object payLoadData = getManagedBean().getPayLoad();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
+		String taskName = getManagedBean().getTaskName();//33380
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
@@ -4384,6 +4386,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setSourceId(sourceId);
 		getManagedBean().setPayLoad(payLoadData);
 		getManagedBean().setTaskId(taskId);
+		getManagedBean().setTaskName(taskName);//33380
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setBackToPreviousPage(backToPreviousPage);
@@ -6687,29 +6690,43 @@ public class LOIDetailBackingBean extends
 		return scLoiAttachment;
 	}
 	
+	//6906 - start - fix for #436
 	private void checkIsLoiProcessRequired(List<ScLoiLoa> pendingLoiLoas) {
-		boolean isSubmitButton = true;
+		this.getManagedBean().setLoiRequired(false);
+		boolean isAllLoiRequired = true;
+
 		for (ScLoiLoa loiLoa : pendingLoiLoas) {
-
-			if (null != loiLoa.getLoiRequired()) {
-				if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
-					isSubmitButton = Boolean.FALSE;
-					break;
-				}
-
-			} else{
-				isSubmitButton = Boolean.FALSE;
-				break;
+			if (!loiLoa.isLoiLoaActive()) {
+				continue;
+			}
+			if (null == loiLoa.getLoiRequired()
+					|| (loiLoa.getLoiRequired() && (!checkIfAllLoiCompleted(loiLoa.getScLois()) || !isLoiRequiredDisabled(loiLoa)))) {
+				this.getManagedBean().setLoiRequired(false);
+				return;
+			}
+			if (!loiLoa.getLoiRequired()) {
+				isAllLoiRequired = false;
 			}
 		}
-
-		if (isSubmitButton) {
-			getManagedBean().setLoiRequired(Boolean.TRUE);
-		} else {
-			getManagedBean().setLoiRequired(Boolean.FALSE);
-		}
+		this.getManagedBean().setLoiRequired(!isAllLoiRequired);
 	}
-	
+
+	private boolean checkIfAllLoiCompleted(List<ScLoi> lois) {
+		if (CollectionUtils.isEmpty(lois))
+			return false;
+		for (ScLoi loi : lois) {
+			PmStatus status = null != loi.getScWorkFlowStatus() && null != loi.getScWorkFlowStatus().getPmStatus() ? loi
+					.getScWorkFlowStatus().getPmStatus() : new PmStatus();
+			Long statusId = null != status.getStatusId() ? status.getStatusId() : 0L;
+
+			if (!QTStatusConst.LOI_COMPLETED.equals(statusId)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	//6906 - end - fix for #436
+
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
 	/**
 	 * Update bpm task action for supplier. update bpm - save data into database and BPM

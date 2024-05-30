@@ -117,7 +117,7 @@
 				</p:column>
 			</p:dataTable> -->
 			<!-- datatable for mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.mandatoryDocs}" id="InquiriesMandatoryList" rendered="#{not empty backingBean.managedBean.mandatoryDocs}"
+			<p:dataTable var="table" value="#{backingBean.managedBean.missinDocsMandatory}" id="InquiriesMandatoryList" rendered="#{not empty backingBean.managedBean.missinDocsMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -207,7 +207,7 @@
 				</p:column>
 			</p:dataTable>
 			<!-- datatable for mandatory support doc with no record to display(fix bug in primeface) -->
-			<p:dataTable var="" value="" id="mandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.mandatoryDocs}"
+			<p:dataTable var="" value="" id="mandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.missinDocsMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -236,7 +236,7 @@
 				</p:columnGroup>
 			</p:dataTable>
 			<!-- datatable for non-mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.nonMandatoryDocs}" id="InquiriesNonMandatoryList" rendered="#{not empty backingBean.managedBean.nonMandatoryDocs}"
+			<p:dataTable var="table" value="#{backingBean.managedBean.missinDocsNonMandatory}" id="InquiriesNonMandatoryList" rendered="#{not empty backingBean.managedBean.missinDocsNonMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -310,7 +310,7 @@
 				</p:column>
 			</p:dataTable>
 			<!-- datatable for non-mandatory support doc with record to display(to fix bug in primeface version) -->
-			<p:dataTable var="" value="" id="nonMandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.nonMandatoryDocs}"
+			<p:dataTable var="" value="" id="nonMandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.missinDocsNonMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -385,5 +385,19 @@
 				multiple="true"
 				showButtons="false"/>
 		</p:dialog>
+		<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteSupDocDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					onclick="confirmDeleteSupDocDialog.hide();"
+					action="#{supportingDocInquiryBackingBean.deleteInquirySupDocFileAttachment}" update="@form"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDeleteSupDocDialog.hide();" />
+			</div>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
