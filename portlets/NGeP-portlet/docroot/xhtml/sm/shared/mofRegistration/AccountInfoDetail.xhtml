@@ -51,7 +51,8 @@
 					<p:outputLabel
 							rendered="#{empty backingBean.managedBean.businessTypeLs}"
 							styleClass="outputLabel-view"
-							value="#{backingBean.getParameterDesc(backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smAppl.smCompanyBasic.businessType)}" />
+							value="#{backingBean.getParameterDesc(
+							backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smAppl.smCompanyBasic.businessType)}" />
 						<p:selectOneMenu id="smBusTypeId" required="true"
 							label="#{lbl['lbl.sm.regtype']}"
 							rendered="#{not empty backingBean.managedBean.businessTypeLs}"
@@ -60,7 +61,8 @@
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
 							<!-- 32304 -->
-							<p:ajax event="change" process="@this" update="@this,:#{p:component('changeBussTypeConfirmDialog')}" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
+							<p:ajax event="change" process="@this" update="@this,:#{p:component('changeBussTypeConfirmDialog')}" 
+								partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
 						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"
 							showSummary="true" showDetail="false" display="icon" />
 				<!-- 32304 - end-->
@@ -90,7 +92,8 @@
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
-						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType}"/>
+						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" 
+							rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType}"/>
 						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}" />
 						<p:tooltip id="regNott" for="regNoti" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType}" >
 							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
