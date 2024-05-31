@@ -122,6 +122,7 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 	 */
 	public void loadDPRequestNote() {
 		this.getManagedBean().setLazy(true);
+		this.getManagedBean().getAuditDPSearchBean().setSearching(true);
 		searchDP.reloadData();
 	}
 
@@ -180,20 +181,18 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 			AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
-				
+
 				IAuditDPRequestNoteSO auditSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 
-				ISearchResultBean<AuDPRequestNoteSPDTO> resDTO = auditSO.searchDPCancelRNResultList(languageCode,
-						dpSearchBean.getDocId(), searchBean);
-				searchResult.setTotalRecord(resDTO.getResultList().size());
-				searchResult.setResultList(resDTO.getResultList());
-				return searchResult;
-
+				ISearchResultBean<AuDPRequestNoteSPDTO> resDTO = null;
+				resDTO = auditSO.searchDPCancelRNResultList(languageCode, dpSearchBean.getDocId(), searchBean);
+				return resDTO;
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, "AU", dpSearchBean.getDocId().toString(),
-						"AuditSearchDPRequestNoteBackingBean.SearchDPPagingDataModel",
-						getUserIdSessionFromLoginId(), e);
+				SLAUtils.getInstance()
+						.logSLAError(SLALogConstant.COMMON_MODULE, "AU", dpSearchBean.getDocId().toString(),
+								"AuditSearchDPRequestNoteBackingBean.SearchDPPagingDataModel",
+								getUserIdSessionFromLoginId(), e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
