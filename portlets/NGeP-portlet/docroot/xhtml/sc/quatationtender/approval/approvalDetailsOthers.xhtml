@@ -69,35 +69,13 @@
 					<!-- #34014, #25077 -start- -->
 					<p:column headerText="#{lbl['lbl.sc.document']}" style="text-align: center;white-space: normal;width: 50%;">
 						<!-- #34014, #25077 -end- -->
-						<!-- #25077#355 - Start (Temporary fixed, before #9019 merge to Prod env) -->
-						<c:choose>
-							<c:when
-								test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<ac:scSingleFileUploadButton id="otheruploadIdICT"
-									popupWidgetVar="otherApprUploadDlgICT"
-									attachment="#{otherrequestdetails.approvalRequestAttachement}"
-									rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"
-									readonly="#{createQtBB.managedBean.readOnly}"
-									deleteFileUploadListener="approvalBackingBean.deleteOthersApprovalFileICT"
-									rowIndex="#{index}">
-									<f:setPropertyActionListener for="actionEvent"
-										value="#{otherrequestdetails}"
-										target="#{approvalBackingBean.managedBean.scQtApprovalDtls}" />
-								</ac:scSingleFileUploadButton>
-							</c:when>
-							<c:otherwise>
-								<!-- #25077#355 - End (Temporary fixed, before #9019 merge to Prod env) -->
-								<c:if
-									test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
-									<ui:include src="downloadDetailsOthersFile.xhtml" />
-								</c:if>
-								<c:if test="#{!qTDetailBB.isApprovalScreen()}">
-									<ui:include src="downloadDetailsOthersFile.xhtml" />
-								</c:if>
-								<!-- #25077#355 - Start (Temporary fixed, before #9019 merge to Prod env) -->
-							</c:otherwise>
-						</c:choose>
-						<!-- #25077#355 - End (Temporary fixed, before #9019 merge to Prod env) -->
+						<c:if
+							test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
+							<ui:include src="downloadDetailsOthersFile.xhtml" />
+						</c:if>
+						<c:if test="#{!qTDetailBB.isApprovalScreen()}">
+							<ui:include src="downloadDetailsOthersFile.xhtml" />
+						</c:if>
 					</p:column>
 				</c:when>
 				<c:otherwise>
