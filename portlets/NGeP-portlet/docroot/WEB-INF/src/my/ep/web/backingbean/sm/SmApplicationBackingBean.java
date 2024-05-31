@@ -205,8 +205,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
-public class SmApplicationBackingBean extends
-		BaseBackingBean<SmApplicationManagedBean> {
+public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManagedBean> {
 
 	/**
 	 * 
@@ -236,55 +235,36 @@ public class SmApplicationBackingBean extends
 		SmCommonUtil.setMDCUserId();
 	}
 
-	/**
-	 * Custom validation for required field
-	 * 
-	 * @param FacesContext
-	 *            facesContext
-	 * @param UIComponent
-	 *            uiComponent
-	 * @param Object
-	 *            value
+	/** Custom validation for required field
+	 * @param FacesContext facesContext
+	 * @param UIComponent uiComponent
+	 * @param Object value 
 	 */
-	public void validateRequiredField(FacesContext facesContext,
-			UIComponent uiComponent, Object value) {
-		Map<String, String> params = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap();
+	public void validateRequiredField(FacesContext facesContext, UIComponent uiComponent, Object value) {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		if (!params.containsKey("validate")) {
 			return;
 		}
-		String labelNameVal = (String) uiComponent.getAttributes().get(
-				"labelName");
+		String labelNameVal = (String) uiComponent.getAttributes().get("labelName");
 		UIInput component = (UIInput) uiComponent;
 
-		if (!StringUtils.isBlank(labelNameVal)
-				&& (component == null || component.getValue() == null || StringUtils
-						.isBlank(component.getValue().toString()))) {
-			throw new ValidatorException(new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, "Required field error",
-					SmCommonUtil.getMessage("lbl.sm.required.msg",
-							new String[] { labelNameVal })));
+		if (!StringUtils.isBlank(labelNameVal) && (component == null || component.getValue() == null || StringUtils.isBlank(component.getValue().toString()))) {
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Required field error", SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { labelNameVal })));
 		}
 	}
 
-	public void validateEmail(FacesContext context, UIComponent component,
-			Object value) {
-		Map<String, String> params = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap();
+	public void validateEmail(FacesContext context, UIComponent component, Object value) {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		if (params.containsKey("disableValidate")) {
 			return;
 		}
-		UIInput emailInput = (UIInput) component.getParent().findComponent(
-				"equiEmail");
-		String emailVal = (emailInput != null && emailInput.getValue() != null) ? emailInput
-				.getValue().toString() : "";
+		UIInput emailInput = (UIInput) component.getParent().findComponent("equiEmail");
+		String emailVal = (emailInput != null && emailInput.getValue() != null) ? emailInput.getValue().toString() : "";
 
 		if (!StringUtils.isBlank(emailVal) && !isValidEmail(emailVal)) {
-			String msg = SmCommonUtil.getMessage("lbl.sm.person.email", null)
-					+ " - "
-					+ SmCommonUtil.getMessage("lbl.sm.invalidEmail", null);
-			throw new ValidatorException(new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, "Email Error", msg));
+			String msg = SmCommonUtil.getMessage("lbl.sm.person.email", null) + " - " + SmCommonUtil.getMessage("lbl.sm.invalidEmail", null);
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Error", msg));
 		}
 	}
 
@@ -1371,6 +1351,17 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		
+		//#34624 & #35204 start
+		log.info("Application Type: " + applicationType);
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+				&& getManagedBean().getSmAppl().getApplCategoryType().equals("S")){
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		}
+		log.info("Application Category Type: " + getManagedBean().getSmAppl().getApplCategoryType());
+		//#34624 & #35204 end
+		
 		//32008 to initialize set PO & Approver cannot edit field key in by supplier
 		getManagedBean().setUpsCannotEdit(false);
 		if (fromBpm
