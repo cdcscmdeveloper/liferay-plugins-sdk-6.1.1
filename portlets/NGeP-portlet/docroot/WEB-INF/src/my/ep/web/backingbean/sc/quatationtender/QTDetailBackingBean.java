@@ -5989,8 +5989,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						if(scQt != null){//#28784
 							demoRequired = scQt.isDemoRequired();
 							evalType = scQt.getEvaluationType();							
+						}else{//Reopen #25726 note 286 - issue 2,3,4
+							scQt = tenderResDTO.getQtDetail();
 						}
-						scQt = tenderResDTO.getQtDetail();
+						
 						getManagedBean().setQt(scQt);
 						
 						//#28784 - Demo WIP
@@ -6002,9 +6004,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
 						this.getManagedBean().setPanel(scQt.isPanel());
-						Long currentStatus = this.getManagedBean().getQt()
-								.getQtStatus().getStatusId();
-						this.getManagedBean().setCurrentStatusId(currentStatus);
+						//Reopen #25726 note 286 - issue 5
+						if (!this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
+							Long currentStatus = this.getManagedBean().getQt()
+									.getQtStatus().getStatusId();
+							this.getManagedBean().setCurrentStatusId(currentStatus);
+						}
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
