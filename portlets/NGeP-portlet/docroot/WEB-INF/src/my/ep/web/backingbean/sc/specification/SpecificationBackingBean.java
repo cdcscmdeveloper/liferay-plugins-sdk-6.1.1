@@ -12153,6 +12153,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				this.getManagedBean().setQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveTechnicalCheckList();//28784 - related issue 35721
 				break;
 			case 1:
 				ScQt scQtSupplier = constructSpecCommitteDtls().getScQt();
@@ -18011,6 +18012,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
 		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
+		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());//#25138
+
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
