@@ -46,8 +46,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
@@ -1729,4 +1727,22 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
+	
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 }

@@ -329,7 +329,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				} else {
 					approver = getFacesScopes().getUserSessionBean();
 				}
-				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+				List<PmUser> approverUserList = sortApproverUserListDO(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId()); //#35429
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
@@ -748,6 +748,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+				
+				//35429-Start
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
+					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
+						String[] outcome = new String[1];
+						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
+						this.getManagedBean().setOutComes(outcome);
+					}
+				}
+				//35429-End
+				
 			}
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
