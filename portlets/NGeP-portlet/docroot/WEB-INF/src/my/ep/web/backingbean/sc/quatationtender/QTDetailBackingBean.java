@@ -3185,7 +3185,7 @@ public class QTDetailBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		String taskName = this.getManagedBean().getTaskName();
-		
+
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
 		ICommitteSO committeSO;
