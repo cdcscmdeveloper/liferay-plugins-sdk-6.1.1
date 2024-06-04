@@ -1082,7 +1082,7 @@ public class QTCommitteBackingBean extends
 		if (null == userSearchCommitteeDataModel) {
 			getManagedBean().setUserSearchCommitteeDataModel(
 					new UserCommitteePagingDataModel(
-							"existingcommitteesearchid", userCommitteeSearchBean));
+							QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID, userCommitteeSearchBean));
 		}
 		userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		reset();

@@ -1868,7 +1868,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.getSmAppl().getApplCategoryType(),
 							getManagedBean().getSmAppl().getSupplierType(),
 							getManagedBean().getBusinessTypeVal()));
-			initNonMandatoryAndMandatoryDocs(); //31043
+			//31043 START
+			initNonMandatoryAndMandatoryDocs();
+			SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean()); 
+			//31043 END
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 				smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 			}
@@ -3059,7 +3062,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			sb.append(ResourceBundleUtils.getMessage(
 					"lbl.sm.mof.reg.reason.delete",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			sb.append(" is mandatory </br>");
+			// #35619 Start
+			sb.append(" ");
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.mandatory",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			sb.append("</br>");
+			// #35619 End
 			valid = false;
 		}
 		if (getManagedBean().getCancellationAttachment().getFileName() == null
@@ -3067,7 +3075,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.trim() == "") {
 			sb.append(ResourceBundleUtils.getMessage("lbl.sm.suppdoc.attach",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			sb.append(" is mandatory ");
+			// #35619 Start
+			sb.append(" "); 
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.mandatory",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			// #35619 End
 			valid = false;
 		}
 		if (!valid) {
@@ -10737,9 +10749,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
 		//#29727 - START
-		if (dialog.equalsIgnoreCase("approverAppDialog")) {
+		if ("approverAppDialog".equalsIgnoreCase(dialog)) {
 			Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
-			List<SmSupplierBranch> supplierList = new ArrayList<SmSupplierBranch>();
+			List<SmSupplierBranch> supplierList = new ArrayList<>();
 			//#28777 - START
 			if(getManagedBean().getSelectedBranches() != null){
 				for (SmSupplierBranch suppBranch : getManagedBean().getSelectedBranches()) {
@@ -12340,6 +12352,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void reCheckVerifiedSection() {
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
 			SmApplicationUtil.checkAllowedToApprove(getManagedBean());
+			SmApplicationUtil.checkAllowedToRecommendSiteVisit(getManagedBean()); //31043
 			int maxReviewCount = getMaxSecCountByShowPanel();
 
 			SmApplSectionReview sec = getManagedBean().isPoUser() ? getManagedBean()
@@ -12850,6 +12863,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeCountry(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getCountryId() == 0){
+			addr.setPmCountry(null);
+		}
+		//#34159 - END
 		//#34799
 		addr.setPmState(null);
 		//#34135 START
@@ -12877,6 +12895,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeState(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getStateId() == 0){
+			addr.setPmState(null);
+		}
+		//#34159 - END
 		//13320-start
 		Long stateId = addr.getStateId();
 		if (stateId != null) {
@@ -12916,6 +12939,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            panelName
 	 */
 	public void onChangeDistrict(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getDistrictId() == 0){
+			addr.setPmDistrict(null);
+		}
+		//#34159 - END
 		//#34799
 		addr.setPmCity(null);
 		SmApplicationUtil.getInstance().populateCitiesByDistrict(addr,
@@ -15566,29 +15594,30 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
 			//#31043 START
-			/*if (applSuppDoc.getVerifiedFlg() != null) {
+			if (applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null) {
 				applSuppDoc
 						.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
-			}*/
-			for(SmApplSupportDoc mandatoryDoc : getManagedBean().getMandatoryDocs()){
-				if(mandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-					applSuppDoc.setApproverVerifiedFlg(mandatoryDoc.getApproverVerifiedFlg());
+			}else{
+				for(SmApplSupportDoc mandatoryDoc : getManagedBean().getMandatoryDocs()){
+					if(mandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+						applSuppDoc.setApproverVerifiedFlg(mandatoryDoc.getApproverVerifiedFlg());
+					}
 				}
-			}
-			for(SmApplSupportDoc nonMandatoryDoc : getManagedBean().getNonMandatoryDocs()){
-				if(nonMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-					applSuppDoc.setApproverVerifiedFlg(nonMandatoryDoc.getApproverVerifiedFlg());
+				for(SmApplSupportDoc nonMandatoryDoc : getManagedBean().getNonMandatoryDocs()){
+					if(nonMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+						applSuppDoc.setApproverVerifiedFlg(nonMandatoryDoc.getApproverVerifiedFlg());
+					}
 				}
-			}
-			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
-			if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
-				for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
-					licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
+				if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
+					for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
+						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+					}
 				}
-			}
-			for(SmApplSupportDoc licenseMandatoryDoc : licenseMandatoryDocs){
-				if(licenseMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-					applSuppDoc.setApproverVerifiedFlg(licenseMandatoryDoc.getApproverVerifiedFlg());
+				for(SmApplSupportDoc licenseMandatoryDoc : licenseMandatoryDocs){
+					if(licenseMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
+						applSuppDoc.setApproverVerifiedFlg(licenseMandatoryDoc.getApproverVerifiedFlg());
+					}
 				}
 			}
 			//#31043 END
@@ -16599,11 +16628,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//13320-Start
 	
 	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
+		//#34159 - START
+		if(addr.getDivisionId() == 0){
+			addr.setPmDivision(null);
+		} else {
+			//#13320 - SmCommonUtil change method
+			addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
+		}
 		SmApplicationUtil.getInstance().populateDistrictsByUsingDivision(addr,
-				panelName, getManagedBean());
+				panelName, getManagedBean()); 
 		setRoleStaffAddrReqd();
-		//#13320 - SmCommonUtil change method
-		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
+		//#34159 - END
 	}
 	//13320-End	
 	
@@ -17124,20 +17159,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	public void validateCompanyBranch(SmApplicationManagedBean managedBean, String process) {
+		String approverAppDialog = "approverAppDialog";
+		String approveDialog = "approveDialog";
+		String approve = "APPROVE";
+		Boolean pendingQT = false;
+		Boolean closedQTSubmitProposal = false;
 		
 		switch (managedBean.getSmAppl().getApplType()) {
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
 		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
 		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
 		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
-			StringBuilder msg = new StringBuilder();
-			if (managedBean.isSupplierUser() || process.equals("")) {
-				Boolean pendingQT = false;
+			if (managedBean.isSupplierUser() || process.isEmpty()) {
 				//#28777 - START - Updated CR
-				Boolean closedQTSubmitProposal = false;
-
-				if (managedBean.getSelectedBranches().size() > 0) {
-					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				if (!managedBean.getSelectedBranches().isEmpty()) {
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
 							.getServiceObject("sm", IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
@@ -17184,8 +17220,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					//#28777 - END - Updated CR
 				}
 			} else if (managedBean.isPoUser()) {
-				List<SmSupplierBranch> supplierBranch = new ArrayList<SmSupplierBranch>();
-				if (managedBean.getSmAppl().getSmSupplierBranches().size() > 0) {
+				List<SmSupplierBranch> supplierBranch = new ArrayList<>();
+				if (!managedBean.getSmAppl().getSmSupplierBranches().isEmpty()) {
 					for (SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
 						if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
 							continue;
@@ -17194,11 +17230,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				}
 
-				Boolean pendingQT = false;
-				Boolean closedQTSubmitProposal = false;
-
-				if (supplierBranch.size() > 0) {
-					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				if (!supplierBranch.isEmpty()) {
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
 							.getServiceObject("sm", IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
@@ -17228,26 +17261,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					} else {
-						if (process.equalsIgnoreCase("approveDialog")) {
+						if (process.equalsIgnoreCase(approveDialog)) {
 							assignFinalApproveOrReject(process);
-						} else if (process.equalsIgnoreCase("APPROVE")) {
+						} else if (process.equalsIgnoreCase(approve)) {
 							submitPOEscalationToApprover(process);
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					}
 				} else {
-					if (process.equalsIgnoreCase("approveDialog")) {
+					if (process.equalsIgnoreCase(approveDialog)) {
 						assignFinalApproveOrReject(process);
-					} else if (process.equalsIgnoreCase("APPROVE")) {
+					} else if (process.equalsIgnoreCase(approve)) {
 						submitPOEscalationToApprover(process);
 					} else {
 						throw new EpException(MessageConst.ERROR_721108);
 					}
 				}
 			} else if (managedBean.isApproverUser()) {
-				List<SmSupplierBranch> supplierBranch = new ArrayList<SmSupplierBranch>();
-				if (managedBean.getSmAppl().getSmSupplierBranches().size() > 0) {
+				List<SmSupplierBranch> supplierBranch = new ArrayList<>();
+				if (!managedBean.getSmAppl().getSmSupplierBranches().isEmpty()) {
 					for (SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
 						if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
 							continue;
@@ -17256,11 +17289,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				}
 
-				Boolean pendingQT = false;
-				Boolean closedQTSubmitProposal = false;
-
-				if (supplierBranch.size() > 0) {
-					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				if (!supplierBranch.isEmpty()) {
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
 							.getServiceObject("sm", IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
@@ -17292,14 +17322,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					} else {
-						if (process.equalsIgnoreCase("approverAppDialog")) {
+						if (process.equalsIgnoreCase(approverAppDialog)) {
 							assignFinalApproveOrReject(process);
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					}
 				} else {
-					if (process.equalsIgnoreCase("approverAppDialog")) {
+					if (process.equalsIgnoreCase(approverAppDialog)) {
 						assignFinalApproveOrReject(process);
 					} else {
 						throw new EpException(MessageConst.ERROR_721108);
@@ -17311,15 +17341,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			break;
 		default:
 			if (managedBean.isPoUser()) {
-				if (process.equalsIgnoreCase("approveDialog")) {
+				if (process.equalsIgnoreCase(approveDialog)) {
 					assignFinalApproveOrReject(process);
-				} else if (process.equalsIgnoreCase("APPROVE")) {
+				} else if (process.equalsIgnoreCase(approve)) {
 					submitPOEscalationToApprover(process);
 				} else {
 					throw new EpException(MessageConst.ERROR_721108);
 				}
 			} else if (managedBean.isApproverUser()) {
-				if (process.equalsIgnoreCase("approverAppDialog")) {
+				if (process.equalsIgnoreCase(approverAppDialog)) {
 					assignFinalApproveOrReject(process);
 				} else {
 					throw new EpException(MessageConst.ERROR_721108);
@@ -17389,7 +17419,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	@SuppressWarnings("unused")
 	private StringBuilder checkingDeletedBranchPendingFL(Long supplierId, List<SmSupplierBranch> supplierBranch) {
 		Boolean closedQTSubmitProposal = false;
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(
+		IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject(
 				"sm", IMofRegistrationSO.class);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplierId);
@@ -17601,7 +17631,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#32304 - start
 		SmAppl latestAppl = getManagedBean().getLatestAppl();
 		String bussType = getManagedBean().getSmAppl().getSmCompanyBasic().getBusinessType();
-		if(latestAppl != null && latestAppl.getSmCompanyBasic() != null
+		if(latestAppl != null && latestAppl.getSmCompanyBasic() != null && bussType != null
 				&& !bussType.equals(latestAppl.getSmCompanyBasic().getBusinessType())){
 			SmAppl bumiAppl = getManagedBean().getPendingBumiAppl();
 			if(bumiAppl == null){
