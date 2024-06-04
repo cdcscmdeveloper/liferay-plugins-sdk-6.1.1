@@ -29,18 +29,19 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 	 * @param org
 	 * @param user
 	 * @param roleCode
-	 * prepare audit trail data to be saved to database
+	 *            prepare audit trail data
 	 */
 	@Override
-	public AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, PmOrgProfile org, PmUser user, String roleCode) {
+	public AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, PmOrgProfile org, PmUser user,
+			String roleCode) {
 
 		RegistrationManagedBean mBean = (RegistrationManagedBean) managedBean;
 		List<AuSMDetailDTO> auDetails = new ArrayList<>();
 		AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
-		
+
 		ListIterator<SmSupplierBank> oldBanks = mBean.getOldBanks().listIterator();
 		ListIterator<SmSupplierBank> newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
-		
+
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
 			while (newBanks.hasNext()) {
@@ -70,7 +71,7 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 			newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
 		}
 		oldBanks = mBean.getOldBanks().listIterator();
-		
+
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
 			AuSMDetailDTO auDetailBankName = new AuSMDetailDTO();
@@ -78,23 +79,23 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 			auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
 			auDetailBankName.setOldValueId(oldBank.getPmFinancialOrg().getFinancialOrgId());
 			auDetails.add(auDetailBankName);
-			
+
 			AuSMDetailDTO auDetailBankNo = new AuSMDetailDTO();
 			auDetailBankNo.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE);
 			auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
 			auDetailBankNo.setOldValue(oldBank.getAccountNo());
 			auDetails.add(auDetailBankNo);
 		}
-		
+
 		while (newBanks.hasNext()) {
 			SmSupplierBank newBank = newBanks.next();
-			if(newBank.isBrandNew()){
+			if (newBank.isBrandNew()) {
 				AuSMDetailDTO auDetailBankName = new AuSMDetailDTO();
 				auDetailBankName.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
 				auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
 				auDetailBankName.setNewValueId(newBank.getPmFinancialOrg().getFinancialOrgId());
 				auDetails.add(auDetailBankName);
-				
+
 				AuSMDetailDTO auDetailBankNo = new AuSMDetailDTO();
 				auDetailBankNo.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
 				auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
@@ -102,7 +103,7 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 				auDetails.add(auDetailBankNo);
 			}
 		}
-		
+
 		auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
 		auObj.setRoleCode(roleCode);
 		auObj.setOrgProfileId(org.getOrgProfileId());
@@ -113,7 +114,7 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 		auObj.setApplId(mBean.getSmSupp().getSmAppl().getApplId());
 		auObj.setApplNo(mBean.getSmSupp().getSmAppl().getApplNo());
 		auObj.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
-		
+
 		return auObj;
 	}
 

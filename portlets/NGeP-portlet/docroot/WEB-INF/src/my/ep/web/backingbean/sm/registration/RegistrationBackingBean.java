@@ -1560,8 +1560,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
 				
 				if (auditSMSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					AuditSupplierManagementBackingBeanTemplate auSMTemplate = new AuditSMBasicAccountMaintananceBackingBean();
-					auSMTemplate.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());				
+					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSMBasicAccountMaintananceBackingBean();
+					auSMBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());				
 				}
 				// #28895_35501 End
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(

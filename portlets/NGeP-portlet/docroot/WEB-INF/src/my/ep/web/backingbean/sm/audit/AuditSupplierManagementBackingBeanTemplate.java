@@ -39,7 +39,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	 * @param managebean
 	 * @param userId
 	 * 
-	 * Save audit data to database
+	 *            Save audit data
 	 */
 	public final void saveAuditData(BaseManagedBean managebean, Long userId) {
 		String roleCode = getRoleCode();
