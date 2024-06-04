@@ -1558,7 +1558,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				// #28895_35501 Start - AUDIT TRAIL SM
 				IAuditSupplierManagementSO auditSMSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				
 				if (auditSMSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSMBankInformationBackingBean();
 					auSMBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
