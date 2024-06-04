@@ -5,6 +5,8 @@ import java.util.List;
 
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.dto.sm.audit.AuSMDetailDTO;
 import my.ep.dto.sm.audit.AuSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -12,7 +14,9 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -28,8 +32,6 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = Logger.getLogger(AuditSupplierManagementBackingBeanTemplate.class);
-
 	private LogKey logKey = new LogKey();
 
 	public AuditSupplierManagementBackingBeanTemplate() {
@@ -42,11 +44,35 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	 *            Save audit data
 	 */
 	public final void saveAuditData(BaseManagedBean managebean, Long userId) {
-		String roleCode = getRoleCode();
-		PmUser user = retriveUser(userId);
-		PmOrgProfile org = retriveUserOrg(userId);
-		AuSupplierManagementDTO auObj = prepareAuditData(managebean, org, user, roleCode);
-		if (auObj.getAuditDetails().size() > 0) {
+		List<AuSMDetailDTO> auDetails = prepareAuditData(managebean);
+		if (auDetails.size() > 0) {
+			String roleCode = getRoleCode();
+			PmOrgProfile org = retriveUserOrg(userId);
+
+			AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
+			RegistrationManagedBean mBean = (RegistrationManagedBean) managebean;
+
+			if (mBean.getSmSupp().getSmAppl().getSupplierType()
+					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+				auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
+			} else if (mBean.getSmSupp().getSmAppl().getSupplierType()
+					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+					|| mBean.getSmSupp().getSmAppl().getSupplierType()
+							.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+				auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
+			} else if (mBean.getSmSupp().getSmAppl().getSupplierType()
+					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+				auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
+			}
+			auObj.setRoleCode(roleCode);
+			auObj.setOrgProfileId(org.getOrgProfileId());
+			auObj.setOrgName(org.getOrgName());
+			auObj.setDocId(mBean.getSmSupp().getSupplierId());
+			auObj.setDocNo(mBean.getSmSupp().getEpNo());
+			auObj.setAuditDetails(auDetails);
+			auObj.setApplId(mBean.getSmSupp().getSmAppl().getApplId());
+			auObj.setApplNo(mBean.getSmSupp().getSmAppl().getApplNo());
+
 			auditSMSO(auObj);
 		}
 	}
@@ -76,11 +102,6 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		return new FacesScopes();
 	}
 
-	private PmUser retriveUser(Long userId) {
-		PmUser user = PmCommonUtil.retrieveUserById(userId, false);
-		return user;
-	}
-
 	private PmOrgProfile retriveUserOrg(Long userOrgId) {
 		new PmOrgProfile();
 		List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
@@ -88,8 +109,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		return org;
 	}
 
-	public abstract AuSupplierManagementDTO prepareAuditData(BaseManagedBean managebean, PmOrgProfile org, PmUser user,
-			String roleCode);
+	public abstract List<AuSMDetailDTO> prepareAuditData(BaseManagedBean managebean);
 
 	private void auditSMSO(AuSupplierManagementDTO auObj) {
 		try {

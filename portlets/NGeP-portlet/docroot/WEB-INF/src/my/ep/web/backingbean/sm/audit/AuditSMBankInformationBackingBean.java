@@ -12,6 +12,7 @@ import my.ep.dto.sm.audit.AuSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 
@@ -20,7 +21,7 @@ import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
  * @since 16.05.2024 #28895_35501
  */
 
-public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierManagementBackingBeanTemplate {
+public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,12 +33,10 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 	 *            prepare audit trail data
 	 */
 	@Override
-	public AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, PmOrgProfile org, PmUser user,
-			String roleCode) {
+	public List<AuSMDetailDTO> prepareAuditData(BaseManagedBean managedBean) {
 
 		RegistrationManagedBean mBean = (RegistrationManagedBean) managedBean;
 		List<AuSMDetailDTO> auDetails = new ArrayList<>();
-		AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
 
 		ListIterator<SmSupplierBank> oldBanks = mBean.getOldBanks().listIterator();
 		ListIterator<SmSupplierBank> newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
@@ -54,6 +53,7 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 						auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
 						auDetailBankName.setOldValueId(oldBank.getPmFinancialOrg().getFinancialOrgId());
 						auDetailBankName.setNewValueId(newBank.getPmFinancialOrg().getFinancialOrgId());
+						auDetailBankName.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
 						auDetails.add(auDetailBankName);
 					}
 					if (!oldBank.getAccountNo().equals(newBank.getAccountNo())) {
@@ -62,6 +62,7 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 						auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
 						auDetailBankNo.setOldValue(oldBank.getAccountNo());
 						auDetailBankNo.setNewValue(newBank.getAccountNo());
+						auDetailBankNo.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
 						auDetails.add(auDetailBankNo);
 					}
 					oldBanks.remove();
@@ -78,12 +79,14 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 			auDetailBankName.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE);
 			auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
 			auDetailBankName.setOldValueId(oldBank.getPmFinancialOrg().getFinancialOrgId());
+			auDetailBankName.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
 			auDetails.add(auDetailBankName);
 
 			AuSMDetailDTO auDetailBankNo = new AuSMDetailDTO();
 			auDetailBankNo.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE);
 			auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
 			auDetailBankNo.setOldValue(oldBank.getAccountNo());
+			auDetailBankNo.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
 			auDetails.add(auDetailBankNo);
 		}
 
@@ -94,28 +97,17 @@ public class AuditSMBasicAccountMaintananceBackingBean extends AuditSupplierMana
 				auDetailBankName.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
 				auDetailBankName.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_NAME);
 				auDetailBankName.setNewValueId(newBank.getPmFinancialOrg().getFinancialOrgId());
+				auDetailBankName.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
 				auDetails.add(auDetailBankName);
 
 				AuSMDetailDTO auDetailBankNo = new AuSMDetailDTO();
 				auDetailBankNo.setActionType(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD);
 				auDetailBankNo.setSmFieldLabelId(AuditSupplierManagementConst.AU_FIELD_LABEL_BANK_ACC_NO);
 				auDetailBankNo.setNewValue(newBank.getAccountNo());
+				auDetailBankNo.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
 				auDetails.add(auDetailBankNo);
 			}
 		}
-
-		auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
-		auObj.setRoleCode(roleCode);
-		auObj.setOrgProfileId(org.getOrgProfileId());
-		auObj.setOrgName(org.getOrgName());
-		auObj.setDocId(mBean.getSmSupp().getSupplierId());
-		auObj.setDocNo(mBean.getSmSupp().getEpNo());
-		auObj.setAuditDetails(auDetails);
-		auObj.setApplId(mBean.getSmSupp().getSmAppl().getApplId());
-		auObj.setApplNo(mBean.getSmSupp().getSmAppl().getApplNo());
-		auObj.setGroupSectionId(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
-
-		return auObj;
+		return auDetails;
 	}
-
 }

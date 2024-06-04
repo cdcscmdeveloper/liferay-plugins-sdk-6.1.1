@@ -133,7 +133,7 @@ import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.util.CustomUtils;
-import my.ep.web.backingbean.sm.audit.AuditSMBasicAccountMaintananceBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSMBankInformationBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 //#28895_35501 End
 
@@ -1560,8 +1560,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
 				
 				if (auditSMSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSMBasicAccountMaintananceBackingBean();
-					auSMBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());				
+					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSMBankInformationBackingBean();
+					auSMBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
 				}
 				// #28895_35501 End
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
