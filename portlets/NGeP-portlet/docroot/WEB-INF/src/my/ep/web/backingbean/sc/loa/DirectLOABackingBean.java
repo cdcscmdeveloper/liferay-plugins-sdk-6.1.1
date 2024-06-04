@@ -5348,86 +5348,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put("agencyFaxNo", agencyFaxNo);
 		context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
-		
-		// #26130 -start-
-        SimpleDateFormat dateSDF = new SimpleDateFormat(
-                commonUtils
-                        .getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-                        
-        context.put("dateSDF", dateSDF);
-        context.put("isZonal", scQt.isZonal());
-        context.put("isSL1M", scLoa.isSl1mReq());
-        
-		String fileNo = "";
-		
-		if (!StringUtils.isBlank(scQt.getFileNo())) {
-			fileNo = scQt.getFileNo();
-			
-			if (fileNo.length() > 30) {
-				fileNo = splitLongLengthString(fileNo, 29);
-			}
-		}
-		
-		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
-		context.put("loaNo", scLoa.getLoaNo());
 
-		String issueDate = "______________";
-		
+		String issueDate = "";
 		if (scLoa.getIssueDate() != null) {
-			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
+			issueDate = DateUtils.getLocalizeDate(scLoa.getIssueDate(),
+					myLocale);
 		}
-		// #26130 -end- 
-
 		context.put("issueDate", issueDate);
 
-		// #26130 -start-
-		String govtSignDate = "______________";
-		
-		if (scLoa.getGovtSignDate() != null) {
-			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
-		}
-		
-		context.put("govtSignDate", govtSignDate);
-
-		String supplierAddress = "";
-		
-		if (scLoa.getScSupplierAddress() != null) {
-			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
-		}
-		
-		StringBuilder supplierAddressTable = null;
-		
-		if (StringUtils.isNotBlank(supplierAddress)) {
-			String[] address = supplierAddress.split(System.getProperty("line.separator"));
-			supplierAddressTable = new StringBuilder();
-			
-			for (String suppAddr : address) {
-				supplierAddressTable.append(suppAddr);
-				supplierAddressTable.append("<br />");
-			}
-			// supplierAddressTable.append("</table>");
-		}
-		
-		context.put("supplierAddressTable", supplierAddressTable);
-
-		String headerTitle = "";
-	
-		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			headerTitle = "Pembelian Terus (Bermasa)";
-		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
-				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType())) {
-			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
-			} else {
-				headerTitle = "Sebut Harga";
-			}
-		}
-
-		context.put("headerTitle", headerTitle);
-		context.put("subTitle", headerTitle.toLowerCase());
-		// #26130 -end-
-
 		context.put("supplierName", scLoiLoa.getSupplierName());
+		String supplierAddress = "";
 		String supplierEmail = "";
 		String supplierPhoneNo = "";
 		String supplierFaxNo = "";
@@ -5542,17 +5472,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					scLoa.getContractEffDate(), myLocale);
 		}
 		context.put("contractEffDate", contractEffDate);
-		
-		// #26130 -start-
-		context.put("contractDuration", scLoa.getContractDuration());
-		context.put("isAgreementReq", scLoa.isAgreementReq());
 
-		String LoaSigner = "______________";
-		String loaSignerDesig = "______________";
-
-		if (scLoa.getContractSigner() != null) {
-			PmUser contractSigner = scLoa.getContractSigner();
-		// #26130 -end-
+		String LoaSigner = "";
+		String loaSignerDesig = "";
+		if(getManagedBean().getContractSignerUser() != null){
+			PmUser contractSigner = getManagedBean().getContractSignerUser();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
 				LoaSigner = contractSigner.getUserName();
 			}
@@ -5657,69 +5581,46 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 //		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 
-		// #26130 -start-
-		setMofInfoForAgreementLetter(context, scLoa, myLocale);
-		setMinSL1MParticipant(context, scLoa,
-				new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)));
-
-		String fiService = "T/B";
-
-		if (scQt != null) {
-			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())) {
-				fiService = "0.8%";
-			}
-
-			else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())
-					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scQt.getFulfilmentType().getParameterCode())) { // Bug
-					fiService = "0.4%";
+		//26130 - start
+		if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
+				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))
+				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode()) 
+					|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())
+					|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scQt.getFulfilmentType().getParameterCode()))){
+			TplSpecMaster productSpecMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
+			TplSpecMaster serviceSpecMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
+			
+			List<TplSpecMaster> specMasters = null;
+			
+			if (null != productSpecMaster || null != serviceSpecMaster) {
+				specMasters = new ArrayList<>();
+				
+				if (null != productSpecMaster) {
+					specMasters.add(productSpecMaster);
+				}
+				if (null != serviceSpecMaster) {
+					specMasters.add(serviceSpecMaster);
 				}
 			}
-				
-				context.put("fiService", fiService);
-
-				// qtno
-				String qtNo = (StringUtils.isEmpty(scQt.getQtNo())) ? "______________" : scQt.getQtNo();
-				
-				context.put("qtNo", qtNo);
-		
-				if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
-						|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))
-						&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode()) 
-							|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode())
-							|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(scQt.getFulfilmentType().getParameterCode()))){
-					TplSpecMaster productSpecMaster = getManagedBean().getProdTemplateSpecBean().getSpecMaster();
-					TplSpecMaster serviceSpecMaster = getManagedBean().getSpecTemplateSpecBean().getSpecMaster();
-					
-					List<TplSpecMaster> specMasters = null;
-					
-					if (null != productSpecMaster || null != serviceSpecMaster) {
-						specMasters = new ArrayList<>();
-						
-						if (null != productSpecMaster) {
-							specMasters.add(productSpecMaster);
-						}
-						if (null != serviceSpecMaster) {
-							specMasters.add(serviceSpecMaster);
-						}
-					}
-					
-					constructSupplierSpecificationAndRemarks(context, scLoa, specMasters);
-					
-					// scLoa
-					context.put("scLoa", scLoa);
-					
-					if(scLoa.getProcurementTypeCatId() != null && 
-							scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)){
-						DocumentGenerator.getInstance().generatePdfFromVelocity(
-								SourcingConstants.LOA_AGREEMENT_LETTER_PRODUCT, context,
-								new FileOutputStream(getActualFilePath(attachment)));
-					} else {
-						DocumentGenerator.getInstance().generatePdfFromVelocity(
-								SourcingConstants.LOA_AGREEMENT_LETTER_SERVICE, context,
-								new FileOutputStream(getActualFilePath(attachment)));
-					}
-				}
+			
+			constructSupplierSpecificationAndRemarks(context, scLoa, specMasters);
+			
+			// scLoa
+			context.put("scLoa", scLoa);
+			
+			if(scLoa.getProcurementTypeCatId() != null && 
+					scLoa.getProcurementTypeCatId().getParameterCode().equals(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY)){
+				DocumentGenerator.getInstance().generatePdfFromVelocity(
+						SourcingConstants.LOA_AGREEMENT_LETTER_PRODUCT, context,
+						new FileOutputStream(getActualFilePath(attachment)));
+			} else {
+				DocumentGenerator.getInstance().generatePdfFromVelocity(
+						SourcingConstants.LOA_AGREEMENT_LETTER_SERVICE, context,
+						new FileOutputStream(getActualFilePath(attachment)));
+			}
 		}
+		//26130 - end
+	}
 				// #26130 - End
 
 //	/**
