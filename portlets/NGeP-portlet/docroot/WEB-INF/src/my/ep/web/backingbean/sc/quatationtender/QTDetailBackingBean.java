@@ -12914,33 +12914,39 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 		}
 		if (!inActiveChecklist.isEmpty()) {
-			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
-			
-			String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
-			
-			this.getManagedBean().setShowInactiveChecklistWarning(true);
-			this.getManagedBean().setInActiveChecklistNotificationText(confirmationMsg);
-			
-			if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
-								.getMessage(
-										QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
-										new String[] {confirmationMsg},
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale())));
-			}else{
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
-								.getMessage(
-										QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
-										new String[] {confirmationMsg},
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale())));
-			}
+			showWarningMessageForInactiveChecklist(inActiveChecklist);
 		}
+	}
+	
+	private void showWarningMessageForInactiveChecklist(List<ScQtCheckList> inActiveChecklist){
+
+		this.getManagedBean().setInActiveChecklist(inActiveChecklist);
+		
+		String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
+		
+		this.getManagedBean().setShowInactiveChecklistWarning(true);
+		this.getManagedBean().setInActiveChecklistNotificationText(confirmationMsg);
+		
+		if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
+							.getMessage(
+									QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
+									new String[] {confirmationMsg},
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+		}else{
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
+							.getMessage(
+									QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
+									new String[] {confirmationMsg},
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+		}
+	
 	}
 	
 	private String inactiveChecklistChecking(List<ScQtCheckList> inActiveChecklist){

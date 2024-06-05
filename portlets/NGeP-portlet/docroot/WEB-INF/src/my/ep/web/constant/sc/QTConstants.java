@@ -333,59 +333,11 @@ public interface QTConstants {
 		ACTIVE_INDEX_5,
 		ACTIVE_INDEX_6
 	};
-	public static final String STRING_BEAN = "bean";
-	public static final String SC_QT_CHECK_ST2FINANCE_PROPOSAL_LIST = "scQtCheckSt2financeProposalList";
-	public static final String SC_QT_CHECK_ST2TECH_PROPOSAL_LIST = "scQtCheckSt2techProposal";
-	public static final String SELECTED_TECH_CHECKLIST = "selectedTechChecklist";
-	public static final String SELECTED_FIN_CHECKLIST = "selectedFinChecklist";
-	public static final String HOST_URL = "hostUrl";
-	public static final String PDF_EXTENSION = ".pdf";
-	public static final String SPECIFICATION_DEFTYPE = "Specification";
-	public static final String SYSTEM_DEFINED_DEFTYPE = "SystemDefined";
-	public static final String WEB_FORM_DEFTYPE = "WebForm";
-	public static final String SAMPLE_DEFTYPE = "Sample";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.techfin.checklist";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE = "lbl.sc.spec.confirm.inactive.techfin.checklist.specprepare";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED = "lbl.sc.spec.confirm.inactive.techfin.checklist.notified";
-	public static final String LBL_TECHNICAL_CHECKLIST_PREVIEW_PRINTING = "lbl.sc.spec.technical.checklist.preview.printing";
-	public static final String LBL_FINANCIAL_CHECKLIST_PREVIEW_PRINTING = "lbl.sc.spec.financial.checklist.preview.printing";
-	public static final String LBL_TECHNICAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING = "lbl.sc.spec.technical.checklist.element.details.preview.printing";
-	public static final String LBL_FINANCIAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING = "lbl.sc.spec.financial.checklist.element.details.preview.printing";
 	public static final String LBL_INACTIVE_TECH_CHECKLIST = "lbl.sc.spec.confirm.inactive.tech.checklist";
 	public static final String LBL_INACTIVE_FIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.fin.checklist";
-	public static final String TEMPLATES_FOR_SAMPLE = "TemplatesForSample";
-	public static final Long DEFINATION_TYPE_SPECIFICATION = 211L;
-	public static final Long DEFINATION_TYPE_SYSTEM_DEFINED = 213L;
-	public static final Long DEFINATION_TYPE_WEB_FORM = 214L;
-	public static final Long DEFINATION_TYPE_SAMPLE = 215L;
-	public static final Long[] DEFINATION_TYPE_LIST = new Long[]{
-		DEFINATION_TYPE_SPECIFICATION,
-		DEFINATION_TYPE_SAMPLE
-	};
-	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TG = "TG";
-	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TN = "TN";
-	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_NE = "NE";
-	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TL = "TL";
-	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_BS = "BS";
-	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CF = "CF";
-	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FG = "FG";
-	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FN = "FN";
-	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_PC = "PC";
-	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_AL = "AL";
-	public static final String[] TECHNICAL_CHECKLIST_SELECT_LIST = new String[]{
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_NE,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TL
-	};
-	public static final String[] FINANCIAL_CHECKLIST_SELECT_LIST = new String[]{
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
-	};
 	//#10141 End Vinod
 	
 	//#25726 - reopen note 110
