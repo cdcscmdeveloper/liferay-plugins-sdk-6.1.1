@@ -12893,8 +12893,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	private void checkInactiveChecklistProcessForDoc(String status) {
 		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
 		if (SCProcessNameConst.PREPARE_QT_SCHEDULE.equals(status)
-			|| SCProcessNameConst.REVISE_QT_SCHEDULE.equals(status)
-			|| SCProcessNameConst.APPROVE_PUBLICATION.equals(status)) {
+				|| SCProcessNameConst.REVISE_QT_SCHEDULE.equals(status)
+				|| SCProcessNameConst.APPROVE_PUBLICATION.equals(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTSpecSO.class);
@@ -12903,50 +12903,46 @@ public void retrieveDemoQtDetails(Long qtId) {
 			SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 
 			for (ScQtCheckList tech : resDTO.getTechnicalCheckList()) {
-				if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()){
+				if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()) {
 					inActiveChecklist.add(tech);
 				}
 			}
 			for (ScQtCheckList fin : resDTO.getFinancialCheckLists()) {
-				if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()){
+				if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()) {
 					inActiveChecklist.add(fin);
 				}
 			}
 		}
-		if (!inActiveChecklist.isEmpty()) {
-			showWarningMessageForInactiveChecklist(inActiveChecklist);
-		}
-	}
-	
-	private void showWarningMessageForInactiveChecklist(List<ScQtCheckList> inActiveChecklist){
 
-		this.getManagedBean().setInActiveChecklist(inActiveChecklist);
-		
-		String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
-		
-		this.getManagedBean().setShowInactiveChecklistWarning(true);
-		this.getManagedBean().setInActiveChecklistNotificationText(confirmationMsg);
-		
-		if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
-							.getMessage(
-									QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
-									new String[] {confirmationMsg},
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())));
-		}else{
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils
-							.getMessage(
-									QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
-									new String[] {confirmationMsg},
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())));
+		showWarningMessageForInactiveChecklist(inActiveChecklist);
+	}
+
+	private void showWarningMessageForInactiveChecklist(List<ScQtCheckList> inActiveChecklist) {
+
+		if (!inActiveChecklist.isEmpty()) {
+			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
+
+			String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
+
+			this.getManagedBean().setShowInactiveChecklistWarning(true);
+			this.getManagedBean().setInActiveChecklistNotificationText(confirmationMsg);
+
+			if (this.getManagedBean().getQt().isInactiveChecklistNotified()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
+								new String[] { confirmationMsg }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
+								new String[] { confirmationMsg }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			}
 		}
-	
 	}
 	
 	private String inactiveChecklistChecking(List<ScQtCheckList> inActiveChecklist){
