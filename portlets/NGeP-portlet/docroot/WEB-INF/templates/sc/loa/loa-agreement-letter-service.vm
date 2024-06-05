@@ -1008,7 +1008,7 @@ u {
 			</td>
 		</tr>
 	</table>
-	##26130 & 26226 - service - start
+	##26130 & 26226 - service - start							  
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	
@@ -1016,16 +1016,15 @@ u {
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A1</i></b></span></td>
 		</tr>
 		<tr>
-			<td align="center"><span class="text_family_header">Harga Kontrak (Pecahan Kos)</span> <br /> <br /></td>
+			<td align="center"><span class="text_family_header">Harga Kontrak(Pecahan Kos)</span> <br /> <br /></td>
 		</tr>
 	</table>
-
-#* #26770 - start 
-disable if else checking that cause only service item generate in lampiran A2. 
-Should be product and service item display if exist
-#if($itemType =="1")  
-#26770 - end *#
+	
 <div class="break-after"><br/></div>
+#set($colSpan = 3) 
+	#if ($isZonal)
+		#set($colSpan = 4) 
+	#end				    
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
@@ -1033,21 +1032,22 @@ Should be product and service item display if exist
 	</tr>
 	<tr>
 		<td colspan="$colSpan"><span class="text_header_submenu">
-				<u style="text-decoration:underline;">* Tempoh dan Jadual Penyempurnaan Perkhidmatan</u></span> <br />
+				<u style="text-decoration:underline;">*Tempoh
+				dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</u></span> <br />
 				<span class="text_header_submenu_red">* Senarai item, kuantiti, 
-				jenis perkhidmatan dan/atau tempoh serta penyempurnaan perkhidmatan yang ditetapkan.</span><br /></td>
+				jenis perkhidmatan dan/atau tempoh serta jadual pembekalan yang ditetapkan.</span><br /></td>
 	</tr>
 	
 	<tr align='left'>
-				<td><span style='font-size: 10px; font-family: Times New Roman;'>
+			<td><span style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
 				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
 							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-							<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
-							<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
-							<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach($productBean in $jadualHargaItemBean.productItemBeans)
@@ -1074,39 +1074,30 @@ Should be product and service item display if exist
 		</td>
 	</tr>
 </table>
-
-#* #26770 - start 
-disable if else checking that cause only service item generate in lampiran A2. 
-Should be product and service item display if exist
- #else 
-#26770 - end *#
 <div class="break-after"><br/></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td align="right" colspan="$colSpan"><span class="text_family"> <b><i>Lampiran
 					A2</i></b></span></td>
 	</tr>
-	##26770 - start
 	<tr>
 		<td colspan="$colSpan"><span class="text_header_submenu">
-				<u style="text-decoration:underline;">* Tempoh
-				dan Jadual Penyempurnaan Perkhidmatan</u></span> <br />
+				<u style="text-decoration:underline;">*Tempoh
+				dan Jadual Pembekalan Barang/Penyempurnaan Perkhidmatan</u></span> <br />
 				<span class="text_header_submenu_red">* Senarai item, kuantiti, 
-				jenis perkhidmatan dan/atau tempoh serta penyempurnaan perkhidmatan yang ditetapkan.</span><br /></td>
+				jenis perkhidmatan dan/atau tempoh serta jadual pembekalan yang ditetapkan.</span><br /></td>
 	</tr>
-	##26770 - end
+	
 	<tr align='left'>
 			<td><span style='font-weight: bold; font-size: 10px; font-family: Arial;'>
-				<table width='100%' border="1"  cellspacing="-1">
+				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th  class="text_family" style="font-weight: bold; color:black;">Zone</th> 
+							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
 						#end
-						<th  class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
-						##26770 - start
-						<th  class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
-						<th  class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
-						##26770 - end
+						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
+						<th class="text_family" style="font-weight: bold; color:black;">Jenis Perkhidmatan</th>
 					</tr>
 					#set($String = "formatter") 
 					#foreach( $serviceBean in $jadualHargaItemBean.serviceItemBeans)
@@ -1120,15 +1111,14 @@ Should be product and service item display if exist
 							<td class="text_family">$serviceBean.item</td>
 							<td class="text_family">
 									#if($serviceBean.quantity)
+												  
+			 
 									 $serviceBean.quantity
 								#else
 									 $serviceScope
 								#end
 							</td>
-							
-							
-								<td class="text_family"></td>
-							
+							<td class="text_family"></td>
 						</tr>
 					#end
 				</table>
@@ -1136,23 +1126,16 @@ Should be product and service item display if exist
 		</td>
 	</tr>
 </table>
-#* #26770 - start 
-disable if else checking that cause only service item generate in lampiran A2. 
-Should be product and service item display if exist
-#end 
-#26770 - end *#
-#if ($scLoa.scLoiLoa.docType != "PR")
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	  <tr>
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
 	  </tr>
 		<tr>
-			<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Skop
+			<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
 					Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
 				<br /></td>
 		</tr>
-
 	</table>
 	
  #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")
@@ -1667,7 +1650,7 @@ Should be product and service item display if exist
 					#end
 			
 		#end
-	#else
+	#else	 
 		<tr align='left'>
 			<td><span
 				style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
@@ -1701,26 +1684,24 @@ Should be product and service item display if exist
 					#end
 			</span></td>
 		</tr>
-	#end
-#end
-	
-	 ##26130 - start 18052022
+	#end										
+##26130 - start 18052022
 		#if ($scLoa.scLoiLoa.docType != "QT")	
 			<div class="break-after"><br/></div>
 		#end
 	 ##26130 - end 18052022
   
-  #if ($scLoa.scLoiLoa.docType == "PR")
-	  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-		  <tr>
-				<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
-		  </tr>
-			<tr>
-				<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
-						Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
-					<br /></td>
-			</tr>
-	  </table>
+  #if ($scLoa.scLoiLoa.docType == "PR")								   
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	  <tr>
+			<td align="right"> <span class="text_family"> <b><i>Lampiran A3</i></b></span></td>
+	  </tr>
+		<tr>
+			<td><span class="text_header_submenu"><u style="text-decoration:underline;">*Spesifikasi/Skop
+					Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</u></span> <br />
+				<br /></td>
+		</tr>
+	</table>
   #end
 		
   #if ($scLoa.scLoiLoa.docType == "QT" || $scLoa.scLoiLoa.docType == "NG")	
@@ -2339,19 +2320,19 @@ Should be product and service item display if exist
 								
 							  #end
 					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-						#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
+						#set($specType = $bean.getParameterDescForReport($tplspecMaster.specTypeCode)) 
 						
 						#if ($isZonal)
-						
+						<tr>
 							#if ($tplspecQuestion.questionType == "I")
-							<tr>							 
+							  
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
 									
 										$tplspecQuestion.clItem
 									
 								</td>
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;" >
+								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;" >
 								
 									#if($tplspecQuestion.clFulfilmentTypeCode)
 										$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2360,37 +2341,37 @@ Should be product and service item display if exist
 								</td>
 							
 									
-								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 								
 								#if($tplspecQuestion.clUom)
 								$tplspecQuestion.clUom.uomName
 								#end
 								
 								</td>
-								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#if ($tplspecQuestion.clUomFrequency)
 										$tplspecQuestion.clUomFrequency
 									#end
 								</td>
-								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 									$serviceScope 
 									#else
 									 $tplspecQuestion.clUomPerDay
 									#end
 								</td>
-								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 									$serviceScope 
 									#else	
 									$tplspecQuestion.clUomPerMonth 
 									#end
 								</td>
-								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: center; padding-left: 5px; font-size:12px;">
-									#if($tplspecQuestion.clDurationMonth)
-										$tplspecQuestion.clDurationMonth
+								<td valign="top" bgcolor="#d0eaee"  class="standard border-bottom left" style="text-align: left; padding-left: 5px; font-size:12px;">
+									#if(($tplspecQuestion.clDurationMonth =="") || ($tplspecQuestion.clDurationMonth == 0))
+									$serviceScope 
 									#else	
-										$serviceScope
+									$tplspecQuestion.clDurationMonth
 									#end
 								</td>
 								
@@ -2471,43 +2452,30 @@ Should be product and service item display if exist
 								</td>
 								
 								
-								</tr>
+
 							
-								</tr>
-								<td valign="top" bgcolor="#d0eaee" colspan="9">
-										#set($rowCount = 0)						
-										#if ($tplspecQuestion.specList)
-											#foreach( $specVal in $tplspecQuestion.specList )
-												#if($rowCount == 0)
-												<table width="100%">
-													<tbody>
-													<tr>
-														<td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
-													</tr>
-													</tbody>
-												</table>
-												#end
-												#set($rowCount = $rowCount + 1)	
-											#end
-										#end
-								</td>
-								</tr>
 							
 								
 							
 								#end
+								#if ($tplspecQuestion.questionType == "S")
 								
+									
+									<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" colspan="9" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
+									
 							
+								#end
+							</tr>
 						#else
 							#if ($tplspecQuestion.questionType == "I")
 						 
 								<tr>
 								
 								
-								<td valign="top" bgcolor="#d0eaee" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px;" >
+								<td valign="top" bgcolor="#d0eaee" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:12px" >
 										$tplspecQuestion.clItem
 								</td>
-								 <td valign="top" bgcolor="#d0eaee" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;" >
+								 <td valign="top" bgcolor="#d0eaee" class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;" >
 									
 										#if($tplspecQuestion.clFulfilmentTypeCode)
 											$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
@@ -2516,7 +2484,7 @@ Should be product and service item display if exist
 									</td>
 							
 									
-									<td valign="top" bgcolor="#d0eaee" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" bgcolor="#d0eaee"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 									
 									#if($tplspecQuestion.clUom)
 									$tplspecQuestion.clUom.uomName
@@ -2528,25 +2496,25 @@ Should be product and service item display if exist
 											$tplspecQuestion.clUomFrequency
 										#end
 									</td>
-									<td valign="top" bgcolor="#d0eaee" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" bgcolor="#d0eaee"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
 										$serviceScope 
 										#else
 										 $tplspecQuestion.clUomPerDay
 										#end
 									</td>
-									<td valign="top" bgcolor="#d0eaee" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
+									<td valign="top" bgcolor="#d0eaee"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
 										#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
 										$serviceScope 
 										#else	
 										$tplspecQuestion.clUomPerMonth 
 										#end
 									</td>
-									<td valign="top" bgcolor="#d0eaee" class="title border left" style="text-align: center; padding-left: 5px; font-size:12px;">
-										#if($tplspecQuestion.clDurationMonth)
-											$tplspecQuestion.clDurationMonth
+									<td valign="top" bgcolor="#d0eaee"  class="title border left" style="text-align: left; padding-left: 5px; font-size:12px;">
+										#if(($tplspecQuestion.clDurationMonth =="") || ($tplspecQuestion.clDurationMonth == 0))
+										$serviceScope 
 										#else	
-											$serviceScope
+										$tplspecQuestion.clDurationMonth
 										#end
 									</td>
 									<td valign="top" bgcolor="#d0eaee" class="title border left"  style="text-align: left; padding-left: 5px; font-size:12px;">
@@ -2569,24 +2537,17 @@ Should be product and service item display if exist
 									</td>
 						
 								</tr>	
-								
-								<td valign="top" colspan="7">						
-										#if ($tplspecQuestion.specList)
-											#foreach( $specVal in $tplspecQuestion.specList )
-												
-												<table width="100%">
-													<tbody>
-													<tr>
-                                                        <td valign="top" bgcolor="#d0eaee" class="title border left"   style="text-align: center; border-bottom: 1px solid black; padding-left: 5px; font-size:12px;">$specVal</td>
-													</tr>
-													</tbody>
-												</table>
-											#set($countSpecList = $countSpecList + 1)			
-											#end
-										#end
-								</td>
+									
 								#end	
-								
+								#if ($tplspecQuestion.questionType == "S")
+							
+									
+									
+									<td valign="top" bgcolor="#d0eaee" class="title border left" colspan="7" style="text-align: center; padding-left: 5px; font-size:12px;">$tplspecQuestion.clSpecDetail</td>
+									
+									
+							
+								#end
 								</tr>	
 						#end
 					    	
@@ -2601,8 +2562,7 @@ Should be product and service item display if exist
 		#end
  
 	 #else
-     
-	 
+
 		<tr align='left'>
 			<td><span
 				style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
@@ -2635,11 +2595,9 @@ Should be product and service item display if exist
 		</tr>
 	#end
 #end
-
-
 ##26130 - start 18052022
 ##26130 - start 18052022
-#if ($scLoa.scLoiLoa.docType != "QT")	
+#if ($scLoa.scLoiLoa.docType == "NG")	
 	<div class="break-after"><br/></div>
   #end
 ##26130 - end 18052022
