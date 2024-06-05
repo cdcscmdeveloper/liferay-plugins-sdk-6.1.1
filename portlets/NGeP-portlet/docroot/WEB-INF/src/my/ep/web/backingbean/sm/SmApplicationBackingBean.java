@@ -10749,9 +10749,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
 		//#29727 - START
-		if (dialog.equalsIgnoreCase("approverAppDialog")) {
+		if ("approverAppDialog".equalsIgnoreCase(dialog)) {
 			Long supplierId = getManagedBean().getSmSupplier().getSupplierId();
-			List<SmSupplierBranch> supplierList = new ArrayList<SmSupplierBranch>();
+			List<SmSupplierBranch> supplierList = new ArrayList<>();
 			//#28777 - START
 			if(getManagedBean().getSelectedBranches() != null){
 				for (SmSupplierBranch suppBranch : getManagedBean().getSelectedBranches()) {
@@ -17159,20 +17159,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	public void validateCompanyBranch(SmApplicationManagedBean managedBean, String process) {
+		String approverAppDialog = "approverAppDialog";
+		String approveDialog = "approveDialog";
+		String approve = "APPROVE";
+		Boolean pendingQT = false;
+		Boolean closedQTSubmitProposal = false;
 		
 		switch (managedBean.getSmAppl().getApplType()) {
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
 		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
 		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
 		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
-			StringBuilder msg = new StringBuilder();
-			if (managedBean.isSupplierUser() || process.equals("")) {
-				Boolean pendingQT = false;
+			if (managedBean.isSupplierUser() || process.isEmpty()) {
 				//#28777 - START - Updated CR
-				Boolean closedQTSubmitProposal = false;
-
-				if (managedBean.getSelectedBranches().size() > 0) {
-					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				if (!managedBean.getSelectedBranches().isEmpty()) {
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
 							.getServiceObject("sm", IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
@@ -17219,8 +17220,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					//#28777 - END - Updated CR
 				}
 			} else if (managedBean.isPoUser()) {
-				List<SmSupplierBranch> supplierBranch = new ArrayList<SmSupplierBranch>();
-				if (managedBean.getSmAppl().getSmSupplierBranches().size() > 0) {
+				List<SmSupplierBranch> supplierBranch = new ArrayList<>();
+				if (!managedBean.getSmAppl().getSmSupplierBranches().isEmpty()) {
 					for (SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
 						if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
 							continue;
@@ -17229,11 +17230,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				}
 
-				Boolean pendingQT = false;
-				Boolean closedQTSubmitProposal = false;
-
-				if (supplierBranch.size() > 0) {
-					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				if (!supplierBranch.isEmpty()) {
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
 							.getServiceObject("sm", IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
@@ -17263,26 +17261,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					} else {
-						if (process.equalsIgnoreCase("approveDialog")) {
+						if (process.equalsIgnoreCase(approveDialog)) {
 							assignFinalApproveOrReject(process);
-						} else if (process.equalsIgnoreCase("APPROVE")) {
+						} else if (process.equalsIgnoreCase(approve)) {
 							submitPOEscalationToApprover(process);
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					}
 				} else {
-					if (process.equalsIgnoreCase("approveDialog")) {
+					if (process.equalsIgnoreCase(approveDialog)) {
 						assignFinalApproveOrReject(process);
-					} else if (process.equalsIgnoreCase("APPROVE")) {
+					} else if (process.equalsIgnoreCase(approve)) {
 						submitPOEscalationToApprover(process);
 					} else {
 						throw new EpException(MessageConst.ERROR_721108);
 					}
 				}
 			} else if (managedBean.isApproverUser()) {
-				List<SmSupplierBranch> supplierBranch = new ArrayList<SmSupplierBranch>();
-				if (managedBean.getSmAppl().getSmSupplierBranches().size() > 0) {
+				List<SmSupplierBranch> supplierBranch = new ArrayList<>();
+				if (!managedBean.getSmAppl().getSmSupplierBranches().isEmpty()) {
 					for (SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
 						if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
 							continue;
@@ -17291,11 +17289,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}
 				}
 
-				Boolean pendingQT = false;
-				Boolean closedQTSubmitProposal = false;
-
-				if (supplierBranch.size() > 0) {
-					IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
+				if (!supplierBranch.isEmpty()) {
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
 							.getServiceObject("sm", IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
@@ -17327,14 +17322,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					} else {
-						if (process.equalsIgnoreCase("approverAppDialog")) {
+						if (process.equalsIgnoreCase(approverAppDialog)) {
 							assignFinalApproveOrReject(process);
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
 						}
 					}
 				} else {
-					if (process.equalsIgnoreCase("approverAppDialog")) {
+					if (process.equalsIgnoreCase(approverAppDialog)) {
 						assignFinalApproveOrReject(process);
 					} else {
 						throw new EpException(MessageConst.ERROR_721108);
@@ -17346,15 +17341,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			break;
 		default:
 			if (managedBean.isPoUser()) {
-				if (process.equalsIgnoreCase("approveDialog")) {
+				if (process.equalsIgnoreCase(approveDialog)) {
 					assignFinalApproveOrReject(process);
-				} else if (process.equalsIgnoreCase("APPROVE")) {
+				} else if (process.equalsIgnoreCase(approve)) {
 					submitPOEscalationToApprover(process);
 				} else {
 					throw new EpException(MessageConst.ERROR_721108);
 				}
 			} else if (managedBean.isApproverUser()) {
-				if (process.equalsIgnoreCase("approverAppDialog")) {
+				if (process.equalsIgnoreCase(approverAppDialog)) {
 					assignFinalApproveOrReject(process);
 				} else {
 					throw new EpException(MessageConst.ERROR_721108);
@@ -17424,7 +17419,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	@SuppressWarnings("unused")
 	private StringBuilder checkingDeletedBranchPendingFL(Long supplierId, List<SmSupplierBranch> supplierBranch) {
 		Boolean closedQTSubmitProposal = false;
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(
+		IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject(
 				"sm", IMofRegistrationSO.class);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplierId);

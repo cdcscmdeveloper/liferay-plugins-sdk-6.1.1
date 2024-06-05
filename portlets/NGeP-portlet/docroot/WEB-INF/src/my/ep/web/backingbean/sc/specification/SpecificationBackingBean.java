@@ -18003,6 +18003,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
 		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
+		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());//#25138
+
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
