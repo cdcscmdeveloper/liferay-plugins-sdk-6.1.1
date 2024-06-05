@@ -1296,7 +1296,9 @@ public class TemplateSpecBackingBean extends
 								.getRoleCode());
 					}
 					
-					RoleCode[] r = {RoleCode.SC_SECRETARY};
+					RoleCode[] r = { RoleCode.SC_SECRETARY, 
+									RoleCode.SC_CHAIRPERSON, 
+									RoleCode.SC_MEMBER };
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
 					};
@@ -3230,7 +3232,7 @@ public class TemplateSpecBackingBean extends
 				// #34656 add checking not null
 				if(tplSpecEstimation.getEstimatedCost() != null && 
 						tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
-					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
+					tplSpecEstimation.setIndicativeUnitPrice(BigDecimal.valueOf(0.00));
 				}
 				// #21695 fix #32130 - end
 				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {

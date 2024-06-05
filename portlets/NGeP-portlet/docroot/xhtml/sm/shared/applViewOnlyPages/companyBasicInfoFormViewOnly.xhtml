@@ -84,12 +84,25 @@
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.incomeTaxNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.incomeTaxNo}"/></td>
+					<!-- #24819 - start -->
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 					<td>
-					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+					<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" 
+						rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+						&#160;
+						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" rendered="#{isSuppDataMaintenance}"/> 
+						<p:tooltip id="newRegNott" for="newRegNoti" rendered="#{isSuppDataMaintenance}">
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}" />
+						</p:tooltip>&#160;
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
+						rendered="#{empty viewSmApplBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="3" /><td>
+						<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" rendered="#{isSuppDataMaintenance}" />
+					</td>
+				</tr><!-- #24819 - end -->
 				<p:outputPanel rendered="#{!viewSmApplBackingBean.managedBean.original}">
 					<tr>
 						<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.viewSupplierProfile}">
@@ -319,6 +332,14 @@
 							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}" 
 							alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.phoneNo}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.website']}" /></td>
@@ -335,17 +356,6 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.local.authority']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.localAuthority}" /></td>
 					</p:outputPanel>
-				</tr>
-				<tr>
-				<td>
-				<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}" />
-					<!-- #32008 -->
-					<ac:smFieldChangeAlertView
-						isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
-						oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}" 
-						currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}" 
-						alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.faxNo}"/></td>
 				</tr>
 				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
 					<tr>
