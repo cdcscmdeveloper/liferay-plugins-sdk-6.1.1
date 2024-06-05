@@ -4834,17 +4834,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		// No need to explicitly close the stream; it's done automatically
 	}
-	// Bug #35485@Syazani 08/02/2024 -- End	
-	
-	//26226 start
+	// Bug #35485@Syazani 08/02/2024 -- End
+		
 	// #26226 - Start
-		/**
-		 * @param context
-		 * @param scLoa
-		 */
-		/**  
-		 * CR Enhancement 26226  Nov 2019
-		 */
+	/**
+	 * @param context
+	 * @param scLoa
+	 */
+	/**
+	 * CR Enhancement 26226 Nov 2019
+	 */
 	public void constructPRSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa) {
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 		IQuoteSO quoteSO;
@@ -5024,181 +5023,179 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			days = null;
 		}
 	}
-		// #26226 - End
+	// #26226 - End
+	
+	// #26226 - Start
+	/**
+	 * @param answer
+	 */
+	private void populateSpecAnswers(TplSpecAnswer answer) {
+		try {
+			boolean itemFound = false;
+			for (TplSpecAnswer tplSpecAnswer : answer.getTplSpecQuestion().getTplSpecAnswers()) {
+				if (tplSpecAnswer.getSpecAnswerId() == answer.getSpecAnswerId()) {
+					itemFound = true;
+					break;
+				}
+			}
+			if (!itemFound) {
+				answer.getTplSpecQuestion().getTplSpecAnswers().add(answer);
+			}
+		} catch (Exception e) {
+			List<TplSpecAnswer> answers = new ArrayList<>();
+			answers.add(answer);
+			answer.getTplSpecQuestion().setTplSpecAnswers(answers);
+			SLAUtils.getInstance().logSLAError("DP", "populateSpecAnswers", answer.getSpecAnswerId().toString(),
+					"populateSpecAnswers", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #26226 - End
+	
+	/**
+	 * @param dafaltValue
+	 * @param newTplSpecQuestionsList
+	 * @param master
+	 * @param question
+	 */
+	private void constructTplSpecQuestion(String dafaltValue, List<TplSpecQuestion> newTplSpecQuestionsList,
+			TplSpecMaster master, TplSpecQuestion question) {
+		TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
+		if (null != master.getSpecName()) {
+			String specTitle = master.getSpecName();
+			specTitle = specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+			specTitle = specTitle.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+			specTitle = specTitle.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+			specTitle = specTitle.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+			master.setSpecName(specTitle);
+
+		}
+		if (question.getClItem() == null) {
+			question.setClItem("");
+		} else {
+			String clItem = question.getClItem();
+			// 20190513@asyrafhaziq - 25812 - Start
+			// add a condition to filter the character (character after space
+			// and before space) length for data 'ITEM'.
+			String[] words = clItem.split(" "); // get array of words
+			StringBuilder sb = new StringBuilder();
+			StringBuilder subSb = new StringBuilder();// this is for perfomance
+			for (String word : words) // affect each word in string
+			{
+				int length = word.length();
+				if (length >= 20) {
+					String subWord;
+					for (int i = 0; i < length; i += 20) {
+						subWord = word.substring(i, Math.min(length, i + 20));
+						subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+					}
+					word = subSb.toString();
+				}
+				sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+			}
+			clItem = sb.toString();
+			// 20190513@asyrafhaziq - 25812 - End
+			clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+			clItem = clItem.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+			clItem = clItem.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+			clItem = clItem.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+			question.setClItem(clItem);
+			// log.info("CIItem  ----------->"+question.getClItem());
+		}
+		if (question.getClSpecDetail() == null) {
+			question.setClSpecDetail(dafaltValue);
+		} else {
+			String clSpecDetail = question.getClSpecDetail().replaceAll(QTConstants.NEW_LINE_CHARACTER,
+					TemplateDocConst.PARAM_SPACE);
+			clSpecDetail = clSpecDetail.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+			clSpecDetail = clSpecDetail.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+			clSpecDetail = clSpecDetail.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+			question.setClSpecDetail(clSpecDetail);
+		}
+		if (question.getClUom() != null) {
+			if (question.getClUom().getUomName() == null) {
+				question.getClUom().setUomName(dafaltValue);
+			}
+		} else {
+			question.setClUom(new PmUom());
+			question.getClUom().setUomName(dafaltValue);
+		}
+
+		if (question.getClUomFrequency() == null) {
+			question.setClUomFrequency(new BigDecimal(0));
+		}
+
+		if (question.getClUomPerDay() == null) {
+			question.setClUomPerDay(new BigDecimal(0));
+		}
+
+		if (question.getClUomPerMonth() == null) {
+			question.setClUomPerMonth(new BigDecimal(0));
+		}
+
+		if (question.getClPriceTypeCode() == null) {
+			question.setClPriceTypeCode(new PmParameter());
+			question.getClPriceTypeCode().setParameterCode(dafaltValue);
+		} else {
+			if (question.getClPriceTypeCode().getParameterCode() == null) {
+				question.getClPriceTypeCode().setParameterCode(dafaltValue);
+			}
+		}
+		if (question.getClQuantity() == null) {
+			question.setClQuantity(new BigDecimal(0));
+		}
+
+		if (question.isClAnswerRequired()) {
+			question.setClAnswerRequired(true);
+		}
+		if (question.getClReviewRemark() == null) {
+			question.setClReviewRemark(dafaltValue);
+		}
+		if (parentQuestion != null) {
+			int specCount = parentQuestion.getSpecCount();
+			if (specCount == 0) {
+				specCount = 1;
+			}
+			parentQuestion.setSpecCount(specCount + 1);
+		}
+		question.setTplSpecMaster(master);
+		
 		// #26226 - Start
-		/**
-		 * @param answer
-		 */
-		private void populateSpecAnswers(TplSpecAnswer answer) {
-			try {
+		if (newTplSpecQuestionsList != null) {
+			if (newTplSpecQuestionsList.size() == 0) {
+				newTplSpecQuestionsList.add(question);
+			} else {
 				boolean itemFound = false;
-				for (TplSpecAnswer tplSpecAnswer : answer.getTplSpecQuestion().getTplSpecAnswers()) {
-					if (tplSpecAnswer.getSpecAnswerId() == answer.getSpecAnswerId()) {
+				for (TplSpecQuestion tplSpecQuestion : newTplSpecQuestionsList) {
+					if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
 						itemFound = true;
 						break;
 					}
 				}
 				if (!itemFound) {
-					answer.getTplSpecQuestion().getTplSpecAnswers().add(answer);
+					newTplSpecQuestionsList.add(question);
 				}
-			} catch (Exception e) {
-				List<TplSpecAnswer> answers = new ArrayList<>();
-				answers.add(answer);
-				answer.getTplSpecQuestion().setTplSpecAnswers(answers);
-				SLAUtils.getInstance().logSLAError("DP", "populateSpecAnswers", answer.getSpecAnswerId().toString(),
-						"populateSpecAnswers", getUserIdSessionFromLoginId(), e);
-			}
-		}
-		// #26226 - End
-		
-		/**
-		 * @param dafaltValue
-		 * @param newTplSpecQuestionsList
-		 * @param master
-		 * @param question
-		 */
-		private void constructTplSpecQuestion(String dafaltValue,
-				List<TplSpecQuestion> newTplSpecQuestionsList,
-				TplSpecMaster master, TplSpecQuestion question) {
-			TplSpecQuestion parentQuestion = question
-					.getParentSpecQuestion();
-			if(null!=master.getSpecName()){
-	               String specTitle= master.getSpecName();
-	               specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-	               specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-	               specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-	               specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-	               master.setSpecName(specTitle);
-				
-			}
-			if (question.getClItem() == null) {
-				question.setClItem("");
-			}else{
-			    String clItem = question.getClItem();
-			//20190513@asyrafhaziq - 25812 - Start
-			// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
-			    String[] words = clItem.split(" "); //get array of words
-			    StringBuilder sb = new StringBuilder();
-			    StringBuilder subSb = new StringBuilder();//this is for perfomance
-			    for(String word : words) //affect each word in string
-			    {
-			      int length = word.length();
-			      if ( length >= 20)
-			    	{
-			    	  String subWord;
-			            for (int i = 0; i < length; i += 20) {
-			            	subWord = word.substring(i, Math.min(length, i + 20));
-			            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-			            }
-			    		word = subSb.toString();	
-			    	}
-			        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-			    }
-			    clItem =  sb.toString();
-			    //20190513@asyrafhaziq - 25812 - End
-				clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-				clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-				clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-				clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-				question.setClItem(clItem);
-				//log.info("CIItem  ----------->"+question.getClItem());
-			}
-			if (question.getClSpecDetail() == null) {
-				question.setClSpecDetail(dafaltValue);
-			} else{
-				 String clSpecDetail = question.getClSpecDetail()
-						.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-				 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-				 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-				 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-				question.setClSpecDetail(clSpecDetail);
-			}
-			if (question.getClUom() != null) {
-				if (question.getClUom().getUomName() == null) {
-					question.getClUom().setUomName(dafaltValue);
-				}
-			} else {
-				question.setClUom(new PmUom());
-				question.getClUom().setUomName(dafaltValue);
-			}
-			
-			if (question.getClUomFrequency() == null) {
-				question.setClUomFrequency(new BigDecimal(0));
-			}
-			
-			if (question.getClUomPerDay() == null) {
-				question.setClUomPerDay(new BigDecimal(0));
-			}
-			
-			if (question.getClUomPerMonth() == null) {
-				question.setClUomPerMonth(new BigDecimal(0));
-			}
-			
-			if (question.getClPriceTypeCode() == null) {
-				question.setClPriceTypeCode(new PmParameter());
-				question.getClPriceTypeCode().setParameterCode(dafaltValue);
-			} else {
-				if (question.getClPriceTypeCode().getParameterCode() == null) {
-					question.getClPriceTypeCode().setParameterCode(dafaltValue);
-				}
-			}
-			if (question.getClQuantity() == null) {
-				question.setClQuantity(new BigDecimal(0));
 			}
 
-			if (question.isClAnswerRequired()) {
-				question.setClAnswerRequired(true);
-			}
-			if (question.getClReviewRemark() == null) {
-				question.setClReviewRemark(dafaltValue);
-			}
-			if (parentQuestion != null) {
-				int specCount = parentQuestion.getSpecCount();
-				if (specCount == 0) {
-					specCount = 1;
-				}
-				parentQuestion.setSpecCount(specCount + 1);
-			}
-			question.setTplSpecMaster(master);
-			// #26226 - Start
-			if(newTplSpecQuestionsList !=null)
-			{
-				if (newTplSpecQuestionsList.size() == 0) {
-					newTplSpecQuestionsList.add(question);
-				} else {
-					boolean itemFound = false;
-					for (TplSpecQuestion tplSpecQuestion : newTplSpecQuestionsList) {
-						if (tplSpecQuestion.getSpecQuestionId() == question.getSpecQuestionId()) {
-							itemFound = true;
-							break;
-						}
-					}
-					if (!itemFound) {
-						newTplSpecQuestionsList.add(question);
-					}
-				}
-				
-			}
-			
 		}
-		/**
-		 * Get Parameter description by parameter for report.
-		 * 
-		 * @param parameter
-		 *            the PmParameter instance.
-		 * @return parameter description
-		 */
-		public String getParameterDescForVelocityReport(PmParameter parameter) {
-			if (parameter != null
-					&& StringUtils.isNotBlank(parameter.getParameterType())) {
-				return getParameterDesc(
-						parameter,
-						myLocale);
-			} else {
-				return null;
-			}
+
+	}
+
+	/**
+	 * Get Parameter description by parameter for report.
+	 * 
+	 * @param parameter
+	 *            the PmParameter instance.
+	 * @return parameter description
+	 */
+	public String getParameterDescForVelocityReport(PmParameter parameter) {
+		if (parameter != null && StringUtils.isNotBlank(parameter.getParameterType())) {
+			return getParameterDesc(parameter, myLocale);
+		} else {
+			return null;
 		}
-		// #26226 - End
+	}
+
+	// #26226 - End
 
 	// Enhancement #26130 -start-
 	/**
@@ -5343,32 +5340,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					addSpecList = true;
 					continue;
 				}
-				
+
 				if (addSpecList) {
 					if (tplSpecQuestion.getQuestionType().equals("S")) {
 						if (specList == null) {
 							specList = new ArrayList<>();
 						}
-						
+
 						if (feedbackList == null) {
 							feedbackList = new ArrayList<>();
 						}
-						
+
 						if (answerRemarkList == null) {
 							answerRemarkList = new ArrayList<>();
 						}
-						
+
 						specList.add(tplSpecQuestion.getClSpecDetail());
 
 						for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
-							
+
 							if (null != tplSpecAnswer
 									&& null != tplSpecAnswer.getTplSpecSuppAnswer()
 									&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()
 									&& tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().longValue() == scLoa
 											.getScLoiLoa().getSmSupplier().getSupplierId().longValue()) {
 								String feedback = null;
-								
+
 								if (null != tplSpecAnswer.getAnswerNumeric()) {
 									feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
 								} else if (null != tplSpecAnswer.getAnswerCompliance()) {
@@ -5380,9 +5377,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
 									feedback = String.valueOf(tplSpecAnswer.getAnswerText());
 								}
-								
+
 								feedbackList.add(feedback);
-								
+
 								answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
 							}
 						}
@@ -5392,12 +5389,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 
 			}
-			
+
 			question.setSpecList(specList);
 
 			if (CollectionUtils.isNotEmpty(specList)) {
 				if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
-					for (int i=0; i < question.getTplSpecZoneQties().size(); i++) {
+					for (int i = 0; i < question.getTplSpecZoneQties().size(); i++) {
 						if (CollectionUtils.isNotEmpty(feedbackList)) {
 							feedbackList.add(i, "&nbsp;");
 						}
@@ -5417,26 +5414,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			question.setAnswerRemarkList(answerRemarkList);
 
 			List<HashMap<String, String>> listCombine = null;
-		
+
 			if (listCombine == null) {
 				listCombine = new ArrayList<HashMap<String, String>>();
 			}
-		
+
 			if (specList != null) {
 				int tempFeedbackIndex = 0;
 				int tempRemarkIndex = 0;
 				int tempSpecZoneQty = 0;
 				int indexFeedbackStore = 0;
 				int indexRemarkStore = 0;
-				
+
 				if (CollectionUtils.isNotEmpty(question.getTplSpecZoneQties())) {
 					tempSpecZoneQty = question.getTplSpecZoneQties().size();
 				}
-			
+
 				for (String tempSpecVal : specList) {
 					HashMap<String, String> map = new HashMap<String, String>();
 					map.put("specVal", tempSpecVal);
-				
+
 					for (String tempFeedback : feedbackList) {
 						if (tempSpecZoneQty > 0) {
 							if (tempFeedbackIndex >= tempSpecZoneQty) {
@@ -5450,20 +5447,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 									break;
 								}
 							}
-							
+
 							tempFeedbackIndex++;
 						} else {
-							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
+							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore) {
 								map.put("feedback", tempFeedback);
 								indexFeedbackStore = tempFeedbackIndex;
 								break;
 							}
-							
+
 							tempFeedbackIndex++;
-							
+
 						}
 					}
-					
+
 					for (String tempRemark : answerRemarkList) {
 
 						if (tempRemark == null) {
@@ -5480,32 +5477,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										indexRemarkStore = tempRemarkIndex;
 										break;
 									}
-									
+
 								}
-								
+
 								tempRemarkIndex++;
 							} else {
-								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
+								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
 									map.put("remark", tempRemark);
 									indexRemarkStore = tempRemarkIndex;
 									break;
 								}
-								
+
 								tempRemarkIndex++;
 							}
 						}
 
 					}
-					
+
 					tempFeedbackIndex = 0;
 					tempRemarkIndex = 0;
-					listCombine.add(map);				
+					listCombine.add(map);
 				}
-				
+
 				question.setListCombineSpec(listCombine);
 			}
 		}
 	}
+
 	// #26130 - End
 
 	// #26130 - zaim start
@@ -5514,6 +5512,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return defaultValue;
 	}
+
 	// #26130 - zaim -end-
 
 	// #26130 start
@@ -5662,16 +5661,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		if (question.getTplSpecZoneQties() != null) {
 			List<TplSpecZoneQty> specZoneQties = new ArrayList<TplSpecZoneQty>();
-			
+
 			for (TplSpecZoneQty specZoneQty : question.getTplSpecZoneQties()) {
 				if (specZoneQty != null) {
 					// #21695 - Start
 					if (null != specZoneQty.getQty() && specZoneQty.getQty().intValue() == 0) {
 						continue;
 					}
-					
+
 					boolean itemFound = false;
-					
+
 					if (null != specZoneQty.getTplSpecZoneDtl()) {
 						if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoiLoaItems())) {
 							for (ScLoiLoaItem loiLoaItem : scLoa.getScLoiLoaItems()) {
@@ -5769,7 +5768,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isExist;
 	}
 	// #26130 -end-
-	
+
 	// #26130 -start-
 	public boolean validateTplSpecMaster(ScLoa scloa, TplSpecMaster master) {
 		boolean isExist = false;

@@ -5,7 +5,6 @@ package my.ep.web.bean.sc.common;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ItemBean.
  * 

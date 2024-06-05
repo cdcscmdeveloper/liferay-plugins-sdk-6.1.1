@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap; //Bug #34882@Syazani 26/06/2023
+import java.util.logging.Level;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1051,8 +1052,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.sortFrequentScheduleList(scLoa.getScQtSchedules());
 
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		} else{
 			this.getManagedBean().setTotalFrequency(0);
@@ -2003,6 +2003,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Specification
 		formSpecification(context, scLoa);
+		
+		// #26130 - Start
+		if (scQt != null
+				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
+						.equals(scLoa.getScLoiLoa().getDocType()))
+				&& (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(scQt.getFulfilmentType().getParameterCode())
+						|| ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scQt.getFulfilmentType().getParameterCode()) || ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+							.equals(scQt.getFulfilmentType().getParameterCode()))) {
+			constructSupplierSpecificationAndRemarks(context, scLoa);
+		}
+		// #26130 - End
 
 		// #26130 - Start
 		if (scQt != null
@@ -4664,17 +4675,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					: item.getTplSpecTierQty().getToQty().toString());
 		}
 		//26226 Start
-				TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
-				itemBean.setItem(item.getScRequestItem().getItemName());
-				itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : SSTConstant.EMPTY_STRING);
+		TplSpecQuestion tplSpecQuestion=item.getScRequestItem().getTplSpecQuestion();
+		itemBean.setItem(item.getScRequestItem().getItemName());
+		itemBean.setZoneName(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : SSTConstant.EMPTY_STRING);
 				
-				if (null != tplSpecQuestion.getClDeliveryTerm()) {
-					itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
-				}
-				if (null != tplSpecQuestion.getClDurationMonth()) {
-					itemBean.setClDurationMonth(tplSpecQuestion.getClDurationMonth().toString());
-				}
-				//End
+		if (null != tplSpecQuestion.getClDeliveryTerm()) {
+			itemBean.setClDeliveryTerm(tplSpecQuestion.getClDeliveryTerm().toString());
+		}
+		if (null != tplSpecQuestion.getClDurationMonth()) {
+			itemBean.setClDurationMonth(tplSpecQuestion.getClDurationMonth().toString());
+		}
+		//End
 		/*BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion()

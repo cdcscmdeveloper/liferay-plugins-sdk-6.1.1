@@ -1124,8 +1124,6 @@ u {
 		</td>
 	</tr>
 </table>
-
-
 #if ($scLoa.scLoiLoa.docType != "PR")
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -1352,16 +1350,17 @@ u {
 		<br/>
 	  #else 
 		#set($whitespace = "&nbsp;")
+			#set($rowCount = 0)	
 		  	#foreach( $tplspecMaster in $masters )
 		  	
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 					#if ($itemType == "Produk" || $itemType == "Product")
 					##26130 - start 03032022
-					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
 					#if ($rowCount > 0)
 						<div class="break-after"><br/></div>
+						#set($rowCount = 0)	
 					#end
 					<table width="100%" border="1" cellpadding="0" cellspacing="-1">
 						<body>
@@ -2321,7 +2320,6 @@ u {
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Zon</th>
 									<th bgcolor="#6d839b" class="title border left" style="text-align: center; padding-left: 5px; font-size:10px;">Kuantiti</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Tawaran Pembekal</th>
-                                    <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th>
 									<th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Skop Perkhidmatan / SLA</th>
 								</tr>
 								
@@ -2429,10 +2427,10 @@ u {
 										<tbody>
 										<tr>
 											
-											  #if($tplspecQuestion.clQuantity)
+											#if($tplspecQuestion.clQuantity)
 													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplspecQuestion.clQuantity</td>
 									
-									#else
+											#else
 										       #if(($tplSpecZoneQtie.qty))
 													<td rowspan="$tplSpecZoneDtls.specCount" class="standard border-bottom left" style="text-align: top; border-bottom: 1px solid black; height: 80px; font-size:12px;">$tplSpecZoneQtie.qty</td>
 											   #else
@@ -2464,14 +2462,7 @@ u {
 								</td>
 								
 								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
-										#if(($tplspecQuestion.clReviewRemark == "" ))
-										 $serviceScope 
-										#else
-											 $tplspecQuestion.clReviewRemark							
-										#end
-								</td>
-								
-								<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
+																																						 
 								#if($serviceScope)
 								 $serviceScope 
 								 #end
@@ -2607,8 +2598,6 @@ u {
 		#end
  
 	 #else
-     
-	 
 		<tr align='left'>
 			<td><span
 				style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
@@ -2644,7 +2633,7 @@ u {
 
 
 ##26130 - start 18052022
-#if ($scLoa.scLoiLoa.docType != "QT")	
+#if ($scLoa.scLoiLoa.docType == "NG")	
 	<div class="break-after"><br/></div>
   #end
 ##26130 - end 18052022
