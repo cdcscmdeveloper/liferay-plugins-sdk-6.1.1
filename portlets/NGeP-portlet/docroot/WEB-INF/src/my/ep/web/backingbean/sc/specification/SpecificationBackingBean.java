@@ -23215,12 +23215,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	private List<ScQtCheckList> addInactiveChecklistsForWarningMessage(){
 		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
 		for (ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()) {
-			if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus())
+			if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()){
 				inActiveChecklist.add(tech);
+			}
 		}
 		for (ScQtCheckList fin : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
-			if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus())
+			if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()){
 				inActiveChecklist.add(fin);
+			}
 		}
 		
 		return inActiveChecklist;
