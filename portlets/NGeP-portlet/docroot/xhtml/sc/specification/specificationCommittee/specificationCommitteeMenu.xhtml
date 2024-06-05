@@ -95,7 +95,7 @@
 
 
 					</p:tabMenu></td>
-				<td width="80%;" valign="top"><h:panelGroup id="printSpecCommitteeid"><!-- #10141 Added  Vinod h:panelGroup--><c:if
+				<td width="80%;" valign="top"><c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
                         <ac:lovPopup/>
 						<ui:include
@@ -120,19 +120,19 @@
 							src="/xhtml/sc/specification/specificationCommittee/financialChecklistMain.xhtml"></ui:include>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
-						
+
 						<ui:include
 							src="/xhtml/sc/specification/specificationCommittee/technicalScoring.xhtml" />
-						
+
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '5'}">
-						
+
 						<ui:include
 							src="/xhtml/sc/specification/specificationCommittee/financialScoring.xhtml" />
-						
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '6'}">
+
 						<ui:include
 							src="/xhtml/sc/specification/specificationCommittee/recomondation.xhtml" />
 					</c:if> <c:if
@@ -168,7 +168,7 @@
 						<ui:include
 							src="/xhtml/sc/specification/specificationCommittee/committeeEndorsmentSignoff.xhtml" />
 
-					</c:if></h:panelGroup><!-- #10141 Added  Vinod h:panelGroup--></td>
+					</c:if></td>
 			</tr>
 		</table>
 
