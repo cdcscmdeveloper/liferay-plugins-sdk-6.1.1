@@ -12679,7 +12679,7 @@ if (null != checklist && !checklist.isEmpty()) {
 
 					}
 					// #10141 Start Vinod
-					showWarningMessageForInactiveChecklist(this.getManagedBean().isShowInactiveChecklistPopup(),action);
+					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),action);
 					// #10141 End Vinod
 					// 25638 - Start
 					SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
@@ -17459,33 +17459,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			checkTechnicalAndFinancialSpec(this.getManagedBean().getQt());
 		}
 		// #10141 Start Vinod
-		if (!this.getManagedBean().isShowInactiveChecklistPopup()) {
-			List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
-			for (ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()) {
-				if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()){
-					inActiveChecklist.add(tech);
-				}
-			}
-			for (ScQtCheckList fin : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
-				if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()){
-					inActiveChecklist.add(fin);
-				}
-			}
-
-			if (!inActiveChecklist.isEmpty() && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-
-				String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
-
-				this.getManagedBean().setInActiveChecklist(inActiveChecklist);
-				this.getManagedBean().setInActiveChecklistNotificationText(
-						getMessage(QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE,
-								new String[] { confirmationMsg }));
-
-				this.getManagedBean().setShowInactiveChecklistPopup(true);
-				RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
-				return;
-			}
-		}
+		checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),action);
 		if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
 			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
 		}
@@ -23192,9 +23166,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10141 Start Vinod
-	private void showWarningMessageForInactiveChecklist(boolean isShowInactiveChecklistPopup, String action) {
+	private void checkInactiveChecklistForPopup(boolean isShowInactiveChecklistPopup, String action) {
 		if (!isShowInactiveChecklistPopup) {
-			List<ScQtCheckList> inActiveChecklist =addInactiveChecklistsForWarningMessage();
+			List<ScQtCheckList> inActiveChecklist =new ArrayList<>();
+			addInactiveChecklistsForPopup(this.getManagedBean().getScQtCheckSt2techProposal(),inActiveChecklist);//For technical checklist
+			addInactiveChecklistsForPopup(this.getManagedBean().getScQtCheckSt2financeProposalList(),inActiveChecklist);//For financial checklist
 
 			if (!inActiveChecklist.isEmpty() && BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 
@@ -23207,25 +23183,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
 				RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
-				return;
 			}
 		}
 	}
 	
-	private List<ScQtCheckList> addInactiveChecklistsForWarningMessage(){
-		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
-		for (ScQtCheckList tech : this.getManagedBean().getScQtCheckSt2techProposal()) {
-			if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()){
-				inActiveChecklist.add(tech);
+	private void addInactiveChecklistsForPopup(List<ScQtCheckList> checklist,List<ScQtCheckList> inActiveChecklist){
+		for (ScQtCheckList cl : checklist) {
+			if (null != cl.getPmDocument() && !cl.getPmDocument().isRecordStatus()){
+				inActiveChecklist.add(cl);
 			}
 		}
-		for (ScQtCheckList fin : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
-			if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()){
-				inActiveChecklist.add(fin);
-			}
-		}
-		
-		return inActiveChecklist;
 	}
 	
 	private String inactiveChecklistsForError(List<ScQtCheckList> checklist){
