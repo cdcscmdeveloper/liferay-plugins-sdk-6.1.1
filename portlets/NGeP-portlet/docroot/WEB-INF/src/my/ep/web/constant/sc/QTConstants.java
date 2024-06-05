@@ -392,6 +392,5 @@ public interface QTConstants {
 	public static final int ACTIVE_INDEX_4 = 4;
 	public static final int ACTIVE_INDEX_5 = 5;
 	public static final int ACTIVE_INDEX_6 = 6;
-	public static final int[] ACTIVE_INDEX_LIST = new int[] { ACTIVE_INDEX_4, ACTIVE_INDEX_5, ACTIVE_INDEX_6 };
 	// #10141 End Vinod
 }
