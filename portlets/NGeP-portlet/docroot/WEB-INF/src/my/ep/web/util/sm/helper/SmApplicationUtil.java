@@ -1213,9 +1213,12 @@ public class SmApplicationUtil {
 						.equalsIgnoreCase("B")
 						|| appl.getSmFacilities().get(i).getFacilityType()
 								.equalsIgnoreCase("H")) {
-					appl.getSmFacilities().set(i,
-							managedBean.getBasicCompanyFacility());
-					break;
+					// #34303 - start
+					if (appl.getSmFacilities().get(i).isHeadquarters()) {
+						appl.getSmFacilities().set(i, managedBean.getBasicCompanyFacility());
+						break;
+					}
+					// #34303 - end
 				}
 			}
 		}
@@ -2180,6 +2183,8 @@ public class SmApplicationUtil {
 		//16052019 - SSM INTEGRATION CR
 		int i = 0;
 		int j = 0; //#30444
+		int k = 1;//#30762 171123
+		StringBuilder errMsg = new StringBuilder(); //#30762 171123
 		StringBuilder sb = new StringBuilder();		
 		sb.append("<br/>");
 		StringBuilder sbd = new StringBuilder(); //#30444 --31072021--
@@ -2370,51 +2375,182 @@ public class SmApplicationUtil {
 		//#31130-end 06122022				
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
-			StringBuilder errMsg = new StringBuilder();
-			if (semiProfCount < 1) {
-				errMsg.append(SmCommonUtil.getMessage(
-						"lbl.sm.person.semi.prof.cont.epf.req", null));
-				errMsg.append("<br />");
-			}
-			if (profCount < 1) {
-				errMsg.append(SmCommonUtil.getMessage(
-						"lbl.sm.person.prof.cont.epf.req", null));
-				errMsg.append("<br />");
-			}
-			if (staffCount < 1) {
-				errMsg.append(SmCommonUtil.getMessage(
-						"lbl.sm.person.clerk.cont.epf.req", null));
-				errMsg.append("<br />");
-			}
-			if (errMsg != null && errMsg.length() > 0) {
-				validSave = false;
-				if (currentTab != -1) {
-					setNavigationBackToCurrentPage(currentTab, managedBean);
+			if(managedBean.isSupplierUser()){ //#30762 171123
+				if (semiProfCount < 1) {
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.person.semi.prof.cont.epf.req", null));
+					errMsg.append("<br />");
+					}
+				if (profCount < 1) {
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.person.prof.cont.epf.req", null));
+					errMsg.append("<br />");
+					}
+				if (staffCount < 1) {
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.person.clerk.cont.epf.req", null));
+					errMsg.append("<br />");
+					}
+				if (errMsg != null && errMsg.length() > 0) {
+					validSave = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+					throw new EpException(errMsg.toString());
 				}
-				throw new EpException(errMsg.toString());
-			}
+			//#30762 -Start 171123
+			} else if(managedBean.isPoUser() || managedBean.isApproverUser()){
+				if (semiProfCount < 1) {
+					errMsg.append(k + ". ");
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.personnelrole.min.one.semiprof", null));
+					errMsg.append("<br />");
+					k++;
+					}
+				if (profCount < 1) {
+					errMsg.append(k + ". ");
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.personnelrole.min.one.prof", null));
+					errMsg.append("<br />");
+					k++;
+					}
+				if (staffCount < 1) {
+					errMsg.append(k + ". ");
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.personnelrole.min.one.clercstaff", null));
+					errMsg.append("<br />");
+					k++;
+					}
+				if (mgmtCount < 1) {
+					errMsg.append(k + ". ");
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.personnelrole.min.one.mgt", null));
+					errMsg.append("<br />");
+					k++;
+					}
+				if(managedBean.getBusinessTypeVal() != null
+						&& (managedBean
+								.getBusinessTypeVal()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT) || managedBean
+								.getBusinessTypeVal()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT))
+						&& directorCount < 1){
+					errMsg.append(k + ". ");
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.personnelrole.min.one.director", null));
+					errMsg.append("<br />");
+					k++;		
+				}
+				if (managedBean.getBusinessTypeVal() != null
+						&& managedBean.getSmSupplier().getBusinessType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+						&& directorCount < 1) {
+					errMsg.append(k + ". ");
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.personnelrole.min.one.director", null));
+					errMsg.append("<br />");
+					k++;	
+				}
+				if (managedBean.getBusinessTypeVal() != null
+						&& managedBean.getSmSupplier().getBusinessType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+						&& directorCount < 2) {
+					errMsg.append(k + ". ");
+					errMsg.append(SmCommonUtil.getMessage(
+							"lbl.sm.personnelrole.min.two.directors", null));
+					errMsg.append("<br />");
+					k++;	
+				}
+				if (errMsg != null && errMsg.length() > 0) {
+					managedBean.setPoApproverPersonnelRoleMsg(true);
+					managedBean.setPersonnelRoleMsg(errMsg.toString());
+				}
+			} //#30762 -End 
 		}
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONTRACTOR)) {
-			if (staffCount < 1) {
-				validSave = false;
-				if (currentTab != -1) {
-					setNavigationBackToCurrentPage(currentTab, managedBean);
+			if (managedBean.isSupplierUser()){ //#30762 171123
+				if (staffCount < 1) {
+					validSave = false;
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+					throw new EpException(MessageConst.ERROR_722513, new String[] {
+							ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.comprole.staff",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale),
+							ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.one.lowercaps",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale),
+							ResourceBundleUtils.getMessage(
+									"lbl.sm.personnel.comprole.staff",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale) });
 				}
-				throw new EpException(MessageConst.ERROR_722513, new String[] {
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.personnel.comprole.staff",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale),
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.personnel.one.lowercaps",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale),
-						ResourceBundleUtils.getMessage(
-								"lbl.sm.personnel.comprole.staff",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								locale) });
-			}
+			//#30762 -Start 171123
+			} else if(managedBean.isPoUser() || managedBean.isApproverUser()){
+					if(staffCount < 1){
+						errMsg.append(k + ". ");
+						errMsg.append(SmCommonUtil.getMessage(
+								"lbl.sm.personnelrole.min.one.staff", null));
+						errMsg.append("<br />");
+						k++;
+					}
+					if(mgmtCount < 1){
+						errMsg.append(k + ". ");
+						errMsg.append(SmCommonUtil.getMessage(
+								"lbl.sm.personnelrole.min.one.mgt", null));
+						errMsg.append("<br />");
+						k++;
+					}
+					if(managedBean.getBusinessTypeVal() != null
+							&& (managedBean
+									.getBusinessTypeVal()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT) || managedBean
+									.getBusinessTypeVal()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT))
+							&& directorCount < 1){
+						errMsg.append(k + ". ");
+						errMsg.append(SmCommonUtil.getMessage(
+								"lbl.sm.personnelrole.min.one.director", null));
+						errMsg.append("<br />");
+						k++;		
+					}
+					if (managedBean.getSmSupplier().getBusinessType() != null
+							&& managedBean.getSmSupplier().getBusinessType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+							&& directorCount < 1) {
+						errMsg.append(k + ". ");
+						errMsg.append(SmCommonUtil.getMessage(
+								"lbl.sm.personnelrole.min.one.director", null));
+						errMsg.append("<br />");
+						k++;	
+					}
+					if (managedBean.getSmSupplier().getBusinessType() != null
+							&& managedBean.getSmSupplier().getBusinessType()
+									.equalsIgnoreCase(
+											SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+							&& directorCount < 2) {
+						errMsg.append(k + ". ");
+						errMsg.append(SmCommonUtil.getMessage(
+								"lbl.sm.personnelrole.min.two.directors", null));
+						errMsg.append("<br />");
+						k++;	
+					}
+					if (errMsg != null && errMsg.length() > 0) {
+						managedBean.setPoApproverPersonnelRoleMsg(true);
+						managedBean.setPersonnelRoleMsg(errMsg.toString());
+					}
+			} //#30762 -End
 		}
 		if (managedBean.getBusinessTypeVal() != null
 				&& (managedBean
@@ -2425,73 +2561,76 @@ public class SmApplicationUtil {
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT))
 				&& directorCount < 1) {
-			validSave = false;
-			if (currentTab != -1) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
+			if(managedBean.isSupplierUser()){ //#30762 171123
+				validSave = false;
+				if (currentTab != -1) {
+					setNavigationBackToCurrentPage(currentTab, managedBean);
+				}
+				throw new EpException(MessageConst.ERROR_722513, new String[] {
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.comprole.director",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.one.lowercaps",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.comprole.director",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
-			throw new EpException(MessageConst.ERROR_722513, new String[] {
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.comprole.director",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.one.lowercaps",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.comprole.director",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 		} else if (managedBean.getBusinessTypeVal() != null
 				&& managedBean
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 				&& directorCount < 2) {
+			if(managedBean.isSupplierUser()){ //#30762 171123		
+				String directorTotal = SmCommonUtil.getMessage(
+						"lbl.sm.personnel.two.lowercaps", null);
+				
+				if (managedBean.getSmSupplier()
+						.getBusinessType()
+						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
+						&& directorCount < 1) {
+					directorTotal = SmCommonUtil.getMessage(
+							"lbl.sm.personnel.one.lowercaps", null);
+					validSave = false;
+				} else if (managedBean.getSmSupplier()
+						.getBusinessType()
+						.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+						&& directorCount < 2) {
+					validSave = false;
+				}
 
-			String directorTotal = SmCommonUtil.getMessage(
-					"lbl.sm.personnel.two.lowercaps", null);
-			if (managedBean
-					.getSmSupplier()
-					.getBusinessType()
-					.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
-					&& directorCount < 1) {
-				directorTotal = SmCommonUtil.getMessage(
-						"lbl.sm.personnel.one.lowercaps", null);
-				validSave = false;
-			} else if (managedBean
-					.getSmSupplier()
-					.getBusinessType()
-					.equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
-					&& directorCount < 2) {
-				validSave = false;
+				if (!validSave) {
+					if (currentTab != -1) {
+						setNavigationBackToCurrentPage(currentTab, managedBean);
+					}
+					throw new EpException(MessageConst.ERROR_722513, new String[] {
+							SmCommonUtil.getMessage(
+									"lbl.sm.personnel.comprole.director", null),
+							directorTotal,
+							SmCommonUtil.getMessage(
+									"lbl.sm.personnel.comprole.director", null) });
+				}
 			}
-
-			if (!validSave) {
+		}
+		if (mgmtCount < 1) {
+			if(managedBean.isSupplierUser()){ //#30762 171123
+				validSave = false;
 				if (currentTab != -1) {
 					setNavigationBackToCurrentPage(currentTab, managedBean);
 				}
 				throw new EpException(MessageConst.ERROR_722513, new String[] {
-						SmCommonUtil.getMessage(
-								"lbl.sm.personnel.comprole.director", null),
-						directorTotal,
-						SmCommonUtil.getMessage(
-								"lbl.sm.personnel.comprole.director", null) });
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.mngmnt.staff",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.one.lowercaps",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
+						ResourceBundleUtils.getMessage(
+								"lbl.sm.personnel.mngmnt.staff",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
-
-		}
-		if (mgmtCount < 1) {
-			validSave = false;
-			if (currentTab != -1) {
-				setNavigationBackToCurrentPage(currentTab, managedBean);
-			}
-			throw new EpException(MessageConst.ERROR_722513, new String[] {
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.mngmnt.staff",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.one.lowercaps",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale),
-					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.mngmnt.staff",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 		}
 		appl = null;
 		return validSave;
@@ -2803,7 +2942,11 @@ public class SmApplicationUtil {
 			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
-
+		//#34277 - start
+		if(managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() == null){
+			managedBean.getSmAppl().getSmCompanyBasic().setPaidUpCapital(new BigDecimal(0));
+		}
+		//#34277 - end
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
 			// String amt = "";
@@ -3753,7 +3896,8 @@ public class SmApplicationUtil {
 				if (vo != null && vo.getOverlapCategoryVOList() != null
 						&& cat.getPmCategoryL1() != null
 						&& cat.getPmCategoryL2() != null
-						&& cat.getPmCategoryL3() != null) {
+						&& cat.getPmCategoryL3() != null
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 					String catcode = cat.getPmCategoryL1().getCategoryL1Code()
 							+ cat.getPmCategoryL2().getCategoryL2Code()
 							+ cat.getPmCategoryL3().getCategoryL3Code();
@@ -6151,6 +6295,21 @@ public class SmApplicationUtil {
 		}
 		desAddr.setCityId(srcAddr.getCityId());
 	}
+	
+	//#34277 - start
+	/**
+	 * Clone SSM address details
+	 * @param desAddr target
+	 * @param srcAddr source
+	 */
+	public static void cloneAddressSSM(SmAddress desAddr, SmAddress srcAddr){
+		desAddr.setSsmData(srcAddr.isSsmData());
+		desAddr.setAddressSsmNull(srcAddr.isAddressSsmNull());
+		desAddr.setPostcodeSsmNull(srcAddr.isPostcodeSsmNull());
+		desAddr.setStateSsmNull(srcAddr.isStateSsmNull());
+		desAddr.setCountrySsmNull(srcAddr.isCountrySsmNull());
+	}
+	//#34277 - end
 
 	/**
 	 * Reset to default entity values.
@@ -9623,6 +9782,19 @@ public class SmApplicationUtil {
 	}
 
 	public static SmFacility getHqFacilityByAppl(SmAppl appl) {
+		// #34303 - start
+		for (SmFacility smFac : appl.getSmFacilities()) {
+			if ((smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
+					.getFacilityType()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+					&& smFac.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& smFac.isHeadquarters()) {
+				return smFac;
+			}
+		}
+
 		for (SmFacility smFac : appl.getSmFacilities()) {
 			if ((smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE) || smFac
@@ -9633,6 +9805,7 @@ public class SmApplicationUtil {
 				return smFac;
 			}
 		}
+		// #34303 - end
 		return null;
 	}
 
@@ -11965,7 +12138,15 @@ public class SmApplicationUtil {
 						PmDivision div = new PmDivision();
 						div.setDivisionId(addr.getSmAddress().getPmDivision()
 								.getDivisionId());
-						smAddress.setPmDivision(div);
+						//#34159 - START
+						IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										IDivisionSO.class);
+						DivisionReqDTO reqDTO = new DivisionReqDTO();
+						reqDTO.setDivisionId(div.getDivisionId());
+						DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
+						smAddress.setPmDivision(resDTO.getPmDivision());
+						//#34159 - END
 						smAddress.setDivisionId(div.getDivisionId());
 					}
 					//#13320 - added division - end
@@ -11981,7 +12162,15 @@ public class SmApplicationUtil {
 					if(addr.getSmAddress().getPmCity() != null){
 						PmCity city = new PmCity();
 						city.setCityId(addr.getSmAddress().getPmCity().getCityId());
-						smAddress.setPmCity(city);
+						//#34159 - START
+						ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										ICitySO.class);
+						CityReqDTO reqDTO = new CityReqDTO();
+						reqDTO.setCityId(city.getCityId());
+						CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
+						smAddress.setPmCity(resDTO.getPmCity());
+						//#34159 - END
 						smAddress.setCityId(city.getCityId());
 					}
 					//END 27879
@@ -12451,6 +12640,11 @@ public class SmApplicationUtil {
 			if (shr.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				countAuthorizedPersonnel++;
 			}
+			//#29616 -start
+			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				throw new EpException(MessageConst.ERROR_722685,
+						new String[] { shr.getName() });
+			}//#29616 -end
 		}
 		return countAuthorizedPersonnel;
 	}
@@ -14624,4 +14818,32 @@ public class SmApplicationUtil {
 			}
 		}
 		//#31043 - END
+	// 29616-start
+	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
+		log.info("******* Validate active softcert For cancel mof account******** ");
+		boolean validPersonnels = true;
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplier.getSupplierId());
+		List<SmPersonnel> latestActivePersonnels = SmServiceLookup
+				.getPersonnelSO().retrieveLatestPersonnelBySupplierId(reqDTO)
+				.getSmPersonnelList();
+
+		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
+			for (SmPersonnel per : latestActivePersonnels) {
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					sb.append(++i + ". ");
+					sb.append(per.getName());
+					sb.append(" ");
+					validPersonnels = false;
+				}
+			}
+		}
+		if (!validPersonnels) {
+			throw new EpException(MessageConst.ERROR_722707,
+					new String[] { sb.toString() });
+		}
+		return validPersonnels;
+	}// 29616-end
 }

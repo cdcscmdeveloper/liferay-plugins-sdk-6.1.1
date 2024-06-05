@@ -55,7 +55,7 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
-				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
+				style="text-wrap : wrap;" rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectEquityCompany}"
 					update=":form:tt:eqiComDt"></p:ajax>
@@ -69,9 +69,11 @@
 					update=":form:tt:eqiComDt"></p:ajax>
 
 				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smEquityCompanies}" disabledSelection="#{equiBean.ssmData}" />
-				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}">
+				<!-- #34600 start -->
+				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-space: break-spaces;">
 					<h:outputText value="#{equiBean.companyName}" />
 				</p:column>
+				<!-- #34600 end -->
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}" style="white-space:normal;word-break:break-all;">
 					<h:outputText
@@ -468,9 +470,11 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionCapitalDropdownPanelId" >
+					<!-- #34159 - START -->
 						<p:selectOneMenu id="equiDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.divisionId}"
+						required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 						style="width: 207px;margin-bottom: 5px;background-color:white;"
 						rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
@@ -482,6 +486,7 @@
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 							update="equiDist,equiCity"/>
 					</p:selectOneMenu>
+					<!-- #34159 - END -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId}" 

@@ -940,10 +940,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		int cheqNonMalaysian = 0;
 		
 		// #14055 - start
-		LinkedHashSet<String> totalCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet();
-		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet();
+		LinkedHashSet<String> totalCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> bumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonBumiCheckingList = new LinkedHashSet<String>();
+		LinkedHashSet<String> nonMyCheckingList = new LinkedHashSet<String>();
 		
 		if (this.getManagedBean().getSmSvTask().getSmSvBankInfos() != null) {
 			for (SmSvBankInfo svBankInfo : this.getManagedBean().getSmSvTask().getSmSvBankInfos()) {
@@ -1454,6 +1454,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("townDtls", (addr.getPmCity() != null && addr.getPmCity().getCityName() !=null && addr.getPmCity().getCityName().length() > 0)? addr.getPmCity().getCityName() : "");
 		context.put("districtDtls", (addr.getPmDistrict() != null && addr.getPmDistrict().getDistrictName() !=null && addr.getPmDistrict().getDistrictName().length() > 0)? addr.getPmDistrict().getDistrictName() : "");
 		context.put("stateDtls", (addr.getPmState() != null && addr.getPmState().getStateName() !=null && addr.getPmState().getStateName().length() > 0)? addr.getPmState().getStateName() : "");
+		//#34159 - START 
+		boolean isStateAdoptDivision;
+		if(addr.getPmState() != null && addr.getPmState().getStateName() !=null && addr.getPmState().getStateName().length() > 0 && addr.getPmState().getAdoptDivision()){
+			isStateAdoptDivision = true;
+			context.put("isStateAdoptDivision", isStateAdoptDivision);
+			context.put("divisionDtls", (addr.getPmDivision() != null && addr.getPmDivision().getDivisionName() != null && addr.getPmDivision().getDivisionName().length() > 0)? addr.getPmDivision().getDivisionName() : "");
+		}
+		
+		//#34159 - END
 		
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
 		context.put("busRegNo", svTask.getSmAppl().getSmSupplier().getRegNo());
@@ -1567,36 +1576,81 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	//#34166 - Start
-	public void test(String clientId, SmSvTask svTask){
+	/**
+	 * To validate before downloading the SV Report.
+	 * @param clientId
+	 * @param svTask
+	 * @param retrieveSvInfo
+	 */
+	public void validateBeforeDownloadSVReport(String clientId, SmSvTask svTask, boolean retrieveSvInfo) {
 		String fieldsName = "";
-		for (SmSvBankInfo bank : svTask.getSmSvBankInfos()) {
-			if (bank.getRemark() != null){
-				if (bank.getRemark().contains("<") || bank.getRemark().contains(">")) {
-					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.remark",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
-							new String[] { fieldsName.toLowerCase() }));
-				}
+		SmSvTask svData = new SmSvTask();
+
+		if (retrieveSvInfo) {
+			getManagedBean().setSvTaskId(svTask.getSvTaskId());
+			retrieveSiteVisitInfo("V");
+			svData = getManagedBean().getSmSvTask();
+		} else {
+			svData = svTask;
+		}
+
+		for (SmSvBankInfo bank : svData.getSmSvBankInfos()) {
+			if (bank.getRemark() != null && (bank.getRemark().contains("<") || bank.getRemark().contains(">"))) {
+				fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.remark",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+						new String[] { fieldsName.toLowerCase() }));
 			}
-			if (bank.getSmSupplierBank().getSignatureInstruction() != null){
-				if(bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank().getSignatureInstruction().contains(">")){
-					fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.terms.cond",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
-							new String[] { fieldsName.toLowerCase() }));
-				}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null
+					&& (bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank()
+							.getSignatureInstruction().contains(">"))) {
+				fieldsName = ResourceBundleUtils.getMessage("lbl.sm.sv.bank.terms.cond",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+						new String[] { fieldsName.toLowerCase() }));
 			}
 		}
-		
-		for (SmSvFinChecklist checklist : svTask.getSmSvFinChecklists()) {
-			if(checklist.getRemark() != null){
-				if (checklist.getRemark().contains("<") || checklist.getRemark().contains(">")) {
-					fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter().getParameterCode());
-					throw new  EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
-							new String[] { fieldsName.toLowerCase() }));
-				}
+
+		for (SmSvFinChecklist checklist : svData.getSmSvFinChecklists()) {
+			if (checklist.getRemark() != null
+					&& (checklist.getRemark().contains("<") || checklist.getRemark().contains(">"))) {
+				fieldsName = getParameterDesc(ParameterTypeConst.SVO_FIN_CHECKLIST, checklist.getPmParameter()
+						.getParameterCode()) + " remarks";
+
+				throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_775197,
+						new String[] { fieldsName.toLowerCase() }));
 			}
 		}
-		
+
 		RequestContext.getCurrentInstance().execute("document.getElementById('" + clientId + "').click()");
+	}
+	
+	/**
+	 * To change the character that might give error when downloading the files
+	 * @param svTask
+	 */
+	public void validatingCharacter(SmSvTask svTask) {
+		for (SmSvBankInfo bank : svTask.getSmSvBankInfos()) {
+			if (bank.getRemark() != null && (bank.getRemark().contains("<") || bank.getRemark().contains(">"))) {
+				bank.setRemark(bank.getRemark().replace("<", "&#60;").replace(">", "&#62;"));
+			}
+			if (bank.getSmSupplierBank().getSignatureInstruction() != null
+					&& (bank.getSmSupplierBank().getSignatureInstruction().contains("<") || bank.getSmSupplierBank()
+							.getSignatureInstruction().contains(">"))) {
+				bank.getSmSupplierBank().setSignatureInstruction(
+						bank.getSmSupplierBank().getSignatureInstruction().replace("<", "&#60;").replace(">", "&#62;"));
+			}
+		}
+
+		for (SmSvFinChecklist checklist : svTask.getSmSvFinChecklists()) {
+			if (checklist.getRemark() != null
+					&& (checklist.getRemark().contains("<") || checklist.getRemark().contains(">"))) {
+				checklist.setRemark(checklist.getRemark().replace("<", "&#60;").replace(">", "&#62;"));
+
+			}
+		}
+
+		getManagedBean().setSmSvTask(svTask);
 	}
 	//#34166 - End
 
@@ -2188,7 +2242,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				// #30504 start
+				// #30504 start #34795 start
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
 				PmUser currPo = PmCommonUtil.retrieveUserByLoginId(currPoLoginId);
 				log.info("---Curent PO: "+currPo.getUserName());
@@ -2209,6 +2263,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					smObj.setPoUsers(newPo.getLoginId());
 					this.getManagedBean().setBpmPojo(smObj);
 
+				} else {
+					SMMOFRegDataType smObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+					smObj.setPoUsers(currPo.getLoginId());
+					this.getManagedBean().setBpmPojo(smObj);
 				}
 				log.info("---Curent PO Latest: "+currPo.getUserName());
 				
@@ -2245,7 +2303,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				reqDTO.setPoName(currPo.getUserName());
-				//#30504 Re-open end
+				//#30504 Re-open end #34795 end
 			}
 
 			reqDTO.setSmSvTask(svTask);
@@ -2285,6 +2343,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * check wheather user has svo role
 	 * @return
 	 */
+	/*
 	private String getUserRole() {	
 		FacesScopes fs = new FacesScopes();
 		if(fs.hasRoleUser(RoleCode.UPS_SVO.value()))
@@ -2292,6 +2351,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		else 
 			return null;
 	}
+	*/
 	
 	/**
 	 * Listener when check the site visit equipment
@@ -2705,6 +2765,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//#32963 - end
 		getManagedBean().setSvTaskId(svTask.getSvTaskId());
 		retrieveSiteVisitInfo(""); //28774
+		//#34166 - Start
+		validatingCharacter(getManagedBean().getSmSvTask());
+		//#34166 - End
 		downloadSiteVisitTemplate(getManagedBean().getSmSvTask(), true);
 	}
 	
@@ -2832,10 +2895,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 	
+	/*
 	private SmAddress getSmAddressById(Long addressId){
 		SmAddress address = SmCommonUtil.getInstance().getSmAddressById(addressId);
 		return address;
 	}
+	*/
 	
 	private void retrieveAndSetSmSvDocLicense(){
 		DocumentReqDTO reqDTO = new DocumentReqDTO();
@@ -3047,7 +3112,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							new String[] { fieldsName.toLowerCase() })));
 		}
 	}
-	
+		
 	public void checkRepresentative() {
 		Locale locale = new FacesScopes().getUserLocale();
 		String Name = ResourceBundleUtils.getMessage("lbl.sm.person.composition.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);

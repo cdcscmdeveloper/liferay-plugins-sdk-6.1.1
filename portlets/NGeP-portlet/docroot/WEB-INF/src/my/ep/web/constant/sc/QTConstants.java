@@ -204,21 +204,21 @@ public interface QTConstants {
 	public static final int ACTIVE_TAB_INDEX = 8;
 	
 	
-	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV = 10; // TODO
-	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV = 11; // TODO
-	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV = 12; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV = 10; 
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV = 11; 
+	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV = 12; 
 	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV = 15;
 	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV = 16;
 	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV = 17;
-	public static final int CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE = 20; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE = 20; 
 	public static final int CRITERIA_TYPE_TOTAL_EMPLOYEE = 21;
-	public static final int CRITERIA_TYPE_NO_OF_YEARS_WARRANTY = 30; // TODO
-	public static final int CRITERIA_TYPE_NO_OF_MONTH_OF_TRAINING = 40; // TODO
+	public static final int CRITERIA_TYPE_NO_OF_YEARS_WARRANTY = 30; 
+	public static final int CRITERIA_TYPE_NO_OF_MONTH_OF_TRAINING = 40; 
 	public static final int CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT = 50;
 	public static final int CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES = 51;
 	public static final int CRITERIA_TYPE_TOTAL_CASH_ON_HAND = 52;
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO = 60;
-	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; // TODO
+	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; 
 	public static final int CRITERIA_TYPE_SUPPLIER_DETAILS = 30;
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO = 61;
 	public static final String NEW_LINE_CHARACTER = "\r\n";
@@ -264,4 +264,20 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
 	// #15391 -end-
 
+	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
+	
+	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
+
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
+	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
+	public static final String TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-TechnicalEvaluation-Committee-Report";
+	public static final String FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-FinancialEvaluation-Committee-Report";
+
+	public static final String DOC_TYPE_SC_EVALUATION_COMMITTEE_REPORT_ATTACHMENT = "ECR";
+	public static final String DOC_TYPE_SC_OPEN_COMMITTEE_REPORT_ATTACHMENT = "OCR";
+	public static final String DOC_TYPE_SC_TECHNICAL_EVALUATION_REPORT_ATTACHMENT = "TCR";
+	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
+	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
+	// Bug #35485@Syazani 08/02/2024 -- End
 }

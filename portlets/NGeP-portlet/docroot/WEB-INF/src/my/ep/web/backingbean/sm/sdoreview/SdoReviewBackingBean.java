@@ -303,24 +303,19 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			}
 			
 			// 29810 - start - add new data type in SMMOFRegDataType - saufi
-			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean()
-					.getBpmPojo();
-			if (this.getManagedBean().getSmAppl().getSdoReceivedDate() != null) {
-				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String dateStr = df.format(this.getManagedBean().getSmAppl()
-						.getSdoReceivedDate());
-				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this
-						.getManagedBean().getSmAppl().getSdoReceivedDate()));
+			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){
+				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");	
+				String dateStr = df.format(this.getManagedBean().getSmAppl().getSdoReceivedDate());	
+				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this.getManagedBean().getSmAppl().getSdoReceivedDate()));
 			}
-
+			
 			reqDTO.setBpmPojo(bpmObj);
-			// 29810 - end
-
-			// 29810 - to check receive date value is there
-			log.info("29810 ====== SdoReviewBackingBean ========= getReceivedDate "
-					+ ((SMMOFRegDataType) reqDTO.getBpmPojo())
-							.getReceivedDate());
-						
+			//29810 - end
+			
+			//29810 - to check receive date value is there
+			//log.info("29810 ====== SdoReviewBackingBean ========= getReceivedDate " + ((SMMOFRegDataType) reqDTO.getBpmPojo()).getReceivedDate());
+			
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			
 			reqDTO.setToken(token);

@@ -77,6 +77,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
@@ -190,6 +191,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.output.CountingOutputStream;	// Bug #35485@Syazani 08/02/2024
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -290,8 +292,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
 
-		attachment.setCreatedBy(createdUser.getUserId());
-		attachment.setCreatedDate(date);
+		// Bug #35485@Syazani 08/02/2024 -- Start
+		if (attachment.getAttachmentId() == null
+				|| (attachment.getAttachmentId() != null && attachment.getAttachmentId() == 0)) {
+			attachment.setCreatedBy(createdUser.getUserId());
+			attachment.setCreatedDate(date);
+		}
+		// Bug #35485@Syazani 08/02/2024 -- End
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
 
@@ -409,7 +416,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					fileName = scAttachment.getTempFileName() + "." + extension;
 				}
 				file = downloadFile(getActualFilePath(scAttachment),
-						fileName);
+						fileName, scAttachment);	// Bug #35485@Syazani 08/02/2024
 			} catch (FileNotFoundException exception) {
 				// Separate the file name from absolute path
 				String splitMsg[] = StringUtils.split(exception.getMessage(),
@@ -438,9 +445,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return File instance
 	 * @throws IOException
 	 */
-	public File downloadFile(String filePath, String fileName)
+	public File downloadFile(String filePath, String fileName, ScAttachment scAttachment)	// Bug #35485@Syazani 08/02/2024
 			throws IOException {
-
+		long byteSize = 0;	// Bug #35485@Syazani 08/02/2024
 		if (filePath != null) {
 			InputStream input = null;
 			try {
@@ -451,11 +458,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// Cannot open connection, maybe local file
 				input = new FileInputStream(filePath);
 			}
-			downloadFileByInputStream(input, fileName);
+			byteSize = downloadFileByInputStream(input, fileName);	// Bug #35485@Syazani 08/02/2024
 		}
          //input has been closed in the called method bcoz here in catch they alternative 
 		// use to upload back to database
 		File file = new File(filePath);
+		scAttachment.setFileSize(byteSize);	// Bug #35485@Syazani 08/02/2024
 		return file;
 	}
 
@@ -466,14 +474,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param fileName
 	 * @throws IOException
 	 */
-	protected void downloadFileByInputStream(InputStream input, String fileName)
-			throws IOException {
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	@SuppressWarnings("resource")
+	protected long downloadFileByInputStream(InputStream input, String fileName) throws IOException {
+		// Bug #35485@Syazani 08/02/2024 -- End
 		log.info("Inside downloadFile(..)");
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse response = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
 		OutputStream out = null;
+		// Bug #35485@Syazani 08/02/2024 -- Start
+		CountingOutputStream countingStream = null;
+		long bytesWritten = 0;
+		// Bug #35485@Syazani 08/02/2024 -- End
 		
 		try{
 			response.setHeader("Pragma", "no-cache");
@@ -491,13 +505,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			response.flushBuffer();
 
 			out = response.getOutputStream();
-
+			countingStream = new CountingOutputStream(out);	// Bug #35485@Syazani 08/02/2024
+			
 			byte[] buffer = new byte[4096];
 			int bytesRead;
 			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
+				countingStream.write(buffer, 0, bytesRead);	// Bug #35485@Syazani 08/02/2024
 				buffer = new byte[4096];
 			}
+			bytesWritten = countingStream.getByteCount();	// Bug #35485@Syazani 08/02/2024
 			out.flush();
 			FacesContext.getCurrentInstance().responseComplete();
 		}
@@ -509,6 +525,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				out.close();
 			}
 		}
+		return bytesWritten; // Bug #35485@Syazani 08/02/2024
 	}
 
 	/**
@@ -680,6 +697,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)) {
 			msgCode = MessageConst.INFO_700032;
 		}
+		// 28834 starts
+		else if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISEBP)) {
+			msgCode = MessageConst.INFO_700091;
+		}
+		// 28834 ends
+
 		return msgCode;
 	}
 
@@ -921,6 +944,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
 		}
 		reportUrl.append(excNextUrl);*/
+		String mimeType = "";	// Improvement #35657@Syazani 14/05/2024
 		String reportUrl= generateReportURL(reportName,paramMap);
 		log.info("reportUrl: " + reportUrl);
 
@@ -951,6 +975,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					URL obj = new URL(reportUrl.toString());
 					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
 					input = new BufferedInputStream(uc.getInputStream());
+					mimeType = uc.getContentType();	// Improvement #35657@Syazani 14/05/2024
 				} catch (ConnectException e) {
 					throw new EpException(MessageConst.ERROR_100058);
 				}
@@ -963,6 +988,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
+				
+				// Improvement #35657@Syazani 14/05/2024 -- Start
+				if (!mimeType.equalsIgnoreCase(CommonConstants.FILE_CONTENT_TYPE_PDF)) {
+					log.info("Report server return '" + mimeType + "' Type");
+					log.info(bos.toString());
+					throw new EpException(MessageConst.ERROR_760530);
+				}
+				// Improvement #35657@Syazani 14/05/2024 -- End
+				
 				byte[] bytes = bos.toByteArray();
 				fos = new FileOutputStream(localFile);
 				fos.write(bytes);
@@ -3588,14 +3622,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Evaluation-Committee-Report");
+						QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 
 			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 					.equalsIgnoreCase(committeeType)) {
 				ScAttachment attachment = scqt.getScOpenCommitteeReportAttachment();
 				
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-Opening-Committee-Report");
+						QTConstants.OPENING_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 				this.getManagedBean().setScAttachment(attachment);
 
 			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -3603,7 +3637,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ScAttachment attachment = scqt.getScTechnicalEvaluationReportAttachment();
 				
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-TechnicalEvaluation-Committee-Report");
+						QTConstants.TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 				this.getManagedBean().setScAttachment(attachment);
 
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
@@ -3611,7 +3645,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ScAttachment attachment = scqt.getScFinancialEvaluationReportAttachment();
 
 				this.getManagedBean().setReportDownloadFileName(
-						"NGeP-QT-FinancialEvaluation-Committee-Report");
+						QTConstants.FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE);	// Bug #35485@Syazani 08/02/2024
 				this.getManagedBean().setScAttachment(attachment);
 
 			}
@@ -3697,12 +3731,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws Exception
 	 *             the exception
 	 */
-	public void downloadAllReports(ScQt scqt) throws Exception {
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public void downloadAllReports(ScQt scqt, String typeRegen, ScAttachment scAttachment, boolean downloadable)
+			throws Exception {
+		// Bug #35485@Syazani 08/02/2024 -- End
 		log.debug(this.getClass().getName() + ".downloadAllReports()");
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getNewBriefingPaperReportList();
 		List<ScAttachment> attachments = new ArrayList<ScAttachment>();
-
+		String fileName = getManagedBean().getReportDownloadFileName();	// Bug #35485@Syazani 08/02/2024
+		
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
 			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
 					.equalsIgnoreCase(scQtFinalizationReport
@@ -3714,9 +3752,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 		}
 		
-		attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
-		
-		downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), attachments);
+		if ("evaluation".equalsIgnoreCase(typeRegen)) {
+			ScAttachment attachment1 = regenerateDocumentEvaAttachmentByFileName(scqt,
+					(ScAttachment) scAttachment.cloneEntity(), fileName);
+			attachments.add(attachment1);
+			scAttachment.setFileName(fileName + ".zip");
+			scAttachment.setFileDesc("File uploded");
+			scAttachment.setDocNo(scqt.getQtNo());
+			scAttachment.setDocType(attachment1.getDocType());
+			populateAttachmentDetails(scAttachment);
+			scAttachment.setDocType(QTConstants.DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT);
+			savedZipScAttachmentFiles(scAttachment, attachments);
+			if (downloadable)
+				downloadZipScAttachmentFiles(scAttachment);
+			updateScAttachment(scAttachment);
+		} else {
+			attachments.add(generateDocumentAttachment(scqt, ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER));
+			downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), attachments);
+		}
+		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	// #18685-End.
 	
@@ -4184,6 +4238,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected void checkKertasTaklimatReports(List<ScQtFinalizationReport> finalizationReports, List<String> reportDocDefList, String taskType) {
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
 			int count = 0;
+			// #28834 -start-
+			List<ScQtFinalizationReport> localListReport = new ArrayList<ScQtFinalizationReport>();
+			// #28834 -end-
 			Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
 			
 			while (iterator.hasNext()) {
@@ -4194,7 +4251,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							.equalsIgnoreCase(finalizationReport
 									.getPmDocument().getDocCategoryCode()
 									.getParameterCode())) {
-						++count;
+						// #28834 -start-
+						if (finalizationReport.getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
+							count++;
+							localListReport.add(finalizationReport);
+							continue;
+						}
+						// #28834 -end-
 
 						if (null == getManagedBean().getNewBriefingPaperReportList()) {
 							List<ScQtFinalizationReport> newBriefingPaperReportList = new LinkedList<>();
@@ -4695,4 +4759,87 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//#35473 11104_start
+	public String replaceWithBR(String specDetails) {
+		
+		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+	}//#35473 11104_end
+	
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	private ScAttachment regenerateDocumentEvaAttachmentByFileName(ScQt scqt, ScAttachment reportAttachment,
+			String fileName) throws Exception {
+		StringBuilder fileNameSB;
+		String committeeType = "";
+		if (fileName.equalsIgnoreCase(QTConstants.EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE;
+			reportAttachment.setDocType(QTConstants.DOC_TYPE_SC_EVALUATION_COMMITTEE_REPORT_ATTACHMENT);
+		} else if (fileName.equalsIgnoreCase(QTConstants.OPENING_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE;
+			reportAttachment.setDocType(QTConstants.DOC_TYPE_SC_OPEN_COMMITTEE_REPORT_ATTACHMENT);
+		} else if (fileName.equalsIgnoreCase(QTConstants.TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE;
+			reportAttachment.setDocType(QTConstants.DOC_TYPE_SC_TECHNICAL_EVALUATION_REPORT_ATTACHMENT);
+		} else if (fileName.equalsIgnoreCase(QTConstants.FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE)) {
+			committeeType = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE;
+			reportAttachment.setDocType(QTConstants.DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT);
+		}
+
+		fileNameSB = new StringBuilder(fileName);
+		fileNameSB.append(".pdf");
+		if (reportAttachment != null) {
+			reportAttachment.setFileName(fileNameSB.toString());
+			reportAttachment.setDocNo(scqt.getQtNo());
+			generateEvaluationPdf((ScAttachment) reportAttachment, scqt, committeeType);
+		}
+		return reportAttachment;
+	}
+
+	private boolean updateScAttachment(ScAttachment attachment) throws IOException {
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		return evaluationSO.updateScAttachment(attachment);
+	}
+
+	private <ATTACHMENT extends ScAttachment> void savedZipScAttachmentFiles(ScAttachment attachment,
+			List<ATTACHMENT> scAttachments) throws IOException {
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(getActualFilePath(attachment)));
+
+		try {
+			downloadAllFilesAsZipFile(zos, scAttachments);
+
+		} catch (Exception ex) {
+			// Log the exception
+			log.error("Error while creating ZIP file for attachment: " + attachment.getFileName(), ex);
+			throw new IOException("Error while creating ZIP file", ex);
+		} finally {
+			zos.close();
+		}
+	}
+
+	private void downloadZipScAttachmentFiles(ScAttachment attachment) throws IOException {
+		PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
+
+		try (FileInputStream fileInputStream = new FileInputStream(getActualFilePath(attachment));
+				OutputStream outputStream = response.getOutputStream()) {
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+			outputStream.flush();
+		} catch (FileNotFoundException e) {
+			// Log the exception
+			log.error("Error while creating ZIP file for attachment: " + attachment.getFileName(), e);
+
+			// Rethrow the exception
+			throw e;
+		}
+		// No need to explicitly close the stream; it's done automatically
+	}
+	// Bug #35485@Syazani 08/02/2024 -- End
 }
