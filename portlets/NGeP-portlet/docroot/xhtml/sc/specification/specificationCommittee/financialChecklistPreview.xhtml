@@ -9,6 +9,7 @@
 <p:dialog id="financialChecklistPreviewId" widgetVar="financialChecklistPreview"
 		resizable="false" position="top" styleClass="pop_up_top"
 		header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650" height="650">
+		<p:ajax event="close" update="@([id$=financeProposaltwo])" actionListener="#{specificationBackingBean.closeFinChecklistPreview()}" />
 		
 	<p:panel id="financialChecklistPreviewPanel1Id" header="#{lbl['lbl.sc.spec.financial.checklist.preview.printing']}" toggleable="true">
 		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
@@ -63,6 +64,8 @@
 	
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true"
+			update="@([id$=financeProposaltwo])"
+			actionListener="#{specificationBackingBean.closeFinChecklistPreview()}"
 			onclick="financialChecklistPreview.hide();"
 			styleClass="BtnSpacing" process="@this"  />
 	</div>
