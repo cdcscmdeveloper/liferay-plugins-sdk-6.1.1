@@ -10787,14 +10787,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				specReqDto.setSpecSearchForApp(false);
 
 				TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
-				log.info(scLoiLoaItem!=null && scLoiLoaItem.getScRequestItem() != null && scLoiLoaItem.getScRequestItem().getTplSpecQuestion()!=null && scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster()!=null && scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster().getSpecName()!=null ? "before ==== spec name : "+scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster().getSpecName() : "null");
-				for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
-					log.info(specAnswer!=null && specAnswer.getSpecAnswerId() != null ? "initial ==== ans id : "+specAnswer.getSpecAnswerId() : "null");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getSpecQuestionId() != null ? "initial ==== qst id : "+specAnswer.getTplSpecQuestion().getSpecQuestionId() : "null");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getClItem()  != null ? "initial ==== item : "+specAnswer.getTplSpecQuestion().getClItem() : "null");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getClSpecDetail()  != null ? "initial ==== spec : "+specAnswer.getTplSpecQuestion().getClSpecDetail() : "not spec");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId() != null ? "initial ==== parent qst id : "+specAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId() : "no parent spec");
-				}
 				
 				if (this.getManagedBean().getScQt().isZonal()) {// 29007&31423-start
 					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<TplSpecAnswer>();
@@ -10982,13 +10974,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 					scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);// 29007&31423
 				}// 29007&31423_End
-				for (TplSpecAnswer specAnswer : scLoiLoaItem.getTplSpecAnswerList()) {
-					log.info(specAnswer!=null && specAnswer.getSpecAnswerId() != null ? "after ==== ans id : "+specAnswer.getSpecAnswerId() : "null");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getSpecQuestionId() != null ? "after ==== qst id : "+specAnswer.getTplSpecQuestion().getSpecQuestionId() : "null");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getClItem() != null ? "after ==== item : "+specAnswer.getTplSpecQuestion().getClItem() : "null");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getClSpecDetail()  != null ? "after ==== spec : "+specAnswer.getTplSpecQuestion().getClSpecDetail() : "not spec");
-					log.info(specAnswer!=null && specAnswer.getTplSpecQuestion().getParentSpecQuestion()!=null && specAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId() != null ? "after ==== parent qst id : "+specAnswer.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId() : "no parent spec");
-				}
 
 				if (itemIds.isEmpty()
 						|| !itemIds.contains(scLoiLoaItem.getScRequestItem()
