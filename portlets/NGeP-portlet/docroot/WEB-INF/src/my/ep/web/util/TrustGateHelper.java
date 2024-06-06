@@ -66,35 +66,23 @@ public class TrustGateHelper {
 		return client;
 	}
 
-	public List<String> getChallengeQuestion(String identificationNo, String epNo, String selectedQuest) {
-		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo + "||" + selectedQuest);
+	public List<String> getChallengeQuestion(String identificationNo,
+			String epNo, String selectedQuest) {
+		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
+				+ "||" + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		try {
 			log.info("Before Get Client=======================");
 			KMCClient client = getClient();
-			log.info("After Get Client=======================" + client);
+			log.info("After Get Client======================="+client);
 			KMCRequestBuilder reqbuilder = getReqBuilder();
-			log.info("After Get reqbuilder=======================" + reqbuilder);
-			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(identificationNo, 10, epNo);
-			log.info("After Get GetChallengeQuestionResponse=======================" + res);
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setUserId(pmUser.getUserId());
-			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
-			log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
+			log.info("After Get reqbuilder======================="+reqbuilder);
+			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder
+					.getChallengeQuestions(identificationNo, 10, epNo);
+			log.info("After Get GetChallengeQuestionResponse======================="+res);
 
-			/* #29228 - Start */
-			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
-				/* #29228 - End */
-				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-				} else {
-					log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					// #29630 - start
+			//#30425 - Start
+			//remove all validation to spkibackingBean
 					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
 						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
 					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
@@ -104,10 +92,7 @@ public class TrustGateHelper {
 					} else {
 						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
 					}
-					// #29630 - end
-					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-				}
-			}
+			//#30425 - End
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -124,7 +109,8 @@ public class TrustGateHelper {
 			}
 
 		} catch (Exception ex) {
-			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo + "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
+			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
+					+ "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
 			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
 
