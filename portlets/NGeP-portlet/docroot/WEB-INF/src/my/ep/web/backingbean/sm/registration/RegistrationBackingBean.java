@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1499,6 +1500,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							if(smPersonnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
 									&& smSupplierOwner.getRecordStatusFlg().intValue()== DbValueConst.RECORD_STATUS_ACTIVE){
 								smPersonnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+								smPersonnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+								smPersonnel.setCreatedBy(getUserIdSessionFromLoginId());
 							}
 							//reactivate personnel thru basic maintenance
 							if (smSupplierOwner.isReactivateOwner() && smPersonnel.getRecordStatusFlg().equals(
@@ -3047,7 +3050,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}
 							//#27691 END
 						}
-						
+						//24819
+						getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET SMSUPPLIEROWNER
 						//27691 START - TO HANDLE ISSUE OWNER ID NULL
 						if(ssmResDTO.getSmSupplierOwners() != null && this.getManagedBean().getSmSupp().getSmSupplierOwners() != null) {
@@ -5245,12 +5249,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(owner.getTempCountryId() > 0 || owner.getNationality().getCountryId() > 0) {
 			owner.setNationality(country);
 			//set if malaysia or not
+			//#30064, #29582 & #35300 start
 			if(country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) || 
-					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)){
+					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)||owner.isNationalityPMR()){
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-			}else{
-				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
 			}
+			if (!country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ) {
+				if (owner.getIdentityResidentStatus() != null || owner.isNationalityPMR()) {
+					if (owner.isNationalityPMR()|| owner.getIdentityResidentStatus().equals("M") || owner.getIdentityResidentStatus().equals("P") ) {
+						reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
+					}
+				} else {
+					reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+				}
+			}//#30064, #29582 & #35300 end
 			reqDTO.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 		} else {
 			PmCountry defaultNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
