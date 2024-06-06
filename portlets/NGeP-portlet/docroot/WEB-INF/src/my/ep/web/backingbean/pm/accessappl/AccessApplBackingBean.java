@@ -11,8 +11,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+// #35584 - Start
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+//#35584 - End
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,9 +97,6 @@ public class AccessApplBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	public static final String NAV_TO_CODIFICATION_VIEW = "codificationView";
-
 
 	/** The log. */
 	private static Logger log = Logger
