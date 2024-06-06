@@ -718,7 +718,7 @@ public class AccessApplBackingBean extends
 				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
 				if (resDTO.isSuccessful() && !resDTO.isValid()) {
 		
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
 							.getCreatedDate()) });
