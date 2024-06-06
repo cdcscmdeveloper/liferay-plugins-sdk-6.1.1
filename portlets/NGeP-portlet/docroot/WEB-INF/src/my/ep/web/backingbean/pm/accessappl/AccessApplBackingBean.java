@@ -11,6 +11,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+// #35584 - Start
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+//#35584 - End
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -701,6 +705,32 @@ public class AccessApplBackingBean extends
 				accessApplSO = null;
 			}
 		}
+		
+		// #35584 - Start
+		if (accessAppl.isBrandNew()) {
+			IAccessApplSO accessApplSO = null;
+			try {
+				accessApplSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAccessApplSO.class);
+
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.isValid()) {
+		
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
+							.getCreatedDate()) });
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			} finally {
+				accessApplSO = null;
+			}
+		}
+		// #35584 - End
 		
 		if(!BpmOutcomeConst.BPM_REJECT.equals(outcome)){
 			PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
