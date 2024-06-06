@@ -9728,14 +9728,25 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//#34392 - start
 	private void replaceNewFile(SmApplSupportDoc smDocu) {
 		// TODO Auto-generated method stub
-		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
-			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
-				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-					smDocFile.setFileName(smDocFileNewAdded.getFileName());
-					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
-				}
-			}
+		
+		smDocu.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+
+		List<SmApplDocFile> newDocFile = new ArrayList<>();
+
+		for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+			newDocFile.add(smDocFileNewAdded);
 		}
+
+		smDocu.setSmApplDocFiles(newDocFile);
+		
+//		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
+//			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
+//				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+//					smDocFile.setFileName(smDocFileNewAdded.getFileName());
+//					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
+//				}
+//			}
+//		}
 	}
 	//#34392 - end
 	
