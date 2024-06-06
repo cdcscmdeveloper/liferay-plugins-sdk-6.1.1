@@ -92,12 +92,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		if(getManagedBean().getUserMap().size()==0) {
 			initializeApproverList();
 		}
-		/*HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);	          
-		if(originalServletRequest.getParameter(ContractConst.PARAMETER_ID) != null)
-			getManagedBean().setViewOnly(true);*/
-	}
-	
+	}	
 	
 	/**
 	 * This  method used to initialize approver list
@@ -115,10 +110,11 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	public boolean isApproverSetting() {
 		if(isContractAdmin() && (getManagedBean().getTaskName() == null ||
 				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_RA_HT_NAME) ||
-				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_RA_HT_NAME) ))
+				getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_RA_HT_NAME) )) {
 			return true;
-		else 
+		} else {
 			return false;
+		}
 	}
 	
 	/**
@@ -133,11 +129,11 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 */
 	public String getPortletTitle() {	
 		String docType = getManagedBean().getContractVer().getDocType();
-		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN))
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN)) {
 			return ResourceBundleUtils.getMessage("lbl.ct.contract.request.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		else
+		} else {
 			return ResourceBundleUtils.getMessage("lbl.ct.contract.remove.ct.admin", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		
+		}		
 	}
 	
 	/**
@@ -190,18 +186,18 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			//21387 start -basri 13/4/22
+
 			if(BpmOutcomeConst.BPM_REJECT.equals(outcome)){
 				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
 			}
 			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}//21387 end
-			return null;
-		}else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+			}
+			return null;			
+		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
-		}   else {
+		} else {
 			return saveRequestCtAdmin(outcome);
 		}
 	}
@@ -238,8 +234,6 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			/*this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_REQUEST_CONTRACT_ADMIN);*/
-
 			reqDTO.setCtContract(getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(getManagedBean().getContractVer());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -253,11 +247,11 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			reqDTO.setUpdateAgencyMap(ctBB.getManagedBean().getUpdateAgencyMap());
 			reqDTO.setUpdateItemMap(ctBB.getManagedBean().getUpdateItemMap());
 			
-
 			if(this.getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			resDTO = contractReqAdminSO.saveReqCtAdminDetails(reqDTO);
+			
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
 				String messageId = MessageConst.INFO_700041;
@@ -320,22 +314,19 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 * User role used in BPM to identify the task
 	 */
 	private String getUserROLE() {
-		String userRole = null;		
-		
-		/*contract admin submit*/
-		
-				
-			if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-				userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
-			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-				userRole = RoleCode.BPK_CCA.value();
-			}else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
-				userRole = RoleCode.CT_APPROVER.value();
-			} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
-				userRole = RoleCode.BPK_CC_APPROVER.value();
-			}
-		
-	
+		String userRole = null;
+
+		/* contract admin submit */
+		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+			userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+			userRole = RoleCode.BPK_CCA.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+			userRole = RoleCode.CT_APPROVER.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+			userRole = RoleCode.BPK_CC_APPROVER.value();
+		}
+
 		if (userRole == null) {
 			throw new EpException(MessageConst.ERROR_750040);
 		} else {
@@ -347,7 +338,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 * This  method used to set retrieve value from BPM or contract maintenance
 	 */
 	public void setRequestCtAdminContractVer(ContractReqDTO reqDTO){
-//		ctBB.renewSesionObject(); //#21387 - Fixing Remark Issue
+
 		IRequestContractAdminSO reqCtAdminSO= null;
 		ContractResDTO resDTO = null;
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
@@ -370,8 +361,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			ctBB.getManagedBean().setUpdateItemMap(resDTO.getUpdateItemMap());
 
 			//Retrieve agreement contract version for physical no & signed date
-			retrieveContractVerOfAgreement();
-			
+			retrieveContractVerOfAgreement();			
 			
 			/*initialize value for assignedCtAdmin*/
 			if(getManagedBean().getContractVer().getCtContract().getAssignedCtAdmin() == null){
@@ -379,15 +369,14 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				
 			}
 			if(getManagedBean().getCtContract().getCurrentContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.RA_APPROVED){
-				log.debug("remove request contract admin");
+				//log.debug("remove request contract admin");
 				getManagedBean().setRemoveRequestAdmin(true);
 				getManagedBean().setDocType(reqDTO.getDocType());
 				
 			}else{
 				getManagedBean().setRemoveRequestAdmin(false);
 				getManagedBean().setDocType(reqDTO.getDocType());
-			}
-			
+			}			
 
 			if(getManagedBean().getUserMap().size()==0) {
 				initializeApproverList();
@@ -406,7 +395,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 						boolean isValidApprover = false;
 						while (sourceIt.hasNext()) {
 							PmUser user = sourceIt.next();
-							log.debug("user : "+user+"; approverUser: "+approverUser);
+							//log.debug("user : "+user+"; approverUser: "+approverUser);
 							if (user!=null && approverUser!=null && (user.getUserId().longValue() == approverUser.getUserId().longValue())) {
 								sourceIt.remove();
 								isValidApprover = true;
@@ -429,17 +418,14 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
-			String status = ctBB.getStatusDescById(ctBB.getManagedBean().getContractVer().getStatus().getStatusId());
 			ctBB.getManagedBean().setSupplierCompanyName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			ctBB.getManagedBean().setSupplierBranchName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 			ctBB.getManagedBean().setSupplierRegNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-			ctBB.getManagedBean().setSupplierMofNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
-			
+			ctBB.getManagedBean().setSupplierMofNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());			
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
 			ctBB.getManagedBean().setContractVer(getManagedBean().getContractVer());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-			/*End remark setting*/
-			
+			/*End remark setting*/			
 			
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -508,8 +494,8 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 		String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
-		log.info("RequestCtAdminManagedBean preRenderView contractVerId*******"+contractVerId);
-		log.info("RequestCtAdminManagedBean preRenderView Task Name*******"+getManagedBean().getTaskName());
+		//log.info("RequestCtAdminManagedBean preRenderView contractVerId*******"+contractVerId);
+		//log.info("RequestCtAdminManagedBean preRenderView Task Name*******"+getManagedBean().getTaskName());
 		
 		/*Start if statement to check login user*/
 		if(contractVerId!=null) {
@@ -541,22 +527,20 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
 				return;
 			}/*end if statement*/
-
 			
 			getManagedBean().setViewOnly(true);
 			getManagedBean().setTaskId(taskId);
 			return;
 		}/*End if statement to check  login user */
 
-		// 20997 - end
 		/*Return when not call from tasklist*/
-		if(taskId==null) 
+		if(taskId==null) {
 			return;
+		}
 
 		getManagedBean().setViewOnly(false);
 		CTContractReqadminDataType dataType =  super.getBpmTaskDetails(CTContractReqadminDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		
 
-		//#21387 - basri
 		/* re-Setting Cancel button*/
 		if(this.getManagedBean().getOutComes()!= null){
 		String[] str_array = this.getManagedBean().getOutComes();
@@ -569,8 +553,6 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			this.getManagedBean().setOutComes(str_array);
 			}
 		}
-
-		//#21387 - End
 		
 		/*Retrieve contract id from BPM  */
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
@@ -583,24 +565,17 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 		PortletRequest request = (PortletRequest)context.getExternalContext().getRequest();
 		RenderResponse response = (RenderResponse) request.getAttribute("javax.portlet.response");
 		
-		if(dataType.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN))
+		if(dataType.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_CT_ADMIN)) {
 			response.setTitle(ResourceBundleUtils.getMessage("lbl.ct.contract.request.ct.admin",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, (new FacesScopes())
 							.getUserLocale()));
-		else
+		} else {
 			response.setTitle(ResourceBundleUtils.getMessage("lbl.ct.contract.remove.ct.admin",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, (new FacesScopes())
 							.getUserLocale()));
-		
-		
-		
-		
-		
+		}
 		setRequestCtAdminContractVer(ctReqDTO);
-		/*End*/
 	}
-	
-	
 	
 	/**
 	 * This method used to validate suspend item and agency as per rule
@@ -668,7 +643,6 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				userRole = RoleCode.BPK_CC_APPROVER.value();
 			}
 		}
-		
 	
 		if (userRole == null) {
 			throw new EpException(MessageConst.ERROR_750040);
@@ -676,40 +650,4 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			return userRole;
 		}
 	}
-
-	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
-	@Override
-	public void goToLoaView(ScLoa scLoa) {
-		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
-		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
-		
-		String docType = getManagedBean().getContractVer().getDocType();
-		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
-		
-		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
-			AmendmentBackingBean abb = new AmendmentBackingBean();
-			
-			FacesContext fc = FacesContext.getCurrentInstance();
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
-			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-			ctBB.getManagedBean().setAmendFromTaskList(true);
-
-			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
-			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
-			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
-			ctBB.getManagedBean().setTaskNameFromTaskList(null);
-
-			if(ctBB.getManagedBean().isViewContractFromAgreement()){
-				ctBB.getManagedBean().setViewSCLFromContract(true);
-			}
-			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
-		} else {
-			super.goToLoaView(scLoa);
-		}
-	}
-	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
 }

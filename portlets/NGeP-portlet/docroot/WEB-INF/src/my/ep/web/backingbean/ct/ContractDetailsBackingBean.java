@@ -84,6 +84,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -2433,31 +2434,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL
 	 */
 	
-	/*#21387-basri start*/
-	 public String goToRequestCtAdmin(Long contractId,String doctype){
-		 
-		 	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractId(contractId);
-			CtContractVer contractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
-			
-			reqDTO.setContractVerId(contractVer.getContractVerId());
-			reqDTO.setDocType(doctype);
-			reqDTO.setUpdateAction(true);
-			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
-			ctBB.getManagedBean().setNotificationSetting(false);
-			RequestCtAdminBackingBean	rcaBB = new RequestCtAdminBackingBean();
-			rcaBB.getManagedBean().setViewOnly(false);
-			rcaBB.getManagedBean().setExternalPageUrl(null);
-			rcaBB.setRequestCtAdminContractVer(reqDTO);
-			
-			/*if(rcaBB.getManagedBean().getContractVer())*/
-			
-			return REQUEST_CONTRACT_ADMIN;
-		
-		
-	 }
-	 /*#21387-basri end*/
+	/* #21387-basri start */
+	public String goToRequestCtAdmin(Long contractId, String doctype) {
+
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		reqDTO.setContractId(contractId);
+		CtContractVer contractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
+
+		reqDTO.setContractVerId(contractVer.getContractVerId());
+		reqDTO.setDocType(doctype);
+		reqDTO.setUpdateAction(true);
+		ctBB.renewSesionObject();// Bug 34142, 15851 - shaqimi start 06/12/2022
+		ctBB.getManagedBean().setNotificationSetting(false);
+		RequestCtAdminBackingBean rcaBB = new RequestCtAdminBackingBean();
+		rcaBB.getManagedBean().setViewOnly(false);
+		rcaBB.getManagedBean().setExternalPageUrl(null);
+		rcaBB.setRequestCtAdminContractVer(reqDTO);
+
+		return REQUEST_CONTRACT_ADMIN;
+	}
+
+	/* #21387-basri end */
 	
 	/**
 	 * The method used to navigate to request factoring screen
