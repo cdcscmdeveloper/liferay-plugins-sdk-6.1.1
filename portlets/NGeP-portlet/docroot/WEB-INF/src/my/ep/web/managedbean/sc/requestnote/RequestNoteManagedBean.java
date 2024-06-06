@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -376,6 +377,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     //29557 - Start
     private boolean purchaseInquiryContinuity = Boolean.FALSE;
     //29557 - End
+    
+    //#28895#35492 - Start
+    private PurchaseRequestResDTO purchaseRequestResDTO;
+    //#28895#35492 - End
     
     /**
      * Instantiates a new request note managed bean.
@@ -2178,4 +2183,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.purchaseInquiryContinuity = purchaseInquiryContinuity;
 	}
 	// 29557 - End
+	
+	// #28895#35492 - Start
+	public PurchaseRequestResDTO getPurchaseRequestResDTO() {
+		return purchaseRequestResDTO;
+	}
+
+	public void setPurchaseRequestResDTO(PurchaseRequestResDTO purchaseRequestResDTO) {
+		this.purchaseRequestResDTO = purchaseRequestResDTO;
+	}
+	// #28895#35492 - End
 }
