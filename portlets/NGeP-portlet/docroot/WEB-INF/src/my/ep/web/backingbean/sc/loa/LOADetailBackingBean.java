@@ -10205,7 +10205,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 
 					this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
-			
+					for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
+						if(tplSpecAnswer.getNewSupplierOffer()!=null && tplSpecAnswer.getNewSupplierOffer()!=""){
+							tplSpecAnswer.setRenderNewSpec(true);
+						}
+					}
 					successMessage(MessageConst.INFO_700004,
 							getMessageCommon("lbl.sc.loiloa.supplier.specification.save"), "", Boolean.FALSE);
 				}
