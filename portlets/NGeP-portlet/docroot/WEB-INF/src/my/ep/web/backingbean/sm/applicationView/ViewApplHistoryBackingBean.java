@@ -598,13 +598,6 @@ public class ViewApplHistoryBackingBean extends
 		PmParameterDesc desc = SmCommonUtil.retrieveParameterDescByTypeAndCodeAndLang(SupplierManagementConst.SPECIAL_SERVICE_CODE,supplier.getServiceType(),new FacesScopes().getUserLocale().getLanguage(),true);
 		getManagedBean().setServiceCodeName(desc.getCodeName());
 		// 30009 end
-		//#35336 START
-		if (this.getManagedBean().getSmAppl().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) 
-				&& !SmApplicationUtil.checkRejectedApplExpired(this.getManagedBean().getSmAppl())) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",MessageUtils.getMessage(MessageConst.ERROR_721099,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-		}
-		//#35336 END
 		/*
 		 * retrieve status from SM_APPL, not workflow status
 		 String statusDesc = null; 
@@ -1892,7 +1885,12 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
-		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			//35336
+			if(!SmApplicationUtil.checkRejectedApplExpired(latestRejectedAppl)){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",MessageUtils.getMessage(MessageConst.ERROR_721099,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+			}
 		}
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
