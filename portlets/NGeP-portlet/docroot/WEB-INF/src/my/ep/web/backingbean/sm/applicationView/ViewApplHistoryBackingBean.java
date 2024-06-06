@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
@@ -85,6 +86,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
@@ -1883,7 +1885,12 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
-		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			//35336
+			if(!SmApplicationUtil.checkRejectedApplExpired(latestRejectedAppl)){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",MessageUtils.getMessage(MessageConst.ERROR_721099,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+			}
 		}
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
@@ -2037,22 +2044,5 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	// #32628 - end
-	//35336 START
-	/**
-	 * Check whether the rejected application was expired
-	 * compare to no. of days allowed to resubmit after rejected
-	 * @param SmAppl appl
-	 * @return Boolean
-	 */
-	public Boolean checkRejectedApplExpired(SmAppl appl){
-		Boolean isExpired = false;
-		if(appl.getApplId() != null) {
-			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
-				isExpired = true;
-			}
-		}		
-		return isExpired;
-	}
-	//35336 END
 
 }
