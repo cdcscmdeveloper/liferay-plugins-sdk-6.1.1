@@ -1935,7 +1935,11 @@ public class ViewApplHistoryBackingBean extends
 			button = false;
 		}
 		// #32628 - end
-		
+		//#35336 START
+		if (smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+			button = false;
+		}
+		//#35336 END
 		return button;
 		//32627 - END
 	}
