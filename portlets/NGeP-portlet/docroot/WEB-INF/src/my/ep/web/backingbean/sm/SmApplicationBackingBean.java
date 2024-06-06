@@ -9717,7 +9717,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#34392 - start
 		for (SmApplSupportDoc smDocu : getManagedBean()
 				.getSmAppl().getSmApplSupportDocs()) {
-			replaceNewFile(smDocu);
+			if(smDocu.getVerifiedFlg().equals(0)){
+				replaceNewFile(smDocu);	
+			}
 		}
 		//#34392 - end
 		
