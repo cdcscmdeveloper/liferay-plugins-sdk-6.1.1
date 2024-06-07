@@ -211,6 +211,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
+import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
@@ -1114,7 +1115,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 				
 				// Improvement #35657@Syazani 14/05/2024 -- Start
-				if (!mimeType.equalsIgnoreCase(CommonConstants.FILE_CONTENT_TYPE_PDF)) {
+				boolean mimeTypePDF = mimeType.equalsIgnoreCase(MimeType.pdf.contentType)
+						|| mimeType.equalsIgnoreCase(MimeType.bin.contentType);
+				if (!mimeTypePDF) {
 					log.info("Report server return '" + mimeType + "' Type");
 					log.info(bos.toString());
 					throw new EpException(MessageConst.ERROR_760530);
