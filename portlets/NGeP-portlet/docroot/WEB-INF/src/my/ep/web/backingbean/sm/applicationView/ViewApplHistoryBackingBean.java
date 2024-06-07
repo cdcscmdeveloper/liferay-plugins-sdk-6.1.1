@@ -1887,7 +1887,8 @@ public class ViewApplHistoryBackingBean extends
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
 			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
 			//35336
-			if(!SmApplicationUtil.checkRejectedApplExpired(latestRejectedAppl)){
+			if(!SmApplicationUtil.checkRejectedApplExpired(smAppl) 
+					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",MessageUtils.getMessage(MessageConst.ERROR_721099,
 						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 			}
