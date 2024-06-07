@@ -33,7 +33,9 @@ public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBa
 	 *            prepare audit trail data
 	 */
 	@Override
-	public List<AuSMDetailDTO> prepareAuditData(BaseManagedBean managedBean) {
+	public AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+
+		AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
 
 		RegistrationManagedBean mBean = (RegistrationManagedBean) managedBean;
 		List<AuSMDetailDTO> auDetails = new ArrayList<>();
@@ -108,6 +110,27 @@ public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBa
 				auDetails.add(auDetailBankNo);
 			}
 		}
-		return auDetails;
+
+		if (mBean.getSmSupp().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
+		} else if (mBean.getSmSupp().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+				|| mBean.getSmSupp().getSmAppl().getSupplierType()
+						.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
+		} else if (mBean.getSmSupp().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
+		}
+		auObj.setRoleCode(roleCode);
+		auObj.setOrgProfileId(org.getOrgProfileId());
+		auObj.setOrgName(org.getOrgName());
+		auObj.setDocId(mBean.getSmSupp().getSupplierId());
+		auObj.setDocNo(mBean.getSmSupp().getEpNo());
+		auObj.setAuditDetails(auDetails);
+		auObj.setApplId(mBean.getSmSupp().getSmAppl().getApplId());
+		auObj.setApplNo(mBean.getSmSupp().getSmAppl().getApplNo());
+
+		return auObj;
 	}
 }

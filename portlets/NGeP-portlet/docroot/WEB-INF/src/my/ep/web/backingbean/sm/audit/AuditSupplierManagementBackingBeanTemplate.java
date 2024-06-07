@@ -44,35 +44,10 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	 *            Save audit data
 	 */
 	public final void saveAuditData(BaseManagedBean managebean, Long userId) {
-		List<AuSMDetailDTO> auDetails = prepareAuditData(managebean);
-		if (auDetails.size() > 0) {
-			String roleCode = getRoleCode();
-			PmOrgProfile org = retriveUserOrg(userId);
-
-			AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
-			RegistrationManagedBean mBean = (RegistrationManagedBean) managebean;
-
-			if (mBean.getSmSupp().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
-				auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
-			} else if (mBean.getSmSupp().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
-					|| mBean.getSmSupp().getSmAppl().getSupplierType()
-							.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
-				auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
-			} else if (mBean.getSmSupp().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
-				auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
-			}
-			auObj.setRoleCode(roleCode);
-			auObj.setOrgProfileId(org.getOrgProfileId());
-			auObj.setOrgName(org.getOrgName());
-			auObj.setDocId(mBean.getSmSupp().getSupplierId());
-			auObj.setDocNo(mBean.getSmSupp().getEpNo());
-			auObj.setAuditDetails(auDetails);
-			auObj.setApplId(mBean.getSmSupp().getSmAppl().getApplId());
-			auObj.setApplNo(mBean.getSmSupp().getSmAppl().getApplNo());
-
+		String roleCode = getRoleCode();
+		PmOrgProfile org = retriveUserOrg(userId);
+		AuSupplierManagementDTO auObj = prepareAuditData(managebean, roleCode, org);
+		if (auObj.getAuditDetails().size() > 0) {
 			auditSMSO(auObj);
 		}
 	}
@@ -109,7 +84,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		return org;
 	}
 
-	public abstract List<AuSMDetailDTO> prepareAuditData(BaseManagedBean managebean);
+	public abstract AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org);
 
 	private void auditSMSO(AuSupplierManagementDTO auObj) {
 		try {
