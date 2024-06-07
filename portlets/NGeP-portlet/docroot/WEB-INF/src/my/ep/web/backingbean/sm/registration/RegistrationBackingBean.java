@@ -5233,9 +5233,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					country.getCountryCode().equalsIgnoreCase(ParameterConst.COUNTRY_UNKNOWN_CODE)||owner.isNationalityPMR()){
 				reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
 			}
-			if (!country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
-				if (owner.getIdentityResidentStatus() != null) {
-					if (owner.getIdentityResidentStatus().equals("M") || owner.getIdentityResidentStatus().equals("P")) {
+			if (!country.getCountryCode().equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ) {
+				if (owner.getIdentityResidentStatus() != null || owner.isNationalityPMR()) {
+					if (owner.isNationalityPMR()|| owner.getIdentityResidentStatus().equals("M") || owner.getIdentityResidentStatus().equals("P") ) {
 						reqDTO.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
 					}
 				} else {
