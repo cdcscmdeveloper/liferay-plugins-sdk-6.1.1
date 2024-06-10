@@ -418,6 +418,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
+			ctBB.getStatusDescById(ctBB.getManagedBean().getContractVer().getStatus().getStatusId());
 			ctBB.getManagedBean().setSupplierCompanyName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			ctBB.getManagedBean().setSupplierBranchName(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 			ctBB.getManagedBean().setSupplierRegNo(ctBB.getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
