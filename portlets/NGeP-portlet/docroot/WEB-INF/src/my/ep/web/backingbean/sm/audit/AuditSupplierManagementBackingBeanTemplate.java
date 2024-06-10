@@ -5,23 +5,17 @@ import java.util.List;
 
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.sm.audit.AuSMDetailDTO;
 import my.ep.dto.sm.audit.AuSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.log4j.Logger;
 
 /**
  * @author Firdaus Omar
@@ -47,7 +41,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		String roleCode = getRoleCode();
 		PmOrgProfile org = retriveUserOrg(userId);
 		AuSupplierManagementDTO auObj = prepareAuditData(managebean, roleCode, org);
-		if (auObj.getAuditDetails().size() > 0) {
+		if (!auObj.getAuditDetails().isEmpty()) {
 			auditSMSO(auObj);
 		}
 	}
@@ -80,11 +74,31 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	private PmOrgProfile retriveUserOrg(Long userOrgId) {
 		new PmOrgProfile();
 		List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
-		PmOrgProfile org = orgList.get(0).getPmOrgProfile();
-		return org;
+		return orgList.get(0).getPmOrgProfile();
 	}
 
-	public abstract AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org);
+	/**
+	 * @param managedBean
+	 * @param org
+	 * @param user
+	 * @param roleCode
+	 * @return AuSupplierManagementDTO prepare audit trail data
+	 */
+	public abstract AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode,
+			PmOrgProfile org);
+
+	protected AuSMDetailDTO createAuditData(String actionType, Long fieldLabel, String newValue, String oldValue,
+			Long newValueId, Long oldValueId, Long groupSection) {
+		AuSMDetailDTO auDetail = new AuSMDetailDTO();
+		auDetail.setActionType(actionType);
+		auDetail.setSmFieldLabelId(fieldLabel);
+		auDetail.setNewValue(newValue);
+		auDetail.setOldValue(oldValue);
+		auDetail.setOldValueId(newValueId);
+		auDetail.setNewValueId(oldValueId);
+		auDetail.setGroupSectionId(groupSection);
+		return auDetail;
+	}
 
 	private void auditSMSO(AuSupplierManagementDTO auObj) {
 		try {
