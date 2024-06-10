@@ -177,8 +177,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-
+		//String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ "/"; //#26130 (10/06/2024)
+		
 		return url;
 	}
 	//#26130 (06/06/2024) - end
