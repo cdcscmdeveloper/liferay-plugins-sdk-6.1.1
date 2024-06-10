@@ -4241,7 +4241,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return Organization Code
 	 */
 	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+		IOrgProfileSO profileSO =  BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
@@ -4252,10 +4252,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				reqDTO).getPmOrgProfile();
 		if (orgProfile != null) {
 			return orgProfile.getOrgCode();
-		} else {
-			log.info("PTJ not found : " + orgProfileId);
-			return null;
 		}
+			
+		return null;
 	}
 	
 	//#12487 end

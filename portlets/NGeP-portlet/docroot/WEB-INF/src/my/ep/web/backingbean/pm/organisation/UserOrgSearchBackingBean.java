@@ -20,6 +20,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.exception.EpException;
@@ -28,9 +29,11 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.pm.organisation.UserOrgSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -40,7 +43,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 /**
- * 20230111@Haziq - #12487
+ * 20230111@Haziq - #12487&29693
  * @author muhammadasyrafhaziq
  * This class to retrieve user organization details information
  */
@@ -66,7 +69,7 @@ public class UserOrgSearchBackingBean extends
 	
 	public SelectItem[] getMinistryDropdownRpt() {
 		SelectItem[] ministryItems = PmCommonUtil.getMinistryDropdown();
-		this.getManagedBean().setPegaiPengawaProfileId(null);
+		this.getManagedBean().setPegawaiPengawalProfileId(null);
 		this.getManagedBean().setJabatanProfileId(null);
 		return ministryItems;
 	}	
@@ -79,7 +82,7 @@ public class UserOrgSearchBackingBean extends
 	}	
 	public SelectItem[] getJabatanDropdownRpt() {
 		return PmCommonUtil.getJabatanDropdown(getManagedBean()
-				.getPegaiPengawaProfileId());
+				.getPegawaiPengawalProfileId());
 	}
 	
 	/**
@@ -132,10 +135,10 @@ public class UserOrgSearchBackingBean extends
 		} else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
 			getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 					pmOrgProfile.getOrgProfileId()).getOrgProfileId());
-			getManagedBean().setPegaiPengawaProfileId(retrievePegawaiPegawalOrgProfile(pmOrgProfile.getOrgProfileId()).getOrgProfileId());
+			getManagedBean().setPegawaiPengawalProfileId(retrievePegawaiPegawalOrgProfile(pmOrgProfile.getOrgProfileId()).getOrgProfileId());
 			getManagedBean().setJabatanProfileId(pmOrgProfile.getOrgProfileId());
 			getManagedBean().setDisabledMinistry(true);
-			getManagedBean().setDisabledPegaiPengawa(true);
+			getManagedBean().setDisabledPegawaiPengawal(true);
 			getManagedBean().setDisabledJabatan(true);
 		} 
 		
@@ -164,8 +167,8 @@ public class UserOrgSearchBackingBean extends
 				if(getManagedBean().getMinistryProfileId() != null){
 					reqDTO.setUserMinistryId(getManagedBean().getMinistryProfileId());
 				}
-				if(getManagedBean().getPegaiPengawaProfileId() != null){
-					reqDTO.setUserPegawaiId(getManagedBean().getPegaiPengawaProfileId());
+				if(getManagedBean().getPegawaiPengawalProfileId() != null){
+					reqDTO.setUserPegawaiId(getManagedBean().getPegawaiPengawalProfileId());
 				}
 				if(getManagedBean().getJabatanProfileId() != null){
 					reqDTO.setUserJabatanId(getManagedBean().getJabatanProfileId());
@@ -187,7 +190,8 @@ public class UserOrgSearchBackingBean extends
 					return resDTO.getUserOrgResultBean();
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage(),e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+						null, "UserOrgSearchBackingBean.pageChangeListener",null, e);
 				 
 			}
 			return null;
@@ -297,21 +301,19 @@ public class UserOrgSearchBackingBean extends
 	 * reset 
 	 */
 	public void resetUserOrg(){
-		Long ministryId = this.getManagedBean().getMinistryProfileId(); //#26475
+		Long ministryId = this.getManagedBean().getMinistryProfileId();
 		
 		this.renewSesionObject();
 		
 		getUserOrgDataModel().resetData();
 		
-		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
+		String portletName = (String) this.getFacesScopes().getRequest().getAttribute(QTConstants.PORTLET_ID);
 
-		log.info("::: resetOrgProfiles() 001 portletName: "+ portletName);
 		
-		if (StringUtils.isNotBlank(portletName) && (portletName.toLowerCase().contains("loa") || 
-				 portletName.toLowerCase().contains("createmanualsourcing") || 
-				 portletName.toLowerCase().contains("reviewmanualsourcing"))) {
+		if (StringUtils.isNotBlank(portletName) && (portletName.toLowerCase().contains(CommonConstants.LOA) || 
+				 portletName.toLowerCase().contains(QTConstants.PORTLET_NAME_CREATE) || 
+				 portletName.toLowerCase().contains(QTConstants.PORTLET_NAME_REVIEW))) {
 			 
-			log.info("::: resetOrgProfiles() portletName: "+ portletName);
 						
 			this.getManagedBean().setMinistryProfileId(ministryId);
 		
@@ -353,7 +355,7 @@ public class UserOrgSearchBackingBean extends
 					new Object[]{getManagedBean().getSelectedUser()});
 			}
 			
-			RequestContext.getCurrentInstance().execute("userPtjPopup.hide();");
+			RequestContext.getCurrentInstance().execute(QTConstants.USER_PTJ_POPUP_HIDE);
 		}
 	}
 	

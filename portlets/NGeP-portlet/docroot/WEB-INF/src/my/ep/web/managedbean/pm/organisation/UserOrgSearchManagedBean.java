@@ -1,6 +1,3 @@
-/*
- * Copyright © 2016 Archisoft Consulting Sdn Bhd. All rights reserved.
- */
 package my.ep.web.managedbean.pm.organisation;
 
 import javax.faces.bean.ManagedBean;
@@ -12,12 +9,10 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
+ * 20230111@Haziq - #12487&29693
  * Managed Bean for User Organization Search
  * 
  * 
- */
-//20230111@Haziq - #12487
-/**
  * @author muhammadasyrafhaziq
  *
  */
@@ -26,7 +21,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class UserOrgSearchManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private Long ministryProfileId;
-	private Long pegaiPengawaProfileId;
+	private Long pegawaiPengawalProfileId;
 	private Long jabatanProfileId;
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
@@ -37,7 +32,7 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	private PmUserOrg currentActiveUserOrg;
 	private boolean disabledJabatan;
 	private boolean disabledMinistry;
-	private boolean disabledPegaiPengawa;
+	private boolean disabledPegawaiPengawal;
 	
 	private String userCodeName;
 	private String userCodeNameSearchValues;
@@ -134,17 +129,17 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 		this.disabledJabatan = disabledJabatan;
 	}
 	/**
-	 * @return the pegaiPengawaProfileId
+	 * @return the pegawaiPengawalProfileId
 	 */
-	public Long getPegaiPengawaProfileId() {
-		return pegaiPengawaProfileId;
+	public Long getPegawaiPengawalProfileId() {
+		return pegawaiPengawalProfileId;
 	}
 
 	/**
-	 * @param pegaiPengawaProfileId the pegaiPengawaProfileId to set
+	 * @param pegawaiPengawalProfileId the pegawaiPengawalProfileId to set
 	 */
-	public void setPegaiPengawaProfileId(Long pegaiPengawaProfileId) {
-		this.pegaiPengawaProfileId = pegaiPengawaProfileId;
+	public void setPegawaiPengawalProfileId(Long pegawaiPengawalProfileId) {
+		this.pegawaiPengawalProfileId = pegawaiPengawalProfileId;
 	}
 
 	/**
@@ -163,17 +158,17 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the disabledPegaiPengawa
+	 * @return the disabledPegawaiPengawal
 	 */
-	public boolean isDisabledPegaiPengawa() {
-		return disabledPegaiPengawa;
+	public boolean isDisabledPegawaiPengawal() {
+		return disabledPegawaiPengawal;
 	}
 
 	/**
-	 * @param disabledPegaiPengawa the disabledPegaiPengawa to set
+	 * @param disabledPegawaiPengawal the disabledPegawaiPengawal to set
 	 */
-	public void setDisabledPegaiPengawa(boolean disabledPegaiPengawa) {
-		this.disabledPegaiPengawa = disabledPegaiPengawa;
+	public void setDisabledPegawaiPengawal(boolean disabledPegawaiPengawal) {
+		this.disabledPegawaiPengawal = disabledPegawaiPengawal;
 	}
 
 	/**

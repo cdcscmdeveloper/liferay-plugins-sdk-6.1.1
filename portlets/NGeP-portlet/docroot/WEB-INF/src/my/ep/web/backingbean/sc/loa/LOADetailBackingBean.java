@@ -3927,11 +3927,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
-				//#29693 - START
-//				if(!scLoa.getScLoiLoa().getLoiRequired() == true){
-//					sendNotification(); 
-//				}								
-				//#29693 - END
 				if (resDTO.isSuccessful()) {
 					scLoa = resDTO.getScLoa();
 					RenameTempLoaNoRepoDirByLoaNo(scLoa);
@@ -12041,64 +12036,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//29006 end
 	
 
-	// #29693 - start
-	/*public void sendNotification() {
-		FacesScopes facesScopes = new FacesScopes();
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();			
-		reqDTO.setScLoa(getManagedBean().getScLoa());
-		reqDTO.setUserLocale(facesScopes.getUserLocale());
-		ScLoa scLoa = getManagedBean().getScLoa();
-		
-		long applId = 12345678910L;
-		if(scLoa.getScLoiLoa()!=null){
-			if(scLoa.getScLoiLoa().getSmSupplier()!=null){
-				if(scLoa.getScLoiLoa().getSmSupplier().getSmAppl()!=null){
-					if(scLoa.getScLoiLoa().getSmSupplier().getSmAppl().getApplId()!=null)
-						applId = scLoa.getScLoiLoa().getSmSupplier().getSmAppl().getApplId();
-				}
-			}
-		}
-		
-		long assignUser = 12345678910L;
-		if (scLoa.getScLoiLoa() != null) {
-			if (scLoa.getScLoiLoa().getSmSupplier() != null) {
-				//if(scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getPmUser()!=null){
-					//assignUser = scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getPmUser().getUserId();
-					assignUser = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-				//}
-			}
-		}
-		
-		String userEmail = "";
-		if (scLoa.getScLoiLoa() != null) {
-			if (scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel() != null) 			
-				userEmail = scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getEmail();	
-		}
-	
-		//ScRequestNote scRequestNote = new ScRequestNote();
-		String ptjName = "";
-		String ministryName = "";
-		PmOrgProfile pmOrgProfile = new PmOrgProfile();
-		if (reqDTO != null) {
-			//scRequestNote = requestNoteReqDTO.getRequestNote();
-			Long profileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
-			Date createdDate = scLoa.getScLoiLoa().getCreatedDate();
-			ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
-			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-			ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-			log.info(ptjName);
-			log.info(ministryName);
-			// return;
-		}
-		
-		getQtAwardSO().sendDashboardNotification(reqDTO, assignUser, ptjName, ministryName);
-	
-		// List<String> loginIdAssignees =
-		// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
-		getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, userEmail, ptjName, ministryName);
-	}*/
-	
+	// #12487 & 29693 - start
+
 	/**
 	 * Validate response period
 	 * @param days
@@ -12178,6 +12117,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		return result;
 	}
-	// #29693 - end
+	// #12487 & 29693 - end
 }
 
