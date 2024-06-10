@@ -641,6 +641,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				// PmParameter()
 				// : pmUser.getOrgTypeCode());
 				// // for the initial load
+				
+				// #35562- Start
+				if (!pmUser.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
+				// #35562- End
+				
 				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
 				pmUserOrg.setPmUser(pmUser);
 				pmUser.getPmUserOrgs().add(pmUserOrg);
@@ -4191,8 +4198,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode()));
 
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
-					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+			//#35562 - Start
+			/*searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
+					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));*/
+			//#35562 - End
 
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserSearchBean(searchBean);
@@ -4207,6 +4216,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					PmUser user = resDTO.getUserResultBean().getResultList().get(0);
 					// TODO set current user info
 					// check for any active org
+					
+					//#35562 - Start (Checking identification no same with login id)
+					if (getManagedBean().getSelectedUser().getIdentificationNo().compareTo(user.getLoginId()) == 0) {
+					
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
@@ -4254,7 +4267,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							// assign new pmUserOrg object to the current user
 						}
 					}
+				} else {// do validate by isSupplier
 
+					IPersonnelSO personnelSO;
+					personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
+
+					PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+					reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
+					PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
+					if (resDTO1.isSupplierPersonnel()) {
+						throw new EpException(MessageConst.ERROR_770214,
+								new String[] { getManagedBean().getSelectedUser().getIdentificationNo() });
+					}
+
+					// new user org / user record
+					getManagedBean().setPmUserExist(false);
+					if (ParameterConst.IDENTIFICATION_TYPES_IC
+							.equals(getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode())) {
+						getManagedBean().getSelectedUser()
+								.setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+					} else {
+						PmCountry country = PmCommonUtil.retrievePmCountryById(
+								getManagedBean().getSelectedUser().getPmCountry().getCountryId());
+						StringBuilder sb = new StringBuilder();
+						sb.append(getManagedBean().getSelectedUser().getIdentificationNo().trim());
+						sb.append(country.getCountryCode());
+						getManagedBean().getSelectedUser().setLoginId(sb.toString());
+					}
+				}
+				//#35562 - End
 				} else {// do validate by isSupplier
 
 					IPersonnelSO personnelSO;

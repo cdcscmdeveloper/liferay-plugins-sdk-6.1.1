@@ -70,6 +70,7 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		}
 	}
 	// 20230111@Haziq - #12487&29693 - start
+
 	/**
 	 * to set detail selected PTJ
 	 * 

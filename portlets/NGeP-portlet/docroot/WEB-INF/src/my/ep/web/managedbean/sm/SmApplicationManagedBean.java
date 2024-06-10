@@ -625,12 +625,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//13362
 	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
-	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
 	private boolean emptyMandatoryDocHistory;
@@ -668,7 +662,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#34392 - start
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	private List<SmApplSupportDoc> missinDocsMandatory;
+	private List<SmApplSupportDoc> missinDocsNonMandatory;
 	//#34393 - end
+	//#31043 START
+	private boolean allowedToSiteVisit;
+	//#31043 END
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4472,32 +4471,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
 	}
 	//30974 - end
-
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;
@@ -4665,4 +4638,29 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
 		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
 	}
+
+	public List<SmApplSupportDoc> getMissinDocsNonMandatory() {
+		return missinDocsNonMandatory;
+	}
+
+	public void setMissinDocsNonMandatory(List<SmApplSupportDoc> missinDocsNonMandatory) {
+		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsMandatory() {
+		return missinDocsMandatory;
+	}
+
+	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
+		this.missinDocsMandatory = missinDocsMandatory;
+	}
+	//#31043 START
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
 }

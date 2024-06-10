@@ -398,7 +398,6 @@ public class UserOrgSearchBackingBean extends
 		return items;
 	}
 	
-	
 	/**
 	 * get faces scopes
 	 * 

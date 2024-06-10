@@ -5154,15 +5154,15 @@ public class SmApplicationUtil {
 			}
 			//#34397, #34398 - start
 			checkMOFExpiryDate(smSupplier, applicationType, false);
-			
-			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI) && smSupplier.isBumi()) {
-				throw new EpException(MessageConst.ERROR_722504);
-			
 			//#32304 - start
-			} else if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-					&& SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
+			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+				if(smSupplier.isBumi()){
+					throw new EpException(MessageConst.ERROR_722504);
+				}
+				if(SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
 							smSupplier.getSupplierId()).getSmAppl() != null){
-				throw new EpException(MessageConst.ERROR_722697);
+					throw new EpException(MessageConst.ERROR_722697);
+				}
 			}
 			//#32304 - end, #34397, #34398 - end			
 
@@ -7192,7 +7192,7 @@ public class SmApplicationUtil {
 		if (valid) {
 			valid = false;
 			//#31043 start
-			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
 			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryLicenseDocs())) {
 				for (SmLicenseInfoVO docVO : managedBean.getMandatoryLicenseDocs()) {
 					licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
@@ -7878,15 +7878,13 @@ public class SmApplicationUtil {
 				.getSmSupplierCategories()) {
 			//26671 - Site Visit Grouping Enhancement -28775 - start
 			if (cat.isSpecialCategory()
-					&& cat.getPmCategoryL3() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode()
 							.getParameterId() != null
-					&& cat.getRecordStatusFlg() != null
-					&& (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0
-					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+					//#32008 - after approval bug
+					&& (cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+							|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+							|| isActiveCategoryAfterApproval(cat, managedBean.getSmAppl().getApplId()))
 					&& !isCategoryRejected(cat)) {
 				//26671 - Site Visit Grouping Enhancement -28775 - end
 				String catType = "";
@@ -10797,6 +10795,7 @@ public class SmApplicationUtil {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						//26671 - Site Visit Grouping Enhancement -28775
 						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+						|| isActiveCategoryAfterApproval(cat, appl.getApplId()) //#32008 - after approval bug
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -11811,11 +11810,10 @@ public class SmApplicationUtil {
 				&& !EntityHelper.isCollectionEmpty(smAppl
 						.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if ((cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-						.getRecordStatusFlg()
-						.compareTo(
-								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+				//#32008 - after approval bug
+				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
 						&& (cat.getPmCategoryL3() != null
 								&& !StringUtils.isBlank(cat.getPmCategoryL3()
 										.getFacilityType()) && cat
@@ -11871,11 +11869,10 @@ public class SmApplicationUtil {
 			SmMachineDtl machDtlTmp = null;
 			boolean isNew = false;
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if ((cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-						.getRecordStatusFlg()
-						.compareTo(
-								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+				//#32008 - after approval bug
+				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -14225,6 +14222,13 @@ public class SmApplicationUtil {
 				valid = false;
 			}
 		}
+		//#32304 - start
+		Long statusId = rejAppl.getPmStatus().getStatusId();
+		if(statusId.equals(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE)
+				|| statusId.equals(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_OTHER_APPL)){
+			valid = false;
+		}
+		//#32304 - end
 		return valid;
 	}
 
@@ -15553,4 +15557,39 @@ public class SmApplicationUtil {
 		}
 	}
 	// #34303 - end
+	//#32008 - after approval bug
+	private static boolean isActiveCategoryAfterApproval(SmSupplierCategory cat, Long applId){
+		return cat.getRecordStatusFlg().intValue() == SupplierManagementConst.APPROVED_RECORD_STATUS
+				&& applId.equals(cat.getApplRefId());
+	}
+	//#31043 START
+	/**
+	 * Check if the Approver or PO is allowed allowed to recommend to site visit application.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
+	public static void checkAllowedToRecommendSiteVisit(SmApplicationManagedBean managedBean) {
+		boolean allowSiteVisit = false;
+		List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
+		if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryLicenseDocs())) {
+			for (SmLicenseInfoVO docVO : managedBean.getMandatoryLicenseDocs()) {
+				licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+			}
+		}
+		if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
+				.getMandatoryDocs(), managedBean.getSmAppl()
+				.getSupportingDocMode(), managedBean.isApproverUser())
+				&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
+						managedBean.getNonMandatoryDocs(), managedBean
+								.getSmAppl().getSupportingDocMode(),
+						managedBean.isApproverUser()) && SmApplicationUtil.isAllSuppDocAlreadyVerified(
+								licenseMandatoryDocs, managedBean
+								.getSmAppl().getSupportingDocMode(),
+						managedBean.isApproverUser())) {
+			allowSiteVisit = true;
+		}
+		managedBean.setAllowedToSiteVisit(allowSiteVisit);
+	}
+	//#31043 END
 }

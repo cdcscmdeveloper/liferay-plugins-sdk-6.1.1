@@ -1714,10 +1714,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
 			}
-			//#25956 - Start
-			if (!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-					|| !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				
+			
+			//#25956 - Start			
+			if(!isCancelOrRejectProcess(outcome)){
 				validateContractAmendment(outcome);
 			}
 			//#25956 - End
@@ -2772,33 +2771,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								){
 
 //							setTabValue("AD");
-					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", 
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", //25956
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 					
 							throw new EpException(MessageConst.ERROR_750078, new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()});
 				}else if ((ContractStatusConst.FA_PENDING_SIGN_OFF.equals(ctBackingBean.getManagedBean()
-								.getContractVer().getStatus().getStatusId()))
+								.getContractVer().getStatus().getStatusId())
 						|| (ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF.equals(ctBackingBean.getManagedBean()
-								.getContractVer().getStatus().getStatusId()))
-								){
+								.getContractVer().getStatus().getStatusId())))){ 
 
-//							setTabValue("AD");
 					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 					
 							throw new EpException(MessageConst.ERROR_750079, new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()});
-				}else if ((ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean()
-								.getContractVer().getStatus().getStatusId()))
-						|| (ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean()
-								.getContractVer().getStatus().getStatusId()))
-								){
-
-//							setTabValue("AD");
-					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-					
-							throw new EpException(MessageConst.ERROR_750075);
-						}else {
+				}else {
 							// Validation for amendment extension period for expired
 							// contract
 							// 28848
@@ -9319,5 +9305,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//#13847 end
+	
+	//#25956 - Start
+	/**
+	 * The method used to check this process is cancellation.
+	 * 
+	 * @return true, if is cancellation process.
+	 *         false, if is not cancellation process.
+	 */
+	public boolean isCancelOrRejectProcess(String action) {
+		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))
+				|| (ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))
+				|| (ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))) {
+			return true;
+		} else {
+			return false;
+		}
+	  }
+	//#25956 - Start
 	
 	}

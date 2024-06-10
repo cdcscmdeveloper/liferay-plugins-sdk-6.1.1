@@ -658,7 +658,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
-			rnBackingBean.viewRequestNote(docId);
+			rnBackingBean.viewRequestNote(docId,true); //#25790
 			rnBackingBean.getManagedBean().setDpObj(dpObj);
 			rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 
@@ -835,7 +835,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
 		searchReqDTO.setDocType(docType);
-		searchReqDTO.setDocId(Long.valueOf(docId));
+		//start - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+		searchReqDTO.setDocId(docId);
+		//stop - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+
 
 		Long groupDocId = docId;
 		String groupDocType = docType;

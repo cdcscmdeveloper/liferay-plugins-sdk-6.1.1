@@ -252,6 +252,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -288,6 +289,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
+import my.ep.web.managedbean.ct.circular.CircularManagedBean; //30866
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -6038,8 +6040,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						if(scQt != null){//#28784
 							demoRequired = scQt.isDemoRequired();
 							evalType = scQt.getEvaluationType();							
-						}
-						scQt = tenderResDTO.getQtDetail();						
+						}else{//Reopen #25726 note 286 - issue 2,3,4
+							scQt = tenderResDTO.getQtDetail();
+						}					
 						getManagedBean().setQt(scQt);
 						
 						//#28784 - Demo WIP
@@ -6051,9 +6054,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
 						this.getManagedBean().setPanel(scQt.isPanel());
-						Long currentStatus = this.getManagedBean().getQt()
-								.getQtStatus().getStatusId();
-						this.getManagedBean().setCurrentStatusId(currentStatus);
+						//Reopen #25726 note 286 - issue 5
+						if (!this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
+							Long currentStatus = this.getManagedBean().getQt()
+									.getQtStatus().getStatusId();
+							this.getManagedBean().setCurrentStatusId(currentStatus);
+						}
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
@@ -13356,6 +13362,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 		scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		scWorkFlowreqDTO.setDocId(scQt.getQtId());
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			currentWorkFlowStatus = null;
+			bpmExistFlag = true;
+		}
+		// End - #30866
 		if(null != currentWorkFlowStatus){
 			if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)){
 				bpmExistFlag = false;

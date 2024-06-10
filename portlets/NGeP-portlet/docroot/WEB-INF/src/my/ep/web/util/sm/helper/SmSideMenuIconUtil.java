@@ -659,8 +659,6 @@ public class SmSideMenuIconUtil {
 						|| bean.getSmAppl().getApplType()
 								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 					retVal = ICON_VIEW;
-					//#31043
-					bean.setCategoryCodeVerified(true);
 				} else {
 					//#31043
 					if(bean.isReviewSiteVisit()){
@@ -705,8 +703,6 @@ public class SmSideMenuIconUtil {
 						
 						if (isAllCatcodeVerified) {
 							retVal = ICON_TICK;
-							//#31043
-							bean.setCategoryCodeVerified(true);
 						}
 					}
 				}
@@ -743,7 +739,7 @@ public class SmSideMenuIconUtil {
 				
 				boolean mandatoryDocVerified = false; 
 				boolean nonMandatoryDocVerified = false; 
-				boolean licenseMandatoryDocVerified = false; 
+				boolean licenseMandatoryDocVerified = true; 
 				
 				log.info("SmAppl revise: "+bean.getSmAppl().getPmStatus().getStatusId());
 				
@@ -853,15 +849,15 @@ public class SmSideMenuIconUtil {
 				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
 					for (SmApplSupportDoc doc : licenseMandatoryDocs) {
 						if(doc.getVerifiedFlg() != null){
-							if(doc.getVerifiedFlg() == 0)
+							if(doc.getVerifiedFlg() == 0){
 								licenseMandatoryDocVerified = false;
-							break;
+								break;
+							}
 						}
 					}
 				}
 					
 				if(mandatoryDocVerified){
-					bean.setDocumentVerified(true);
 					retVal = ICON_TICK;
 					
 					if(!licenseMandatoryDocVerified && !EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
@@ -870,7 +866,6 @@ public class SmSideMenuIconUtil {
 					
 				}else{
 					retVal = ICON_UNTICK;
-					bean.setDocumentVerified(false);
 				}
 				//24964 & 31043 - end
 

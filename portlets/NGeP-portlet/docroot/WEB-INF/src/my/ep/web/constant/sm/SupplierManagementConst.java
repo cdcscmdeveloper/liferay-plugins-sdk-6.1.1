@@ -509,6 +509,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
+	public static final long PM_STATUS_PENDING_PAYMENT_SOFT_CERT = 20252; //#35579
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
@@ -737,6 +738,9 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
 	
+	//#34159
+	public static final String STATE_ID_SARAWAK = "14";
+		
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	
@@ -1442,5 +1446,11 @@ public class SupplierManagementConst {
 	public static String getIdentificationTypeIc() {
 		return IDENTIFICATION_TYPE_IC;
 	}
+
+	public static String getStateIdSarawak() {
+		return STATE_ID_SARAWAK;
+	}
+	
+	
 
 }

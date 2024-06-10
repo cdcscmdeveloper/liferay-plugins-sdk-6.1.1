@@ -4,11 +4,9 @@
 package my.ep.web.managedbean.sc.dp.requestnote.audit;
 
 import java.math.BigInteger;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
-import my.ep.dto.sc.audit.VAuditDPRequestNoteDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
@@ -17,15 +15,14 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 /**
  * 
- * @author normuliana
- * #28895_35492
- *
+ * @author normuliana #28895_35492
+ * 
  */
-@ManagedBean(name="auDPRequestNoteMB")
+@ManagedBean(name = "auDPRequestNoteMB")
 @SessionScoped
-public class AuDPRequestNoteManagedBean extends BaseManagedBean{
-    
-    /**
+public class AuDPRequestNoteManagedBean extends BaseManagedBean {
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -35,30 +32,28 @@ public class AuDPRequestNoteManagedBean extends BaseManagedBean{
 	private PurchaseRequestReqDTO purchaseRequestReqDTO;
 
 	private RequestNoteReqDTO reqNoteDTO;
-	
+
 	private AuDPRequestNoteDTO auDPRequestNoteDTO;
-	
+
 	private AuditDPSearchBean auditDPSearchBean;
-	
-	private List<VAuditDPRequestNoteDTO> vAuditDPRequestnoteDTOList;
-	
+
 	private boolean isLazy = false;
-	
+
 	/** The Audit trail view. */
 	private boolean auditTrailView;
-	
+
 	/** The Audit trail view URL. */
 	private String backURL;
-	
+
 	private String language;
-	
+
 	private BigInteger docId;
-    
-    /**
-     * Instantiates a new request note managed bean.
-     */
-    public AuDPRequestNoteManagedBean() {
-    	/*
+
+	/**
+	 * Instantiates a new request note managed bean.
+	 */
+	public AuDPRequestNoteManagedBean() {
+		/*
     	 * 
     	 */
 	}
@@ -96,19 +91,13 @@ public class AuDPRequestNoteManagedBean extends BaseManagedBean{
 	}
 
 	public AuditDPSearchBean getAuditDPSearchBean() {
+		if (auditDPSearchBean == null)
+			auditDPSearchBean = new AuditDPSearchBean();
 		return auditDPSearchBean;
 	}
 
 	public void setAuditDPSearchBean(AuditDPSearchBean auditDPSearchBean) {
 		this.auditDPSearchBean = auditDPSearchBean;
-	}
-
-	public List<VAuditDPRequestNoteDTO> getvAuditDPRequestnoteDTOList() {
-		return vAuditDPRequestnoteDTOList;
-	}
-
-	public void setvAuditDPRequestnoteDTOList(List<VAuditDPRequestNoteDTO> vAuditDPRequestnoteDTOList) {
-		this.vAuditDPRequestnoteDTOList = vAuditDPRequestnoteDTOList;
 	}
 
 	public boolean isLazy() {
