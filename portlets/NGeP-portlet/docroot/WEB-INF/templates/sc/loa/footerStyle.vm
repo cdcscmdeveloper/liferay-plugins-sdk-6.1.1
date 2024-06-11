@@ -1,0 +1,35 @@
+@page{
+
+    @bottom-left {                 
+        content: element(footer);  
+        vertical-align: top;
+        padding-top: 10px;
+
+    }
+
+
+    size: A4 portrait;
+    margin-top:1.2cm; 
+    margin-left:1cm; 
+    margin-right:1cm; 
+    margin-bottom:5.5cm; 
+}
+div.footer {
+    margin-top: 0.5cm;
+    display: block;
+    position: running(footer);
+}
+ 
+div.content {
+
+    display: block;
+    text-align: justify;
+}
+
+#pagenumber:before {
+    content: counter(page);
+}
+
+#pagecount:before {
+    content: counter(pages);
+}

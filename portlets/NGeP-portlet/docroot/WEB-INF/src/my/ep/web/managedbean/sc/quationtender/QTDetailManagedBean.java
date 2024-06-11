@@ -1630,6 +1630,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean approverTabLoaded = false;
 	// bug #30435, Enhancement #25077 -end-
 
+	// #9019 (Harun) -start-
+	private Long qtRemarksIdRemove;
+
+	/** The qt remark missing issues. */
+	private boolean scQtRemarksEmpty = false;
+	// #9019 08082022 (Harun) -end-
+
 	// #1873 -start
 	private boolean technicalOtherCheckList;
 	private boolean technicalTemplateEdited;
@@ -10318,7 +10325,25 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.approverTabLoaded = approverTabLoaded;
 	}
 	// bug #30435, Enhancement #25077 - end
-	
+
+	// #9019 - Start (Harun)
+	public Long getQtRemarksIdRemove() {
+		return qtRemarksIdRemove;
+	}
+
+	public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
+		this.qtRemarksIdRemove = qtRemarksIdRemove;
+	}
+
+	public boolean isScQtRemarksEmpty() {
+		return scQtRemarksEmpty;
+	}
+
+	public void setScQtRemarksEmpty(boolean scQtRemarksEmpty) {
+		this.scQtRemarksEmpty = scQtRemarksEmpty;
+	}
+	// #9019 - End (Harun)
+
 	// 1873 - start
 	public boolean isTechnicalOtherCheckList() {
 		return technicalOtherCheckList;
