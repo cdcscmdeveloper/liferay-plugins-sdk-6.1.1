@@ -1640,10 +1640,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) 
-		   //|| BpmOutcomeConst.BPM_SUBMIT.equals(outcome) //20230111@Haziq - #12487
+			//20230111@Haziq - #12487 - remove because this logic not applicable during submit/creation
 				){
 			//20230111@Haziq - #12487
-			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			// remove this because loa respond period are get from UI not from PM rule
 			Integer loaRespPeriod = scLoa.getLoaResponsePeriod();
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
@@ -5083,13 +5083,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		// Acknowledge Date
 		//20230111@Haziq - #12487
-		/*if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
-				.getPmStatus().getStatusId().longValue()) ||
-				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
-						.getPmStatus().getStatusId().longValue())) {
-			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
-			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
-		}*/
+		//Remove this because it will not be use to set ackduedate in this function.
 		
 		TemplateSpecBean bean = new TemplateSpecBean(
 				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);

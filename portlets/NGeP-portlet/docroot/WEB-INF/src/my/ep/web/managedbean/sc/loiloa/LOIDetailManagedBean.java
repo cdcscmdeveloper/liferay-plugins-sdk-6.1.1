@@ -426,14 +426,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	//#12487 start
     private Map<String, Object> loiObj;
+    private PmUserOrg selectedUserPtj;
+    private PmOrgProfile ministryOrgProfile;
 	//#12487 end
     
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 
 	
-	//20230111@Haziq - #12487
-    private PmUserOrg selectedUserPtj;
-    private PmOrgProfile ministryOrgProfile;
+	
 	
     /**
      * Gets the spki backing bean.
@@ -2445,7 +2445,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setLoiObj(Map <String, Object> loiObj) {
 		this.loiObj = loiObj;
 	}
-	//#12487 end
+	
 
 	public PmUserOrg getSelectedUserPtj() {
 		return selectedUserPtj;
@@ -2462,6 +2462,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
 		this.ministryOrgProfile = ministryOrgProfile;
 	}
-	
+	//#12487 end
 	
 }

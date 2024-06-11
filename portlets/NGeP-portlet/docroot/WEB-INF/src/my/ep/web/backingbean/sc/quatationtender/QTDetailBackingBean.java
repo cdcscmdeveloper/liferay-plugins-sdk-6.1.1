@@ -7515,19 +7515,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 
 			case 2:
-				//29464-start
-				if(taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
+				if(taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE))					
 					this.getManagedBean().setCommitteeAppointmentMenuTab(false);
-				}
-				//29464-end
-				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				//Bug 32277 - start
-				if(StringUtils.equals(this.getManagedBean().getTaskName(), SCProcessNameConst.APPROVE_COMMITTEE)){
-					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION, true);
-				}else{
-					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
-				}
-				//Bug 32277 - end
+				retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION, StringUtils.equals(getManagedBean().getTaskName(), SCProcessNameConst.APPROVE_COMMITTEE));
 				retrieveApprovalTabDtl();//12471
 				break;
 			case 3:
