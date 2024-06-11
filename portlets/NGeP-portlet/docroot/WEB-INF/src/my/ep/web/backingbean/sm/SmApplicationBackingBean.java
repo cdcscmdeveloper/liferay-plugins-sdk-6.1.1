@@ -9381,9 +9381,11 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getPoToSupplierInquiry().setResponseDate(new Date());
 		
 		// #34392 - start
-		for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
-				.getSmApplSupportDocs()) {
-			replaceNewFile(smDocu);
+		for (SmApplSupportDoc smDocu : getManagedBean()
+				.getSmAppl().getSmApplSupportDocs()) {
+			if(smDocu.getVerifiedFlg().equals(0)){
+				replaceNewFile(smDocu);	
+			}
 		}
 		// #34392 - end
 				
@@ -9391,19 +9393,30 @@ public class SmApplicationBackingBean extends
 
 	}
 	
-	// #34392 - start
+	//#34392 - start
 	private void replaceNewFile(SmApplSupportDoc smDocu) {
 		// TODO Auto-generated method stub
-		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
-			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
-				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-					smDocFile.setFileName(smDocFileNewAdded.getFileName());
-					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
-				}
-			}
+		
+		smDocu.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+
+		List<SmApplDocFile> newDocFile = new ArrayList<>();
+
+		for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+			newDocFile.add(smDocFileNewAdded);
 		}
+
+		smDocu.setSmApplDocFiles(newDocFile);
+		
+//		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
+//			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
+//				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+//					smDocFile.setFileName(smDocFileNewAdded.getFileName());
+//					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
+//				}
+//			}
+//		}
 	}
-	// #34392 - end
+	//#34392 - end
 
 	/**
 	 * Submit sm application to bpm and save the latest information to DB.
