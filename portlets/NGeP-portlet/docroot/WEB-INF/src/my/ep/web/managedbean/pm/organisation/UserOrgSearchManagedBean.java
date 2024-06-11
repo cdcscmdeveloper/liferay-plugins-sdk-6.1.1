@@ -102,7 +102,6 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	/**
 	 * @return the orgType
 	 */
-	@Override
 	public String getOrgType() {
 		return orgType;
 	}
@@ -110,7 +109,6 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	/**
 	 * @param orgType the orgType to set
 	 */
-	@Override
 	public void setOrgType(String orgType) {
 		this.orgType = orgType;
 	}
