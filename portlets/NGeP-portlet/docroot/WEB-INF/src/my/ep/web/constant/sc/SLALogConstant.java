@@ -23,8 +23,12 @@ public class SLALogConstant {
 	public static final String QT_NOTICE_BOARD_BACKINGBEAN = "NoticeBoardBackingBean"; //Development #35054
 	//12471 - start
 	public static final String QT_COMMITTEE_BACKINGBEAN = "QTCommitteBackingBean";
+	public static final String QT_EVALUATION_MEETING_BACKINGBEAN = "EvaluationMeetingBackingBean";
 	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
 	public static final String QT_SOURCING_BACKINGBEAN = "SourcingBaseBackingBean";
+	public static final String QT_USER_COMMITTEE_PAGING_DATA_MODEL = "UserCommitteePagingDataModel";
+	public static final String QT_USER_QC_PAGING_DATA_MODEL = "UserQCPagingDataModel";
+	public static final String QT_SLA_DOT_SEPARATOR = ".";
 	//12471 - end
 
 	//#29187 Start Vinod
@@ -65,6 +69,7 @@ public class SLALogConstant {
 	//12471 - start
 	public static final String QT_BUILD_ORG_NAME_DD = "buildOrgNameDD";
 	public static final String QT_BUILD_PTJ_DD = "buildPtjDD";
+	public static final String QT_PAGE_CHANGE_LISTENER = "pageChangeListener";
 	//12471 - end
 	//06022024@Sonarqube QT#58 - haziq
 	public static final String QT_CALC_TOTAL_AMOUNT = "calcTotalAmount";

@@ -6271,7 +6271,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			if (resDTO.isSuccessful()) {
 				List<ScPurchaseRequest> purchaseRequestList = resDTO.getListPurchaseRequest();
-				if (purchaseRequestList != null && CollectionUtils.isNotEmpty(purchaseRequestList)) {
+				if (CollectionUtils.isNotEmpty(purchaseRequestList)) {
 					List<Map<String, String>> prDtl = new ArrayList<>();
 					extractPurchaseRequestList(purchaseRequestList, prDtl);
 					getManagedBean().getPurchaseRequestMapList().addAll(prDtl);
@@ -6425,8 +6425,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void extractScloa(IContractSO contractSO, boolean isSupplierUser, List<ScLoiLoa> loiLoaList,
 			List<Map<String, String>> loaDtl) {
+		//expected size below than 10
 		for (ScLoiLoa loiLoa : loiLoaList) {
-			if (loiLoa.getScloas() != null && CollectionUtils.isNotEmpty(loiLoa.getScloas())) {
+			if (CollectionUtils.isNotEmpty(loiLoa.getScloas())) {
+				//expected size below than 10
 				for (ScLoa scLoa : loiLoa.getScloas()) {
 					Map<String, String> mapScLoa = new HashMap<>();
 					mapScLoa.put(ContinuityDPConst.getLoaNo(), scLoa.getLoaNo());
