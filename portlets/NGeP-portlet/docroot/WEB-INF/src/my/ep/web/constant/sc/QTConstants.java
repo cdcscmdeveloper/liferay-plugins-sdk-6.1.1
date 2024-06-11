@@ -382,4 +382,10 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	public static final String PORTLET_ID = "PORTLET_ID";
+	public static final String PORTLET_NAME_CREATE = "createmanualsourcing";
+	public static final String PORTLET_NAME_REVIEW = "reviewmanualsourcing";
+	public static final String  USER_PTJ_POPUP_HIDE = "userPtjPopup.hide();";
+	
 }
