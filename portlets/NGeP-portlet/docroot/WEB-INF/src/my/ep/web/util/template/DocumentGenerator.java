@@ -3,8 +3,6 @@
  */
 package my.ep.web.util.template;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -15,6 +13,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+
+import my.ep.factory.EpLogger;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -54,18 +54,9 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.safety.Cleaner;
-import org.jsoup.safety.Whitelist;
-import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.liferay.portal.util.PortalUtil;
-import com.lowagie.text.DocumentException;
-
-import my.ep.factory.EpLogger;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * Singleton Helper For Document Generator.
