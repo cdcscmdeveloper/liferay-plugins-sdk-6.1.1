@@ -1,6 +1,3 @@
-/*
- * Copyright © 2016 Archisoft Consulting Sdn Bhd. All rights reserved.
- */
 package my.ep.web.managedbean.pm.organisation;
 
 import javax.faces.bean.ManagedBean;
@@ -12,17 +9,19 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
+ * 20230111@Haziq - #12487&29693
  * Managed Bean for User Organization Search
  * 
  * 
+ * @author muhammadasyrafhaziq
+ *
  */
-//20230111@Haziq - #12487
 @ManagedBean(name = "userOrgSearchMB")
 @SessionScoped
 public class UserOrgSearchManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private Long ministryProfileId;
-	private Long pegaiPengawaProfileId;
+	private Long pegawaiPengawalProfileId;
 	private Long jabatanProfileId;
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
@@ -33,7 +32,7 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	private PmUserOrg currentActiveUserOrg;
 	private boolean disabledJabatan;
 	private boolean disabledMinistry;
-	private boolean disabledPegaiPengawa;
+	private boolean disabledPegawaiPengawal;
 	
 	private String userCodeName;
 	private String userCodeNameSearchValues;
@@ -41,7 +40,7 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	
 	
 	public UserOrgSearchManagedBean() {
-
+      //Do nothing
 	}
 
 	/**
@@ -128,17 +127,17 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 		this.disabledJabatan = disabledJabatan;
 	}
 	/**
-	 * @return the pegaiPengawaProfileId
+	 * @return the pegawaiPengawalProfileId
 	 */
-	public Long getPegaiPengawaProfileId() {
-		return pegaiPengawaProfileId;
+	public Long getPegawaiPengawalProfileId() {
+		return pegawaiPengawalProfileId;
 	}
 
 	/**
-	 * @param pegaiPengawaProfileId the pegaiPengawaProfileId to set
+	 * @param pegawaiPengawalProfileId the pegawaiPengawalProfileId to set
 	 */
-	public void setPegaiPengawaProfileId(Long pegaiPengawaProfileId) {
-		this.pegaiPengawaProfileId = pegaiPengawaProfileId;
+	public void setPegawaiPengawalProfileId(Long pegawaiPengawalProfileId) {
+		this.pegawaiPengawalProfileId = pegawaiPengawalProfileId;
 	}
 
 	/**
@@ -157,71 +156,113 @@ public class UserOrgSearchManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the disabledPegaiPengawa
+	 * @return the disabledPegawaiPengawal
 	 */
-	public boolean isDisabledPegaiPengawa() {
-		return disabledPegaiPengawa;
+	public boolean isDisabledPegawaiPengawal() {
+		return disabledPegawaiPengawal;
 	}
 
 	/**
-	 * @param disabledPegaiPengawa the disabledPegaiPengawa to set
+	 * @param disabledPegawaiPengawal the disabledPegawaiPengawal to set
 	 */
-	public void setDisabledPegaiPengawa(boolean disabledPegaiPengawa) {
-		this.disabledPegaiPengawa = disabledPegaiPengawa;
+	public void setDisabledPegawaiPengawal(boolean disabledPegawaiPengawal) {
+		this.disabledPegawaiPengawal = disabledPegawaiPengawal;
 	}
 
+	/**
+	 * @return userCodeName
+	 */
 	public String getUserCodeName() {
 		return userCodeName;
 	}
 
+	/**
+	 * @param userCodeName the userCodeName to set
+	 */
 	public void setUserCodeName(String userCodeName) {
 		this.userCodeName = userCodeName;
 	}
 
+	/**
+	 * @return userCodeNameSearchValues
+	 */
 	public String getUserCodeNameSearchValues() {
 		return userCodeNameSearchValues;
 	}
 
+	/**
+	 * @param userCodeNameSearchValues
+	 */
 	public void setUserCodeNameSearchValues(String userCodeNameSearchValues) {
 		this.userCodeNameSearchValues = userCodeNameSearchValues;
 	}
 
+	/**
+	 * @return zone
+	 */
 	public Long getZone() {
 		return zone;
 	}
 
+	/**
+	 * @param zone
+	 */
 	public void setZone(Long zone) {
 		this.zone = zone;
 	}
 
+	/**
+	 * @return userOrgDataModel
+	 */
 	public IPagingDataModel<PmUserOrg> getUserOrgDataModel() {
 		return userOrgDataModel;
 	}
 
+	/**
+	 * @param userOrgDataModel
+	 */
 	public void setUserOrgDataModel(IPagingDataModel<PmUserOrg> userOrgDataModel) {
 		this.userOrgDataModel = userOrgDataModel;
 	}
 
+	/**
+	 * @return selectedUser
+	 */
 	public PmUserOrg getSelectedUser() {
 		return selectedUser;
 	}
 
+	/**
+	 * @param selectedUser
+	 */
 	public void setSelectedUser(PmUserOrg selectedUser) {
 		this.selectedUser = selectedUser;
 	}
 
+	/**
+	 * @return currentActiveUserOrg
+	 */
 	public PmUserOrg getCurrentActiveUserOrg() {
 		return currentActiveUserOrg;
 	}
 
+	/**
+	 * @param currentActiveUserOrg
+	 */
 	public void setCurrentActiveUserOrg(PmUserOrg currentActiveUserOrg) {
 		this.currentActiveUserOrg = currentActiveUserOrg;
 	}
 
+	/**
+	 * @return currentActiveOrg
+	 */
 	public PmOrgProfile getCurrentActiveOrg() {
 		return currentActiveOrg;
 	}
 
+	/**
+	 * @param currentActiveOrg
+	 */
 	public void setCurrentActiveOrg(PmOrgProfile currentActiveOrg) {
 		this.currentActiveOrg = currentActiveOrg;
 	}
