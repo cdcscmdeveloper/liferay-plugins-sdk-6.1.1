@@ -10713,7 +10713,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String dafaltValue = "T/B";
 		
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "N/A";
+			dafaltValue = "T/B";
 		}
 		
 		if (scLoa.getScLoiLoaItems().size() != 0) {
@@ -11266,7 +11266,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return supplierRemarks;
 		} else {
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				remarks = "N/A";
+				remarks = "T/B";
 			}
 		}
 
