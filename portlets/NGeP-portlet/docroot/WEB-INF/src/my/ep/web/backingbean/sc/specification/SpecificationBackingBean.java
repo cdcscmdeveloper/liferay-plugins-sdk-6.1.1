@@ -12770,7 +12770,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			// Bug #33661@Syazani 07/10/2022 -- End
 			ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster().getSpecName());
-			scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			Integer index = null; //1873 - note 97
 	
@@ -12816,6 +12815,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				isSpecNotExist = isSpecQuestionNotExist(scQtCheckList);
 
 				if (isModified || !isTemplateSpec || isSpecNotExist) {
+					scQtCheckList.getScQtDoc().getTplSpecMaster().setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT); //Bug #35233
 					// #34048 - End
 					scQtCheckList.setPmStatus(pendingStatus);
 					scQtCheckList.setPmEvalStatus(pendingStatus);
@@ -18522,7 +18522,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			sb.append(quantityTierCompareSb.toString());
 			sb.append(zoneQuantityTierCompareSb.toString());
 			sb.append(priceType);
-			sb.append(StringUtils.deleteWhitespace(question.getClItem().toUpperCase()));
+			sb.append(question.getClItem()); // Bug #34926@Syazani 17/07/2023
 			sb.append(question.getClUom().getUomCode());
 			sb.append(uomFrequency.doubleValue());
 			sb.append(uomPerDay.doubleValue());
@@ -18613,7 +18613,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						String localQuestionStr = buildQuestionCompareString(q);
 						
 						if (type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM) && !changesFlag.get("itemUpdated")) {
-							changesFlag.put("itemUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
+							changesFlag.put("itemUpdated", !currentQuestionStr.equals(localQuestionStr)); // Bug #34926@Syazani 17/07/2023
 
 							boolean isEdited = checklist.isEdited() == null ? false : checklist.isEdited();
 
@@ -18624,7 +18624,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						
 						if (type.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 								&& !changesFlag.get("specificationUpdated")) {
-							changesFlag.put("specificationUpdated", !currentQuestionStr.equalsIgnoreCase(localQuestionStr));
+							changesFlag.put("specificationUpdated", !currentQuestionStr.equals(localQuestionStr)); // Bug #34926@Syazani 17/07/2023
 						}
 					}
 				}

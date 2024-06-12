@@ -69,25 +69,39 @@
 				  <table>
 				     <tr>
 					   <td>
-							<p:selectOneMenu id="loaApprover"
-									value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
-									disabled="#{!isPendingSubmissionStatus or lOADetailBackingBean.managedBean.readOnly}"
-									required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
-									label="#{lbl['lbl.sc.approver']}"
-									style="width: 276px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-										itemValue="#{null}" />
-									<f:selectItems
-										value="#{lOADetailBackingBean.managedBean.approverList}"
-										var="pmUser" itemLabel="#{pmUser.userName}"
-										itemValue="#{pmUser.userId}" />
-									<p:ajax event="change"
-										listener="#{lOADetailBackingBean.approverChanged()}"
-										partialSubmit="true" process="@this" update="@this" />
-								</p:selectOneMenu><p:message id="loaApproverMsg" for="loaApprover"
-									display="icon" /> 
-									
-							 </td>
+						<!-- syazani - Bug #35454 - Start --> 
+								<c:choose>
+									<c:when
+										test="#{!(!isPendingSubmissionStatus or lOADetailBackingBean.managedBean.readOnly)}">
+										<!-- syazani - Bug #35454 - End -->
+										<p:selectOneMenu id="loaApprover"
+											value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
+											disabled="#{!isPendingSubmissionStatus or lOADetailBackingBean.managedBean.readOnly}"
+											required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
+											label="#{lbl['lbl.sc.approver']}"
+											style="width: 276px;margin-bottom: 5px;">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="#{null}" />
+											<f:selectItems
+												value="#{lOADetailBackingBean.managedBean.approverList}"
+												var="pmUser" itemLabel="#{pmUser.userName}"
+												itemValue="#{pmUser.userId}" />
+											<p:ajax event="change"
+												listener="#{lOADetailBackingBean.approverChanged()}"
+												partialSubmit="true" process="@this" update="@this" />
+										</p:selectOneMenu>
+										<p:message id="loaApproverMsg" for="loaApprover"
+											display="icon" />
+										<!-- syazani - Bug #35454 - Start -->
+									</c:when>
+									<c:otherwise>
+										<p:inputText id="loaApproverTxt"
+											value="#{lOADetailBackingBean.managedBean.approverUser.userName}"
+											size="40" disabled="true" />
+									</c:otherwise>
+								</c:choose> 
+								<!-- syazani - Bug #35454 - End -->
+							</td>
 							<td style="margin-top: -3px">
 											   <ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.verification.approval.tooltip']}" />
 							</td>

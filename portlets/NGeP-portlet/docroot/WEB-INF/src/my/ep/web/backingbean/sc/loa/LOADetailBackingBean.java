@@ -10205,7 +10205,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 
 					this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
-			
+					for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
+						if(tplSpecAnswer.getNewSupplierOffer()!=null && tplSpecAnswer.getNewSupplierOffer()!=""){
+							tplSpecAnswer.setRenderNewSpec(true);
+						}
+					}
 					successMessage(MessageConst.INFO_700004,
 							getMessageCommon("lbl.sc.loiloa.supplier.specification.save"), "", Boolean.FALSE);
 				}
@@ -10340,6 +10344,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		IQTAwardSO iQTAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTAwardSO.class);		
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
+		List<Long> itemIds = new ArrayList<>();
 
 		populateAttachmentDetails(attachment);
 		
@@ -10490,7 +10495,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoiLoaItem.setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 				// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3 -end-
 				
-				scLoiLoaItemsList.add(scLoiLoaItem);
+				if(itemIds.isEmpty() || !itemIds.contains(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					scLoiLoaItemsList.add(scLoiLoaItem);
+					itemIds.add(scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
+				}
 			}
 			
 			if (this.getManagedBean().getScQt().isZonal() && scLoiLoaItemsList.size() > 1) {
@@ -11203,9 +11211,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			return false;
 		}
 		// 35284 - end
-		
+
+		if (!this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
+				.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			return isShowAssignButtonIfNotPR(loiLoaItem);
+		} else {
+			return true;
+		}
+	}
+	// Bug #34757, #29007 - End
+	
+	// Bug #34757, #29007 -start-
+	private boolean isShowAssignButtonIfNotPR(ScLoiLoaItem loiLoaItem) {
 		boolean isShow = false;
-		
+
 		if (loiLoaItem.getTplSpecZoneDtl() != null) {
 			if (this.getManagedBean().getFirstZone() == null) {
 				this.getManagedBean().setFirstZone(loiLoaItem.getTplSpecZoneDtl().getZoneName());
@@ -11214,20 +11233,40 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if (this.getManagedBean().getFirstZone().equals(loiLoaItem.getTplSpecZoneDtl().getZoneName())) {
 				isShow = true;
 			}
+
+			isShow = checkItemList(loiLoaItem);
 		} else {
 			isShow = true;
 		}
-		
+
 		// 35284 - start
 		boolean isFromQty = null != loiLoaItem.getTplSpecTierQty()
 				&& null != loiLoaItem.getTplSpecTierQty().getFromQty() ? loiLoaItem.getTplSpecTierQty().getFromQty()
 				.compareTo(BigDecimal.ONE) == 0 : false;
 		boolean isSpecTierQty = null == loiLoaItem.getTplSpecTierQty() || isFromQty;
-		
 		isShow = isSpecTierQty && isShow;
 		// 35284 - end
 
 		return isShow;
+	}
+	// Bug #34757, #29007 - End
+
+	// Bug #34757, #29007 -start-
+	private boolean checkItemList(ScLoiLoaItem loiLoaItem) {
+		if (this.getManagedBean().getItemList() == null) {
+			this.getManagedBean().setItemList(new ArrayList<Long>());
+		}
+
+		if (this.getManagedBean().getLoaItemIds() == null) {
+			this.getManagedBean().setLoaItemIds(new ArrayList<Long>());
+		}
+
+		if (!this.getManagedBean().getItemList().contains(loiLoaItem.getScRequestItem().getRequestNoteItemId())) {
+			this.getManagedBean().getItemList().add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
+			this.getManagedBean().getLoaItemIds().add(loiLoaItem.getLoiLoaItemId());
+		}
+
+		return this.getManagedBean().getLoaItemIds().contains(loiLoaItem.getLoiLoaItemId());
 	}
 	// Bug #34757, #29007 - End
 	
@@ -11267,8 +11306,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								map.put(SSTConstant.zoneName, zone);
 							}
 							map.put(SSTConstant.ZONE_SIZE, String.valueOf(scLoiLoaItem.getZoneNameList().size()));
-							map.put(SSTConstant.quantity, question.getClQuantity() == null ? SSTConstant.TB : question
-									.getClQuantity().toString());
+							map.put(SSTConstant.quantity, scLoiLoaItem.getQty() == null? SSTConstant.TB : scLoiLoaItem.getQty().toString()); //35521 @zaim
 							map.put(SSTConstant.serviceScope, SSTConstant.TB);
 							// retrieve supplier offer start
 							if (answerList != null && !answerList.isEmpty()) {
@@ -11427,38 +11465,45 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					map.put(SSTConstant.clUomPerMonth, question.getClUomPerMonth() == null ? SSTConstant.TB : question
 							.getClUomPerMonth().toString());
 					map.put(SSTConstant.CL_DURATION_MONTH, question.getClDurationMonth().toString());
-					map.put(SSTConstant.quantity, question.getClQuantity() == null ? SSTConstant.TB : question
-							.getClQuantity().toString());
+					map.put(SSTConstant.quantity, scLoiLoaItem.getQty() == null? SSTConstant.TB : scLoiLoaItem.getQty().toString()); //35521 @zaim
 					map.put(SSTConstant.serviceScope, SSTConstant.TB);
 
 					for (TplSpecAnswer answer : answerList) {
-
-						if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
-								.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
-							// supplier respond and make new supplier offer
-							answerRemark = answer.getNewSupplierOffer();
-							answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
-									SSTConstant.GREATER_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-									SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
-							map.put(SSTConstant.answerRemark, answerRemark);
-							break;
-						} else if ((answer.getNewSupplierOffer() == null || answer.getNewSupplierOffer().isEmpty())
-								&& (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty())) {
-							// supplier respond but no changes
-							answerRemark = answer.getAnswerRemark();
-							answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
-									SSTConstant.GREATER_THAN_SYMBOL);
-							answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-									SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
-							map.put(SSTConstant.answerRemark, answerRemark);
-						} else {
-							// no changes and no supplier respond
-							map.put(SSTConstant.answerRemark, SSTConstant.TB);
+						// 35596 @zaim start
+						if (answer.getTplSpecSuppAnswer() != null
+								&& answer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId()
+										.equals(currentSupplier)) {
+							// 35596 @zaim end
+							if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
+									.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
+								// supplier respond and make new supplier offer
+								answerRemark = answer.getNewSupplierOffer();
+								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN,
+										SSTConstant.LESS_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
+										SSTConstant.GREATER_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+										SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+								map.put(SSTConstant.answerRemark, answerRemark);
+								break;
+							} else if ((answer.getNewSupplierOffer() == null || answer.getNewSupplierOffer().isEmpty())
+									&& (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty())) {
+								// supplier respond but no changes
+								answerRemark = answer.getAnswerRemark();
+								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN,
+										SSTConstant.LESS_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN,
+										SSTConstant.GREATER_THAN_SYMBOL);
+								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+										SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+								map.put(SSTConstant.answerRemark, answerRemark);
+							} else {
+								// no changes and no supplier respond
+								map.put(SSTConstant.answerRemark, SSTConstant.TB);
+							}
+						// 35596 @zaim start
 						}
-
+						// 35596 @zaim end
 					}
 					// end supplier offer
 					// start retrieve spec size
