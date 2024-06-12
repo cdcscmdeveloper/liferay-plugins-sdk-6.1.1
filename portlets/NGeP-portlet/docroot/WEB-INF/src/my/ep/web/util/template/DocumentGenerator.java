@@ -3,16 +3,18 @@
  */
 package my.ep.web.util.template;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-
-import my.ep.factory.EpLogger;
-import my.ep.web.util.sm.helper.SmCommonUtil;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -52,7 +54,18 @@ import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
 import org.docx4j.wml.Text;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.liferay.portal.util.PortalUtil;
+import com.lowagie.text.DocumentException;
+
+import my.ep.factory.EpLogger;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * Singleton Helper For Document Generator.
@@ -153,6 +166,24 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	}
 	
 	/**
+	 * #26130 (06/06/2024) - start 
+	 * 
+	 * Gets the server url.
+	 *
+	 * @return the server url
+	 */
+	private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		//String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ "/"; //#26130 (10/06/2024)
+		
+		return url;
+	}
+	//#26130 (06/06/2024) - end
+	/**
 	 * Generate PDF file by html.
 	 * 
 	 * @param os
@@ -179,14 +210,13 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 					html = html.replaceAll("&amp;amp;", "&");
 					//20220921@asyrafhaziq - 29076 - End == //#25142 - end
 					
-					// #26130 - start 
-					String fontPath = "";
-					String getPortalBaseURL = SmCommonUtil.getBasePortalUrl();
+					//#26130 (06/06/2024) - start
+					String fontPath = getServerUrl()+ "NGeP-portlet/resources/fonts/Arial.ttf";
 
-					fontPath = getPortalBaseURL + "/NGeP-portlet/resources/fonts/Arial.ttf";
-
+					log.info("fontPath: "+fontPath);
+					
 					render.getFontResolver().addFont(fontPath, true);
-					// #26130 - end
+					//#26130 (06/06/2024) - end
 					
 		            render.setDocumentFromString(html);
 		            render.layout();
@@ -194,6 +224,10 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		        }
 		        
 		        os.flush();
+		//#26130 (06/06/2024) - start
+		}catch(Exception e){
+			e.printStackTrace();
+		//#26130 (06/06/2024) - end			
 		}finally{
 			html = null; //#25142
 			render = null;
