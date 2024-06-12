@@ -15604,38 +15604,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public void setVerifiedSupportDoc() {
-		for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
+		/*for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			//#31043 START
-			if (applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null) {
+			if (applSuppDoc.getVerifiedFlg() != null) {
 				applSuppDoc
 						.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
-			}else{
-				for(SmApplSupportDoc mandatoryDoc : getManagedBean().getMandatoryDocs()){
-					if(mandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-						applSuppDoc.setApproverVerifiedFlg(mandatoryDoc.getApproverVerifiedFlg());
-					}
-				}
-				for(SmApplSupportDoc nonMandatoryDoc : getManagedBean().getNonMandatoryDocs()){
-					if(nonMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-						applSuppDoc.setApproverVerifiedFlg(nonMandatoryDoc.getApproverVerifiedFlg());
-					}
-				}
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
-				if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
-					for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
-						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
-					}
-				}
-				for(SmApplSupportDoc licenseMandatoryDoc : licenseMandatoryDocs){
-					if(licenseMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-						applSuppDoc.setApproverVerifiedFlg(licenseMandatoryDoc.getApproverVerifiedFlg());
-					}
-				}
 			}
-			//#31043 END
-		}
-	}
+		}*/
+		//#31043 START
+		List<SmApplSupportDoc> allSupportDocs = getManagedBean().getSmAppl().getSmApplSupportDocs();
+	    // Create a map of all documents with their IDs for quick lookup
+	    Map<Long, SmApplSupportDoc> allDocsMap = createDocsMap();
+	    for (SmApplSupportDoc applSuppDoc : allSupportDocs) {
+	        if (shouldSetApproverVerifiedFlg(applSuppDoc)) {
+	            applSuppDoc.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
+	        } else {
+	            updateApproverVerifiedFlgFromDocs(applSuppDoc, allDocsMap);
+	        }
+	    }
+	    //#31043 END
+}
 
 	public void viewMyIdentityRespond() {
 		if (getManagedBean().getSelectedShareHolder() != null && getManagedBean().getSelectedShareHolder().getIdentityResponseCode() != null) {
@@ -18152,4 +18140,41 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getSmAppl().getSmSupplierCategories(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
+	//#31043 START
+	private boolean shouldSetApproverVerifiedFlg(SmApplSupportDoc applSuppDoc) {
+	    return applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null;
+	}
+
+	private void updateApproverVerifiedFlgFromDocs(SmApplSupportDoc applSuppDoc, Map<Long, SmApplSupportDoc> allDocsMap) {
+	    SmApplSupportDoc matchedDoc = allDocsMap.get(applSuppDoc.getApplSupportDocId());
+	    if (matchedDoc != null) {
+	        applSuppDoc.setApproverVerifiedFlg(matchedDoc.getApproverVerifiedFlg());
+	    }
+	}
+
+	private Map<Long, SmApplSupportDoc> createDocsMap() {
+	    Map<Long, SmApplSupportDoc> allDocsMap = new HashMap<>();
+
+	    // Add all mandatory docs to the map
+	    for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
+	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    }
+
+	    // Add all non-mandatory docs to the map
+	    for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    }
+
+	    // Add all license mandatory docs to the map
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
+	        for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
+	            for (SmApplSupportDoc doc : docVO.getLicenseSuppDocs()) {
+	                allDocsMap.put(doc.getApplSupportDocId(), doc);
+	            }
+	        }
+	    }
+
+	    return allDocsMap;
+	}
+	//#31043 END
 }

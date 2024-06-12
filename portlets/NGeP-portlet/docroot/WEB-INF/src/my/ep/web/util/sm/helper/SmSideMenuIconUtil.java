@@ -11,6 +11,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -856,6 +857,27 @@ public class SmSideMenuIconUtil {
 						}
 					}
 				}
+				
+				if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
+					for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
+						if(doc.getSmApplDocFiles() != null){
+							for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
+								if(!docFile.getFilePath().equals(" ")){
+									if(doc.getVerifiedFlg() != null){
+										if(doc.getVerifiedFlg() == 0){
+											nonMandatoryDocVerified = false;
+											break;
+										}
+									}
+								}
+							}
+							if(!nonMandatoryDocVerified){
+								break;
+							}
+						}
+						
+					}
+				}
 					
 				if(mandatoryDocVerified){
 					retVal = ICON_TICK;
@@ -864,6 +886,9 @@ public class SmSideMenuIconUtil {
 						retVal = ICON_UNTICK;
 					}
 					
+					if(!nonMandatoryDocVerified){
+						retVal = ICON_UNTICK;
+					}
 				}else{
 					retVal = ICON_UNTICK;
 				}
