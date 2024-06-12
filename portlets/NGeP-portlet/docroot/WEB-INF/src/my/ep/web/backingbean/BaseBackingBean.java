@@ -84,6 +84,7 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -2801,7 +2802,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public void changeRoleAndProceed() {
-	//start loop list #28454
+		//start loop list #28454
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		this.getManagedBean().setDowngradeRole(true);  //#29956
@@ -2824,6 +2825,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
+						resDTO.getSmPersonnel().setSsmData(false); //#29956
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -2840,7 +2844,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 
 		}
-		
 	}
 	public void listenerRolePopup(SmPersonnel smPersonnelSSm){
 		//27951 & 27239
@@ -3187,7 +3190,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		return retVal;
-	}	
+	}
+	
+	//29956 START
+    public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
+		Boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
+		}
+		return retVal;
+	}
+    //29956 END
+    
 	public static void checkEquityOwnerUpdateAllowance(
 			BaseManagedBean managedBean) {
 		//#27165
@@ -3643,36 +3659,38 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
 		getManagedBean().getPersonnelsRole().clear();
 		getManagedBean().setDowngradeRole(false);
+		getManagedBean().setDisAllowOwnerEdit(false);
+		
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
+		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-		if(!resDto.getSmPersonnelList().isEmpty() && resDto.getSmPersonnelList() != null){
+		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
 				
-				if(smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(!isMofAccEffDatePassedCurrDate(supplier) 
-						&& isPersonnelAdminRole(personnel)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(isMofAccEffDatePassedCurrDate(supplier)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
+				}
+				
+				if(isPersonnelAdminRole
+						&& !isMofAccEffDatePassed6MonthCurrDate
+						&& !isBasicAccount){
+					getManagedBean().setDisAllowOwnerEdit(true);
+					break;
 				}
 			}
 		}
-		if(!getManagedBean().getPersonnelsRole().isEmpty()){
-			getManagedBean().setDisAllowOwnerEdit(false);
-			for(SmPersonnel smPersonnel : getManagedBean().getPersonnelsRole()){
-				if(!isMofAccEffDatePassedCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
-					getManagedBean().setDisAllowOwnerEdit(true);
-				}
-			}
-			
+		if(getManagedBean().getPersonnelsRole() != null 
+				&& !getManagedBean().getPersonnelsRole().isEmpty()) {
 			getManagedBean().setDowngradeRole(true);
 			
 			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());

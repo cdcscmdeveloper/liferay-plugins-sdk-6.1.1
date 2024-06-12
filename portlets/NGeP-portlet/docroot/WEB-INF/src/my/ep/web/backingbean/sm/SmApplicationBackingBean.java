@@ -2044,7 +2044,7 @@ public class SmApplicationBackingBean extends
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 						//start #29956
-						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(), ssmResDTO);
+						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(),ssmResDTO);
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
 							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
