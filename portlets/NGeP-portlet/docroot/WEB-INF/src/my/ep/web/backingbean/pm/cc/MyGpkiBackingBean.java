@@ -376,6 +376,16 @@ public class MyGpkiBackingBean  implements Serializable {
 	
 	////# RnD URL
 	//*START FOR TESTING SERVER URL ISSUE TO PRINT VALUE FROM ALL FUNCTION*/
+	public String getUrlAll() {
+		getServerUrlAgreementBackingBean();
+		getServerUrlTerminationBackingBean();
+		getServerUrlRequestNoteBackingBean();
+		getServerUrlSvoSiteVisitBackingBean();
+		getServerUrlDocumentGenerator();
+		getServerUrlQT();
+		getServerUrlPaan();
+		return "";
+	}
 	/**
 	 * The method used to retrieve the base URL.
 	 * 
@@ -389,7 +399,7 @@ public class MyGpkiBackingBean  implements Serializable {
 				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-		System.out.println("getServerUrlAgreementBackingBean: " + url);
+		log.info("getServerUrlAgreementBackingBean: " + url);
 		return url;
 	}
 	//TerminationBackingBean.java
@@ -403,7 +413,7 @@ public class MyGpkiBackingBean  implements Serializable {
 				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url2 = requestURL.substring(0, requestURL.length()	- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-		System.out.println("getServerUrlTerminationBackingBean: " + url2);
+		log.info("getServerUrlTerminationBackingBean: " + url2);
 		return url2;
 	}	
 	//RequestNoteBackingBean.java
@@ -420,7 +430,7 @@ public class MyGpkiBackingBean  implements Serializable {
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length())
 				+ httpServletRequest.getContextPath() + "/";
-		System.out.println("getServerUrlRequestNoteBackingBean: " + url);
+		log.info("getServerUrlRequestNoteBackingBean: " + url);
 		return url;
 	}
 	
@@ -437,7 +447,7 @@ public class MyGpkiBackingBean  implements Serializable {
 				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-		System.out.println("getServerUrlSvoSiteVisitBackingBean: " + url);
+		log.info("getServerUrlSvoSiteVisitBackingBean: " + url);
 		return url;
 	}
 	
@@ -449,7 +459,7 @@ public class MyGpkiBackingBean  implements Serializable {
 				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-		System.out.println("getServerUrlDocumentGenerator: " + url);
+		log.info("getServerUrlDocumentGenerator: " + url);
 		return url;
 	}
 	
@@ -466,10 +476,10 @@ public class MyGpkiBackingBean  implements Serializable {
 		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
 				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
-		System.out.println("HANZ URL: " + requestURL);
-		System.out.println("HANZ URL ContextPath: " + httpServletRequest.getContextPath());
+		log.info("HANZ URL: " + requestURL);
+		log.info("HANZ URL ContextPath: " + httpServletRequest.getContextPath());
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length()) + "/";
-		System.out.println("getServerUrlQT: " + url);
+		log.info("getServerUrlQT: " + url);
 		return url;
 	}
 	//#26130 (06/06/2024) - end
@@ -487,17 +497,15 @@ public class MyGpkiBackingBean  implements Serializable {
 		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
 				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
-		System.out.println("HANZ URL: " + requestURL);
-		System.out.println("HANZ URL ContextPath: " + httpServletRequest.getContextPath());
+		log.info("HANZ URL: " + requestURL);
+		log.info("HANZ URL ContextPath: " + httpServletRequest.getContextPath());
 		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length()) + "/";
-		System.out.println("getServerUrlPaan: " + url);
+		log.info("getServerUrlPaan: " + url);
 		return url;
 	}
 	//#26130 (06/06/2024) - end
 	
 	/*END FOR TESTING SERVER URL ISSUE TO PRINT VALUE FROM ALL FUNCTION*/
-	
-
 
 
 }
