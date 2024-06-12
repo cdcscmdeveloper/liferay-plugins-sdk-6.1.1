@@ -1,17 +1,21 @@
 package my.ep.web.backingbean.sm.audit;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.List;
 
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.sm.audit.AuSMDetailDTO;
 import my.ep.dto.sm.audit.AuSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -72,7 +76,6 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	}
 
 	private PmOrgProfile retriveUserOrg(Long userOrgId) {
-		new PmOrgProfile();
 		List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
 		return orgList.get(0).getPmOrgProfile();
 	}
@@ -87,17 +90,46 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	public abstract AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode,
 			PmOrgProfile org);
 
-	protected AuSMDetailDTO createAuditData(String actionType, Long fieldLabel, String newValue, String oldValue,
-			Long newValueId, Long oldValueId, Long groupSection) {
+	protected AuSMDetailDTO createAuditData(String actionType, Long fieldLabelId, String oldValue, String newValue,
+			Long oldValueId, Long newValueId, Long fieldLabelCode) {
 		AuSMDetailDTO auDetail = new AuSMDetailDTO();
 		auDetail.setActionType(actionType);
-		auDetail.setSmFieldLabelId(fieldLabel);
-		auDetail.setNewValue(newValue);
-		auDetail.setOldValue(oldValue);
-		auDetail.setOldValueId(newValueId);
-		auDetail.setNewValueId(oldValueId);
-		auDetail.setGroupSectionId(groupSection);
+		auDetail.setSmFieldLabelId(BigInteger.valueOf(fieldLabelId));
+		auDetail.setOldValue(oldValue != null ? oldValue : null);
+		auDetail.setNewValue(newValue != null ? newValue : null);
+		auDetail.setOldValueId(newValueId != null ? BigInteger.valueOf(newValueId) : null);
+		auDetail.setNewValueId(oldValueId != null ? BigInteger.valueOf(oldValueId) : null);
+		auDetail.setFieldLabelCode(BigInteger.valueOf(fieldLabelCode));
 		return auDetail;
+	}
+
+	protected void auditBaseData(AuSupplierManagementDTO auObj, SmSupplier supplier, String roleCode, PmOrgProfile org,
+			List<AuSMDetailDTO> auDetails, Long groupSectionId) {
+		if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
+		} else if (supplier.getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+				|| supplier.getSmAppl().getSupplierType()
+						.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
+		} else if (supplier.getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
+		}
+
+		auObj.setRoleCode(roleCode);
+		auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
+		if (org.getPmOrgValidityList().isEmpty()) {
+			auObj.setOrgName(org.getSmSupplier().getCompanyName());
+		} else {
+			auObj.setOrgName(org.getOrgName());
+		}
+		auObj.setDocId(BigInteger.valueOf(supplier.getSupplierId()));
+		auObj.setDocNo(supplier.getEpNo());
+		auObj.setAuditDetails(auDetails);
+		auObj.setApplId(BigInteger.valueOf(supplier.getSmAppl().getApplId()));
+		auObj.setApplNo(supplier.getSmAppl().getApplNo());
+		auObj.setGroupSectionId(BigInteger.valueOf(groupSectionId));
 	}
 
 	private void auditSMSO(AuSupplierManagementDTO auObj) {
