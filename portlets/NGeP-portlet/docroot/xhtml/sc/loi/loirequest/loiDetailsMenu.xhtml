@@ -289,7 +289,7 @@
 				</td>
 			</tr>
 			
-			<!-- 20230111@Haziq - #12487 -->
+			<!-- 20230111@Haziq - #12487 - start -->
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.signer']}" /> <p:outputLabel
@@ -297,7 +297,7 @@
 				<td colspan="3">
 				<c:if test="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}">
 						<!-- #30447 start -->
-						<p:inputText size="34"
+						<p:inputText size="181"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.contractSignerUser.userName)}"
 							disabled="true" />
 						<!-- #30447 end -->
@@ -306,14 +306,14 @@
 					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 						<p:outputPanel id="opPtjOrgCode" >
 							<p:inputText 
-								size="106"
+								size="80"
 								id="itSelectedUserPtj" 
 								value="#{lOIDetailBackingBean.managedBean.selectedUserPtj.pmUser.userName}" 
 								readonly="true"
 								/>
 							&#160;
 							<p:commandLink id="ptjSearchCL" partialSubmit="true"
-								process="@this" update=":form:userOrgCcId:userPtjPopup"
+								process="@this" update=":form:userPtjOrg:userPtjPopup"
 								action="#{userOrganisationSearchBackingBean.initPtjPopupDefaultMinistry(lOIDetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
 								oncomplete="userPtjPopup.show();" >
 								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
@@ -322,7 +322,7 @@
 
 						<h:panelGroup >
 							<ac:userPtjPopup 
-								id="userOrgCcId"
+								id="userPtjOrg"
 								orgTypeParamCode="#{ParameterConst.orgTypePtj}"
 								okAction="lOIDetailBackingBean.userPtjListener" update=":form:opPtjOrgCode,:form:itSelectedUserPtj,:form:loiSignerDesigId"
 								includeUser="true" 
@@ -331,6 +331,7 @@
 					</c:if>
 				</td>
 			</tr>
+			<!-- 20230111@Haziq - #12487 - end -->
 			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.signer.desig']}" />

@@ -335,7 +335,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setRequestNoteId(getManagedBean().getRequestNoteId());
 			// 12177 - End
 			// start - #25790
-			if (flFulfilmentRequest.getCreatedOrgProfile() != null) {
+			if (BpmOutcomeConst.BPM_DRAFT.equals(action) && flFulfilmentRequest.getCreatedOrgProfile() != null) {
 				reqDTO.setPtjOfOrgProfileId(retrievePTJByOrgProfileId(flFulfilmentRequest.getCreatedOrgProfile()
 						.getOrgProfileId(), flFulfilmentRequest.getCreatedOrgProfile().getCreatedDate()));
 			}// end - #25790
@@ -3935,7 +3935,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		reqNoteBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		// start - #25790
 		reqNoteBB.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-		reqNoteBB.viewRequestNote(requestNoteId, false);
+		reqNoteBB.viewRequestNote(requestNoteId);
 		// end - #25790
 	}
 	

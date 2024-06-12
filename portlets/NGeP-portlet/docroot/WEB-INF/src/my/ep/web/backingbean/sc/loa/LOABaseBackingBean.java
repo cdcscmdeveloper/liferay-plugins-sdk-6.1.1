@@ -40,6 +40,7 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 
 public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends SourcingBaseBackingBean<T> {
+	private static final String USER_PTJ_ORG = "userPtjOrg";
 	private static final long serialVersionUID = 1L;
 
 	protected void viewContractDetails(ScLoa scLoa) {
@@ -68,7 +69,8 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 			RequestContext.getCurrentInstance().update("usergrouping");
 		}
 	}
-	// 20230111@Haziq - #12487 
+	// 20230111@Haziq - #12487&29693 - start
+
 	/**
 	 * to set detail selected PTJ
 	 * 
@@ -84,9 +86,10 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 			scLoa.setContractSigner(userOrg.getPmUser());
 			scLoa.setLoaSignerDesig(userOrg.getPmUser().getDesignation());
 			
-			RequestContext.getCurrentInstance().update("userOrgCcId");
+			RequestContext.getCurrentInstance().update(USER_PTJ_ORG);
 		}
 	}
+	// 20230111@Haziq - #12487&29693 - end
 	
 	// #26475 - start
 	/**

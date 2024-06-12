@@ -6040,8 +6040,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						if(scQt != null){//#28784
 							demoRequired = scQt.isDemoRequired();
 							evalType = scQt.getEvaluationType();							
-						}
-						scQt = tenderResDTO.getQtDetail();						
+						}else{//Reopen #25726 note 286 - issue 2,3,4
+							scQt = tenderResDTO.getQtDetail();
+						}					
 						getManagedBean().setQt(scQt);
 						
 						//#28784 - Demo WIP
@@ -6053,9 +6054,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
 						this.getManagedBean().setPanel(scQt.isPanel());
-						Long currentStatus = this.getManagedBean().getQt()
-								.getQtStatus().getStatusId();
-						this.getManagedBean().setCurrentStatusId(currentStatus);
+						//Reopen #25726 note 286 - issue 5
+						if (!this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
+							Long currentStatus = this.getManagedBean().getQt()
+									.getQtStatus().getStatusId();
+							this.getManagedBean().setCurrentStatusId(currentStatus);
+						}
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
@@ -7511,19 +7515,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				break;
 
 			case 2:
-				//29464-start
-				if(taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
+				if(taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE))					
 					this.getManagedBean().setCommitteeAppointmentMenuTab(false);
-				}
-				//29464-end
-				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				//Bug 32277 - start
-				if(StringUtils.equals(this.getManagedBean().getTaskName(), SCProcessNameConst.APPROVE_COMMITTEE)){
-					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION, true);
-				}else{
-					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
-				}
-				//Bug 32277 - end
+				retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION, StringUtils.equals(getManagedBean().getTaskName(), SCProcessNameConst.APPROVE_COMMITTEE));
 				retrieveApprovalTabDtl();//12471
 				break;
 			case 3:

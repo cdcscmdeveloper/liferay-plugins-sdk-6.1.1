@@ -154,7 +154,7 @@
 
 					<ac:paginator for="existingcommitteesearchid" />
                    <p:ajax event="page"
-				listener="#{qTCommitteBackingBean.addNewCommiteteUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
+				listener="#{qTCommitteBackingBean.addNewCommitteeUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 				update="@([id$=existingcommitteesearchid])" />
 					
 					<p:column style="width:3px;text-align:center;" >
@@ -334,7 +334,7 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing" id="committeeAppointmentAddSpecificationBtnId"
 			disabled="#{qTCommitteBackingBean.enableSelectedNewCommitteeList(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
-			actionListener="#{qTCommitteBackingBean.addNewCommiteteUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
+			actionListener="#{qTCommitteBackingBean.addNewCommitteeUsers(qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel)}"
 				action="#{qTCommitteBackingBean.okCommitteeAction}"
 				update="@(.scMemberDtl,.amendButton)" />
 
