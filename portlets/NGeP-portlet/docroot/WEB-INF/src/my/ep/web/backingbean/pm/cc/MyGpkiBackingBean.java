@@ -20,6 +20,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.http.HttpEntity;
@@ -44,7 +46,7 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "myGpkiBackingBean")
 @SessionScoped
-public class MyGpkiBackingBean  implements Serializable {
+public class MyGpkiBackingBean  extends BaseBackingBean<BaseManagedBean> implements Serializable {
 
 	/**
 	 * 
@@ -384,6 +386,8 @@ public class MyGpkiBackingBean  implements Serializable {
 		getServerUrlDocumentGenerator();
 		getServerUrlQT();
 		getServerUrlPaan();
+		log.info("Final version IP : "+getServerIP());
+		log.info("Final version DNS : "+getBasePortalUrl());
 		return "";
 	}
 	/**

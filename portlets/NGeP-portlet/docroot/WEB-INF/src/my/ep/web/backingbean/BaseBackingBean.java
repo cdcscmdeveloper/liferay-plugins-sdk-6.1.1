@@ -48,10 +48,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.ExceptionHandler;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.imageio.ImageIO;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -4300,6 +4302,35 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		String report = isSVC ? ReportConst.SM_BUMI_APPL_CANCELLED_SVC : ReportConst.SM_BUMI_APPL_CANCELLED;
 
 		generateReport(report, paramMap);
+	}
+	
+	/**
+	 * 
+	 * Gets the server IP.
+	 *
+	 * @return the server IP ex:http://192.168.120.15:8621/
+	 */
+	public String getServerIP() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil
+				.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		return requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) + "/";
+	}
+	
+	/**
+	 * Get Liferay Portal Base URL
+	 * 
+	 * @return String
+	 */
+	public String getBasePortalUrl() {
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		return themeDisplay.getURLPortal();
 	}
 	
 }
