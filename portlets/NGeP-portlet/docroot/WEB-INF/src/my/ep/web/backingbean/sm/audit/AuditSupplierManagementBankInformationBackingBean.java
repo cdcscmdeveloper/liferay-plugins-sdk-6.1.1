@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.dto.sm.audit.AuSMDetailDTO;
-import my.ep.dto.sm.audit.AuSupplierManagementDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -19,7 +19,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
  * @since 16.05.2024 #28895_35501
  */
 
-public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBackingBeanTemplate {
+public class AuditSupplierManagementBankInformationBackingBean extends AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,11 +31,11 @@ public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBa
 	 *            prepare audit trail data
 	 */
 	@Override
-	public AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
 
-		AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
+		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		RegistrationManagedBean mBean = (RegistrationManagedBean) managedBean;
-		List<AuSMDetailDTO> auDetails = new ArrayList<>();
+		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
 		ListIterator<SmSupplierBank> oldBanks = mBean.getOldBanks().listIterator();
 		ListIterator<SmSupplierBank> newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
 
@@ -66,7 +66,7 @@ public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBa
 		return auObj;
 	}
 
-	private void auditModifiedDataBankName(List<PmFinancialOrg> bankList, List<AuSMDetailDTO> auDetails,
+	private void auditModifiedDataBankName(List<PmFinancialOrg> bankList, List<AuditSupplierManagementDetailDTO> auDetails,
 			SmSupplierBank oldBank, SmSupplierBank newBank) {
 		if (!oldBank.getPmFinancialOrg().getFinancialOrgId().equals(newBank.getPmFinancialOrg().getFinancialOrgId())) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
@@ -77,7 +77,7 @@ public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBa
 		}
 	}
 
-	private void auditModifiedDataBankNo(List<AuSMDetailDTO> auDetails, SmSupplierBank oldBank, SmSupplierBank newBank) {
+	private void auditModifiedDataBankNo(List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank, SmSupplierBank newBank) {
 		if (!oldBank.getAccountNo().equals(newBank.getAccountNo())) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, oldBank.getAccountNo(),
@@ -85,7 +85,7 @@ public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBa
 		}
 	}
 
-	private void auditDeletedData(List<AuSMDetailDTO> auDetails,
+	private void auditDeletedData(List<AuditSupplierManagementDetailDTO> auDetails,
 			ListIterator<SmSupplierBank> oldBanks) {
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
@@ -99,7 +99,7 @@ public class AuditSMBankInformationBackingBean extends AuditSupplierManagementBa
 		}
 	}
 
-	private void auditAddedData(List<PmFinancialOrg> bankList, List<AuSMDetailDTO> auDetails,
+	private void auditAddedData(List<PmFinancialOrg> bankList, List<AuditSupplierManagementDetailDTO> auDetails,
 			ListIterator<SmSupplierBank> newBanks) {
 		while (newBanks.hasNext()) {
 			SmSupplierBank newBank = newBanks.next();

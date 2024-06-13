@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.dto.sm.audit.AuSMDetailDTO;
-import my.ep.dto.sm.audit.AuSupplierManagementDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -16,7 +16,7 @@ import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationMan
  * @since 12.06.2024 #28895_35501
  */
 
-public class AuditSMUserInformationBackingBean extends AuditSupplierManagementBackingBeanTemplate {
+public class AuditSupplierManagementUserInformationBackingBean extends AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,11 +28,11 @@ public class AuditSMUserInformationBackingBean extends AuditSupplierManagementBa
 	 *            prepare audit trail data
 	 */
 	@Override
-	public AuSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
 
-		AuSupplierManagementDTO auObj = new AuSupplierManagementDTO();
+		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ProfilePersonalizationManagedBean mBean = (ProfilePersonalizationManagedBean) managedBean;
-		List<AuSMDetailDTO> auDetails = new ArrayList<>();
+		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
 		PmUser oldUser = mBean.getOldSelectedUser();
 		PmUser newUser = mBean.getSelectedUser();
 
