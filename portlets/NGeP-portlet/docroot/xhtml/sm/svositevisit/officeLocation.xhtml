@@ -44,12 +44,23 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtSignBoardRmk" disabled="#{viewFlag}"
-					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" /></td>
-					
+				<!-- #34166 - Start  -->
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtSignBoardRmk" readonly="#{viewFlag}"
+					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" validator="#{svoSiteVisitBackingBean.validateText}" >
+					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.sign.board']}" />
+					<f:ajax event="blur" execute="@this" />
+					</p:inputTextarea>
+				</td>
+				<!-- #34166 - End -->	
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtShareWithRmk" disabled="#{viewFlag}"
-					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" /></td>
+				<!-- #34166 - Start  -->
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" id="txtShareWithRmk" readonly="#{viewFlag}"
+					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" validator="#{svoSiteVisitBackingBean.validateText}" >
+					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.share.with']}" />
+					<f:ajax event="blur" execute="@this" />
+					</p:inputTextarea>
+				</td>
+				<!-- #34166 - End  -->
 			</tr>
 			
 			<tr><td>&#160;</td></tr>
@@ -57,10 +68,14 @@
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
 				<td>
+				<!-- #34166 - Start  -->
 				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
-				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" disabled="#{viewFlag}">
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" validator="#{svoSiteVisitBackingBean.validateText}">
+					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" />
+					<f:ajax event="blur" execute="@this" />
 					<f:validateLength maximum="255" />
 				</p:inputTextarea>
+				<!-- #34166 - End  -->
 				</td>
 			</tr>
 		</table>

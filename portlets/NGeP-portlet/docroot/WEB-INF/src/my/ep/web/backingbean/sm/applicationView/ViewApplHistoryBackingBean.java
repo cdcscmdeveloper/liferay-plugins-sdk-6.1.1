@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -64,6 +65,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -651,9 +653,16 @@ public class ViewApplHistoryBackingBean extends
 		if (resDTO.getPoApproverRemarksList() != null) {
 			//log.info("PoApproverRemarksList() size:"
 					//+ resDTO.getPoApproverRemarksList().size());
+			//#32424 START--03032023--
+			boolean isMoreThanOneRemark = false; 	
+			
+			if(resDTO.getPoApproverRemarksList().size()> 1){
+				isMoreThanOneRemark = true; 
+			}//#32424 END--03032023--
 			for (Object[] obj : resDTO.getPoApproverRemarksList()) {
 				boolean isPoUser = false;
 				boolean isApproverUser = false;
+				boolean isBothPoApproverHaveRemark = false; //#32424 --03032023--
 
 				String userName = (String) obj[0];
 				Date remarkCreatedDate = (Date) obj[1];
@@ -665,6 +674,12 @@ public class ViewApplHistoryBackingBean extends
 						//+ remarkCreatedDate + ",roleType:" + roleType
 						//+ ",docType:" + docType + ",remark:" + remark);
 				
+				//#32424 START--03032023--
+				if (roleType.equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO) && 
+						roleType.equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_APP)){
+					isBothPoApproverHaveRemark = true;
+				} //#32424 END--03032023--
+
 				if (roleType != null){
 					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 						isPoUser = true;
@@ -677,11 +692,22 @@ public class ViewApplHistoryBackingBean extends
 
 				if (isPoUser) {
 					getManagedBean().setPoUserName(userName);
+					 //#32424 START--03032023--
+					//To handle a condition for scenario PO1 rejecting the application. 
+					if (docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)
+							&& !isMoreThanOneRemark
+							&& !isBothPoApproverHaveRemark) {
+						remark = "";  
+					} //#32424 END--03032023--
 					setPORemarksInfo(docType, remark, remarkCreatedDate);
 				} 
 				//25930
 				if(isApproverUser) {
 					getManagedBean().setApproverUserName(userName);
+					//#32424 START--03032023--
+					if (docType.equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)) {
+						remark = "";
+					} //#32424 END--03032023--
 					setApproverRemarksInfo(docType, remark, remarkCreatedDate);
 				}
 			}
@@ -689,44 +715,97 @@ public class ViewApplHistoryBackingBean extends
 		
 		// #29664 - start
 		SmRemarksReqDTO remarksReqDTO = new SmRemarksReqDTO();
-		remarksReqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE);
+		//remarksReqDTO.setDocType(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE); //#32424 --03032023--
 		remarksReqDTO.setDocId(getManagedBean().getSmAppl().getApplId());
-
-		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarksReqDTO);
-
+		//#32424 START--03032023--
+		SmRemaksResDTO remaksResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocIdSiteVisitAfterApproval(remarksReqDTO);
+		
 		if (remaksResDTO.getRemarksList().size() > 0) {
+			log.info("getRemarksList().size():: " + remaksResDTO.getRemarksList().size());
 			for (SmRemark poRemark : remaksResDTO.getRemarksList()) {
-				if (poRemark.getRoleCode() != null && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())) {
+				boolean isDifferentFirstAndSecondPoForApprovedAppl = false; 
+				boolean isDifferentFirstAndSecondPoForRejectedAppl = false; 
+				
+				// #32424 - start
+				if (!StringUtils.isEmpty(poRemark.getRoleCode()) && poRemark.getRoleCode().equals(RoleCode.UPS_PO.value())){				
+					System.out.println("getDocId:: " + poRemark.getDocId() + " || getRoleCode:: "
+							+ poRemark.getRoleCode() + " || getChangedDate:: " + poRemark.getChangedDate()
+							+ " || getRemark:: " + poRemark.getRemark());
+				// #32424 - end
 					getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
-					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
-
-					if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
-						PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
-						getManagedBean().setSecondPoUserName(user.getUserName());
-					}
-				} else {
-					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(poRemark.getCreatedBy());
-					String roleCode = StringUtils.EMPTY;
-					if (!EntityHelper.isCollectionEmpty(userRoles)) {
-						for (PmUserRole pmRole : userRoles) {
-							if (pmRole.getPmRole().getRoleCode().equals(RoleCode.UPS_PO.value()) && pmRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-								roleCode = pmRole.getPmRole().getRoleCode();
-								break;
+					getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getChangedDate());
+					
+					for (SmApplSectionReview smApplSectionreview : getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+						if(smApplSectionreview.getRoleType().equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+								&& (!smApplSectionreview.getChangedBy().equals(poRemark.getChangedBy())
+										||!poRemark.getChangedBy().equals(getManagedBean().getSmAppl().getPoUserId()))){
+								isDifferentFirstAndSecondPoForApprovedAppl = true;
 							}
-						}
 					}
-					if ((roleCode != null && roleCode.equals(RoleCode.UPS_PO.value()))) {
-						//System.out.println("getCreatedBy: " + poRemark.getCreatedBy() + " || getRoleCode = " + poRemark.getRoleCode() + " || getRemarkId = "
-								//+ poRemark.getRemarkId() + " || getRemark = " + poRemark.getRemark());
+					if (isDifferentFirstAndSecondPoForApprovedAppl) {  
+						PmUser user = SmCommonUtil.getUserByUserId(poRemark.getChangedBy());
+						getManagedBean().setSecondPoUserName(user.getUserName());
+					} 
+					break;
+				} else if (StringUtils.isEmpty(poRemark.getRoleCode())
+						&& poRemark.getDocType().equals(ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE)) {
+					// #32424 - start
+					SmWorkflowStatus currWorkflowStatus = SmCommonUtil.getCurrentActiveWokFlowStatus(getManagedBean()
+							.getSmAppl().getApplId());					
+					SimpleDateFormat sdf = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+					String poChangedDate = sdf.format(poRemark.getChangedDate());
+					String wFlowCreatedDate = sdf.format(currWorkflowStatus.getCreatedDate());
+					
+					System.out.println("getPoUserId== " + getManagedBean().getSmAppl().getPoUserId()
+							+ " || poRemark.getChangedBy()==" + poRemark.getChangedBy() 
+							+ " || wFlow CreatedBy==" + currWorkflowStatus.getCreatedBy() + " || applStatusId=="
+							+ getManagedBean().getSmAppl().getPmStatus().getStatusId() + " || wFlowStatusId=="
+							+ currWorkflowStatus.getPmStatus().getStatusId() + " || poChangedDate==" + poChangedDate
+							+ " || wFlowCreatedDate==" + wFlowCreatedDate);
+					
+					if ((getManagedBean().getSmAppl().getPoUserId() != null && ((getManagedBean().getSmAppl()
+							.getPoUserId().equals(poRemark.getChangedBy())) || poRemark.getChangedBy().equals(
+							currWorkflowStatus.getCreatedBy())))
+							&& (getManagedBean().getSmAppl().getPmStatus().getStatusId() != null
+									&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED && currWorkflowStatus
+									.getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_REGISTERED)
+							&& poChangedDate.equals(wFlowCreatedDate)) {
 						getManagedBean().setPoRemarkAfterSiteVisit(poRemark.getRemark());
-						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getCreatedDate());
-						if (!(poRemark.getCreatedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
-							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getCreatedBy());
+						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getChangedDate());
+
+						if (!(poRemark.getChangedBy().equals(getManagedBean().getSmAppl().getPoUserId()))) {
+							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getChangedBy());
 							getManagedBean().setSecondPoUserName(user.getUserName());
 						}
+
+						if (getManagedBean().getSmAppl().getPoUserId().equals(poRemark.getChangedBy())
+								|| poRemark.getChangedBy().equals(currWorkflowStatus.getCreatedBy())) {
+							// update roleCode in smRemark
+							log.info("getRemarkId:: " + poRemark.getRemarkId());
+							updateRoleCode(getManagedBean().getSmAppl().getApplId(), poRemark.getRemarkId(),
+									ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE, RoleCode.UPS_PO.value());
+						}
 					}
-				}
-			}
+				// #32424 - end
+				} else if (StringUtils.isEmpty(poRemark.getRoleCode()) && remaksResDTO.getRemarksList().size()>1
+								&& poRemark.getDocType().equals(ParameterConst.SM_APPLN_RMRK_DECISION_REJECT)) {
+						
+						for (SmApplSectionReview smApplSectionreview : getManagedBean().getSmAppl().getSmApplSectionReviews()) {
+							if(smApplSectionreview.getRoleType().equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+									&& (!smApplSectionreview.getChangedBy().equals(poRemark.getChangedBy())
+											||!poRemark.getChangedBy().equals(getManagedBean().getSmAppl().getPoUserId()))){
+									isDifferentFirstAndSecondPoForRejectedAppl = true;
+								}
+						}
+						if (isDifferentFirstAndSecondPoForRejectedAppl) {  
+							PmUser user = SmCommonUtil.getUserByUserId(poRemark.getChangedBy());
+							getManagedBean().setSecondPoUserName(user.getUserName());
+						}
+						
+						getManagedBean().setPoRemarkAfterSiteVisit("N/A");
+						getManagedBean().setPoRemarkAfterSiteVisitCreatedDate(poRemark.getChangedDate());
+					}
+			} //#32424 END--03032023--
 		}
 		// #29664 - end
 	}
@@ -1619,6 +1698,19 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
+	
+	// #32424 - start
+	public void updateRoleCode(Long applId, Long remarkId, String docType, String poRoleCode) {
+		System.out.println("ViewApplHistoryBackingBean.updateRoleCode()");
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocId(applId);
+		reqDTO.setRemarkId(remarkId);
+		reqDTO.setDocType(docType);
+		reqDTO.setRoleCode(poRoleCode);
+
+		SmServiceLookup.getSmRemarksSO().updateRoleCode(reqDTO);
+	}
+	// #32424 - end
 	
 	//26238 - start
 	public void onViewDisciplinaryAction() {

@@ -338,7 +338,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				PmPtjSpecialApproval ptjSpecialApproval = getPtjSpecialApprovalByOrgProfileId(pmOrgProfile.getOrgProfileId());
 				if (ptjSpecialApproval != null) {
 					scQt.setCircularVer(null);
-					this.getManagedBean().setPanel(null);
+					this.getManagedBean().setPanel(false);//35507 defaulted to false
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
