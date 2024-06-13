@@ -210,6 +210,7 @@ import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
+import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
@@ -993,6 +994,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reportUrl.append(URLEncoder.encode(params.getValue(), UTF));
 		}
 		reportUrl.append(excNextUrl);*/
+		String mimeType = "";	// Improvement #35657@Syazani 14/05/2024
 		String reportUrl= generateReportURL(reportName,paramMap);
 		log.info("reportUrl: " + reportUrl);
 
@@ -1030,6 +1032,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					URL obj = new URL(reportUrl.toString());
 					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
 					input = new BufferedInputStream(uc.getInputStream());
+					mimeType = uc.getContentType();	// Improvement #35657@Syazani 14/05/2024
 				} catch (ConnectException e) {
 					throw new EpException(MessageConst.ERROR_100058);
 				}
@@ -1042,6 +1045,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
+				
+				// Improvement #35657@Syazani 14/05/2024 -- Start
+				boolean mimeTypePDF = mimeType.equalsIgnoreCase(MimeType.pdf.contentType)
+						|| mimeType.equalsIgnoreCase(MimeType.bin.contentType);
+				if (!mimeTypePDF) {
+					log.info("Report server return '" + mimeType + "' Type");
+					log.info(bos.toString());
+					throw new EpException(MessageConst.ERROR_760530);
+				}
+				// Improvement #35657@Syazani 14/05/2024 -- End
+				
 				byte[] bytes = bos.toByteArray();
 				fos = new FileOutputStream(localFile);
 				fos.write(bytes);
