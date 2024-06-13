@@ -1607,6 +1607,12 @@ public class SpecificationBackingBean extends
 
 		log.debug("retriveBusinessOwnerQualificationCriteri - START");
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean().getTobeRemoveCategoryCodes();
+		//#29732 
+		if(CollectionUtils.isNotEmpty(deleteCategoryCodesList)){
+			this.getManagedBean().setTobeRemoveCategoryCodes(null);
+		}
+		//#29732
 		qtBackingBean.retrieveSuppQualificationTabDtl();
 	}
 
@@ -17742,11 +17748,18 @@ if (null != checklist && !checklist.isEmpty()) {
 		log.debug("start specCommitteMaintenanceBpmTask");
 		
 		// #29732(#232) reuse existing code- start
-		if (!isRoleValidationfromTaskListAllowRevise()) {
+		if (!isRoleValidationfromTaskListAllowRevise()
+				&& !action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)
+				|| isRoleValidationfromTaskListSpecEndorsement()
+				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| isRoleValidationfromTaskListAllowRevise()
+				&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE) || action
+						.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF))) {
 			if (isRoleValidationfromTaskList()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 			}
-		   	//#29732 check if submit with no category code before checking category code change
+			// #29732 check if submit with no category code before checking
+			// category code change
 			this.getManagedBean().setFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
@@ -23444,6 +23457,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
 				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
 				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value());
+	}
+	// 29732 end
+    
+	// 29732 start
+	private boolean isRoleValidationfromTaskListSpecEndorsement() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
 	// 29732 end
 }
