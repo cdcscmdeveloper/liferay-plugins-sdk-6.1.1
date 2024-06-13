@@ -9381,8 +9381,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getPoToSupplierInquiry().setResponseDate(new Date());
 		
 		// #34392 - start
-		for (SmApplSupportDoc smDocu : getManagedBean()
-				.getSmAppl().getSmApplSupportDocs()) {
+		for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
+				.getSmApplSupportDocs()) {
 			if(smDocu.getVerifiedFlg().equals(0)){
 				replaceNewFile(smDocu);	
 			}
@@ -9401,20 +9401,13 @@ public class SmApplicationBackingBean extends
 
 		List<SmApplDocFile> newDocFile = new ArrayList<>();
 
-		for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-			newDocFile.add(smDocFileNewAdded);
+		if(smDocu.getNewAddedFiles() != null){
+			for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+				newDocFile.add(smDocFileNewAdded);
+			}
 		}
 
 		smDocu.setSmApplDocFiles(newDocFile);
-		
-//		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
-//			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
-//				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-//					smDocFile.setFileName(smDocFileNewAdded.getFileName());
-//					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
-//				}
-//			}
-//		}
 	}
 	//#34392 - end
 
