@@ -388,4 +388,9 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_REVIEW = "reviewmanualsourcing";
 	public static final String  USER_PTJ_POPUP_HIDE = "userPtjPopup.hide();";
 	
+	//#29732 -Start
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String QT_CAT_CODE_CHANGE_ALERT_SHOW = "catCodeChangeAlert.show()";
+	//#29732 -End
 }
