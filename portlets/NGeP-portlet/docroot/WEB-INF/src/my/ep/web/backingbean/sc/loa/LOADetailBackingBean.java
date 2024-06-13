@@ -2550,7 +2550,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(getManagedBean().getContractSignerUser() != null){
 			PmUser contractSigner = getManagedBean().getContractSignerUser();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
-				LoaSigner = contractSigner.getUserName();
+				//20230111@Haziq - #12487&29693
+				LoaSigner = contractSigner.getSalutationCode().getSalutationName() + " "+  contractSigner.getUserName();
 			}
 		}
 		context.put("loaSigner", LoaSigner);	
@@ -4029,13 +4030,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				List<ScLoiLoaItem> items = getQtAwardSO().getLoiLoaItemByLoaIdAndReqItemId(
 						each.getScLoa().getLoaId(), each.getScRequestItem().getRequestNoteItemId());
 				
-				if (items.size() > 0) {
-					if((items.get(0).isComplete() == false) && (!currentItemName.equalsIgnoreCase(each.getScRequestItem().getItemName()))){
+				//start - #35828(fixing 29006) 
+				List<TplSpecAnswer> tpaList = getTemplateSpecSO().findSpecAnswersByQuestion(
+						each.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+
+				boolean condition1 = CollectionUtils.isNotEmpty(items) && !items.get(0).isComplete()
+						&& !currentItemName.equalsIgnoreCase(each.getScRequestItem().getItemName());
+				boolean condition2 = !CollectionUtils.isNotEmpty(items) && CollectionUtils.isNotEmpty(tpaList)
+						&& !currentItemName.equalsIgnoreCase(each.getScRequestItem().getItemName());
+
+				if (condition1 || condition2) {
 						count++;
 						updatedItems.append(count + ". " + each.getScRequestItem().getItemName() + "</br>");//#29006 - uat issue
 						currentItemName = each.getScRequestItem().getItemName();
-					}
 				}
+				//end - #35828(fixing 29006)
 			}
 			//#29006 - end - note 607/619
 			
