@@ -65,6 +65,8 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 		try {
 			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+			log.info("from Template Class !!!! ");
+			System.out.println("from Template Class !!!! ");
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
