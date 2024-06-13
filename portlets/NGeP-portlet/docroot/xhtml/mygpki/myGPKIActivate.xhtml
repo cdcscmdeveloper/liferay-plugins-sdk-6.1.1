@@ -54,7 +54,14 @@ textarea {
 	text-align: right !important;
 }
 </style>
-
+		<!-- # RnD URL -->
+		<p:remoteCommand name="getUrlAll" action="#{myGpkiBackingBean.getUrlAll()}"/>
+		<script type="text/javascript">
+			$(document).ready( function(){
+				getUrlAll();
+			});
+		</script>
+		
 		<p:blockUI block="myGPKIActivate" widgetVar="gpkiBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -62,31 +69,6 @@ textarea {
 			autoUpdate="true" closable="true" />
 			
 		<p:panel id="myGPKIActivate">
-			<!-- RnD URL -->
-			<!-- START FOR TESTING SERVER URL ISSUE TO PRINT VALUE FROM ALL FUNCTION -->
-			<h:panelGrid columns="1">
-				<p:commandButton value="getServerUrlAgreementBackingBean" 
-					action="#{myGpkiBackingBean.getServerUrlAgreementBackingBean}"/>
-					
-				<p:commandButton value="getServerUrlTerminationBackingBean" 
-					action="#{myGpkiBackingBean.getServerUrlTerminationBackingBean}"/>
-					
-				<p:commandButton value="getServerUrlRequestNoteBackingBean" 
-					action="#{myGpkiBackingBean.getServerUrlRequestNoteBackingBean}"/>
-					
-				<p:commandButton value="getServerUrlSvoSiteVisitBackingBean" 
-					action="#{myGpkiBackingBean.getServerUrlSvoSiteVisitBackingBean}"/>
-				
-				<p:commandButton value="getServerUrlDocumentGenerator" 
-					action="#{myGpkiBackingBean.getServerUrlDocumentGenerator}"/>
-				
-				<p:commandButton value="getServerUrlQT ??" 
-					action="#{myGpkiBackingBean.getServerUrlQT}"/>
-				
-				<p:commandButton value="getServerUrlPaan ??" 
-					action="#{myGpkiBackingBean.getServerUrlPaan}"/>
-			</h:panelGrid>
-			<!-- RnD URL - end -->
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tbody>
