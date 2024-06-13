@@ -356,4 +356,10 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	//#29732 -Start
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String QT_CAT_CODE_CHANGE_ALER_SHOW = "catCodeChangeAlert.show()";
+	//#29732 -End
 }
