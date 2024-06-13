@@ -17757,10 +17757,14 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void specCommitteMaintenanceBpmTask(String action) {
 		log.debug("start specCommitteMaintenanceBpmTask");
 		// #29732(#232) reuse existing code- start
+<<<<<<< HEAD
 		if (!isRoleValidationfromTaskListAllowRevise() && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)
 				|| isRoleValidationfromTaskListSpecEndorsement() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| isRoleValidationfromTaskListAllowRevise() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF))
 				){//this not allow to endorse from tasklist
+=======
+		if (!isRoleValidationfromTaskListAllowRevise()) {
+>>>>>>> refs/remotes/origin/release-sit
 			if (isRoleValidationfromTaskList()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 			}
@@ -22693,6 +22697,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value()); 
 	}
     //29732 end
+<<<<<<< HEAD
     
 	  //29732 start
     private boolean isRoleValidationfromTaskListSpecEndorsement(){
@@ -22701,4 +22706,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
 	}
     //29732 end
+=======
+>>>>>>> refs/remotes/origin/release-sit
 }
