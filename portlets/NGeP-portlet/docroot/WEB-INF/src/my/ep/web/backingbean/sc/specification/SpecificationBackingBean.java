@@ -12523,7 +12523,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALER_SHOW);
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 		}
@@ -17363,7 +17363,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		String changedCatCodeList = checkCatCodeChange();
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setCatCodeList(changedCatCodeList);
-			RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALER_SHOW);
+			RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 			return;
 		}
 // #29732 End - reOpen Fix
@@ -17762,7 +17762,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALER_SHOW);
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 		}
