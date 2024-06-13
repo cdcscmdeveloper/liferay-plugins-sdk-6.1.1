@@ -11176,12 +11176,12 @@ if (null != checklist && !checklist.isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.category.has.changes.on.prerender.view.1", null,
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2, new String[] { changedCatCodeList },
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 		}
 		// #29732 @idham 25/07/2023 - End
@@ -12523,7 +12523,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALER_SHOW);
 				return;
 			}
 		}
@@ -17363,7 +17363,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		String changedCatCodeList = checkCatCodeChange();
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setCatCodeList(changedCatCodeList);
-			RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+			RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALER_SHOW);
 			return;
 		}
 // #29732 End - reOpen Fix
@@ -17723,12 +17723,12 @@ if (null != checklist && !checklist.isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.category.has.changes.on.prerender.view.1", null,
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2, new String[] { changedCatCodeList },
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 		}
 		// #29732(#232) - End
@@ -17762,7 +17762,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALER_SHOW);
 				return;
 			}
 		}
