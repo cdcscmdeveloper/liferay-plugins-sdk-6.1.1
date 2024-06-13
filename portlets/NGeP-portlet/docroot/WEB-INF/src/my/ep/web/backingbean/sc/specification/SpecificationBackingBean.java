@@ -11166,25 +11166,23 @@ if (null != checklist && !checklist.isEmpty()) {
 	}//11104-End
 		
 		// #29732 @idham 25/07/2023 - Start
-	   if ((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId)
-				|| (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-						.equals(statusId)) && !this.getManagedBean().isReadOnly())) {
-			String changedCatCodeList = checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
-				this.getManagedBean().setActiveIndex(1);
-				retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.category.has.changes.on.prerender.view.1", null,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			}
+		if (isRoleValidationfromTaskList()) {
+			this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+		}
+		String changedCatCodeList = checkCatCodeChange();
+		if (!changedCatCodeList.isEmpty()) {
+			this.getManagedBean().setActiveIndex(1);
+			retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2, new String[] { changedCatCodeList },
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 		}
 		// #29732 @idham 25/07/2023 - End
 		
@@ -12512,20 +12510,20 @@ if (null != checklist && !checklist.isEmpty()) {
 	 */
 	public void specCommitteBpmTask(String action) {
 // #29732 Start - reOpen Fix
-		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
-				.equals((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))
-				|| this.getManagedBean()
-						.getQt()
-						.getQtStatus()
-						.getStatusId()
-						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
-		   	//#29732 check if submit with no category code before checking category code change
-			this.getManagedBean().setIsFromSubmitCatChange(true);
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) 
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
+			// #29732 check if submit with no category code before checking category
+			IQTSpecSO specSo = getSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+			this.getManagedBean().setFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 		}
@@ -17356,23 +17354,17 @@ if (null != checklist && !checklist.isEmpty()) {
 	 */
 	public void submitSpecMaintenanceDtls(String action) {
 // #29732 Start - reOpen Fix
-		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
-				.equals((QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL))
-				|| this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-				&& (this.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals((QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) || this.getManagedBean().getQt()
-						.getQtStatus().getStatusId().equals((QTStatusConst.QT_REVISION_PUBLICATION)))) {
-		   	//#29732 check if submit with no category code before checking category code change
-			IQTSpecSO specSo = getSpecSO();
-			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
-			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
-			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
-			String changedCatCodeList = checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
-				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
-				return;
-			}
+		// #29732 check if submit with no category code before checking category
+		// code change
+		IQTSpecSO specSo = getSpecSO();
+		SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+		specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+		String changedCatCodeList = checkCatCodeChange();
+		if (!changedCatCodeList.isEmpty()) {
+			this.getManagedBean().setCatCodeList(changedCatCodeList);
+			RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
+			return;
 		}
 // #29732 End - reOpen Fix
 		log.debug("start submitSpecMaintenanceDtls" + action);
@@ -17721,27 +17713,23 @@ if (null != checklist && !checklist.isEmpty()) {
 		//#15391 - end
 
 		// #29732(#232) reuse existing code
-		if ((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(statusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(statusId) || (this.getManagedBean()
-				.getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-				.equals(statusId) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(statusId)))
-				&& !this.getManagedBean().isReadOnly())) {
-			String changedCatCodeList = checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
-				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
-				this.getManagedBean().setActiveIndex(1);
-				retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.category.has.changes.on.prerender.view.1", null,
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			}
+		if (isRoleValidationfromTaskList()) {
+			this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+		}
+		String changedCatCodeList = checkCatCodeChange();
+		if (!changedCatCodeList.isEmpty()) {
+			this.getManagedBean().setActiveIndex(1);
+			retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2, new String[] { changedCatCodeList },
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 		}
 		// #29732(#232) - End
 
@@ -17765,29 +17753,16 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void specCommitteMaintenanceBpmTask(String action) {
 		log.debug("start specCommitteMaintenanceBpmTask");
 		// #29732(#232) reuse existing code- start
-		if (this.getManagedBean().getQt().getQtStatus().getStatusId()
-				.equals((QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))
-				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) 
-						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
-								&& !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action)
-								&& !BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action))
-						//#29732 exclude endorsement
-				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-						.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) 
-						&& (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action) 
-								&& !BpmOutcomeConst.BPM_ENDORSE.equalsIgnoreCase(action)
-								&& !BpmOutcomeConst.BPM_SIGNOFF.equalsIgnoreCase(action))
-						//#29732 exclude endorsement
-				&& !this.getManagedBean().isReadOnly()) {
+		if (!isRoleValidationfromTaskListAllowRevise()) {
+			if (isRoleValidationfromTaskList()) {
+				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+			}
 		   	//#29732 check if submit with no category code before checking category code change
-			this.getManagedBean().setIsFromSubmitCatChange(true);
+			this.getManagedBean().setFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 		}
@@ -21718,11 +21693,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #29732 Start - reOpen Fix
 	public String checkCatCodeChange() {
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
-				&& !this.getManagedBean().isFromSubmitCatChange) {
+				&& !this.getManagedBean().isFromSubmitCatChange()) {
 				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 				qtBackingBean.retrieveSuppQualificationTabDtl();
 		}else if(CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
-				&& this.getManagedBean().isFromSubmitCatChange){
+				&& this.getManagedBean().isFromSubmitCatChange()){
 			IQTSpecSO specSo = getSpecSO();
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
@@ -22693,4 +22668,22 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 		}	
 	}// 11104-Reendose794
+	
+	  //29732 start
+    private boolean isRoleValidationfromTaskList(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
+	}
+    //29732 end
+  //29732 start
+    private boolean isRoleValidationfromTaskListAllowRevise(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value()); 
+	}
+    //29732 end
 }
