@@ -9735,20 +9735,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		List<SmApplDocFile> newDocFile = new ArrayList<>();
 
-		for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-			newDocFile.add(smDocFileNewAdded);
+		if(smDocu.getNewAddedFiles() != null){
+			for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+				newDocFile.add(smDocFileNewAdded);
+			}
 		}
-
 		smDocu.setSmApplDocFiles(newDocFile);
-		
-//		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
-//			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
-//				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-//					smDocFile.setFileName(smDocFileNewAdded.getFileName());
-//					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
-//				}
-//			}
-//		}
 	}
 	//#34392 - end
 	
