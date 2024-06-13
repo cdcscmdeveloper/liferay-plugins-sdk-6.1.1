@@ -849,11 +849,9 @@ public class SmSideMenuIconUtil {
 				
 				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
 					for (SmApplSupportDoc doc : licenseMandatoryDocs) {
-						if(doc.getVerifiedFlg() != null){
-							if(doc.getVerifiedFlg() == 0){
-								licenseMandatoryDocVerified = false;
-								break;
-							}
+						if(doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0){
+							licenseMandatoryDocVerified = false;
+							break;
 						}
 					}
 				}
@@ -862,20 +860,16 @@ public class SmSideMenuIconUtil {
 					for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
 						if(doc.getSmApplDocFiles() != null){
 							for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
-								if(!docFile.getFilePath().equals(" ")){
-									if(doc.getVerifiedFlg() != null){
-										if(doc.getVerifiedFlg() == 0){
-											nonMandatoryDocVerified = false;
-											break;
-										}
-									}
+								if(!(" ").equals(docFile.getFilePath()) && doc.getVerifiedFlg() != null 
+										&& doc.getVerifiedFlg() == 0){
+									nonMandatoryDocVerified = false;
+									break;
 								}
 							}
 							if(!nonMandatoryDocVerified){
 								break;
 							}
 						}
-						
 					}
 				}
 					
