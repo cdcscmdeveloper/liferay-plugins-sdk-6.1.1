@@ -243,6 +243,28 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 		return ResourceBundleUtils.getMessage("lbl.msg.confirm.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 
+	/*#21387 - basri 13/4/22*/
+	/**
+	 * Retrieve cancel confirmation message for contract request administrator by passing in document type
+	 * 
+	 * @param docType the document type
+	 * @return Cancel Confirmation message
+	 */
+	public String getCancelRequestAdminConfirmationContent(String docType) {
+		return ResourceBundleUtils.getMessage("lbl.ct.msg.confirm.request.cancel", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+	
+	/**
+	 * Retrieve reject confirmation message for contract request administrator by passing in document type
+	 * 
+	 * @param docType the document type
+	 * @return Reject Confirmation message
+	 */
+	public String getRejectRequestAdminConfirmationContent(String docType) {
+		return ResourceBundleUtils.getMessage("lbl.msg.confirm.reject.contractAdministrator", new Object[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType)}, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+	/*#21387 - basri*/
+	
 	/**
 	 * Method used to retrieve actor by document Id, document type and role code.
 	 * 
