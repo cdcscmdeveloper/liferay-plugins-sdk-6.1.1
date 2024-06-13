@@ -4308,7 +4308,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * 
 	 * Gets the server IP.
 	 *
-	 * @return the server IP ex:http://192.168.120.15:8621/
+	 * @return the server IP ex:http://192.168.120.15:8621
 	 */
 	public String getServerIP() {
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
@@ -4316,13 +4316,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil
 				.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
-		return requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) + "/";
+		return requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length());
 	}
 	
 	/**
 	 * Get Liferay Portal Base URL
 	 * 
-	 * @return String
+	 * @return String the server dns ex : http://ngepdevwps01.eperolehan.com.my:8888/
 	 */
 	public String getBasePortalUrl() {
 		FacesContext fCtx = FacesContext.getCurrentInstance();
