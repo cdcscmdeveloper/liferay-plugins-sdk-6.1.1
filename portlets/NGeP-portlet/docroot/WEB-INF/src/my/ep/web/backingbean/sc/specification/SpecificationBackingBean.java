@@ -1581,6 +1581,10 @@ public class SpecificationBackingBean extends
 
 		log.debug("retriveBusinessOwnerQualificationCriteri - START");
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean().getTobeRemoveCategoryCodes();
+		if(CollectionUtils.isNotEmpty(deleteCategoryCodesList)){
+			this.getManagedBean().setTobeRemoveCategoryCodes(null);
+		}
 		qtBackingBean.retrieveSuppQualificationTabDtl();
 	}
 
@@ -17753,7 +17757,10 @@ if (null != checklist && !checklist.isEmpty()) {
 	public void specCommitteMaintenanceBpmTask(String action) {
 		log.debug("start specCommitteMaintenanceBpmTask");
 		// #29732(#232) reuse existing code- start
-		if (!isRoleValidationfromTaskListAllowRevise()) {
+		if (!isRoleValidationfromTaskListAllowRevise() && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)
+				|| isRoleValidationfromTaskListSpecEndorsement() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| isRoleValidationfromTaskListAllowRevise() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF))
+				){//this not allow to endorse from tasklist
 			if (isRoleValidationfromTaskList()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 			}
@@ -22684,6 +22691,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
 				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
 				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value()); 
+	}
+    //29732 end
+    
+	  //29732 start
+    private boolean isRoleValidationfromTaskListSpecEndorsement(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
 	}
     //29732 end
 }

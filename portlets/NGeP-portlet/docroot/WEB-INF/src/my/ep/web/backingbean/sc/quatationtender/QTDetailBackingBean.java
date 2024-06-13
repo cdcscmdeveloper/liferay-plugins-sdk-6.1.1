@@ -1293,7 +1293,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
 					.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) || 
 					this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)) {
+							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
+							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
 				if(isQTRoleMaintenanceValidation()){
 					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 				}
