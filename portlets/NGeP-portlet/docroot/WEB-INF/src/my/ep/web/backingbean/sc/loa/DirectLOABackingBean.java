@@ -6351,7 +6351,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
         if(scLoa.getContractSigner() != null){
             PmUser contractSigner = scLoa.getContractSigner();
             if(StringUtils.isNotEmpty(contractSigner.getUserName())){
-                LoaSigner = contractSigner.getUserName();
+              //20230111@Haziq - #12487&29693
+			  LoaSigner = contractSigner.getSalutationCode().getSalutationName() + " "+  contractSigner.getUserName();
             }
         }
         context.put("loaSigner", LoaSigner);
@@ -9263,7 +9264,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(scLoa.getContractSigner() != null){
 			PmUser contractSigner = scLoa.getContractSigner();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
-				LoaSigner = contractSigner.getUserName();
+				//20230111@Haziq - #12487&29693
+				LoaSigner = contractSigner.getSalutationCode().getSalutationName() + " "+  contractSigner.getUserName();
 			}
 		}
 		context.put("loaSigner", LoaSigner);	
