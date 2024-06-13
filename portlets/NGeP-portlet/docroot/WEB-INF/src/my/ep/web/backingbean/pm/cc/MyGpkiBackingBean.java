@@ -7,11 +7,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.net.ssl.SSLContext;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.EpPropertiesConst;
@@ -20,8 +17,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.http.HttpEntity;
@@ -46,7 +41,7 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "myGpkiBackingBean")
 @SessionScoped
-public class MyGpkiBackingBean  extends BaseBackingBean<BaseManagedBean> implements Serializable {
+public class MyGpkiBackingBean  implements Serializable {
 
 	/**
 	 * 
@@ -374,142 +369,7 @@ public class MyGpkiBackingBean  extends BaseBackingBean<BaseManagedBean> impleme
 	public void setQrCodeText(String qrCodeText) {
 		this.qrCodeText = qrCodeText;
 	}
-	
-	
-	////# RnD URL
-	//*START FOR TESTING SERVER URL ISSUE TO PRINT VALUE FROM ALL FUNCTION*/
-	public String getUrlAll() {
-		getServerUrlAgreementBackingBean();
-		getServerUrlTerminationBackingBean();
-		getServerUrlRequestNoteBackingBean();
-		getServerUrlSvoSiteVisitBackingBean();
-		getServerUrlDocumentGenerator();
-		getServerUrlQT();
-		getServerUrlPaan();
-		log.info("Final version IP : "+getServerIP());
-		log.info("Final version DNS : "+getBasePortalUrl());
-		return "";
-	}
-	/**
-	 * The method used to retrieve the base URL.
-	 * 
-	 * @return url  the base URL
-	 */
-	//AgreementBackingBean.java
-	public String getServerUrlAgreementBackingBean() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
-				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-		log.info("getServerUrlAgreementBackingBean: " + url);
-		return url;
-	}
-	//TerminationBackingBean.java
-	/**
-	 * Method used to call during generation of letter
-	 * This method used to retrieve portal information 
-	 */
-	public String getServerUrlTerminationBackingBean() {
-		PortletRequest portletRequest = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
-				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url2 = requestURL.substring(0, requestURL.length()	- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-		log.info("getServerUrlTerminationBackingBean: " + url2);
-		return url2;
-	}	
-	//RequestNoteBackingBean.java
-	/**
-	 * Gets the server url.
-	 * 
-	 * @return the server url
-	 */
-	public String getServerUrlRequestNoteBackingBean() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
-				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length())
-				+ httpServletRequest.getContextPath() + "/";
-		log.info("getServerUrlRequestNoteBackingBean: " + url);
-		return url;
-	}
-	
-	//SvoSiteVisitBackingBean.java
-	/**
-	 * Gets the server url.
-	 *
-	 * @return the server url
-	 */
-	public String getServerUrlSvoSiteVisitBackingBean() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
-				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
-		log.info("getServerUrlSvoSiteVisitBackingBean: " + url);
-		return url;
-	}
-	
-	//DocumentGenerator.java
-	public String getServerUrlDocumentGenerator() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
-				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-		log.info("getServerUrlDocumentGenerator: " + url);
-		return url;
-	}
-	
-	/**
-	 * #26130 (06/06/2024) - start 
-	 * 
-	 * Gets the server url.
-	 *
-	 * @return the server url
-	 */
-	public String getServerUrlQT() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
-				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		log.info("HANZ URL: " + requestURL);
-		log.info("HANZ URL ContextPath: " + httpServletRequest.getContextPath());
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length()) + "/";
-		log.info("getServerUrlQT: " + url);
-		return url;
-	}
-	//#26130 (06/06/2024) - end
-	
-	/**
-	 * #26130 (06/06/2024) - start 
-	 * 
-	 * Gets the server url.
-	 *
-	 * @return the server url
-	 */
-	public String getServerUrlPaan() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
-		HttpServletRequest httpServletRequest = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(
-				com.liferay.portal.util.PortalUtil.getHttpServletRequest(portletRequest));
-		String requestURL = httpServletRequest.getRequestURL().toString();
-		log.info("HANZ URL: " + requestURL);
-		log.info("HANZ URL ContextPath: " + httpServletRequest.getContextPath());
-		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length()) + "/";
-		log.info("getServerUrlPaan: " + url);
-		return url;
-	}
-	//#26130 (06/06/2024) - end
-	
-	/*END FOR TESTING SERVER URL ISSUE TO PRINT VALUE FROM ALL FUNCTION*/
+
 
 
 }
