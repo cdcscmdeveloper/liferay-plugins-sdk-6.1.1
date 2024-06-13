@@ -283,11 +283,15 @@ u.underline {
 				## #25025 #478 - start
 				<p>
 					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga Kontrak adalah tidak termasuk cukai perkhidmatan selaras dengan Perintah Cukai Perkhidmatan 2018. </span>
+																												 
+																														 
+														
 				</p>
 				## #25025 & #26770 -end
 	
 				<p>
 					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk perolehan Perkhidmatan yang tidak dikenakan cukai di bawah Perintah Cukai Perkhidmatan 2018) </span>
+																							   
 				</p>
 				## #25025 #478 - end
 				## #25025 & #26770 -start
@@ -339,6 +343,16 @@ u.underline {
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(b)</td>
 									<td style="text-align:justify;">suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (RM______________) dan resit premium; </td>
+			  
+								
+																  
+											 
+																														  
+			  
+																														  
+			 
+		 
+		 
 								</tr>
 								## #25025 #478 - start	
 								<tr class="text_family_red">
@@ -364,10 +378,18 @@ u.underline {
 				#if($isSL1M == "true")
 					<p>
 						<span class="text_family_red">
+										   
 							*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs- Ready To Work </i> 
+																																			 
+																																							   
+																					  
+		   
+																											   
 							(PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 							dengan bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW sebanyak ______________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 							peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
+		  
+	 
 					</p>
 					<p>
 						<table width="25%" align="center" style="border-collapse: collapse;">
@@ -406,13 +428,25 @@ u.underline {
 				#if($isSL1M == "true")
 				##26770 - start
 				<p>
+																			 
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
 					untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
+		  
+																																		  
+																				  
+		 
 				</p>
 				##26770 - end
 				#else
 				<p>
+																			
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
+																				  
+		 
+																																	   
+																				 
+		
+	 
 				</p>
 				#end
 				
@@ -457,6 +491,7 @@ u.underline {
 						## #25025 & #26770 -end
 						<p>
 							<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+																																	 
 						</p>
 					#end
 					
@@ -518,6 +553,11 @@ u.underline {
 								<td align="center" style="vertical-align: top;">(f)</td>
 								#if ($isSL1M == "true")
 									<td>syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya pembekalan barang tanpa kelulusan Kerajaan terlebih dahulu;</td>
+			
+		   
+																
+																				 
+																																																 
 								#else
 									<td>syarikat tuan telah memberikan subkontrak sama ada sepenuhnya atau sebahagiannya perkhidmatan tanpa kelulusan Kerajaan terlebih dahulu;</td>
 								#end
@@ -700,7 +740,12 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
+											 
+																																														   
+			  
 									<td class="text_header_submenu">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+			 
+		 
 								</tr>
 						</table>		
 					</td>
@@ -798,7 +843,12 @@ u.underline {
 						## #25025-start
 						<table class="text_family">
 							<td align="center" style="vertical-align: top;">4.1 </td>
+																			   
 							<td>Harga $docType (butiran harga seperti di <b><i>Lampiran A1</i></b>)</td>
+			
+																				   
+		   
+	   
 						</table>
 						## #25025-end	
 					</td>
@@ -872,6 +922,9 @@ u.underline {
 							perkhidmatan dan/atau tempoh serta jadual penyempurnaan perkhidmatan yang
 							ditetapkan seperti di <b><i>Lampiran A2</i></b></span>
 							<br/>
+										   
+																																												   
+			
 								<span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span>
 	   
 					</td>
@@ -927,9 +980,12 @@ u.underline {
 					<td class="text_family_red">RM $!bondAmt</td>
 				</tr>
 				<tr>						   
+												   
 					<td valign="top" align="left" class="submenu_padding"><span class="text_family_red">7.4 Bentuk Bon Pelaksanaan</span></td>
 					<td valign="top" class="text_family_red">:</td>					   
+										   
 					<td class="text_family_red" style="text-align:justify;">Jaminan Bank/Bank Islam/Bank Pembangunan Malaysia Berhad; atau Jaminan Syarikat Kewangan; atau Jaminan Insurans/Takaful</td>														
+																				
 				</tr>
 				<tr valign="top">
 					<td align="left" class="submenu_padding"><span
@@ -955,7 +1011,11 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
+																				 
 										<td class ="text_header_submenu">No Kod Majikan PERKESO/No. Pendaftaran KWSP/<span class="text_header_submenu_red">*Polisi Insurans (jika berkaitan)</span></td>
+			  
+																																										   
+			 
 								</tr>
 						</table>
 					</td>
@@ -1032,12 +1092,17 @@ u.underline {
 					<td class="text_family_red" valign="bottom">
 					    <table border="0" cellpadding="0" cellspacing="0" width="100%">
 					      <tr style="margin-bottom:1px;" align="bottom">														 
+																					 
 						     <td align="bottom" class="dottedBorderRed"><span class="text_family_medium" style="text-align:justify;">Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>
+				  
+																																																								
+				   
 					      </tr>
 					    </table>
 					</td>
 				</tr>
 				<tr valign="top">							   
+												   
 					<td align="left" class="submenu_padding"><span class="text_family_red">9.2 Kadar Sehari</span></td>
 					<td class="text_family_red">:</td>
 					<td>
@@ -1059,6 +1124,7 @@ u.underline {
 									<td class="text_header_submenu"><i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> (PROT&Eacute;G&Eacute; - RTW) (jika berkaitan)
 										<br/>
 										<span class="text_family_small_black">(Bagi perolehan yang telah melebihi nilai ambang berdasarkan PP/PK1.12). Tidak terpakai bagi perolehan di bawah nilai ambang pelaksanaan PROT&Eacute;G&Eacute;-RTW dan tidak melaksanakan PROT&Eacute;G&Eacute;-RTW)</span>												   
+																					   
 									</td>
 								</tr>
 						</table>
@@ -1084,6 +1150,7 @@ u.underline {
 						</table>
 					</td>
 					<td valign="top" class="text_family">:</td>
+		 
 					<table width="100%" align="left" style="border-collapse: collapse;">
 						<tr>
 							<td>
@@ -1223,6 +1290,17 @@ u.underline {
 				
 				<p style="text-align:left;">
 					<span class="text_family">
+										  
+									  
+															
+															
+								 
+										   
+			
+		
+	
+								
+							   
 						Ketua Pegawai Eksekutif<br/>
 						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
 						Menara Hasil<br/>
@@ -1244,6 +1322,16 @@ u.underline {
 					</span>
 				</p>
 				## #25025 #478 - start
+								
+							   
+					  
+										 
+									 
+									  
+								 
+			
+		
+	
 				<p style="text-align:left;">
 					<span class="text_family">
 						Sekretariat Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;)<br/>
@@ -1282,6 +1370,10 @@ u.underline {
 	</table>
 
 #if($jadualHargaItemBean.productItemBeans.size() > 0)
+																			   
+												   
+					  
+			   
 <div class="break-after"><br/></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -1333,6 +1425,10 @@ u.underline {
 </table>
 #end
 #if ($jadualHargaItemBean.serviceItemBeans.size() > 0)
+																			   
+												   
+	   
+			   
 <div class="break-after"><br/></div>
 <table width="100%" border="0" cellpadding="0" cellspacing="-1">
 	<tr>
@@ -1389,7 +1485,11 @@ u.underline {
 		</td>
 	</tr>
 </table>
+				  
+																			   
+												   
 #end
+			   
 #if ($scLoa.scLoiLoa.docType != "PR")
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -1636,20 +1736,20 @@ u.underline {
 								#set($colspanZone = 6)
 						#end
 							<tr>
-								<td colspan="2" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
+								<td colspan="2" width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Tajuk Templat</nobr></td>
 								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$tplspecMaster.specName</td>
 							</tr>
 							<tr>
-								<td colspan="2" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
+								<td colspan="2" width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Item</nobr></td>
 								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemTypeCode)</td>
 							</tr>
 							<tr>
-								<td colspan="2" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Barangan</nobr></td>
+								<td colspan="2" width="20%" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold;"><nobr>Jenis Barangan</nobr></td>
 								<td class="title border left" colspan="$colspanZone" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 							</tr>
 							<tr>
-								<td colspan="2" class="title border left" style="text-align: left; border-right: none !important; border-bottom: none !important;">&nbsp;</td>
-								<td class="title border left" colspan="$colspanZone" style="text-align: left; border-left: none !important; border-bottom: none !important;">&nbsp;</td>
+								<td colspan="2" class="title border left" style="text-align: left; border-right:none; border-bottom: none !important;">&nbsp;</td>
+								<td class="title border left" colspan="$colspanZone" style="text-align: left; border-left:none; border-bottom: none !important;">&nbsp;</td>
 							</tr>
 							<tr>
 					            <th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
@@ -2192,7 +2292,7 @@ u.underline {
 				##26130 - start 03032022
 				#set($rowCount = 0)
 				#if($tplspecMaster.tplSpecQuestions.size() > 0)
-				<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+				<table width="103%" border="1" cellpadding="0" cellspacing="-1">
 				##26130 - end 03032022
 						 #if ($rowCount == 0)
 							<tr>
@@ -2208,11 +2308,11 @@ u.underline {
 								<td class="title border left" colspan="10" style="text-align: left; padding-left: 5px; padding-right: 5px;">$bean.getParameterDescForReport($tplspecMaster.itemOriginCode)</td>
 							</tr>
 							<tr>
-								<td width="20%" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-weight: bold; border-right: none !important; border-bottom: none !important;"><nobr>&nbsp;</nobr></td>
-								<td class="title border left" colspan="10" style="text-align: left; border-left: none !important; border-bottom: none !important;">&nbsp;</td>
+								<td class="title border left" style="text-align: left; border-right:none;  border-bottom: none !important;">&nbsp;</td>
+								<td class="title border left" colspan="10" style="text-align: left; border-left:none;  border-bottom: none !important;">&nbsp;</td>
 							</tr>
 						</table>
-						<table width="100%" border="1" cellpadding="0" cellspacing="-1">		
+						<table width="103%" border="1" cellpadding="0" cellspacing="-1">		
 							<tr>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
