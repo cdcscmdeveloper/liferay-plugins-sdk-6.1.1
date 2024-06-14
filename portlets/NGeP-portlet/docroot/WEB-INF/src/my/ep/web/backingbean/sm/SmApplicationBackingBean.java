@@ -9735,20 +9735,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		List<SmApplDocFile> newDocFile = new ArrayList<>();
 
-		for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-			newDocFile.add(smDocFileNewAdded);
+		if(smDocu.getNewAddedFiles() != null){
+			for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+				newDocFile.add(smDocFileNewAdded);
+			}
 		}
-
 		smDocu.setSmApplDocFiles(newDocFile);
-		
-//		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
-//			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
-//				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-//					smDocFile.setFileName(smDocFileNewAdded.getFileName());
-//					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
-//				}
-//			}
-//		}
 	}
 	//#34392 - end
 	
@@ -15604,13 +15596,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public void setVerifiedSupportDoc() {
-		/*for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
-				.getSmApplSupportDocs()) {
-			if (applSuppDoc.getVerifiedFlg() != null) {
-				applSuppDoc
-						.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
-			}
-		}*/
 		//#31043 START
 		List<SmApplSupportDoc> allSupportDocs = getManagedBean().getSmAppl().getSmApplSupportDocs();
 	    // Create a map of all documents with their IDs for quick lookup
