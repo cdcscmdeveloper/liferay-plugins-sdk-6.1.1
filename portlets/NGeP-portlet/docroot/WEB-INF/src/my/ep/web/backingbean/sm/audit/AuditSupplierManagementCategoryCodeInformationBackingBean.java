@@ -1,0 +1,55 @@
+package my.ep.web.backingbean.sm.audit;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.sm.SmDeleteCategoryCodeManagedBean;
+
+/**
+ * @author Firdaus Omar
+ * @since 13.06.2024 #28895_35501
+ */
+
+public class AuditSupplierManagementCategoryCodeInformationBackingBean extends
+		AuditSupplierManagementBackingBeanTemplate {
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @param managedBean
+	 * @param org
+	 * @param user
+	 * @param roleCode
+	 *            prepare audit trail data
+	 */
+	@Override
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+
+		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
+		SmDeleteCategoryCodeManagedBean mBean = (SmDeleteCategoryCodeManagedBean) managedBean;
+		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
+
+		List<SmSupplierCategory> delCatCodeList = mBean.getSelectedCategories();
+
+		for (SmSupplierCategory catCode : delCatCodeList) {
+			String Category = catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name()
+					+ "<br/>" + catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name()
+					+ "<br/>" + catCode.getPmCategoryL3().getCategoryL3Code() + " - " + catCode.getCategoryL3Name();
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
+					AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO, Category, null,
+					catCode.getSupplierCategoryId(), null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY_CODE));
+		}
+
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
+				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO);
+
+		return auObj;
+	}
+}

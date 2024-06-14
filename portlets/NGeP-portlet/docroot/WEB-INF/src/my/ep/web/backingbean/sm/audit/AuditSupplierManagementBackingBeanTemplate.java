@@ -97,8 +97,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		auDetail.setSmFieldLabelId(BigInteger.valueOf(fieldLabelId));
 		auDetail.setOldValue(oldValue != null ? oldValue : null);
 		auDetail.setNewValue(newValue != null ? newValue : null);
-		auDetail.setOldValueId(newValueId != null ? BigInteger.valueOf(newValueId) : null);
-		auDetail.setNewValueId(oldValueId != null ? BigInteger.valueOf(oldValueId) : null);
+		auDetail.setOldValueId(oldValueId != null ? BigInteger.valueOf(oldValueId) : null);
+		auDetail.setNewValueId(newValueId != null ? BigInteger.valueOf(newValueId) : null);
 		auDetail.setFieldLabelCode(BigInteger.valueOf(fieldLabelCode));
 		return auDetail;
 	}
