@@ -715,19 +715,22 @@ public class AccessApplBackingBean extends
 
 				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
 				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				reqDTO.setMarketResearchType(accessAppl.isMarketResearch());
+				reqDTO.setCompanyProfileType(accessAppl.isCompanyProfile());
+
 				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
 				if (resDTO.isSuccessful() && !resDTO.isValid()) {
-		
+
+					this.getManagedBean().getAccessAppl().isMarketResearch();
+
 					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
 							.getCreatedDate()) });
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("cannot retrieve created dated ",e);
 				throw e;
-			} finally {
-				accessApplSO = null;
 			}
 		}
 		// #35584 - End
