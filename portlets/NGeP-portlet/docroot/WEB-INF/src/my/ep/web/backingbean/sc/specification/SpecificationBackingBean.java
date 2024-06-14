@@ -70,7 +70,6 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -124,7 +123,6 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
@@ -168,7 +166,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.pm.general.settings.bpm.PmCompositeValidity;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
@@ -292,7 +289,6 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
-import com.bea.common.security.xacml.CollectionUtil;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.util.PortalUtil;
 //#25138
@@ -13469,6 +13465,34 @@ if (null != checklist && !checklist.isEmpty()) {
 					}
 				}//#28784 - End
 				if (this.getManagedBean().getQt().isDemoRequired()) {
+					// #28784 - reset Demo status after delete spec
+					IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+					SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+					reqDTO.setScQt(this.getManagedBean().getQt());					
+					List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+					List<ScQtCheckList> demoUpdateList = new ArrayList<>();
+					ScQtCheckList demo = null;
+					if (this.getManagedBean().isNewVersion()) {
+
+						for (ScQtCheckList t : st2technicalproposalList) {
+							if (t.getDefinationType().getParameterCode()
+									.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+								t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+								t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+								demo = t;
+								demoUpdateList.add(t);
+								break;
+							}
+						}
+						
+						reqDTO.setCheckLists(demoUpdateList);
+					}
+					if (demo != null) {
+						SpecificationResDTO resDto = specSO.completeDemoChecklist(reqDTO);
+						this.getManagedBean().getScQtCheckSt2techProposal().set(this.getManagedBean().getScQtCheckSt2techProposal().indexOf(demo)
+								, resDto.getSavedCheckLists().get(0));
+					}
 					resetDemoSpecStatus();// #28784
 				}
 				this.getManagedBean().setCheckListTitle("");
@@ -22117,6 +22141,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		boolean checkTS = false;
 		//retriveTechnicalCheckList(); //#28784
 		List<ScQtCheckList> st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+		List<ScQtCheckList> demoTemplateList = new ArrayList<>();
 
 		for (ScQtCheckList t : st2technicalproposalList) {
 			if (t.getDefinationType().getParameterCode()
@@ -22137,6 +22162,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						}
 					}
 				}
+				demoTemplateList.add(t);
 			}
 		}
 
@@ -22186,6 +22212,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				this.getManagedBean().setPanelSpecExistedOrNot(false);
 				specCommitteeResetData();
 				checkDemoVersion(savedCheckListsDemo.get(0).getScQt());//28784 -  WIP
+				
+				//update demo weightage	
+				reqDTO1.setTobeRemoveList(demoTemplateList);
+				specSO.updateDemoScoreWeightage(reqDTO1);
+				
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
 		} else {
