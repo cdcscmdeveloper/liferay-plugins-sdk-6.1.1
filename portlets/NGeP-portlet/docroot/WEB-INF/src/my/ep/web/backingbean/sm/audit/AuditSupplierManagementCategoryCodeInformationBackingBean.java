@@ -48,7 +48,7 @@ public class AuditSupplierManagementCategoryCodeInformationBackingBean extends
 		}
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO);
+				AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO);
 
 		return auObj;
 	}
