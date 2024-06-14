@@ -4785,25 +4785,20 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
+			//29582, 30064, 35300 start
+			PmParameter ic = retrieveParameterByTypeAndCode(
+					ParameterTypeConst.IDENTIFICATION_TYPES,
+					SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 			if (per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)
-					|| (per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per // start #30064
-							.getIdentificationType().getParameterCode()
-							.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES))) { // end #30064
-				PmParameter ic = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				per.setIdentificationTypeId(ic.getParameterId());
-				//start #30064
-				if(per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per 
-						.getIdentificationType().getParameterCode()
-						.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
-					per.setIdentificationType(per.getIdentificationType());
-				}else{
-					per.setIdentificationType(ic);
-				}
-				//end #30064
-			} else {
+				per.setIdentificationType(ic);
+			}   
+			if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) &&
+					per.getIdentificationTypeId().equals(ic.getParameterId())){
+				per.setIdentificationType(per.getIdentificationType());
+			}//29582, 30064, 35300 end
+			else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
 						StringUtils.EMPTY);

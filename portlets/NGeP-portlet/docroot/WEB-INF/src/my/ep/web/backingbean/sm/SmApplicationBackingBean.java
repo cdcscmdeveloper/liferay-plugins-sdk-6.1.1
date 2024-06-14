@@ -18107,11 +18107,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if(isROB){
 			return new String[]{"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull",
 					"designationSsmNull","equityOwner","director","pmCountry","directorSsm",
-					"equityOwnerSsm","managementSsm","pmRace", "otherRaceSsm"};
+					"equityOwnerSsm","managementSsm","pmRace", "otherRaceSsm", "permanentResident"};//35300
 		}
 		return new String[]{"name","birthDate","designation","shareAmt","nameInSsm","raceSsmNull",
 				"birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull",
-				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm"};
+				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm","permanentResident"};//35300
 	}
 	//#35145 - end
 	
