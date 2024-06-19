@@ -4793,12 +4793,12 @@ public class SmCommonUtil {
 					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				per.setIdentificationTypeId(ic.getParameterId());
 				per.setIdentificationType(ic);
-			}   
-			if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) &&
-					per.getIdentificationTypeId().equals(ic.getParameterId())){
+			}	else if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) 
+					&& per.isPermanentResident()){
 				per.setIdentificationType(per.getIdentificationType());
+				per.setIdentificationType(ic);
 			}//29582, 30064, 35300 end
-			else {
+		else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
 						StringUtils.EMPTY);
