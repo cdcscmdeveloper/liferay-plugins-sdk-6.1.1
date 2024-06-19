@@ -1170,6 +1170,7 @@ public class QTDetailBackingBean extends
 		} finally {
 			detailSO = null;
 		}
+
 		return REDIRECT_PAGE;
 	}
 	
@@ -9223,7 +9224,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void saveQtCAApproval() {
 		//IQTDetailSO detailSO;
-
+		
 		try {
 			if (((getUserTaskIsCommitteeAppointmentApproval() && this.getManagedBean().getActiveIndex() == 5) || (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && this.getManagedBean()
 					.getActiveIndex() == 9))) {
