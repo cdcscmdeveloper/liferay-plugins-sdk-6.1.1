@@ -1171,7 +1171,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#21692 05/02/2024 - Start
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
 			if (selectedScQt.getResponsePeriod() != null &&
-					selectedScQt.getResponsePeriod() != result) {
+					selectedScQt.getResponsePeriod() != result && enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD)) {//#21692 note-#418 issue 2
 				selectedScQt.setResponsePeriod(result);
 			}
 			//#21692 05/02/2024 - End
