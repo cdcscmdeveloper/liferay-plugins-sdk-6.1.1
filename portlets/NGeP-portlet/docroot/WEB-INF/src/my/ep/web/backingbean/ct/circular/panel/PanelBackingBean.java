@@ -467,6 +467,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		else {
 			return "search.xhtml?faces-redirect=true";
 		}
+		
+		return null;
 	}
 
 	/**
