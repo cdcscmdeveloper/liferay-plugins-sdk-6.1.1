@@ -120,7 +120,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		String desc = null;
 		Boolean isRejApplExpired = false;
 
-		if(userSupplier != null){
+		if (userSupplier != null) {
 			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
 			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
 			suppSearchReqDTO.setSupplierId(userSupplier.getSupplierId());
@@ -138,122 +138,121 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
-			
+
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
-			
-			//Self Request Supplier Admin
+
+			// Self Request Supplier Admin
 			if (supplier.getRecordStatusFlg() == SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS) {
 				path = basicAccountFlow(supplier);
-			}else{
-				//Active Appl
-				if(appl != null){
-					log.info("*****In Progress*********" + isRejectedApplExist);			
+			} else {
+				// Active Appl
+				if (appl != null) {
+					log.info("*****In Progress*********" + isRejectedApplExist);
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
 					this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
 					log.info("*****workFlowStatus*********" + getManagedBean().getStatusDesc() + " " + workFlowStatus.getPmStatus().getStatusId());
-					
-					//Enhancement #20467
-					if(rejectedWf != null){
+
+					// Enhancement #20467
+					if (rejectedWf != null) {
 						log.info("************** currentStatusAndPath: rejectedWf.getDocId() = " + rejectedWf.getDocId());
 						SmAppl rejAppl = new SmAppl();
 						rejAppl.setApplId(rejectedWf.getDocId());
-						
-						//to check rejected appl expired or not
-						isRejApplExpired = checkRejectedApplExpired(rejAppl);				
+
+						// to check rejected appl expired or not
+						isRejApplExpired = checkRejectedApplExpired(rejAppl);
 						log.info("************** currentStatusAndPath: isRejApplExpired = " + isRejApplExpired);
-						
-						//if rejected appl expired, treat as new appl
-						if(isRejApplExpired) {
+
+						// if rejected appl expired, treat as new appl
+						if (isRejApplExpired) {
 							isRejectedApplExist = false;
 						}
 					}
 
-					if(successPayment){
+					if (successPayment) {
 						setSuccessPaymentFlag();
-						
-						//to check whether is resubmit
-						if(appl.isResubmit()){
+
+						// to check whether is resubmit
+						if (appl.isResubmit()) {
 							getManagedBean().setRejectedApplExist(true);
-						}else{
-							//if refId for processing fee not equeal to current workflow doc id
-							//treat is as rejectedAppl
+						} else {
+							// if refId for processing fee not equeal to current workflow doc id
+							// treat is as rejectedAppl
 							PyBill pyBill = getSuccessPaymentApplIdBySupplierId(supplier.getSupplierId());
-							if(pyBill != null){
-								if(pyBill.getBillRefId() == workFlowStatus.getDocId()){
+							if (pyBill != null) {
+								if (pyBill.getBillRefId() == workFlowStatus.getDocId()) {
 									getManagedBean().setRejectedApplExist(false);
 									successPayment = false;
-								}else{
-									if(rejectedPaymentExpired(supplier.getSupplierId()).size() > 0){
+								} else {
+									if (rejectedPaymentExpired(supplier.getSupplierId()).size() > 0) {
 										// to avoid resubmit flow when supplier rejected by system during Registration fee(20119)
 										getManagedBean().setRejectedApplExist(false);
 									}
-									//if rejected appl expired, user need to pay processing fee
-									if(isRejApplExpired) {
+									// if rejected appl expired, user need to pay processing fee
+									if (isRejApplExpired) {
 										getManagedBean().setSuccessPayment(false);
 									}
 								}
-							}else{
+							} else {
 								getManagedBean().setRejectedApplExist(false);
-								if(isRejApplExpired) {
+								if (isRejApplExpired) {
 									getManagedBean().setSuccessPayment(false);
 								}
 							}
 						}
 					}
-					
-					showHyperlink(workFlowStatus.getPmStatus().getStatusId(),isRejectedApplExist,successPayment);
+
+					showHyperlink(workFlowStatus.getPmStatus().getStatusId(), isRejectedApplExist, successPayment);
 					path = TASK_LIST_PATH;
-					log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());	
-					
-					if(workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION_L){
-						if(isRejApplExpired) {
+					log.info("*****Flow Status*********" + getManagedBean().getFlowStatus());
+
+					if (workFlowStatus.getPmStatus().getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION_L) {
+						if (isRejApplExpired) {
 							getManagedBean().setFlowStatus(1);
-						} else if(rejectedWf != null){
+						} else if (rejectedWf != null) {
 							validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
 						}
 					}
-					
-					if(isRejApplExpired) {
+
+					if (isRejApplExpired) {
 						setExpiredRejectedApplFlag();
 					}
 
-				}else{
-					//MOF APPL
-					if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+				} else {
+					// MOF APPL
+					if (supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 						SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
-						if(workFlowStatus != null && 
-							(workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTERED || 
-							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL || 
-							workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT)){
-							if(successPayment){
+						if (workFlowStatus != null
+								&& (workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_REGISTERED
+										|| workFlowStatus.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_SV_ASSIGNMENT_AFTER_APPROVAL || workFlowStatus
+										.getPmStatus().getStatusId().longValue() == my.ep.constant.sm.SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT)) {
+							if (successPayment) {
 								getManagedBean().setSuccessPayment(true);
 							}
-							
-							setRejectApplFlagByPayment(supplier,workFlowStatus);
-							
-							path = mofSupplierFlowAfterApproval(supplier,getManagedBean().isRejectedApplExist());
-						}else{
+
+							setRejectApplFlagByPayment(supplier, workFlowStatus);
+
+							path = mofSupplierFlowAfterApproval(supplier, getManagedBean().isRejectedApplExist());
+						} else {
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
-							if(wfStatus != null){
+							if (wfStatus != null) {
 								PmStatus wfStat = wfStatus.getPmStatus();
-								//31792
-								//32627 START
-								if(wfStat != null &&
-									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
-									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
-									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS ||
-									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY ||
-									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY ||
-									wfStat.getStatusId() == SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)){
-								//32627 END	
+								// 31792
+								// 32627 START
+								if (wfStat != null
+										&& (wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION
+												|| wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION
+												|| wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS
+												|| wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY
+												|| wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY || wfStat.getStatusId() == SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT)) {
+									// 32627 END
 									log.info("*******Resubmit********");
-									//path = RESUBMIT_APPLICATION + wfStatus.getDocId();
+									// path = RESUBMIT_APPLICATION + wfStatus.getDocId();
 									getManagedBean().setFlowStatus(3);
 									path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
-									
-									if(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS){
+
+									if (wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS) {
 										log.info("*******PM_STATUS_REJECTED_BY_SYS********");
-										if(!checkSuccessPaymentBySupplierId(supplier.getSupplierId())){
+										if (!checkSuccessPaymentBySupplierId(supplier.getSupplierId())) {
 											log.info("*******No SUCCESS PAYMENT********");
 											getManagedBean().setRejectedApplExist(false);
 											path = MOF_REG_PATH;
@@ -261,39 +260,37 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 											getManagedBean().setDisplayRejectLabel(true);
 										}
 									}
-								}else{
+								} else {
 									getManagedBean().setRejectedApplExist(false);
 									log.info("*******Not Resubmit********");
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
-									
-									if(rejectedWf != null){
+
+									if (rejectedWf != null) {
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
-								//#35579 --start--
-										if(wfStat != null &&
-												wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT){
+										// #35579 --start--
+										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
 											getManagedBean().setFlowStatus(8);
 										}
-									}else{
-										if(wfStat != null &&
-												wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT){
+									} else {
+										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
 											getManagedBean().setFlowStatus(7);
 										}
 									}
-								//#35579 --end--							
+									// #35579 --end--
 								}
-							}else{
+							} else {
 								path = MOF_REG_PATH;
 								getManagedBean().setFlowStatus(1);
 							}
 						}
-						log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
-					}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
+						log.info("********FLOW STATUS**********" + getManagedBean().getFlowStatus());
+					} else if (supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)) {
 						path = basicAccountFlow(supplier);
 					}
 				}
 			}
-			
+
 		}
 
 		return path;
