@@ -2861,6 +2861,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
 						resDTO.getSmPersonnel().setSsmData(false);
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -4188,9 +4190,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
 		getManagedBean().getPersonnelsRole().clear();
 		getManagedBean().setDowngradeRole(false);
+		getManagedBean().setDisAllowOwnerEdit(false);
 		
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-
+		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
+		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
@@ -4198,25 +4203,34 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 				
-				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
-						&& isPersonnelAdminRole(personnel)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				
+				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
+				
+				if(isPersonnelAdminRole
+						&& !isMofAccEffDatePassed6MonthCurrDate
+						&& !isBasicAccount){
+					getManagedBean().setDisAllowOwnerEdit(true);
+				}
+				
+//				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
+//						&& isPersonnelAdminRole(personnel)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				}
 			}
 		}
-		if(!getManagedBean().getPersonnelsRole().isEmpty()){
-			getManagedBean().setDisAllowOwnerEdit(false);
-			for(SmPersonnel smPersonnel : getManagedBean().getPersonnelsRole()){
-				if(isMofAccEffDatePassed6MonthCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
-					getManagedBean().setDisAllowOwnerEdit(true);
-					break;
-				}
-			}
+		if(getManagedBean().getPersonnelsRole() != null 
+				&& !getManagedBean().getPersonnelsRole().isEmpty()){
 			
 			getManagedBean().setDowngradeRole(true);
 			
@@ -4254,7 +4268,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return Organization Code
 	 */
 	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+		IOrgProfileSO profileSO =  BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
@@ -4265,10 +4279,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				reqDTO).getPmOrgProfile();
 		if (orgProfile != null) {
 			return orgProfile.getOrgCode();
-		} else {
-			log.info("PTJ not found : " + orgProfileId);
-			return null;
 		}
+			
+		return null;
 	}
 	
 	//#12487 end
@@ -4280,7 +4293,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @throws IOException
 	 */
 	public void downloadCancelledBumiAppl(boolean isSVC) throws IOException{
-		Map<String, String> paramMap = new HashMap<String, String>();
+		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
 		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes().getUserSessionBean().getUserId().toString());
 		paramMap.put("PLANGUANGE", "ms");
