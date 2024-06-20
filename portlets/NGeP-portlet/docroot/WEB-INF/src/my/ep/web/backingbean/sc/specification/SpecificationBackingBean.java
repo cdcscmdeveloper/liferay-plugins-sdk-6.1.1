@@ -13496,6 +13496,7 @@ if (null != checklist && !checklist.isEmpty()) {
 								break;
 							}
 						}
+						sampleDetailsPendingTemplateSpec();//11104-807
 					}//11104-End				
 					
 					addDemoTechnicalCheckList();//#28784
