@@ -142,6 +142,10 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
 	// 28855 - End
+	
+	//#35508 start
+	private String originalSupplierDoRef;
+	//#35508 end
 
 	/**
 	 * Gets the item selected for cal.
@@ -1363,4 +1367,12 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.itemSpecList = itemSpecList;
 	}
 	//28855 - End
+
+	public String getOriginalSupplierDoRef() {
+		return originalSupplierDoRef;
+	}
+
+	public void setOriginalSupplierDoRef(String originalSupplierDoRef) {
+		this.originalSupplierDoRef = originalSupplierDoRef;
+	}
 }

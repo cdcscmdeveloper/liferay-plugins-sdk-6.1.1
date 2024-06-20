@@ -36,6 +36,7 @@ import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -45,6 +46,8 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.AuditFLConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -53,6 +56,9 @@ import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.fl.audit.AuFLReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -73,6 +79,7 @@ import my.ep.persistence.entity.fl.order.FlTempDoItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -89,6 +96,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
+import my.ep.web.backingbean.fl.audit.FulfilmentAuditBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -340,6 +348,26 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
+				//#35508 fl audit trail - DO modification start
+				if(resDTO.isSuccessful()){
+					PmUser userAudit = getFacesScopes().getUserSessionBean();
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+						insertAuditTrailFl(getManagedBean().getFlDeliveryOrder(),userAudit,
+								getManagedBean().getFlDeliveryOrder().getFlRequest().getSmSupplier().getSupplierId(),
+								getManagedBean().getFlDeliveryOrder().getFlRequest().getSmSupplier().getCompanyName(),
+								getManagedBean().getOriginalSupplierDoRef(),getManagedBean().getFlDeliveryOrder().getSupplierDoRef(),AuditFLConst.AUD_ACTION_TYPE_MODIFY);						
+					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+						IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+						UserReqDTO userReqDTO = new UserReqDTO();
+						userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+						UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+						PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+						insertAuditTrailFl(getManagedBean().getFlDeliveryOrder(),userAudit,
+								pmOrgAudit.getOrgProfileId(),pmOrgAudit.getOrgName(),
+								null,null,AuditFLConst.AUD_ACTION_TYPE_APPROVE);
+					}
+				}
+				//#35508 fl audit trail - DO modification end
 			}
 			else{
 				resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
@@ -843,6 +871,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setContractFlag(false);
 		}
 		//28855 - End
+		
+		//#35508 fl audit trail - set original DO supplier ref no
+		if(getManagedBean().getFlDeliveryOrder() != null){
+			getManagedBean().setOriginalSupplierDoRef(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());			
+		}
+		//#35508 fl audit trail
 	}
 
 	/**
@@ -1714,4 +1748,32 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		return itemName;		
 	}
 	//#21416 end
+	
+	//#35508 fl audit trail - insert method
+	public void insertAuditTrailFl(FlDeliveryOrder fldo,PmUser userAudit,Long orgProfileId,String OrgName,String newSupplierDoRef,String oldSupplierDoRef,String auditActionType){
+		log.info("35508: start audit");
+		//add audit insert
+		FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+		List<AuFLReqDTO> objList = new ArrayList<>();
+		//insert for DO
+		AuFLReqDTO auFLSPDTO = new AuFLReqDTO();
+		auFLSPDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+		auFLSPDTO.setRoleCode(getUserRole());
+		auFLSPDTO.setOrgProfileId(orgProfileId);
+		auFLSPDTO.setOrgName(OrgName);
+		auFLSPDTO.setDocId(fldo.getDeliveryOrderId());
+		auFLSPDTO.setDocNo(fldo.getDeliveryOrderNo());
+		auFLSPDTO.setStatusId(fldo.getStatus().getStatusId());
+		auFLSPDTO.setActionType(auditActionType);
+		auFLSPDTO.setFlFieldLabelId(AuditFLConst.FL_AU_DO_NO_FIELDLABELID);
+		auFLSPDTO.setFulfilmentReqId(getManagedBean().getFlDeliveryOrder().getFlRequest().getFulfilmentReqId());
+		auFLSPDTO.setOldValue(newSupplierDoRef);
+		auFLSPDTO.setNewValue(oldSupplierDoRef);
+		auFLSPDTO.setCreatedBy(userAudit.getUserId());
+		auFLSPDTO.setFieldLabelCode(AuditFLConst.FL_AU_DO_NO_FIELDLABELCODE);
+		
+		objList.add(auFLSPDTO);
+		auflBB.auditInsertFL(objList);
+	}
+	//#35508 fl audit trail
 }
