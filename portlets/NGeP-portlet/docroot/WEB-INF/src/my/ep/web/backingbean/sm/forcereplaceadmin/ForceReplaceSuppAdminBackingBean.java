@@ -347,7 +347,9 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 						.inactiveSupplierRole(getOldAdminReqDTO());
-			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
+			//33129
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && getManagedBean().getSmAppl() != null &&
+					getManagedBean().getSmAppl().getPmStatus() != null &&
 					(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
 					getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
 				getManagedBean().setBypassFlag1(1);
