@@ -3687,6 +3687,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 			}
 		}
+		
 		if(getManagedBean().getPersonnelsRole() != null 
 				&& !getManagedBean().getPersonnelsRole().isEmpty()) {			
 			getManagedBean().setDowngradeRole(true);
