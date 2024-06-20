@@ -2321,6 +2321,7 @@ public void saveComplianceSample() {
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			reqDTO.setScQt(this.getManagedBean().getScQt());//#29187 Added Vinod
 			evaluationSO.preInitializeChecklist(reqDTO);//34496 4serangkai
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			
@@ -19097,10 +19098,7 @@ private void retriveCommitteeRemarksList(){
 			ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 			score = templateSpecSO.getMaxDemoScore(this.getManagedBean().getSinglesummaryItemList().getTplSpecQuestion().getSpecQuestionId());
-			if (score != null) {
-				score = this.getManagedBean().getDemoWeightage().equals(BigDecimal.ZERO) || this.getManagedBean().getDemoWeightage() == null ? score :
-					new BigDecimal(score).multiply(this.getManagedBean().getDemoWeightage()).toString();
-			} else {
+			if (score == null) {
 				score = SourcingConstants.NO_TS_DEMO_DATA_EXIST;
 			}
 		}
