@@ -3673,6 +3673,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
 				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+				
 				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
 				
 				if(shouldAddPersonnel){
@@ -3688,13 +3689,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		if(getManagedBean().getPersonnelsRole() != null 
-				&& !getManagedBean().getPersonnelsRole().isEmpty()) {
-			getManagedBean().setDisAllowOwnerEdit(false);
-			for(SmPersonnel smPersonnel : getManagedBean().getPersonnelsRole()){
-				if(!isMofAccEffDatePassedCurrDate(supplier) && isPersonnelAdminRole(smPersonnel)){
-					getManagedBean().setDisAllowOwnerEdit(true);
-				}
-			}
+				&& !getManagedBean().getPersonnelsRole().isEmpty()){
 			
 			getManagedBean().setDowngradeRole(true);
 			
