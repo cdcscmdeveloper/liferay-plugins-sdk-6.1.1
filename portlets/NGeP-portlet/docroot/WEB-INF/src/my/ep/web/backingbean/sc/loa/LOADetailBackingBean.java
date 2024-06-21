@@ -2241,10 +2241,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// ##25025 #509 -start
+		log.debug("Start [25025]");
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
+		log.debug("End [25025]");
 		// ##25025 #509 -start		
 
 		String issueDate = "______________";
@@ -2435,11 +2437,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
+			log.debug("Start [25025]");
 			if (qtNo.contains("SQ") && StringUtils.isNotEmpty(rnNo)) {
 				qtNo = qtNo + "/" + rnNo;
 			} else {
 				qtNo = rnNo;
 			}
+			log.debug("Start [25025] - " + qtNo);
 			context.put("docType", "Pembelian Terus"); 
 		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
 				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
