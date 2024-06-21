@@ -10707,9 +10707,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
 		String dafaltValue = "T/B";
 		
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "T/B";
-		}
 		
 		if (scLoa.getScLoiLoaItems().size() != 0) {
 			scLoiLoaItemsList = new ArrayList<ScLoiLoaItem>();
