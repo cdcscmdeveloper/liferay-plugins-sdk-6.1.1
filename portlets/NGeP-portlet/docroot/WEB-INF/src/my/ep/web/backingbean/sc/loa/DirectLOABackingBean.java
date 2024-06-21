@@ -10696,6 +10696,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	/* #29007 Start Vinod */
 	private void generateLampiranA3PdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
+		log.info("generateLampiranA3PdfFromVelocity -- Start-- Loa No : "+scLoa.getLoaNo());
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
@@ -10706,6 +10707,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		VelocityContext context = new VelocityContext();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
 		String dafaltValue = "T/B";
+		log.info("dafaltValue initally : "+dafaltValue);
 		
 		
 		if (scLoa.getScLoiLoaItems().size() != 0) {
@@ -10981,7 +10983,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		
+		log.info("dafaltValue before setting to serviceScope : "+dafaltValue);
 		context.put("serviceScope", dafaltValue);
+		log.info("context : "+context.toString());
 		context.put("itemsList", scLoiLoaItemsList);
 		context.put("isZonal", scLoa.getScLoiLoa().isZonal());
 		context.put("bean", this);
@@ -11010,6 +11014,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getUserIdSessionFromLoginId(), ex);
 			// Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 		}
+		log.info("generateLampiranA3PdfFromVelocity -- End-- Loa No : "+scLoa.getLoaNo());
 	}
 	// #29007 -end-
 
