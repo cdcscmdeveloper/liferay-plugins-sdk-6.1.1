@@ -159,12 +159,15 @@
 						 label="#{lbl['lbl.sc.tec.compliance']}"
 						 value="#{tplSpecAnswer.compliance}" 
 						 disabled="#{evaluationBackingBean.managedBean.readOnly}" 
-						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec and !tplSpecAnswer.notOfferAll}">
+						 rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec 
+									and !(tplSpecAnswer.notOfferAll and !tplSpecAnswer.notApplicable and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected))}">
 			<f:selectItems value="#{templateSpecBackingBean.getMandatorySpecAndComplianceDropdownValues(true)}" />
 			<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=questionTbl])" listener="#{templateSpecBackingBean.onchangeCompliance(tplSpecAnswer)}" />
 		</h:selectOneMenu>
-		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  and !tplSpecAnswer.tplSpecQuestion.mandatorySpec and !tplSpecAnswer.notOfferAll}"/>
-		<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec and tplSpecAnswer.notOfferAll}"/>
+		<h:outputText value="" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification  and !tplSpecAnswer.tplSpecQuestion.mandatorySpec 
+		and !(tplSpecAnswer.notOfferAll and !tplSpecAnswer.notApplicable and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected))}"/>
+		<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification and tplSpecAnswer.tplSpecQuestion.mandatorySpec 
+		and (tplSpecAnswer.notOfferAll and !tplSpecAnswer.notApplicable and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected))}"/>
 		<p:message id="specComplianceMsg" for="specCompliance" display="icon" />
 	</p:column>
 	<!-- #29187 End Vinod -->
