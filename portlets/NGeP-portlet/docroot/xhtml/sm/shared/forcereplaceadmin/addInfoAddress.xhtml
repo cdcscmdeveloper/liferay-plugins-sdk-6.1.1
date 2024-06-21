@@ -59,7 +59,7 @@
 										id="basicPermAddCountryList" label="#{lbl['lbl.sm.country']}"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCountry.countryId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permCountries}" />
 										<!-- #34159 - START -->
@@ -82,7 +82,7 @@
 										label="#{lbl['lbl.sm.state']}" id="basicPermAddStateList"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmState.stateId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permStates}" />
 										<p:ajax event="change"
@@ -109,7 +109,7 @@
 												label="#{lbl['lbl.sm.division']}" id="basicPermAddDivisionList"
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmDivision.divisionId}"
 												style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems value="#{forceReplaceSuppAdminBackingBean.managedBean.permDivisions}" />
 												<p:ajax event="change" update="basicPermAddDistrictList, basicPermAddCityList"
 													listener="#{forceReplaceSuppAdminBackingBean.updatePermAddLists(null,null,forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmDivision.divisionId,null)}" />
@@ -129,7 +129,7 @@
 										label="#{lbl['lbl.sm.district']}" id="basicPermAddDistrictList"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmDistrict.districtId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permDistricts}" />
 										<!-- #34159 - START -->
@@ -149,7 +149,7 @@
 										label="#{lbl['lbl.sm.towncity']}" id="basicPermAddCityList"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCity.cityId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permCities}" />
 											<p:ajax event="change" update="@this"  process="@this" partialSubmit="true"></p:ajax>
@@ -258,7 +258,7 @@
 										label="#{lbl['lbl.sm.country']}"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmCountry.countryId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.mailCountries}" />
 										<!-- #34159 - START -->
@@ -284,7 +284,7 @@
 										label="#{lbl['lbl.sm.state']}" id="basicMailAddStateList"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmState.stateId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.mailStates}" />
 										<p:ajax event="change"
@@ -314,7 +314,7 @@
 												label="#{lbl['lbl.sm.division']}" id="basicMailAddDivisionList"
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmDivision.divisionId}"
 												style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems value="#{forceReplaceSuppAdminBackingBean.managedBean.mailDivisions}" />
 												<p:ajax event="change"
 													update="basicMailAddDistrictList basicMailAddCityList"
@@ -338,7 +338,7 @@
 											id="basicMailAddDistrictList" label="#{lbl['lbl.sm.district']}"
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmDistrict.districtId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.mailDistricts}" />
 											<!-- #34159 - START -->
@@ -361,7 +361,7 @@
 											id="basicMailAddCityList" label="#{lbl['lbl.sm.towncity']}"
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.mailAddr.smAddress.pmCity.cityId}"
 											style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{forceReplaceSuppAdminBackingBean.managedBean.mailCities}" />
 											</p:selectOneMenu>
