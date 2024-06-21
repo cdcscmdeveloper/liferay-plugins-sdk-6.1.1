@@ -11,6 +11,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -741,7 +742,7 @@ public class SmSideMenuIconUtil {
 				//retVal = ICON_UNTICK; 
 				
 				boolean mandatoryDocVerified = false; 
-				boolean nonMandatoryDocVerified = false; 
+				boolean nonMandatoryDocVerified = true; 
 				boolean licenseMandatoryDocVerified = true; 
 				
 				log.info("SmAppl revise: "+bean.getSmAppl().getPmStatus().getStatusId());
@@ -850,9 +851,24 @@ public class SmSideMenuIconUtil {
 					}
 					if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
 						for (SmApplSupportDoc doc : licenseMandatoryDocs) {
-							if(doc.getVerifiedFlg() != null){
-								if(doc.getVerifiedFlg() == 0){
-									licenseMandatoryDocVerified = false;
+							if(doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0){
+								licenseMandatoryDocVerified = false;
+								break;
+							}
+						}
+					}
+					
+					if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
+						for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
+							if(doc.getSmApplDocFiles() != null){
+								for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
+									if(!(" ").equals(docFile.getFilePath()) && doc.getVerifiedFlg() != null 
+											&& doc.getVerifiedFlg() == 0){
+										nonMandatoryDocVerified = false;
+										break;
+									}
+								}
+								if(!nonMandatoryDocVerified){
 									break;
 								}
 							}
@@ -862,6 +878,9 @@ public class SmSideMenuIconUtil {
 				if(mandatoryDocVerified){
 					retVal = ICON_TICK;
 					if(!licenseMandatoryDocVerified && !EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
+						retVal = ICON_UNTICK;
+					}
+					if(!nonMandatoryDocVerified){
 						retVal = ICON_UNTICK;
 					}
 				}else{
