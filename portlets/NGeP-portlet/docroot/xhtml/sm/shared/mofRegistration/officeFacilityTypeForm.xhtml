@@ -251,7 +251,7 @@
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId}"
 								required="true" label="#{lbl['lbl.sm.country']}"
 								disabled="#{backingBean.managedBean.upsCannotEdit}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="basicCountry"
 									value="#{backingBean.managedBean.countryItems}" />
 								<p:ajax event="change" process="@this"
@@ -291,7 +291,7 @@
 								id="basicOffFacState" required="true"
 								label="#{lbl['lbl.sm.state']}"
 								disabled="#{backingBean.managedBean.upsCannotEdit}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offState"
 									value="#{backingBean.managedBean.basicOffFacStates}" />
 								<p:ajax event="change" process="@this"
@@ -325,7 +325,7 @@
 						value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
 						style="width: 207px;margin-bottom: 5px;"
 						disabled="#{backingBean.managedBean.upsCannotEdit}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{backingBean.managedBean.basicOffFacDivisions}"
 							itemValue="#{division.divisionId}"
@@ -367,7 +367,7 @@
 								label="#{lbl['lbl.sm.district']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.districtId}"
 								disabled="#{backingBean.managedBean.upsCannotEdit}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offDist"
 									value="#{backingBean.managedBean.basicOffFacDistricts}" />
 								<p:ajax event="change" process="@this"
@@ -395,7 +395,7 @@
 								label="#{lbl['lbl.sm.towncity']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.cityId}"
 								disabled="#{backingBean.managedBean.upsCannotEdit}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}" />
 								<p:ajax event="change" process="@this"
