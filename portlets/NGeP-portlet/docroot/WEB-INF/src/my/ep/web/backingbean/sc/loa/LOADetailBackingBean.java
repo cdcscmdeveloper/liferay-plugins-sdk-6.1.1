@@ -10377,9 +10377,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
 		String dafaltValue = "T/B";
 		
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "T/B";
-		}
 		
 		if (!scLoa.getScLoiLoaItems().isEmpty()) {
 			scLoiLoaItemsList = new ArrayList<>();
