@@ -616,6 +616,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 		this.getManagedBean().setSmApplDocFile(null);
 		
+		//#34392 - start
 		Iterator<SmApplSupportDoc> suppDocIter = this.getManagedBean()
 				.getUpdatedSupportDocs().iterator();
 		while (suppDocIter.hasNext()) {
@@ -626,6 +627,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				suppDocIter.remove();
 			}
 		}
+		//#34392 - end
 	}
 	
 	public void deleteInquirySupDocFileAttachment() {
