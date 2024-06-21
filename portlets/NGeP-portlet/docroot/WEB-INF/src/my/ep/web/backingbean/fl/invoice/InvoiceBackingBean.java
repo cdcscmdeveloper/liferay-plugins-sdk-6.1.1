@@ -48,6 +48,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.AuditFLConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
@@ -61,6 +62,7 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.fl.audit.AuFLReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -97,6 +99,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
@@ -116,6 +119,7 @@ import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
+import my.ep.web.backingbean.fl.audit.FulfilmentAuditBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
@@ -349,6 +353,26 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				//33654-End
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
+				//#35508 fl audit trail - inv modification start
+				if(resDTO.isSuccessful()){
+					PmUser userAudit = getFacesScopes().getUserSessionBean();
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+						insertAuditTrailFl(getManagedBean(),userAudit,action,null,null,null);
+					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+						//audit fl for supplier invoice reference
+						FlInvoice flinv = getManagedBean().getInvoice();
+						if(!flinv.getSupplierInvoiceRef().equals(getManagedBean().getOriginalSupplierInvRef())){
+							insertAuditTrailFl(getManagedBean(),userAudit,action,AuditFLConst.FL_AU_INV_NO_FIELDLABELCODE,
+									getManagedBean().getOriginalSupplierInvRef(),flinv.getSupplierInvoiceRef());
+						}
+						String newBankAccNoNameInv = flinv.getAccountNo()+" "+flinv.getPaymentBankName();
+						if(!newBankAccNoNameInv.equals(getManagedBean().getOriginalBankAccNoName())){
+							insertAuditTrailFl(getManagedBean(),userAudit,action,AuditFLConst.FL_AU_BANK_ACC_FIELDLABELCODE,
+									getManagedBean().getOriginalBankAccNoName(),newBankAccNoNameInv);
+						}
+					}
+				}
+				//#35508 fl audit trail - inv modification end
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				resDTO = invoiceSO.saveInvoice(reqDTO);
@@ -2665,4 +2689,57 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 	}
 	//#21416 end
+	
+	// #35508 fl audit trail - insert method
+		public void insertAuditTrailFl(InvoiceManagedBean invBean, PmUser userAudit, String action,String fieldLabelCode,String oldValueInv, String newValueInv) {
+			// add audit insert
+			FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+			FlInvoice flinv = invBean.getInvoice();
+
+			List<AuFLReqDTO> objList = new ArrayList<>();
+			Long orgProfileId, statusId;
+			String OrgName, auditActionType;
+
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+				// audit fl supplier
+				auditActionType = AuditFLConst.AUD_ACTION_TYPE_MODIFY;
+				orgProfileId = flinv.getFlRequest().getSmSupplier().getSupplierId();
+				OrgName = flinv.getFlRequest().getSmSupplier().getCompanyName();
+				statusId = FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL;
+			} else {
+				// audit fl approver
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(userAudit.getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+
+				auditActionType = null;
+				orgProfileId = pmOrgAudit.getOrgProfileId();
+				OrgName = pmOrgAudit.getOrgName();
+				statusId = FulfilmentStatusConst.SUBMITTED;
+			}
+			// insert for DO
+			AuFLReqDTO auFLSPDTO = new AuFLReqDTO();
+			auFLSPDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
+			auFLSPDTO.setRoleCode(getUserRole());
+			auFLSPDTO.setOrgProfileId(orgProfileId);
+			auFLSPDTO.setOrgName(OrgName);
+			auFLSPDTO.setDocId(flinv.getInvoiceId());
+			auFLSPDTO.setDocNo(flinv.getInvoiceNo());
+			auFLSPDTO.setStatusId(statusId);
+			auFLSPDTO.setActionType(auditActionType);
+			auFLSPDTO.setFulfilmentReqId(flinv.getFlRequest().getFulfilmentReqId());
+			auFLSPDTO.setOldValue(oldValueInv);
+			auFLSPDTO.setNewValue(newValueInv);
+			auFLSPDTO.setCreatedBy(userAudit.getUserId());
+			auFLSPDTO.setFieldLabelCode(fieldLabelCode);
+
+			objList.add(auFLSPDTO);
+			auflBB.auditInsertFL(objList);
+
+		}
+		// #35508 fl audit trail
+	
 }

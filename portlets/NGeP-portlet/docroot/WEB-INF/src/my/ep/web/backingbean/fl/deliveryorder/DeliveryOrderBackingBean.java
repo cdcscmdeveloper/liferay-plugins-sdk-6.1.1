@@ -351,21 +351,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				//#35508 fl audit trail - DO modification start
 				if(resDTO.isSuccessful()){
 					PmUser userAudit = getFacesScopes().getUserSessionBean();
-					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
-						insertAuditTrailFl(getManagedBean().getFlDeliveryOrder(),userAudit,
-								getManagedBean().getFlDeliveryOrder().getFlRequest().getSmSupplier().getSupplierId(),
-								getManagedBean().getFlDeliveryOrder().getFlRequest().getSmSupplier().getCompanyName(),
-								getManagedBean().getOriginalSupplierDoRef(),getManagedBean().getFlDeliveryOrder().getSupplierDoRef(),AuditFLConst.AUD_ACTION_TYPE_MODIFY);						
-					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
-						IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
-						UserReqDTO userReqDTO = new UserReqDTO();
-						userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-						UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-						PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
-						insertAuditTrailFl(getManagedBean().getFlDeliveryOrder(),userAudit,
-								pmOrgAudit.getOrgProfileId(),pmOrgAudit.getOrgName(),
-								null,null,AuditFLConst.AUD_ACTION_TYPE_APPROVE);
-					}
+					insertAuditTrailFl(getManagedBean(),userAudit,action);
 				}
 				//#35508 fl audit trail - DO modification end
 			}
@@ -1749,13 +1735,43 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	}
 	//#21416 end
 	
-	//#35508 fl audit trail - insert method
-	public void insertAuditTrailFl(FlDeliveryOrder fldo,PmUser userAudit,Long orgProfileId,String OrgName,String newSupplierDoRef,String oldSupplierDoRef,String auditActionType){
-		log.info("35508: start audit");
-		//add audit insert
+	// #35508 fl audit trail - insert method
+	public void insertAuditTrailFl(DeliveryOrderManagedBean doBean, PmUser userAudit, String action) {
+		// add audit insert
 		FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+		FlDeliveryOrder fldo = doBean.getFlDeliveryOrder();
+
 		List<AuFLReqDTO> objList = new ArrayList<>();
-		//insert for DO
+		Long orgProfileId, statusId;
+		String OrgName, auditActionType, newSupplierDoRef, oldSupplierDoRef,fieldAuditCode;
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+			// audit fl supplier
+			auditActionType = AuditFLConst.AUD_ACTION_TYPE_MODIFY;
+			newSupplierDoRef = doBean.getFlDeliveryOrder().getSupplierDoRef();
+			oldSupplierDoRef = doBean.getOriginalSupplierDoRef();
+			orgProfileId = fldo.getFlRequest().getSmSupplier().getSupplierId();
+			OrgName = fldo.getFlRequest().getSmSupplier().getCompanyName();
+			statusId = FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL;
+			fieldAuditCode = AuditFLConst.FL_AU_DO_NO_FIELDLABELCODE;
+		} else {
+			// audit fl approver
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(userAudit.getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+
+			auditActionType = null;
+			newSupplierDoRef = null;
+			oldSupplierDoRef = null;
+			orgProfileId = pmOrgAudit.getOrgProfileId();
+			OrgName = pmOrgAudit.getOrgName();
+			statusId = FulfilmentStatusConst.SUBMITTED;
+			fieldAuditCode = null;
+		}
+		// insert for DO
 		AuFLReqDTO auFLSPDTO = new AuFLReqDTO();
 		auFLSPDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 		auFLSPDTO.setRoleCode(getUserRole());
@@ -1763,17 +1779,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		auFLSPDTO.setOrgName(OrgName);
 		auFLSPDTO.setDocId(fldo.getDeliveryOrderId());
 		auFLSPDTO.setDocNo(fldo.getDeliveryOrderNo());
-		auFLSPDTO.setStatusId(fldo.getStatus().getStatusId());
+		auFLSPDTO.setStatusId(statusId);
 		auFLSPDTO.setActionType(auditActionType);
 		auFLSPDTO.setFlFieldLabelId(AuditFLConst.FL_AU_DO_NO_FIELDLABELID);
-		auFLSPDTO.setFulfilmentReqId(getManagedBean().getFlDeliveryOrder().getFlRequest().getFulfilmentReqId());
+		auFLSPDTO.setFulfilmentReqId(fldo.getFlRequest().getFulfilmentReqId());
 		auFLSPDTO.setOldValue(newSupplierDoRef);
 		auFLSPDTO.setNewValue(oldSupplierDoRef);
 		auFLSPDTO.setCreatedBy(userAudit.getUserId());
-		auFLSPDTO.setFieldLabelCode(AuditFLConst.FL_AU_DO_NO_FIELDLABELCODE);
-		
+		auFLSPDTO.setFieldLabelCode(fieldAuditCode);
+
 		objList.add(auFLSPDTO);
 		auflBB.auditInsertFL(objList);
+
 	}
-	//#35508 fl audit trail
+	// #35508 fl audit trail
 }
