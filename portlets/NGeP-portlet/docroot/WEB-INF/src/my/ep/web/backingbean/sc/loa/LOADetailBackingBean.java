@@ -2241,12 +2241,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// ##25025 #509 -start
-		log.debug("Start [25025]");
+		log.debug("Start [25025] - " + fileNo);
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
-		log.debug("End [25025]");
+		log.debug("End [25025] - " + fileNo);
 		// ##25025 #509 -start		
 
 		String issueDate = "______________";
@@ -2437,7 +2437,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			String rnNo = getQtAwardSO().retrieveRequestNoteNoByLoa(reqDTO);
-			log.debug("Start [25025]");
+			log.debug("Start [25025] - " + qtNo);
 			if (qtNo.contains("SQ") && StringUtils.isNotEmpty(rnNo)) {
 				qtNo = qtNo + "/" + rnNo;
 			} else {
