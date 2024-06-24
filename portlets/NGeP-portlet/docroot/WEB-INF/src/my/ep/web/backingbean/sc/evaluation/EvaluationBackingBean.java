@@ -2321,6 +2321,7 @@ public void saveComplianceSample() {
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			reqDTO.setScQt(this.getManagedBean().getScQt());//#29187 Added Vinod
 			evaluationSO.preInitializeChecklist(reqDTO);//34496 4serangkai
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			
@@ -17578,8 +17579,8 @@ private void retriveCommitteeRemarksList(){
 			resDTO = evaluationSO.excludePresentationDemo(reqDTO);
 			this.getManagedBean().setOtherchecklistScore(String.valueOf(totalNum.toPlainString()));
 			totalTechScore = String.valueOf(resDTO.getTechScore());
-			this.getManagedBean().setItemTsPercentage(resDTO.getTechScore().divide(this.getManagedBean().getMaxItemTsScore())
-					.multiply(this.getManagedBean().getMaxItemTsPercentage()));
+			this.getManagedBean().setItemTsPercentage(resDTO.getTechScore().multiply(this.getManagedBean().getMaxItemTsPercentage())
+					.divide(this.getManagedBean().getMaxItemTsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
 			if (resDTO.isGenerateSuppliers()) {
 				presentationDemoItemScore(String.valueOf(propId.getQtEvaluationResult().getScQtProposal().getSupplierNo()),
 						this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
@@ -17589,8 +17590,8 @@ private void retriveCommitteeRemarksList(){
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes()
 						.getUserLocale()));
-				this.getManagedBean().setItemAllOtherElementsPercentage(totalNum.divide(this.getManagedBean().getMaxItemAllOtherElementsScore())
-						.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage()));
+				this.getManagedBean().setItemAllOtherElementsPercentage(totalNum.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
+						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
 			}
 		} finally {
 			evaluationSO = null;
@@ -17614,8 +17615,8 @@ private void retriveCommitteeRemarksList(){
 			}
 			this.getManagedBean().setItemAllOtherElementsPercentage((new BigDecimal(this.getManagedBean().getOtherchecklistScore())
 			.add(new BigDecimal(this.getManagedBean().getDemoScore())))
-			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore())
-					.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage()));
+			.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
+			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
 		}
 		finally {
 
@@ -19097,10 +19098,7 @@ private void retriveCommitteeRemarksList(){
 			ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 			score = templateSpecSO.getMaxDemoScore(this.getManagedBean().getSinglesummaryItemList().getTplSpecQuestion().getSpecQuestionId());
-			if (score != null) {
-				score = this.getManagedBean().getDemoWeightage().equals(BigDecimal.ZERO) || this.getManagedBean().getDemoWeightage() == null ? score :
-					new BigDecimal(score).multiply(this.getManagedBean().getDemoWeightage()).toString();
-			} else {
+			if (score == null) {
 				score = SourcingConstants.NO_TS_DEMO_DATA_EXIST;
 			}
 		}

@@ -74,12 +74,14 @@
 					<!-- #33783 - end  -->
 				<!-- 32304 - start-->
 					<td>
-						<p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'C' or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'F'}" /></td>
+						<p:outputLabel value="#{lbl['lbl.sm.account.rob.expire']}" 
+							rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'C' 
+								or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'F'}" /></td>
 					<td>
-					<c:if test="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'C' or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'F'}">
-						
+					<c:if test="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'C' 
+						or backingBean.managedBean.smAppl.smCompanyBasic.businessType == 'F'}">
 				<!-- 32304 - end-->
-				<c:choose> 
+					<c:choose> 
 								<c:when test="#{backingBean.managedBean.smAppl.applValidWithSsm and !empty backingBean.managedBean.smAppl.smCompanyBasic.robExpiryDate}">
 								<p:calendar  navigator="true"
 							display="inline" readonlyInput="true" disabled = "true"
@@ -482,18 +484,24 @@
 				<!-- 32304 - start-->
 						<p:outputPanel id="localAuthLabelOutPanelId">
 							<p:outputLabel value="#{lbl['lbl.sm.local.authority']}" 
-								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
-								or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"/>
+								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' 
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' 
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"/>
 							<p:outputLabel value="*" styleClass="mandatory" 
-								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
-								or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"/>
+								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D'
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' 
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"/>
 						</p:outputPanel> 
 					</td>
 					<td> 
 						<p:outputPanel id="localAuthInputOutPanelId" >
 							<ac:smLocalAuthoritySelectItems backingBean="#{backingBean}" 
-								isShow="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
-								or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"
+								isShow="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' 
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' 
+									or backingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}"
 								smSupplier="#{backingBean.managedBean.smSupplier}" required="true"
 								disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 						</p:outputPanel>

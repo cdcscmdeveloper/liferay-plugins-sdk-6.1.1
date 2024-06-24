@@ -329,10 +329,6 @@ public interface QTConstants {
 	//#25726 end
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
-	// #12471 Start
-	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
-	// #12471 End
-	
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 	
 	//#10542 Start Dayan
@@ -351,6 +347,9 @@ public interface QTConstants {
 	//12471 - start
 	public static final String MEMBER_INFO_POPUP = "memberInfoPopUp.show()";
 	public static final String LABEL_TEXT_SELECT = "lbl.txt.select";
+	public static final String DATATABLE_EXISTINGCOMMITTEESEARCHID = "existingcommitteesearchid";
+	public static final String DATATABLE_EXISTINGMEMBERTBL = "existingMemberTbl";
+	public static final Long ORG_CAT_NAME_EXTERNAL_PARTIES_ID = 1001332L;
 	//12471 - end
     public static final Long TREENODE_GENERAL_INFORMATION=1L;//SonarQubeIssuesFixed25635-Start
 	public static final Long TREENODE_SUPPLIER_CRITERIA=2L;
@@ -383,4 +382,15 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	public static final String PORTLET_ID = "PORTLET_ID";
+	public static final String PORTLET_NAME_CREATE = "createmanualsourcing";
+	public static final String PORTLET_NAME_REVIEW = "reviewmanualsourcing";
+	public static final String  USER_PTJ_POPUP_HIDE = "userPtjPopup.hide();";
+	
+	//#29732 -Start
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String QT_CAT_CODE_CHANGE_ALERT_SHOW = "catCodeChangeAlert.show()";
+	//#29732 -End
 }
