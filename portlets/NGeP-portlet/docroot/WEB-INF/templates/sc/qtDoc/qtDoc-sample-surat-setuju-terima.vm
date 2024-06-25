@@ -8,7 +8,7 @@
 				content: counter(page) " daripada " counter(pages); 
 			}
 		}
-				
+		
 		p {
 			text-align: justify;
 		}		
@@ -86,6 +86,7 @@
 			font-style: normal;
 			line-height: 20px;
 			text-decoration: underline;
+			
 		}	
 		
 		.submenu_padding {
@@ -356,27 +357,28 @@
 				tawaran kontrak baharu atau pelanjutan kontrak pada masa hadapan kepada syarikat tuan.</span>
 			</p>
 			<span class="text_family_small_black">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ-RTW berdasarkan PP/PK1.2. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
-			<p>
-				## #26770 #503 - start
-				## 9
-					<span class="text_family">*9.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
-				## #26770 #503 - end
-			</p>
-			<p>
-				## 10
-					<span class="text_family">*10.<span class="text_indent"> Syarikat </span>Tuan hendaklah merujuk dan mengadakan perbincangan lebih lanjut dengan pihak Technology Depository Agency (TDA)** sebagai agensi pelaksana bagi menentu dan memuktamadkan butiran projek-projek ICP untuk dimasukkan di dalam Perjanjian Utama ICP yang akan ditandatangani antara pihak Kerajaan dengan Syarikat Tuan secara bersama dengan Kontrak Perolehan Utama.</span>
-					<br/><span class="text_family_small_black">**Bahagian Industri Pertahanan untuk perolehan di Kementerian Pertahanan</span>
-			</p>
-			<p>
-				## 11
-					<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
-			</p>
-			<div style="text-align:justify; margin-bottom:1px !important">
-				## 12					
-					<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
-			</div>		
+		<p>
+					## #26770 #503 - start
+					## 9
+						<span class="text_family">*9.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
+					</p>
+					## #26770 #503 - end
+					## 10
+					<p>
+						<span class="text_family">*10.<span class="text_indent"> Syarikat </span>Tuan hendaklah merujuk dan mengadakan perbincangan lebih lanjut dengan pihak Technology Depository Agency (TDA)** sebagai agensi pelaksana bagi menentu dan memuktamadkan butiran projek-projek ICP untuk dimasukkan di dalam Perjanjian Utama ICP yang akan ditandatangani antara pihak Kerajaan dengan Syarikat Tuan secara bersama dengan Kontrak Perolehan Utama.</span>
+						<br/><span class="text_family_small_black">**Bahagian Industri Pertahanan untuk perolehan di Kementerian Pertahanan</span>
+					</p>
+					<p>
+					## 11
+						<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
+					</p>
+					<div style="text-align:justify; margin-bottom:1px !important">
+						## 12					
+						<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
+					</div>		
 					<span class="text_family">penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori. </span>
 					<br/><span class="text_family_small_black">(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+						
 			<p>
 				13. <span class="text_indent">Syarikat</span> tuan juga adalah diingatkan bahawa Kerajaan berhak 
 				untuk membatalkan Surat ini sekiranya:
@@ -949,7 +951,7 @@
 						</tr>
 					</table>
 		</td>
-	</tr>			
+	</tr>
 	<tr>
 		<td colspan="3" >
 			<table>
@@ -1023,6 +1025,7 @@
 						(u.p.: Pengarah Bahagian Cukai Dalam Negeri (SST)) 
 					</span>
 				</p>
+
 				
 				<p style="text-align:left;">
 					<span class="text_family">
