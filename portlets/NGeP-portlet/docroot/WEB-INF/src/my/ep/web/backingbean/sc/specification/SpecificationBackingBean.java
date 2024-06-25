@@ -22216,7 +22216,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				
 				//update demo weightage	
 				reqDTO1.setTobeRemoveList(demoTemplateList);
-				specSO.updateDemoScoreWeightage(reqDTO1);
+				SpecificationResDTO resDTO = specSO.updateDemoScoreWeightage(reqDTO1);
+				
+				List<ScQtCheckList> savedCheckListsDemoNew = resDTO.getSavedCheckLists();
+				specCommitteeResetData();
+				for (ScQtCheckList obj : savedCheckListsDemoNew) {
+					resetDemoChecklist(obj);
+				}
 				
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
