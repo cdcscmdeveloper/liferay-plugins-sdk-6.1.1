@@ -108,9 +108,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 
 		if (StringUtils.isNotEmpty(getManagedBean().getRegType()) || getManagedBean().getRegType() != null) {
 			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
-				sb.append("recordStatus^1");
-				sb.append("|pmOrgValidity.recordStatus^1");
-				sb.append("|orgTypeCode.parameterType^");
+//				sb.append("recordStatus^1");  -- #30824
+//				sb.append("|pmOrgValidity.recordStatus^1"); -- #30824
+				sb.append("orgTypeCode.parameterType^");
 				sb.append(ParameterTypeConst.ORGANISATION_TYPES);
 
 				if (this.getManagedBean().getOrgTypeCode() != null) {
