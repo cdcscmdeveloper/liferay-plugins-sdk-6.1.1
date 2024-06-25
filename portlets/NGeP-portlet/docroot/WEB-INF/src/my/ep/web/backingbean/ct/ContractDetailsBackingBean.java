@@ -3027,7 +3027,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
 			boolean isTrue =  getManagedBean().isBackPageAmendment();
 			String taskId = getManagedBean().getTaskId();
-			renewSesionObject();
+			//Start Fix - #30866
+			if(!getManagedBean().isContinuityCircularAuditSearch()){
+				renewSesionObject();
+			}
+			//End Fix - #30866
 			if(isTrue && taskId == null){
 				return gotoAmendPage(contractId);
 			}else if (isTrue && taskId != null){
