@@ -349,9 +349,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
 				//#35508 fl audit trail - DO modification start
-				if(resDTO.isSuccessful()){
-					PmUser userAudit = getFacesScopes().getUserSessionBean();
-					insertAuditTrailFl(getManagedBean(),userAudit,action);
+				if (resDTO.isSuccessful()) {
+					FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+					if (auflBB.getAuditFlConfigState()) {
+						PmUser userAudit = getFacesScopes().getUserSessionBean();
+						insertAuditTrailFl(getManagedBean(), userAudit, action);
+					}
 				}
 				//#35508 fl audit trail - DO modification end
 			}

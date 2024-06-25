@@ -354,21 +354,26 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 				//#35508 fl audit trail - inv modification start
-				if(resDTO.isSuccessful()){
-					PmUser userAudit = getFacesScopes().getUserSessionBean();
-					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
-						insertAuditTrailFl(getManagedBean(),userAudit,action,null,null,null);
-					}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
-						//audit fl for supplier invoice reference
-						FlInvoice flinv = getManagedBean().getInvoice();
-						if(!flinv.getSupplierInvoiceRef().equals(getManagedBean().getOriginalSupplierInvRef())){
-							insertAuditTrailFl(getManagedBean(),userAudit,action,AuditFLConst.FL_AU_INV_NO_FIELDLABELCODE,
-									getManagedBean().getOriginalSupplierInvRef(),flinv.getSupplierInvoiceRef());
-						}
-						String newBankAccNoNameInv = flinv.getAccountNo()+" "+flinv.getPaymentBankName();
-						if(!newBankAccNoNameInv.equals(getManagedBean().getOriginalBankAccNoName())){
-							insertAuditTrailFl(getManagedBean(),userAudit,action,AuditFLConst.FL_AU_BANK_ACC_FIELDLABELCODE,
-									getManagedBean().getOriginalBankAccNoName(),newBankAccNoNameInv);
+				if (resDTO.isSuccessful()) {
+					FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+					if (auflBB.getAuditFlConfigState()) {
+						PmUser userAudit = getFacesScopes().getUserSessionBean();
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+							insertAuditTrailFl(getManagedBean(), userAudit, action, null, null, null);
+						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+							// audit fl for supplier invoice reference
+							FlInvoice flinv = getManagedBean().getInvoice();
+							if (!flinv.getSupplierInvoiceRef().equals(getManagedBean().getOriginalSupplierInvRef())) {
+								insertAuditTrailFl(getManagedBean(), userAudit, action,
+										AuditFLConst.FL_AU_INV_NO_FIELDLABELCODE, getManagedBean()
+												.getOriginalSupplierInvRef(), flinv.getSupplierInvoiceRef());
+							}
+							String newBankAccNoNameInv = flinv.getAccountNo() + " " + flinv.getPaymentBankName();
+							if (!newBankAccNoNameInv.equals(getManagedBean().getOriginalBankAccNoName())) {
+								insertAuditTrailFl(getManagedBean(), userAudit, action,
+										AuditFLConst.FL_AU_BANK_ACC_FIELDLABELCODE, getManagedBean()
+												.getOriginalBankAccNoName(), newBankAccNoNameInv);
+							}
 						}
 					}
 				}
