@@ -93,7 +93,10 @@
 					style="width:10%;" styleClass="column-align-center">
 					<div align="left">
 						<h:outputText value="#{metadata.effDate}"
-							style="text-align:left; float:left;" />
+							style="text-align:left; float:left;" 
+							<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
 					</div>
 				</p:column>
 
@@ -101,7 +104,10 @@
 					styleClass="column-align-center">
 					<div align="left">
 						<h:outputText value="#{metadata.expDate}"
-							style="text-align:left; float:left;" />
+							style="text-align:left; float:left;"
+							<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> 
+						</h:outputText>
 					</div>
 				</p:column>
 
