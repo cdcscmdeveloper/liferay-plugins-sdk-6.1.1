@@ -134,9 +134,9 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 
 	private void auditSMSO(AuditSupplierManagementDTO auObj) {
 		try {
-			IAuditSupplierManagementSO auSMSO = BusinessDelegate.getInstance().getServiceObject(
+			IAuditSupplierManagementSO auSmSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-			auSMSO.insertAudit(auObj);
+			auSmSo.insertAudit(auObj);
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", auObj.getDocNo(),
 					"AuditSupplierManagementSO", logKey.getUserId(), ex);

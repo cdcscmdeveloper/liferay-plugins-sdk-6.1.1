@@ -94,6 +94,13 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.util.CustomUtils;
+import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
+//#28895_35501 End
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
 @RequestScoped
@@ -351,6 +358,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setFlagShowButtonSubmit(true);
 		}
 		//#28278 - Disciplonary action - #28278, #26238, #32818 -end
+		// #28895_35501 Start - AUDIT TRAIL SM
+		this.getManagedBean().setOldSmAppl(
+				(SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
+		// #28895_35501 End
 		
 	}
 
@@ -867,6 +878,14 @@ public class SupplierDataMaintenanceBackingBean extends
 						throw new EpException("Failed to update Supplier Category imposed Disciplinary Action");
 					}
 				}
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+				if (auditSmSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
+				}
+				// #28895_35501 End
 			} 
 			//26238 - end
 			

@@ -42,7 +42,7 @@ public class AuditSupplierManagementCategoryCodeInformationBackingBean extends
 					+ "<br/>" + catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name()
 					+ "<br/>" + catCode.getPmCategoryL3().getCategoryL3Code() + " - " + catCode.getCategoryL3Name();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
-					AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO, Category, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY_CODE, Category, null,
 					catCode.getSupplierCategoryId(), null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY_CODE));
 		}

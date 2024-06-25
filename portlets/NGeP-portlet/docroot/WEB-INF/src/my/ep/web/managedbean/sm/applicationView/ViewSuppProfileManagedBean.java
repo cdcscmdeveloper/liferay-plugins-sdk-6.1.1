@@ -194,6 +194,9 @@ public class ViewSuppProfileManagedBean extends
 	// #26238 eend
 	
 	private boolean hasActiveDA; //#34626
+	
+	// #28895_35501 - AUDIT TRAIL SM
+	private SmAppl oldSmAppl;
 		
 	public ViewSuppProfileManagedBean() {
 
@@ -1014,4 +1017,15 @@ public class ViewSuppProfileManagedBean extends
 		this.hasActiveDA = hasActiveDA;
 	}
 	//#34626 - end
+
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
+
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
+	// #28895_35501 End
+	
 }
