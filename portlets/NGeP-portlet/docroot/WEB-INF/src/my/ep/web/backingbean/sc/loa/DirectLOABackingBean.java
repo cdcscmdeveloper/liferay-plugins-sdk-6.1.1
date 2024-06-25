@@ -8476,27 +8476,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		
-		// 26770 - start
-		if (supplier.getRegNo() != null && !supplier.getRegNo().equalsIgnoreCase("")) {
+		//26770 - start
+		if(supplier.getRegNo() != null && !supplier.getRegNo().equalsIgnoreCase("")){
 			context.put("regNo", supplier.getRegNo());
-		} else {
-			context.put("regNo", "______________");
-		}
-
-		if (null != supplier.getSmAppl()) {
-			if (null != supplier.getSmAppl().getSmCompanyBasic()) {
-				if (null != supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()) {
-					context.put(
-							"ssmExpired",
-							new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(supplier.getSmAppl()
-									.getSmCompanyBasic().getRobExpiryDate()));
-				} else {
-					context.put("ssmExpired", "______________");
-				}
-
+		}else{
+			context.put("regNo","______________"); 
+		}	
+		if (null != supplier.getSmAppl()){
+			if (null != supplier.getSmAppl().getSmCompanyBasic()){
+				if (null != supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()){		
+					context.put("ssmExpired",new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(supplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()));									   
+				}else{
+					context.put("ssmExpired","______________"); 
+				}		
 			}
 		}
-		// 26770-end
+		//26770-end
 
 //		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
@@ -10701,6 +10696,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	/* #29007 Start Vinod */
 	private void generateLampiranA3PdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
+		log.info("generateLampiranA3PdfFromVelocity -- Start-- Loa No : "+scLoa.getLoaNo());
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
@@ -10711,10 +10707,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		VelocityContext context = new VelocityContext();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
 		String dafaltValue = "T/B";
+		log.info("dafaltValue initally : "+dafaltValue);
 		
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			dafaltValue = "N/A";
-		}
 		
 		if (scLoa.getScLoiLoaItems().size() != 0) {
 			scLoiLoaItemsList = new ArrayList<ScLoiLoaItem>();
@@ -10989,7 +10983,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		
+		log.info("dafaltValue before setting to serviceScope : "+dafaltValue);
 		context.put("serviceScope", dafaltValue);
+		log.info("context : "+context.toString());
 		context.put("itemsList", scLoiLoaItemsList);
 		context.put("isZonal", scLoa.getScLoiLoa().isZonal());
 		context.put("bean", this);
@@ -11018,6 +11014,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getUserIdSessionFromLoginId(), ex);
 			// Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 		}
+		log.info("generateLampiranA3PdfFromVelocity -- End-- Loa No : "+scLoa.getLoaNo());
 	}
 	// #29007 -end-
 
@@ -11266,7 +11263,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return supplierRemarks;
 		} else {
 			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				remarks = "N/A";
+				remarks = "T/B";
 			}
 		}
 

@@ -11503,6 +11503,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().setQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId());
 				getfulfilmentDtls(resDTO.getScQt());
+				retriveTechnicalCheckList();//28784 - related issue 35721
 				break;
 			case 1:
 				ScQt scQtSupplier = constructSpecCommitteDtls().getScQt();
