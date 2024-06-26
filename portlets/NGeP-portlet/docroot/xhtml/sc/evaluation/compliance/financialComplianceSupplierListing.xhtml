@@ -48,15 +48,16 @@
 				<h:outputText 
 					value="#{lbl['lbl.sc.eva.compliance.stage.completed']}"
 					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and complianceTechnicalSupplier.compliance ne null and complianceTechnicalSupplier.compliance ne 2
-								and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"/>
+								and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"/><ui:remove>#21692</ui:remove>
 				
 				<h:outputText
 					value="#{lbl['lbl.sc.eva.compliance.stage.pending']}"
 					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and (complianceTechnicalSupplier.compliance eq null or complianceTechnicalSupplier.compliance eq 2)
-								and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"/>
+								and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"/><ui:remove>#21692</ui:remove>
 					
 				<h:outputText 
-					value="#{lbl['lbl.sc.eva.compliance.stage.completed']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}"/>
+					value="#{lbl['lbl.sc.eva.compliance.stage.completed']}" rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null
+								or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}"/><ui:remove>#21692</ui:remove>
 				
 			</p:column>
 
