@@ -185,6 +185,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
+import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
