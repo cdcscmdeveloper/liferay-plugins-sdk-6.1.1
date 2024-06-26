@@ -99,6 +99,7 @@ import my.ep.util.CustomUtils;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementDisciplinaryActionInformationBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
 //#28895_35501 End
 
@@ -883,6 +884,8 @@ public class SupplierDataMaintenanceBackingBean extends
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
 				if (auditSmSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionInformationBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
 				}
 				// #28895_35501 End

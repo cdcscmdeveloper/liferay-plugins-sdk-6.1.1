@@ -15,7 +15,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * @author Firdaus Omar
- * @since 24.05.2024 #28895_35501
+ * @since 24.06.2024 #28895_35501
  */
 
 public class AuditSupplierManagementSupplierInformationBackingBean extends AuditSupplierManagementBackingBeanTemplate {
@@ -39,8 +39,8 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 		SmAppl oldSmAppl = mBean.getOldSmAppl();
 		SmAppl newSmAppl = mBean.getSmAppl();
 
-		if (oldSmAppl.getPmRegStatus().getPmStatus().getStatusId() != newSmAppl.getPmRegStatus().getPmStatus()
-				.getStatusId()) {
+		if (!oldSmAppl.getPmRegStatus().getPmStatus().getStatusId().equals(newSmAppl.getPmRegStatus().getPmStatus()
+				.getStatusId())) {
 			auDetails.add(createAuditData(
 					AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_REGISTRATION_STATUS,

@@ -66,6 +66,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			roleCode = RoleCode.MOF_SUPPLIER_USER.value();
 		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
 			roleCode = RoleCode.MOF_SUPPLIER_ADMIN.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())) {
+			roleCode = RoleCode.UPS_APPROVER.value();
 		}
 
 		return roleCode;
