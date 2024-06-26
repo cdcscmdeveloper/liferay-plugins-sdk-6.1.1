@@ -17,6 +17,13 @@
 					size="35" >
 						<p:ajax process="@this" partialSubmit="true"/>
 					</p:inputText> 
+					<!-- 35194 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+						oriValue="#{backingBean.managedBean.latestBranch.branchName}" 
+						currValue="#{backingBean.managedBean.selectedBranch.branchName}" 
+						alertValue="#{backingBean.managedBean.latestBranch.branchName}"/>
 					<p:message id="supBranchNameMsg" for="supBranchName"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
@@ -159,6 +166,7 @@
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.division']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}"
 					id="branchDivision">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDivision"
@@ -167,6 +175,16 @@
 					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchDist,branchCity" />
 				</p:selectOneMenu>
+				<!-- #35086 -->
+				<ac:smFieldChangeAlert 
+					isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+					oriValue="#{backingBean.managedBean.latestBranch.smAddress.pmDivision.divisionId}" 
+					currValue="#{backingBean.managedBean.selectedBranch.smAddress.pmDivision.divisionId}" 
+					alertValue="#{(not empty backingBean.managedBean.latestBranch and 
+					 	not empty backingBean.managedBean.latestBranch.smAddress) ?
+						backingBean.getDivisionLabelById(backingBean.managedBean.latestBranch.smAddress.pmDivision.divisionId)
+						: lbl['lbl.txt.na']}"/>
 				</ui:fragment>
 				</p:outputPanel>
 				<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true"

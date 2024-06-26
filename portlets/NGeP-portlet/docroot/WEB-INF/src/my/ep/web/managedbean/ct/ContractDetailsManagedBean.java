@@ -33,6 +33,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.VCtFl;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -102,6 +103,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	public boolean backPageAmendment;
 	private Long contractId;
+	private boolean backPageDpContinuity = Boolean.FALSE; //#25790
+	private String dpContinuitySession = null; //#25790
 
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -122,7 +125,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> contractFlDataModel = new ContractFlPagingDataModel();
 	private CtDeduction selectedDeduction;
 	//29551 - end
-
+	
+	// Start - #30866
+	private boolean isContinuityCircularAuditSearch = false;
+	private boolean isFromResultViewAudit = false;
+	private boolean isFromContractViewPage = false;
+	private VCtContract contractDetailsAuditList;
+	private transient IPagingDataModel<VCtFl> contractDataModelForCtAuditViewFl = new contractDataModelForCtAuditViewSubFl();
+	// End - #30866
 	/**
 	 * @return the taskName
 	 */
@@ -1222,7 +1232,46 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
-	
+		
+	// Start - #30866
+	private class contractDataModelForCtAuditViewSubFl extends PagingDataModel<VCtFl> {
+		private static final long serialVersionUID = 1L;
+
+		public contractDataModelForCtAuditViewSubFl() {
+			super("subTableFL", true);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<VCtFl> pageChangeListener(ISearchBean<VCtFl> searchBean) {
+			IContractSO contractSO = null;
+			try {
+
+				searchBean.setUseEntityClass(true);
+				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setAuditObjectSearchBean(searchBean);
+				reqDTO.setContractNo(getSearchContractNo());
+				ContractResDTO resDTO = contractSO.getContractDtlForCtAuditView(reqDTO);
+				setSelectedTabIndex(0);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getAuditObjectSearchBean();
+				}
+			} catch (Exception e) {
+				log.error(" Error : " + e);
+			}
+			return null;
+		}
+	}
+
+	// End - #30866
 	/**
 	 * @return the searchFinancialYear
 	 */
@@ -1279,4 +1328,74 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.selectedDeduction = selectedDeduction;
 	}	
 	//29551 - end
+	// Start - #30866
+	public boolean isContinuityCircularAuditSearch() {
+		return isContinuityCircularAuditSearch;
+	}
+
+	public void setContinuityCircularAuditSearch(boolean isContinuityCircularAuditSearch) {
+		this.isContinuityCircularAuditSearch = isContinuityCircularAuditSearch;
+	}
+
+	public IPagingDataModel<VCtFl> getContractDataModelForCtAuditViewFl() {
+		return contractDataModelForCtAuditViewFl;
+	}
+
+	public void setContractDataModelForCtAuditViewFl(IPagingDataModel<VCtFl> contractDataModelForCtAuditViewFl) {
+		this.contractDataModelForCtAuditViewFl = contractDataModelForCtAuditViewFl;
+	}
+
+	public VCtContract getContractDetailsAuditList() {
+		return contractDetailsAuditList;
+	}
+
+	public void setContractDetailsAuditList(VCtContract contractDetailsAuditList) {
+		this.contractDetailsAuditList = contractDetailsAuditList;
+	}
+
+	public boolean isFromResultViewAudit() {
+		return isFromResultViewAudit;
+	}
+
+	public void setFromResultViewAudit(boolean isFromResultViewAudit) {
+		this.isFromResultViewAudit = isFromResultViewAudit;
+	}
+
+	public boolean isFromContractViewPage() {
+		return isFromContractViewPage;
+	}
+
+	public void setFromContractViewPage(boolean isFromContractViewPage) {
+		this.isFromContractViewPage = isFromContractViewPage;
+	}
+	// End - #30866
+	//start - #25790
+	/**
+	 * @return the backPageDpContinuity
+	 */
+	public boolean isBackPageDpContinuity() {
+		return backPageDpContinuity;
+	}
+
+	/**
+	 * @param backPageDpContinuity the backPageDpContinuity to set
+	 */
+	public void setBackPageDpContinuity(boolean backPageDpContinuity) {
+		this.backPageDpContinuity = backPageDpContinuity;
+	}
+
+	/**
+	 * @return the dpContinuitySession
+	 */
+	public String getDpContinuitySession() {
+		return dpContinuitySession;
+	}
+
+	/**
+	 * @param dpContinuitySession the dpContinuitySession to set
+	 */
+	public void setDpContinuitySession(String dpContinuitySession) {
+		this.dpContinuitySession = dpContinuitySession;
+	}
+	//end - #25790
 }

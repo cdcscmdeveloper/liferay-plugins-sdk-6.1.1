@@ -98,9 +98,9 @@
 					disabled="#{!(typeValueObj.brandNew)}" 
 					required="true"
 					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"	>
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
 					<f:attribute name="min" value="0"/>	
-		  			<f:attribute name="max" value="9999"/>		
+		  			<f:attribute name="max" value="9999"/>	
 					<f:validator validatorId="quantityDoubleRangeValidator" />
 					<!-- 29650 - START -->
 					<p:ajax event="change" listener="#{ruleCatalogueBackingBean.valueErrorCheck(index)}"
@@ -238,7 +238,7 @@
 					size="17" required="true" maxlength="4" style="text-align:right"
 					requiredMessage="#{lbl['lbl.pm.settings.fromvalue.required']}"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
 		  			<f:attribute name="min" value="0"/>
 		  			<f:attribute name="max" value="9999"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -259,7 +259,7 @@
 					size="15" required="true" maxlength="17" style="text-align:right"
 					requiredMessage="#{lbl['lbl.pm.settings.tovalue.required']}"
 					disabled="#{!(typeValueObj.brandNew)}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					<f:converter converterId="pmIntegerConverter"/> <!-- #34397, #34398 -->
 		  			<f:attribute name="min" value="0"/>
 		  			<f:attribute name="max" value="9999"/>				
 					<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -284,8 +284,10 @@
 		       	</f:facet>
 		      	#{typeValueObj.ruleDescription}
 			</p:column>
+			<!-- #34397, #34398 - start -->
 			<p:column width="15%" style="white-space:normal"
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')
+				or ruleCatalogueBackingBean.isRenewTypes(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 	             	#{lbl['lbl.pm.zone']}
@@ -299,13 +301,13 @@
 					style="width: 250px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 					<f:selectItems var="zoneLs"
-						value="#{ruleCatalogueBackingBean.managedBean.zoneList}"
+						value="#{ruleCatalogueBackingBean.getZones()}"
 						itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}"/>
 					<p:ajax partialSubmit="true" process="@this" update="@this, zoneCodeMsg"/>
 				</p:selectOneMenu>
 				<p:message id="zoneCodeMsg" for="zoneCode" display="icon"/>
 			</p:column>
-			<!-- 27827 - END -->
+			<!-- 27827, #34397, #34398 - END -->
 
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">

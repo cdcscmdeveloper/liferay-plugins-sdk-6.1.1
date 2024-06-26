@@ -37,7 +37,7 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{mcCrGenAsPoRptBB.disablePtjGroupLov()}"
+					disabled="#{mcCrGenAsPoRptBB.disablePtjGroupLovByReportCode()}"
 					value="#{mcCrGenAsPoRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcCrGenAsPoRptBB.resetPtjProfile()"
 					update=":form"
@@ -54,7 +54,7 @@
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{mcCrGenAsPoRptBB.disablePtjLov()}"
+					disabled="#{mcCrGenAsPoRptBB.disablePtjLovByReportCode()}"
 					value="#{mcCrGenAsPoRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="mcCrGenAsPoRptBB.managedBean.ptj"
@@ -158,8 +158,8 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+						itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
