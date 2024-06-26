@@ -1006,7 +1006,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 				
 				// Improvement #35657@Syazani 14/05/2024 -- Start
-				if (!mimeType.equalsIgnoreCase(CommonConstants.FILE_CONTENT_TYPE_PDF)) {
+				boolean mimeTypePDF = mimeType.equalsIgnoreCase(MimeType.pdf.contentType)
+						|| mimeType.equalsIgnoreCase(MimeType.bin.contentType);
+				if (!mimeTypePDF) {
 					log.info("Report server return '" + mimeType + "' Type");
 					log.info(bos.toString());
 					throw new EpException(MessageConst.ERROR_760530);
