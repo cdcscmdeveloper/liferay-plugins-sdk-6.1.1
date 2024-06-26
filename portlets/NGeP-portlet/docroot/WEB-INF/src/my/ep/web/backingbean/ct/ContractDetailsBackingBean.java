@@ -3086,7 +3086,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
 			boolean isTrue =  getManagedBean().isBackPageAmendment();
 			String taskId = getManagedBean().getTaskId();
-			renewSesionObject();
+			//Start Fix - #30866
+			if(!getManagedBean().isContinuityCircularAuditSearch()){
+				renewSesionObject();
+			}
+			//End Fix - #30866
 			if(isTrue && taskId == null){
 				return gotoAmendPage(contractId);
 			}else if (isTrue && taskId != null){
@@ -3170,6 +3174,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		// End - #30866
 	
+		// #25790 - start
+		if (getManagedBean().getDpContinuitySession() != null) {
+			getManagedBean().setExternalPageUrl(getManagedBean().getDpContinuitySession());
+		}
+		// #25790 - end
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 
