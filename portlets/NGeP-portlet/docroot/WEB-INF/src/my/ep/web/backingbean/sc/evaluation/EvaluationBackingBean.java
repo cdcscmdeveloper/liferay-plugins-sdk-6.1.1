@@ -2319,6 +2319,13 @@ public class EvaluationBackingBean extends
 			reqDTO.setCompliance(null);
 			reqDTO.setScQt(this.getManagedBean().getScQt());//#29187 Added Vinod
 			evaluationSO.preInitializeChecklist(reqDTO);//34496 4serangkai
+			
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
+			}
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			
 			//#34452 related to #25138 -start
@@ -13705,7 +13712,8 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {//6906 
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906 
 				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -13719,6 +13727,15 @@ private void retriveCommitteeRemarksList(){
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 
+			}
+			if (this.getManagedBean().isAllSupplierRejectEpv()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+								MessageUtils.getMessage(
+										MessageConst.WARN_760530,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 			}
 		}
 
