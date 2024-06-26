@@ -211,6 +211,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
+import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
@@ -1114,7 +1115,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 				
 				// Improvement #35657@Syazani 14/05/2024 -- Start
-				if (!mimeType.equalsIgnoreCase(CommonConstants.FILE_CONTENT_TYPE_PDF)) {
+				boolean mimeTypePDF = mimeType.equalsIgnoreCase(MimeType.pdf.contentType)
+						|| mimeType.equalsIgnoreCase(MimeType.bin.contentType);
+				if (!mimeTypePDF) {
 					log.info("Report server return '" + mimeType + "' Type");
 					log.info(bos.toString());
 					throw new EpException(MessageConst.ERROR_760530);
@@ -2126,17 +2129,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		if(isDirectLoa) {
 			boolean setBondReq = true; 
-			// Reopen 25726 note 271- Issue 2 
-//			if (null != scLoa.getScQt() 
-//					&& null != scLoa.getScQt().getFulfilmentType()
-//					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-//					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-//					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
-//					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))) {
-//					if((overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) < 0) || (overallCtAmount.compareTo(this.getManagedBean().getLowerLimit()) == 0))
-//						setBondReq = false;	
-//					
-//				}
 			//20231122@asyrafhaziq_25726 - Issue 16
 			if (null != scLoa.getQtType() 
 					&& null != scLoa.getQtType().getParameterId() 

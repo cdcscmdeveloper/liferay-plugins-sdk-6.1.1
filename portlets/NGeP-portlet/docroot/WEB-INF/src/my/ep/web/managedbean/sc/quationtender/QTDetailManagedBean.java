@@ -1875,7 +1875,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//12471 - end
 
 	//#29732
-	public boolean isFromSubmitCatChange;
+	private boolean isFromSubmitCatChange;
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11896,7 +11896,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/**
 	 * @return the isFromSubmitCatChange
 	 */
-	public boolean getIsFromSubmitCatChange() {
+	public boolean isFromSubmitCatChange() {
 		return isFromSubmitCatChange;
 	}
 
@@ -11904,7 +11904,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 * @param isFromSubmitCatChange
 	 *            the isFromSubmitCatChange to set
 	 */
-	public void setIsFromSubmitCatChange(boolean isFromSubmitCatChange) {
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
 		this.isFromSubmitCatChange = isFromSubmitCatChange;
 	}
 }
