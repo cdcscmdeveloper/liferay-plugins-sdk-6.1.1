@@ -156,6 +156,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
+import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean; //#25790
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -2393,7 +2394,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
-		// ##25025 #509 -start		context.put("loaNo", scLoa.getLoaNo());
+		// ##25025 #509 -end	context.put("loaNo", scLoa.getLoaNo());
 
 		String issueDate = "______________";
 		if (scLoa.getIssueDate() != null) {
@@ -12025,6 +12026,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		//29006 end
+		
+	// #25790 - start
+	/**
+	 * Navigate to RequestNote view page.
+	 * 
+	 * @param requestNoteId
+	 */
+	public void navigateRequestNotePage(Long requestNoteId) {
+		RequestNoteBackingBean reqNoteBB = new RequestNoteBackingBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		reqNoteBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		reqNoteBB.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		reqNoteBB.viewRequestNote(requestNoteId);
+	}
+	// #25790 - end
 
 }
 
