@@ -158,12 +158,10 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				if(ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSearchDocumentType())){
 					paramPtj = "pmOrgProfile.orgProfileId";
 					paramTitle ="title";
-					if (isSearchDPM()) {
-						if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
-							paramPtj = "requestNote.pmOrgProfile.orgProfileId";
-							paramTitle ="requestNote.title";
-						} 
-					} 
+					if (isSearchDPM() && (getSearchStatusId() != null && getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION))) {//#36018
+						paramPtj = "requestNote.pmOrgProfile.orgProfileId";
+						paramTitle ="requestNote.title";
+					}
 					paramPtjGroupAndMinistry = "pmOrgProfile";
 				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
 					paramPtj = "requestNotes.pmOrgProfile.orgProfileId";
@@ -285,7 +283,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				reqDTO.setSourcingDocSearchBean(searchBean);
 				SourcingIntegrationResDTO resDTO = null;
 				if (isSearchDPM()) {
-					if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+					if (getSearchStatusId() != null && getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) { //#36018
 						resDTO = sourcingIntegrationSO.searchSourcingDocumentForDPM(reqDTO);
 					} else {
 						resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
