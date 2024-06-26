@@ -1170,6 +1170,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		// #29693 start
+		// More than 1000 plus request note details data
 		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
 			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 
@@ -1178,6 +1179,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					&& (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || fulfilmentType
 							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 				approvalNotification();
+				break;
 			}
 
 		}
