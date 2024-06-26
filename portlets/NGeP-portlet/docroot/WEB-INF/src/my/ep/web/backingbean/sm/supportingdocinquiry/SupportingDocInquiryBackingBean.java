@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -583,12 +584,16 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 						smApplSupportDoc.setNewAddedFiles(smApplDocFiles);
 					}
 				}
-				if(this.getManagedBean().getUpdatedSupportDocs() != null){
-					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
-				}else{
+				//#34392 - start
+				if (this.getManagedBean().getUpdatedSupportDocs() != null) {
+					if (!this.getManagedBean().getUpdatedSupportDocs().contains(doc)) {
+						this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
+					}
+				} else {
 					this.getManagedBean().setUpdatedSupportDocs(new ArrayList<SmApplSupportDoc>());
 					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
 				}
+				//#34392 - end
 			}
 		}
 	}
@@ -610,6 +615,19 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			this.getManagedBean().getAddedDocFile().remove(this.getManagedBean().getSmApplDocFile());
 		}
 		this.getManagedBean().setSmApplDocFile(null);
+		
+		//#34392 - start
+		Iterator<SmApplSupportDoc> suppDocIter = this.getManagedBean()
+				.getUpdatedSupportDocs().iterator();
+		while (suppDocIter.hasNext()) {
+			SmApplSupportDoc suppDoc = suppDocIter.next();
+			if (suppDoc.getNewAddedFiles().isEmpty()
+					&& suppDoc.getApplSupportDocId().equals(
+							smApplSupportDoc.getApplSupportDocId())) {
+				suppDocIter.remove();
+			}
+		}
+		//#34392 - end
 	}
 	
 	public void deleteInquirySupDocFileAttachment() {
