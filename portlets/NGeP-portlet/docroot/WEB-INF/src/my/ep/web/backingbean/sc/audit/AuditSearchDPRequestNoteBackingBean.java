@@ -176,8 +176,6 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		 */
 		@Override
 		public ISearchResultBean<AuDPRequestNoteSPDTO> pageChangeListener(ISearchBean<AuDPRequestNoteSPDTO> searchBean) {
-
-			SearchResultBean<AuDPRequestNoteSPDTO> searchResult = new SearchResultBean<>();
 			AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
