@@ -2244,8 +2244,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
-		context.put("loaNo", scLoa.getLoaNo());
-		// ##25025 #509 -start		
+		// ##25025 #509 -end		context.put("loaNo", scLoa.getLoaNo());
+
 
 		String issueDate = "______________";
 		if (scLoa.getIssueDate() != null) {
