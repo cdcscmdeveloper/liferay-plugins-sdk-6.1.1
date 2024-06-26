@@ -148,6 +148,7 @@ import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
+import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -797,8 +798,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep8_9PoApproverDefaultDecision();
 		initBumiRecommendNote();
 		//#32008 - start
-		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog()
-				&& getManagedBean().isViewApplicationHistory()){
+		getManagedBean().setShowFieldChanges(false);
+		getManagedBean().setLatestAppl(null);
+		getManagedBean().setEditVO(new SmSectionEditorVO());
+		if (!getManagedBean().isPoApprUnClaimTask() && !getManagedBean().isRevisionDialog() 
+				&& getManagedBean().isViewApplicationHistory() 
+				&& !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 			SmFieldChangeUtil.initLatestAppl(getManagedBean());
 			SmSideMenuIconUtil.setSectionEditorVO(getManagedBean());
 		}
@@ -906,16 +911,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if(personnel.isDirector() || personnel.isManagement()){
 				this.getManagedBean().getPersonnelDirectorManager().add(personnel);	
 				}
-				//28767
-				for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
-					if (address.getAddressType().equals("R")){
-						personnel.setSmPersonnelAdd(address);
-					}	
+				//#35037 - start
+				if(personnel.getSmPersonnelAddresses() != null){
+					for (SmPersonnelAddress address : personnel.getSmPersonnelAddresses()){
+						if (address.getAddressType() != null && address.getAddressType()
+								.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+							personnel.setSmPersonnelAdd(address);
+						}
+					}
 				}
+				//#35037 - end
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
@@ -1343,6 +1353,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setStoreFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
+		//34303 - Start
+		getManagedBean().getStoreFacilitiesVOList()
+				.addAll(getCategoryFacilityVO(getManagedBean().getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
+		//34303 - End
 		getManagedBean().setFactoryFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
@@ -1596,6 +1611,38 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				new String[] { "accountNo", "accountPurpose" }, null, null));
 		}
 		//#32008 - end
+		//#35086 - start
+		SmSupplierBank latestbank = getManagedBean().getLatestBank();
+		sb = new StringBuilder();
+		i = 0;
+		if(latestbank != null && latestbank.getSmChequeSignatories() != null){
+			if (latestbank.getSmChequeSignatories().size() == 1) {
+				sb.append(latestbank.getSmChequeSignatories().get(0)
+						.getSmPersonnel().getName());
+			} else {
+				for (SmChequeSignatory tmp : latestbank.getSmChequeSignatories()) {
+					i++;
+					sb.append(i + ") "+tmp.getSmPersonnel().getName()+"<br />");
+				}
+			}
+		}
+		getManagedBean().setLatestChequeSignPersonnelName(sb.toString());
+		
+		sb = new StringBuilder();
+		i = 0;
+		if(latestbank != null && latestbank.getSmSupplierBranchBanks() != null){
+			if (latestbank.getSmSupplierBranchBanks().size() == 1) {
+				sb.append(latestbank.getSmSupplierBranchBanks().get(0)
+						.getSmSupplierBranch().getBranchName());
+			} else {
+				for (SmSupplierBranchBank brTmp : latestbank.getSmSupplierBranchBanks()) {
+					i++;
+					sb.append(i + ") "+brTmp.getSmSupplierBranch().getBranchName()+"<br />");
+				}
+			}
+		}
+		getManagedBean().setLatestBankBranchName(sb.toString());
+		//#35086 - end		
 		closeBlockUI();
 	}
 
@@ -5234,6 +5281,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			retVal = SmCommonUtil.getMessage("lbl.sm.bankDtls.both.regandpay",
 					null);
+		}
+		return retVal;
+	}
+	
+	public String getLabelFromSelectItems(Object objId, String paramType) {
+		String retVal = "";
+		List<SelectItem> items = Arrays.asList(getDropdownValues(paramType));
+		if (!SmCommonUtil.isCollectionEmpty(items) && objId != null) {
+			for (SelectItem item : items) {
+				if (item.getValue() != null
+						&& item.getValue().toString().equals(objId.toString())) {
+					retVal = item.getLabel();
+				}
+			}
 		}
 		return retVal;
 	}
