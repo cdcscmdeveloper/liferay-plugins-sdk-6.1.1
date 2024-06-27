@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -12,13 +13,14 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
+import my.ep.web.util.CommonUtils;
 
 /**
  * @author Firdaus Omar
  * @since 25.06.2024 #28895_35501
  */
 
-public class AuditSupplierManagementDisciplinaryActionInformationBackingBean extends
+public class AuditSupplierManagementDisciplinaryActionBackingBean extends
 		AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
@@ -41,8 +43,12 @@ public class AuditSupplierManagementDisciplinaryActionInformationBackingBean ext
 		SmDisciplinaryAction newDisciplinaryAction = mBean.getDisciplineVO().getSmDiscplinaryAction();
 
 		Locale locale = new Locale("ms");
+		
+		if(oldDisciplinaryAction == null){
+			oldDisciplinaryAction = new SmDisciplinaryAction();
+		}
 
-		if (oldDisciplinaryAction.isWarning() != newDisciplinaryAction.isWarning()) {
+		if (!oldDisciplinaryAction.isWarning() && newDisciplinaryAction.isWarning()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
 							.getMessage("lbl.sm.disciplinary.jktt.warning", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -92,62 +98,66 @@ public class AuditSupplierManagementDisciplinaryActionInformationBackingBean ext
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
 		}
 
-		// CommonUtils commonUtils = new CommonUtils();
-		//
-		// if
-		// (oldDisciplinaryAction.getStartDate().equals(newDisciplinaryAction.getStartDate()))
-		// {
-		// if (oldDisciplinaryAction.getStartDate() == null) {
-		// auDetails.add(createAuditData(
-		// AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-		// AuditSupplierManagementConst.AU_FIELD_LABEL_ID_START_DATE,
-		// commonUtils.getFormattedDate(oldDisciplinaryAction.getStartDate(),
-		// commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
-		// null,
-		// null, null,
-		// AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_START_DATE));
-		// } else {
-		// auDetails.add(createAuditData(
-		// AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-		// AuditSupplierManagementConst.AU_FIELD_LABEL_ID_START_DATE,
-		// commonUtils.getFormattedDate(oldDisciplinaryAction.getStartDate(),
-		// commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
-		// commonUtils.getFormattedDate(newDisciplinaryAction.getStartDate(),
-		// commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
-		// null,
-		// null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_START_DATE));
-		// }
-		// }
-		//
-		// if
-		// (oldDisciplinaryAction.getEndDate().equals(newDisciplinaryAction.getEndDate()))
-		// {
-		// if (oldDisciplinaryAction.getEndDate() == null) {
-		// auDetails.add(createAuditData(
-		// AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-		// AuditSupplierManagementConst.AU_FIELD_LABEL_ID_END_DATE,
-		// commonUtils.getFormattedDate(oldDisciplinaryAction.getEndDate(),
-		// commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
-		// null,
-		// null, null,
-		// AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_START_DATE));
-		// } else {
-		// auDetails.add(createAuditData(
-		// AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-		// AuditSupplierManagementConst.AU_FIELD_LABEL_ID_END_DATE,
-		// commonUtils.getFormattedDate(oldDisciplinaryAction.getEndDate(),
-		// commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
-		// commonUtils.getFormattedDate(newDisciplinaryAction.getEndDate(),
-		// commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
-		// null,
-		// null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_START_DATE));
-		// }
-		// }
+		CommonUtils commonUtils = new CommonUtils();
+
+		if (oldDisciplinaryAction.getStartDate() != null) {
+			if (!oldDisciplinaryAction.getStartDate().equals(newDisciplinaryAction.getStartDate())) {
+				auDetails.add(createAuditData(
+						AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_START_DATE,
+						commonUtils.getFormattedDate(oldDisciplinaryAction.getStartDate(),
+								commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
+						commonUtils.getFormattedDate(newDisciplinaryAction.getStartDate(),
+								commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)), null,
+						null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_START_DATE));
+			}
+		} else if (newDisciplinaryAction.getStartDate() != null) {
+			auDetails.add(createAuditData(
+					AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_START_DATE,
+					null,
+					commonUtils.getFormattedDate(newDisciplinaryAction.getStartDate(),
+							commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_START_DATE));
+		}
+
+		if (oldDisciplinaryAction.getEndDate() != null) {
+			if (!oldDisciplinaryAction.getEndDate().equals(newDisciplinaryAction.getEndDate())) {
+				auDetails.add(createAuditData(
+						AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_END_DATE,
+						commonUtils.getFormattedDate(oldDisciplinaryAction.getEndDate(),
+								commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)),
+						commonUtils.getFormattedDate(newDisciplinaryAction.getEndDate(),
+								commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)), null,
+						null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_END_DATE));
+			}
+		} else if (newDisciplinaryAction.getEndDate() != null) {
+			auDetails.add(createAuditData(
+					AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_END_DATE,
+					null,
+					commonUtils.getFormattedDate(newDisciplinaryAction.getEndDate(),
+							commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_END_DATE));
+		}
+
+		if (oldDisciplinaryAction.getRemark() != null) {
+			if (!oldDisciplinaryAction.getRemark().equals(newDisciplinaryAction.getRemark())) {
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_REMARKS, oldDisciplinaryAction.getRemark(),
+						newDisciplinaryAction.getRemark(), null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_REMARKS));
+			}
+		} else if (newDisciplinaryAction.getRemark() != null) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_REMARKS, null, newDisciplinaryAction.getRemark(),
+					null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_REMARKS));
+		}
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION);
 
 		return auObj;
 	}
-
 }

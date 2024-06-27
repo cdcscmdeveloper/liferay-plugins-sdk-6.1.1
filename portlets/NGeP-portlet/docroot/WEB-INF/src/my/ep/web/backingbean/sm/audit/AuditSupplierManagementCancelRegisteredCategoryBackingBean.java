@@ -16,7 +16,7 @@ import my.ep.web.managedbean.sm.SmDeleteCategoryCodeManagedBean;
  * @since 13.06.2024 #28895_35501
  */
 
-public class AuditSupplierManagementCategoryCodeInformationBackingBean extends
+public class AuditSupplierManagementCancelRegisteredCategoryBackingBean extends
 		AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;

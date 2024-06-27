@@ -200,6 +200,7 @@ public class ViewSuppProfileManagedBean extends
 	// #28895_35501 Start - AUDIT TRAIL SM
 	private SmAppl oldSmAppl;
 	private SmDisciplinaryAction oldSmDisciplinaryAction;
+	private List<SmSupplierCategory> oldApprovedCategoryList;
 	// #28895_35501 End
 		
 	public ViewSuppProfileManagedBean() {
@@ -1037,6 +1038,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setOldSmDisciplinaryAction(SmDisciplinaryAction oldSmDisciplinaryAction) {
 		this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
+	}
+
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
+
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
 	}
 	// #28895_35501 End
 	

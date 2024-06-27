@@ -50,7 +50,7 @@ import org.primefaces.event.UnselectEvent;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementCategoryCodeInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementCancelRegisteredCategoryBackingBean;
 //#28895_35501 End
 
 // TODO: Auto-generated Javadoc
@@ -324,7 +324,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 				IAuditSupplierManagementSO auditSMSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
 				if (auditSMSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSupplierManagementCategoryCodeInformationBackingBean();
+					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSupplierManagementCancelRegisteredCategoryBackingBean();
 					auSMBackingBean.saveAuditData(getManagedBean(), getFacesScopes().getUserSessionBean().getUserId());		
 				}
 				// #28895_35501 End

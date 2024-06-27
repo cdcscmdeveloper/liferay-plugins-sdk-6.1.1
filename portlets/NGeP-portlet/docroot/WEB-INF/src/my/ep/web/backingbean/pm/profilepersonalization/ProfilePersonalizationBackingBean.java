@@ -90,7 +90,7 @@ import com.liferay.portal.util.PortalUtil;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.util.CustomUtils;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 //#28895_35501 End
 
@@ -943,7 +943,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				IAuditSupplierManagementSO auditSMSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
 				if (auditSMSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSupplierManagementUserInformationBackingBean();
+					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSupplierManagementUserProfileBackingBean();
 					auSMBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
 				}
 				// #28895_35501 End

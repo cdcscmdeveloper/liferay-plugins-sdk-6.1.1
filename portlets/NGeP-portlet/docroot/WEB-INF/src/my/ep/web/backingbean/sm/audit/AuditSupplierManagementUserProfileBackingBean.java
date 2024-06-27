@@ -16,7 +16,7 @@ import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationMan
  * @since 12.06.2024 #28895_35501
  */
 
-public class AuditSupplierManagementUserInformationBackingBean extends AuditSupplierManagementBackingBeanTemplate {
+public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
 

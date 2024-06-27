@@ -98,8 +98,9 @@ import org.primefaces.context.RequestContext;
 import my.ep.util.CustomUtils;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementDisciplinaryActionInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementDisciplinaryActionBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
 //#28895_35501 End
 
@@ -362,8 +363,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		// #28895_35501 Start - AUDIT TRAIL SM
 		this.getManagedBean().setOldSmAppl(
 				(SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
-		this.getManagedBean().setOldSmDisciplinaryAction(
-				(SmDisciplinaryAction) CustomUtils.getInstance().deepCopy(this.getManagedBean().getDisciplineVO().getSmDiscplinaryAction()));
+		this.getManagedBean().setOldApprovedCategoryList(
+				CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getApprovedCategoryList()));
 		// #28895_35501 End
 		
 	}
@@ -887,7 +888,9 @@ public class SupplierDataMaintenanceBackingBean extends
 				if (auditSmSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionInformationBackingBean();
+					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
+					auditSmBackingBean = new AuditSupplierManagementApprovedCategoryCodesBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
 				}
 				// #28895_35501 End
@@ -2187,6 +2190,10 @@ public class SupplierDataMaintenanceBackingBean extends
 							disc.getEndDate());
 					discipline.setSuspend(true);
 					getManagedBean().setHasActiveDA(true); //#34626
+					// #28895_35501 Start - AUDIT TRAIL SM
+					this.getManagedBean().setOldSmDisciplinaryAction(
+							(SmDisciplinaryAction) CustomUtils.getInstance().deepCopy(disc));
+					// #28895_35501 End
 					break;
 				}
 			}
