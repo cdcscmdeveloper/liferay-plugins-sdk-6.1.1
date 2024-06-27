@@ -97,7 +97,7 @@
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.submitted eq 'true'
 					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected
-					or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified)}">
+					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified)}">
 					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 						value="#{complianceTechnicalSupplier.remark}">

@@ -218,7 +218,7 @@
 				</p:column>
 				
 				<p:column style="text-align:left;">
-					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}" 
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected and qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 required="false" size="20" autocomplete="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" 
