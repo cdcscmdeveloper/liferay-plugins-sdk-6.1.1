@@ -36,6 +36,8 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -195,8 +197,10 @@ public class ViewSuppProfileManagedBean extends
 	
 	private boolean hasActiveDA; //#34626
 	
-	// #28895_35501 - AUDIT TRAIL SM
+	// #28895_35501 Start - AUDIT TRAIL SM
 	private SmAppl oldSmAppl;
+	private SmDisciplinaryAction oldSmDisciplinaryAction;
+	// #28895_35501 End
 		
 	public ViewSuppProfileManagedBean() {
 
@@ -1025,6 +1029,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setOldSmAppl(SmAppl oldSmAppl) {
 		this.oldSmAppl = oldSmAppl;
+	}
+
+	public SmDisciplinaryAction getOldSmDisciplinaryAction() {
+		return oldSmDisciplinaryAction;
+	}
+
+	public void setOldSmDisciplinaryAction(SmDisciplinaryAction oldSmDisciplinaryAction) {
+		this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
 	}
 	// #28895_35501 End
 	

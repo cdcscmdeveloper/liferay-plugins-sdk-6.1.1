@@ -362,6 +362,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		// #28895_35501 Start - AUDIT TRAIL SM
 		this.getManagedBean().setOldSmAppl(
 				(SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
+		this.getManagedBean().setOldSmDisciplinaryAction(
+				(SmDisciplinaryAction) CustomUtils.getInstance().deepCopy(this.getManagedBean().getDisciplineVO().getSmDiscplinaryAction()));
 		// #28895_35501 End
 		
 	}
