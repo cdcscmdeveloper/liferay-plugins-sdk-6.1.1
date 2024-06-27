@@ -1172,7 +1172,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#21692 05/02/2024 - Start
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
 			if (selectedScQt.getResponsePeriod() != null &&
-					selectedScQt.getResponsePeriod() != result) {
+					selectedScQt.getResponsePeriod() != result && enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD)) {//#21692 note-#418 issue 2
 				selectedScQt.setResponsePeriod(result);
 			}
 			//#21692 05/02/2024 - End
@@ -7668,7 +7668,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			// #25077 - End
 			//#25426 - Start
-			if(activeIndex != 3){
+			if(activeIndex != 3
+					&& !isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(this.getManagedBean().getQt().getQtStatus().getStatusId())){//#21692 note-418 issue 1
 				ScQt qt = this.getManagedBean().getQt();
 				Long[] orgIds={qt.getOwnerOrgProfile().getOrgProfileId(),qt.getPmOrgProfile().getOrgProfileId()};
 				DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(RoleCode.COMMITTEE_APPROVER,orgIds,this.getManagedBean().getScQtApproval());
