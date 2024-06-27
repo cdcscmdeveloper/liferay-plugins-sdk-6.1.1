@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import javax.ejb.TransactionAttribute; //#21387
+import javax.ejb.TransactionAttributeType;	//#21387								  										  
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
@@ -2216,6 +2218,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				bb.getManagedBean().setClaim(claim);
 				bb.getManagedBean().setTaskId(taskId);
+				//21387 - Start
+				bb.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
+				bb.getManagedBean().setDocNo(resDTO.getDocNumber());
+				//21387 - End				 
 				bb.getManagedBean().setGroupTask(true);
 			} else {
 				log.info("====groupTask null===" + resDTO.isGroupTask());
@@ -3516,4 +3522,33 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	// 33410 - END
+	
+	//#21387 - Start
+	/**
+	 * Claim bpm task group By Document Number And Module
+	 * @param reqDTO
+	 * @return resDTO 
+	 */
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
+		BpmResponseDTO resDTO = new BpmResponseDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		try {
+
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(reqDTO.getDocNumber());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			bpmReqDTO.setModule(BpmConstants.MODULE_CT);
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			resDTO = bpmSO.getTasksByDocNoandModule(bpmReqDTO);
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	//#21387 - End
 }
