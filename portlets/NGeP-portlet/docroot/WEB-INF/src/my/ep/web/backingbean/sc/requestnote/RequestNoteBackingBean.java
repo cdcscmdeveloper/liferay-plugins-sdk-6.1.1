@@ -190,7 +190,6 @@ import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -1171,14 +1170,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		// #29693 start
+		// More than 1000 plus request note details data
 		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
 			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 
 			if ((getManagedBean().getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) || getManagedBean()
-					        .getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL))
+							.getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL))
 					&& (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || fulfilmentType
 							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 				approvalNotification();
+				break;
 			}
 
 		}
@@ -6205,32 +6206,31 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 
-		long assignUser = 12345678910L;
 		if (getManagedBean().getRequestNoteDtl() != null
 				&& getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
-			assignUser = getManagedBean().getRequestNoteDtl().getAssignedUser().getUserId();
+			
+			
+			long assignUser = getManagedBean().getRequestNoteDtl().getAssignedUser().getUserId();
+			String userEmail = getManagedBean().getRequestNoteDtl().getAssignedUser().getEmail();
+
+			ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
+			Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
+			Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
+			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+		
+			getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
+					CommonConstants.DASHBOARD);
+			getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
+					CommonConstants.EMAIL);
+		}else{
+			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION,
+					ParameterConst.DOCTYPE_REQUEST_NOTE.toUpperCase(),
+					"RequestNoteBackingBean.approvalNotification : No notification send", 
+					System.currentTimeMillis());
 		}
 
-		String userEmail = "";
-		if (getManagedBean().getRequestNoteDtl() != null
-				&& getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
-			userEmail = getManagedBean().getRequestNoteDtl().getAssignedUser().getEmail();
-
-		}
-
-		ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
-		Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
-		Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
-		String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
-		PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-		String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-		log.info(ptjName);
-		log.info(ministryName);
-
-		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
-				CommonConstants.DASHBOARD);
-		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
-				CommonConstants.EMAIL);
 	}
 	// #29693 - end
 	
@@ -6273,7 +6273,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			if (resDTO.isSuccessful()) {
 				List<ScPurchaseRequest> purchaseRequestList = resDTO.getListPurchaseRequest();
-				if (purchaseRequestList != null && CollectionUtils.isNotEmpty(purchaseRequestList)) {
+				if (CollectionUtils.isNotEmpty(purchaseRequestList)) {
 					List<Map<String, String>> prDtl = new ArrayList<>();
 					extractPurchaseRequestList(purchaseRequestList, prDtl);
 					getManagedBean().getPurchaseRequestMapList().addAll(prDtl);
@@ -6427,8 +6427,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void extractScloa(IContractSO contractSO, boolean isSupplierUser, List<ScLoiLoa> loiLoaList,
 			List<Map<String, String>> loaDtl) {
+		//expected size below than 10
 		for (ScLoiLoa loiLoa : loiLoaList) {
-			if (loiLoa.getScloas() != null && CollectionUtils.isNotEmpty(loiLoa.getScloas())) {
+			if (CollectionUtils.isNotEmpty(loiLoa.getScloas())) {
+				//expected size below than 10
 				for (ScLoa scLoa : loiLoa.getScloas()) {
 					Map<String, String> mapScLoa = new HashMap<>();
 					mapScLoa.put(ContinuityDPConst.getLoaNo(), scLoa.getLoaNo());

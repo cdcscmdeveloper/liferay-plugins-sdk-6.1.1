@@ -584,7 +584,7 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 					
-		<!-- #29693 start -->
+		<!-- 20230111@Haziq - #12487&29693 - start  -->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
 			</td>
@@ -595,7 +595,7 @@
 						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 							<p:inputText id="ContractAmtId2"
 								value="#{directLOABackingBean.managedBean.scLoa.loaResponsePeriod}"
-								style="text-align:right;" partialSubmit="true" size="5" >
+								style="text-align:right;" partialSubmit="true" size="2" >
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.validateResponsePeriod(directLOABackingBean.managedBean.scLoa.loaResponsePeriod)}"
 									partialSubmit="true" process="@this"
@@ -605,7 +605,7 @@
 						<c:otherwise>
 						    <p:inputText id="ContractAmtId2"
 								value="#{directLOABackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.loaResponsePeriod}"
-								style="text-align:right;" partialSubmit="true" size="5"
+								style="text-align:right;" partialSubmit="true" size="2"
 								disabled="true" >
 								
 							</p:inputText> 	
@@ -636,7 +636,7 @@
 					</tr>
 				</table></td>
 
-			<!-- #29693 end -->									
+			<!-- 20230111@Haziq - #12487&29693 - end  -->									
 			</tr>
 			<tr>
 				<td>

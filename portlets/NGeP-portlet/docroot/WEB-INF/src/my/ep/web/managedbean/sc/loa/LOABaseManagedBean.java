@@ -26,7 +26,7 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	private Long periodicAsAndWhenParamId;
 	
 	private Long periodicScheduleParamId;
-	//20230111@Haziq - #12487
+	//20230111@Haziq - #12487&29693
 	private PmUserOrg selectedUserPtj;
 
 	public PmParameter getSelectedOrgType() {
