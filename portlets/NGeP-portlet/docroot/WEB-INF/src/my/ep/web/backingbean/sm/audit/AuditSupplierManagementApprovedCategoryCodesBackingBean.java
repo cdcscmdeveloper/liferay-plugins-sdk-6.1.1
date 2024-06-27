@@ -44,6 +44,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 				newApprovedCategories.remove();
 			}
 		}
+		newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories().listIterator();
 
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
@@ -56,16 +57,15 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 			}
 			newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories().listIterator();
 		}
+		oldApprovedCategories = mBean.getOldApprovedCategoryList().listIterator();
 
-		newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories().listIterator();
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY, null, codeToString(newApprovedCategory), null,
 					newApprovedCategory.getSupplierCategoryId(), AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY));
 		}
-
-		oldApprovedCategories = mBean.getOldApprovedCategoryList().listIterator();
+		
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
