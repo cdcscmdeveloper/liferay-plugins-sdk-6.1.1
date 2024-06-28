@@ -99,8 +99,10 @@ import my.ep.util.CustomUtils;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApproverRemarksBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementDisciplinaryActionBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementOverlappingCategoryBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
 //#28895_35501 End
 
@@ -365,6 +367,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				(SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
 		this.getManagedBean().setOldApprovedCategoryList(
 				CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getApprovedCategoryList()));
+		this.getManagedBean().setOldPoApprOverlappedRemark(this.getManagedBean().getPoApprOverlappedRemark());
+		this.getManagedBean().setOldApproverRemark(this.getManagedBean().getApproverRemark());
 		// #28895_35501 End
 		
 	}
@@ -892,6 +896,10 @@ public class SupplierDataMaintenanceBackingBean extends
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
 					auditSmBackingBean = new AuditSupplierManagementApprovedCategoryCodesBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
+					auditSmBackingBean = new AuditSupplierManagementOverlappingCategoryBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
+					auditSmBackingBean = new AuditSupplierManagementApproverRemarksBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());	
 				}
 				// #28895_35501 End
 			} 

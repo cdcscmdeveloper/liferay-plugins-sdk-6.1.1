@@ -201,6 +201,8 @@ public class ViewSuppProfileManagedBean extends
 	private SmAppl oldSmAppl;
 	private SmDisciplinaryAction oldSmDisciplinaryAction;
 	private List<SmSupplierCategory> oldApprovedCategoryList;
+	private String oldPoApprOverlappedRemark;
+	private String oldApproverRemark;
 	// #28895_35501 End
 		
 	public ViewSuppProfileManagedBean() {
@@ -1046,6 +1048,22 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
 		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
+
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
+
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
+
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
+
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
 	}
 	// #28895_35501 End
 	

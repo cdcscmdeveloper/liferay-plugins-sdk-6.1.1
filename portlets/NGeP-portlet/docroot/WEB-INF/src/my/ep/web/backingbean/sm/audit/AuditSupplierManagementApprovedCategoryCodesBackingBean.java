@@ -36,8 +36,9 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
 
 		ListIterator<SmSupplierCategory> oldApprovedCategories = mBean.getOldApprovedCategoryList().listIterator();
-		ListIterator<SmSupplierCategory> newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories().listIterator();
-		
+		ListIterator<SmSupplierCategory> newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories()
+				.listIterator();
+
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			if (!newApprovedCategory.getRecordStatusFlg().equals(1)) {
@@ -62,15 +63,30 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY, null, codeToString(newApprovedCategory), null,
-					newApprovedCategory.getSupplierCategoryId(), AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY));
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY, null, codeToString(newApprovedCategory),
+					null, newApprovedCategory.getSupplierCategoryId(),
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY));
+			if (!newApprovedCategory.getOtherDesc().isEmpty()) {
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION, null,
+						newApprovedCategory.getOtherDesc(), null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OTHER_DESCRIPTION));
+			}
+
 		}
-		
+
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY, codeToString(oldApprovedCategory), null,
-					oldApprovedCategory.getSupplierCategoryId(), null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY));
+					oldApprovedCategory.getSupplierCategoryId(), null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY));
+			if (!oldApprovedCategory.getOtherDesc().isEmpty()) {
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION,
+						oldApprovedCategory.getOtherDesc(), null, null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OTHER_DESCRIPTION));
+			}
 		}
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
