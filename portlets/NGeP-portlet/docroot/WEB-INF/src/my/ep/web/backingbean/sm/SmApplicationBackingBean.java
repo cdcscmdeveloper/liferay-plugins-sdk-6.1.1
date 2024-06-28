@@ -18120,13 +18120,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    Map<Long, SmApplSupportDoc> allDocsMap = new HashMap<>();
 
 	    // Add all mandatory docs to the map
-	    for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
-	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
 	    }
 
 	    // Add all non-mandatory docs to the map
-	    for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
-	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
 	    }
 
 	    // Add all license mandatory docs to the map
