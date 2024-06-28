@@ -140,6 +140,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayReviseInstrn;
 	// #25638 - End
 	
+	//#25037-start
+	private String currentTaskDocType;
+	
 	//27346-start 
 	// 27346
 	private StreamedContent downloadfile;
@@ -874,6 +877,17 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayReviseInstrn = displayReviseInstrn;
 	}
 	// #25638 - End
+	
+	// #25037 - start
+	public String getCurrentTaskDocType() {
+		return currentTaskDocType;
+	}
+
+	public void setCurrentTaskDocType(String currentTaskDocType) {
+		this.currentTaskDocType = currentTaskDocType;
+	}
+	// #25037 - end
+	
 	// 28767
 	public List<SmPersonnel> getPersonnelDirectorManager() {
 		return personnelDirectorManager;
