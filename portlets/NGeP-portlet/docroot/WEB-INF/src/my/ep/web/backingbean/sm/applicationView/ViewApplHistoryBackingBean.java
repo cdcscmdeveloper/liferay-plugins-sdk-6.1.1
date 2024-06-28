@@ -567,16 +567,18 @@ public class ViewApplHistoryBackingBean extends
 			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
 			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
 					.getSmApplInquiries()) {
-				if (!StringUtils.isBlank(inquiry.getInquirySubject())
-						&& inquiry
-								.getInquirySubject()
-								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+				//#34392 - start
+//				if (!StringUtils.isBlank(inquiry.getInquirySubject())
+//						&& inquiry
+//								.getInquirySubject()
+//								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
 					inquiry.getSmApplSupportDocInquiries().size();
 					this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
 					//#34392 - start
 					POinquiryRowSelect(inquiry);
-					//#34392 - end
-				}
+					
+//				}
+				//#34392 - end
 			}
 		}		
 		//END 14530
