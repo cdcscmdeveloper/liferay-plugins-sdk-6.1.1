@@ -258,6 +258,8 @@
 				action="#{bpmTasklistBackingBean.claimTask}" update="@form">
 
 				<f:param name="taskId" value="#{tasks.taskId}" />
+				<f:param name="docNumber" value="#{tasks.docNumber}" />
+				<f:param name="docType" value="#{tasks.docType}" />
 			</p:commandButton>
 		</p:column>
 		<!--#29810-END-->
