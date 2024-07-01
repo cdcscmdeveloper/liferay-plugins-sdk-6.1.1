@@ -4786,7 +4786,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		for(CtAgreement currAgreement : filterAgreementList()){
 			if((currAgreement.getCreatedDate().equals(agreement.getCreatedDate())
 					|| currAgreement.getCreatedDate().before(agreement.getCreatedDate())) 
-					&& currAgreement.getCtAmendment() != null){
+					&& currAgreement.getCtAmendment() != null
+					&& currContractVerId!=currAgreement.getCtAmendment().getCtContractVer().getContractVerId()){
 				//set previous amendment data for retrieval
 				prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
 			}
