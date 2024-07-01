@@ -36,8 +36,8 @@ public class AuditSupplierManagementOverlappingCategoryBackingBean extends Audit
 		String oldPoApprOverlappedRemark = mBean.getOldPoApprOverlappedRemark();
 		String poApprOverlappedRemark = mBean.getPoApprOverlappedRemark();
 
-		if (oldPoApprOverlappedRemark.equals(" ")) {
-			if (!poApprOverlappedRemark.isEmpty() && !poApprOverlappedRemark.equals(" ")) {
+		if (" ".equals(oldPoApprOverlappedRemark)) {
+			if (!poApprOverlappedRemark.isEmpty() && !" ".equals(poApprOverlappedRemark)) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK, null,
 						poApprOverlappedRemark, null, null,

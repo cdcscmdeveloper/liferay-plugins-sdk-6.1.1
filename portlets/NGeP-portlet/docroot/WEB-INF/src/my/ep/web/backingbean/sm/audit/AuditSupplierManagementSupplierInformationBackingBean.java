@@ -39,8 +39,8 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 		SmAppl oldSmAppl = mBean.getOldSmAppl();
 		SmAppl newSmAppl = mBean.getSmAppl();
 
-		if (!oldSmAppl.getPmRegStatus().getPmStatus().getStatusId().equals(newSmAppl.getPmRegStatus().getPmStatus()
-				.getStatusId())) {
+		if (!oldSmAppl.getPmRegStatus().getPmStatus().getStatusId()
+				.equals(newSmAppl.getPmRegStatus().getPmStatus().getStatusId())) {
 			auDetails.add(createAuditData(
 					AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_REGISTRATION_STATUS,
@@ -62,7 +62,7 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 		String statusName = "";
 		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
 			for (PmStatusDesc status : statusList) {
-				if (status.getLanguageCode().equals("ms") && status.getPmStatus().getStatusId().equals(pmStatusId)) {
+				if ("ms".equals(status.getLanguageCode()) && status.getPmStatus().getStatusId().equals(pmStatusId)) {
 					statusName = status.getStatusName();
 				}
 			}

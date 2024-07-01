@@ -38,11 +38,11 @@ public class AuditSupplierManagementCancelRegisteredCategoryBackingBean extends
 		List<SmSupplierCategory> delCatCodeList = mBean.getSelectedCategories();
 
 		for (SmSupplierCategory catCode : delCatCodeList) {
-			String Category = catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name()
+			String category = catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name()
 					+ "<br/>" + catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name()
 					+ "<br/>" + catCode.getPmCategoryL3().getCategoryL3Code() + " - " + catCode.getCategoryL3Name();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY_CODE, Category, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY_CODE, category, null,
 					catCode.getSupplierCategoryId(), null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY_CODE));
 		}

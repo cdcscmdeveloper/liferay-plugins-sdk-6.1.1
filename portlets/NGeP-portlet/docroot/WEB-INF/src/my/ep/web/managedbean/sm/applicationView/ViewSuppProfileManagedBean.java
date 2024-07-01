@@ -203,6 +203,7 @@ public class ViewSuppProfileManagedBean extends
 	private List<SmSupplierCategory> oldApprovedCategoryList;
 	private String oldPoApprOverlappedRemark;
 	private String oldApproverRemark;
+	private List<SmPersonnel> oldOwnerAndDirectorList; 
 	// #28895_35501 End
 		
 	public ViewSuppProfileManagedBean() {
@@ -1064,6 +1065,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setOldApproverRemark(String oldApproverRemark) {
 		this.oldApproverRemark = oldApproverRemark;
+	}
+
+	public List<SmPersonnel> getOldOwnerAndDirectorList() {
+		return oldOwnerAndDirectorList;
+	}
+
+	public void setOldOwnerAndDirectorList(List<SmPersonnel> oldOwnerAndDirectorList) {
+		this.oldOwnerAndDirectorList = oldOwnerAndDirectorList;
 	}
 	// #28895_35501 End
 	

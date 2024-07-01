@@ -8,6 +8,7 @@ import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
@@ -60,45 +61,61 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		}
 		oldApprovedCategories = mBean.getOldApprovedCategoryList().listIterator();
 
+		auditAddedData(newApprovedCategories, auDetails);
+
+		auditDeletedData(oldApprovedCategories, auDetails);
+
+		SmDisciplinaryAction oldDisciplinaryAction = mBean.getOldSmDisciplinaryAction();
+		SmDisciplinaryAction newDisciplinaryAction = mBean.getDisciplineVO().getSmDiscplinaryAction();
+
+		if (oldDisciplinaryAction == null && newDisciplinaryAction.isCancelCategory()) {
+			ListIterator<SmSupplierCategory> selectedApprovedCategories = mBean.getSelectedApprovedCategories().listIterator();
+			auditDeletedData(selectedApprovedCategories, auDetails);
+		}
+
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
+				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVE_CATEGORY_CODES);
+
+		return auObj;
+	}
+
+	private String codeToString(SmSupplierCategory catCode) {
+		return catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name() + "<br/>"
+				+ catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name() + "<br/>"
+				+ catCode.getPmCategoryL3().getCategoryL3Code() + " - " + catCode.getCategoryL3Name();
+	}
+
+	private void auditAddedData(ListIterator<SmSupplierCategory> newApprovedCategories,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY, null, codeToString(newApprovedCategory),
 					null, newApprovedCategory.getSupplierCategoryId(),
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY));
-			if (!newApprovedCategory.getOtherDesc().isEmpty()) {
+			if (newApprovedCategory.getOtherDesc() != null && !newApprovedCategory.getOtherDesc().isEmpty()) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION, null,
 						newApprovedCategory.getOtherDesc(), null, null,
 						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OTHER_DESCRIPTION));
 			}
-
 		}
+	}
 
+	private void auditDeletedData(ListIterator<SmSupplierCategory> oldApprovedCategories,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_CATEGORY, codeToString(oldApprovedCategory), null,
 					oldApprovedCategory.getSupplierCategoryId(), null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY));
-			if (!oldApprovedCategory.getOtherDesc().isEmpty()) {
+			if (oldApprovedCategory.getOtherDesc() != null && !oldApprovedCategory.getOtherDesc().isEmpty()) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
 						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION,
 						oldApprovedCategory.getOtherDesc(), null, null, null,
 						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OTHER_DESCRIPTION));
 			}
 		}
-
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO);
-
-		return auObj;
-	}
-
-	private String codeToString(SmSupplierCategory catCode) {
-		String Category = catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name() + "<br/>"
-				+ catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name() + "<br/>"
-				+ catCode.getPmCategoryL3().getCategoryL3Code() + " - " + catCode.getCategoryL3Name();
-		return Category;
 	}
 }

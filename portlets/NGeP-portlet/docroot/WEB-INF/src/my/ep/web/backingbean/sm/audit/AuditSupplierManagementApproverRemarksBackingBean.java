@@ -36,12 +36,10 @@ public class AuditSupplierManagementApproverRemarksBackingBean extends AuditSupp
 		String oldApproverRemark = mBean.getOldApproverRemark();
 		String approverRemark = mBean.getApproverRemark();
 
-		if (oldApproverRemark == null) {
-			if (!approverRemark.isEmpty()) {
-				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_APPROVER_REMARK, null, approverRemark, null,
-						null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_APPROVER_REMARK));
-			}
+		if (oldApproverRemark == null && !approverRemark.isEmpty()) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_APPROVER_REMARK, null, approverRemark, null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_APPROVER_REMARK));
 		}
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,

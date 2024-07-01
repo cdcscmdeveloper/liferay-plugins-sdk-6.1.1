@@ -2,13 +2,12 @@ package my.ep.web.backingbean.sm.audit;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 
@@ -34,6 +33,8 @@ public class AuditSupplierManagementListOwnerDirectorBackingBean extends AuditSu
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ViewSuppProfileManagedBean mBean = (ViewSuppProfileManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
+
+		List<SmPersonnel> selectedOwnerAndDirectorList = mBean.getSelectedOwnerAndDirectorList();
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO);

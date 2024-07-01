@@ -20,8 +20,7 @@ import my.ep.web.util.CommonUtils;
  * @since 25.06.2024 #28895_35501
  */
 
-public class AuditSupplierManagementDisciplinaryActionBackingBean extends
-		AuditSupplierManagementBackingBeanTemplate {
+public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
 
@@ -42,62 +41,114 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends
 		SmDisciplinaryAction oldDisciplinaryAction = mBean.getOldSmDisciplinaryAction();
 		SmDisciplinaryAction newDisciplinaryAction = mBean.getDisciplineVO().getSmDiscplinaryAction();
 
-		Locale locale = new Locale("ms");
-		
-		if(oldDisciplinaryAction == null){
+		if (oldDisciplinaryAction == null) {
 			oldDisciplinaryAction = new SmDisciplinaryAction();
 		}
 
+		warning(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		cancelCategory(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		suspendRegistration(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		cancelRegistration(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		blackListOwner(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		bumiCancel(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		manufacturerCancel(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		starDate(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		endDate(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		remark(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
+				AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION);
+
+		return auObj;
+	}
+
+	private String getLabel(String label) {
+		Locale locale = new Locale("ms", "MY");
+		return ResourceBundleUtils.getMessage(label, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+	}
+
+	private void warning(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
 		if (!oldDisciplinaryAction.isWarning() && newDisciplinaryAction.isWarning()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
-							.getMessage("lbl.sm.disciplinary.jktt.warning", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									locale), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
+					getLabel("lbl.sm.disciplinary.jktt.warning"), null, null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
 		}
+	}
+
+	private void cancelCategory(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
 		if (oldDisciplinaryAction.isCancelCategory() != newDisciplinaryAction.isCancelCategory()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
-							.getMessage("lbl.sm.disciplinary.jktt.cancel.cat.code",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
-		}
-		if (oldDisciplinaryAction.isSuspendRegistration() != newDisciplinaryAction.isSuspendCategory()) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
-							.getMessage("lbl.sm.disciplinary.jktt.suspend.registration",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
-		}
-		if (oldDisciplinaryAction.isCancelRegistration() != newDisciplinaryAction.isCancelRegistration()) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
-							.getMessage("lbl.sm.disciplinary.jktt.cancel.registration",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
-		}
-		if (oldDisciplinaryAction.isBlacklistOwner() != newDisciplinaryAction.isBlacklistOwner()) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
-							.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
-		}
-		if (oldDisciplinaryAction.isBumiputeraCancel() != newDisciplinaryAction.isBumiputeraCancel()) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
-							.getMessage("lbl.sm.disciplinary.jktt.cancel.of.bumiputera",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
-		}
-		if (oldDisciplinaryAction.isManufacturerCancel() != newDisciplinaryAction.isManufacturerCancel()) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, ResourceBundleUtils
-							.getMessage("lbl.sm.disciplinary.jktt.cancel.of.manufacturer",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
+					getLabel("lbl.sm.disciplinary.jktt.cancel.cat.code"), null, null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
 		}
 
+	}
+
+	private void suspendRegistration(SmDisciplinaryAction oldDisciplinaryAction,
+			SmDisciplinaryAction newDisciplinaryAction, List<AuditSupplierManagementDetailDTO> auDetails) {
+		if (oldDisciplinaryAction.isSuspendRegistration() != newDisciplinaryAction.isSuspendCategory()) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
+					getLabel("lbl.sm.disciplinary.jktt.suspend.registration"), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
+		}
+	}
+
+	private void cancelRegistration(SmDisciplinaryAction oldDisciplinaryAction,
+			SmDisciplinaryAction newDisciplinaryAction, List<AuditSupplierManagementDetailDTO> auDetails) {
+		if (oldDisciplinaryAction.isCancelRegistration() != newDisciplinaryAction.isCancelRegistration()) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
+					getLabel("lbl.sm.disciplinary.jktt.cancel.registration"), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
+		}
+	}
+
+	private void blackListOwner(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
+		if (oldDisciplinaryAction.isBlacklistOwner() != newDisciplinaryAction.isBlacklistOwner()) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
+					getLabel("lbl.sm.disciplinary.jktt.blacklist.owner"), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
+		}
+	}
+
+	private void bumiCancel(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
+		if (oldDisciplinaryAction.isBumiputeraCancel() != newDisciplinaryAction.isBumiputeraCancel()) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
+					getLabel("lbl.sm.disciplinary.jktt.cancel.of.bumiputera"), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
+		}
+	}
+
+	private void manufacturerCancel(SmDisciplinaryAction oldDisciplinaryAction,
+			SmDisciplinaryAction newDisciplinaryAction, List<AuditSupplierManagementDetailDTO> auDetails) {
+		if (oldDisciplinaryAction.isManufacturerCancel() != newDisciplinaryAction.isManufacturerCancel()) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
+					getLabel("lbl.sm.disciplinary.jktt.cancel.of.manufacturer"), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
+		}
+	}
+
+	private void starDate(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
 		CommonUtils commonUtils = new CommonUtils();
 
 		if (oldDisciplinaryAction.getStartDate() != null) {
@@ -120,6 +171,11 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends
 							commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)), null, null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_START_DATE));
 		}
+	}
+
+	private void endDate(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
+		CommonUtils commonUtils = new CommonUtils();
 
 		if (oldDisciplinaryAction.getEndDate() != null) {
 			if (!oldDisciplinaryAction.getEndDate().equals(newDisciplinaryAction.getEndDate())) {
@@ -141,7 +197,10 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends
 							commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)), null, null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_END_DATE));
 		}
+	}
 
+	private void remark(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
+			List<AuditSupplierManagementDetailDTO> auDetails) {
 		if (oldDisciplinaryAction.getRemark() != null) {
 			if (!oldDisciplinaryAction.getRemark().equals(newDisciplinaryAction.getRemark())) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
@@ -154,10 +213,5 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_REMARKS, null, newDisciplinaryAction.getRemark(),
 					null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_REMARKS));
 		}
-
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION);
-
-		return auObj;
 	}
 }
