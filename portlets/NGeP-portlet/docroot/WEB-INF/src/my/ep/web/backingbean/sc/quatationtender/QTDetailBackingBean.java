@@ -248,6 +248,8 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+import my.ep.web.managedbean.ct.circular.CircularManagedBean; //30866
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -1288,6 +1290,35 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
 			}
 			//9019 - End (Harun) 
+			
+			// #29732 Start
+			if (this.getManagedBean().getQt().getQtStatus().getStatusId()
+					.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) || 
+					this.getManagedBean().getQt().getQtStatus().getStatusId()
+							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
+							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
+							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
+				if(isQTRoleMaintenanceValidation()){
+					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+				}
+				String changedCatCodeList = checkCatCodeChange();
+				if (!changedCatCodeList.isEmpty()) {
+					this.getManagedBean().setActiveIndex(1);
+					retrieveSuppQualificationTabDtl();
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									"lbl.sc.category.has.changes.on.prerender.view.1", null,
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+									"lbl.sc.category.has.changes.on.prerender.view.2",
+									new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale())));
+				}
+			}
+			// #29732 End
 			
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(), QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
 			this.getManagedBean().setValidFor25037(isValidFor25037);
@@ -7789,7 +7820,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveScheduleTabDtl();
 				
 			}//11104-End
-
+			
+			//29732 qt maintenance 
+			this.getManagedBean().setFromSubmitCatChange(true);
+			String changedCatCodeList = checkCatCodeChange();
+			if (!changedCatCodeList.isEmpty()) {
+				this.getManagedBean().setCatCodeList(changedCatCodeList);
+				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				return;
+			}
+			//29732
+			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
@@ -12766,9 +12807,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//#29474 - end
 	
-	// #29732 Start
 // #29732 Start - reOpen Fix
 	public String checkCatCodeChange() {
+		//check submit empty category code
+		if(CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
+				&& this.getManagedBean().isFromSubmitCatChange()){
+			IQTSpecSO specSo = getQtSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
+			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+		}
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQt()
 				.getScQtCategorys();
 // #29732 Start - reOpen Fix
@@ -13311,6 +13359,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 		scWorkFlowreqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		scWorkFlowreqDTO.setDocId(scQt.getQtId());
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO).getWorkFlowStatus();
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			currentWorkFlowStatus = null;
+			bpmExistFlag = true;
+		}
+		// End - #30866
 		if(null != currentWorkFlowStatus){
 			if(currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)){
 				bpmExistFlag = false;
@@ -13321,4 +13376,15 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
+	
+	//29732 start
+    private boolean isQTRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
+	}
+    //29732 end
+
 }

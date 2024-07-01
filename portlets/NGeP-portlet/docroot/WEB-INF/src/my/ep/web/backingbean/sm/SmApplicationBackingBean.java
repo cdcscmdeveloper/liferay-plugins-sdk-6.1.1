@@ -9383,7 +9383,9 @@ public class SmApplicationBackingBean extends
 		// #34392 - start
 		for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			replaceNewFile(smDocu);
+			if(!smDocu.isVerified()){
+				replaceNewFile(smDocu);	
+			}
 		}
 		// #34392 - end
 				
@@ -9391,19 +9393,23 @@ public class SmApplicationBackingBean extends
 
 	}
 	
-	// #34392 - start
+	//#34392 - start
 	private void replaceNewFile(SmApplSupportDoc smDocu) {
 		// TODO Auto-generated method stub
-		for (SmApplDocFile smDocFile : smDocu.getSmApplDocFiles()) {
-			if (!EntityHelper.isCollectionEmpty(smDocu.getNewAddedFiles())) {
-				for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
-					smDocFile.setFileName(smDocFileNewAdded.getFileName());
-					smDocFile.setFilePath(smDocFileNewAdded.getFilePath());
-				}
+		
+		smDocu.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+
+		List<SmApplDocFile> newDocFile = new ArrayList<>();
+
+		if(smDocu.getNewAddedFiles() != null){
+			for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+				newDocFile.add(smDocFileNewAdded);
 			}
 		}
+
+		smDocu.setSmApplDocFiles(newDocFile);
 	}
-	// #34392 - end
+	//#34392 - end
 
 	/**
 	 * Submit sm application to bpm and save the latest information to DB.
@@ -15254,37 +15260,18 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void setVerifiedSupportDoc() {
-		for (SmApplSupportDoc applSuppDoc : getManagedBean().getSmAppl()
-				.getSmApplSupportDocs()) {
-			//#31043 START
-			if (applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null) {
-				applSuppDoc
-						.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
-			}else{
-				for(SmApplSupportDoc mandatoryDoc : getManagedBean().getMandatoryDocs()){
-					if(mandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-						applSuppDoc.setApproverVerifiedFlg(mandatoryDoc.getApproverVerifiedFlg());
-					}
-				}
-				for(SmApplSupportDoc nonMandatoryDoc : getManagedBean().getNonMandatoryDocs()){
-					if(nonMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-						applSuppDoc.setApproverVerifiedFlg(nonMandatoryDoc.getApproverVerifiedFlg());
-					}
-				}
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
-				if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
-					for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
-						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
-					}
-				}
-				for(SmApplSupportDoc licenseMandatoryDoc : licenseMandatoryDocs){
-					if(licenseMandatoryDoc.getApplSupportDocId().equals(applSuppDoc.getApplSupportDocId())){
-						applSuppDoc.setApproverVerifiedFlg(licenseMandatoryDoc.getApproverVerifiedFlg());
-					}
-				}
-			}
-			//#31043 END
-		}
+		//#31043 START
+		List<SmApplSupportDoc> allSupportDocs = getManagedBean().getSmAppl().getSmApplSupportDocs();
+	    // Create a map of all documents with their IDs for quick lookup
+	    Map<Long, SmApplSupportDoc> allDocsMap = createDocsMap();
+	    for (SmApplSupportDoc applSuppDoc : allSupportDocs) {
+	        if (shouldSetApproverVerifiedFlg(applSuppDoc)) {
+	            applSuppDoc.setApproverVerifiedFlg(applSuppDoc.getVerifiedFlg());
+	        } else {
+	            updateApproverVerifiedFlgFromDocs(applSuppDoc, allDocsMap);
+	        }
+	    }
+	    //#31043 END
 	}
 
 	public void viewMyIdentityRespond() {
@@ -17657,11 +17644,52 @@ public class SmApplicationBackingBean extends
 		if(isROB){
 			return new String[]{"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull",
 					"designationSsmNull","equityOwner","director","pmCountry","directorSsm",
-					"equityOwnerSsm","managementSsm","pmRace", "otherRaceSsm"};
+					"equityOwnerSsm","managementSsm","pmRace", "otherRaceSsm", "permanentResident"};//35300
 		}
 		return new String[]{"name","birthDate","designation","shareAmt","nameInSsm","raceSsmNull",
 				"birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull",
-				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm"};
+				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm","permanentResident"};//35300
 	}
 	//#35145 - end
+	//#31043 START
+	private boolean shouldSetApproverVerifiedFlg(SmApplSupportDoc applSuppDoc) {
+	    return applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null;
+	}
+
+	private void updateApproverVerifiedFlgFromDocs(SmApplSupportDoc applSuppDoc, Map<Long, SmApplSupportDoc> allDocsMap) {
+	    SmApplSupportDoc matchedDoc = allDocsMap.get(applSuppDoc.getApplSupportDocId());
+	    if (matchedDoc != null) {
+	        applSuppDoc.setApproverVerifiedFlg(matchedDoc.getApproverVerifiedFlg());
+	    }
+	}
+
+	private Map<Long, SmApplSupportDoc> createDocsMap() {
+	    Map<Long, SmApplSupportDoc> allDocsMap = new HashMap<>();
+
+	    // Add all mandatory docs to the map
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
+	    }
+
+	    // Add all non-mandatory docs to the map
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
+	    }
+
+	    // Add all license mandatory docs to the map
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryLicenseDocs())) {
+	        for (SmLicenseInfoVO docVO : getManagedBean().getMandatoryLicenseDocs()) {
+	            for (SmApplSupportDoc doc : docVO.getLicenseSuppDocs()) {
+	                allDocsMap.put(doc.getApplSupportDocId(), doc);
+	            }
+	        }
+	    }
+
+	    return allDocsMap;
+	}
+	//#31043 END
 }
