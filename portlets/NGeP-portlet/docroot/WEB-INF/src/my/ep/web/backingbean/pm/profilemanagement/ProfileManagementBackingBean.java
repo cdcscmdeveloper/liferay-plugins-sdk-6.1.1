@@ -4214,7 +4214,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			try {
 				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
-				UserResDTO resDTO = userSO.searchUserProfile(userReqDTO);
+				UserResDTO resDTO = userSO.searchUserProfileUsingIdNo(userReqDTO);//#35769 - Call New Method
 
 				if (resDTO != null && resDTO.getUserResultBean().getResultList() != null
 						&& resDTO.getUserResultBean().getResultList().size() > 0) {
