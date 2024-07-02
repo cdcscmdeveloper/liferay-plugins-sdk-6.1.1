@@ -322,8 +322,9 @@
 					</p:outputPanel>
 				</p:column>
 			</p:dataTable>
+			<!-- 32008 disable for ups -->
 			<p:spacer height="2px;" />
-			<c:if test="#{!backingBean.managedBean.approverUser}">
+			<c:if test="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
