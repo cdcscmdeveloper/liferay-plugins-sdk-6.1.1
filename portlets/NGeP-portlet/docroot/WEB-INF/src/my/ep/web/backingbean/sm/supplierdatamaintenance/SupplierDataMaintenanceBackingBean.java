@@ -531,6 +531,14 @@ public class SupplierDataMaintenanceBackingBean extends
 				
 			}
 			//26238 - Disciplinary Action - 28798 - end
+			// #28895_35501 Start - AUDIT TRAIL SM
+			IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+			if (auditSmSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				AuditSupplierManagementBackingBeanTemplate  auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+			}
+			// #28895_35501 End
 			
 		} catch (NullPointerException nex) {
 			throw new EpException(nex.getMessage());
