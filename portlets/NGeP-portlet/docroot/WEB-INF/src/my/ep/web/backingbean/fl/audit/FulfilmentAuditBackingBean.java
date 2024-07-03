@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.biz.service.fl.audit.IAuditFulfilmentSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.AuditFLConst;
@@ -17,6 +18,9 @@ public class FulfilmentAuditBackingBean {
 
 	IAuditFulfilmentSO auditFulfilmentSO = (IAuditFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(
 			ModuleCodeConst.ORDER_FULFILLMENT, IAuditFulfilmentSO.class);
+	
+	IAuditTrailsSO auditTrailAuSo = (IAuditTrailsSO) BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
 
 	public void auditInsertFL(List<AuFLReqDTO> objList) {
 		auditFulfilmentSO.insertAuditFLDetails(objList);
@@ -24,7 +28,7 @@ public class FulfilmentAuditBackingBean {
 
 	public boolean getAuditFlConfigState() {
 		boolean auditFlConfig;
-		auditFlConfig = auditFulfilmentSO.isAuditConfig(AuditFLConst.FL_AU_CONF);
+		auditFlConfig = auditTrailAuSo.isAuditConfig(AuditFLConst.FL_AU_CONF);
 
 		return auditFlConfig;
 	}
