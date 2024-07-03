@@ -9371,7 +9371,6 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-			validateSupportingDocs();
 			//34392 - Start
 			validateMandatoryEnquirySupportingDocs();
 			//34392 - End
