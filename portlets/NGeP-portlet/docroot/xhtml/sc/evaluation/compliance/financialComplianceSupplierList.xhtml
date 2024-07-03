@@ -151,7 +151,8 @@
 				style="width:15%">
 				<!-- 26339 and 25138 Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance' and 'or evaluationBackingBean.managedBean.readOnly'-->
 				<ui:remove><!-- 6906 - add disabled isRejected, add style --></ui:remove>
-				<p:selectOneMenu style="max-width: 225px !important; width:100% !important" disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier) or isRejected or (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
+				<p:selectOneMenu style="max-width: 225px !important; width:100% !important" disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier) or isRejected or (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+				or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified))}"
 					value="#{complianceTechnicalSupplier.compliance}"><ui:remove>#21692</ui:remove>
                   <!-- 26339 End-->
 					<f:selectItems
@@ -164,7 +165,8 @@
 				style="width:35%;white-space: normal;">
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'
-					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove>#21692</ui:remove>
+					and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified))}"><ui:remove>#21692</ui:remove>
 					<!-- 26339  Venkat Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
@@ -181,7 +183,8 @@
 				<ui:remove>#21692 - start</ui:remove>
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'
-					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
+					or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
 						disabled="true"
