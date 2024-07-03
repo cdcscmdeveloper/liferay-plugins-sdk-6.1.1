@@ -5650,9 +5650,15 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			}
 
-			// using new method
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
-			// 9019 - end
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
+				// 9019 - end
+			}
+			//Bug_35997 - End
 
 			renewQTSesionObject();
 			this.getManagedBean().setTaskName(taskName);
@@ -5676,9 +5682,15 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			}
 		
-			// using new method
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
-			// 9019 - end
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
+				// 9019 - end
+			}
+			//Bug_35997 - End
 
 			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -5709,9 +5721,15 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			}
 
-			// using new method
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
-			// 9019 - end
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
+				// 9019 - end
+			}
+			//Bug_35997 - End
 
 			int committeeTabIndex = this.getManagedBean()
 					.getSelectedCommitteeTabIndex();
@@ -5743,9 +5761,15 @@ public class QTDetailBackingBean extends
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			}
 
-			// using new method
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
-			// 9019 - end
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO);
+				// 9019 - end
+			}
+			//Bug_35997 - End
 
 			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
 			renewQTSesionObject();
