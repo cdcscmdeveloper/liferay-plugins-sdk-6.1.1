@@ -129,6 +129,15 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		validateInternalSPKI(getSupplier().getEpNo());
 		// end checking for validation
 		// #30425 - End
+		// #30425 - Start
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR TRG, UAT, SIT AND DEV ONLY <<<<<<<<<
+		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
+			// start checking for validation
+			validateInternalSPKI(getSupplier().getEpNo());
+			// end checking for validation
+		}
+		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		// #30425 - End
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
