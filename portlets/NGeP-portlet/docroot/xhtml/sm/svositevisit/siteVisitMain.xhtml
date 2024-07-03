@@ -57,8 +57,8 @@
 						<!-- 29430,28775 - Site Visit Grouping Enhancement - 28775, 32304 -->
 						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							action="#{svoSiteVisitBackingBean.checkCancelBumiApplFromNewAppl()}"
-							rendered="#{svoSiteVisitBackingBean.managedBean.activePage eq 's'}" 
+							action="#{svoSiteVisitBackingBean.validateBeforeSubmitDialog()}"
+							rendered="#{svoSiteVisitBackingBean.managedBean.activePage eq 'S'}" 
 							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
 							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
@@ -79,11 +79,11 @@
 							<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 						</c:if>
 
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'l'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'L'}">
 							<ui:include src="/xhtml/sm/svositevisit/group/license.xhtml" />
 						</c:if>
 
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'c'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'C'}">
 						<c:choose>
 						<c:when test="#{svoSiteVisitBackingBean.managedBean.licensed}">
 							<ui:include src="/xhtml/sm/svositevisit/group/categoryType.xhtml" />
@@ -129,15 +129,15 @@
 						</c:choose>
 						</c:if>
 						
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'r'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'R'}">
 							<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" />
 						</c:if>
 
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'o'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'O'}">
 							<ui:include src="/xhtml/sm/svositevisit/officeLocation.xhtml" />
 						</c:if>
 						
-						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 's'}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activePage eq 'S'}">
 							<ui:include src="/xhtml/sm/svositevisit/reportPreview.xhtml" />
 						</c:if>
 						<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end --> 
