@@ -4209,12 +4209,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			//#35562 - End
 
 			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo()); //#35769 - set Identification No
 			userReqDTO.setUserSearchBean(searchBean);
 			IUserSO userSO;
 			try {
 				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
-				UserResDTO resDTO = userSO.searchUserProfile(userReqDTO);
+				UserResDTO resDTO = userSO.searchUserProfileUsingIdNo(userReqDTO);//#35769 - Call New Method
 
 				if (resDTO != null && resDTO.getUserResultBean().getResultList() != null
 						&& resDTO.getUserResultBean().getResultList().size() > 0) {

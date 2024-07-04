@@ -4411,17 +4411,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	//#29418 start
 	/**
-	 * This function is used to filter and sort the agreement, but has been changed to only sort agreementList
+	 * This function is used to filter and sort the agreement when user change reference no at the fulfilment details page.
 	 * 
-	 * @return currentCtAgreementList
+	 * @return newCtAgreementList
 	 */
 	public List<CtAgreement> filterAgreementList() {
-		//List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
+		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
-		/*CtAgreement tempCtAgreement = null;
+
+		CtAgreement tempCtAgreement = null;
 		int index = 0;
 
-		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
+		if(CollectionUtils.isNotEmpty(currentCtAgreementList))
 		{
 			//currentCtAgreementList is sorted by created date in descending order
 			for(index = 0; index < currentCtAgreementList.size(); index++)
@@ -4450,18 +4451,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 	
-		}*/
-
-		if(CollectionUtils.isNotEmpty(currentCtAgreementList)){
-			Collections.sort(currentCtAgreementList, new Comparator<CtAgreement>() {
-			  @Override
-			  public int compare(CtAgreement cta1, CtAgreement cta2) {
-				  return cta1.getCreatedDate().compareTo(cta2.getCreatedDate());
-			  }
-			});
 		}
 
-		return currentCtAgreementList;
+		return newCtAgreementList;
 	}
 	//#29418 end
 	
@@ -4842,7 +4834,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		//checking for previous agreement in list. the last agreementid that is less than currentagreementid is the direct previous agreement
 		for(CtAgreement currAgreement : filterAgreementList()){
-			if(currAgreement.getAgreementId() < agreement.getAgreementId() && currAgreement.getCtAmendment() != null){
+			if((currAgreement.getCreatedDate().equals(agreement.getCreatedDate())
+					|| currAgreement.getCreatedDate().before(agreement.getCreatedDate())) 
+					&& currAgreement.getCtAmendment() != null
+					&& currContractVerId!=currAgreement.getCtAmendment().getCtContractVer().getContractVerId()){
 				//set previous amendment data for retrieval
 				prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
 			}
