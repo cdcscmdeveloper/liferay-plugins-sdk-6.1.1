@@ -4182,6 +4182,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			//#35562 - End
 
 			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo()); //#35769 - set Identification No
 			userReqDTO.setUserSearchBean(searchBean);
 			IUserSO userSO;
 			try {
