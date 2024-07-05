@@ -13,8 +13,11 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+<<<<<<< HEAD
 
 import my.ep.factory.EpLogger;
+=======
+>>>>>>> refs/remotes/origin/release-prd
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -57,6 +60,13 @@ import org.docx4j.wml.Text;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.liferay.portal.util.PortalUtil;
+<<<<<<< HEAD
+=======
+import com.lowagie.text.DocumentException;
+
+import my.ep.factory.EpLogger;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+>>>>>>> refs/remotes/origin/release-prd
 
 /**
  * Singleton Helper For Document Generator.
@@ -188,6 +198,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		debugLogger("generatePdf");
 
 		ITextRenderer render = new ITextRenderer();
+<<<<<<< HEAD
 		try {
 			// #26180
 			if (html != null) {
@@ -221,6 +232,42 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			// #26130 (06/06/2024) - end
 		} finally {
 			html = null; // #25142
+=======
+		try{
+			//#26180
+			 if (html != null) {
+		        	html = html.replaceAll("&amp;nbsp;", " ");
+		        	html = html.replaceAll("&amp;", "&amp;amp;")
+		        			   .replaceAll("&", "&amp;");
+		        	html = html.replaceAll("&amp;#62", "&#62");
+		          	html = html.replaceAll("&amp;#60", "&#60");
+		          	
+					//20220921@asyrafhaziq - 29076 -  Start == //#25142 - start
+					html = html.replaceAll("&amp;nbsp;", " ");
+					html = html.replaceAll("&amp;amp;", "&");
+					//20220921@asyrafhaziq - 29076 - End == //#25142 - end
+					
+					//#26130 (06/06/2024) - start
+					String fontPath = getServerUrl()+ "NGeP-portlet/resources/fonts/Arial.ttf";
+
+					log.info("fontPath: "+fontPath);
+					
+					render.getFontResolver().addFont(fontPath, true);
+					//#26130 (06/06/2024) - end
+					
+		            render.setDocumentFromString(html);
+		            render.layout();
+		            render.createPDF(os);
+		        }
+		        
+		        os.flush();
+		//#26130 (06/06/2024) - start
+		}catch(Exception e){
+			e.printStackTrace();
+		//#26130 (06/06/2024) - end			
+		}finally{
+			html = null; //#25142
+>>>>>>> refs/remotes/origin/release-prd
 			render = null;
 			os.close();
 			os = null; // #25142

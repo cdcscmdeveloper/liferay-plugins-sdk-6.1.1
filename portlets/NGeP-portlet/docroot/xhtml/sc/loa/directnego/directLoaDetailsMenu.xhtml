@@ -721,12 +721,13 @@
 						<p:outputPanel id="opPtjOrgCode" 
 							rendered="#{ParameterConst.orgTypePtj eq directLOABackingBean.managedBean.selectedOrgType.parameterCode or 
 							ParameterConst.orgTypePtjGroup eq directLOABackingBean.managedBean.selectedOrgType.parameterCode}">
+							<!-- 26474 -start- -->
 							<p:inputText 
-								size="60"
+								size="106"
 								id="itSelectedPtj" 
 								value="#{directLOABackingBean.managedBean.selectedPtj.orgName}" 
 								readonly="true"
-								/>
+								/> <!-- 26474 -end- -->
 							&#160;
 							<p:commandLink id="ptjSearchCL" partialSubmit="true"
 								disabled="#{directLOABackingBean.managedBean.selectedOrgType.parameterId==null}"
@@ -739,39 +740,15 @@
 
 						<h:panelGroup rendered="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
 							or directLOABackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
+							<!-- 26474 -start- -->
 							<ac:ptjPopup 
 								id="orgProfileCcId"
 								orgTypeParamCode="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode}"
-								okAction="directLOABackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj,:form:contAdminId"/>
+								okAction="directLOABackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj"/>
+								<!-- 26474 -end- -->
 						</h:panelGroup>
 					</c:if>
 					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
-				</td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td colspan="3">
-					<c:choose>
-						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
-							<p:selectOneMenu id="contAdminId" styleClass="ppDropDownWidthM"
-								disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"
-								value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userId}"
-								style="width: 275px;margin-bottom: 5px;">
-								<f:selectItems
-									value="#{directLOABackingBean.getUsersByAgency()}" />
-								<p:ajax event="change" listener="#{directLOABackingBean.updateContractAdmin()}" 
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
-							</p:selectOneMenu>
-						</c:when>
-						<c:otherwise>
-							<p:inputText id="contractAdminTxt"
-								value="#{directLOABackingBean.managedBean.scLoa.contractAdmin.userName}"
-								size="35" disabled="true" />
-						</c:otherwise>
-					</c:choose>
 				</td>
 			</tr>
 			<tr>

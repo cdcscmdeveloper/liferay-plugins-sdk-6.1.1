@@ -6726,27 +6726,27 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * retrieve pp reject reason
 	 * @param ppItem
 	 */
-	public void retrievePpUpdateReasons(PpProcurementItem ppItem){
+	public void retrievePpUpdateReasons(PpProcurementItem ppItem) {
 		log.info("retrievePpUpdateReasons");
-		//log.info("pp item " + ppItem.getProcurementDesc());
-		//log.info("reasons= "+ppItem.getPpUpdateReasons().size());
-		
-	if(!ppItem.isBrandNew()){
-		if(ppItem.getPpUpdateReasons()==null || ppItem.getPpUpdateReasons().isEmpty()){
-			ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
-//			ppItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
+		// log.info("pp item " + ppItem.getProcurementDesc());
+		// log.info("reasons= "+ppItem.getPpUpdateReasons().size());
+
+		if (!ppItem.isBrandNew()) {
+			if (ppItem.getPpUpdateReasons() == null || ppItem.getPpUpdateReasons().isEmpty()) {
+				ppItem.setPpUpdateReasons(new ArrayList<PpUpdateReason>());
+				// ppItem.setPpRejectReasons(PpCommonUtil.retrieveRejectReason(ppItem.getProcurementItemId(), ParameterConst.DOCTYPE_PLAN_PROCUREMENT));
+			}
 		}
+		// loadUpdateReasons(ppItem.getPpUpdateReasons());
+		// 24975 - Start
+		loadUpdateReasons(ppItem);
+		// 24975 - End
+		// 24975@20112020 - start
+		if (ppItem.isIndicator() == true) {
+			ppItem.setIndicator(false);
+		}
+		// 24975@20112020 - End
 	}
-	  //loadUpdateReasons(ppItem.getPpUpdateReasons());
-      //24975 - Start
-	  loadUpdateReasons(ppItem);
-	  //24975 - End
-	  //24975@20112020 - start
-	  if(ppItem.isIndicator() == true){
-	      ppItem.setIndicator(false);
-	  }
-	  //24975@20112020 - End
-  }
 
 	/**
 	 * Initial or load reject reasons
