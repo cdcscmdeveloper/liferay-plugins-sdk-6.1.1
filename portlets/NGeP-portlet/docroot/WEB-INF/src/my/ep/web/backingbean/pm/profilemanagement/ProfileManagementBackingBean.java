@@ -3683,20 +3683,24 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 			
 			// #35489 - Start
-			if (this.getManagedBean().isOrgUnitStatusChange()) {
+			// #35769 - Start // fixing null pointer after inactive user
+			if (this.getManagedBean().isOrgUnitStatusChange()
+					&& isCheckSelectedReceivingAddrTypes()) {
 				for (PmAddressType addressType : this.getManagedBean()
 						.getSelectedReceivingAddrTypes()) {
 					addressType.setChangedBy(getUserIdSessionFromLoginId());
 				}
 			}
 
-			if (this.getManagedBean().isUserStatusChange()) {
+			if (this.getManagedBean().isUserStatusChange()
+					&& isCheckSelectedReceivingAddrTypes()) {
 				for (PmAddressType addressType : this.getManagedBean()
 						.getSelectedReceivingAddrTypes()) {
 					addressType.setChangedBy(getUserIdSessionFromLoginId());
 				}
 			}
 			// #35489 - End
+			// #35769 - End // fixing null pointer after inactive user
 			
 			//Redmine Bug #31541 - START
 			if (this.getManagedBean().getIsNewUser()) {
@@ -5194,4 +5198,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return null;
 	}
+	
+	/*** checks If Selected Receiving Address Type. */
+	// #35769 - Start // fixing null pointer after inactive user
+	private boolean isCheckSelectedReceivingAddrTypes() {
+		return this.getManagedBean().getSelectedReceivingAddrTypes() != null
+				&& !this.getManagedBean().getSelectedReceivingAddrTypes()
+						.isEmpty();
+	}
+	// #35769 - End // fixing null pointer after inactive user
 }
