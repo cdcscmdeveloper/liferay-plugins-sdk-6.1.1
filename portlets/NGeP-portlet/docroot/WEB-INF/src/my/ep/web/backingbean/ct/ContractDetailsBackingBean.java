@@ -105,7 +105,6 @@ import my.ep.web.util.pm.helper.StatusHelper; //Fix - #30866
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -808,19 +807,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					}
 				}
 			}
-		
-			//#35642 start
-			/*if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-				for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
-					if (ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
-							&& ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
-						ctBB.getManagedBean().setCtTestBondWaiverAmount(contractAmt);
-						break;
-					}
-				}
-			}*/
-			//#35642 end
 			
 			chkBondWaivedAttachment();
 			sortDeductions();
@@ -850,27 +836,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * and grouping the bond waiver into latest and history to show on the screen which one is the history. 
 	 */
 	private void chkBondWaivedAttachment() {
-		//#35642 start
-		/*
-		if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
-				|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setDocId(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getContractVerId());
-			reqDTO.setDocType(ctBB.getManagedBean().getContractVer().getCtContract().getLatestContractVer().getDocType());
-			reqDTO.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
-			IContractSO contractSO =   (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			List<CtAttachment> attachments = contractSO.retrieveAttachmentBySectionId(reqDTO).getCtAttachments();
-			if(CollectionUtils.isNotEmpty(attachments)){
-				for(CtAttachment ctAttach : attachments){
-					for(CtAttachment waivedAttach :ctBB.getManagedBean().getContractVer().getBondWaiverAttachments()){
-						if(waivedAttach.getFilePath().equalsIgnoreCase(ctAttach.getFilePath())){
-							waivedAttach.setBondWaivedTrue(true);
-						}
-					}
-				}
-			}
-		}*/
-		//#35642 end
 		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
 		ctBB.getManagedBean().getContractVer().setBondWaiverDefermentHistory(null);
 		if (ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()!=null
@@ -1832,35 +1797,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						}	
 					}
 				}
-			}	
-			//LOG : 13847, by Fahmi 22032019 start
-			//#35642 start
-			/*if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)
-					|| ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-				boolean isEqual = ctBB.getManagedBean().getCtContractAmount().isBondWaived()==ctBB.getManagedBean().getCtTestBondWaiverAmount().isBondWaived();
-				if(!isEqual){
-					int temp=0;
-					for(CtBondWaiverDetail bondWaiverDetail : ctBB.getManagedBean().getContractVer().getCtBondWaiverDetails()){
-						if(!bondWaiverDetail.getCtAttachment().isBondWaivedTrue() 
-								&& (bondWaiverDetail.getCtAttachment().getFilePath() !=null 
-								|| !bondWaiverDetail.getCtAttachment().getFilePath().isEmpty())){
-							temp++;
-						}
-					}
-					if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName() != null 
-							|| !StringUtils.isBlank(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName())) {
-						temp++;
-					}
-					if(temp == 0){
-						setTabValue("PB");
-						throw new EpException(MessageConst.ERROR_750044);
-					}    
-				}
-			}*/
-			//#35642 end
+			}
 		}
-		validationPerformanceBond(action);
-		//#13847 end
+		validationPerformanceBond(action); //#13847
 		
 		// Validation for Approver
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
@@ -3088,7 +3027,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
 			boolean isTrue =  getManagedBean().isBackPageAmendment();
 			String taskId = getManagedBean().getTaskId();
-			renewSesionObject();
+			//Start Fix - #30866
+			if(!getManagedBean().isContinuityCircularAuditSearch()){
+				renewSesionObject();
+			}
+			//End Fix - #30866
 			if(isTrue && taskId == null){
 				return gotoAmendPage(contractId);
 			}else if (isTrue && taskId != null){

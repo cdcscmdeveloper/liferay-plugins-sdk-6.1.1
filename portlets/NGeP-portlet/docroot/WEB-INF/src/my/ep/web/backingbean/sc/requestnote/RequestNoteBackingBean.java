@@ -58,7 +58,6 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25790
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
-import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -98,8 +97,6 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#25790
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#25790
-import my.ep.dto.osb.sc.DPOsbReqDTO;
-import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
 import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
@@ -1170,6 +1167,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 
 		// #29693 start
+		// More than 1000 plus request note details data
 		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
 			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 
@@ -1178,6 +1176,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					&& (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || fulfilmentType
 							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
 				approvalNotification();
+				break;
 			}
 
 		}
@@ -2136,6 +2135,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+					
+					//#33388 - Start										
+					if(scRequestNote != null){
+						requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
+						getRequestNoteSO().checkingRequestSupplierItemId(requestNoteReqDTO);
+					}
+					//#33388 - End
+					
 					// 26059 - start - replace with original code
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.TRUE);
@@ -6574,6 +6581,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			String navigatePR = fulfilmentOrderBackingBean.navigateDocument(resDTO.getFlFulfilmentRequest()
 					.getDocType());
 
+			PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+			prBB.initializePRBeans();
+			prBB.getManagedBean().setHyperLinkPage(false);
+			prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigatePR);
 		} catch(Exception e) {
@@ -6604,8 +6616,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			FulfilmentOrderBackingBean fulfilmentOrderBackingBean = new FulfilmentOrderBackingBean();
 			fulfilmentOrderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			String navigatePO = fulfilmentOrderBackingBean.navigateDocument(resDTO.getFlOrder().getDocType());
+			
+			fulfilmentOrderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			fulfilmentOrderBackingBean.getManagedBean().setHyperLinkPage(false);
+			fulfilmentOrderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			
+			boolean isFactoredSelected=resDTO.getFlOrder().isFactored();
+			if(isFactoredSelected){
+				fulfilmentOrderBackingBean.getManagedBean().setFactoringCheck("true");
+			} else {
+				fulfilmentOrderBackingBean.getManagedBean().setFactoringCheck("false");
+			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
+			fulfilmentOrderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigatePO);
 		} catch(Exception e) {
 			String exceptionPoNo = resDTO.getFlOrder() == null ? "" : resDTO.getFlOrder().getDocNo();
