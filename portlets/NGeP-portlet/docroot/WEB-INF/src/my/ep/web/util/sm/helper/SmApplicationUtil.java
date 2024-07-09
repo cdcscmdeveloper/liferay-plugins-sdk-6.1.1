@@ -9414,6 +9414,8 @@ public class SmApplicationUtil {
 				//#32627 END
 				.append(")");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setNotUsedConditionExpired(true);  //#36064 START
+		reqDTO.setCurrent(true);				  //#36064 END
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setWorkflowStatus(sb.toString());
 		reqDTO.setAppType(applType);
@@ -12998,10 +13000,12 @@ public class SmApplicationUtil {
 						retVal = false;
 					}
 					//27821
-					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())
-							|| smPersonnel.getIdentificationType() != null && ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ //#30064
+					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ 
 						retVal = false;
-					}
+					}//29582, 30064, 35300 start 
+					if (smPersonnel.getIdentificationType() != null && smPersonnel.isPermanentResident() ){
+						retVal = false;
+					}//29582, 30064, 35300 end 
 					// #28831 - start
 				} else {
 					if (smPersonnel.getIdentificationType() != null
@@ -13015,7 +13019,7 @@ public class SmApplicationUtil {
 			}
 			//END  #27230
 		} catch (Exception ex) {
-			log.error(ex.getMessage());
+			log.info(ex.getMessage());
 		}
 		return retVal;
 	}
