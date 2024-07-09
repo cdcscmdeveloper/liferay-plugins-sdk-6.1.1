@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:dataTable var="map" rowIndexVar="index"
+		rendered="#{requestNoteBackingBean.managedBean.purchaseRequestMapList.size() > 0}"
+		value="#{requestNoteBackingBean.managedBean.purchaseRequestMapList}" style="width:100%">
+		<p:column headerText="#{lbl['lbl.sc.continuity.no']}" style="text-align:center;">
+			<p:outputLabel value="#{index + 1}" style="text-align:center;" />
+		</p:column>
+		<p:column headerText="#{lbl['lbl.rpt.prNo']}"
+			style="text-align:center;">
+			<p:commandLink value="#{map['prNo']}" style="float:left;"
+				action="#{requestNoteBackingBean.viewPurchaseRequest(map['prId'])}"
+				immediate="true" />
+		</p:column>
+		<p:column headerText="#{lbl['lbl.td.status']}"
+			style="text-align:center;">
+			<h:outputText value="#{map['prStatus']}" style="float:left;" />
+		</p:column>
+		<p:column headerText="#{lbl['lbl.td.order.no']}"
+			style="text-align:center;">
+			<p:commandLink value="#{map['poNo']}" style="float:left;"
+				action="#{requestNoteBackingBean.viewPurchaseOrder(map['poId'])}"
+				immediate="true" />
+		</p:column>
+		<p:column headerText="#{lbl['lbl.td.status']}"
+			style="text-align:center;">
+			<h:outputText value="#{map['poStatus']}" style="float:left;" />
+		</p:column>
+	</p:dataTable>
+</ui:composition>
