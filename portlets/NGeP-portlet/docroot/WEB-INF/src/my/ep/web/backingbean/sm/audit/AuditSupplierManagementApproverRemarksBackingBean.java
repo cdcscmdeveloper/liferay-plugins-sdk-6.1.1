@@ -43,7 +43,7 @@ public class AuditSupplierManagementApproverRemarksBackingBean extends AuditSupp
 		}
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_OVERLAPPING_REMARKS);
+				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVER_REMARKS);
 
 		return auObj;
 	}
