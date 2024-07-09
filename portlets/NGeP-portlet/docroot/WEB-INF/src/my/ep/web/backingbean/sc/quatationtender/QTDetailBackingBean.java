@@ -7894,7 +7894,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//29732 qt maintenance 
 			this.getManagedBean().setFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
+			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().getQt().getQtStatus().getStatusId()
+					.equals((QTStatusConst.QT_SUPPLIER_FINALIZATION)) || !this.getManagedBean().getQt().getQtStatus().getStatusId()
+							.equals((QTStatusConst.QT_PENDING_RECOMMENDATION))) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
 				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
 				return;
