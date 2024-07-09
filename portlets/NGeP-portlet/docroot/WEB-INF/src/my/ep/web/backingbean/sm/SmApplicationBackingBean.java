@@ -9371,7 +9371,6 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-			validateSupportingDocs();
 			//34392 - Start
 			validateMandatoryEnquirySupportingDocs();
 			//34392 - End
@@ -9383,7 +9382,7 @@ public class SmApplicationBackingBean extends
 		// #34392 - start
 		for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			if(smDocu.getVerifiedFlg().equals(0)){
+			if(!smDocu.isVerified()){
 				replaceNewFile(smDocu);	
 			}
 		}
@@ -17667,13 +17666,17 @@ public class SmApplicationBackingBean extends
 	    Map<Long, SmApplSupportDoc> allDocsMap = new HashMap<>();
 
 	    // Add all mandatory docs to the map
-	    for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
-	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
 	    }
 
 	    // Add all non-mandatory docs to the map
-	    for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
-	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
 	    }
 
 	    // Add all license mandatory docs to the map
