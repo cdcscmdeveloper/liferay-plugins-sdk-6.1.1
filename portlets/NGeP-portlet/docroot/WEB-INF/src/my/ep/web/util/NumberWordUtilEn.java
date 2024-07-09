@@ -5,7 +5,7 @@
 package my.ep.web.util;
 
 import java.text.DecimalFormat;
-import org.apache.commons.lang.StringUtils;//#35977
+import org.apache.commons.lang.StringUtils;
 
 public class NumberWordUtilEn {
 
