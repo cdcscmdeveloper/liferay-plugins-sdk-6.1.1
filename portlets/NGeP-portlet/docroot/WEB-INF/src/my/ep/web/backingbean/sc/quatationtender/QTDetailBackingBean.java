@@ -7854,9 +7854,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//29732 qt maintenance 
 			this.getManagedBean().setFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
-			Long workflowStatusId = ParameterConst.PM_PARAMETERID_ZERO;
+			ScWorkFlowStatus specMainworkflow = this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
+			Long workflowStatusId = specMainworkflow.getPmStatus().getStatusId();
 			boolean qtStatusWorkflow = workflowStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
-					&& workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || workflowStatusId
+					|| workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || workflowStatusId
 					.equals(QTStatusConst.SE_PENDING_SIGNOFF) || workflowStatusId
 					.equals(QTStatusConst.SE_PENDING_REVISION) || workflowStatusId
 					.equals(QTStatusConst.SE_COMPLETED);
