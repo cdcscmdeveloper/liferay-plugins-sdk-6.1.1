@@ -2547,12 +2547,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		String LoaSigner = "______________";
 		String loaSignerDesig = "______________";
-		if(getManagedBean().getContractSignerUser() != null){
-			//30449 - start
+		//30449 - start
+		if(scLoa.getContractSigner() != null){
 			// To be merge with #12487&29693 to make sure selected LOA Signer display when download SST
 			//PmUser contractSigner = getManagedBean().getContractSignerUser();
 			PmUser contractSigner = scLoa.getContractSigner();
-			//30449 - end
+		//30449 - end
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
 				//20230111@Haziq - #12487&29693
 				LoaSigner = contractSigner.getSalutationCode().getSalutationName() + " "+  contractSigner.getUserName();
