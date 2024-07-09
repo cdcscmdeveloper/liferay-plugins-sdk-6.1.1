@@ -13,15 +13,7 @@ public class ProfileOfRegCompanyRptManagedBean extends SmReportManagedBean{
 
 	private SmSupplier smSupplier;
 	
-	private SmMofAccount smMofAccount;
-
-	public SmMofAccount getSmMofAccount() {
-		return smMofAccount;
-	}
-
-	public void setSmMofAccount(SmMofAccount smMofAccount) {
-		this.smMofAccount = smMofAccount;
-	}
+	private SmMofAccount smMofAccount; 
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -30,5 +22,13 @@ public class ProfileOfRegCompanyRptManagedBean extends SmReportManagedBean{
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
-	
+	//#30824 START
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
+	}
+	//#30824 END
 }

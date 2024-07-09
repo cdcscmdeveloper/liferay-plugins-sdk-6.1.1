@@ -500,37 +500,12 @@
 						<ac:ptjPopup 
 							id="orgProfileCcId"
 							orgTypeParamCode="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode}"
-							okAction="lOADetailBackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj,:form:contAdminId"/>
+							okAction="lOADetailBackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj"/><!-- #26475 -->
 					</h:panelGroup>
 				</c:if>
 				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />
 			</td>
 		</tr>
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-			</td>
-			<td>
-				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="contAdminId" styleClass="ppDropDownWidthM"
-						disabled="false" label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}"
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 275px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{lOADetailBackingBean.getUsersByAgency()}" />
-						<p:ajax event="change" listener="#{lOADetailBackingBean.updateContractAdmin()}" 
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
-					</p:selectOneMenu>
-				</c:if>
-				<c:if test="#{!isEditableStatus}">
-					<p:inputText 
-						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userName}"
-						disabled="true" size="35" />
-				</c:if>
-			</td>
-		</tr>
-
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />

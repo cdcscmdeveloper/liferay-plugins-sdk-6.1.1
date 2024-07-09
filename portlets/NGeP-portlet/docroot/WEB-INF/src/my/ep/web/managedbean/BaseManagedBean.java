@@ -147,6 +147,9 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerChangeRole;
 	private Boolean isDowngradeRole;
 	// end #29956
+
+	//#25037-start
+	private String currentTaskDocType;
 	
 	//27346-start 
 	// 27346
@@ -939,7 +942,17 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setOutputPage(String outputPage) {
 		this.outputPage = outputPage;
 	}
+	
+	// #25037 - start
+	public String getCurrentTaskDocType() {
+		return currentTaskDocType;
+	}
 
+	public void setCurrentTaskDocType(String currentTaskDocType) {
+		this.currentTaskDocType = currentTaskDocType;
+	}
+	// #25037 - end
+	
 	// 28767
 	public List<SmPersonnel> getPersonnelDirectorManager() {
 		return personnelDirectorManager;

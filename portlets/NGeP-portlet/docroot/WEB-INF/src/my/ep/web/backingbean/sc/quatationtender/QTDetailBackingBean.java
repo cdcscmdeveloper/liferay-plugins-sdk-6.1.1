@@ -9885,4 +9885,5 @@ public class QTDetailBackingBean extends
 		return bpmExistFlag;
 	}
 	// 9019 - End (Harun)
+
 }
