@@ -1603,12 +1603,6 @@ public class SpecificationBackingBean extends
 
 		log.debug("retriveBusinessOwnerQualificationCriteri - START");
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		List<ScQtCategory> deleteCategoryCodesList = this.getManagedBean().getTobeRemoveCategoryCodes();
-		//#29732 
-		if(CollectionUtils.isNotEmpty(deleteCategoryCodesList)){
-			this.getManagedBean().setTobeRemoveCategoryCodes(null);
-		}
-		//#29732
 		qtBackingBean.retrieveSuppQualificationTabDtl();
 	}
 
@@ -11202,16 +11196,35 @@ if (null != checklist && !checklist.isEmpty()) {
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setActiveIndex(1);
 			retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-							QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2, new String[] { changedCatCodeList },
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			if (isRoleValidationPopUpMessagefor()
+					&& (SCProcessNameConst.ENDORSE_SCORING.equals(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_SCORING
+							.equals(this.getManagedBean().getTaskName()))) {
+				this.getManagedBean().setCheckUserCanRevise(true);
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A,
+								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1, null,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2,
+								new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			}
 		}
 		// #29732 @idham 25/07/2023 - End
 		
@@ -17788,6 +17801,11 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
+				if(isRoleValidationPopUpMessagefor() && (SCProcessNameConst.ENDORSE_SCORING.equals(this
+						.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_SCORING.equals(this
+								.getManagedBean().getTaskName()))){
+					this.getManagedBean().setCheckUserCanRevise(true);
+				}
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
 				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
@@ -23517,5 +23535,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
-	// 29732 end
+
+    private boolean isRoleValidationPopUpMessagefor(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value()); 
+	}
+    //29732 end
 }

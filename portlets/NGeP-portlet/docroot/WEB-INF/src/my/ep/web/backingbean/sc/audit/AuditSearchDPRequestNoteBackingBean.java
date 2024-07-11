@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -176,8 +175,6 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		 */
 		@Override
 		public ISearchResultBean<AuDPRequestNoteSPDTO> pageChangeListener(ISearchBean<AuDPRequestNoteSPDTO> searchBean) {
-
-			SearchResultBean<AuDPRequestNoteSPDTO> searchResult = new SearchResultBean<>();
 			AuditDPSearchBean dpSearchBean = getManagedBean().getAuditDPSearchBean();
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
