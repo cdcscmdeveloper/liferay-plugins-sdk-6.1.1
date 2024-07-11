@@ -1218,8 +1218,6 @@ public class SmApplicationBackingBean extends
 				//30713 - Start
 				subStartTime = System.currentTimeMillis();
 				//Add checking check expired for KN
-				//SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
-				isLatestActiveWorkFlow(currSupp.getSupplierId());
 				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "isLatestActiveWorkFlow-7", 
 						subStartTime); //20211005@fadhli - #31754
@@ -14473,7 +14471,6 @@ public class SmApplicationBackingBean extends
 				currSupp.getSupplierId(), "N");
 		//30713 - Start
 		//Add checking check expired for KN
-		SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
 		SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
 		//31792 - START
 		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
@@ -17143,20 +17140,6 @@ public class SmApplicationBackingBean extends
 		}
 		
 		return wf;
-	}
-	private SmWorkflowStatus isLatestActiveWorkFlow(Long supplierId){
-		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
-		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
-		SmWorkflowStatus wfStatus = null;
-		
-		reqDTO.setSupplierId(supplierId);	
-		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.retrieveAllIsCurrentBySupplierId(reqDTO);
-		
-		if(resDTO.getWorkFlowStatusLs().size() > 0){
-			wfStatus = resDTO.getWorkFlowStatusLs().get(0);
-		}
-		
-		return wfStatus;
 	}
 	//30713 - End
 	//30974 - Start
