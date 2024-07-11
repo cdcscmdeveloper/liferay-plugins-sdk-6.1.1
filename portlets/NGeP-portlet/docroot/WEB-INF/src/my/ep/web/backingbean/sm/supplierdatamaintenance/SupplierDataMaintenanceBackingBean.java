@@ -95,9 +95,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 //#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.util.CustomUtils;
+import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApproverRemarksBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
@@ -532,9 +533,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			//26238 - Disciplinary Action - 28798 - end
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-			if (auditSmSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+			IAuditTrailsSO auditSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+			if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				AuditSupplierManagementBackingBeanTemplate  auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
 				auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
 			}
@@ -569,7 +570,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	/**
 	 * Submit supplier maintenance
 	 */
-	public void submitSupplierDataMaintenance() {
+	public void submitSupplierDataMaintenance() {1
 		
 		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
@@ -898,13 +899,14 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				if (auditSmSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				IAuditTrailsSO auditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+				if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					// Waiting for BA Decision
+					//auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+					//auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
 					auditSmBackingBean = new AuditSupplierManagementApprovedCategoryCodesBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
 					auditSmBackingBean = new AuditSupplierManagementOverlappingCategoryBackingBean();

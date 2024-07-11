@@ -129,7 +129,7 @@ import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 //#13320 - Rahim
 //#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
+import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.util.CustomUtils;
@@ -1556,9 +1556,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//		null,
 				//		MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				if (auditSmSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				IAuditTrailsSO auditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+				if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
 				}

@@ -87,7 +87,7 @@ import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 //#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
+import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
@@ -940,9 +940,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditSupplierManagementSO auditSMSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				if (auditSMSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				IAuditTrailsSO auditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+				if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSupplierManagementUserProfileBackingBean();
 					auSMBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
 				}

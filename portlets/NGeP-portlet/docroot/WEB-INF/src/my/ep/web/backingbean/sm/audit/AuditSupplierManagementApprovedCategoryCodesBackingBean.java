@@ -40,6 +40,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		ListIterator<SmSupplierCategory> newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories()
 				.listIterator();
 
+		// Expected Max Size in loop (571)
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			if (!newApprovedCategory.getRecordStatusFlg().equals(1)) {
@@ -48,8 +49,10 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		}
 		newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories().listIterator();
 
+		// Expected Max Size in loop (571)
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
+			// Expected Max Size in loop (571)
 			while (newApprovedCategories.hasNext()) {
 				SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 				if (oldApprovedCategory.getSupplierCategoryId().equals(newApprovedCategory.getSupplierCategoryId())) {
@@ -69,7 +72,8 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		SmDisciplinaryAction newDisciplinaryAction = mBean.getDisciplineVO().getSmDiscplinaryAction();
 
 		if (oldDisciplinaryAction == null && newDisciplinaryAction.isCancelCategory()) {
-			ListIterator<SmSupplierCategory> selectedApprovedCategories = mBean.getSelectedApprovedCategories().listIterator();
+			ListIterator<SmSupplierCategory> selectedApprovedCategories = mBean.getSelectedApprovedCategories()
+					.listIterator();
 			auditDeletedData(selectedApprovedCategories, auDetails);
 		}
 
@@ -87,6 +91,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 
 	private void auditAddedData(ListIterator<SmSupplierCategory> newApprovedCategories,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
+		// Expected Max Size in loop (571)
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
@@ -104,6 +109,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 
 	private void auditDeletedData(ListIterator<SmSupplierCategory> oldApprovedCategories,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
+		// Expected Max Size in loop (571)
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
