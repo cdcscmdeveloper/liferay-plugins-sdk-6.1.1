@@ -145,7 +145,7 @@
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!qTDetailBB.isCancel(bpmAction)}"
+								rendered="#{!qTDetailBB.isCancel(bpmAction) and !isCommitteeApprovalReviseTask}"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
 								<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 								<f:param name="skipsubmitvalidation" value="0" />
