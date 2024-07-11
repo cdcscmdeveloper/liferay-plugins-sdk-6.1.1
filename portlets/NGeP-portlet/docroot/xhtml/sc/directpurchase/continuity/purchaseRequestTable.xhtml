@@ -8,7 +8,7 @@
 	<p:dataTable var="map" rowIndexVar="index"
 		rendered="#{requestNoteBackingBean.managedBean.purchaseRequestMapList.size() > 0}"
 		value="#{requestNoteBackingBean.managedBean.purchaseRequestMapList}" style="width:100%">
-		<p:column headerText="#{lbl['lbl.sc.no']}" style="text-align:center;">
+		<p:column headerText="#{lbl['lbl.sc.continuity.no']}" style="text-align:center;">
 			<p:outputLabel value="#{index + 1}" style="text-align:center;" />
 		</p:column>
 		<p:column headerText="#{lbl['lbl.rpt.prNo']}"
