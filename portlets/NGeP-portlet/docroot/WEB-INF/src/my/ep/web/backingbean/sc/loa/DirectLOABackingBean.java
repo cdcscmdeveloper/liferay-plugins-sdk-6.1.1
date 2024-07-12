@@ -440,8 +440,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractNGovtSignDate(scLoa);
 			updateContractDetails(scLoa);
 			validateContractDetails(scLoa);
+			validateContractAdmin(scLoa); // #26474 validate contract admin
 
-			log.info("submitAction loop executed");
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
@@ -455,6 +455,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			reqDTO.setScLoa(scLoa);
+
+			// #26474 - start
+			if (getManagedBean().getContractSignerUser() != null) {
+				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
+
+				String designation = getManagedBean().getContractSignerUser().getDesignation();
+
+				reqDTO.getScLoa().setLoaSignerDesig(designation);
+			}
+
+			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+
+			if (this.getManagedBean().getSelectedPtj() != null) {
+				reqDTO.getScLoa().setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
+			// #26474 - end
+
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -1514,6 +1531,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		scLoa.setIssueDate(scLoa.getContractEffDate());
 
+		// #26474 - start
+		scLoa.setContractAdmin(null);
+		// #26474 - end
+
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) || BpmOutcomeConst.BPM_SUBMIT.equals(outcome)){
 			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
@@ -2245,6 +2266,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		getApprovalUsers();
 		prepareSignerInfo();
 		FacesContext fc = FacesContext.getCurrentInstance();
+
+		/* ENHANCEMENT 26474 START */
+		this.getManagedBean().setSelectedPtj(pmOrgProfile);
+		/* ENHANCEMENT 26474 END */
+
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null, redirectUrl);
@@ -4565,8 +4591,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// contract Signer info
 		if (scLoa.getContractSigner() == null) {
 			scLoa.setContractSigner(new PmUser());
+		} else { //#26474 - start
+			getManagedBean().setContractSignerUser(scLoa.getContractSigner());
+			getManagedBean().getScLoa().setLoaSignerDesig(scLoa.getContractSigner().getDesignation());
 		}
 		
+		if (this.getManagedBean().getSelectedPtj() == null) {
+			PmOrgProfile pmOrgProfile = getPTJOrgProfileByLoginUser();
+			this.getManagedBean().setSelectedPtj(pmOrgProfile);
+		}
+		// #26474 - end
+
 		// Actual Total Intended Price (RM)
 		if (scLoa.getEstimatedPrice() != null) {
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
@@ -4901,7 +4936,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					getManagedBean().getScLoa().getScLoaWitnesses().remove(
 							this.getManagedBean().getLoaSupplierWitness());					
 					this.getManagedBean().setLoaSupplierWitness(null);
-			}
+				}
 			}
 
 			// spki
@@ -4928,6 +4963,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							scLoa.getLoaId(), scLoa.getLoaNo());
 				}
 			}
+
+			// #26474 -start-
+			ScQt scQt = this.getManagedBean().getScQt();
+
+			reqDTO.setScQt(scQt);
+			reqDTO.setLanguageCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			// #26474 -end-
 
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -6593,9 +6635,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			if (null != scLoa.getContractSigner() && scLoa.getContractSigner().getUserId() != null) {
-				scLoa.setLoaSignerDesig(null);
-				scLoa.setContractSigner(null);
-				
 				prepareSignerInfo();
 				
 				RequestContext.getCurrentInstance().execute("sstSignerConfirmPopupWin.show()");
@@ -8408,12 +8447,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	public void signerUserListener(PmUser contractSignerUser) {
-		log.info("signerUserListener");
-
 		ScLoa scLoa = getManagedBean().getScLoa();
 		scLoa.setLoaSignerDesig(contractSignerUser.getDesignation());
 
+		// #26474 - start.
+		getManagedBean().setContractSignerUser(contractSignerUser);
+		// #26474 - end.
 	}
+
 	private boolean isFulfillmentTypeOneOffOrAsAndWhen(PmParameter fulfillmentType) {
 		String fullfillmentTypeParamCode = null;
 		if(null != fulfillmentType) {
@@ -8432,14 +8473,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		Locale locale = new FacesScopes().getUserLocale();
-
-		if (StringUtils.isBlank(
-				scLoa.getContractAdmin().getUserName())) {
-			throw new EpException(MessageConst.ERROR_760400,
-					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}
 		//Redmine Bug #21137
 		if(scLoa.getContractDuration() != null && (scLoa.getContractDuration().compareTo(new BigDecimal(1)) < 0)) {
 			throw new EpException(MessageConst.ERROR_760473);
@@ -8458,7 +8491,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoa.setContractExpDate(contractExpDate.getTime());
 		}
 	}
-	
+
+	// #26474 - start
+	private void validateContractAdmin(ScLoa scLoa) {
+		List<PmUser> pmUserList = getUsersByAgency();
+
+		if (CollectionUtils.isEmpty(pmUserList)) {
+			throw new EpException(MessageConst.ERROR_760512);
+		}
+	}
+	// #26474 - end
+
 	/**
 	 * Get User Organization Profile by user id.
 	 * 

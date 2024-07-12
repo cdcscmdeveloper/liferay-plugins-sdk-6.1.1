@@ -181,6 +181,7 @@
 					   	   
                                  <p:menuitem id="menuItemId1" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
                                       rendered="#{contractDetailsBackingBean.isContractAdmin()
+                                      	and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
 					 		          	and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1
 					 		          	and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 					 		          	and !data.allowAgreementCreation}"  
@@ -190,6 +191,7 @@
 					 		          
 					 		   <p:menuitem id="menuItemId2" value="#{lbl['lbl.ct.termination']}"  icon="ui-icon-termination"
 					 		         rendered="#{contractDetailsBackingBean.isContractAdmin() 
+					 		         	and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
 					 		         	and data.ctStatus == 1 and data.ctContract.recordStatusFlg==1
 					 		         	and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 					 		         	and !data.allowAgreementCreation}"  
@@ -200,6 +202,7 @@
 								        
 							  <p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.amendment.with.supplement']}" icon="ui-icon-amendment" 
 							        rendered="#{(contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==1
+							        	and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
                              	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch
                              	        and !data.allowAgreementCreation) or (contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1 and data.ctContract.recordStatusFlg ==3
                              	        and data.agStatus == 1 and !contractDetailsBackingBean.managedBean.trackingDiarySearch
@@ -210,7 +213,9 @@
 							  </p:menuitem>
 					 		 
 					 		<p:menuitem id="menuItemId4" value="#{(data.agStatus == 1) ? lbl['lbl.ct.amendment.without.supplement'] : lbl['lbl.ct.fulfilment.details.update']}"  icon="ui-icon-update" 
-					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() and data.ctStatus == 1
+					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() 
+					 		      			  and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+					 		      			  and data.ctStatus == 1
 					 		      			  and data.ctContract.recordStatusFlg==1 and !data.pendingFinalistAgreement
 					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch
 					 		      			  and !data.allowAgreementCreation }" 
@@ -230,24 +235,48 @@
 						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 						    </p:menuitem>
 
-				
+						    <!-- #25406 - Start -->
+						     <p:menuitem id="menuItemId7" value="#{lbl['lbl.ct.owner.management']}" icon="ui-icon-edit" 
+						          rendered="#{contractDetailsBackingBean.isApprover() and data.ctStatus == 1 and data.status == 1
+						          and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+						          			 and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)}" 
+								  process="@this" partialSubmit="true"
+								  disabled="#{data.assignedCtAdminFlag == 1}"
+						          action="#{contractDetailsBackingBean.gotoOwnerManagementPage(data.ctContract.contractId)}"
+						          onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						    </p:menuitem>
+							<!-- #25406 - End -->
+							
 					   	 <p:menuitem id="menuItemId5" value="#{lbl['lbl.ct.view.termination.history']}"  
 					   	     icon="ui-icon-termination-history" 
                              rendered="#{(data.terminate or data.mutualTerminate or data.remedy)
-                             	and !data.allowAgreementCreation}" process="@this" partialSubmit="true"
+                           			    and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+                             	    	and !data.allowAgreementCreation}" process="@this" partialSubmit="true"
                              action="#{contractDetailsBackingBean.gotoTerminateHistoryPage(data.ctContract.contractId)}"
 							 onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 					     </p:menuitem>
 					     
 					     <p:menuitem id="menuItemId6" value="#{lbl['lbl.ct.proceed.migrated']}"  
 					   	     icon="ui-icon-proceed-migrated" 
-                             rendered="#{contractDetailsBackingBean.isContractAdmin()
+                             rendered="#{contractDetailsBackingBean.isContractAdmin() 
+                            		  and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
 					 		          and data.ctContract.recordStatusFlg==1
 					 		          and data.allowAgreementCreation}"
 					 		 action="#{contractDetailsBackingBean.setContractId(data.ctContract.contractId)}"
 							   	process="@this" partialSubmit="true"  oncomplete="proceedMigratedDlg.show()">
 					     </p:menuitem>
-					   		          
+						 <p:menuitem id="menuItemId16" value="#{(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.design.ct.admin'] : lbl['lbl.ct.remove.design.ct.admin']}"
+					     		icon="ui-icon-edit"
+					     		process="@this" partialSubmit="true"
+					     		rendered="#{(contractDetailsBackingBean.isContractAdmin() or ctBackingBean.isApprover()) 
+					     				and data.status == 1
+					     				and data.ctStatus == 1 
+					     				and data.ctContract.recordStatusFlg==1
+					     				and !contractDetailsBackingBean.managedBean.trackingDiarySearch
+					     				and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
+					     				and  !data.allowAgreementCreation}" action="#{contractDetailsBackingBean.goToRequestCtAdmin(data.ctContract.contractId,(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.ct.admin'] : lbl['lbl.ct.remove.ct.admin'])}"
+					     		onStart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     </p:menuitem>  
                        </p:menuButton>
 					</p:column>
 					<!-- Supplier's action -->

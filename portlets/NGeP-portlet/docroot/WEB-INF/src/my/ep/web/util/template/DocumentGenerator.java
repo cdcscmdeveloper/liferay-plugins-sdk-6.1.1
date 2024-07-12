@@ -183,47 +183,47 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	 * 		the html content to generate as PDF.
 	 * @throws Exception
 	 */
+	
 	public void generatePdf(OutputStream os, String html) throws Exception {
 		debugLogger("generatePdf");
-		
-		ITextRenderer render = new ITextRenderer();
-		try{
-			//#26180
-			 if (html != null) {
-		        	html = html.replaceAll("&amp;nbsp;", " ");
-		        	html = html.replaceAll("&amp;", "&amp;amp;")
-		        			   .replaceAll("&", "&amp;");
-		        	html = html.replaceAll("&amp;#62", "&#62");
-		          	html = html.replaceAll("&amp;#60", "&#60");
-		          	
-					//20220921@asyrafhaziq - 29076 -  Start == //#25142 - start
-					html = html.replaceAll("&amp;nbsp;", " ");
-					html = html.replaceAll("&amp;amp;", "&");
-					//20220921@asyrafhaziq - 29076 - End == //#25142 - end
-					
-					//#26130 (06/06/2024) - start
-					String fontPath = getServerUrl()+ "NGeP-portlet/resources/fonts/Arial.ttf";
 
-					log.info("fontPath: "+fontPath);
-					
-					render.getFontResolver().addFont(fontPath, true);
-					//#26130 (06/06/2024) - end
-					
-		            render.setDocumentFromString(html);
-		            render.layout();
-		            render.createPDF(os);
-		        }
-		        
-		        os.flush();
-		//#26130 (06/06/2024) - start
-		}catch(Exception e){
+		ITextRenderer render = new ITextRenderer();
+		try {
+			// #26180
+			if (html != null) {
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;", "&amp;amp;").replaceAll("&", "&amp;");
+				html = html.replaceAll("&amp;#62", "&#62");
+				html = html.replaceAll("&amp;#60", "&#60");
+
+				// 20220921@asyrafhaziq - 29076 - Start == //#25142 - start
+				html = html.replaceAll("&amp;nbsp;", " ");
+				html = html.replaceAll("&amp;amp;", "&");
+				// 20220921@asyrafhaziq - 29076 - End == //#25142 - end
+
+				// #26130 (06/06/2024) - start
+				String fontPath = getServerUrl() + "NGeP-portlet/resources/fonts/Arial.ttf";
+
+				log.info("fontPath: " + fontPath);
+
+				render.getFontResolver().addFont(fontPath, true);
+				// #26130 (06/06/2024) - end
+
+				render.setDocumentFromString(html);
+				render.layout();
+				render.createPDF(os);
+			}
+
+			os.flush();
+			// #26130 (06/06/2024) - start
+		} catch (Exception e) {
 			e.printStackTrace();
-		//#26130 (06/06/2024) - end			
-		}finally{
-			html = null; //#25142
+			// #26130 (06/06/2024) - end
+		} finally {
+			html = null; // #25142
 			render = null;
 			os.close();
-			os = null; //#25142
+			os = null; // #25142
 		}
 	}
 	

@@ -322,7 +322,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(Boolean.TRUE);
-			
+			// #26475 - start
+			if (getManagedBean().getSelectedPtj() == null) {
+				getManagedBean().setSelectedPtj(scLoa.getContractAgency());
+			}
+			// #26475 - end
+
 			//Enhancement #12177
 			if(!getManagedBean().isTrackingDairyView()){
 				if(scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)){
@@ -3005,7 +3010,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 				String outcome = BpmOutcomeConst.BPM_SAVE;
 				ScLoa scLoa = this.getManagedBean().getScLoa();
-
+				// #26475, #26474 -start-
+				Long statusId = null;
+				PmUser pmUserNull = null;
+				// #26475, #26474 -end-
 				boolean isNewLoa = false; // Bug #33188
 
 				// #19336 -start-
@@ -3016,7 +3024,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
 				}
 				ScLoaWitness loaSupplierWitness = this.getManagedBean().getLoaSupplierWitness();
-				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+
+				// #29173 - CR 26475: Static Code Analysis
+				// start
+				// #29173 - removed longValue() from getStatusId
+				// #29173 - added if statement to check if null
+				if (scLoa != null) {
+					statusId = scLoa.getPmStatus().getStatusId();
+				}
+				// #29173 - CR 26475: Static Code Analysis -end-
 
 				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 					validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
@@ -3046,7 +3062,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 				parseLOADetails(scLoa, outcome);
 				validateLOADetails(scLoa, outcome);
-				validateContractDetails(scLoa);
+
+				// start - #26475 & #26474 - disable validation on save action
+				scLoa.setContractAdmin(pmUserNull);
+				// end - #26475 & #26474
+
 				if (!supplier) {
 					updateContractDetails(scLoa);
 				}
@@ -3311,6 +3331,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateLOADetails(scLoa, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+
+			// #26475 - start
+			if (this.getManagedBean().getSelectedPtj() != null) {
+				scLoa.setContractAgency(this.getManagedBean().getSelectedPtj());
+			}
+			// #26475 - end
+
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -6916,15 +6943,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 *          the scLoa
 	 */	
 	private void validateContractDetails(ScLoa scLoa) {
-		Locale locale = new FacesScopes().getUserLocale();
-		
-		if (StringUtils.isBlank(
-				scLoa.getContractAdmin().getUserName())) {
-			throw new EpException(MessageConst.ERROR_760400,
-					new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.cont.admin", 
-				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
-		}	
-		
+		// #26475 - start
+		List<PmUser> pmUserList = getUsersByAgency();
+		PmUser pmUserNull = null;
+		if (CollectionUtils.isEmpty(pmUserList)) {
+			throw new EpException(MessageConst.ERROR_760512);
+		} else {
+			scLoa.setContractAdmin(pmUserNull);
+		}
+		// #26475 - end
+
 		//Bug #30837
 		BigDecimal contractDuration = scLoa.getContractDuration();
 		Calendar contractExpDate = Calendar.getInstance();
