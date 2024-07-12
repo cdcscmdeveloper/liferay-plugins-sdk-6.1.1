@@ -1452,7 +1452,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//30713 - Start
 				subStartTime = System.currentTimeMillis();
 				//Add checking check expired for KN
-				SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
 				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "isLatestActiveWorkFlow-7", 
 						subStartTime); //20211005@fadhli - #31754
@@ -14791,7 +14790,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				currSupp.getSupplierId(), "N");
 		//30713 - Start
 		//Add checking check expired for KN
-		SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(currSupp.getSupplierId());
 		SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
 		//31792 - START
 		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
@@ -17488,20 +17486,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		return wf;
 	}
-	private SmWorkflowStatus isLatestActiveWorkFlow(Long supplierId){
-		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
-		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
-		SmWorkflowStatus wfStatus = null;
-		
-		reqDTO.setSupplierId(supplierId);	
-		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.retrieveAllIsCurrentBySupplierId(reqDTO);
-		
-		if(resDTO.getWorkFlowStatusLs().size() > 0){
-			wfStatus = resDTO.getWorkFlowStatusLs().get(0);
-		}
-		
-		return wfStatus;
-	}
 	//30713 - End
 	//30974 - Start
 	public void setReasonIdList(){
@@ -18120,13 +18104,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    Map<Long, SmApplSupportDoc> allDocsMap = new HashMap<>();
 
 	    // Add all mandatory docs to the map
-	    for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
-	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
 	    }
 
 	    // Add all non-mandatory docs to the map
-	    for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
-	        allDocsMap.put(doc.getApplSupportDocId(), doc);
+	    if (!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocs())) {
+	    	for (SmApplSupportDoc doc : getManagedBean().getNonMandatoryDocs()) {
+		        allDocsMap.put(doc.getApplSupportDocId(), doc);
+		    }
 	    }
 
 	    // Add all license mandatory docs to the map

@@ -4784,7 +4784,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		
 		//checking for previous agreement in list. the last agreementid that is less than currentagreementid is the direct previous agreement
 		for(CtAgreement currAgreement : filterAgreementList()){
-			if(currAgreement.getAgreementId() < agreement.getAgreementId() && currAgreement.getCtAmendment() != null){
+			if((currAgreement.getCreatedDate().equals(agreement.getCreatedDate())
+					|| currAgreement.getCreatedDate().before(agreement.getCreatedDate())) 
+					&& currAgreement.getCtAmendment() != null
+					&& currContractVerId!=currAgreement.getCtAmendment().getCtContractVer().getContractVerId()){
 				//set previous amendment data for retrieval
 				prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
 			}
