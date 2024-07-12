@@ -13,22 +13,109 @@
 						<h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
 						<br/>
-						<h:outputLabel
-							value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
+						<!-- 25790 - start -->
+							<c:choose>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.prInquiryId != null}">
+									<h:outputLabel
+										value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
+								</c:when>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.showPurchaseInDefault}">
+									<h:outputLabel
+										value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
+								</c:when>
+								<c:otherwise>
+									<h:outputLabel value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
+								</c:otherwise>
+							</c:choose> 
+						<!-- 25790 - end -->
 					</td>
 					<td class="header-info-text">
 							#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
 						<br/>
-							#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}
+							<!-- 25790 - start --> 
+							<c:choose>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.prInquiryId != null}">
+											<p:commandLink
+												value="#{purchaseInquiryBackingBean.retrievePurchaseInquiry(requestNoteBackingBean.managedBean.prInquiryId).prInquiryNo}"
+												style="float:left;"
+												action="#{purchaseInquiryBackingBean.viewPurchaseInquiry(requestNoteBackingBean.managedBean.prInquiryId)}"
+												immediate="true" />
+										</c:when>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.showPurchaseInDefault}">
+									<p:commandLink
+										value="#{requestNoteBackingBean.managedBean.scRequestNoteDtl.requestItem.purchaseInDefault.purchaseInDefaultNo}"
+										style="float:left;"
+										action="#{simpleQuoteBackingBean.viewPurchaseInDefault(requestNoteBackingBean.managedBean.scRequestNoteDtl.requestItem.purchaseInDefault.purchaseInDefaultId)}"
+										immediate="true" />
+								</c:when>
+								<c:otherwise>
+									<p:commandLink
+										value="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}"
+										style="float:left;"
+										action="#{requestNoteBackingBean.showSimpleQuote}"
+										immediate="true" />
+										</c:otherwise>
+							</c:choose>
+						 <!-- 25790 - end -->
 				   </td>
 				 </c:if>
 				 <c:if test="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo == null}">
 					<td style="width:9%">
 						<h:outputLabel
 							value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
+						<br/>
+						<!-- 25790 - start -->
+							<c:choose>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.prInquiryId != null}">
+									<h:outputLabel
+										value="#{lbl['lbl.sc.price.inquiry.purchase.inquiry.no']}" />
+								</c:when>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.showPurchaseInDefault}">
+									<h:outputLabel
+										value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
+								</c:when>
+								<c:otherwise>
+									<h:outputLabel value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
+								</c:otherwise>
+							</c:choose> 
+						<!-- 25790 - end -->
 					</td>
 					<td class="header-info-text">
 							#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo == null ? lbl['lbl.sc.system.generated'] : requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+							<br/>
+							<!-- 25790 - start --> 
+							<c:choose>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.prInquiryId != null}">
+											<p:commandLink
+												value="#{purchaseInquiryBackingBean.retrievePurchaseInquiry(requestNoteBackingBean.managedBean.prInquiryId).prInquiryNo}"
+												style="float:left;"
+												action="#{purchaseInquiryBackingBean.viewPurchaseInquiry(requestNoteBackingBean.managedBean.prInquiryId)}"
+												immediate="true" />
+										</c:when>
+								<c:when
+									test="#{requestNoteBackingBean.managedBean.showPurchaseInDefault}">
+									<p:commandLink
+										value="#{requestNoteBackingBean.managedBean.scRequestNoteDtl.requestItem.purchaseInDefault.purchaseInDefaultNo}"
+										style="float:left;"
+										action="#{simpleQuoteBackingBean.viewPurchaseInDefault(requestNoteBackingBean.managedBean.scRequestNoteDtl.requestItem.purchaseInDefault.purchaseInDefaultId)}"
+										immediate="true" />
+								</c:when>
+								<c:otherwise>
+									<p:commandLink
+										value="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}"
+										style="float:left;"
+										action="#{requestNoteBackingBean.showSimpleQuote}"
+										immediate="true" />
+										</c:otherwise>
+							</c:choose>
+						 <!-- 25790 - end -->
 				   </td>
 				 </c:if>
 					<td style="width:3%"><h:outputLabel
@@ -51,13 +138,9 @@
 				       <h:panelGroup
 							rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
 				         #{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, ParameterConst.reqNoteSQMethodCode)}
-				         <p:commandLink id="viewSimpleQuote" partialSubmit="true" process="@this" 
-				                onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								action="#{requestNoteBackingBean.showSimpleQuote}">
-								<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"
-									title="#{lbl['lbl.sc.rn.simple.quote.tooltip']}" />
-							</p:commandLink>
+				         <!-- 25790 - start -->
+				         <!-- remove SQ tooltip -->
+						 <!-- 25790 - end -->
 						</h:panelGroup></td>
 
 					<td style="width: 5%"><h:outputLabel
