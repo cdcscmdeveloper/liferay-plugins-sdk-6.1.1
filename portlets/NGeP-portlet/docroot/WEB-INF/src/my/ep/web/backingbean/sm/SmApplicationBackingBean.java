@@ -7128,11 +7128,11 @@ public class SmApplicationBackingBean extends
 	 * Save or update the latest information of the application i.e. SmAppl .
 	 */
 	private void saveOrUpdateAppl() {
-		//checkin if coordinate null #27853
-		if(!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()){
-		SmApplicationUtil.validateCoordinate(getManagedBean());
+		// checkin if coordinate null #27853
+		if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+			SmApplicationUtil.validateCoordinate(getManagedBean());
 		}
-		
+
 		// checking if suddenly premise information is missing (#21955)
 		SmApplicationUtil.validateDontHavePremise(getManagedBean().getSmAppl());
 
@@ -7140,10 +7140,8 @@ public class SmApplicationBackingBean extends
 		// (#22444)
 		getManagedBean().getSmAppl().setSmApplRejectReasons(null);
 
-		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
-				.getCompanyBasicGst());
-		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
-				.getSelectedBranch().getGst());
+		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean().getCompanyBasicGst());
+		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean().getSelectedBranch().getGst());
 
 		// update category that record status is 1 for new mof application. This
 		// happen due to resubmit application (#23683)
@@ -7155,8 +7153,7 @@ public class SmApplicationBackingBean extends
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 			reqDto.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			reqDto.setBranchGst(getManagedBean().getSelectedBranch().getGst());
-			reqDto.setSameAsHq(getManagedBean().getSelectedBranch()
-					.isSameAsHq());
+			reqDto.setSameAsHq(getManagedBean().getSelectedBranch().isSameAsHq());
 			// #27802 - start
 			if (getManagedBean().isSupplierUser() && getManagedBean().getSelectedShareHolder() != null && getManagedBean().getSelectedShareHolder().getPmUser() != null) {
 				reqDto.setPersonnel(getManagedBean().getSelectedShareHolder());
@@ -7164,16 +7161,14 @@ public class SmApplicationBackingBean extends
 			// #27802 - end
 			SmServiceLookup.getMofRegistrationSO().updateApplication(reqDto);
 		} catch (Exception e) {
-			log.info("error to save appl no:"
-					+ getManagedBean().getSmAppl().getApplNo(), e);
+			log.info("error to save appl no:" + getManagedBean().getSmAppl().getApplNo(), e);
 		} finally {
 
 			retriveLatestApplAfterUpdate("", "");
 
 			// set section editor VO after update
-			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
-					getManagedBean().getCurrentPageType());
-			setBranchDisplayTable(); //29727 , #34135
+			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false, getManagedBean().getCurrentPageType());
+			setBranchDisplayTable(); // 29727 , #34135
 
 		}
 	}
