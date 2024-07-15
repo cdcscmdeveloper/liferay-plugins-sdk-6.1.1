@@ -8909,7 +8909,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 				}
 				//36103 - end
-				//36103 - endzzzzzzzzzzzzz
 				//29006 @zaim
 				getManagedBean().setListSpecAnswer(tpqSpecList);
 				//29006 @zaim
