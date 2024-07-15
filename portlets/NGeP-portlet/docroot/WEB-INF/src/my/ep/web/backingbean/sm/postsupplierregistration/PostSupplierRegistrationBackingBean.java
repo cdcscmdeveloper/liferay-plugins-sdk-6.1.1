@@ -139,7 +139,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
 			//30713 - Start
-			SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 			//31792 - START
 			Boolean resubmitExpired = false;
 			if(rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
