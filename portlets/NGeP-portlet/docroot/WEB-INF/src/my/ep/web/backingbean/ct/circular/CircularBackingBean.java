@@ -348,7 +348,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 										new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 			} else if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
-					&& getManagedBean().getProcurementMode() == null) {
+					&& getManagedBean().getProcurementMode() == null && getManagedBean().isContinuityCircularAuditSearch()) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
@@ -572,6 +572,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			getManagedBean().setPqCircularType(true);
 		} else {
 			getManagedBean().setPqCircularType(false);
+			getManagedBean().setProcurementMode(null);
+			getManagedBean().setProcurementModeCode(null);
 		}
 	}
 

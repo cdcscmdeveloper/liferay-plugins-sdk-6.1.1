@@ -140,8 +140,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
-			//30713 - Start
-			SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
+			//30713 - Start 
 			//31792 - START
 			Boolean resubmitExpired = false;
 			if(rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
@@ -1299,7 +1298,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		//32627 START
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY);
-		//33778 - add new status 20400
+		//33778 & 35979 - add new status 20400
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT);
 		//32627 END
 		reqDTO.setSupplierId(supplierId);

@@ -121,12 +121,13 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		// #30425 - Start
-		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			//start checking for validation
 			validateInternalSPKI(getSupplier().getEpNo());
 			//end checking for validation
 		}
+		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
 		// #30425 - End
 		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
@@ -150,12 +151,13 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	
 	public void getChallengeQuestions(String identificationNo) {
 		//#30425 - Start
-		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			//start checking for validation (for checking cert expiration)
 			validateInternalSPKI(getSupplier().getEpNo());
 			//end checking for validation
 		}
+		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
 		//#30425 - End
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {

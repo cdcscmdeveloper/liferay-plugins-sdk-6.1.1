@@ -1319,13 +1319,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// Acknowledge Date
 		//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 		//20230111@Haziq - #12487
-		/*if (scLoa != null && (QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa
-				.getPmStatus().getStatusId()) ||
-				QTStatusConst.LOA_PENDING_REVISION.equals(scLoa
-						.getPmStatus().getStatusId()))) {
-			Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
-			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
-		}*/
+		//Remove this because it will not be use to set ackduedate in this function.
 
 		// check whether loa from s1 or s2.
 		if(scLoa != null && scLoa.getScLoiLoa() != null){ //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -2553,10 +2547,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		String LoaSigner = "______________";
 		String loaSignerDesig = "______________";
-		if(getManagedBean().getContractSignerUser() != null){
-			PmUser contractSigner = getManagedBean().getContractSignerUser();
+		//30449 - start
+		if(scLoa.getContractSigner() != null){
+			// To be merge with #12487&29693 to make sure selected LOA Signer display when download SST
+			//PmUser contractSigner = getManagedBean().getContractSignerUser();
+			PmUser contractSigner = scLoa.getContractSigner();
+		//30449 - end
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
-				LoaSigner = contractSigner.getUserName();
+				//20230111@Haziq - #12487&29693
+				LoaSigner = contractSigner.getSalutationCode().getSalutationName() + " "+  contractSigner.getUserName();
 			}
 		}
 		context.put("loaSigner", LoaSigner);	
@@ -3938,11 +3937,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 
-				//#29693 - START
-//				if(!scLoa.getScLoiLoa().getLoiRequired() == true){
-//					sendNotification(); 
-//				}								
-				//#29693 - END
 				if (resDTO.isSuccessful()) {
 					scLoa = resDTO.getScLoa();
 					RenameTempLoaNoRepoDirByLoaNo(scLoa);
@@ -4040,13 +4034,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				List<ScLoiLoaItem> items = getQtAwardSO().getLoiLoaItemByLoaIdAndReqItemId(
 						each.getScLoa().getLoaId(), each.getScRequestItem().getRequestNoteItemId());
 				
-				if (items.size() > 0) {
-					if((items.get(0).isComplete() == false) && (!currentItemName.equalsIgnoreCase(each.getScRequestItem().getItemName()))){
+				//start - #35828(fixing 29006) 
+				List<TplSpecAnswer> tpaList = getTemplateSpecSO().findSpecAnswersByQuestion(
+						each.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+
+				boolean condition1 = CollectionUtils.isNotEmpty(items) && !items.get(0).isComplete()
+						&& !currentItemName.equalsIgnoreCase(each.getScRequestItem().getItemName());
+				boolean condition2 = !CollectionUtils.isNotEmpty(items) && CollectionUtils.isNotEmpty(tpaList)
+						&& !currentItemName.equalsIgnoreCase(each.getScRequestItem().getItemName());
+
+				if (condition1 || condition2) {
 						count++;
 						updatedItems.append(count + ". " + each.getScRequestItem().getItemName() + "</br>");//#29006 - uat issue
 						currentItemName = each.getScRequestItem().getItemName();
-					}
 				}
+				//end - #35828(fixing 29006)
 			}
 			//#29006 - end - note 607/619
 			
@@ -4910,10 +4912,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		// Acknowledge Date
 		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome) 
-		   //|| BpmOutcomeConst.BPM_SUBMIT.equals(outcome) //20230111@Haziq - #12487
+		   //20230111@Haziq - #12487 - remove because this logic not applicable during submit/creation
 				){
 			//20230111@Haziq - #12487
-			//Integer loaRespPeriod = getDaysByRuleType(RuleTypeConst.LOA_RESPONSE_PERIOD);
+			// remove this because loa respond period are get from UI not from PM rule
 			Integer loaRespPeriod = scLoa.getLoaResponsePeriod();
 			scLoa.setAckDueDate(DateUtils.addDays(DateUtils.getCurrentDateWithoutTime(), loaRespPeriod));
 		}
@@ -8871,14 +8873,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			List<TplSpecQuestion> tpqSpecList = templateSpecSO.findQuestionsBySpecMasterIdAndParentQuestionId(
 					scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster().getSpecMasterId(), "S",
 					scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+			//36103 - start
+			String specDtl;
 			if (CollectionUtils.isEmpty(tpqSpecList)) {
-				getManagedBean().getScLoiLoaItemSpecsList().add(scLoiLoaItem.getScRequestItem().getItemDesc());
+				specDtl = scLoiLoaItem.getScRequestItem().getItemDesc()
+						.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+				specDtl = specDtl.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+						TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+				specDtl = specDtl.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+						TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+				getManagedBean().getScLoiLoaItemSpecsList().add(specDtl);
 			} else {
 				for (TplSpecQuestion tpqSpec : tpqSpecList) {
 					if (StringUtils.isNotBlank(tpqSpec.getClSpecDetail())) {
-						getManagedBean().getScLoiLoaItemSpecsList().add(tpqSpec.getClSpecDetail());
+						specDtl = tpqSpec.getClSpecDetail().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+								TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+						specDtl = specDtl.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+								TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+						specDtl = specDtl.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+								TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+						getManagedBean().getScLoiLoaItemSpecsList().add(specDtl);
 					}
 				}
+				//36103 - end
 				//29006 @zaim
 				getManagedBean().setListSpecAnswer(tpqSpecList);
 				//29006 @zaim
@@ -10792,9 +10809,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		if(!scLoa.getScLoiLoaItems().isEmpty()){
 			scLoiLoaItemsList = new ArrayList<>();
-			if(scLoa.getScLoiLoaItems().size()> 1){//29007-start
-			checkItemSorting(scLoa.getScLoiLoaItems());
-			}//29007-End
 			for (ScLoiLoaItem scLoiLoaItemOld : scLoa.getScLoiLoaItems()) {
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoiLoaItem(scLoiLoaItemOld);
@@ -12048,64 +12062,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//29006 end
 	
 
-	// #29693 - start
-	/*public void sendNotification() {
-		FacesScopes facesScopes = new FacesScopes();
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();			
-		reqDTO.setScLoa(getManagedBean().getScLoa());
-		reqDTO.setUserLocale(facesScopes.getUserLocale());
-		ScLoa scLoa = getManagedBean().getScLoa();
-		
-		long applId = 12345678910L;
-		if(scLoa.getScLoiLoa()!=null){
-			if(scLoa.getScLoiLoa().getSmSupplier()!=null){
-				if(scLoa.getScLoiLoa().getSmSupplier().getSmAppl()!=null){
-					if(scLoa.getScLoiLoa().getSmSupplier().getSmAppl().getApplId()!=null)
-						applId = scLoa.getScLoiLoa().getSmSupplier().getSmAppl().getApplId();
-				}
-			}
-		}
-		
-		long assignUser = 12345678910L;
-		if (scLoa.getScLoiLoa() != null) {
-			if (scLoa.getScLoiLoa().getSmSupplier() != null) {
-				//if(scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getPmUser()!=null){
-					//assignUser = scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getPmUser().getUserId();
-					assignUser = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-				//}
-			}
-		}
-		
-		String userEmail = "";
-		if (scLoa.getScLoiLoa() != null) {
-			if (scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel() != null) 			
-				userEmail = scLoa.getScLoiLoa().getSmSupplier().getSmPersonnel().getEmail();	
-		}
-	
-		//ScRequestNote scRequestNote = new ScRequestNote();
-		String ptjName = "";
-		String ministryName = "";
-		PmOrgProfile pmOrgProfile = new PmOrgProfile();
-		if (reqDTO != null) {
-			//scRequestNote = requestNoteReqDTO.getRequestNote();
-			Long profileId = scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId();
-			Date createdDate = scLoa.getScLoiLoa().getCreatedDate();
-			ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
-			pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-			ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-			log.info(ptjName);
-			log.info(ministryName);
-			// return;
-		}
-		
-		getQtAwardSO().sendDashboardNotification(reqDTO, assignUser, ptjName, ministryName);
-	
-		// List<String> loginIdAssignees =
-		// getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-		getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, ptjName, ministryName);
-		getRequestNoteSO().sendRNEmailNotification(requestNoteReqDTO, userEmail, ptjName, ministryName);
-	}*/
-	
+	// #12487 & 29693 - start
+
 	/**
 	 * Validate response period
 	 * @param days
@@ -12113,8 +12071,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void validateResponsePeriod(Integer days){
 		ScLoa scLoa = getManagedBean().getScLoa();
 		
-		if (days != 0) {
-			//scLoa.setRespPeriod(days);		
+		if (days != 0) {		
 			scLoa.setLoaResponsePeriod(days);
 			BigDecimal fromValue = retrieveResponsePeriod(ParameterConst.FROM_VALUE);
 			BigDecimal toValue = retrieveResponsePeriod(ParameterConst.TO_VALUE);
@@ -12186,8 +12143,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		return result;
 	}
-	// #29693 - end
-	
+	// #12487 & 29693 - end
+
 	// #25790 - start
 	/**
 	 * Navigate to RequestNote view page.
