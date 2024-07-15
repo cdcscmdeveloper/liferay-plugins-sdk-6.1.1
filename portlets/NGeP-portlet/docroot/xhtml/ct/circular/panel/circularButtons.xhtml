@@ -11,9 +11,9 @@
 		enableAutoUpdate="#{panelBackingBean.enableAutoUpdate()}" />
 	<table style="width: 100%;">
 		<tr>
-			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+			<td><!--#33511 start--><p:commandButton value="#{lbl['lbl.btn.back']}"
 					immediate="true" action="#{panelBackingBean.backAction}"
-					rendered="#{panelBackingBean.managedBean.action != null}" /></td>
+					rendered="#{panelBackingBean.managedBean.action != null and panelBackingBean.managedBean.taskId==null}" /><!--#33511 end--></td>
 			<td class="ppRightBtn"><f:event
 					listener="#{panelBackingBean.preRenderView}" type="preRenderView" />
 				<ui:repeat var="action"
