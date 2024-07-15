@@ -39,7 +39,7 @@
 					headerText="#{lbl['lbl.ct.audit.circular.panel.quotationTender']}"
 					style="width:10%;" styleClass="column-align-center">
 					<p:commandLink value="#{metadata.quotationNo}"
-						styleClass="blue_font" style="text-align:left; float:left;"
+						styleClass="blue_font" style="text-align:left; float:left; color:#009ae5 !important;"
 						action="#{qTDetailBB.editQuationTenderDetails(metadata.scQt, false, true, view.viewId)}"
 						onstart="blkContractSearchAuditTable.show()"
 						oncomplete="blkContractSearchAuditTable.hide()">
