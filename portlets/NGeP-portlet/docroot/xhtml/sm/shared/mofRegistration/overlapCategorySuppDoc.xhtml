@@ -110,7 +110,7 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column style="width : 10%;">
+			<p:column style="width : 10%;" rendered="#{backingBean.managedBean.supplierUser}">
 				<f:facet name="header">
 					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.btn.upload.doc']}" />
