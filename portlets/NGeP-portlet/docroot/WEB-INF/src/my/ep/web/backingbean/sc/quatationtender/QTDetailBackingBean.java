@@ -3177,7 +3177,7 @@ public class QTDetailBackingBean extends
 			}
 		}
 		// End Reopen 9019 #note-317
-		
+
 		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
 
 		if (this.getManagedBean().isPcbProcess()) {
