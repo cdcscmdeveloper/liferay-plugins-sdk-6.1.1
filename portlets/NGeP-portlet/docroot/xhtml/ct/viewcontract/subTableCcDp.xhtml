@@ -47,7 +47,7 @@
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.panel.doc.no']}"
 					style="width:10%;" styleClass="column-align-center">
 					<p:commandLink value="#{metadata.docNo}" styleClass="blue_font"
-						style="text-align:left; float:left;"
+						style="text-align:left; float:left; color:#009ae5 !important;"
 						action="#{purchaseRequestBackingBean.navigateRequestNotePage(metadata.scRequestNote.requestNoteId)}"
 						onstart="blkContractSearchAuditTable.show()"
 						oncomplete="blkContractSearchAuditTable.hide()">
