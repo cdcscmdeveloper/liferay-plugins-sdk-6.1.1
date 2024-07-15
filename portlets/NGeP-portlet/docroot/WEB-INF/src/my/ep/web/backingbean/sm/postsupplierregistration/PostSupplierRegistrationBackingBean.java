@@ -1449,57 +1449,40 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			if (sUsers == null) {
 				throw new EpException(MessageConst.ERROR_770045);
 			}
-			if (new FacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-					|| new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-					|| new FacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-					|| new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-					|| new FacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())
-					|| new FacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			if (new FacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+					|| new FacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+					|| new FacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || new FacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
 				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 				reqDTO.setUserId(sUsers.getUserId());
-				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",
-						IPersonnelSO.class);
+				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 				PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelByUserId(reqDTO);
 				if (resDTO.getSmPersonnel() != null && resDTO.getSmPersonnel().isShowWelcome()) {
 					String msgId = null;
 
-					if (resDTO.getSmPersonnel().getSmAppl().getApplType()
-							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)) {
+					if (resDTO.getSmPersonnel().getSmAppl().getApplType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF)) {
 						msgId = MessageConst.INFO_721035;
 					} else {
-						if (resDTO
-								.getSmPersonnel()
-								.getSmAppl()
-								.getSmSupplier()
-								.getBusinessType()
-								.equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
+						if (resDTO.getSmPersonnel().getSmAppl().getSmSupplier().getBusinessType().equals(my.ep.constant.sm.SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_GOVT_SELLER)) {
 							msgId = MessageConst.INFO_721038;
 						} else {
 							msgId = MessageConst.INFO_721039;
 						}
 					}
 
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgId,
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgId, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 					// UPDATE FLAG TO 0
 					resDTO.getSmPersonnel().setShowWelcome(false);
 					reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 					smPersonnelSO.updatePersonnelRecord(reqDTO);
-					
-					
 
 				}
 
 			}
-			//callTestEjb();
+			// callTestEjb();
 		} catch (Exception e) {
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
-							.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
+			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil.getMsgFromMsgUtils(MessageConst.ERROR_770045, null)));
 		}
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ACKNOWLEDGEMENT_PAGE);
 

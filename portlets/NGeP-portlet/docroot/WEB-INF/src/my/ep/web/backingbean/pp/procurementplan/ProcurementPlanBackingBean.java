@@ -971,12 +971,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 		for (PpProcurementItem pp : this.getManagedBean().getSelectedPlan().getPpProcurementItems()) {
 			// For cloning
-			/* pp.setCloneEnabled(false); pp.setDisableForPindaan(false); //For update reason pp.setReasonForUpdateEnabled(true); pp.setBrandNew(false); //For status pp.setStatusEnabled(false);
-			 * pp.setCloneEnabled(false); pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); */
+			/* 
+			pp.setCloneEnabled(false); 
+			pp.setDisableForPindaan(false); 
+			//For update reason 
+			pp.setReasonForUpdateEnabled(true); 
+			pp.setBrandNew(false); 
+			//For status pp.setStatusEnabled(false);
+			 pp.setCloneEnabled(false); pp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); 
+			 */
 
-			/* log.info("ppitem= "+pp.getProcurementItemId()+", title= "+pp.getProcurementTitle()+", isOriginal= "+pp.isOriginal()+ ", getFromPpItem= "+pp.getFromPpItem());
+			/* 
+			log.info("ppitem= "+pp.getProcurementItemId()+", title= "+pp.getProcurementTitle()+", isOriginal= "+pp.isOriginal()+ ", getFromPpItem= "+pp.getFromPpItem());
 			 * log.info("cloneEnabled= "+pp.isCloneEnabled()+", disableForPindaan= "+pp.isDisableForPindaan()+ ", brandNew= "+pp.isBrandNew()+", statusEnabled= "+pp.isStatusEnabled()+
-			 * ", reasonForUpdateEnabled= "+pp.isReasonForUpdateEnabled()+ ", recordStatusFlg= "+pp.getRecordStatusFlg()); */
+			 * ", reasonForUpdateEnabled= "+pp.isReasonForUpdateEnabled()+ ", recordStatusFlg= "+pp.getRecordStatusFlg()); 
+			 */
 
 			if (pp.isOriginal()) {
 				// if there are any clones under it
@@ -2009,20 +2018,15 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		log.info("getPlanYearOptions");
 		if (brandNew) {
 			if (ParameterConst.PLAN_TYPE_PROCUREMENT.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
-				PmParameter parameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.PLAN_TYPE_PT,
-						ParameterConst.PLAN_TYPE_PROCUREMENT);
-				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId(),
-						parameter.getParameterId());
+				PmParameter parameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.PLAN_TYPE_PT, ParameterConst.PLAN_TYPE_PROCUREMENT);
+				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId(), parameter.getParameterId());
 			} else if (ParameterConst.PLAN_TYPE_EXPENDITURE.equalsIgnoreCase(this.getManagedBean().getSelectedPlan().getPlanType().getParameterCode())) {
-				PmParameter parameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.PLAN_TYPE_PT,
-						ParameterConst.PLAN_TYPE_EXPENDITURE);
+				PmParameter parameter = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterConst.PLAN_TYPE_PT, ParameterConst.PLAN_TYPE_EXPENDITURE);
 				// return PpCommonUtil.getEpPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId());
-				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId(),
-						parameter.getParameterId());
+				return PpCommonUtil.getPlanYearOptions(getFacesScopes().getUserSessionBean().getUserId(), this.getCurrentActiveOrg().getOrgProfileId(), parameter.getParameterId());
 			} else {
 				SelectItem[] items = new SelectItem[1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				return items;
 			}
 		} else {
@@ -2035,8 +2039,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				currentYear = startyear;
 				int diff = nextYear - currentYear + 1;
 				items = new SelectItem[diff + 1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
 				for (int i = 1; i <= diff; i++) {
 					items[i] = new SelectItem(currentYear.longValue(), currentYear.toString());
@@ -2048,8 +2051,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				currentYear = Calendar.getInstance().get(Calendar.YEAR);
 				nextYear = currentYear + 1;
 				items = new SelectItem[3];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 				items[1] = new SelectItem(currentYear.longValue(), currentYear.toString());
 				items[2] = new SelectItem(nextYear.longValue(), nextYear.toString());
 				return items;
@@ -5348,10 +5350,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.getManagedBean().setSearch(true);
 		boolean isEmpty = true;
 
-		if (!StringUtils.isBlank(this.getManagedBean().getPlanSearchBean().getTitleOrDesc()) || this.getManagedBean().getPlanSearchBean().getCategoryType() != null
-				|| this.getManagedBean().getPlanSearchBean().getProcurementType() != null || this.getManagedBean().getPlanSearchBean().getInvitationDateFrom() != null
-				|| this.getManagedBean().getPlanSearchBean().getInvitationDateTo() != null || this.getManagedBean().getPlanSearchBean().getUpdatedDateFrom() != null
-				|| this.getManagedBean().getPlanSearchBean().getUpdatedDateTo() != null || this.getManagedBean().getPlanSearchBean().getStatus() != null) {
+		if (!StringUtils.isBlank(this.getManagedBean().getPlanSearchBean().getTitleOrDesc()) 
+			|| this.getManagedBean().getPlanSearchBean().getCategoryType() != null
+			|| this.getManagedBean().getPlanSearchBean().getProcurementType() != null 
+			|| this.getManagedBean().getPlanSearchBean().getInvitationDateFrom() != null
+			|| this.getManagedBean().getPlanSearchBean().getInvitationDateTo() != null 
+			|| this.getManagedBean().getPlanSearchBean().getUpdatedDateFrom() != null
+			|| this.getManagedBean().getPlanSearchBean().getUpdatedDateTo() != null 
+			|| this.getManagedBean().getPlanSearchBean().getStatus() != null) {
 			isEmpty = false;
 		}
 
@@ -6805,7 +6811,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				this.getManagedBean().setDisable(false);
 			}
 		}
-
+	
 		this.getManagedBean().setSelectedUpdateReasons(ppItem.getPpUpdateReasons());
 		this.getManagedBean().setSelectedReasonDesc(ppItem.getPpUpdateReasons().isEmpty() ? "" : ppItem.getPpUpdateReasons().get(0).getReasonDesc());
 		// 24975@06112020@azza - End
@@ -6826,9 +6832,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			log.info("----------Before PpPlan save----------");
 			int itemIndex = 0;
 			for (PpProcurementItem ppProcurementItem : ppPlan.getPpProcurementItems()) {
-
-				log.info("getAllUpdateReasons" + ppProcurementItem.getPpUpdateReasons());
-
 				if (ppProcurementItem.getPpUpdateReasons() != null && !ppProcurementItem.getPpUpdateReasons().isEmpty()) {
 					if (ppProcurementItem.isSearchReset() && !this.getManagedBean().isPlanDetailSearch() && !this.getManagedBean().isPlanDetailReset()) {
 						PpUpdateReason updateReason = ppProcurementItem.getPpUpdateReasons().get(0);
@@ -8511,11 +8514,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				 cloned.setDisableEditAccount(true);
 				 				 
 			 }
-			 
-			 log.info("cloned= "+cloned.getPmGlAccount()+" ("+cloned.getExpenditureItemId()
-					 +"), isCloned= "+cloned.isCloned()+", isClonedItem= "
-					 +cloned.isClonedItem()+", isBrandNew= "+cloned.isBrandNew()
-					 +", allowAnotherPindaan= "+cloned.isAllowAnotherPindaan());
 			 
 			 idx -= 1;
 			 PpExpenditureItem original = items.get(idx);

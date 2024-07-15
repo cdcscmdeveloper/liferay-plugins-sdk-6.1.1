@@ -469,7 +469,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
 				identificationNo, getSupplier().getEpNo());
 	}
-	
+
 	//#30425 - Start
 	private String getTypeOfCert(String identificationNo){
 		return PmCommonUtil.getTypeOfCertIssuer(
