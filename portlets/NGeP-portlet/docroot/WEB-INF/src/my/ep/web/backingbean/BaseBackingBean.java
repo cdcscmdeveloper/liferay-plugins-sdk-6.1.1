@@ -1982,121 +1982,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public int getListSize(Collection<?> value) {
 		return value.size();
 	}
-
-	//start #29956
-	/**
-	 * Compare all list in params with epRole
-	 * 
-	 * @param String
-	 *            roleCode
-        
-	 * @return String
-	 */
-	public Boolean compareSmPersonnelRoleAndStringRole(String[] params, String epRole) {
-		Boolean available = false;
-		String epRoleDesc = getEpRoleDescByRoleCode(epRole);
-		if (params != null && params.length > 0) {
-			for (int x=0; x<params.length; x++) {
-				if (params[x]!=null && params[x].equals(epRoleDesc)) {
-					available = true;
-				}
-			}
-		}
-		return available;
-	}
 	
-	/**
-	 * Get no eP Role by language
-	 * 
-	 * @param String
-	 *            roleCode
-	 * @return String
-	 */
-	public String getNoEpRoleDescByLanguage() {
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		String noEp;
-		if(language.equalsIgnoreCase("en")){
-			noEp = "no EP Role";
-		}else{
-			noEp = "profil yang tiada peranan";
-		}
-		return noEp;
-	}
-	
-	/**
-	 * Get eP Role for Downgrade Popup by personnel
-	 * 
-	 * @param String
-	 *            roleCode
-	 * @return String
-	 */
-	public String getEpRoleDowngradePopupByPersonnel(List<SmPersonnel> personnelsRole) {
-		String[] params = new String[50];
-		StringBuilder sb = new StringBuilder();
-		int x = 0;
-		Boolean noEp = false;
-		if (!personnelsRole.isEmpty()) {
-			for (SmPersonnel smPersonnel : personnelsRole) {
-				int countRole=0;
-				if(smPersonnel.isHigherManagement()){
-					countRole++;
-				}
-				if(smPersonnel.isManagement()){
-					countRole++;
-				}
-				if(smPersonnel.isEquityOwner()){
-					countRole++;
-				}
-				if(countRole>1){
-					if(smPersonnel.isHigherManagement()){
-						smPersonnel.setManagement(false);
-						smPersonnel.setEquityOwner(false);
-					}else if(smPersonnel.isManagement()){
-						smPersonnel.setHigherManagement(false);
-						smPersonnel.setEquityOwner(false);
-					}
-				}
-				if (x != 0) {
-					for (String roles : params) {
-						if(roles!=null){
-							if (smPersonnel.getEpRole() == null && !roles.equals(getNoEpRoleDescByLanguage()) && !roles.equals("/ ")
-									&& !noEp) {
-								params[x] = "/ ";
-								sb.append("/ ");
-								x++;
-								params[x] = getNoEpRoleDescByLanguage();
-								sb.append(getNoEpRoleDescByLanguage());
-								x++;
-								noEp = true;
-							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) 
-									&& !compareSmPersonnelRoleAndStringRole(params, smPersonnel.getEpRole()) && !roles.equals("/ ")) {
-								params[x] = "/ ";
-								sb.append("/ ");
-								x++;
-								params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-								sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
-								x++;
-							}
-						}
-					}
-				} else {
-					if(smPersonnel.getEpRole() == null){
-						params[x] = getNoEpRoleDescByLanguage();
-						sb.append(getNoEpRoleDescByLanguage());
-						x++;
-						noEp = true;
-					}else{
-						params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
-						sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
-						x++;
-					}
-				}
-			}
-		}
-		return sb.toString();
-	}
-	//end #29956
-
 	/**
 	 * Download file.
 	 *
@@ -3191,18 +3077,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return retVal;
 	}
 	
-	//29956 START
-    	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
-		Boolean retVal = false;
-		if (supplier != null && supplier.getSupplierId() != null) {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(supplier.getSupplierId());
-			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
-		}
-		return retVal;
-	}
-    	//29956 END
-    
 	public static void checkEquityOwnerUpdateAllowance(
 			BaseManagedBean managedBean) {
 		//#27165
@@ -3655,6 +3529,161 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// 33410 - END
 	
+	//#21387 - Start
+	/**
+	 * Claim bpm task group By Document Number And Module
+	 * @param reqDTO
+	 * @return resDTO 
+	 */
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
+		BpmResponseDTO resDTO = new BpmResponseDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		try {
+
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(reqDTO.getDocNumber());
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			bpmReqDTO.setModule(BpmConstants.MODULE_CT);
+			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+			resDTO = bpmSO.getTasksByDocNoandModule(bpmReqDTO);
+			resDTO.setSuccessful(true);
+			return resDTO;
+		} catch (Exception e) {
+			resDTO.setSuccessful(false);
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	//#21387 - End
+	
+	//29956 START
+    	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
+		Boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
+		}
+		return retVal;
+	}
+    	//29956 END
+	
+	//start #29956
+	/**
+	 * Compare all list in params with epRole
+	 * 
+	 * @param String
+	 *            roleCode
+        
+	 * @return String
+	 */
+	public Boolean compareSmPersonnelRoleAndStringRole(String[] params, String epRole) {
+		Boolean available = false;
+		String epRoleDesc = getEpRoleDescByRoleCode(epRole);
+		if (params != null && params.length > 0) {
+			for (int x=0; x<params.length; x++) {
+				if (params[x]!=null && params[x].equals(epRoleDesc)) {
+					available = true;
+				}
+			}
+		}
+		return available;
+	}
+	
+	/**
+	 * Get no eP Role by language
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getNoEpRoleDescByLanguage() {
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String noEp;
+		if(language.equalsIgnoreCase("en")){
+			noEp = "no EP Role";
+		}else{
+			noEp = "profil yang tiada peranan";
+		}
+		return noEp;
+	}
+	
+	/**
+	 * Get eP Role for Downgrade Popup by personnel
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getEpRoleDowngradePopupByPersonnel(List<SmPersonnel> personnelsRole) {
+		String[] params = new String[50];
+		StringBuilder sb = new StringBuilder();
+		int x = 0;
+		Boolean noEp = false;
+		if (!personnelsRole.isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelsRole) {
+				int countRole=0;
+				if(smPersonnel.isHigherManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isEquityOwner()){
+					countRole++;
+				}
+				if(countRole>1){
+					if(smPersonnel.isHigherManagement()){
+						smPersonnel.setManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}else if(smPersonnel.isManagement()){
+						smPersonnel.setHigherManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}
+				}
+				if (x != 0) {
+					for (String roles : params) {
+						if(roles!=null){
+							if (smPersonnel.getEpRole() == null && !roles.equals(getNoEpRoleDescByLanguage()) && !roles.equals("/ ")
+									&& !noEp) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getNoEpRoleDescByLanguage();
+								sb.append(getNoEpRoleDescByLanguage());
+								x++;
+								noEp = true;
+							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) 
+									&& !compareSmPersonnelRoleAndStringRole(params, smPersonnel.getEpRole()) && !roles.equals("/ ")) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+								sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+								x++;
+							}
+						}
+					}
+				} else {
+					if(smPersonnel.getEpRole() == null){
+						params[x] = getNoEpRoleDescByLanguage();
+						sb.append(getNoEpRoleDescByLanguage());
+						x++;
+						noEp = true;
+					}else{
+						params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+						sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+						x++;
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+	//end #29956
+	
 	//START #29956
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
 		getManagedBean().getPersonnelsRole().clear();
@@ -3718,33 +3747,4 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
-
-	//#21387 - Start
-	/**
-	 * Claim bpm task group By Document Number And Module
-	 * @param reqDTO
-	 * @return resDTO 
-	 */
-
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
-		BpmResponseDTO resDTO = new BpmResponseDTO();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		try {
-
-			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			bpmReqDTO.setDocNumber(reqDTO.getDocNumber());
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			bpmReqDTO.setModule(BpmConstants.MODULE_CT);
-			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-			resDTO = bpmSO.getTasksByDocNoandModule(bpmReqDTO);
-			resDTO.setSuccessful(true);
-			return resDTO;
-		} catch (Exception e) {
-			resDTO.setSuccessful(false);
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		}
-	}
-	//#21387 - End
 }
