@@ -18114,6 +18114,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#31043 END
 	
+	//#28777 - START
 	private List<SmSupplierBranch> filterStatusActiveBranch(List<SmSupplierBranch> listSelectBranch) {
 		List<SmSupplierBranch> supplierList = new ArrayList<>();
 		for (SmSupplierBranch suppBranch : listSelectBranch) {
@@ -18135,5 +18136,5 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		return supplierList;
 	}
-	
+	//#28777 - END
 }
