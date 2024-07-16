@@ -32,13 +32,13 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAuditTrailsSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -1163,10 +1163,10 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			//#28895-35500
-			IQTAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+			IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
-//			IAuditGeneralSO auditGeneralSO = BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.AUDIT, IAuditGeneralSO.class);
+			IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
 			List<AuditTrailsReqDTO> auditReqList = new ArrayList<>();
 			
 			int successCount = 0;
@@ -1237,7 +1237,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					auditResDTO.setNewValue(entry.getValue().getUserName());
 					auditResDTO.setNewValueId(entry.getValue().getUserId());
 					
-					AuditTrailsReqDTO auditReqDTO = auditTrailsSO.populateAuditReqDTO(auditResDTO);
+					AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
 				
@@ -1245,7 +1245,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					successCount ++;
 				}
 			}  
-			auditTrailsSO.insertAuditTrails(auditReqList);
+			qtAuditTrailsSO.insertAuditTrails(auditReqList);
 			//#28895-35500 end
 			
 			String msgCode = this.isCommitteeApprover() ? "INFO-760490" : "INFO-760492";
@@ -1356,12 +1356,12 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				QuationTenderResDTO resDTO = getQTDetailSO().updateDOReasignmentTask(reqDTO);
 				
 				//#28895-35500
-				IQTAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
-//				IAuditGeneralSO auditGeneralSO = BusinessDelegate.getInstance().getServiceObject(
-//						ModuleCodeConst.AUDIT, IAuditGeneralSO.class);
+				IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
 				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-					prepareAuditTrails(auditTrailsSO);
+					prepareAuditTrails(qtAuditTrailsSO);
 				}
 				
 				if(resDTO.isSuccessful()){
@@ -1517,7 +1517,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	}
 		
 		
-	private void prepareAuditTrails(IQTAuditTrailsSO auditTrailsSO) {
+	private void prepareAuditTrails(IQTAuditTrailsSO qtAuditTrailsSO) {
 		List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
 		AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
 
@@ -1547,9 +1547,9 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			auditResDTO.setActionType(null);
 		}
 
-		AuditTrailsReqDTO auditReqDTO = auditTrailsSO.populateAuditReqDTO(auditResDTO);
+		AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
 
 		auReqList.add(auditReqDTO);
-		auditTrailsSO.insertAuditTrails(auReqList);
+		qtAuditTrailsSO.insertAuditTrails(auReqList);
 	}		
 }
