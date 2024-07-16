@@ -1747,14 +1747,20 @@ u.underline {
 															#if ($specCombine.feedback == "&nbsp;" ) 
 																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whitespace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
+																#set ($feedback = $specCombine.feedback)
+																#set($feedback = $feedback.replace(">", "&#62;"))
+																#set($feedback = $feedback.replace("<", "&#60;"))
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 															#end
 														
 															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " " ) 
 																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#else
 																#if ($specCombine.answerRemark)
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																	#set ($answerRemark = $specCombine.answerRemark)
+																	#set($answerRemark = $answerRemark.replace(">", "&#62;"))
+																	#set($answerRemark = $answerRemark.replace("<", "&#60;"))
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$answerRemark</td>
 																#else 
 																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
@@ -1772,7 +1778,10 @@ u.underline {
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-																<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+																#set ($specVal = $combine.specVal)
+																#set($specVal = $specVal.replace(">", "&#62;"))
+																#set($specVal = $specVal.replace("<", "&#60;"))
+																<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 												
 															##feedback
 															
@@ -1781,10 +1790,16 @@ u.underline {
 
 																#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																			
 																#end
 																			
@@ -1795,7 +1810,10 @@ u.underline {
 																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 															#else
 																#if ($combine.remark)
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																	#set ($remark = $combine.remark)
+																	#set($remark = $remark.replace(">", "&#62;"))
+																	#set($remark = $remark.replace("<", "&#60;"))
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																	
 																#else 
 																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
@@ -1828,7 +1846,10 @@ u.underline {
 													#if ($specCombine.feedback == "&nbsp" || $specCombine.feedback == " ")
 														<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 													#else
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
+														#set ($feedback = $specCombine.feedback)
+														#set($feedback = $feedback.replace(">", "&#62;"))
+														#set($feedback = $feedback.replace("<", "&#60;"))
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 													#end
 												#end						
 																				
@@ -1836,7 +1857,10 @@ u.underline {
 													<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 												#else
 													#if ($specCombine.remark)
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.remark</td>
+														#set ($remark = $specCombine.remark)
+														#set($remark = $remark.replace(">", "&#62;"))
+														#set($remark = $remark.replace("<", "&#60;"))
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 													#else 
 														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 													#end
@@ -1857,7 +1881,10 @@ u.underline {
 												##specval
 												#foreach($combine in $tplspecQuestion.listCombineSpec)
 												<tr style="border-bottom: 1px solid black;">
-												<td valign="top" colspan="4" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+												#set ($specVal = $combine.specVal)
+												#set($specVal = $specVal.replace(">", "&#62;"))
+												#set($specVal = $specVal.replace("<", "&#60;"))
+												<td valign="top" colspan="4" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 											
 														##feedback
 														
@@ -1865,10 +1892,16 @@ u.underline {
 																#set($count = 1)
 
 																	#if ($combine.feedback)
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																			
 																	#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																		
 																	#end
 																		
@@ -1879,7 +1912,10 @@ u.underline {
 																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 														#else
 															#if ($combine.remark)
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																#set ($remark = $combine.remark)
+																#set($remark = $remark.replace(">", "&#62;"))
+																#set($remark = $remark.replace("<", "&#60;"))
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																
 															#else 
 																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
@@ -2312,7 +2348,10 @@ u.underline {
 															#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " " ) 
 																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whitespace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
+																#set ($feedback = $specCombine.feedback)
+																#set($feedback = $feedback.replace(">", "&#62;"))
+																#set($feedback = $feedback.replace("<", "&#60;"))
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 															#end
 															
 															
@@ -2320,7 +2359,10 @@ u.underline {
 																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#else
 																#if ($specCombine.answerRemark)
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																	#set ($answerRemark = $specCombine.answerRemark)
+																	#set($answerRemark = $answerRemark.replace(">", "&#62;"))
+																	#set($answerRemark = $answerRemark.replace("<", "&#60;"))
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$answerRemark</td>
 																#else 
 																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
@@ -2337,7 +2379,10 @@ u.underline {
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-																<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+																#set ($specVal = $combine.specVal)
+																#set($specVal = $specVal.replace(">", "&#62;"))
+																#set($specVal = $specVal.replace("<", "&#60;"))
+																<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 												
 															##feedback
 															
@@ -2346,10 +2391,16 @@ u.underline {
 
 																#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																			
 																#end
 																			
@@ -2360,7 +2411,10 @@ u.underline {
 																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 															#else
 																#if ($combine.remark)
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																	#set ($remark = $combine.remark)
+																	#set($remark = $remark.replace(">", "&#62;"))
+																	#set($remark = $remark.replace("<", "&#60;"))
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																	
 																#else 
 																	<td valign="top" class="title border left"   style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
@@ -2407,7 +2461,10 @@ u.underline {
 														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ")
 															<td  class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 														#else
-															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.feedback</td>
+															#set ($feedback = $specCombine.feedback)
+															#set($feedback = $feedback.replace(">", "&#62;"))
+															#set($feedback = $feedback.replace("<", "&#60;"))
+															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 														#end					
 													#end
 
@@ -2415,7 +2472,10 @@ u.underline {
 														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 													#else
 														#if ($specCombine.remark)
-															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.remark</td>
+															#set ($remark = $specCombine.remark)
+															#set($remark = $remark.replace(">", "&#62;"))
+															#set($remark = $remark.replace("<", "&#60;"))
+															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 														#else 
 															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 														#end
@@ -2433,7 +2493,10 @@ u.underline {
 												##specval
 												#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-												<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+														#set ($specVal = $combine.specVal)
+														#set($specVal = $specVal.replace(">", "&#62;"))
+														#set($specVal = $specVal.replace("<", "&#60;"))
+												<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 											
 														##feedback
 														
@@ -2442,13 +2505,19 @@ u.underline {
 
 																	#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																			#set($count = $count + 1)
-																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																			
 																	#else
 																		#if(!$combine.feedback)
 																			<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 																		#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																		#end
 																	#end
 																		
@@ -2459,7 +2528,10 @@ u.underline {
 																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>	
 														#else
 															#if ($combine.remark)
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																#set ($remark = $combine.remark)
+																#set($remark = $remark.replace(">", "&#62;"))
+																#set($remark = $remark.replace("<", "&#60;"))
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																
 															#else 
 																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>

@@ -1296,7 +1296,9 @@ public class TemplateSpecBackingBean extends
 								.getRoleCode());
 					}
 					
-					RoleCode[] r = {RoleCode.SC_SECRETARY};
+					RoleCode[] r = { RoleCode.SC_SECRETARY, 
+									RoleCode.SC_CHAIRPERSON, 
+									RoleCode.SC_MEMBER };
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
 					};

@@ -654,6 +654,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDoc> missinDocsMandatory;
 	private List<SmApplSupportDoc> missinDocsNonMandatory;
 	//#34393 - end
+	//#31043 START
+	private boolean allowedToSiteVisit;
+	//#31043 END
 		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4604,5 +4607,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.missinDocsNonMandatory = missinDocsNonMandatory;
 	}
 	//#34392 - end
+	//#31043 START
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
 
 }

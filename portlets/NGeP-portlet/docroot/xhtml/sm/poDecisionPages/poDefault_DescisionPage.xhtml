@@ -80,7 +80,7 @@
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>
@@ -130,7 +130,7 @@
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
 								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this"
@@ -174,7 +174,7 @@
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>

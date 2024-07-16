@@ -59,6 +59,7 @@
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
+								disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and (bpmAction eq BpmOutcomeConstant.bpmEndorse)}"
 								action="#{specificationBackingBean.submitAction(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat>

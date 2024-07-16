@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -80,6 +81,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
@@ -565,13 +567,18 @@ public class ViewApplHistoryBackingBean extends
 			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
 			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
 					.getSmApplInquiries()) {
-				if (!StringUtils.isBlank(inquiry.getInquirySubject())
-						&& inquiry
-								.getInquirySubject()
-								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+				//#34392 - start
+//				if (!StringUtils.isBlank(inquiry.getInquirySubject())
+//						&& inquiry
+//								.getInquirySubject()
+//								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
 					inquiry.getSmApplSupportDocInquiries().size();
 					this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
-				}
+					//#34392 - start
+					POinquiryRowSelect(inquiry);
+					
+//				}
+				//#34392 - end
 			}
 		}		
 		//END 14530
@@ -1794,6 +1801,53 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
 		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		//#34392 - start
+		getManagedBean().setMandatoryDocsInquiry(
+				new ArrayList<SmApplSupportDocInquiry>());
+		getManagedBean().setNonMandatoryDocsInquiry(
+				new ArrayList<SmApplSupportDocInquiry>());
+		
+		for (SmApplSupportDocInquiry doc : applInquiry
+				.getSmApplSupportDocInquiries()) {
+			doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
+			if (doc.getPmDocument().isMandatory()) {
+				getManagedBean().getMandatoryDocsInquiry().add(doc);
+			} else if (!doc.getPmDocument().isMandatory()) {
+				getManagedBean().getNonMandatoryDocsInquiry().add(doc);
+			}
+
+		}
+
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())){
+			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+		
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())){
+			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+		//#34392 - end
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
@@ -1813,7 +1867,13 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
-		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			//35336
+			if(!SmApplicationUtil.checkRejectedApplExpired(smAppl) 
+					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",MessageUtils.getMessage(MessageConst.ERROR_721099,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+			}
 		}
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
@@ -1851,7 +1911,11 @@ public class ViewApplHistoryBackingBean extends
 			button = false;
 		}
 		// #32628 - end
-		
+		//#35336 START
+		if (smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+			button = false;
+		}
+		//#35336 END
 		return button;
 		//32627 - END
 	}
@@ -1879,7 +1943,8 @@ public class ViewApplHistoryBackingBean extends
 		
 		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
 			return false;
-		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
+		}else if((this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ //#34483
 			return false;
 		}
 		
@@ -1943,21 +2008,4 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		// #32628 - end
-	//35336 START
-	/**
-	 * Check whether the rejected application was expired
-	 * compare to no. of days allowed to resubmit after rejected
-	 * @param SmAppl appl
-	 * @return Boolean
-	 */
-	public Boolean checkRejectedApplExpired(SmAppl appl){
-		Boolean isExpired = false;
-		if(appl.getApplId() != null) {
-			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
-				isExpired = true;
-			}
-		}		
-		return isExpired;
-	}
-	//35336 END
 }
