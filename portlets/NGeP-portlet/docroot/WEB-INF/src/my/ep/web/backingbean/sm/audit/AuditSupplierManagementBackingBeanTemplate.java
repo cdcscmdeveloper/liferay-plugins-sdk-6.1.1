@@ -36,7 +36,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	}
 
 	/**
-	 * @param managebean
+	 * @param manageBean
 	 * @param userId
 	 * 
 	 *            Save audit data

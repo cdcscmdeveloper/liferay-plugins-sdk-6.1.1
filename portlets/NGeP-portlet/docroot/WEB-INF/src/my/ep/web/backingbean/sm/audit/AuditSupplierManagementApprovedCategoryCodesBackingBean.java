@@ -8,7 +8,6 @@ import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
