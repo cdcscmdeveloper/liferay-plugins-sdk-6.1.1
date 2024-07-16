@@ -9,7 +9,7 @@
 	<p:dataTable var="map" rowIndexVar="index"
 		rendered="#{requestNoteBackingBean.managedBean.loaMapList.size() > 0}"
 		value="#{requestNoteBackingBean.managedBean.loaMapList}" style="width:100%">
-		<p:column headerText="#{lbl['lbl.sc.no']}" style="text-align:center;">
+		<p:column headerText="#{lbl['lbl.sc.continuity.no']}" style="text-align:center;">
 			<p:outputLabel value="#{index + 1}" style="text-align:center;" />
 		</p:column>
 		<p:column headerText="#{lbl['lbl.sc.letter.of.acceptance.no']}"

@@ -1868,6 +1868,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	//#29732
 	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11881,6 +11882,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
 		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
 	}
 }
 
