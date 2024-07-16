@@ -538,10 +538,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The selected sc qt committee. */
 	private ScQtCommittee selectedScQtCommittee;
-	
-	//28895 - 35500
-	/** The newly added sc qt committee */
-	private List<ScCommitteeMember> newScCommitteeMemberList;
 
 	/** The clone business owner data model. */
 	private IPagingDataModel<ScQt> cloneBusinessOwnerDataModel;
@@ -750,10 +746,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The selectedpmuser contactperson list. */
 	private List<ScQtContactPerson> selectedpmuserContactpersonList;
-	
-	//28895 - 35500
-	/** The pmuser contactperson list that had been deleted */
-	private List<ScQtContactPerson> pmuserDeletedContactpersonList;
 
 	/** The pm users list. */
 	private List<PmUser> pmUsersList;
@@ -1876,6 +1868,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	//#29732
 	private boolean isFromSubmitCatChange;
+	
+	//28895 - 35500
+	/** The newly added sc qt committee */
+	private List<ScCommitteeMember> newScCommitteeMemberList;
+	
+	/** The pmuser contactperson list that had been deleted */
+	private List<ScQtContactPerson> pmuserDeletedContactpersonList;
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
