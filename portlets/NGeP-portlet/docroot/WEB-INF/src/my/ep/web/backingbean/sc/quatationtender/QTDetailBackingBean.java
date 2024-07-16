@@ -2494,6 +2494,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
+		// 28895 - 35500 adli
+		quationTenderReqDTO.setDeletedCommitteMembers(this.getManagedBean()
+				.getToBeDelCommitteMemebers());
+		
 		//20210325@asyrafhaziq_30518 - Start
 	    List <ScQtCommittee> scQtCommittees = getQtCommiteDtlsByQtId(scQt.getQtId());
 	    List<ScQtCommittee> toBeRemovedScQtCommittees = new ArrayList<ScQtCommittee>() ;
@@ -7851,7 +7855,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setDoaList(this.getManagedBean().getPmuserContactpersonList());
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			//end #25037
-
+			//28895 - 35500 adli
+			quationTenderReqDTO.setNewCommitteeMembers(this.getManagedBean().getNewScCommitteeMemberList());
+			
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
