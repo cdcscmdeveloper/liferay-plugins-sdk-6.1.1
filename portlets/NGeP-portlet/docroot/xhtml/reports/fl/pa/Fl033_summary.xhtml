@@ -64,15 +64,15 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.contractandsystem']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}"></p:outputLabel><!-- 29890 - change label  -->
 			</td>
 			<td>
 				<p:inputText maxlength="400" id="contractSysTypeId"
-					label="#{lbl['lbl.rpt.contractandsystem']}"
+					label="#{lbl['lbl.fl.sistem.panel.name']}"
 					value="#{mcSmRptBB.managedBean.contractSystem}">
 					<p:ajax event="blur" partialSubmit="true"
 						update="@([id$=Msg])" />
-				</p:inputText>
+				</p:inputText><!-- 29890 - change label  -->
 				&#160;
 				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforpoandpacontract']}" />
 			</td>
