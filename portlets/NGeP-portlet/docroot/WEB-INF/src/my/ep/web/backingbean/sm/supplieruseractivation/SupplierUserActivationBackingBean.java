@@ -144,7 +144,7 @@ public class SupplierUserActivationBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if(personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivatedOrTerminates(personnel, supplierProfile.getSupplierId()) 
 				&& isLatestActivationEmail(createdTimeParam, personnel)) {
-			//#32040
+			//#32040 START
 			String adminName = null;
 			if(supplierProfile.getSmAppl().getSmPersonnels() != null){
 				for(SmPersonnel person : supplierProfile.getSmAppl().getSmPersonnels()){
@@ -156,9 +156,13 @@ public class SupplierUserActivationBackingBean extends
 				}
 			}
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
-				//#32040
-				long applDateInMilis = personnel.getActivationDate().getTime();
-				/*long applDateInMilis = personnel.getCreatedDate().getTime();*/
+				long applDateInMilis;
+				if(personnel.getActivationDate() != null){
+					applDateInMilis = personnel.getActivationDate().getTime();
+				}else{
+					applDateInMilis = personnel.getCreatedDate().getTime();
+				}
+				//#32040 END
 				long dayInMilis = 1000 * 60 * 60 * 24;
 
 				Date expiryDate = new Date(applDateInMilis + (SmRuleHelper.getInstance().getEmailActivationDays() * dayInMilis));
@@ -606,22 +610,27 @@ public class SupplierUserActivationBackingBean extends
 	private boolean isLatestActivationEmail(String createdTimeParam,
 			SmPersonnel smPersonnel) {
 		boolean retVal = true;
-		try { //#32040
+		try { //#32040 START
+			Date activationdate;
+			if(smPersonnel.getActivationDate() != null){
+				activationdate = smPersonnel.getActivationDate();
+			}else{
+				activationdate = smPersonnel.getCreatedDate();
+			}
 			if (createdTimeParam != null
 					&& StringUtils.isNotBlank(createdTimeParam)) {
 				log.info(">>>>>>>>>>>>>Inside comparing latest activation email for personnelId:"
 						+ smPersonnel.getPersonnelId()
 						+ " sendMailDate:"
 						+ createdTimeParam
-						+ " activateDate:"
-						+ smPersonnel.getActivationDate().getTime());
-						/*+ " createdDate:"
-						+ smPersonnel.getCreatedDate().getTime());*/
+						+ " activationDate:"
+						+ activationdate.getTime());
 				Long createdTime = Long.parseLong(createdTimeParam);
-				if (createdTime.compareTo(smPersonnel.getActivationDate()
+				if (createdTime.compareTo(activationdate
 						.getTime()) != 0) {
 					retVal = false;
 				}
+				//#32040 END
 			}
 		} catch (Exception ex) {
 		}
