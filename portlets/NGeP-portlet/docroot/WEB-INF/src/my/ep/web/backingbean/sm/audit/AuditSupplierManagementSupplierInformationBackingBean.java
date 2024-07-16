@@ -31,14 +31,11 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 	 */
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
-
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ViewSuppProfileManagedBean mBean = (ViewSuppProfileManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
-
 		SmAppl oldSmAppl = mBean.getOldSmAppl();
 		SmAppl newSmAppl = mBean.getSmAppl();
-
 		if (!oldSmAppl.getPmRegStatus().getPmStatus().getStatusId()
 				.equals(newSmAppl.getPmRegStatus().getPmStatus().getStatusId())) {
 			auDetails.add(createAuditData(
@@ -51,16 +48,15 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 							.getPmRegStatus().getPmStatus().getStatusId(),
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_REGISTRATION_STATUS));
 		}
-
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_SUPPLIER_INFO);
-
 		return auObj;
 	}
 
 	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
 		String statusName = "";
 		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+			// Expected Max Size in loop (10) based on NGEP_PDS database
 			for (PmStatusDesc status : statusList) {
 				if ("ms".equals(status.getLanguageCode()) && status.getPmStatus().getStatusId().equals(pmStatusId)) {
 					statusName = status.getStatusName();

@@ -1556,11 +1556,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//		null,
 				//		MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailsSO auditSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
-				if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailsSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());		
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
 				}
 				// #28895_35501 End
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(

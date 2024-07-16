@@ -321,11 +321,12 @@ public class SmDeleteCategoryCodeBackingBean extends
 				//25963 - update deleted codes in rejected appl, if any
 				updateDeletedCodesInRejAppl();
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailsSO auditSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
-				if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					AuditSupplierManagementBackingBeanTemplate auSMBackingBean = new AuditSupplierManagementCancelRegisteredCategoryBackingBean();
-					auSMBackingBean.saveAuditData(getManagedBean(), getFacesScopes().getUserSessionBean().getUserId());		
+				IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailsSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementCancelRegisteredCategoryBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getFacesScopes().getUserSessionBean()
+							.getUserId());
 				}
 				// #28895_35501 End
 				//START 14150

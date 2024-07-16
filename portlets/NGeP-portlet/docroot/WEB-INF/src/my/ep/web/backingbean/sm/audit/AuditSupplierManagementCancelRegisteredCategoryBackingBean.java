@@ -30,13 +30,11 @@ public class AuditSupplierManagementCancelRegisteredCategoryBackingBean extends
 	 */
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
-
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		SmDeleteCategoryCodeManagedBean mBean = (SmDeleteCategoryCodeManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
-
 		List<SmSupplierCategory> delCatCodeList = mBean.getSelectedCategories();
-
+		// Expected Max Size in loop (161) based on NGEP_PDS database
 		for (SmSupplierCategory catCode : delCatCodeList) {
 			String category = catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name()
 					+ "<br/>" + catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name()
@@ -46,10 +44,8 @@ public class AuditSupplierManagementCancelRegisteredCategoryBackingBean extends
 					catCode.getSupplierCategoryId(), null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_CATEGORY_CODE));
 		}
-
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO);
-
 		return auObj;
 	}
 }

@@ -32,17 +32,16 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 	 */
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
-
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		RegistrationManagedBean mBean = (RegistrationManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
 		ListIterator<SmSupplierBank> oldBanks = mBean.getOldBanks().listIterator();
 		ListIterator<SmSupplierBank> newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
-
 		List<PmFinancialOrg> bankList = mBean.getFinancialOrgLs();
-
+		// Expected Max Size in loop (93) based on NGEP_PDS database
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
+			// Expected Max Size in loop (93) based on NGEP_PDS database
 			while (newBanks.hasNext()) {
 				SmSupplierBank newBank = newBanks.next();
 				if (oldBank.getSupplierBankId().equals(newBank.getSupplierBankId())) {
@@ -55,19 +54,15 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 			newBanks = mBean.getSmSupp().getSmAppl().getSmSupplierBanks().listIterator();
 		}
 		oldBanks = mBean.getOldBanks().listIterator();
-
 		auditDeletedData(auDetails, oldBanks);
-
 		auditAddedData(bankList, auDetails, newBanks);
-
 		auditBaseData(auObj, mBean.getSmSupp(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
-
 		return auObj;
 	}
 
-	private void auditModifiedDataBankName(List<PmFinancialOrg> bankList, List<AuditSupplierManagementDetailDTO> auDetails,
-			SmSupplierBank oldBank, SmSupplierBank newBank) {
+	private void auditModifiedDataBankName(List<PmFinancialOrg> bankList,
+			List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank, SmSupplierBank newBank) {
 		if (!oldBank.getPmFinancialOrg().getFinancialOrgId().equals(newBank.getPmFinancialOrg().getFinancialOrgId())) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, oldBank.getPmFinancialOrg()
@@ -77,7 +72,8 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 		}
 	}
 
-	private void auditModifiedDataBankNo(List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank, SmSupplierBank newBank) {
+	private void auditModifiedDataBankNo(List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank,
+			SmSupplierBank newBank) {
 		if (!oldBank.getAccountNo().equals(newBank.getAccountNo())) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, oldBank.getAccountNo(),
@@ -87,6 +83,7 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 
 	private void auditDeletedData(List<AuditSupplierManagementDetailDTO> auDetails,
 			ListIterator<SmSupplierBank> oldBanks) {
+		// Expected Max Size in loop (93) based on NGEP_PDS database
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
@@ -101,6 +98,7 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 
 	private void auditAddedData(List<PmFinancialOrg> bankList, List<AuditSupplierManagementDetailDTO> auDetails,
 			ListIterator<SmSupplierBank> newBanks) {
+		// Expected Max Size in loop (93) based on NGEP_PDS database
 		while (newBanks.hasNext()) {
 			SmSupplierBank newBank = newBanks.next();
 			if (newBank.isBrandNew()) {
@@ -120,6 +118,7 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 	private String getFinOrgName(List<PmFinancialOrg> bankList, Long finOrgId) {
 		String finName = "";
 		if (!SmCommonUtil.isCollectionEmpty(bankList) && finOrgId != null) {
+			// Expected Max Size in loop (85) based on NGEP_PDS database
 			for (PmFinancialOrg finOrg : bankList) {
 				if (finOrg.getFinancialOrgId().compareTo(finOrgId) == 0) {
 					finName = finOrg.getFinOrgName();

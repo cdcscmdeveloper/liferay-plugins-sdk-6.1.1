@@ -41,19 +41,17 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	 * 
 	 *            Save audit data
 	 */
-	public final void saveAuditData(BaseManagedBean managebean, Long userId) {
+	public final void saveAuditData(BaseManagedBean manageBean, Long userId) {
 		String roleCode = getRoleCode();
 		PmOrgProfile org = retriveUserOrg(userId);
-		AuditSupplierManagementDTO auObj = prepareAuditData(managebean, roleCode, org);
+		AuditSupplierManagementDTO auObj = prepareAuditData(manageBean, roleCode, org);
 		if (!auObj.getAuditDetails().isEmpty()) {
-			auditSMSO(auObj);
+			auditSmSo(auObj);
 		}
 	}
 
 	private String getRoleCode() {
-
 		String roleCode = null;
-
 		if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			roleCode = RoleCode.BASIC_SUPPLIER_ADMIN.value();
 		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
@@ -69,7 +67,6 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		} else if (getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())) {
 			roleCode = RoleCode.UPS_APPROVER.value();
 		}
-
 		return roleCode;
 	}
 
@@ -92,8 +89,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	public abstract AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode,
 			PmOrgProfile org);
 
-	protected AuditSupplierManagementDetailDTO createAuditData(String actionType, Long fieldLabelId, String oldValue, String newValue,
-			Long oldValueId, Long newValueId, Long fieldLabelCode) {
+	protected AuditSupplierManagementDetailDTO createAuditData(String actionType, Long fieldLabelId, String oldValue,
+			String newValue, Long oldValueId, Long newValueId, Long fieldLabelCode) {
 		AuditSupplierManagementDetailDTO auDetail = new AuditSupplierManagementDetailDTO();
 		auDetail.setActionType(actionType);
 		auDetail.setSmFieldLabelId(BigInteger.valueOf(fieldLabelId));
@@ -105,8 +102,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		return auDetail;
 	}
 
-	protected void auditBaseData(AuditSupplierManagementDTO auObj, SmSupplier supplier, String roleCode, PmOrgProfile org,
-			List<AuditSupplierManagementDetailDTO> auDetails, Long groupSectionId) {
+	protected void auditBaseData(AuditSupplierManagementDTO auObj, SmSupplier supplier, String roleCode,
+			PmOrgProfile org, List<AuditSupplierManagementDetailDTO> auDetails, Long groupSectionId) {
 		if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
 		} else if (supplier.getSmAppl().getSupplierType()
@@ -118,7 +115,6 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 		}
-
 		auObj.setRoleCode(roleCode);
 		auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
 		if (org.getPmOrgValidityList().isEmpty()) {
@@ -134,7 +130,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		auObj.setGroupSectionId(BigInteger.valueOf(groupSectionId));
 	}
 
-	private void auditSMSO(AuditSupplierManagementDTO auObj) {
+	private void auditSmSo(AuditSupplierManagementDTO auObj) {
 		try {
 			IAuditSupplierManagementSO auSmSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
