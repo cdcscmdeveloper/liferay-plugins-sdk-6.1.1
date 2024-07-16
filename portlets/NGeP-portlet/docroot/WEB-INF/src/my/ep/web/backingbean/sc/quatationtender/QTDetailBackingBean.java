@@ -8336,15 +8336,6 @@ public class QTDetailBackingBean extends
 						new String[] { getRuleTypeDesc(scQt.isPanel() ? RuleTypeConst.PANEL_PUBLISHING_PERIOD_DAYS
 								: RuleTypeConst.QT_PUBLISHING_PERIOD_DAYS) });
 			}
-			
-//			//#29425 - Start
-//			if (null == scQt.getQtValidityPeriod()) {
-//				
-//				addFacesMessage(fc,
-//						MessageConst.ERROR_770222,
-//						new String[] { getRuleTypeDesc(RuleTypeConst.QT_PROPOSAL_VALIDITY_DAYS) });
-//			}
-//			//#29425 - end
 		}
 	}
 	
