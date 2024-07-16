@@ -1772,6 +1772,7 @@ public class BSVAttendanceBackingBean extends
 	}
 	
 	/**
+	 * prepare audit trails parameters for BSV Attendance
 	 * #28895-35500
 	 * @param scQt
 	 * @param newBriefingRegistrationList

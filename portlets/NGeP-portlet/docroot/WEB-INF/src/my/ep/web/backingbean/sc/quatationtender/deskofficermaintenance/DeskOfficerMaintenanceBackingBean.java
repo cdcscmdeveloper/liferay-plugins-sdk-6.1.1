@@ -1361,7 +1361,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
 				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-					prepareAuditTrails(qtAuditTrailsSO);
+					prepareAuditTrailsDeskOfficer(qtAuditTrailsSO);
 				}
 				
 				if(resDTO.isSuccessful()){
@@ -1517,7 +1517,11 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	}
 		
 		
-	private void prepareAuditTrails(IQTAuditTrailsSO qtAuditTrailsSO) {
+	/**
+	 * Prepare audit trails parameters for Desk Officer
+	 * @param qtAuditTrailsSO
+	 */
+	private void prepareAuditTrailsDeskOfficer(IQTAuditTrailsSO qtAuditTrailsSO) {
 		List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
 		AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
 
