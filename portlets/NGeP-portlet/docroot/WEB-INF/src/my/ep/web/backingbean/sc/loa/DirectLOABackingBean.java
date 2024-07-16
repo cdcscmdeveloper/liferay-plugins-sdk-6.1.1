@@ -563,7 +563,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			reqDTO.setScLoa(scLoa);
 			//#26474 - start
-			if(getManagedBean().getContractSignerUser() != null){
+			if(getManagedBean().getContractSignerUser().getUserId() != null){//12487&29693 add to check by user id
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
 				String designation = getManagedBean().getContractSignerUser().getDesignation();
 				reqDTO.getScLoa().setLoaSignerDesig(designation);
