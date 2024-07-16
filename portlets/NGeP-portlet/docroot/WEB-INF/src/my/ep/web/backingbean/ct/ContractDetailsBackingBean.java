@@ -3110,6 +3110,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				return CONTRACT_VIEW_AUDIT;
 			} else if (getManagedBean().isFromResultViewAudit()) {
 				getManagedBean().setFromResultViewAudit(false);
+				getManagedBean().setSearchContractNo(null);
 				return CONTRACT_MAINT_PAGE;
 			}
 		}
