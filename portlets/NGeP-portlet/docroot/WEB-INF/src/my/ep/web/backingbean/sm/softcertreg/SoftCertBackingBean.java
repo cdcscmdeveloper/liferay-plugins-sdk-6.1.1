@@ -558,7 +558,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					.updatePersonnelAndRequestSoftCert(reqDTO);
 			//#32510
 			SmServiceLookup.getPersonnelSO().checkSiteVisitAfterApprovalWorkflow(
-					reqDTO.getSoftCertPaymentDocId().longValue());
+					getManagedBean().getSmAppl().getApplId());
 
 			if (resDTO.isSuccessful()) {
 				String msgKey = MessageConst.INFO_721060;
