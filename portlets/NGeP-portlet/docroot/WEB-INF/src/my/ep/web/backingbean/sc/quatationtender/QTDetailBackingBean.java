@@ -7894,7 +7894,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveScheduleTabDtl();
 				
 			}//11104-End
-
 			
 			//29732 qt maintenance 
 			this.getManagedBean().setFromSubmitCatChange(true);
