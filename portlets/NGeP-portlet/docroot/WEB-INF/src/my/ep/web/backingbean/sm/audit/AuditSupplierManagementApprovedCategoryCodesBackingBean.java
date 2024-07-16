@@ -68,15 +68,6 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 
 		auditDeletedData(oldApprovedCategories, auDetails);
 
-		SmDisciplinaryAction oldDisciplinaryAction = mBean.getOldSmDisciplinaryAction();
-		SmDisciplinaryAction newDisciplinaryAction = mBean.getDisciplineVO().getSmDiscplinaryAction();
-
-		if (oldDisciplinaryAction == null && newDisciplinaryAction.isCancelCategory()) {
-			ListIterator<SmSupplierCategory> selectedApprovedCategories = mBean.getSelectedApprovedCategories()
-					.listIterator();
-			auditDeletedData(selectedApprovedCategories, auDetails);
-		}
-
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVE_CATEGORY_CODES);
 
