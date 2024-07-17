@@ -738,9 +738,6 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
 	
-	//#34159
-	public static final String STATE_ID_SARAWAK = "14";
-		
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	
@@ -1446,11 +1443,5 @@ public class SupplierManagementConst {
 	public static String getIdentificationTypeIc() {
 		return IDENTIFICATION_TYPE_IC;
 	}
-
-	public static String getStateIdSarawak() {
-		return STATE_ID_SARAWAK;
-	}
-	
-	
 
 }

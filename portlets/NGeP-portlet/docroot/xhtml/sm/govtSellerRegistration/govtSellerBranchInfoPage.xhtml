@@ -166,7 +166,7 @@
 							label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
 							style="width: 207px;margin-bottom: 5px;background-color:white;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCountry"
 								value="#{bb.managedBean.countryLs}" />
 							<p:ajax event="change" process="@this"
@@ -185,7 +185,7 @@
 							label="#{lbl['lbl.sm.state']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmState.stateId}"
 							id="branchState">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnState"
 								value="#{bb.managedBean.branchCompanyStates}" />
 							<p:ajax event="change" process="@this"
@@ -213,7 +213,7 @@
 							label="#{lbl['lbl.sm.division']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmDivision.divisionId}"
 							id="branchDivision">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDivision"
 								value="#{bb.managedBean.branchCompanyDivisions}" />
 							<p:ajax event="change" process="@this"
@@ -237,7 +237,7 @@
 							id="branchDist" required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDist" 
 								value="#{bb.managedBean.branchCompanyDistricts}" />
 							<p:ajax event="change" process="@this"
@@ -254,7 +254,7 @@
 							id="branchCity" required="#{bb.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{bb.managedBean.selectedBranch.smAddress.pmCity.cityId}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCity"
 								value="#{bb.managedBean.branchCompanyCities}" />
 							<p:ajax event="change" process="@this" update="branchCity" />

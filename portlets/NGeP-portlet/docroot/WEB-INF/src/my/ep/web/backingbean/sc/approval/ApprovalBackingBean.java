@@ -2251,6 +2251,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				parameterReqDTO.setParameterId(requestdetails.getDecessionType().getParameterId());
 				requestdetails.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 			}
+			//#21692 note-418 issue 3 - Start
+			else {
+				requestdetails.setDecessionType(new PmParameter());
+			}
+			//#21692 note-418 issue 3 - End
 		}
 	}
 

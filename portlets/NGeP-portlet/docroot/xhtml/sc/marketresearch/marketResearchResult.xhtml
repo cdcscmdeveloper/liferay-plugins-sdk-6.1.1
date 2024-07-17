@@ -13,15 +13,15 @@
 				rows="10" lazy="true"
 				value="#{marketResearchBackingBean.marketResearchDataModel}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				width="100%" var="scMarketData" style="word-break: break-all">  <!-- Bug #35682 -->
+				width="100%" var="scMarketData">
 
 				<ac:paginator for="marketdetailsId"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.no']}">
 					<h:outputText value="#{scMarketData[5]}"/>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.mr.procurement.title']}" style="white-space:pre-line;"> <!-- Bug #35682 -->
-					<h:outputText value="#{scMarketData[2]}"/>
+				<p:column headerText="#{lbl['lbl.sc.mr.procurement.title']}" style="white-space:normal;">
+					<h:outputText value="#{scMarketData[2]}" style="white-space: normal;word-wrap: break-word;" /> <!-- Bug #35682 -->
 				</p:column>
 				
 				<p:column  headerText="#{lbl['lbl.sc.mr.loa.ack.date']}">
