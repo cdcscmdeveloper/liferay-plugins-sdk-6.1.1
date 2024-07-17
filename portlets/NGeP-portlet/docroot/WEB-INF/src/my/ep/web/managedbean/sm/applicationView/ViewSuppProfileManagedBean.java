@@ -36,6 +36,7 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28895_35501 - AUDIT TRAIL SM
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -194,6 +195,13 @@ public class ViewSuppProfileManagedBean extends
 	// #26238 eend
 	
 	private boolean hasActiveDA; //#34626
+	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmAppl oldSmAppl;
+	private List<SmSupplierCategory> oldApprovedCategoryList;
+	private String oldPoApprOverlappedRemark;
+	private String oldApproverRemark;
+	// #28895_35501 End
 		
 	public ViewSuppProfileManagedBean() {
 
@@ -1014,4 +1022,39 @@ public class ViewSuppProfileManagedBean extends
 		this.hasActiveDA = hasActiveDA;
 	}
 	//#34626 - end
+
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
+
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
+
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
+
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
+
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
+
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
+
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
+
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
+	}
+	// #28895_35501 End
+	
 }

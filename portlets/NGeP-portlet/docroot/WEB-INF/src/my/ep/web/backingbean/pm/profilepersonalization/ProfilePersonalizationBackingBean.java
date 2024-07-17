@@ -86,6 +86,13 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailsSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 
 /**
@@ -433,6 +440,10 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 			getManagedBean().setPasswordPolicy(null);
 			generatePasswordPolicy();
+			// #28895_35501 Start - AUDIT TRAIL SM
+			this.getManagedBean().setOldSelectedUser(
+					(PmUser) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSelectedUser()));
+			// #28895_35501 End
 
 			// Load admin profile details of current user
 			searchAdminProfile();
@@ -928,6 +939,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				 * if(user.getPortrait()!=null){
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailsSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+				}
+				// #28895_35501 End
 				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
