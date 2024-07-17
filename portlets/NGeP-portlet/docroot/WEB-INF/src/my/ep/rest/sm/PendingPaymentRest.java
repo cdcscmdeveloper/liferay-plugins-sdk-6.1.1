@@ -36,8 +36,6 @@ public class PendingPaymentRest {
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
 				try {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
-					//#32510
-					SmServiceLookup.getPersonnelSO().checkSiteVisitAfterApprovalWorkflow(smPendingProcess.getApplId());
 				} catch (Exception e) {
 					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
 					smPendingProcess.setErrorMsg(e.getMessage());
@@ -47,6 +45,9 @@ public class PendingPaymentRest {
 						log.error(e2);
 					}
 				}
+				//#32510
+				log.info("debug_32510_rest "+smPendingProcess.getPendingProcessId());
+				SmServiceLookup.getPersonnelSO().checkSiteVisitAfterApprovalWorkflow(smPendingProcess.getApplId());
 			}
 			//#33948 - Start
 			long endTime = System.currentTimeMillis();
