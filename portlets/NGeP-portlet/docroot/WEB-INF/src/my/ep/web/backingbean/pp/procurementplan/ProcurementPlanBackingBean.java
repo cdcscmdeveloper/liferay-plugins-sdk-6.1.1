@@ -2127,21 +2127,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param ppPlanActors
 	 */
 	private void generateSourceVerifiers(Long orgProfileId, String roleCode, List<PpPlanActor>ppPlanActors){
-		log.info("generateSourceVerifiers");	
-		if(ppPlanActors!=null){
-		   List<PmUser> target = new ArrayList<PmUser>();  
-			for(PpPlanActor ppPlanActor : ppPlanActors){
-				List <PmUser> userCheck = PpCommonUtil.getUserRolesByUserIdAndOrg(ppPlanActor.getPmUser().getUserId(), orgProfileId, roleCode);
-				if(DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg()){
-					if(roleCode.equals(ppPlanActor.getRoleCode().getRoleCode())){
-						if(userCheck.size()>0){
-							target.add(ppPlanActor.getPmUser());
-						}
-					}
+		log.info("generateSourceVerifiers");
+		// #36107 - Start
+		if (ppPlanActors != null) {
+			List<PmUser> target = new ArrayList<>();
+			for (PpPlanActor ppPlanActor : ppPlanActors) {
+				List<PmUser> userCheck = PpCommonUtil.getUserRolesByUserIdAndOrg(ppPlanActor.getPmUser().getUserId(),
+						orgProfileId, roleCode);
+				if (DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg()
+						&& roleCode.equals(ppPlanActor.getRoleCode().getRoleCode()) && !userCheck.isEmpty()) {
+					target.add(ppPlanActor.getPmUser());
 				}
 			}
 			this.getManagedBean().getVerifierModel().setTarget(target);
 		}
+		// #36107 - End
 		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getVerifierModel().getTarget(),false);
 		this.getManagedBean().getVerifierModel().setSource(sourceList);
 	
@@ -2155,20 +2155,20 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	private void generateSourceApprovers(Long ptjOrgProfileId, String roleCode, List<PpPlanActor>ppPlanActors){
 		log.info("generateSourceApprovers");
-		if(ppPlanActors!=null){
-		   List<PmUser> target = new ArrayList<PmUser>();  
-			for(PpPlanActor ppPlanActor : ppPlanActors){
-				List <PmUser> userCheck = PpCommonUtil.getUserRolesByUserIdAndOrg(ppPlanActor.getPmUser().getUserId(), ptjOrgProfileId, roleCode);
-				if(DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg()){
-					if(roleCode.equals(ppPlanActor.getRoleCode().getRoleCode())){ 
-						if(userCheck.size()>0){
-							target.add(ppPlanActor.getPmUser());
-						}
-					}
+		// #36107 - Start
+		if (ppPlanActors != null) {
+			List<PmUser> target = new ArrayList<>();
+			for (PpPlanActor ppPlanActor : ppPlanActors) {
+				List<PmUser> userCheck = PpCommonUtil.getUserRolesByUserIdAndOrg(ppPlanActor.getPmUser().getUserId(),
+						ptjOrgProfileId, roleCode);
+				if (DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg()
+						&& roleCode.equals(ppPlanActor.getRoleCode().getRoleCode()) && !userCheck.isEmpty()) {
+					target.add(ppPlanActor.getPmUser());
 				}
 			}
 			this.getManagedBean().getApproverModel().setTarget(target);
 		}
+		// #36107 - End
 		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(ptjOrgProfileId, roleCode, this.getManagedBean().getApproverModel().getTarget(),true);
 		this.getManagedBean().getApproverModel().setSource(sourceList);
 	}
