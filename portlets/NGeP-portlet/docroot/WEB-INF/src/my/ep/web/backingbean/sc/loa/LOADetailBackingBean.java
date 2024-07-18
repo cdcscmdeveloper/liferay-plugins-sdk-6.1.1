@@ -8843,14 +8843,42 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			List<TplSpecQuestion> tpqSpecList = templateSpecSO.findQuestionsBySpecMasterIdAndParentQuestionId(
 					scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getTplSpecMaster().getSpecMasterId(), "S",
 					scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+			//36103 - start
+			String specDtl;
 			if (CollectionUtils.isEmpty(tpqSpecList)) {
-				getManagedBean().getScLoiLoaItemSpecsList().add(scLoiLoaItem.getScRequestItem().getItemDesc());
+				specDtl = scLoiLoaItem.getScRequestItem().getItemDesc();
+				if (getManagedBean().getScLoa().getPmStatus() != null
+						&& getManagedBean().getScLoa().getPmStatus().getStatusId()
+								.equals(QTStatusConst.LOA_PENDING_VERIFICATION)
+						|| getManagedBean().getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_COMPLETED)) {
+					specDtl = specDtl.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+							TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+					specDtl = specDtl.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+							TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+					specDtl = specDtl.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+							TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+				}
+				getManagedBean().getScLoiLoaItemSpecsList().add(specDtl);
 			} else {
 				for (TplSpecQuestion tpqSpec : tpqSpecList) {
 					if (StringUtils.isNotBlank(tpqSpec.getClSpecDetail())) {
-						getManagedBean().getScLoiLoaItemSpecsList().add(tpqSpec.getClSpecDetail());
+						specDtl = tpqSpec.getClSpecDetail();
+						if (getManagedBean().getScLoa().getPmStatus() != null
+								&& getManagedBean().getScLoa().getPmStatus().getStatusId()
+										.equals(QTStatusConst.LOA_PENDING_VERIFICATION)
+								|| getManagedBean().getScLoa().getPmStatus().getStatusId()
+										.equals(QTStatusConst.LOA_COMPLETED)) {
+							specDtl = specDtl.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+									TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+							specDtl = specDtl.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+									TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+							specDtl = specDtl.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+									TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+						}
+						getManagedBean().getScLoiLoaItemSpecsList().add(specDtl);
 					}
 				}
+				//36103 - end
 				//29006 @zaim
 				getManagedBean().setListSpecAnswer(tpqSpecList);
 				//29006 @zaim
@@ -10781,9 +10809,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		if(!scLoa.getScLoiLoaItems().isEmpty()){
 			scLoiLoaItemsList = new ArrayList<>();
-			if(scLoa.getScLoiLoaItems().size()> 1){//29007-start
-			checkItemSorting(scLoa.getScLoiLoaItems());
-			}//29007-End
 			for (ScLoiLoaItem scLoiLoaItemOld : scLoa.getScLoiLoaItems()) {
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoiLoaItem(scLoiLoaItemOld);

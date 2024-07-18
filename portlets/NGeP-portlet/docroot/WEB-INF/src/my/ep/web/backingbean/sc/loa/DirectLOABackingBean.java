@@ -316,7 +316,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
-			
+
 			//#34413 - Start
 		    if(scLoa.getJustificationType()!=null && !isPk7Periodic()){
 		    	scLoa.setJustificationType(null);
@@ -1406,7 +1406,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//Bug #24061
 			//#29164 CR 26474: Static Code Analysis Start
 			//if(scLoa.getScLoiLoa() != null){
-			if(scLoa.getScLoiLoa() != null && ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
+			//Bug #36120 (adding param NPS for schedule validation DLOA)
+			if(scLoa.getScLoiLoa() != null && (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())
+					|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()))){
 				if (scLoa.getScQtProgPayments() != null && !scLoa.getScQtProgPayments().isEmpty()) {
 					for (ScQtProgressivePayment progressivePayment : scLoa
 							.getScQtProgPayments()) {
@@ -10763,9 +10765,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 		if(scLoa.getScLoiLoaItems().size() != 0){
 			scLoiLoaItemsList = new ArrayList<>();
-			if(scLoa.getScLoiLoaItems().size()>1){//29007-start
-			checkItemSorting(scLoa.getScLoiLoaItems());
-			}//29007-End
 			for(ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()){
 				FacesScopes facesScopes = new FacesScopes();
 				PmUser pmUser = facesScopes.getUserSessionBean();
