@@ -18,9 +18,11 @@
 				action="#{requestNoteBackingBean.viewRequestNote(requestNoteBackingBean.managedBean.requestNote.requestNoteId)}"
 				immediate="true" />
 		</p:column>
-		<p:column style="text-align:center;width:40%;white-space:normal" headerText="#{lbl['lbl.sc.document.title']}">
-			<h:outputText value="#{requestNoteBackingBean.managedBean.requestNote.title}" style="float:left;" />
-		</p:column>
+		<p:column style="text-align:center;width:40%;white-space:normal;" headerText="#{lbl['lbl.sc.document.title']}">
+	        <div style="text-align:left;">
+	            <h:outputText value="#{requestNoteBackingBean.managedBean.requestNote.title}"  style="display:block; white-space: normal;"/>
+	        </div>
+    	</p:column>
 		<p:column style="text-align:center;" headerText="#{lbl['lbl.td.status']}">
 			<h:outputText value="#{requestNoteBackingBean.managedBean.docStatus}" style="float:left;" />
 		</p:column>

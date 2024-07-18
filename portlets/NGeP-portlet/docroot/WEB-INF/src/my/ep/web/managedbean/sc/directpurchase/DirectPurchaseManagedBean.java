@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean; //#36018
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
@@ -158,11 +159,10 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				if(ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSearchDocumentType())){
 					paramPtj = "pmOrgProfile.orgProfileId";
 					paramTitle ="title";
-					if (isSearchDPM()) {
-						if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+					if (isSearchDPM() && (getSearchStatusId() != null && getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION))) {//#36018
 							paramPtj = "requestNote.pmOrgProfile.orgProfileId";
 							paramTitle ="requestNote.title";
-						} 
+						
 					} 
 					paramPtjGroupAndMinistry = "pmOrgProfile";
 				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
@@ -231,7 +231,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				}
 				if(getSearchStatusId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), getSearchStatusId()));
-				}
+				} else { // start - #36018
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+									DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+				}// end - #36018
 				
 				if(getSearchDocumentFromDuration() != null && getSearchDocumentToDuration() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("createdDate", SearchOperator.OPERATOR_BETWEEN.value(), 
@@ -285,11 +289,21 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				reqDTO.setSourcingDocSearchBean(searchBean);
 				SourcingIntegrationResDTO resDTO = null;
 				if (isSearchDPM()) {
-					if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
-						resDTO = sourcingIntegrationSO.searchSourcingDocumentForDPM(reqDTO);
+					// start - #36018
+					if (getSearchStatusId() != null) {
+						resDTO = assignSourcingDocument(sourcingIntegrationSO, reqDTO);
 					} else {
 						resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
+
+						ISearchResultBean<Object[]> a = resDTO.getSourcingDocSearchResultBean();
+						ISearchResultBean<Object[]> b = reloadSourcingDocumentForDPM().getSourcingDocSearchResultBean();
+						
+						a.getResultList().addAll(b.getResultList());
+						a.setTotalRecord(a.getTotalRecord() + b.getTotalRecord());
+	
+						return a;
 					}
+					// end - #36018
 				} else {
 					resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 				}
@@ -302,8 +316,231 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			}
 			return null;
 		}
+		// start - 36018
+		private SourcingIntegrationResDTO assignSourcingDocument(ISourcingIntegrationSO sourcingIntegrationSO,
+				SourcingIntegrationReqDTO reqDTO) {
+			SourcingIntegrationResDTO resDTO;
+			if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION))
+				resDTO = sourcingIntegrationSO.searchSourcingDocumentForDPM(reqDTO);
+			else
+				resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
+			return resDTO;
+		}
+		// end - 36018
 	}
 	
+	
+	// start - 36018
+	/**
+	 * Reloads the sourcing documents for Direct Purchase Management (DPM) based on the current search criteria.
+	 * 
+	 * @return A {@link SourcingIntegrationResDTO} containing the search results for sourcing documents. Returns {@code null}
+	 *         if an exception occurs during processing.
+	 */
+	public SourcingIntegrationResDTO reloadSourcingDocumentForDPM() {
+		try {
+			ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+			
+			SourcingIntegrationReqDTO forDPMreqDTO = new SourcingIntegrationReqDTO();
+			ISearchBean<Object[]> searchBean = new SearchBean<>();
+			
+			if (getSearchDocumentType() != null && getSearchDocumentType() != "") {
+				buildSearchBeanDocType(searchBean);
+			}
+
+			buildSearchBean(forDPMreqDTO, searchBean);
+
+			forDPMreqDTO.setSourcingDocSearchBean(searchBean);
+			return sourcingIntegrationSO.searchSourcingDocumentForDPM(forDPMreqDTO);
+
+		} catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+	}
+
+	/**
+	 * Builds the search criteria for sourcing integration based on the provided DTO and search bean.
+	 *
+	 * @param forDPMreqDTO 
+	 * 		The DTO containing request details.
+	 * @param searchBean   
+	 * 		The search bean to which criteria will be applied.
+	 */
+	private void buildSearchBean(SourcingIntegrationReqDTO forDPMreqDTO, ISearchBean<Object[]> searchBean) {		
+
+		String paramPtj = "requestNote.pmOrgProfile.orgProfileId";
+		String paramTitle = "requestNote.title";
+		String paramPtjGroupAndMinistry = "pmOrgProfile";
+
+		if (isGovernment()) {
+			buildSearchBeanGov(searchBean, paramPtj, paramPtjGroupAndMinistry);
+		}
+
+		if (StringUtils.isNotBlank(getSearchDocumentTitle())) {
+			buildSearchBeanDocTitle(searchBean, paramTitle);
+		}
+
+		if (getSearchDocumentNo() != null && getSearchDocumentNo() != "") {
+			buildSearchBeanDocumentNo(searchBean);
+		}
+		
+		buildSearchBeanPendingItemCodification(searchBean);
+
+		if (getSearchDocumentFromDuration() != null && getSearchDocumentToDuration() != null) {
+			buildSearchBeanDocDuration(searchBean);
+		}
+
+		if (isReqOrApprover() && CollectionUtils.isNotEmpty(searchBean.getDataFilterMetadatas())) {
+			searchBean.getDataFilterMetadatas().clear();
+
+		}
+
+		if (!isGovernment()) {
+			// Filter By - supplierId
+			buildSearchBeanNonGov(forDPMreqDTO);
+		}
+	}
+
+	/**
+	 * Adds search criteria based on document creation date range to the provided search bean.
+	 *
+	 * @param searchBean 
+	 * 		The search bean to which the document duration criteria will be applied.
+	 */
+	private void buildSearchBeanDocDuration(ISearchBean<Object[]> searchBean) {
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("createdDate", SearchOperator.OPERATOR_BETWEEN.value(),
+						new SearchBetweenValue<Date>(getSearchDocumentFromDuration(),
+								getSearchDocumentToDuration())));
+	}
+
+	/**
+	 * Adds search criteria for pending item codification status to the provided search bean.
+	 *
+	 * @param searchBean 
+	 * 		The search bean to which the pending item codification criteria will be applied.
+	 */
+	private void buildSearchBeanPendingItemCodification(ISearchBean<Object[]> searchBean) {
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(),
+						DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+	}
+
+	/**
+	 * Adds search criteria for document title similarity to the provided search bean.
+	 *
+	 * @param searchBean        
+	 * 		The search bean to which the document title criteria will be applied.
+	 * @param paramTitle        
+	 * 		The parameter representing the document title field in the search criteria.
+	 */
+	private void buildSearchBeanDocTitle(ISearchBean<Object[]> searchBean, String paramTitle) {
+		SearchFilterBean filterBean = new SearchFilterBean(paramTitle, SearchOperator.OPERATOR_LIKE.value(),
+				getSearchDocumentTitle());
+		searchBean.getDataFilterBeans().add(filterBean);
+	}
+
+	/**
+	 * Builds search filters in the provided ISearchBean based on the document
+	 * type criteria. Adds a filter for "docType" based on the current search
+	 * document type. If the search document type is "Letter of Award", adds an
+	 * additional filter for "MOD" with a specific module code.
+	 * 
+	 * @param searchBean
+	 *            The ISearchBean<Object[]> instance to which search filters are
+	 *            added.
+	 */
+	private void buildSearchBeanDocType(ISearchBean<Object[]> searchBean) {
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentType()));
+		if (getSearchDocumentType().equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("MOD", SearchOperator.OPERATOR_EQUALS.value(),
+							ModuleCodeConst.DIRECT_PURCHASE));
+		}
+	}
+
+	/**
+	 * Adds search criteria for document type to the provided search bean, and optionally filters by module code.
+	 *
+	 * @param searchBean 
+	 * 		The search bean to which the document type criteria will be applied.
+	 */
+	private void buildSearchBeanDocumentNo(ISearchBean<Object[]> searchBean) {
+		if (isSearchLoaByRN()) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("docNo", SearchOperator.OPERATOR_IN.value(), getLoaList()));
+		} else {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(), String.valueOf(
+							SpecialCharacter.MODULO.getCharacter()).concat(getSearchDocumentNo())));
+		}
+	}
+
+	/**
+	 * Sets supplier IDs in the provided DTO based on non-government user criteria.
+	 *
+	 * @param forDPMreqDTO 
+	 * 		The DTO containing request details.
+	 */
+	private void buildSearchBeanNonGov(SourcingIntegrationReqDTO forDPMreqDTO) {
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		List<SmSupplier> smSuppliers = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO).getResultBean()
+				.getResultList();
+
+		if (CollectionUtils.isNotEmpty(smSuppliers)) {
+			List<Long> supplierIds = new ArrayList<>();
+			for (SmSupplier smSupplier : smSuppliers) {
+				supplierIds.add(smSupplier.getSupplierId());
+			}
+			forDPMreqDTO.setSupplierIds(supplierIds);
+		} else {
+			if (isViewAsSupplier()) {
+				List<Long> supplierIds = new ArrayList<>();
+				supplierIds.add(supplierSearchReqDTO.getUserId());
+				forDPMreqDTO.setSupplierIds(supplierIds);
+			}
+		}
+	}
+
+	/**
+	 * Adds government-specific search criteria to the provided search bean based on organizational profiles.
+	 *
+	 * @param searchBean               
+	 * 		The search bean to which the government-specific criteria will be applied.
+	 * @param paramPtj                 
+	 * 		The parameter representing the organization profile ID field in the search criteria.
+	 * @param paramPtjGroupAndMinistry 
+	 * 		The parameter representing the combined organization profile and ministry/group field.
+	 */
+	private void buildSearchBeanGov(ISearchBean<Object[]> searchBean, String paramPtj, String paramPtjGroupAndMinistry) {
+		if (getSearchPtjProfile() != null && getSearchPtjProfile().getOrgProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
+							getSearchPtjProfile().getOrgProfileId()));
+
+		} else if (getSearchPtjGroupProfile() != null && getSearchPtjGroupProfile().getOrgProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(paramPtjGroupAndMinistry + "."
+							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getSearchPtjGroupProfile()
+									.getOrgProfileId()));
+
+		} else if (getSearchMinistryProfile() != null && getSearchMinistryProfile().getOrgProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(paramPtjGroupAndMinistry + "."
+							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getSearchMinistryProfile()
+									.getOrgProfileId()));
+		}
+	}
+	// end - #36018
 	
     /**
      * Checks if is requisitioner or approver.
