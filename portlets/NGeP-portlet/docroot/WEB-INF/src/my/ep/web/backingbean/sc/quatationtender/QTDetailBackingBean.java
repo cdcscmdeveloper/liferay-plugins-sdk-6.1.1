@@ -11765,7 +11765,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = this.getManagedBean().getQt();
 		reqDTO.setQtId(scQt.getQtId());
 		reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_OTHERS);
-		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalReqICTByQtId(reqDTO).getQtApproval();
 		if(approval!=null && approval.getScQtApprovalDtls() != null){
 		   approvalDtls = approval.getScQtApprovalDtls();
 		   for(ScQtApprovalRequest oth : approvalDtls){
