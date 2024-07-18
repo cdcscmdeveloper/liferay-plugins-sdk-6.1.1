@@ -206,6 +206,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
@@ -10011,6 +10012,11 @@ public class QTDetailBackingBean extends
 	// #29425 -end-
 	
 	// #29425 -start-
+	/**
+	 * Validate Validity Days Entered By User
+	 * 
+	 * @param validityDays
+	 */
 	public void validateValidityDays(int validityDays) {
 		PmParameter procureMentMode = this.getManagedBean().getQt().getProcurementMode();
 
@@ -10046,12 +10052,15 @@ public class QTDetailBackingBean extends
 				List<String> ruleValueStrList = ruleSO.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
 						.getRuleValueStrList();
 
-				if (ruleValueStrList != null && ruleValueStrList.size() > 0) {
+				if (ruleValueStrList != null && CollectionUtils.isNotEmpty(ruleValueStrList)) {
 					return Integer.valueOf(ruleValueStrList.get(0));
 				} else {
 					throw new EpException(MessageConst.ERROR_770222,
 							new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
 				}
+			} catch(Exception e) {
+				SLAUtils.getInstance().logSLAError("QT", "GetProposalValidityDaysFromPmRule", this.getManagedBean().getQt().getQtNo(),
+						"getProposalValidityDays", getUserIdSessionFromLoginId(), e);
 			} finally {
 				ruleSO = null;
 			}
