@@ -199,7 +199,8 @@
 		<p:spacer width="2" />	
 		
 		<p:panel  id="bondSpl" toggleable="true" rendered="#{(ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractUpdate
-		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement)
+		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
+		or ctBackingBean.managedBean.notificationSetting)
 		and ctBackingBean.isAlreadyAmendment()}" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.spl.bond']}"/>

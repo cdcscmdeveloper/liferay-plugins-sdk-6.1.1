@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -3306,18 +3305,5 @@ public class SupplierDataMaintenanceBackingBean extends
 		});
 		return mofList.get(0).getMofNo();
 	}
-	/**
-	 * @param SmMofAccount mofAcc
-	 * @return Date 
-	 */
-	public Date getMinDate(SmMofAccount mofAcc) {
-        Date effDate = mofAcc.getEffDate();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(effDate);
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-        return calendar.getTime();
-    }
 	//32792 END
 }

@@ -2350,23 +2350,6 @@ public class ConsolidationReportBackingBean extends
     	  
     	return supplierBranchList;
 	}
-	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplier id 
-	* @return true or false
-	**/
-	public boolean disableRankIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
-		
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-		
-		boolean isSupplierBranchDeleted = false;
-		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
-			isSupplierBranchDeleted = true;
-		}
-	    return isSupplierBranchDeleted;
-	}
 	//#28777 & #29729 - End
 	
 	//#32398 - Start
