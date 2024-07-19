@@ -30,6 +30,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
+import my.ep.biz.service.fl.audit.IAuditFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
@@ -91,6 +92,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
+import my.ep.persistence.entity.fl.audit.FlAuditTrail;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -354,28 +356,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 				//#35508 fl audit trail - inv modification start
-				if (resDTO.isSuccessful()) {
-					FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
-					if (auflBB.getAuditFlConfigState()) {
-						PmUser userAudit = getFacesScopes().getUserSessionBean();
-						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-							insertAuditTrailFl(getManagedBean(), userAudit, action, null, null, null);
-						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
-							// audit fl for supplier invoice reference
-							FlInvoice flinv = getManagedBean().getInvoice();
-							if (!flinv.getSupplierInvoiceRef().equals(getManagedBean().getOriginalSupplierInvRef())) {
-								insertAuditTrailFl(getManagedBean(), userAudit, action,
-										AuditFLConst.FL_AU_INV_NO_FIELDLABELCODE, getManagedBean()
-												.getOriginalSupplierInvRef(), flinv.getSupplierInvoiceRef());
-							}
-							String newBankAccNoNameInv = flinv.getAccountNo() + " " + flinv.getPaymentBankName();
-							if (!newBankAccNoNameInv.equals(getManagedBean().getOriginalBankAccNoName())) {
-								insertAuditTrailFl(getManagedBean(), userAudit, action,
-										AuditFLConst.FL_AU_BANK_ACC_FIELDLABELCODE, getManagedBean()
-												.getOriginalBankAccNoName(), newBankAccNoNameInv);
-							}
-						}
-					}
+				FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+				if (resDTO.isSuccessful() && auflBB.getAuditFlConfigState()) {
+					insertAuditFulfilmentInvoice(action);
 				}
 				//#35508 fl audit trail - inv modification end
 			}else{
@@ -2696,55 +2679,119 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	//#21416 end
 	
 	// #35508 fl audit trail - insert method
-		public void insertAuditTrailFl(InvoiceManagedBean invBean, PmUser userAudit, String action,String fieldLabelCode,String oldValueInv, String newValueInv) {
-			// add audit insert
-			FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
-			FlInvoice flinv = invBean.getInvoice();
+	/**
+	 * insert audit for invoice
+	 * 
+	 * @param invBean
+	 *            invoice manage bean
+	 * @param action
+	 *            action type for audit
+	 * 
+	 */
+	private void insertAuditFulfilmentInvoice(String action) {
+		PmUser userAudit = getFacesScopes().getUserSessionBean();
+		IAuditFulfilmentSO auditFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IAuditFulfilmentSO.class);
 
-			List<AuFLReqDTO> objList = new ArrayList<>();
-			Long orgProfileId, statusId;
-			String OrgName, auditActionType;
+		FlAuditTrail auFlAuditTrailObj;
+		List<FlAuditTrail> objList = new ArrayList<>();
 
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
-				// audit fl supplier
-				auditActionType = AuditFLConst.AUD_ACTION_TYPE_MODIFY;
-				orgProfileId = flinv.getFlRequest().getSmSupplier().getSupplierId();
-				OrgName = flinv.getFlRequest().getSmSupplier().getCompanyName();
-				statusId = FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL;
-			} else {
-				// audit fl approver
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setUserId(userAudit.getUserId());
-				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-				PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
-
-				auditActionType = null;
-				orgProfileId = pmOrgAudit.getOrgProfileId();
-				OrgName = pmOrgAudit.getOrgName();
-				statusId = FulfilmentStatusConst.SUBMITTED;
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			auFlAuditTrailObj = setAuditFulfilmentInvoice(userAudit, action, null, null, null);
+			objList.add(auFlAuditTrailObj);
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+			// audit fl for supplier invoice reference
+			FlInvoice flinv = getManagedBean().getInvoice();
+			if (!flinv.getSupplierInvoiceRef().equals(getManagedBean().getOriginalSupplierInvRef())) {
+				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAudit, action,
+						AuditFLConst.FL_AU_INV_NO_FIELDLABELCODE, getManagedBean().getOriginalSupplierInvRef(),
+						flinv.getSupplierInvoiceRef());
+				objList.add(auFlAuditTrailObj);
 			}
-			// insert for DO
-			AuFLReqDTO auFLSPDTO = new AuFLReqDTO();
-			auFLSPDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
-			auFLSPDTO.setRoleCode(getUserRole());
-			auFLSPDTO.setOrgProfileId(orgProfileId);
-			auFLSPDTO.setOrgName(OrgName);
-			auFLSPDTO.setDocId(flinv.getInvoiceId());
-			auFLSPDTO.setDocNo(flinv.getInvoiceNo());
-			auFLSPDTO.setStatusId(statusId);
-			auFLSPDTO.setActionType(auditActionType);
-			auFLSPDTO.setFulfilmentReqId(flinv.getFlRequest().getFulfilmentReqId());
-			auFLSPDTO.setOldValue(oldValueInv);
-			auFLSPDTO.setNewValue(newValueInv);
-			auFLSPDTO.setCreatedBy(userAudit.getUserId());
-			auFLSPDTO.setFieldLabelCode(fieldLabelCode);
-
-			objList.add(auFLSPDTO);
-			auflBB.auditInsertFL(objList);
-
+			String newBankAccNoNameInv = flinv.getAccountNo() + " " + flinv.getPaymentBankName();
+			if (!newBankAccNoNameInv.equals(getManagedBean().getOriginalBankAccNoName())) {
+				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAudit, action,
+						AuditFLConst.FL_AU_BANK_ACC_FIELDLABELCODE, getManagedBean().getOriginalBankAccNoName(),
+						newBankAccNoNameInv);
+				objList.add(auFlAuditTrailObj);
+			}
 		}
-		// #35508 fl audit trail
+
+		if (!objList.isEmpty()) {
+			AuFLReqDTO auFlDTO = new AuFLReqDTO();
+			auFlDTO.setFlAuditTrailList(objList);
+			auditFulfilmentSO.insertAuditFLDetails(auFlDTO);
+		}
+	}
+
+	/**
+	 * set audit for invoice
+	 * 
+	 * @param invBean
+	 *            invoice manage bean
+	 * @param userAudit
+	 *            pmuser audit
+	 * @param action
+	 *            action type for audit
+	 * @param fieldLabelCode
+	 *            field label code for audit
+	 * @param oldValueInv
+	 *            value before change
+	 * @param newValueInv
+	 *            value after change
+	 *            
+	 * @return FlAuditTrail FlAuditTrail obj
+	 * 
+	 */
+	public FlAuditTrail setAuditFulfilmentInvoice(PmUser userAudit, String action, String fieldLabelCode,
+			String oldValueInv, String newValueInv) {
+		// add audit set
+		FlInvoice flinv = getManagedBean().getInvoice();
+
+		Long orgProfileId;
+		Long statusId;
+		String orgName;
+		String auditActionType;
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+			// audit fl supplier
+			auditActionType = AuditFLConst.AUD_ACTION_TYPE_MODIFY;
+			orgProfileId = flinv.getFlRequest().getSmSupplier().getSupplierId();
+			orgName = flinv.getFlRequest().getSmSupplier().getCompanyName();
+			statusId = FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL;
+		} else {
+			// audit fl approver
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(userAudit.getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+
+			auditActionType = null;
+			orgProfileId = pmOrgAudit.getOrgProfileId();
+			orgName = pmOrgAudit.getOrgName();
+			statusId = FulfilmentStatusConst.SUBMITTED;
+		}
+		// insert for DO
+		FlAuditTrail auFlAuditTrail = new FlAuditTrail();
+		auFlAuditTrail.setDocType(ParameterConst.DOCTYPE_INVOICE);
+		auFlAuditTrail.setRoleCode(getUserRole());
+		auFlAuditTrail.setOrgProfileId(orgProfileId);
+		auFlAuditTrail.setOrgName(orgName);
+		auFlAuditTrail.setDocId(flinv.getInvoiceId());
+		auFlAuditTrail.setDocNo(flinv.getInvoiceNo());
+		auFlAuditTrail.setStatusId(statusId);
+		auFlAuditTrail.setActionType(auditActionType);
+		auFlAuditTrail.setFulfilmentRequestId(flinv.getFlRequest().getFulfilmentReqId());
+		auFlAuditTrail.setOldValue(oldValueInv);
+		auFlAuditTrail.setNewValue(newValueInv);
+		auFlAuditTrail.setCreatedBy(userAudit.getUserId());
+		auFlAuditTrail.setChangedBy(userAudit.getUserId());
+		auFlAuditTrail.setFieldLabelCode(fieldLabelCode);
+
+		return auFlAuditTrail;
+	}
+	// #35508 fl audit trail
 	
 }
