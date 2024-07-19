@@ -2685,6 +2685,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(false);
 			
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
+				if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()!=null &&
+						getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!=null &&
+						getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getAttachmentId() != null){
+					getManagedBean().getDeleteAttachmentList().add(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment());
+				}
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
 				
 				//remove bond waiver that hasn't been approved
