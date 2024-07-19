@@ -38,6 +38,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -135,10 +136,16 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setExistingRegStatus(getManagedBean().getSmAppl().getPmRegStatus());
 		getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
 		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		//#32792 START
 		if (getManagedBean().getSmMofAccount() != null) {
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
+		}else if(getManagedBean().getSmSupplier()!= null && getManagedBean().getSmSupplier().getSmMofAccounts()!= null && getManagedBean().getSmSupplier().getSmMofAccounts().size()>0){
+			getManagedBean().setSmMofAccount(getManagedBean().getSmSupplier().getSmMofAccounts().get(0));
+			getManagedBean().setExistingMofExpiryDate(
+					getManagedBean().getSmMofAccount().getExpDate());
 		}
+		//#32792 END
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 		}
@@ -1498,4 +1505,18 @@ public class SupplierDataMaintenanceBackingBean extends
 		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
 	}
 	//End 17906
+	
+	//32792 START
+	public String getLatestMOFNo(List<SmMofAccount> mofList){
+		// sort by latest created date 
+		Collections.sort(mofList,new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount mof1, SmMofAccount mof2) {
+				return Integer.valueOf(mof2.getCreatedDate().compareTo(mof1.getCreatedDate()));
+				
+			}
+		});
+		return mofList.get(0).getMofNo();
+	}
+	//32792 - END
 }
