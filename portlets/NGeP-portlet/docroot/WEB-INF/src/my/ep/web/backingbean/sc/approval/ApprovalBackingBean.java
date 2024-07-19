@@ -42,7 +42,6 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -83,7 +82,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
@@ -91,8 +89,6 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -985,11 +981,7 @@ public class ApprovalBackingBean extends
 					committeReqDTO.setSpecApprovalReq(true);
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
-
-				// #25426 -start-
-				approveCancelQTwithDOASenariosExists(this.getManagedBean().getQt(), taskName, action);
-				// #25426 -end-
-
+				
 				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
 					// #25638 -start-
@@ -2299,84 +2291,7 @@ return scQt;
 		}
 	}
 	// #29762, #25692 -end-
-
-	// #30477, #25426 - Start
-	public boolean isInactivePublicationApproverRole() {
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		boolean inactive = false;
-		ScQt scQt = this.getManagedBean().getQt();
-		ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
-
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		reqDTO.setQtId(scQt.getQtId());
-		reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
-
-		QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
-
-		if (null == publicationApproval && null != resDTO && null != resDTO.getQtApproval()) {
-			publicationApproval = resDTO.getQtApproval();
-			List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
-
-			for (ScQtApproverSettings approverSetting : approverSettings) {
-				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-
-				if (qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),
-						RoleCode.PUBLICATION_APPROVER.value())) {
-					inactive = true;
-				}
-			}
-		}
-
-		return inactive;
-	}
-	// #30477, #25426 -end-
-
-	// #25426 - Start
-	private void approveCancelQTwithDOASenariosExists(ScQt scQt, String taskName, String action) {
-		if (SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)
-				&& BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
-			String docNo = null;
-			docNo = scQt.getQtNo();
-
-			if (docNo != null) {
-
-				BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
-				bpmReqDTO.setDocNumber(docNo);
-				bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-
-				BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-
-				if (bpmResDTO.getWorklistVO() != null
-						&& CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())) {
-					for (WorklistItemVO currentVO : bpmResDTO.getWorklistVO().getWorklistItem()) {
-						String docType = currentVO.getDocType();
-
-						if (StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)) {
-
-							String taskId = currentVO.getTaskId();
-
-							if (StringUtils.isNotBlank(taskId)) {
-
-								Object token = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(
-										EpPropertiesConst.BPM_PRINCIPAL));
-
-								bpmReqDTO = new BpmRequestDTO();
-								bpmReqDTO.setTaskId(taskId);
-								bpmReqDTO.setCtxToken(token);
-
-								bpmSO.withdrawTask(bpmReqDTO);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	// #25426 - End
-
+	
 	// 15391 -start-
 	public boolean assertSpecificationUpdateInProgress() {
 		boolean inProgress = false;
