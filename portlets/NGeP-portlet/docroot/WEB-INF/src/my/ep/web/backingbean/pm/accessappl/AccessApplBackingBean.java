@@ -684,6 +684,7 @@ public class AccessApplBackingBean extends
 							"lbl.pm.access.app.request.type",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
+		}
 				
 		// #35584 - Start
 		if (accessAppl.isBrandNew()) {
