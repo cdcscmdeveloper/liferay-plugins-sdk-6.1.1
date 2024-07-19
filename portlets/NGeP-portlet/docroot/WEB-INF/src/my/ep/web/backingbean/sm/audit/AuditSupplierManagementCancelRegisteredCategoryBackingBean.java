@@ -34,7 +34,7 @@ public class AuditSupplierManagementCancelRegisteredCategoryBackingBean extends
 		SmDeleteCategoryCodeManagedBean mBean = (SmDeleteCategoryCodeManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
 		List<SmSupplierCategory> delCatCodeList = mBean.getSelectedCategories();
-		// Expected Max Size in loop (161) based on NGEP_PDS database
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmSupplierCategory catCode : delCatCodeList) {
 			String category = catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name()
 					+ "<br/>" + catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name()
