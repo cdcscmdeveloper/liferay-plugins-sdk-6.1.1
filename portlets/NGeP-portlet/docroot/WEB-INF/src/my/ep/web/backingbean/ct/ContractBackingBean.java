@@ -1990,22 +1990,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null) {
 				Iterator<CtAgency> agencyIterator = this.getManagedBean().getContractVer().getCtAgencies().iterator();
+				// #36138 - Fixing Start
+				List<CtContractItem> ctContractItems = new ArrayList<>(getManagedBean().getCtItemList());
+				ctContractItems.addAll(getManagedBean().getCtItemServiceList());
+				// #36138 - Fixing End
 				while (agencyIterator.hasNext()) {
 					CtAgency agency = agencyIterator.next();
 					if (agency.isSelectedCheckBox()) {
 						agencyIterator.remove();
-						if (getManagedBean().getCtItemList() != null && getManagedBean().getCtItemList().size() > 0) {
-							for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
-								Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
-								while (ctItemCeilingQtyIterator.hasNext()) {
-									CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
-									if (ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(
-											agency.getOrgProfile().getOrgProfileId())) {
-										ctItemCeilingQtyIterator.remove();
-									}
-								}
-							}	
-						}
+						// #36138 - Fixing Start
+						removeCtItemCeilingQties(agency, ctContractItems);
+						// #36138 - Fixing End
 						//CT_CHANGE_LOG
 						if((agency.isBrandNew() && !agency.isCloned()) || 
 								getManagedBean().getNewAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
@@ -2067,6 +2062,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
+	
+	// #36138 - Fixing Start
+	/**
+	 * Removes the specified CtItemCeilingQties from the contract items.
+	 * 
+	 * @param CtItemCeilingQties
+	 *            the Ceiling Quantity to be removed
+	 * @param contractItems
+	 *            the list of contract items
+	 */
+	private void removeCtItemCeilingQties(CtAgency agency, List<CtContractItem> contractItems) {
+		if (contractItems != null) {
+			for (CtContractItem contractItem : contractItems) {
+				Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator = contractItem.getCtItemCeilingQties().iterator();
+				while (ctItemCeilingQtyIterator.hasNext()) {
+					CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
+					if (ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(agency.getOrgProfile().getOrgProfileId())) {
+						ctItemCeilingQtyIterator.remove();
+					}
+				}
+			}
+		}
+	}
+	// #36138 - Fixing End
 
 	/**
 	 * The method used for searching the agency.
@@ -2685,11 +2704,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(false);
 			
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
-				if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()!=null &&
-						getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!=null &&
-						getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getAttachmentId() != null){
-					getManagedBean().getDeleteAttachmentList().add(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment());
-				}
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
 				
 				//remove bond waiver that hasn't been approved
