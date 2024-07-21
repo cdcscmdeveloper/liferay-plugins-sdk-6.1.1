@@ -7019,9 +7019,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
-			//9019 - End (Harun)
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
-			//9019 - end
+			
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+				//9019 - end
+			}
+			//Bug_35997 - End
+			
 			renewQTSesionObject();
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -7043,9 +7051,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
-			//9019 - End (Harun)
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
-			//9019 - end
+			
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+				//9019 - end
+			}
+			//Bug_35997 - End
+			
 			renewQTSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -7077,9 +7093,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
-			//9019 - End (Harun)
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
-			//9019 - end
+			
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+				//9019 - end
+			}
+			//Bug_35997 - End
 
 			int committeeTabIndex = this.getManagedBean()
 					.getSelectedCommitteeTabIndex();
@@ -7115,9 +7138,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().isScQtRemarksEmpty()) {
 				this.getManagedBean().getQt().setScQtRemarks(null);
 			} 
-			//9019 - End (Harun)
-			resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
-			//9019 - end
+			
+			//Bug_35997 - Start
+			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+				resDTO = detailSO.saveQTDtl(reqDTO);
+			}else{
+				// using new method
+				resDTO = detailSO.saveQTDetailsForDraft(reqDTO); 
+				//9019 - end
+			}
+			//Bug_35997 - End
 			
 			int selectedApprovalTabIndex = this.getManagedBean().getSelectedApprovalTabIndex();
 			renewQTSesionObject();
@@ -7824,7 +7854,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//29732 qt maintenance 
 			this.getManagedBean().setFromSubmitCatChange(true);
 			String changedCatCodeList = checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
+			ScWorkFlowStatus specMainworkflow = this.getManagedBean().getQt().getCurrentWorkFlowStatus();
+			Long workflowStatusId = specMainworkflow.getPmStatus().getStatusId();
+			boolean qtStatusWorkflow = workflowStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
+					|| workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || workflowStatusId
+					.equals(QTStatusConst.SE_PENDING_SIGNOFF) || workflowStatusId
+					.equals(QTStatusConst.SE_PENDING_REVISION) || workflowStatusId
+					.equals(QTStatusConst.SE_COMPLETED);
+			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
 				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
 				return;
@@ -11728,7 +11765,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = this.getManagedBean().getQt();
 		reqDTO.setQtId(scQt.getQtId());
 		reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_OTHERS);
-		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalDtlsByQtIdNType(reqDTO).getQtApproval();
+		ScQtApproval approval = this.getQTDetailSO().retrieveApprovalReqICTByQtId(reqDTO).getQtApproval();
 		if(approval!=null && approval.getScQtApprovalDtls() != null){
 		   approvalDtls = approval.getScQtApprovalDtls();
 		   for(ScQtApprovalRequest oth : approvalDtls){
