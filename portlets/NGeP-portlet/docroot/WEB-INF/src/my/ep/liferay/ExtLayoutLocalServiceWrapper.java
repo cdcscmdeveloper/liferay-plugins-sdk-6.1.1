@@ -32,7 +32,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public static final String RENEW_MOF_URL = "/renew-mof-account";
 	public static final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
-	public static final String BASIC_ACCOUNT_STATUS_URL = "/deactivate-basic-account";
+	public static final String BASIC_ACCOUNT_STATUS_URL = "/basic-account-deactivation";
 	
 	public static final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
 	public static final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
