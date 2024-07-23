@@ -166,6 +166,7 @@ import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
@@ -177,6 +178,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
@@ -816,10 +818,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				scLoa = calcBondAmountWithSST(scLoa, Boolean.FALSE);
 				
 				
-				if (scLoa.getBondAmt() != null) {
+				// #35977 - Start
+				if (scLoa.getBondAmt() != null
+						&& ReportConst.ENG_LANGUAGE_CODE.equals(new FacesScopes()
+								.getUserLocale().getLanguage())) {
+					getManagedBean()
+							.setBondAmountWord(
+									NumberWordUtilEn.convert(scLoa.getBondAmt()
+											.toString()));
+				} else if (scLoa.getBondAmt() != null
+						&& ReportConst.MALAY_LANGUAGE_CODE.equals(new FacesScopes()
+								.getUserLocale().getLanguage())) {
 					getManagedBean().setBondAmountWord(
 							NumberWordUtil.convert(scLoa.getBondAmt().toString()));
-				}	
+				} else {
+					getManagedBean().setBondAmountWord(null);
+				}
+				// #35977 - End
 			}
 
 			// show default clause
@@ -1432,10 +1447,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //		scLoa = calcBondAmount(scLoa, false);
 		scLoa = calcBondAmountWithSST(scLoa, false);
 		
-		if (scLoa.getBondAmt() != null) {
+		// #35977 - Start
+		if (scLoa.getBondAmt() != null
+				&& ReportConst.ENG_LANGUAGE_CODE.equals(new FacesScopes()
+						.getUserLocale().getLanguage())) {
+			getManagedBean()
+					.setBondAmountWord(
+							NumberWordUtilEn.convert(scLoa.getBondAmt()
+									.toString()));
+		} else if (scLoa.getBondAmt() != null
+				&& ReportConst.MALAY_LANGUAGE_CODE.equals(new FacesScopes()
+						.getUserLocale().getLanguage())) {
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		} else {
+			getManagedBean().setBondAmountWord(null);
 		}
+		// #35977 - End
 		
 		
 		//awarded supplier and proposal
@@ -7062,9 +7090,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		calcBondAmountWithSST(scLoa, Boolean.FALSE);
 		
 		// bond amount in words
-		if (scLoa.getBondAmt() != null) {
-			getManagedBean().setBondAmountWord(NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		// #35977 - Start
+		if (scLoa.getBondAmt() != null
+				&& ReportConst.ENG_LANGUAGE_CODE.equals(new FacesScopes()
+						.getUserLocale().getLanguage())) {
+			getManagedBean()
+					.setBondAmountWord(
+							NumberWordUtilEn.convert(scLoa.getBondAmt()
+									.toString()));
+		} else if (scLoa.getBondAmt() != null
+				&& ReportConst.MALAY_LANGUAGE_CODE.equals(new FacesScopes()
+						.getUserLocale().getLanguage())) {
+			getManagedBean().setBondAmountWord(
+					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		} else {
+			getManagedBean().setBondAmountWord(null);
 		}
+		// #35977 - End
 	}
 
 //	/**

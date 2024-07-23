@@ -149,7 +149,7 @@ public class SupplierUserActivationBackingBean extends
 			String adminName = null;
 			if(personnel.getSmAppl() != null && personnel.getSmAppl().getSmPersonnels() != null){
 				for(SmPersonnel person : personnel.getSmAppl().getSmPersonnels()){
-					if(!person.getEpRole().isEmpty() &&
+					if(person.getEpRole() != null &&
 							Arrays.asList(ADMIN_ROLES).contains(person.getEpRole())){
 						adminName = person.getName();
 						break;
@@ -185,7 +185,7 @@ public class SupplierUserActivationBackingBean extends
 					// redirect & display activation expired
 					this.getManagedBean().setValidActivation(false);
 					//#32040
-					if(!personnel.getEpRole().isEmpty()){
+					if(personnel.getEpRole() != null){
 						if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
 							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
 									new String[] { SmRuleHelper.getInstance()
@@ -201,7 +201,7 @@ public class SupplierUserActivationBackingBean extends
 				// redirect & display invalid activation
 				this.getManagedBean().setValidActivation(false);
 				//#32040
-				if(!personnel.getEpRole().isEmpty()){
+				if(personnel.getEpRole() != null){
 					if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
 						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
 								new String[] { SmRuleHelper.getInstance()
