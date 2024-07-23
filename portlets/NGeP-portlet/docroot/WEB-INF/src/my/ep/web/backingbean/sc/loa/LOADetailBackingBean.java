@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode; // Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -457,8 +458,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #27797 - start
 		if (isZonalWithPaOrPs()) {//29006 - change condition
 			if(scLoiLoa.isZonal()){
-				Map<Long, Integer> reqItemRowSpanMap = new HashMap<Long, Integer>();
-				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<Long, BigDecimal>();
+				//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+				Map<Long, Integer> reqItemRowSpanMap = new HashMap<>();
+				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<>();
+				//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				AwardSupplierResDTO itemsResDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
 				
 				//29006 - start
@@ -512,10 +515,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.getManagedBean().getScLoa().setLoaAmt(getManagedBean().getTotalZonePrice());//27797 & 29006
 				
 				if (scLoa.getSstAmt() != null) {
+					//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					BigDecimal overallAmt = BigDecimal.ZERO;
 					overallAmt = totalZonePrice.add(scLoa.getSstAmt());
-					overallAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
+					overallAmt = overallAmt.setScale(2, RoundingMode.HALF_EVEN);
+					//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+					
 					this.getManagedBean().setOverallContractAmt(overallAmt);
 
 				} else {
@@ -1045,8 +1050,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		if (isZonalWithPaOrPs()) {//29006 - change condition
 			if(scLoiLoa.isZonal()){
-				Map<Long, Integer> reqItemRowSpanMap = new HashMap<Long, Integer>();
-				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<Long, BigDecimal>();
+				//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+				Map<Long, Integer> reqItemRowSpanMap = new HashMap<>();
+				Map<Long, BigDecimal> reqItemMaxTotalMap = new HashMap<>();
+				//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				AwardSupplierResDTO itemsResDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
 				
 				//29006 - start
@@ -1100,9 +1107,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				this.getManagedBean().getScLoa().setLoaAmt(getManagedBean().getTotalZonePrice());//27797 & 29006
 				
 				if (this.getManagedBean().getScLoa().getSstAmt() != null) {
+					//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					BigDecimal overallAmt = BigDecimal.ZERO;
 					overallAmt = totalZonePrice.add(this.getManagedBean().getScLoa().getSstAmt());
-					overallAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					overallAmt = overallAmt.setScale(2, RoundingMode.HALF_EVEN);
+					//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 					this.getManagedBean().setOverallContractAmt(overallAmt);
 
@@ -4015,8 +4024,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				&& CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
 			// #29006 - start - reendorsed (comment 528)
 			boolean lampiranA3Exists = false;
-			Timestamp lampiranA3Time = null;
-			Timestamp justificationTime = null;
+			//Timestamp lampiranA3Time = null; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+			//Timestamp justificationTime = null; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			int count = 0;
 			StringBuffer updatedItems = new StringBuffer();			
 			// #29006 - end - reendorsed (comment 528)
@@ -4571,7 +4580,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		Boolean isZonalWithPaOrPs = false;
 		Boolean isZonal = getManagedBean().getScLoa().getScLoiLoa().isZonal();
-		String fulfilmentType = getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+//		String fulfilmentType = getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		String docType = getManagedBean().getScLoa().getScLoiLoa().getDocType();
 		
 		/*if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
@@ -8831,13 +8840,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 					}
 				}
-				
-				if (count > 1) {
-					getManagedBean().setMultipleSuppOffer(true);
-				}else{
-					getManagedBean().setMultipleSuppOffer(false);
-				}
-
+				//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+				getManagedBean().setMultipleSuppOffer(count > 1);
+				//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				setSelectedSupplierOffer(supplierOffer.toString());
 			}
 
@@ -8939,8 +8944,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				//end - #29006 note 819
 				
 				//#34766 - end
-				
-				List<String> nsoJustList = new ArrayList<String>();
+				//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+				List<String> nsoJustList = new ArrayList<>();
+				//[End] -Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				if(specResDTO.getSpecAnswerList().size() > 0){
 					for(TplSpecAnswer tplSpecAnswer : specResDTO.getSpecAnswerList()){
 						if (tplSpecAnswer.getNewSupplierOffer() != null
@@ -9087,9 +9093,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						&& getManagedBean().getSelectedItemId().compareTo(each.getLoiLoaItemId()) == 0) {
 					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 					reqDTO.setTplSpecAnswerList(new ArrayList<TplSpecAnswer>());
-					List<Long> tpaIdList = new ArrayList<Long>();
+					List<Long> tpaIdList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					int oldNewSuppOfferSameCount = 0;
-					List<TplSpecAnswer> clonedAnswerList = new ArrayList<TplSpecAnswer>();
+					List<TplSpecAnswer> clonedAnswerList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					for (TplSpecAnswer tpa : tpaList) {
 						tpa.setNewSupplierOffer(null);
 						tpaIdList.add(tpa.getSpecAnswerId());
@@ -9111,11 +9117,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					// Put into scLoiLoaItemAnswerMap for use in generating
 					// updated Lampiran A3 later
 					this.getManagedBean().getScLoiLoaItemAnswerMap().put(each.getLoiLoaItemId(), clonedAnswerList);
-					if (oldNewSuppOfferSameCount > 0) {
-						getManagedBean().setOldNewSuppOfferSameFlag(true);
-					} else {
-						getManagedBean().setOldNewSuppOfferSameFlag(false);
-					}
+					//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+					getManagedBean().setOldNewSuppOfferSameFlag(oldNewSuppOfferSameCount > 0);
+					//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					each.setLoaSpecJustification(null);
 					try {
 						// Save and update new supplier offer into each related TplSpecAnswer in DB
@@ -9141,7 +9145,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					} catch (Exception e) {
 						log.error(e);
 					}
-					List<String> nsoJustList = new ArrayList<String>();
+					//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+					List<String> nsoJustList = new ArrayList<>();
+					//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					nsoJustList.add("NSO_" + null);
 					nsoJustList.add("NSOJ_" + null);
 					if (MapUtils.isEmpty(getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap())) {
@@ -9179,7 +9185,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					// even if the item does not have new supplier offered.
 					// Otherwise, the Updated Lampiran A3 will not display
 					// the data of items without new supplier offered.
-					List<TplSpecAnswer> clonedAnswerList = new ArrayList<TplSpecAnswer>();
+					//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+					List<TplSpecAnswer> clonedAnswerList = new ArrayList<>();
+					//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					for (TplSpecAnswer tpa : tpaList) {
 						try {
 							// POPULATE tpaClone GOES HERE
@@ -9207,8 +9215,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		for (ScLoiLoaItem scLoiLoaItem : getManagedBean().getScLoa().getScLoiLoaItems()) {
 			List<ScLoiLoaItem> items = getQtAwardSO().getLoiLoaItemByLoaIdAndReqItemId(
 					scLoiLoaItem.getScLoa().getLoaId(), scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
-			
-			if (items.size() > 0) {
+			//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+			if (!items.isEmpty()) {
+			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				justificationIsChanged = true;
 				break;
 			}
@@ -9473,9 +9482,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							&& getManagedBean().getSelectedItemId().compareTo(each.getLoiLoaItemId()) == 0) {
 						AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 						reqDTO.setTplSpecAnswerList(new ArrayList<TplSpecAnswer>());
-						List<Long> tpaIdList = new ArrayList<Long>();
+						List<Long> tpaIdList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						int oldNewSuppOfferSameCount = 0;
-						List<TplSpecAnswer> clonedAnswerList = new ArrayList<TplSpecAnswer>();
+						List<TplSpecAnswer> clonedAnswerList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						for (TplSpecAnswer tpa : tpaList) {
 							tpa.setNewSupplierOffer(getManagedBean().getNewSupplierOffered());
 							tpaIdList.add(tpa.getSpecAnswerId());
@@ -9498,11 +9507,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// Put into scLoiLoaItemAnswerMap for use in generating
 						// updated Lampiran A3 later
 						this.getManagedBean().getScLoiLoaItemAnswerMap().put(each.getLoiLoaItemId(), clonedAnswerList);
-						if (oldNewSuppOfferSameCount > 0) {
-							getManagedBean().setOldNewSuppOfferSameFlag(true);
-						} else {
-							getManagedBean().setOldNewSuppOfferSameFlag(false);
-						}
+						//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+						getManagedBean().setOldNewSuppOfferSameFlag(oldNewSuppOfferSameCount > 0);
+						//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						each.setLoaSpecJustification(getManagedBean().getNewSupplierJustification());
 						try {
 							// Save and update new supplier offer into each
@@ -9534,7 +9541,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						} catch (Exception e) {
 							log.error(e);
 						}
-						List<String> nsoJustList = new ArrayList<String>();
+						List<String> nsoJustList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						nsoJustList.add("NSO_" + getManagedBean().getNewSupplierOffered());
 						nsoJustList.add("NSOJ_" + getManagedBean().getNewSupplierJustification());
 						if (MapUtils.isEmpty(getManagedBean().getScRequestItemIdNewSuppOfferAndJustMap())) {
@@ -9571,7 +9578,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// even if the item does not have new supplier offered.
 						// Otherwise, the Updated Lampiran A3 will not display
 						// the data of items without new supplier offered.
-						List<TplSpecAnswer> clonedAnswerList = new ArrayList<TplSpecAnswer>();
+						List<TplSpecAnswer> clonedAnswerList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						for (TplSpecAnswer tpa : tpaList) {
 							try {
 								// POPULATE tpaClone GOES HERE
@@ -9596,8 +9603,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			for (ScLoiLoaItem scLoiLoaItem : getManagedBean().getScLoa().getScLoiLoaItems()) {
 				List<ScLoiLoaItem> items = getQtAwardSO().getLoiLoaItemByLoaIdAndReqItemId(
 						scLoiLoaItem.getScLoa().getLoaId(), scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
-				
-				if (items.size() > 0) {
+				//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+				if (!items.isEmpty()) {
+				//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					justificationIsChanged = true;
 					break;
 				}
@@ -9871,23 +9879,32 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			//29006 @zaim start
 			getManagedBean().setTplSpecAnswerList(tplSpecAnswerList);
 			//29006 @zaim end
-				for (TplSpecAnswer tplSpecAnswer :tplSpecAnswerList) {
-					if(tplSpecAnswer.getIsWip() == null){
-						tplSpecAnswer.setIsWip(false);
-					}
-					
-					if(tplSpecAnswer.getIsWip())
-						break;
-					
-					scLoiLoaItem.getSupplierOfferDetailList().clear();
-					
-					if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {						
-						if(tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier)){							
-							scLoiLoaItem.getSupplierOfferDetailList().add(tplSpecAnswer.getAnswerRemark().replaceAll("<", "&#60;")); //#29006 note 819
-							break;
-						}
-					}
-				}				
+			boolean shouldBreak = false;
+			//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+			for (TplSpecAnswer tplSpecAnswer : tplSpecAnswerList) {
+			    if (tplSpecAnswer.getIsWip() == null) {
+			        tplSpecAnswer.setIsWip(false);
+			    }
+
+			    if (tplSpecAnswer.getIsWip()) {
+			        shouldBreak = true;
+			    } else {
+			        scLoiLoaItem.getSupplierOfferDetailList().clear();
+
+			        if (StringUtils.isNotBlank(tplSpecAnswer.getAnswerRemark())) {
+			            if (tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().equals(currentSupplier)) {
+			                scLoiLoaItem.getSupplierOfferDetailList().add(tplSpecAnswer.getAnswerRemark().replaceAll("<", "&#60;")); //#29006 note 819
+			                shouldBreak = true;
+			            }
+			        }
+			    }
+
+			    if (shouldBreak) {
+			        break;
+			    }
+			}
+			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+				
 		}
 				
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
@@ -9916,8 +9933,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItemCloneList) {
 			List<ScLoiLoaItem> items = getQtAwardSO().getLoiLoaItemByLoaIdAndReqItemId(
 					scLoiLoaItem.getScLoa().getLoaId(), scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
-			
-			if(items.size() > 0)
+			//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+			if(!items.isEmpty())
+			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				scLoiLoaItem.setComplete(items.get(0).isComplete());
 			else
 				scLoiLoaItem.setComplete(false);
@@ -10359,8 +10377,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 		}
-		totalPrice.setScale(2, BigDecimal.ROUND_UP);
-
+		//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		totalPrice = totalPrice.setScale(2, RoundingMode.UP);
+		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		return totalPrice;
 	}
 	// #29006 - note 746 - end
@@ -11399,7 +11418,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != "") {
 			reqDTO.setLoaId(this.getManagedBean().getScLoa().getLoaId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().searchScLoiLoaItemByLoaId(reqDTO);
-			List<ScLoiLoaItem> containCriteriaScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+			List<ScLoiLoaItem> containCriteriaScLoiLoaItemList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			
 			for(ScLoiLoaItem scLoiLoaItem : resDTO.getScLoiLoaItemList()){
 				String itemNameSearchCriteria = this.getItemNameSearchCriteria().toUpperCase().trim().replaceAll("[ ]{2,}", " ");

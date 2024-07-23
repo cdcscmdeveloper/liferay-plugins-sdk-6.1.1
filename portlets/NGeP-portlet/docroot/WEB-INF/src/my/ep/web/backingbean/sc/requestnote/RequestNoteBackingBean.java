@@ -498,15 +498,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					reloadRequestNote(scRequestNote);
 
 					// #29557 - start
-					Boolean PIcontinuity = false;
+					Boolean piContinuity = false; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					for (ScRequestNoteDtl scRequestNoteDtl : scRequestNote.getRequestNoteDtls()) {
 						if (scRequestNoteDtl.isShowPurchaseInquiry()) {
-							PIcontinuity = true;
+							piContinuity = true; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 							break;
 						}
 					}
 
-					if (PIcontinuity) {
+					if (piContinuity) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.FALSE);
 					} else {
@@ -1603,7 +1603,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
-					String pType = requestNoteDtl.getProcurementType().getParameterCode();
+//					String pType = requestNoteDtl.getProcurementType().getParameterCode(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					// #32362 - comment out this condition - start
 					/*
 					 * if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) &&

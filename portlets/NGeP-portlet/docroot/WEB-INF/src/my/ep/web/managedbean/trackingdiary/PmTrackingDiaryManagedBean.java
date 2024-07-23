@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -1027,6 +1027,25 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		public SearchTrackingDiaryPagingDataModel() {
 			super("trackingDiaryTableID");
 		}
+		
+		//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		// to get list of all supplier role
+		// Start - #25396
+		private List<String> getAllSupplierRole() {
+			List<String> supplierRoles = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+
+			supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
+			supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+			supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
+			supplierRoles.add(RoleCode.FL_USER.value());
+			supplierRoles.add(RoleCode.GOVT_SELLER.value());
+			supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+			supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
+
+			return supplierRoles;
+		}
+		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(ISearchBean<PmTrackingDiary> searchBean) {
@@ -1096,7 +1115,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 						// #25396 - Start
 						ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
-						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
+						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						if (isUseViewAsOption()) {
 							if (isViewAsSupplier()) {
 								List<String> listOfSupplierRole = getAllSupplierRole();
@@ -1166,22 +1185,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		return pmOrgProfile;
 	}
 
-	// to get list of all supplier role
-	// Start - #25396
-	private List<String> getAllSupplierRole() {
-		List<String> supplierRoles = new ArrayList<String>();
-
-		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
-		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
-		supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-		supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
-		supplierRoles.add(RoleCode.FL_USER.value());
-		supplierRoles.add(RoleCode.GOVT_SELLER.value());
-		supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
-		supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
-
-		return supplierRoles;
-	}
+	
 
 	// End - #25396
 
