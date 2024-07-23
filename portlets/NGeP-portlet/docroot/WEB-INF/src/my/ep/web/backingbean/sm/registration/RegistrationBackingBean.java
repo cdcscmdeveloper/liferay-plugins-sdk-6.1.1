@@ -433,6 +433,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//if ssm, disable role.
 					this.getManagedBean().setDisableRole(true);
 				}
+				//24819
+				this.getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
 				this.getManagedBean().setSmPersonnelDirector(ssmResDTO.getSmPersonnelDirector());
 				this.getManagedBean().setSmAppl(ssmResDTO.getSmAppl());
@@ -2467,6 +2469,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}
 						}
 						
+						//24819
+						getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET SMSUPPLIEROWNER
 						if(ssmResDTO.getSmSupplierOwners() != null) {
 							if(this.getManagedBean().getSmSuppOwners() == null){
