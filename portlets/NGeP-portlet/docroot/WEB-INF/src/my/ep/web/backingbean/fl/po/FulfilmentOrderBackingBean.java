@@ -668,7 +668,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			//34316-Start
 			if(getManagedBean().getFulfilmentOrder().isYep()){
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-				flReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER); //#34316 update to DOCTYPE_CONTRACT_ORDER
 				flReqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
 				
 				FulfilmentResDTO resDTO = null;
