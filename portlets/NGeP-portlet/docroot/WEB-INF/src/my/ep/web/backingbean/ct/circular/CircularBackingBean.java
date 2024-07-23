@@ -571,6 +571,8 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			getManagedBean().setPqCircularType(true);
 		} else {
 			getManagedBean().setPqCircularType(false);
+			getManagedBean().setProcurementMode(null);
+			getManagedBean().setProcurementModeCode(null);
 		}
 	}
 
