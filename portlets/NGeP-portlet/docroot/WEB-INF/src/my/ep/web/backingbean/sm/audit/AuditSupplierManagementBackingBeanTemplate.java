@@ -82,9 +82,9 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 
 	private PmOrgProfile retriveUserOrg(Long userOrgId) {
 		PmOrgProfile orgProfile = new PmOrgProfile();
-		if(userOrgId != null){
+		if (userOrgId != null) {
 			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
-			if(!orgList.isEmpty()){
+			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
 			}
 		}
@@ -128,11 +128,16 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 		}
 		auObj.setRoleCode(roleCode);
-		auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
-		if (org.getPmOrgValidityList().isEmpty()) {
-			auObj.setOrgName(org.getSmSupplier().getCompanyName());
+		if(org == null){
+			auObj.setOrgProfileId(null);
+			auObj.setOrgName(null);
 		} else {
-			auObj.setOrgName(org.getOrgName());
+			auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
+			if (org.getPmOrgValidityList().isEmpty()) {
+				auObj.setOrgName(org.getSmSupplier().getCompanyName());
+			} else {
+				auObj.setOrgName(org.getOrgName());
+			}
 		}
 		auObj.setDocId(BigInteger.valueOf(supplier.getSupplierId()));
 		auObj.setDocNo(supplier.getEpNo());
