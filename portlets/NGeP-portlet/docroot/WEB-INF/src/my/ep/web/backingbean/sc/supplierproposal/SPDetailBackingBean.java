@@ -1285,10 +1285,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
-						//28777 - start
-						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
-							continue;
-						//28777 - end
+						
+						
+						
+						
+						
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
