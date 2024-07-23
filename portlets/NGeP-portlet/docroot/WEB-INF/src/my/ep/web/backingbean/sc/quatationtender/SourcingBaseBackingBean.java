@@ -1658,7 +1658,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QUOTATION_THRESHOLD);
-			reqDTO.setCompareValue(estimatedAmount.toString());
+			reqDTO.setCompareValue(estimatedAmount != null ? estimatedAmount.toString() : "0");	// Bug #36072@Syazani 22/07/2024
 			List<String> ruleValueStrList = ruleSO
 					.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
 					.getRuleValueStrList();
@@ -3688,6 +3688,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//Bug #36104 start
+	private void getAnswerRemarkItem(ScLoa scLoa, List<String> answerRemarkList, TplSpecQuestion tplSpecQuestion) {
+
+		SmSupplier suppLoa = scLoa.getScLoiLoa().getSmSupplier();
+		if(CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecAnswers())){		
+			for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
+				
+				SmSupplier suppAns = new SmSupplier();
+			
+				if(null != tplSpecAnswer.getTplSpecSuppAnswer() 
+						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
+					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
+				}
+				
+				if (null != suppAns.getSupplierId()
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
+						&& null != tplSpecAnswer.getAnswerRemark()){					
+					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+					break;
+				}
+			}
+		}
+	}
+	//Bug #36104 end
+	
 	// #26130 - Start
 	/**
 	 * @param scLoa
@@ -3708,16 +3733,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (answerRemarkList == null) {
 						answerRemarkList = new ArrayList<>();
 					}
-					//32648 - start
-					if (null != tplSpecQuestion.getTplSpecAnswers() && !tplSpecQuestion.getTplSpecAnswers().isEmpty()){
-						//32648 & 34406 - start						
-						if (tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark() != null){
-							answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
-						}
-						//32648 & 34406 - end
-					}
-					//32648 - end
-					// #26130 - End
+					
+					getAnswerRemarkItem(scLoa, answerRemarkList, tplSpecQuestion); //Bug #36104 
+					
 					addSpecList = true;
 					continue;
 				}
