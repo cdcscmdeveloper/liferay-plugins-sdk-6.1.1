@@ -2663,14 +2663,18 @@ public class EvaluationBackingBean extends
 							// 34943 - start
 							String evalStageStr = evalstage.get(0);
 							// 28784 - Start
-							if (this.getManagedBean().getScQt().isDemoRequired()
-									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean()
-											.getScQt().getEvaluationType())) {
-								evalStageStr = StringUtils.join(Arrays.asList(QTConstants.TECHNICAL_EVALUATION_BY_ITEM,
-										   QTConstants.PRESENTATION_DEMO_EVALUATION),",");//#36143 updated Vinod
-							} else {
-								evalStageStr = StringUtils.join(
-										Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
+							if (evalstage.contains(QTConstants.TECHNICAL_EVALUATION_BY_ITEM)
+									&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+											.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+								if (this.getManagedBean().getScQt().isDemoRequired()
+										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean()
+												.getScQt().getEvaluationType())) {
+									evalStageStr = StringUtils.join(Arrays.asList(QTConstants.TECHNICAL_EVALUATION_BY_ITEM,
+											   QTConstants.PRESENTATION_DEMO_EVALUATION),",");//#36143 updated Vinod
+								} else {
+									evalStageStr = StringUtils.join(
+											Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
+								}
 							}
 							// 28784 - end
 							localCheckList.add(checkStausForUploadNoActionCheckLists(checkList, evalStageStr));
