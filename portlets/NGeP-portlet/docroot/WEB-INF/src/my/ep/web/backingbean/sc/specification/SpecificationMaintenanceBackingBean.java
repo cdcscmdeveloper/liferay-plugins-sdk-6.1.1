@@ -60,6 +60,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 /**
  * The Class SpecificationBackingBean.
@@ -432,10 +433,29 @@ public void specCommitteeMaintenancereset() {
 	 * @param ScQt scQt.
 	 * @param Boolean true/false.
 	 */
+	// 25037 - start - note 510
 	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable) {
-		/*** 25692#95 ** -start- */
+		editSpecificationMaintenance(scQt, isEditable, false);
+	}
+
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
 		editSpecificationMaintenance(scQt, isEditable, true, false, null);
-		/*** 25692#95 ** -end- */
+		if (popup) {
+			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
+			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
+				SpecificationBackingBean specBB = new SpecificationBackingBean();
+				// temporary while awaiting #29474 close in SIT -start-
+				// remove when #29474 ready for UAT
+				specBB.qtChecklistTabChange(9);
+				// temporary while awaiting #29474 close in SIT -end-
+
+				// use this when #29474 ready for UAT -start-
+				// specBB.qtChecklistTabChange(10);
+				// use this when #29474 ready for UAT -end-
+				// RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			}
+		}
+	// 25037 - end - note 510
 	}
 
 	/**
@@ -701,13 +721,16 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		// 1873 note 125 end
 	}
 
-private boolean checkStatus(Long statusId){
-	
-	return isQTStatusInBetween(statusId,
-			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-	
-}
+	private boolean checkStatus(Long statusId) {
+		// 25037 - start
+		if (QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)) {
+			return false;
+		}
+		// 25037 - end
+		return isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+
+	}
 
 	// #15391 - start
 	public boolean isSpecCommittee() {

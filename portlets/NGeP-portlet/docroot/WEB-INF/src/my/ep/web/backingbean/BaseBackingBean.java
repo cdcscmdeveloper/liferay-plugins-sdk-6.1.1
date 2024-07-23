@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -1387,13 +1389,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param String
 	 *            [] params
 	 */
-	//#25037-START
-	public void successMessage(String messageCode, String [] params){
+	// 25037 - start
+	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
-	//#25037-END
 
-	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
+	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
+	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -1402,13 +1404,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								params,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		//#25037-START
+		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
-		//#25037-END
-
+		// 25037 - end
 	}
 
 	/**
@@ -2246,7 +2247,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
-
+			// 25037 - start
+			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
+			// 25037 - end
+			
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2261,16 +2266,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return the string[]
 	 */
 	private String[] sortOutcomes(String[] outComes) {
+		// 25037(29253) - start
+		outComes = outComes == null ? new String[] {} : outComes;
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
+			// last index will appear on the far right,
+			// if outcome not ranked, order come as is,
+			// existed ordered outcome will take precedent
+			List<String> sortOrder = Arrays.asList(orderedAction);
 
-		// Move 'Cancel' button to the last
-		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
-				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
-						BpmOutcomeConst.BPM_CANCEL)) {
-			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
-			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
-		}
-
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		});
+		// 25037(29253) - end
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
 	}
