@@ -1935,6 +1935,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+					
+					//#33388 - Start										
+					if(scRequestNote != null){
+						requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
+						getRequestNoteSO().checkingRequestSupplierItemId(requestNoteReqDTO);
+					}
+					//#33388 - End
+					
 					//26059 - start - replace with original code
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
