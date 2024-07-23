@@ -14,10 +14,11 @@
 		<cc:attribute name="widget" default="" />
 		<cc:attribute name="okAction" required="true" default="" />
 		<cc:attribute name="cancelAction" default="" />
-		<cc:attribute name="width" default="400" />
-		<cc:attribute name="height" default="200" />
+		<cc:attribute name="width" default="auto" />
+		<cc:attribute name="height" default="auto" />
 		<cc:attribute name="resetInput" default="" />
 		<cc:attribute name="okProcess" default="@this" />
+		<cc:attribute name="noProcess" default="@this" />
 		<!-- 25692 -start- -->
 		<cc:attribute name="style" default="" />
 		<cc:attribute name="dialogCSS" default="" />
@@ -53,7 +54,7 @@
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />		
 		
 		<!-- 25692 -start- -->
-		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
+		<p:dialog styleClass="confirm-ui-dialog" id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
 			header="#{confirmationheader}" resizable="false"
 			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
 			closable="false" modal="true" style="#{cc.attrs.style}">
@@ -74,15 +75,23 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
+					<c:when test="#{not empty cc.attrs.loadingWidget}">
+						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
+						<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" 
+							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+					</c:when>
 				    <c:when test="#{empty cc.attrs.resetInput}">
-				       <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+				       <p:commandButton id="yesWithResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
 				    </c:when>
 				    <c:otherwise>
-				        <p:commandButton value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+				        <p:commandButton id="yesWithoutResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
@@ -93,16 +102,17 @@
 				</c:choose>
 				<c:choose>
 				    <c:when test="#{not empty cc.attrs.cancelAction}">
-				    	<p:commandButton value="#{lbl['lbl.btn.no']}"
+				    	<p:commandButton id="noWithActionId" value="#{lbl['lbl.btn.no']}"
 				    		partialSubmit="true" 
 				    		onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.cancelAction)}"
-							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}"
+							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" 
+							process="#{cc.attrs.noProcess}"						
 						/>
 				    </c:when>
 				    <c:otherwise>
-				    	<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
-							oncomplete="#{cc.attrs.widget}.hide();" />
+				    	<p:commandButton id="noWithoutActionId" value="#{lbl['lbl.btn.no']}" immediate="true"
+							oncomplete="#{cc.attrs.widget}.hide();" process="#{cc.attrs.noProcess}"/>
 				    </c:otherwise>
 				    </c:choose>
 				
