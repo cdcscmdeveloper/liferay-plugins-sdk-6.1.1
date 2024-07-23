@@ -22525,8 +22525,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 		}
+		
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean()
 				.getQtCategoryList();
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())) {
+			retriveSupplierQualificationCriteria("SC");
+			qtCatCodeList = this.getManagedBean().getQtCategoryList();
+		}
+		
 		String catCodeList = "";
 		Integer recordstatusInactive = 0; //#29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
