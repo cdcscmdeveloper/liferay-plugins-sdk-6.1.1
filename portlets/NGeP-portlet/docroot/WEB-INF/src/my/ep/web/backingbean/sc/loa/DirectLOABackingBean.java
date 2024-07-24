@@ -11219,8 +11219,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
 				char[] arr = text.toCharArray();
 				arr[index] = Character.toLowerCase(arr[index]);
-				String newPrefixName = new String(arr);
-				return newPrefixName;
+				return new String(arr); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 			}
 			return text;	
 		}
@@ -12410,7 +12409,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put(SSTConstant.specType, specType);
 					map.put(SSTConstant.itemType, itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ String.valueOf(rowspan));
+					log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					map.put(SSTConstant.rowSpan, rowspan);
 					listZonalDLSpec.add(map);
 				}
@@ -12515,7 +12514,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put(SSTConstant.specType, specType);
 					map.put(SSTConstant.itemType, itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ String.valueOf(rowspan));
+					log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					map.put(SSTConstant.rowSpan, rowspan);
 					listZonalDLSpec.add(map);
 				}
@@ -12537,7 +12536,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				map.put(SSTConstant.specType, specType);
 				map.put(SSTConstant.itemType, itemType);
 				int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-				log.info("Calculate "+ String.valueOf(rowspan));
+				log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				map.put(SSTConstant.rowSpan, rowspan);
 				listZonalDLSpec.add(map);
 			}

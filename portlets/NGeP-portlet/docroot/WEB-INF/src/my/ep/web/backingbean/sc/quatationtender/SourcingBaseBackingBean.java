@@ -3821,60 +3821,65 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for(String tempSpecVal: specList){
 				HashMap<String, String> map = new HashMap<>();
 				map.put(SSTConstant.specValue, tempSpecVal);
-				if (feedbackList != null &&  CollectionUtils.isNotEmpty(feedbackList) ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-					for(String tempFeedback: feedbackList){
-						if (tempSpecZoneQty > 0){
-							if (tempFeedbackIndex >= tempSpecZoneQty){
-								if (indexFeedbackStore == 0){
-									map.put(SSTConstant.Feedback, tempFeedback);
-									indexFeedbackStore = tempFeedbackIndex;
-									break;
-								}else if (tempFeedbackIndex > indexFeedbackStore){
-									map.put(SSTConstant.Feedback, tempFeedback);
-									indexFeedbackStore = tempFeedbackIndex;
-									break;
-								}
-							}
-							tempFeedbackIndex++;
-						}else {
-							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
-								map.put(SSTConstant.Feedback, tempFeedback);
-								indexFeedbackStore = tempFeedbackIndex;
-								break;
-							}
-							tempFeedbackIndex++;
-						}
-					}
+				//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+				if (feedbackList != null && CollectionUtils.isNotEmpty(feedbackList)) { // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				    for (String tempFeedback : feedbackList) {
+				        boolean shouldBreak = false;
+
+				        if (tempSpecZoneQty > 0) {
+				            if (tempFeedbackIndex >= tempSpecZoneQty) {
+				                if (indexFeedbackStore == 0 || tempFeedbackIndex > indexFeedbackStore) {
+				                    map.put(SSTConstant.Feedback, tempFeedback);
+				                    indexFeedbackStore = tempFeedbackIndex;
+				                    shouldBreak = true;
+				                }
+				            }
+				        } else {
+				            if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore) {
+				                map.put(SSTConstant.Feedback, tempFeedback);
+				                indexFeedbackStore = tempFeedbackIndex;
+				                shouldBreak = true;
+				            }
+				        }
+
+				        tempFeedbackIndex++;
+
+				        if (shouldBreak) {
+				            break;
+				        }
+				    }
 				}
-				if (answerRemarkList != null && CollectionUtils.isNotEmpty(answerRemarkList) ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
-					for (String tempRemark: answerRemarkList){
-						if (tempRemark == null){
-							tempRemark = SSTConstant.TB;
-						}else{
-							if (tempSpecZoneQty > 0){
-								if (tempRemarkIndex >= tempSpecZoneQty){
-									if (indexRemarkStore == 0){
-										map.put(SSTConstant.Remark, tempRemark);
-										indexRemarkStore = tempRemarkIndex;
-										break;
-									}else if (tempRemarkIndex > indexRemarkStore){
-										map.put(SSTConstant.Remark, tempRemark);
-										indexRemarkStore = tempRemarkIndex;
-										break;
-									}
-								}
-								tempRemarkIndex++;
-							}else {
-								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
-									map.put(SSTConstant.Remark, tempRemark);
-									indexRemarkStore = tempRemarkIndex;
-									break;
-								}
-								tempRemarkIndex++;
-							}
-						}
-					}
-			}
+				if (answerRemarkList != null && CollectionUtils.isNotEmpty(answerRemarkList)) { // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				    for (String tempRemark : answerRemarkList) {
+				        boolean shouldBreak = false;
+
+				        if (tempRemark == null) {
+				            tempRemark = SSTConstant.TB;
+				        } else {
+				            if (tempSpecZoneQty > 0) {
+				                if (tempRemarkIndex >= tempSpecZoneQty) {
+				                    if (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore) {
+				                        map.put(SSTConstant.Remark, tempRemark);
+				                        indexRemarkStore = tempRemarkIndex;
+				                        shouldBreak = true;
+				                    }
+				                }
+				            } else {
+				                if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
+				                    map.put(SSTConstant.Remark, tempRemark);
+				                    indexRemarkStore = tempRemarkIndex;
+				                    shouldBreak = true;
+				                }
+				            }
+				            tempRemarkIndex++;
+				        }
+
+				        if (shouldBreak) {
+				            break;
+				        }
+				    }
+				}
+				//[End] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					tempFeedbackIndex = 0;
 					tempRemarkIndex = 0;
 				listCombine.add(map);	
@@ -3930,7 +3935,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
 			String dafaltValue = SSTConstant.TB;
-			if (masters.size() > 0) {
+			if (!masters.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				masters.clear();
 			}
 			for (ScLoiLoaItem item : items) {
@@ -6564,8 +6569,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		//#26130 start
 		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
-			StringBuilder sb = new StringBuilder();
-			if (listTplSpecTierQties.size() > 0) {
+			StringBuilder sb = new StringBuilder(); 
+			if (!listTplSpecTierQties.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				for (TplSpecTierQty qty : listTplSpecTierQties) {
 					sb.append(qty.getFromQty() + " - " + qty.getToQty() + "<br />");
 				}
