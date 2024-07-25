@@ -10,6 +10,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
+import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 
 /**
  * @author Firdaus Omar
@@ -34,25 +35,24 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 		String oldAdminIC = "";
 		String newAdminIC = "";
 		SmSupplier supplier = new SmSupplier();
-		
-		if(managedBean.isForceReplace()){
+		if (managedBean.isForceReplace()) {
 			ForceReplaceSuppAdminManagedBean mBean = (ForceReplaceSuppAdminManagedBean) managedBean;
 			oldAdminIC = mBean.getOldIdentification();
 			newAdminIC = mBean.getNewIdentifiction();
 			supplier = mBean.getSmSupplier();
-			org = null;
 			auObj.setCreatedBy(null);
 			auObj.setChangedBy(null);
+		} else {
+			SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
+			oldAdminIC = mBean.getUpdateSmPersonnel().getIdentificationNo();
+			newAdminIC = mBean.getSelectedPersonnelToReassign().getIdentificationNo();
+			supplier = mBean.getSmSupplier();
 		}
-		
 		auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-				AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ADMIN_IDENTIFICATION_NO, oldAdminIC, newAdminIC, null, null,
-				AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ADMIN_IDENTIFICATION_NO));
-
+				AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ADMIN_IDENTIFICATION_NO, oldAdminIC, newAdminIC, null,
+				null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ADMIN_IDENTIFICATION_NO));
 		auditBaseData(auObj, supplier, roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO);
-		
-
 		return auObj;
 	}
 }
