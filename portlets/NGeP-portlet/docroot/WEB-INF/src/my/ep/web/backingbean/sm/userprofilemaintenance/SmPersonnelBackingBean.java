@@ -90,6 +90,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailsSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.persistence.logging.LogKey;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+//#28895_35501 End
 
 @ManagedBean(name = "smPersonnelBackingBean")
 @RequestScoped
@@ -188,6 +197,8 @@ public class SmPersonnelBackingBean extends
 		renewSesionObject();
 		boolean isHasSupplierUser = false;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		// #28895_35501 - AUDIT TRAIL SM
+		getManagedBean().setSmSupplier(smSupplier);
 		SmPersonnel adminPersonnel = null;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
@@ -2641,6 +2652,15 @@ public class SmPersonnelBackingBean extends
 		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
 
 		if (resDTO.isSuccessful()) {
+			// #28895_35501 Start - AUDIT TRAIL SM
+			IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailsSO.class);
+			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				LogKey logKey = new LogKey();
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+			}
+			// #28895_35501 End
 			SmCommonUtil
 					.callDeactivationSuccessDialog(MessageConst.INFO_721027);
 		} else {

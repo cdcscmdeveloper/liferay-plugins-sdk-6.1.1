@@ -2960,6 +2960,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
 				//checking with ssm
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				//#29582
+				ssmReqDTO.setSmSupp(smSupplier);
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
 				//27329

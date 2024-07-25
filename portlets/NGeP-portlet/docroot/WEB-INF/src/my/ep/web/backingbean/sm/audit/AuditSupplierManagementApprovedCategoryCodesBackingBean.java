@@ -39,7 +39,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		ListIterator<SmSupplierCategory> newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories()
 				.listIterator();
 
-		// Expected Max Size in loop (571)
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			if (!newApprovedCategory.getRecordStatusFlg().equals(1)) {
@@ -48,10 +48,10 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		}
 		newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories().listIterator();
 
-		// Expected Max Size in loop (571)
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
-			// Expected Max Size in loop (571)
+			// Expected Max Size in loop (30) based on NGEP_PDS database
 			while (newApprovedCategories.hasNext()) {
 				SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 				if (oldApprovedCategory.getSupplierCategoryId().equals(newApprovedCategory.getSupplierCategoryId())) {
@@ -81,7 +81,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 
 	private void auditAddedData(ListIterator<SmSupplierCategory> newApprovedCategories,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
-		// Expected Max Size in loop (571)
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		while (newApprovedCategories.hasNext()) {
 			SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
@@ -99,7 +99,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 
 	private void auditDeletedData(ListIterator<SmSupplierCategory> oldApprovedCategories,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
-		// Expected Max Size in loop (571)
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		while (oldApprovedCategories.hasNext()) {
 			SmSupplierCategory oldApprovedCategory = oldApprovedCategories.next();
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,

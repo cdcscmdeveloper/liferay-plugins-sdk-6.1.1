@@ -62,6 +62,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -449,7 +450,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			searchAdminProfile();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogKey logKey = new LogKey();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "retrieve", id.toString(), "UserSO", logKey.getUserId(), e);
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}
 	}

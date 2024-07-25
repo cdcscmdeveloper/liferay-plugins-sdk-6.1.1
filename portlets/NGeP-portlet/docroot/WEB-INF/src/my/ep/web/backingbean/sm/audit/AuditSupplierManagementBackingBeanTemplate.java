@@ -42,12 +42,18 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	 *            Save audit data
 	 */
 	public final void saveAuditData(BaseManagedBean manageBean, Long userId) {
-		String roleCode = getRoleCode();
-		PmOrgProfile org = retriveUserOrg(userId);
-		AuditSupplierManagementDTO auObj = prepareAuditData(manageBean, roleCode, org);
-		if (!auObj.getAuditDetails().isEmpty()) {
-			auditSmSo(auObj);
+		try {
+			String roleCode = getRoleCode();
+			PmOrgProfile org = retriveUserOrg(userId);
+			AuditSupplierManagementDTO auObj = prepareAuditData(manageBean, roleCode, org);
+			if (!auObj.getAuditDetails().isEmpty()) {
+				auditSmSo(auObj);
+			}
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null,
+					"AuditSupplierManagementSO", logKey.getUserId(), ex);
 		}
+
 	}
 
 	private String getRoleCode() {
@@ -75,8 +81,14 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	}
 
 	private PmOrgProfile retriveUserOrg(Long userOrgId) {
-		List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
-		return orgList.get(0).getPmOrgProfile();
+		PmOrgProfile orgProfile = null;
+		if (userOrgId != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
+			if (!orgList.isEmpty()) {
+				orgProfile = orgList.get(0).getPmOrgProfile();
+			}
+		}
+		return orgProfile;
 	}
 
 	/**
@@ -116,11 +128,16 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 		}
 		auObj.setRoleCode(roleCode);
-		auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
-		if (org.getPmOrgValidityList().isEmpty()) {
-			auObj.setOrgName(org.getSmSupplier().getCompanyName());
+		if(org == null){
+			auObj.setOrgProfileId(null);
+			auObj.setOrgName(null);
 		} else {
-			auObj.setOrgName(org.getOrgName());
+			auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
+			if (org.getPmOrgValidityList().isEmpty()) {
+				auObj.setOrgName(org.getSmSupplier().getCompanyName());
+			} else {
+				auObj.setOrgName(org.getOrgName());
+			}
 		}
 		auObj.setDocId(BigInteger.valueOf(supplier.getSupplierId()));
 		auObj.setDocNo(supplier.getEpNo());

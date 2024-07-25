@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.supplieruseractivation;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -146,9 +147,9 @@ public class SupplierUserActivationBackingBean extends
 				&& isLatestActivationEmail(createdTimeParam, personnel)) {
 			//#32040 START
 			String adminName = null;
-			if(supplierProfile.getSmAppl().getSmPersonnels() != null){
-				for(SmPersonnel person : supplierProfile.getSmAppl().getSmPersonnels()){
-					if(!person.getEpRole().isEmpty() &&
+			if(personnel.getSmAppl() != null && personnel.getSmAppl().getSmPersonnels() != null){
+				for(SmPersonnel person : personnel.getSmAppl().getSmPersonnels()){
+					if(person.getEpRole() != null &&
 							Arrays.asList(ADMIN_ROLES).contains(person.getEpRole())){
 						adminName = person.getName();
 						break;
@@ -184,7 +185,7 @@ public class SupplierUserActivationBackingBean extends
 					// redirect & display activation expired
 					this.getManagedBean().setValidActivation(false);
 					//#32040
-					if(!personnel.getEpRole().isEmpty()){
+					if(personnel.getEpRole() != null){
 						if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
 							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
 									new String[] { SmRuleHelper.getInstance()
@@ -200,7 +201,7 @@ public class SupplierUserActivationBackingBean extends
 				// redirect & display invalid activation
 				this.getManagedBean().setValidActivation(false);
 				//#32040
-				if(!personnel.getEpRole().isEmpty()){
+				if(personnel.getEpRole() != null){
 					if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
 						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
 								new String[] { SmRuleHelper.getInstance()
@@ -611,11 +612,11 @@ public class SupplierUserActivationBackingBean extends
 			SmPersonnel smPersonnel) {
 		boolean retVal = true;
 		try { //#32040 START
-			Date activationdate;
+			Timestamp activationDate;
 			if(smPersonnel.getActivationDate() != null){
-				activationdate = smPersonnel.getActivationDate();
+				activationDate = smPersonnel.getActivationDate();
 			}else{
-				activationdate = smPersonnel.getCreatedDate();
+				activationDate = smPersonnel.getCreatedDate();
 			}
 			if (createdTimeParam != null
 					&& StringUtils.isNotBlank(createdTimeParam)) {
@@ -624,9 +625,9 @@ public class SupplierUserActivationBackingBean extends
 						+ " sendMailDate:"
 						+ createdTimeParam
 						+ " activationDate:"
-						+ activationdate.getTime());
+						+ activationDate.getTime());
 				Long createdTime = Long.parseLong(createdTimeParam);
-				if (createdTime.compareTo(activationdate
+				if (createdTime.compareTo(activationDate
 						.getTime()) != 0) {
 					retVal = false;
 				}
