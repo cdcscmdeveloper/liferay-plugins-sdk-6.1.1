@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.primefaces.component.log.Log;
 
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -17,6 +18,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -141,5 +143,34 @@ public class VmUtil {
 	public String getCompleteAddress(SmAddress smAdd) {
 		return AddressUtils.getFullAddress(smAdd);
 	}
+	
+	// 36122 - start
+	/**
+	 * This method will break Long words to display properly in velocity
+	 * template.
+	 * 
+	 * @param key
+	 * @param maxLength
+	 * @return the updatedKey
+	 */
+	public String addLineBreaks(String key, int maxLength) {
+		if (key == null || maxLength <= 0) {
+			return key;
+		}
+		String[] stringArray = key.split("\\s+");
+		StringBuilder updatedKey = new StringBuilder();
+		for (String s : stringArray) {
+			if (s.length() > maxLength) {
+				updatedKey.append(s.replaceAll("(.{" + maxLength + "})(?!$)",
+						"$1" + TemplateSpecConst.HTML_NEW_LINE_CHARACTER).concat(SSTConstant.ADD_WHITESPACE));
+			} else {
+				updatedKey.append(s.concat(SSTConstant.ADD_WHITESPACE));
+			}
+			log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
+		}
+		return updatedKey.toString();
+	}
+
+	// 36122 - end
 	
 }

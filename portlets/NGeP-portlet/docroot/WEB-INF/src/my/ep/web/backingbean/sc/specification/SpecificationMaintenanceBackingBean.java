@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -612,12 +612,15 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		
 		// #29732 @idham 25/07/2023 - Start
 		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-				&& (QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(scQt.getQtStatus().getStatusId())
-						|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(scQt.getQtStatus().getStatusId())
-						&& !this.getManagedBean().isReadOnly() || QTStatusConst.QT_REVISION_PUBLICATION.equals(scQt
-						.getQtStatus().getStatusId())) && !this.getManagedBean().isReadOnly()) {
+				&& !isQtRevisePubNqtPendingScheDoc()) {
+			if (isSpecRoleMaintenanceValidation()) {
+				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
+
 			if (!changedCatCodeList.isEmpty()) {
+				redirect = false;
 				this.getManagedBean().setActiveIndex(1);
 				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
 				FacesContext.getCurrentInstance().addMessage(
@@ -631,13 +634,13 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 			}
-			this.getManagedBean().setCurrentInSpecMaint(true);//#29732 first time spec maint
 		}
 		// #29732 @idham 25/07/2023 - End
 		
 		//29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
-		if(redirect || checkDemoRedirect()){//#28784
+		if((redirect && !this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE))
+				|| (checkDemoRedirect() && !this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE))){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		//29464-end
@@ -812,5 +815,24 @@ public boolean isSpecCommittee() {
 	public boolean isSpecEndorsmentScreen() {
 		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
+	
+	  //29732 start
+    private boolean isSpecRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
+	}
+
+	private boolean isQtRevisePubNqtPendingScheDoc() {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (QTStatusConst.QT_REVISION_PUBLICATION.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+						.equals(this.getManagedBean().getCurrentStatusId()))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+    //29732 end
 
 }
