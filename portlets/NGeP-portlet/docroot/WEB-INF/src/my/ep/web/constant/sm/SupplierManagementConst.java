@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2012 Archisoft Consulting Sdn Bhd. All rights reserved.
+ * Copyright © 2012 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.constant.sm;
 
@@ -560,8 +560,6 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_PODEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC;
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC;
 	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY;
-	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL; //35501
-
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
 	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
@@ -1444,13 +1442,6 @@ public class SupplierManagementConst {
 
 	public static String getIdentificationTypeIc() {
 		return IDENTIFICATION_TYPE_IC;
-	}
-
-	/**
-	 * @return the smApplPageTypeAuditTrail
-	 */
-	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
-		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
 	}
 
 }
