@@ -10416,6 +10416,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public boolean isNewOfferComplete(ScLoiLoaItem loiLoaItem) {
 		List<TplSpecAnswer> tpaList = getTemplateSpecSO().findSpecAnswersByQuestion(
 				loiLoaItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId());
+		//Maximum result 21 rows
 		for (TplSpecAnswer tplSpecAnswer : tpaList) {
 			if (StringUtils.isBlank(tplSpecAnswer.getNewSupplierOffer()) || tplSpecAnswer.getNewSupplierOffer() == null) {
 				return false;
@@ -10431,6 +10432,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public boolean isJustificationComplete(List<ScLoiLoaItem> items) {
 		if (CollectionUtils.isNotEmpty(items)) {
+			//loop only 1 row
 			for (ScLoiLoaItem scloiLoaItem : items) {
 				if (scloiLoaItem.isComplete())
 					return true;
