@@ -2287,6 +2287,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_BRIEFING_SITE_VISIT);
 	}
 	
+	//25037-start
+	public boolean isQTStatusEvaluation(Long currentStatusId) {
+		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
+	}
+	//25037-end
+	
 	/**
 	 * Check if QT Status greater than or equals from status.
 	 * 
@@ -5326,6 +5332,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// Enhancement #26130 -end-
 
+	//Bug #36104 start
+	private void getAnswerRemarkItem(ScLoa scLoa, List<String> answerRemarkList, TplSpecQuestion tplSpecQuestion) {
+
+		SmSupplier suppLoa = scLoa.getScLoiLoa().getSmSupplier();
+		if(CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecAnswers())){		
+			for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
+				
+				SmSupplier suppAns = new SmSupplier();
+			
+				if(null != tplSpecAnswer.getTplSpecSuppAnswer() 
+						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
+					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
+				}
+				
+				if (null != suppAns.getSupplierId()
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
+						&& null != tplSpecAnswer.getAnswerRemark()){					
+					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+					break;
+				}
+			}
+		}
+	}
+	//Bug #36104 end
+	
 	// #26130 - Start
 	/**
 	 * @param scLoa
@@ -5345,15 +5376,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						answerRemarkList = new ArrayList<>();
 					}
 
-					// 32648 - start
-					if (null != tplSpecQuestion.getTplSpecAnswers() && tplSpecQuestion.getTplSpecAnswers().size() > 0) {
-						// 32648 & 34406 - start
-						if (tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark() != null) {
-							answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
-						}
-						// 32648 & 34406 - end
-					}
-					// 32648 - end
+					getAnswerRemarkItem(scLoa, answerRemarkList, tplSpecQuestion); //Bug #36104
 
 					addSpecList = true;
 					continue;
