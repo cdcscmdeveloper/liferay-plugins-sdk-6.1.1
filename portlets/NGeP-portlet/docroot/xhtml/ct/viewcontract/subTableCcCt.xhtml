@@ -38,7 +38,7 @@
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.contract.no']}"
 					style="width:10%;" styleClass="column-align-center">
 					<p:commandLink value="#{metadata.contractNo}"
-						styleClass="blue_font" style="text-align:left; float:left;"
+						styleClass="blue_font" style="text-align:left; float:left; color:#009ae5 !important;"
 						action="#{contractDetailsBackingBean.gotoViewPage(metadata.ctContract.contractId, metadata.ctContract.latestContractVer.contractVerId)}"
 						onstart="blkContractSearchAuditTable.show()"
 						oncomplete="blkContractSearchAuditTable.hide()">
@@ -48,7 +48,7 @@
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.contract.title']}"
 					styleClass="column-align-center"
-					style="width:25%;white-space:normal;">
+					style="width:15%; white-space:normal;">
 					<div align="left">
 						<h:outputText value="#{metadata.contractName}"
 							style="text-align:left; float:left;" />
@@ -93,7 +93,10 @@
 					style="width:10%;" styleClass="column-align-center">
 					<div align="left">
 						<h:outputText value="#{metadata.effDate}"
-							style="text-align:left; float:left;" />
+							style="text-align:left; float:left;"> 
+							<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
 					</div>
 				</p:column>
 
@@ -101,7 +104,10 @@
 					styleClass="column-align-center">
 					<div align="left">
 						<h:outputText value="#{metadata.expDate}"
-							style="text-align:left; float:left;" />
+							style="text-align:left; float:left;">
+							<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> 
+						</h:outputText>
 					</div>
 				</p:column>
 

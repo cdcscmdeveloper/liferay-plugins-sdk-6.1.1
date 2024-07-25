@@ -52,12 +52,12 @@
 			
 			<ac:paginator for="itemtbl" />
 			
-			<p:column headerText="#{lbl['lbl.sc.zone']}" rendered="#{isZonal}">
+			<p:column headerText="#{lbl['lbl.sc.zone']}" rendered="#{isZonal}" style="white-space:normal;"><!-- Bug #35682 -->
 				<p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">					
 					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{scLoiLoaItem.tplSpecZoneDtl}" />
-					<h:outputText value="#{scLoiLoaItem.tplSpecZoneDtl.zoneName}" />
+					<h:outputText value="#{scLoiLoaItem.tplSpecZoneDtl.zoneName}" style="white-space: normal;word-wrap: break-word;" /> <!-- Bug #35682 -->
 				</p:commandLink>
 			</p:column>
 			

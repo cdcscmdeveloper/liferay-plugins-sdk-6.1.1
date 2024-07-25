@@ -44,20 +44,17 @@
 				</td>
 				<td colspan="3">
 				
-				<p:inputText id="contractSigner" disabled="true" size="80"
-						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userName}" 
+				<p:inputText id="contractSigner" disabled="true" size="106" 
+						value="#{directLOABackingBean.managedBean.scLoa.contractSigner.salutationCode.salutationName.concat(' ').concat(directLOABackingBean.managedBean.scLoa.contractSigner.userName)}"
 						rendered="#{!isEditableStatus}" />
 						
 					<c:if test="#{isEditableStatus}">
-						<p:inputText id="contractSignerEdit" disabled="true" size="80"
-							value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userName}"
-							rendered="#{directLOABackingBean.managedBean.selectedOrgType.parameterCode == null}" />
 
 						<p:outputPanel id="opPtjOrgCode" >
 							<p:inputText 
 								size="106"
 								id="itSelectedUserPtj" 
-								value="#{directLOABackingBean.managedBean.selectedUserPtj.pmUser.userName}" 
+								value="#{directLOABackingBean.managedBean.scLoa.contractSigner.salutationCode.salutationName.concat(' ').concat(directLOABackingBean.managedBean.scLoa.contractSigner.userName)}"
 								readonly="true"
 								/>
 							&#160;

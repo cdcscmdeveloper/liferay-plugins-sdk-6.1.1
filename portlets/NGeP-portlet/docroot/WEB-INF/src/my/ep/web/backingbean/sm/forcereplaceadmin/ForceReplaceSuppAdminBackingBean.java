@@ -139,6 +139,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setCompanyName(getManagedBean().getReactivateBasic()
 				.getAgencyName());
 		reqDTO.setSuppType(getManagedBean().getReactivateBasic().getSuppType());
+		reqDTO.setAccType(getManagedBean().getAccType()); //#33129
 
 		//#28765 chained method retrieveSupplierAndPersonnelsByBusRegNoAndNameBypassActiveAcc
 		if (getManagedBean().getAccType().equals(
@@ -345,15 +346,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			redirectToSuccessPageForInProgress(resDto);
 		} else {
-			
-			//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
-			if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
-//					&& resDto.isTerminateSupplier() == false
-					) {
-				// End 28765 comment changes 12981
-				PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 						.inactiveSupplierRole(getOldAdminReqDTO());
-			} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
+			//#33129
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && getManagedBean().getSmAppl() != null &&
+					getManagedBean().getSmAppl().getPmStatus() != null &&
 					(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
 					getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
 				getManagedBean().setBypassFlag1(1);
@@ -1004,61 +1001,39 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	//#34159 - START
-	public void updateMailAddLists(String countryId, String stateId, String divisionId, String districtId) {
+	public void updateMailAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
-			if(countryId.equalsIgnoreCase("0")){
-				getManagedBean().getMailAddr().getSmAddress().setPmCountry(new PmCountry());
-				getManagedBean().setMailStates(null);
-			} else {
-				getManagedBean().setMailStates(SmCommonUtil.getStateList(Long.valueOf(countryId)));
-			}
-			getManagedBean().getMailAddr().getSmAddress().setPmState(new PmState());
-			getManagedBean().getMailAddr().getSmAddress().setPmDivision(new PmDivision());
-			getManagedBean().getMailAddr().getSmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().setMailDivisions(null); 
+			getManagedBean().setMailStates(
+					SmCommonUtil.getStateList(Long.valueOf(countryId)));
+			getManagedBean().setMailDivisions(null); //#34159
 			getManagedBean().setMailDistricts(null);
 			getManagedBean().setMailCities(null);
 		}
+		//#34159 - START
 		if (!stateId.isEmpty() || ("null").equalsIgnoreCase(stateId)) {
-			if(stateId.equalsIgnoreCase("0")){
-				getManagedBean().getMailAddr().getSmAddress().setPmState(new PmState());
-				getManagedBean().setMailDivisions(null);
+			if(("14").equals(stateId)){
+				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
 				getManagedBean().setMailDistricts(null);
-			} else {
-				if(stateId.equals(SupplierManagementConst.STATE_ID_SARAWAK)){
-					getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
-					getManagedBean().setMailDistricts(null);
-				} else {
-					getManagedBean().setMailDivisions(null);
-					getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
-				}
-			}
-			getManagedBean().getMailAddr().getSmAddress().setPmDivision(new PmDivision());
-			getManagedBean().getMailAddr().getSmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().setMailCities(null);
-		}
-		if(!divisionId.isEmpty() || ("null").equalsIgnoreCase(divisionId)){
-			if(divisionId.equalsIgnoreCase("0")){
-				getManagedBean().getMailAddr().getSmAddress().setPmDivision(new PmDivision());
-				getManagedBean().setMailDistricts(null);
-			} else {
-				getManagedBean().setMailDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));	
-			}
-			getManagedBean().getMailAddr().getSmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().setMailCities(null);
-		}
-		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
-			if(districtId.equalsIgnoreCase("0")){
-				getManagedBean().getMailAddr().getSmAddress().setPmDistrict(new PmDistrict());
 				getManagedBean().setMailCities(null);
 			} else {
-				getManagedBean().setMailCities(SmCommonUtil.getCityList(Long.valueOf(districtId)));
+				getManagedBean().setMailDivisions(null);
+				if(getManagedBean().getMailAddr().getSmAddress().getPmDivision() != null){
+					getManagedBean().getMailAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				}
+				getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getMailAddr().getSmAddress().getPmDistrict().setDistrictId(null);
+				getManagedBean().setMailCities(null);
 			}
 		}
-		
-		getManagedBean().getMailAddr().getSmAddress().setPmCity(new PmCity());
+		if(!divisionId.isEmpty() || ("null").equalsIgnoreCase(divisionId)){
+			getManagedBean().setMailDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));
+			getManagedBean().setMailCities(null);
+		}
 		//#34159 - END
+		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
+			getManagedBean().setMailCities(
+					SmCommonUtil.getCityList(Long.valueOf(districtId)));
+		}
 	}
 
 	/**
@@ -1071,61 +1046,39 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * @param String
 	 *            districtId
 	 */
-	//#34159 - START
-	public void updatePermAddLists(String countryId, String stateId, String divisionId, String districtId) {
+	public void updatePermAddLists(String countryId, String stateId, String divisionId, String districtId) { //#34159
 		if (!countryId.isEmpty() || countryId.equalsIgnoreCase("null")) {
-			if(countryId.equalsIgnoreCase("0")){
-				getManagedBean().getPermAddr().getSmAddress().setPmCountry(new PmCountry());
-				getManagedBean().setPermStates(null);
-			} else {
-				getManagedBean().setPermStates(SmCommonUtil.getStateList(Long.valueOf(countryId)));
-			}
-			getManagedBean().getPermAddr().getSmAddress().setPmState(new PmState());
-			getManagedBean().getPermAddr().getSmAddress().setPmDivision(new PmDivision());
-			getManagedBean().getPermAddr().getSmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().setPermDivisions(null); 
+			getManagedBean().setPermStates(
+					SmCommonUtil.getStateList(Long.valueOf(countryId)));
+			getManagedBean().setPermDivisions(null); //#34159
 			getManagedBean().setPermDistricts(null);
 			getManagedBean().setPermCities(null);
 		}
+		//#34159 - START
 		if (!stateId.isEmpty() || ("null").equalsIgnoreCase(stateId)) {
-			if(stateId.equalsIgnoreCase("0")){
-				getManagedBean().getPermAddr().getSmAddress().setPmState(new PmState());
-				getManagedBean().setPermDivisions(null);
+			if(("14").equals(stateId)){
+				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
 				getManagedBean().setPermDistricts(null);
-			} else {
-				if(stateId.equals(SupplierManagementConst.STATE_ID_SARAWAK)){
-					getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(Long.valueOf(stateId)));
-					getManagedBean().setPermDistricts(null);
-				} else {
-					getManagedBean().setPermDivisions(null);
-					getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
-				}
-			}
-			getManagedBean().getPermAddr().getSmAddress().setPmDivision(new PmDivision());
-			getManagedBean().getPermAddr().getSmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().setPermCities(null);
-		}
-		if(!divisionId.isEmpty() || ("null").equalsIgnoreCase(divisionId)){
-			if(divisionId.equalsIgnoreCase("0")){
-				getManagedBean().getPermAddr().getSmAddress().setPmDivision(new PmDivision());
-				getManagedBean().setPermDistricts(null);
-			} else {
-				getManagedBean().setPermDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));	
-			}
-			getManagedBean().getPermAddr().getSmAddress().setPmDistrict(new PmDistrict());
-			getManagedBean().setPermCities(null);
-		}
-		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
-			if(districtId.equalsIgnoreCase("0")){
-				getManagedBean().getPermAddr().getSmAddress().setPmDistrict(new PmDistrict());
 				getManagedBean().setPermCities(null);
 			} else {
-				getManagedBean().setPermCities(SmCommonUtil.getCityList(Long.valueOf(districtId)));
+				getManagedBean().setPermDivisions(null);
+				if(getManagedBean().getPermAddr().getSmAddress().getPmDivision() != null){
+					getManagedBean().getPermAddr().getSmAddress().getPmDivision().setDivisionId(null);
+				}
+				getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getPermAddr().getSmAddress().getPmDistrict().setDistrictId(null);
+				getManagedBean().setPermCities(null);
 			}
 		}
-		
-		getManagedBean().getPermAddr().getSmAddress().setPmCity(new PmCity());
+		if(!divisionId.isEmpty() || ("null").equalsIgnoreCase(divisionId)){
+			getManagedBean().setPermDistricts(SmCommonUtil.getDistrictListByID(Long.valueOf(divisionId)));
+			getManagedBean().setPermCities(null);
+		}
 		//#34159 - END
+		if (!districtId.isEmpty() || districtId.equalsIgnoreCase("null")) {
+			getManagedBean().setPermCities(
+					SmCommonUtil.getCityList(Long.valueOf(districtId)));
+		}
 	}
 
 	/**
