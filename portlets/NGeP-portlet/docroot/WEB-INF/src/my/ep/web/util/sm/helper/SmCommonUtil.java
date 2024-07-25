@@ -3604,7 +3604,6 @@ public class SmCommonUtil {
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setAppl(latestAppl);
-		//#32510
 		return SmServiceLookup.getPersonnelSO().getSoftcertDocNo(reqDTO)
 				.getSoftcertDocNo();
 	}

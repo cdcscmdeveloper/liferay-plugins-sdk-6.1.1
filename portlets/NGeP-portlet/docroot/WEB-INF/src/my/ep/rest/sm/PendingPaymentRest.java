@@ -44,10 +44,12 @@ public class PendingPaymentRest {
 					} catch (Exception e2) {
 						log.error(e2);
 					}
-				}
 				//#32510
-				log.info("debug_32510_rest "+smPendingProcess.getPendingProcessId());
-				SmServiceLookup.getPersonnelSO().checkSiteVisitAfterApprovalWorkflow(smPendingProcess.getApplId());
+				} finally {
+					log.info("debug_32510_rest "+smPendingProcess.getPendingProcessId());
+					SmServiceLookup.getPersonnelSO().checkSiteVisitAfterApprovalWorkflow(
+							smPendingProcess.getApplId(), false);
+				}
 			}
 			//#33948 - Start
 			long endTime = System.currentTimeMillis();
