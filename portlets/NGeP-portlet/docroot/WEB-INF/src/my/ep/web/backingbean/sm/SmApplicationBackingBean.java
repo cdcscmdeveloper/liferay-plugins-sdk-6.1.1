@@ -1846,6 +1846,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							}
 						//27382 - end
 						this.getManagedBean().setCompanyValidWithSSM(true);
+						// #24819
+						this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET COMPANY NAME
 						//if rob no need to copy capital.
 						//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -14542,6 +14544,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			//27382 - end
 			this.getManagedBean().setCompanyValidWithSSM(true);
+			// #24819
+			this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 			//SET COMPANY NAME
 			//if rob no need to copy capital.
 			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -14856,6 +14860,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							IMofRegistrationSO.class);
 			MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
 			mofReqDto.setSmAppl(this.getManagedBean().getSmAppl());
+			//#24819
+			mofReqDto.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+			mofRegistrationSO.updateSupplierProfile(mofReqDto);
 			MofRegistrationResDTO mofRespDto = mofRegistrationSO.updateSmAppl(mofReqDto);
 			this.getManagedBean().setSmAppl(mofRespDto.getSmAppl());
 			
