@@ -31,15 +31,18 @@
 						value="#{supplierDetailBackingBean.managedBean.mofNo}"
 						disabled="true" /></td>
 			</tr>
-			<!-- 29818 & #29819 - Start -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.supplierInfo.newSSMNo']}" /></td>
-				<td>
-					<p:inputText disabled="true" readonly="true" size="30"
+				<!-- 29818,29819 -start- -->
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.supplierInfo.newSSMNo']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{empty supplierDetailBackingBean.managedBean.smSupplier.ssmNewRegNo ? lbl['lbl.txt.na']: supplierDetailBackingBean.managedBean.smSupplier.ssmNewRegNo}" />
-					<ac:iconTooltip id="ssmIcoTooltipId" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.tooltip']}"  />
-					<h:outputText styleClass="instruction" style="display: block; margin-top: -4px;" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.note']}"/>
-				</td>
+					<ac:iconTooltip id="ssmIcoTooltipId"
+						value="#{lbl['lbl.sc.supplierInfo.newSSMNo.tooltip']}" /> 
+					<h:outputText
+						styleClass="instruction" style="display: block; margin-top: -4px;"
+						value="#{lbl['lbl.sc.supplierInfo.newSSMNo.note']}" /></td>
+				<!-- 29818,29819 -end- -->
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
 				<td><p:inputText disabled="true" size="30"
@@ -113,7 +116,6 @@
 				<td><p:inputText id="suppAddr3"
 						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}"
 						size="30" disabled="true" /></td>
-							 
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
 				<td><p:inputText id="suppFaxNo" size="30"
 						value="#{supplierDetailBackingBean.managedBean.smAppl.smCompanyBasic.faxFull}"
@@ -127,7 +129,6 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<!-- 29818 & #29819 - End -->
 		</table>
 		
 		<!-- 11134 -start- -->

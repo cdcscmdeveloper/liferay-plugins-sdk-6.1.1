@@ -22,27 +22,29 @@
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.regNo}" /></td>
 			</tr>
-			<!-- 29818 & #29819 - Start -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tax.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smAppl.smCompanyBasic.incomeTaxNo}" /></td>
-
-				<td><p:outputLabel value="#{lbl['lbl.sc.supplierInfo.newSSMNo']}" /></td>
-				<td>
-					<p:inputText disabled="true" readonly="true" size="30"
+				<!-- 29818,29819 -start- -->
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.supplierInfo.newSSMNo']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{empty smSupplier.ssmNewRegNo ? lbl['lbl.txt.na']: smSupplier.ssmNewRegNo}" />
-					<ac:iconTooltip id="ssmIcoTooltipId" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.tooltip']}"  />
-					<h:outputText styleClass="instruction" style="display: block; margin-top: -4px;" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.note']}"/>
-				</td>
+					<ac:iconTooltip id="ssmIcoTooltipId"
+						value="#{lbl['lbl.sc.supplierInfo.newSSMNo.tooltip']}" />
+					<h:outputText
+						styleClass="instruction" style="display: block; margin-top: -4px;"
+						value="#{lbl['lbl.sc.supplierInfo.newSSMNo.note']}" /></td>
+				<!-- 29818,29819 -end- -->
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{qtProposal.mofNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.epno']}" /></td> <!-- 20220530@syazani - Bug #30316 -->
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smSupplier.epNo}" /></td>		
+						value="#{smSupplier.epNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.eff.date']}" /></td>
@@ -58,7 +60,14 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
-			<tr>		
+			<tr>
+				<!-- 20220530@syazani - Bug #30316 - Maklumat pembekal tidak memaparkan maklumat yang betul - Start -->
+				<!-- <td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
+				<td><p:inputText
+						value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.businessTypes, 
+											smSupplier.manufacturer ? ParameterConst.businessTypeManufacturer : ParameterConst.businessTypeDistributor)}"
+						disabled="true" readonly="true" size="30" /></td> -->	
+				<!-- 20220530@syazani - Bug #30316 - Maklumat pembekal tidak memaparkan maklumat yang betul - End -->			
 				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
 				<td><p:inputText value="#{supplierProposalDetailBackingBean.getSmMofAccountByMofNo(qtProposal.mofNo).expDate}"
 						size="30" readonly="true" disabled="true">
@@ -77,7 +86,6 @@
 											fn:toUpperCase(qtProposal.bumi))}"
 						disabled="true" readonly="true" size="30" /></td>
 			</tr>
-			<!-- 29818 & #29819 - End -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
