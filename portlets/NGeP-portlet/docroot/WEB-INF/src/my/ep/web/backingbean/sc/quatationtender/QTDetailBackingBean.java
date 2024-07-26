@@ -9425,7 +9425,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public int manipulateIndexNumber(int activeIndex){
 		
 		int changedIndex = activeIndex;
-		if (isMaintancePendingChklistStatus()) {
+		if (isMaintancePendingChklistStatus()
+				&& !this.getManagedBean().getTaskName().equalsIgnoreCase(SCProcessNameConst.APPROVE_COMMITTEE)) {
 			if (activeIndex == 4) {
 				changedIndex = QTConstants.DEDUCTION_TAB_INDEX;
 			} else if (activeIndex == 5) {
