@@ -801,7 +801,6 @@ public class PmReportsBackingBean extends
 			if(getManagedBean().getReportCode().equals(PmReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
 				if(pmParameter.getParameterId() == PmReportConst.ORG_TYPE_SUPPLIER){
 					hideOrgCodeName();
-				
 				}else{
 					this.getManagedBean().setSelectedSupplier(null);
 					showOrgCodeName();
