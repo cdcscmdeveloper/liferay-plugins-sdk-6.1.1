@@ -324,7 +324,7 @@ u {
 				#end
 				<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Kuantiti</th>
 				<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Tawaran<br/>Pembekal</th>
-				<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Skop<br/>Perkhidmatan<br/>/ SLA</th>
+				<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border: 1px solid black;">Skop<br/>Perkhidmatan<br/>/ SLA</th>
 			</tr>
 			<tr>
 				#if ($isZonal)
@@ -346,12 +346,7 @@ u {
 					#set($rowSpanItemTitle = $ZoneSize+$sizeSpec)
 					<tr>
 						#if ($map.clItem != $whitespace)
-						#set($title = $title.replace("-", "&#45;"))
-						#set($title = $title.replace("/", "&#47;"))
-						#set($title = $title.replace(">", "&#62;"))
-						#set($title = $map.clItem.replace("<", "&#60;"))
-						
-							<td valign="top" rowspan="$rowSpanItemTitle" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$title</td>
+							<td valign="top" rowspan="$rowSpanItemTitle" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$map.clItem</td>
 						#end
 						#if($map.clFulfilmentTypeCode != $whitespace)
 							<td valign="top" rowspan="$ZoneSize" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$map.clFulfilmentTypeCode</td>
@@ -396,10 +391,7 @@ u {
 					#set($sizeSpec = $map.sizeSpec)
 					#set($rowSpanItemTitle = 1+$sizeSpec)
 						<tr>
-							#set($title = $title.replace("-", "&#45;"))
-							#set($title = $title.replace(">", "&#62;"))
-							#set($title = $map.clItem.replace("<", "&#60;"))
-							<td valign="top" rowspan="$rowSpanItemTitle" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$title</td>
+							<td valign="top" rowspan="$rowSpanItemTitle" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$map.clItem</td>
 							<td valign="top" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$map.clFulfilmentTypeCode</td>
 							<td valign="top" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$map.uomName</td>
 							<td valign="top" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;border: 1px solid black !important;">$map.clUomFrequency</td>
@@ -423,21 +415,18 @@ u {
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
-								#set($specification = $specification.replace("&", "&#38;"))
-								#set($specification = $specification.replace(">", "&#62;"))
-								#set($specification = $tpqSpec.replace("<", "&#60;"))
-								
+
 								#set($rowCount = $rowCount + 1)
 									<table width="100%" style="border-collapse:collapse; margin:0px;"  >
 										<tbody>
 											<tr>
 											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
-													<span>$specification</span>
+													<span>$tpqSpec</span>
 												</td>
 											#else
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
-													<span>$specification</span>
+													<span>$tpqSpec</span>
 												</td>
 											#end
 											</tr>
@@ -454,22 +443,17 @@ u {
 							#if ($scLoiLoaItem.itemSpecificationList)
 								#set($rowCount = 0)	
 								#foreach($tpqSpec in $scLoiLoaItem.itemSpecificationList)
-								
-								#set($specification = $specification.replace("&", "&#38;"))
-								#set($specification = $specification.replace(">", "&#62;"))
-								#set($specification = $tpqSpec.replace("<", "&#60;"))
-								
 									#set($rowCount = $rowCount + 1)
 									<table width="100%" style="border-collapse:collapse; margin:0px;">
 										<tbody>
 											<tr>
 											#if ($scLoiLoaItem.itemSpecificationList.size() == $rowCount)
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif;">
-													<span>$specification</span>
+													<span>$tpqSpec</span>
 												</td>
 											#else
 												<td valign="top"  class="standard border-bottom left" colspan="7" style="text-align: center; padding-left: 5px; padding-right: 5px; font-size:9.3px; font-family: Arial, Helvetica, sans-serif; border-bottom: 1px solid black;">
-													<span>$specification</span>
+													<span>$tpqSpec</span>
 												</td>
 											#end
 											</tr>
