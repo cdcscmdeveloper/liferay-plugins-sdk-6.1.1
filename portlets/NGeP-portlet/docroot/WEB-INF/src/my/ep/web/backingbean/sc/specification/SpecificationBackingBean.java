@@ -13570,6 +13570,7 @@ if (null != checklist && !checklist.isEmpty()) {
 									, resDto.getSavedCheckLists().get(0));
 						}
 						resetDemoSpecStatus();// #28784
+						saveSpecMaintenanceWorkFlowStatus(); // to Set Spec Status to pending submittion if spec sec delete spec when doing spec maintanance, #28785
 					}
 					this.getManagedBean().setCheckListTitle("");
 					this.getManagedBean().setIndex(-1);
