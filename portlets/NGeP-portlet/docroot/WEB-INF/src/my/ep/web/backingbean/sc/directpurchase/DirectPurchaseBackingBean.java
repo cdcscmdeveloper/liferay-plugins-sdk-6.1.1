@@ -513,7 +513,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	public void viewMaintenance(Object[] dpObj, boolean isCancel) {
 		
-		if (getManagedBean().isSearchDPM() && getManagedBean().getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+		if (getManagedBean().isSearchDPM() && dpObj[4].equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {//#36018
 			//Start - #22211
 			/*if(isRnApprover()){
 				this.viewDpMaintenance(dpObj);
@@ -606,15 +606,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
 				requestNote = (ScRequestNote) prObj[7];
 				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
-				if (!CollectionUtils.isEmpty(objList)) {
-					for (Object[] obj : objList) {
-						ScPurchaseRequest purchaseRequestFromModel =  (ScPurchaseRequest) obj[2];
-						if (purchaseRequestId == purchaseRequestFromModel.getPurchaseRequestId()) {
-							requestNoteDtls = (List<ScRequestNoteDtl>) obj[6];
-							break;
-						}
-					}
-				}
+				requestNoteDtls = loadScPurchaseRequest(purchaseRequestId, objList);//#36018
 			}
 			
 			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 
@@ -643,7 +635,62 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			}
 		}
 	}
-
+	
+	//start -  #36018
+	/**
+	 * Loads and retrieves the list of ScRequestNoteDtl associated with a
+	 * specific purchase request ID from objList.
+	 * 
+	 * @param purchaseRequestId
+	 *            The ID of the purchase request to match.
+	 * @param objList
+	 *            The list of objects containing purchase request and associated
+	 *            details.
+	 * @return The updated list of ScRequestNoteDtl associated with the
+	 *         specified purchase request ID.
+	 */
+	private List<ScRequestNoteDtl> loadScPurchaseRequest(Long purchaseRequestId, List<Object[]> objList) {
+		List<ScRequestNoteDtl> requestNoteDtls = null;
+		if (!CollectionUtils.isEmpty(objList)) {
+			requestNoteDtls = loadScPurchaseRequestDtl(purchaseRequestId, objList);
+		}
+		return requestNoteDtls;
+	}
+	
+	/**
+	 * Loads and retrieves the list of ScRequestNoteDtl associated with a
+	 * specific purchase request ID from objList.
+	 * 
+	 * @param purchaseRequestId
+	 *            The ID of the purchase request to match.
+	 * @param objList
+	 *            The list of objects containing purchase request and associated
+	 *            details.
+	 * @param requestNoteDtls
+	 *            The list of ScRequestNoteDtl to populate with matching
+	 *            details.
+	 * @return The updated list of ScRequestNoteDtl associated with the
+	 *         specified purchase request ID.
+	 */
+	private List<ScRequestNoteDtl> loadScPurchaseRequestDtl(Long purchaseRequestId, List<Object[]> objList) {
+		List<ScRequestNoteDtl> requestNoteDtls = null;
+		for (Object[] obj : objList) {
+			if (obj.length > 6 && obj[2] instanceof ScPurchaseRequest) {
+				ScPurchaseRequest purchaseRequestFromModel = (ScPurchaseRequest) obj[2];
+				// Check if the purchase request IDs match
+				if (purchaseRequestId.equals(purchaseRequestFromModel.getPurchaseRequestId())
+						&& obj[6] instanceof List<?>) {
+					@SuppressWarnings("unchecked")
+					List<ScRequestNoteDtl> castedList = (List<ScRequestNoteDtl>) obj[6];
+					requestNoteDtls = castedList;
+					break;
+				}
+			}
+		}
+		return requestNoteDtls;
+	}
+	//end - #36018
+	
 	public void viewDoc(Object[] dpObj){
 		debugLogger("viewDoc");
 		long docId = (long) dpObj[0];
