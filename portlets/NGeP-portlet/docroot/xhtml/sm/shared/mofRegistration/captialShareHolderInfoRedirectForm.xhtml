@@ -15,7 +15,9 @@
 					actionListener="#{backingBean.backFromPersonnelPage}" />
 			</div>
 			<c:choose>
-				<c:when test="#{backingBean.managedBean.showPersonnelViewOnly or backingBean.managedBean.disAllowOwnerEdit}">
+				<!-- Disable for UPS 32008 - START -->
+				<c:when test="#{backingBean.managedBean.showPersonnelViewOnly or backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
+				<!-- Disable for UPS 32008 - END -->
 					<ui:param name="viewSmApplBackingBean" value="#{backingBean}" />
 					<ui:include
 						src="/xhtml/sm/shared/applViewOnlyPages/shareHolderInfoPopUpFormViewOnly.xhtml" />

@@ -16,25 +16,60 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address1}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address1}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address1}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address1}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address1}"/></td>
 						</tr>
 
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address2}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address2}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address2}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address2}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address2}"/></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address3}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address3}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address3}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address3}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.address3}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmCountry.countryId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}" 
+									alertValue="#{viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmCountry.countryId)}"/></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmState.stateId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}" 
+									alertValue="#{viewSmApplBackingBean.getStateLabelById(viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmState.stateId)}"/></td>
 						</tr>
 						<!-- 13320 -->
 						<tr>
@@ -42,21 +77,50 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}"/></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionName}"
-												rendered="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}"/></td>
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+										and viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.adoptDivision
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmDivision.divisionId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDivision.divisionId}" 
+									alertValue="#{viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmDivision.divisionId)}"/></td>
 							<!-- #13320 - render division - end-->
 						</tr>
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmDistrict.districtId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}" 
+									alertValue="#{viewSmApplBackingBean.getDistrictLabelById(viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmDistrict.districtId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmCity.cityId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}" 
+									alertValue="#{viewSmApplBackingBean.getCityLabelById(viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.pmCity.cityId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPermAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.postcode}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.postcode}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestPermAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
 				</p:outputPanel></td>
@@ -67,25 +131,60 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address1}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address1}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address1}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address1}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address1}"/></td>
 						</tr>
 
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address2}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address2}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address2}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address2}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address2}"/></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address3}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address3}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address3}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address3}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.address3}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}" 
+									alertValue="#{viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmCountry.countryId)}"/></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmState.stateId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}" 
+									alertValue="#{viewSmApplBackingBean.getStateLabelById(viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmState.stateId)}"/></td>
 						</tr>
 						<!-- 13320 -->
 						<tr>
@@ -93,21 +192,50 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}"/></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionName}"
-												rendered="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}"/></td>
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.adoptDivision}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+										and viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmState.adoptDivision
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmDivision.divisionId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDivision.divisionId}" 
+									alertValue="#{viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmDivision.divisionId)}"/></td>
 							<!-- #13320 - render division - end-->
 						</tr>
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}" 
+									alertValue="#{viewSmApplBackingBean.getDistrictLabelById(viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmDistrict.districtId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}" 
+									alertValue="#{viewSmApplBackingBean.getCityLabelById(viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.pmCity.cityId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestMailAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.postcode}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.postcode}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestMailAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
 				</p:outputPanel></td>
@@ -123,25 +251,60 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address1}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address1}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address1}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address1}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address1}"/></td>
 						</tr>
 
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address2}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address2}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address2}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address2}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address2}"/></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address3}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address3}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address3}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address3}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.address3}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmCountry.countryId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}" 
+									alertValue="#{viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmCountry.countryId)}"/></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmState.stateId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}" 
+									alertValue="#{viewSmApplBackingBean.getStateLabelById(viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmState.stateId)}"/></td>
 						</tr>
 						<!-- 13320 -->
 						<tr>
@@ -149,22 +312,51 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision}"/></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionName}"
-												rendered="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision}"/></td>
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.adoptDivision}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+										and viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmState.adoptDivision
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmDivision.divisionId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDivision.divisionId}" 
+									alertValue="#{viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmDivision.divisionId)}"/></td>
 							<!-- #13320 - render division - end-->
 						</tr>
 						
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmDistrict.districtId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}" 
+									alertValue="#{viewSmApplBackingBean.getDistrictLabelById(viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmDistrict.districtId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmCity.cityId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}" 
+									alertValue="#{viewSmApplBackingBean.getCityLabelById(viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.pmCity.cityId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestResdAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.postcode}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.postcode}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestResdAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
 				</p:outputPanel></td>
@@ -175,25 +367,60 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address1}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address1}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address1}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address1}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address1}"/></td>
 						</tr>
 
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address2}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address2}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address2}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address2}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address2}"/></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address3}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address3}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address3}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address3}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.address3}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmCountry.countryId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}" 
+									alertValue="#{viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmCountry.countryId)}"/></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmState.stateId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}" 
+									alertValue="#{viewSmApplBackingBean.getStateLabelById(viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmState.stateId)}"/></td>
 						</tr>
 						<!-- 13320 -->
 						<tr>
@@ -201,21 +428,50 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
 												rendered="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}"/></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionName}"
-												rendered="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}"/></td>
+												rendered="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+										and viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.adoptDivision
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmDivision.divisionId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDivision.divisionId}" 
+									alertValue="#{viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmDivision.divisionId)}"/></td>
 							<!-- #13320 - render division - end-->
 						</tr>
 
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmDistrict.districtId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}" 
+									alertValue="#{viewSmApplBackingBean.getDistrictLabelById(viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmDistrict.districtId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityName}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityName}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmCity.cityId}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}" 
+									alertValue="#{viewSmApplBackingBean.getCityLabelById(viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.pmCity.cityId)}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"/></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestOffAddr.personnelAddressId}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.postcode}" 
+									currValue="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.postcode}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestOffAddr.smAddress.postcode}"/></td>
 						</tr>
 					</table>
 				</p:outputPanel></td>
