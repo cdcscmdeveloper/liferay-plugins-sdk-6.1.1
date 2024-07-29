@@ -4211,7 +4211,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		if (!SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 				.getSmAppl().getSmApplSupportDocs(), managedBean.getSmAppl()
-				.getSupportingDocMode(), managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+				.getSupportingDocMode(), managedBean.isApproverUser())) {
 			throw new EpException(MessageConst.ERROR_722559);
 		}
 	}
@@ -6866,11 +6866,11 @@ public class SmApplicationUtil {
 			//#31043 start
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 					.getMandatoryDocs(), managedBean.getSmAppl()
-					.getSupportingDocMode(), managedBean.isApproverUser(),managedBean.getSmAppl().getApplNo())
+					.getSupportingDocMode(), managedBean.isApproverUser())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
 							managedBean.getNonMandatoryDocs(), managedBean
 									.getSmAppl().getSupportingDocMode(),
-							managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+							managedBean.isApproverUser())) {
 				valid = true;
 			}
 			//#31043 end
@@ -9259,6 +9259,8 @@ public class SmApplicationUtil {
 				//#32627 END
 				.append(")");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setNotUsedConditionExpired(true);  //#36064 START
+		reqDTO.setCurrent(true);				  //#36064 END
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setWorkflowStatus(sb.toString());
 		reqDTO.setAppType(applType);
@@ -11279,11 +11281,11 @@ public class SmApplicationUtil {
 	 */
 	//#31043 start
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver, String applNo) {
+			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
 		boolean retVal = true;
 		if (!EntityHelper.isCollectionEmpty(docs)) {
 			for (SmApplSupportDoc doc : docs) {
-				if(doc.getSmAppl().getApplNo().equals(applNo)){
+				
 					if ((approver && (doc.getApproverVerifiedFlg() == null || doc
 							.getApproverVerifiedFlg() == 0))
 							|| (!approver && (doc.getVerifiedFlg() == null || doc
@@ -11310,11 +11312,6 @@ public class SmApplicationUtil {
 						retVal = false;
 						break;
 					}
-				} else{
-					retVal = false;
-					break;
-				}
-				//#31043 end
 			}
 		}
 
