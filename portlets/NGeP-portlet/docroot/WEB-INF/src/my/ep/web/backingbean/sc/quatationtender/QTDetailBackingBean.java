@@ -6035,8 +6035,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							getManagedBean().getQt().setEvaluationType(evalType);
 						}
 						this.getManagedBean().setPanel(scQt.isPanel());
-						//Reopen #25726 note 286 - issue 5
-						if (!this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
+						//Reopen #25726 note 286 - issue 5, #28784 - add checking for status not null
+						if (!this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && this.getManagedBean().getQt().getQtStatus() != null){
 							Long currentStatus = this.getManagedBean().getQt()
 									.getQtStatus().getStatusId();
 							this.getManagedBean().setCurrentStatusId(currentStatus);
