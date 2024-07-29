@@ -4211,7 +4211,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		if (!SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 				.getSmAppl().getSmApplSupportDocs(), managedBean.getSmAppl()
-				.getSupportingDocMode(), managedBean.isApproverUser())) {
+				.getSupportingDocMode(), managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
 			throw new EpException(MessageConst.ERROR_722559);
 		}
 	}
@@ -6866,11 +6866,11 @@ public class SmApplicationUtil {
 			//#31043 start
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 					.getMandatoryDocs(), managedBean.getSmAppl()
-					.getSupportingDocMode(), managedBean.isApproverUser())
+					.getSupportingDocMode(), managedBean.isApproverUser(),managedBean.getSmAppl().getApplNo())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
 							managedBean.getNonMandatoryDocs(), managedBean
 									.getSmAppl().getSupportingDocMode(),
-							managedBean.isApproverUser())) {
+							managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
 				valid = true;
 			}
 			//#31043 end
@@ -11281,11 +11281,11 @@ public class SmApplicationUtil {
 	 */
 	//#31043 start
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
+			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver, String applNo) {
 		boolean retVal = true;
 		if (!EntityHelper.isCollectionEmpty(docs)) {
 			for (SmApplSupportDoc doc : docs) {
-				
+				if(doc.getSmAppl().getApplNo().equals(applNo)){
 					if ((approver && (doc.getApproverVerifiedFlg() == null || doc
 							.getApproverVerifiedFlg() == 0))
 							|| (!approver && (doc.getVerifiedFlg() == null || doc
@@ -11312,6 +11312,11 @@ public class SmApplicationUtil {
 						retVal = false;
 						break;
 					}
+				} else{
+					retVal = false;
+					break;
+				}
+				//#31043 end
 			}
 		}
 
