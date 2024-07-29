@@ -98,6 +98,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 //#28895_35501 End
 
 @ManagedBean(name = "smPersonnelBackingBean")
@@ -197,8 +198,28 @@ public class SmPersonnelBackingBean extends
 		renewSesionObject();
 		boolean isHasSupplierUser = false;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
-		// #28895_35501 - AUDIT TRAIL SM
-		getManagedBean().setSmSupplier(smSupplier);
+		// #28895_35501 Start - AUDIT TRAIL SM
+		getManagedBean().setOldSmSupplier(smSupplier);
+		String oldRole = null;
+		FacesScopes facesScope = new FacesScopes();
+		if (facesScope.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			oldRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		} else if (facesScope.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			oldRole = RoleCode.G2G_SUPPLIER_ADMIN.value();
+		} else if (facesScope.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			oldRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
+		}
+		getManagedBean().setOldRole(oldRole);
+		LogKey logKey = new LogKey();
+		PmOrgProfile orgProfile = new PmOrgProfile();
+		if (logKey.getUserId() != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(logKey.getUserId());
+			if (!orgList.isEmpty()) {
+				orgProfile = orgList.get(0).getPmOrgProfile();
+			}
+		}
+		getManagedBean().setOldOrg(orgProfile);
+		// #28895_35501 End
 		SmPersonnel adminPersonnel = null;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());

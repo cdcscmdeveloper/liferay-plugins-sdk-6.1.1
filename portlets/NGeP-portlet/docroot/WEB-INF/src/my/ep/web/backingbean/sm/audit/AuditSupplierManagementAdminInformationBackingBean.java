@@ -8,6 +8,7 @@ import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
@@ -40,13 +41,16 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 			oldAdminIC = mBean.getOldIdentification();
 			newAdminIC = mBean.getNewIdentifiction();
 			supplier = mBean.getSmSupplier();
+			org = null;
 			auObj.setCreatedBy(null);
 			auObj.setChangedBy(null);
 		} else {
 			SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
+			supplier = mBean.getOldSmSupplier();
+			org = mBean.getOldOrg();
+			roleCode = mBean.getOldRole();
 			oldAdminIC = mBean.getUpdateSmPersonnel().getIdentificationNo();
 			newAdminIC = mBean.getSelectedPersonnelToReassign().getIdentificationNo();
-			supplier = mBean.getSmSupplier();
 		}
 		auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 				AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ADMIN_IDENTIFICATION_NO, oldAdminIC, newAdminIC, null,
