@@ -102,17 +102,8 @@
 				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{ccSumTotalNumValofPoRptBB.managedBean.purchaseOrderStatus}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.beforePendingInv']}" 
-      					itemValue="#{lbl['lbl.rpt.drpdown.beforePendingInv']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"></f:selectItem>
+				<p:selectOneMenu value="#{ccSumTotalNumValofPoRptBB.managedBean.groupStatus}">
+					<f:selectItems value="#{ccSumTotalNumValofPoRptBB.getGroupStatusDropdown()}"/>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>

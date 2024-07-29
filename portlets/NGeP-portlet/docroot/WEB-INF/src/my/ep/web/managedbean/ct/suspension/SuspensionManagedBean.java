@@ -22,6 +22,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;//#29214
+import my.ep.biz.bean.search.SearchOrderBean;//35985
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.constant.ModuleCodeConst;
@@ -214,7 +215,8 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 					}
 				}
 			
-
+				searchBean.getSortColumns().add(new SearchOrderBean("itemType.parameterCode")); //35985
+				searchBean.getSortColumns().add(new SearchOrderBean("scRequestItem.cmItem.extensionCode")); //35985	
 				
 				ContractItemReqDTO reqDTO=new ContractItemReqDTO();
 				reqDTO.setContractItemSearchBean(searchBean);

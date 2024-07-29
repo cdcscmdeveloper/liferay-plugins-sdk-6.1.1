@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.sitevisit.printing.type.wrkdone.inprgrss']}">
-		<p:dataTable value="#{template.smSvPrintworks}" var="pWork"
+		<p:dataTable value="#{template.smSvPrintworks}" var="pWork" id="printTbl#{catCode}"
 		selection="#{template.selectedPrintWorks}" rowKey="#{pWork}" 
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />

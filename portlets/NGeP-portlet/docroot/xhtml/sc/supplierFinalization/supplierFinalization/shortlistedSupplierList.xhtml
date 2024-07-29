@@ -143,8 +143,15 @@
 						</ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" style="width:15%; text-align:center;" 
-		               		rendered="#{haveSupplierRejection}"/>	               	
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
+		               		rendered="#{haveSupplierRejection}"/>
+
+						<ui:remove>	Enhancement #30008 START</ui:remove>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.loi.loa.remark']}"
+							style="width:10%;white-space:normal;"
+							rendered="#{isNotReachAgrm}" />
+						<ui:remove>Enhancement #30008 END</ui:remove>
+
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
@@ -164,13 +171,13 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
-					 <!-- #29729 Start -->
+					 <ui:remove> #28777#29729 - Start </ui:remove>
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					 <!-- #29729 End -->
+					 <ui:remove> #28777#29729 - End </ui:remove>
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">
 					<p:column style="text-align:center;">
@@ -300,9 +307,17 @@
 				
 				<p:column style="text-align:left;white-space: normal;" rendered="#{haveSupplierRejection}">
 					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
-				</p:column>			
-								
-				<p:column selectionMode="single" rendered="#{showSelectionColumn}" disabledSelection="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" /><ui:remove>#25157 - move logic to bb, #21692 <!-- #28777 & #29729 --> </ui:remove>
+				</p:column>
+
+				<ui:remove>	Enhancement #30008 START</ui:remove>
+				<p:column style="text-align:left;white-space: normal;"
+					rendered="#{isNotReachAgrm}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.getParameterDesc(shortlistedSupp.notInAgreement)}" />
+				</p:column>
+				<ui:remove>Enhancement #30008 END</ui:remove>
+
+				<p:column selectionMode="single" rendered="#{showSelectionColumn}" disabledSelection="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" /><ui:remove>#25157 - move logic to bb, #21692 </ui:remove>
 
 			</p:dataTable>		 	    
 
@@ -388,7 +403,14 @@
      		            </ui:remove>
 		               	<p:column colspan="2" headerText="#{lbl['lbl.sc.recommendation.desk.officer']}" style="width:15%; text-align:center;" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.rejection.remarks']}" 
-		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>		               	
+		               			  style="width:10%; white-space:normal;" rendered="#{haveSupplierRejection}"/>	
+		               			  
+		               	<ui:remove>	Enhancement #30008 START</ui:remove>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.loi.loa.remark']}"
+							style="width:10%;white-space:normal;"
+							rendered="#{isNotReachAgrm}" />
+						<ui:remove>Enhancement #30008 END</ui:remove>
+							               	
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:5%; white-space:normal;"
 		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
@@ -398,7 +420,7 @@
 		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}" 
 		               			  style="width:10%; white-space:normal;" />
 		           	</p:row>
-		       	</p:columnGroup>
+				</p:columnGroup>
 				
 				<p:column style="text-align:center;">
 					<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
@@ -407,13 +429,13 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
-					 <!-- #29729 Start -->
+					 <ui:remove> #28777#29729 - Start </ui:remove>
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					 <!-- #29729 End -->
+					 <ui:remove> #28777#29729 - End </ui:remove>
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">
 					<p:column style="text-align:center;">
@@ -544,14 +566,22 @@
 				
 				<p:column style="text-align:left;" rendered="#{haveSupplierRejection}">
 					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
-				</p:column>	
-								
+				</p:column>
+
+				<ui:remove>	Enhancement #30008 START</ui:remove>
+				<p:column style="text-align:left;white-space: normal;"
+					rendered="#{isNotReachAgrm}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.getParameterDesc(shortlistedSupp.notInAgreement)}" />
+				</p:column>
+				<ui:remove>Enhancement #30008 END</ui:remove>
+
 				<ui:remove>
 					Enhancement #19336 START #142
 				</ui:remove>				
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<!-- #30999 Start -->
-					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" disabled="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" ><ui:remove>#25157 - move logic to bb, #21692 <!-- #28777 & #29729 --></ui:remove>
+					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" disabled="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" ><ui:remove>#25157 - move logic to bb, #21692 </ui:remove>
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	

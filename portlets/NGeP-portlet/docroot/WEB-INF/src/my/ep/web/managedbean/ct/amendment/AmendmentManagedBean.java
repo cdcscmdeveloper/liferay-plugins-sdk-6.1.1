@@ -193,6 +193,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	//Enhancement 15851 - shaqimi end
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	
+	private String backToNtf; //25956
+	
 //	private boolean isFromViewPage = false; // Fix - #34110
 	
 	public void reassignValue(boolean value) 
@@ -1658,4 +1660,13 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedChangeItemPrice = selectedChangeItemPrice;
 	}
 	// End Fix - #33256
+	
+	//#25956 - Start
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	//#25956 - End
 }

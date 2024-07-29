@@ -1259,6 +1259,12 @@ public class SmPersonnelBackingBean extends
 					this.getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictListByID(getManagedBean().getDivisionId()));
 					getManagedBean().setMailDivisionBox(true);
 				} else {
+					//#34159 - START - clear division when selecting non-sarawak
+					if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision() != null){
+						getManagedBean().setMailDivisionId(null);
+						getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision().setDivisionId(null);
+					}
+					//#34159 - END
 					this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().setPmDistrict(new PmDistrict());
 					getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 				}//#33592- end
@@ -1483,6 +1489,11 @@ public class SmPersonnelBackingBean extends
 							SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionId())); 
 					getManagedBean().setDivisionBox(true);
 				}else {
+					//#34159 - START - clear division when selecting non-sarawak
+					if(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDivision() != null){
+						getManagedBean().setDivisionId(null);
+					}
+					//#34159 - END
 					this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().setPmDistrict(new PmDistrict());
 					getManagedBean().setPermAddDistrictList(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 				}//#33592-end
@@ -2059,14 +2070,20 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		//32515 END
-		//Start 13320
-		for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
-			//#33592-start
-			if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-				per.getSmAddress().setPmDivision(null);
-			}//#33592-end
+		// Start - 35178
+		if (!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().isEmpty()) {
+			// Start 13320
+			for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
+				// #33592-start
+				if ((per.getSmAddress() != null) && (per.getSmAddress().getPmState().getStateCode() != null
+						&& !per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE))) {
+					per.getSmAddress().setPmDivision(null);
+				}// #33592-end
+			}
+			// End 13320
 		}
-		//End 13320
+		// End - 35178
+		
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			//#9569 - Start
 			getManagedBean().getBasicSmPersonnel().setFromBasicUserMaintenane(true);

@@ -1,7 +1,7 @@
 #parse("templates/sm/sitevisit/shared/header.vm")
-#set($bumi = "Bumiputera")
-#set($nonBumi = "Non-Bumiputera")
-#set($nonMy = "Non-Malaysian")
+#set($bumi = $smVmUtil.getDescByLabel('lbl.sm.person.bumi'))
+#set($nonBumi = $smVmUtil.getDescByLabel('lbl.sm.person.composition.nonBumi'))
+#set($nonMy = $smVmUtil.getDescByLabel('lbl.sm.person.composition.Frg'))
 
 
 <table width='100%'>
@@ -132,7 +132,8 @@
 			#foreach($finCheckItem in $financialCheckList)
 				<tr>
 			    	<td>$smVmUtil.getParameterDesc($finCheckItem.pmParameter)</td>
-			    	<td>#if($finCheckItem.valid)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') #else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
+			    	<td>#if($finCheckItem.valid)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			    		#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
 			    	<td>$!finCheckItem.remark</td>
 			    </tr>
 			<tr><td><br /></td></tr>

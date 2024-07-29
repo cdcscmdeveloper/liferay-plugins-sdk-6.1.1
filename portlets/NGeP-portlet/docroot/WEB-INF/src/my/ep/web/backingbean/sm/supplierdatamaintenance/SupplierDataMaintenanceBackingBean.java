@@ -1627,9 +1627,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
 		if (selectedCategories != null && selectedCategories.size() > 0) {
-			List<SmSupplierCategory> categories = selectedCategories;
-			deleteCatCodes(categories);
-
+			//#34209 - START
+			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()){
+				throw new EpException(MessageConst.ERROR_722708);
+			} else {
+				List<SmSupplierCategory> categories = selectedCategories;
+				deleteCatCodes(categories);
+			}
+			//#34209 - END
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			//Redmine #18959 - no need to check overlapping
 			//setOverLappingCategories();
@@ -1716,6 +1721,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				//26238 -  Disciplinary action - 28146 - start
 				/*getManagedBean().setCancelRegistration(true);
 				getManagedBean().setFlagBlacklistCancel(true);*/
+				getManagedBean().setSelectedOwnerAndDirectorList(getManagedBean().getOwnerAndDirectorList());
 				//26238 -  Disciplinary action - 28146 - end
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
@@ -1772,7 +1778,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 			} else {
-				getManagedBean().setEditDisciplinaryActionCheckBox(false);
+				getManagedBean().setEditDisciplinaryActionCheckBox(true);
 				getManagedBean().setEditDisciplinaryAction(true);
 			}
 			//29181: Disciplinary Action - end - 26238

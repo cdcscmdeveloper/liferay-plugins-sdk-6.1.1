@@ -84,6 +84,14 @@
 			<td width="50%">$addressFormatter.getAddress($compAddress)</td>
 		</tr>
 		
+		<!--#34159 - START - Re-Order Address based on format in log #36-->
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$compAddress.pmDistrict.districtName</td>
+		</tr>
+		<!--#34159 - END -->
+		
 		<tr align="left">
 			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.postal.code')</b></td>
 			<td width="5%">:</td>
@@ -96,18 +104,22 @@
 			<td width="50%">$compAddress.pmCity.cityName</td>
 		</tr>
 		
+		<!--#34159 - START -->
+		#if($compAddress.pmState.adoptDivision)
+		<tr align="left">
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.division')</b></td>
+			<td width="5%">:</td>
+			<td width="50%">$compAddress.pmDivision.divisionName</td>
+		</tr>
+		#end
+		<!--#34159 - END -->
+		
 		<tr align="left">
 			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.state')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.pmState.stateName</td>
 		</tr>
-		
-		<tr align="left">
-			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
-			<td width="5%">:</td>
-			<td width="50%">$compAddress.pmDistrict.districtName</td>
-		</tr>
-		
+				
 		<tr align="left">
 			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.type')</b></td>
 			<td width="5%">:</td>
@@ -156,10 +168,6 @@
 			<td>Pegawai Pelawat: 
 				<br />
 				##29781 - Start - Display names of Site Visit Officers 
-				<!-- 
-				<b> i. $svOfficers </b><br/>
-				<b> ii. $svAOfficer </b><br/>
-				-->
 				#foreach($svOfficer in $svOfficers)
 					<b> $velocityCount. $svOfficer </b><br/>
 				#end

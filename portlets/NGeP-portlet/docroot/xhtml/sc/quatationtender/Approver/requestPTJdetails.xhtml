@@ -17,13 +17,13 @@
 		}
 	</style>
 	<p:panel header="#{lbl['lbl.sc.qt.req.ptj']}" toggleable="true" id="qtScQtReqPtjId">
-		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange}" >
+		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange and approvalBackingBean.managedBean.qt.responsePeriod != null}" >
 			<ui:remove>#21692 - start</ui:remove>
-			<p:outputLabel styleClass="blue-instruction"
-				value="#{lbl['lbl.sc.qt.supplier.accept.change.instruction']}" />
+			<h:outputText styleClass="blue-instruction"
+				value="#{lbl['lbl.sc.qt.supplier.accept.change.instruction']}"  />
 			<br/><br/>
 		</c:if>
-		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
+		<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange and approvalBackingBean.managedBean.qt.responsePeriod != null}" ><ui:remove>#21692 WIP</ui:remove>
 			<p:outputLabel styleClass="blue-instruction"
 				value="#{lbl['lbl.sc.proposal.validity.extension.instruction']}"/>
 			<ui:remove>#21692 - end</ui:remove>
@@ -89,7 +89,8 @@
 						value="#{scQt.qtTitle}" cols="170"
 						rows="3" style=" margin-bottom:5px; width:866px;" disabled="true" /></td>
 			</tr>
-			<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange || approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
+			<c:if test="#{(approvalBackingBean.managedBean.taskName eq ParameterConst.supplierAcceptQtChange || approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange)
+							and approvalBackingBean.managedBean.qt.responsePeriod != null}" ><ui:remove>#21692 WIP</ui:remove>
 				<tr>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.old.validity.days']}" /> 

@@ -853,16 +853,19 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
 				scDescOfficerList.add(selectItem);
 			} else {
-				Long orgProfileId = findScQtByQuotationNumber().getOrgProfileId();
+				ScQt qt = findScQtByQuotationNumber();
 				
-				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
-						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
-				if (CollectionUtils.isNotEmpty(reqLst)) {
-					for (Object[] object : reqLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						scDescOfficerList.add(selectItem);
+				if (qt != null) {
+					Long orgProfileId = qt.getOrgProfileId();
+					List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+							new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+					if (CollectionUtils.isNotEmpty(reqLst)) {
+						for (Object[] object : reqLst) {
+							SelectItem selectItem = new SelectItem();
+							selectItem.setLabel(object[0].toString());
+							selectItem.setValue(object[1]);
+							scDescOfficerList.add(selectItem);
+						}
 					}
 				}
 			}

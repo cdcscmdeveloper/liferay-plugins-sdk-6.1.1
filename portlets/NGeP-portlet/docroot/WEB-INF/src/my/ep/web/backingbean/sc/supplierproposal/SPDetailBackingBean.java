@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
@@ -93,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -1256,6 +1258,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getTemplateSpecBean());
 				}
 				
+				//28777 - start
+				List<Long> deactivatedZones = new ArrayList<>();
+				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
+					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
+						if(zoneDtl.isBranchDeactivated())
+							deactivatedZones.add(zoneDtl.getSpecZoneId());
+					}
+				}
+				//28777 - end
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1276,10 +1287,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
-				if (templateSpecBeans != null && templateSpecBeans.size() > 0) {
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {// 28777(35838) - fix sonarqube issue
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
+						//28777 - start
+						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+							continue;
+						//28777 - end
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -2908,13 +2923,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				.retrieveTechnicalSpecZoneDtlsSupplier(reqDTO);
 		
 		List<TplSpecZoneDtl> zones = resDTO.getZones();
-		if (CollectionUtils.isNotEmpty(zones)) {
-			this.getManagedBean().setZones(zones);
-			//#21695 Farid Start - add condition 21/2/2022 
-			if(this.getManagedBean().getQt().isPartial()){
-				disableDefaultSelected();
-			}
-			//#21695 Farid End - add condition 21/2/2022
+			if (CollectionUtils.isNotEmpty(zones)) {
+				this.getManagedBean().setZones(zones);
+				// wip doesnt need to execute this code below
+				if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					if (this.getManagedBean().getQt().isPartial()) {
+						disableDefaultSelected();
+					} else {
+						// for proposal technical item & spec
+						removeItemBaseOnSuppZoneQtyZero(templateSpecBean);
+					}
+				}
 			}
 		}
 		//#21695 Farid end 2/4/2021
@@ -3275,6 +3294,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		debugLogger("retrieveFinancialSpecDtls::::supplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setFinancialQtProposalChecklist(scQtProposalChecklist);
+		
 		//REMOVE Bug #31542 
 		IQTProposalSO proposalSO = null;
 
@@ -4596,14 +4616,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			if(this.getManagedBean().isFinancialAttchment()){//#28792-start
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
-			
-			//#29729 - Start
-			if(checkValidationSupplierBranchDeleted()){
+			evaluateWIP(this.getManagedBean().getQt()); //#21695
+			//#28777 & #29729 - Start
+			boolean branchDeleted = checkValidationSupplierBranchDeleted();
+			if(branchDeleted){
+				this.getManagedBean().setReadOnly(branchDeleted);
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
-			//#29729 - End
+			//#28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -4811,11 +4833,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		//#32648 - start
 
 		if (pmUser != null) {
-			//#30447 - start
-			if(pmUser.getSalutationCode()!=null){
+			// #30447 - start
+			if (pmUser.getSalutationCode() != null) {
 				context.put("salutation", pmUser.getSalutationCode().getSalutationName());
 			}
-			//#30447 - end
+			// #30447 - end
 			context.put("userName", pmUser.getUserName());
 			context.put("icNo", pmUser.getIdentificationNo());			
 		}
@@ -6288,23 +6310,22 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-		//29729 - start	
+        //#28777 & #29729 - Start
+		/**
+		* Method to return true, if branch in supplier has been deleted
+		* @param supplier id 
+		* @return true or false
+		**/
 		public boolean checkValidationSupplierBranchDeleted(){
-			IQTProposalSO sproposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			
 			boolean isSupplierBranchDeleted = false;
-			Long supplierId = this.getManagedBean().getSupplierId();
-			ScQt scQt = this.getManagedBean().getQt();
-			if(supplierId != null && scQt != null){
-				if(sproposalSO.isCheckPrepareProposalCurrentSupplierBranchDeleted(supplierId, scQt)){
+			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
-			    }
 			}
 		    return isSupplierBranchDeleted;
 		}
-		//29729 - end
+		//#28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
@@ -6533,7 +6554,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	 */
 	private void checkFinancialProposalAttachmentsForStatusCompliance(){
 		List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
-		if(null!=financialChecklist && CollectionUtils.isNotEmpty(financialChecklist)){
+		if(CollectionUtils.isNotEmpty(financialChecklist)){
 			for (ScQtProposalChecklist checklist : financialChecklist) {
 
 				PmDocument document = checklist.getScQtCheckList().getPmDocument();
@@ -6543,13 +6564,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							getManagedBean().getFinanceCheckDetailsList(),
 							QTConstants.FINANCIAL_ASSET_LIABILITY_CODE);
 					
-						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
-							boolean assetLiabilityUpload=assetLiabilitiesUpload(finProposalChecklist);
-							if(assetLiabilityUpload){
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-						    }else{
-						    	checklist.setCompliance(null);
-						    }
+						if(null!=finProposalChecklist && finProposalChecklist.isSubmitted() && assetLiabilitiesUpload(finProposalChecklist)){
+						   checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						}else{
+						   checklist.setCompliance(null);
 						}
 	
 					
@@ -6559,13 +6577,10 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							getManagedBean().getFinanceCheckDetailsList(),
 							QTConstants.FINANCIAL_CREDIT_FACILITY_CODE);
 					
-					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted()){
-							boolean creditfacilityUpload=creditFacilityUpload(finProposalChecklist);
-							if(creditfacilityUpload){
-								checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-							}else{
-								checklist.setCompliance(null);
-							}
+					    if(null!=finProposalChecklist && finProposalChecklist.isSubmitted() && creditFacilityUpload(finProposalChecklist)){
+						   checklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
+						}else{
+						   checklist.setCompliance(null);
 				        }
 			    }
 	
@@ -6610,4 +6625,45 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		return zoneMap;
 	}
 	// Enhancement #3657@Syazani 12/10/2023 -- End
+	
+	/**
+	 * 
+	 * @param templateSpecBean
+	 * Below method is to get supplier zone & remove the item if the supplier only has 1 zone and the zone is 0 quantity
+	 */
+	public void removeItemBaseOnSuppZoneQtyZero(TemplateSpecBean templateSpecBean) {
+		List<TplSpecAnswer> asnwerList = new ArrayList<>();
+		long specquestionidItem = 0;
+		for (TplSpecAnswer retrieveAns : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+			// Technical Spec Item 
+			if (ParameterConst.TPL_SPEC_QUESTION_TYPE_SPECIFICATION.equals(retrieveAns.getTplSpecQuestion()
+					.getQuestionType())
+					&& retrieveAns.getTplSpecQuestion().getParentSpecQuestion().getSpecQuestionId()
+							.equals(specquestionidItem)) {
+				asnwerList.add(retrieveAns);
+			}
+			// Technical Item
+			if (retrieveAns != null && this.getManagedBean().getZones().size() == 1) {
+				for (TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()) {
+					if (specZonedtl != null) {
+						for (TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()) {
+							boolean hasDifferentSizes = this.getManagedBean().getZones().size() != retrieveAns.getTplSpecQuestion().getTplSpecZoneQties().size() ;
+							boolean hasPositiveQty = specZoneQty != null && specZoneQty.getQty().compareTo(BigDecimal.ZERO) > 0;
+							boolean hasMatchingSpecZoneId = specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId());
+
+							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId) {
+								specquestionidItem = retrieveAns.getTplSpecQuestion().getSpecQuestionId();
+								asnwerList.add(retrieveAns);
+							}
+						}
+					}
+				}
+			}
+		}
+		if(CollectionUtils.isEmpty(asnwerList)){
+			templateSpecBean.setSpecAnswerList(this.getManagedBean().getTemplateSpecBean().getSpecAnswerList());
+		}else{
+			templateSpecBean.setSpecAnswerList(asnwerList);
+		}
+	}
 }

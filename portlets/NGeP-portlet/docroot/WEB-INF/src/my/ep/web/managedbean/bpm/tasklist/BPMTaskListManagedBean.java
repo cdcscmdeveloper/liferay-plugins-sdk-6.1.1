@@ -153,6 +153,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	//#32304 - start
 	private List<SmAppl> cancelledBumiApplLs;
 	private PagingDataModel<SmAppl> bumiListDataModel = new BumiPagingDataModel();
+	private Boolean showCancelledBumiApplList;
 	//#32304 - end
 
 	public List<WorklistItemVO> getTaskList() {
@@ -2097,7 +2098,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void setBumiListDataModel(PagingDataModel<SmAppl> bumiListDataModel) {
 		this.bumiListDataModel = bumiListDataModel;
 	}
-	
+
+	public Boolean getShowCancelledBumiApplList() {
+		return showCancelledBumiApplList;
+	}
+
+	public void setShowCancelledBumiApplList(Boolean showCancelledBumiApplList) {
+		this.showCancelledBumiApplList = showCancelledBumiApplList;
+	}
+
 	private class BumiPagingDataModel extends PagingDataModel<SmAppl> {
 		private static final long serialVersionUID = 1L;
 		

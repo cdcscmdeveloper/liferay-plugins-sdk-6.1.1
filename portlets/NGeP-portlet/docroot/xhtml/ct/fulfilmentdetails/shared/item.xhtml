@@ -109,7 +109,7 @@
                   onExpandStart="">
                  <ac:paginator for="itemTable"/>
                  <p:ajax event="rowSelect" update="@form" listener="#{ctBackingBean.onSelectProductItem()}" 
-                  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+                   process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
                  
                  <p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
                  <h:outputText value="#{index+1}" />

@@ -181,7 +181,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	//#30829 end
 	
 	// 27691 - Add/Delete Supplier Owner
-	private List<SmSupplierOwner> selectedSuppOwners = new ArrayList<SmSupplierOwner>();
+	private List<SmSupplierOwner> selectedSuppOwners = new ArrayList<>();
 	
 	private boolean showOwnerPersonnel = false;
 	
