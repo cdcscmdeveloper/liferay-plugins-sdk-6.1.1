@@ -28,8 +28,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -148,6 +151,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
+import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
 public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManagedBean> {
@@ -2303,7 +2307,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	private String getLogoHeaderPath(){
 		//CR 28774: Static Code Analysis
-		return SmCommonUtil.getBasePortalUrl();
+		log.info("getServerUrl()--:"+ getServerUrl());
+		return getServerUrl();
+		//return SmCommonUtil.getBasePortalUrl();
 	}
 	
 	/**
@@ -2923,6 +2929,21 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	//#28774 - End
+	
+	/**
+	 * Gets the server url.
+	 *
+	 * @return the server url
+	 */
+	private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
+
+		return url;
+	}
 	// #28175 start
 	public String getSmCategoryL3(Long categoryL3Id, Long applId) { 
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
@@ -3470,42 +3491,35 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private boolean isPoApproverActive(PmUser user, boolean isAfterApproval){
-		if(user == null || user.getPmUserOrgs() == null
-				|| user.getPmUserOrgs().isEmpty() || user.getPmUserOrgs().get(0) == null){
-			return false;
-		}
-		List<PmUserRole> roles = user.getPmUserOrgs().get(0).getPmUserRoles();
-		if(roles == null || roles.isEmpty()){
-			return false;
-		}
-		//#33955 - START
-		for (PmUserRole pmUserRole : roles) {
-			if(pmUserRole.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
-				continue;
+		try{
+			//#33955 - START
+			for (PmUserRole pmUserRole : user.getPmUserOrgs().get(0).getPmUserRoles()) {
+				String role = pmUserRole.getPmRole().getRoleCode();
+				if ((role.equals(SupplierManagementConst.PO_HQ) && !isAfterApproval)
+					|| (role.equals(SupplierManagementConst.APPROVER_HQ) && isAfterApproval)) {
+					return pmUserRole.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
 			}
-			String role = pmUserRole.getPmRole().getRoleCode();
-			if ((role.equals(SupplierManagementConst.PO_HQ) && !isAfterApproval)
-				|| (role.equals(SupplierManagementConst.APPROVER_HQ) && isAfterApproval)) {
-				return true;
-			}
+			//#33955 - END
+		} catch (NullPointerException e){
+			log.info("PO/Approver null", e);
 		}
-		//#33955 - END
 		return false;
 	}
 	
 	/**
-	 * Cancel Bumi application if supplier has other active application
+	 * Validate before showing submit dialog
 	 */
-	public void checkCancelBumiApplFromNewAppl(){
-		if(SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmSvTask().getSmAppl())){
+	public void validateBeforeSubmitDialog(){
+		if(SmCommonUtil.checkCancelBumiApplFromBumiStatus(getManagedBean().getSmSvTask().getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
-		} else {
-			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
-		}
+			return;
+		} 	
+		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
 	}
 	
 	/**
-	 * Redirect to task list
+	 * Redirect
 	 */
 	public void redirectToTaskList(){
 		FacesContext fc = FacesContext.getCurrentInstance();

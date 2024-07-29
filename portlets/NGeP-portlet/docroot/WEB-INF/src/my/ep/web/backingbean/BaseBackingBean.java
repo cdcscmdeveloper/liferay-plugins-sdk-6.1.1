@@ -2861,6 +2861,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
 						resDTO.getSmPersonnel().setSsmData(false);
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -2958,6 +2960,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
 				//checking with ssm
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				//#29582
+				ssmReqDTO.setSmSupp(smSupplier);
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
 				//27329
@@ -4212,7 +4216,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				
 				if(isPersonnelAdminRole
-						&& isMofAccEffDatePassed6MonthCurrDate
+						&& !isMofAccEffDatePassed6MonthCurrDate
 						&& !isBasicAccount){
 					getManagedBean().setDisAllowOwnerEdit(true);
 				}
@@ -4228,7 +4232,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		if(getManagedBean().getPersonnelsRole() != null 
-				|| !getManagedBean().getPersonnelsRole().isEmpty()){
+				&& !getManagedBean().getPersonnelsRole().isEmpty()){
 			
 			getManagedBean().setDowngradeRole(true);
 			
@@ -4266,7 +4270,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return Organization Code
 	 */
 	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+		IOrgProfileSO profileSO =  BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
@@ -4277,10 +4281,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				reqDTO).getPmOrgProfile();
 		if (orgProfile != null) {
 			return orgProfile.getOrgCode();
-		} else {
-			log.info("PTJ not found : " + orgProfileId);
-			return null;
 		}
+			
+		return null;
 	}
 	
 	//#12487 end
@@ -4292,7 +4295,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @throws IOException
 	 */
 	public void downloadCancelledBumiAppl(boolean isSVC) throws IOException{
-		Map<String, String> paramMap = new HashMap<String, String>();
+		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
 		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes().getUserSessionBean().getUserId().toString());
 		paramMap.put("PLANGUANGE", "ms");

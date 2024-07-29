@@ -1464,7 +1464,8 @@ public void saveComplianceSample() {
 						}
 						//#21692 - Start
 						if (null != proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod()
-								&& proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
+								&& (proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED
+								|| proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {//#21692 include not qualified
 							proposalCheckList.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
 						}
 						//#21692 - End
@@ -2321,7 +2322,15 @@ public void saveComplianceSample() {
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			reqDTO.setScQt(this.getManagedBean().getScQt());//#29187 Added Vinod
 			evaluationSO.preInitializeChecklist(reqDTO);//34496 4serangkai
+			
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
+			}
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			
 			//#34452 related to #25138 -start
@@ -2669,7 +2678,8 @@ public void saveComplianceSample() {
 								if (this.getManagedBean().getScQt().isDemoRequired()
 										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 												.getManagedBean().getScQt().getEvaluationType())) {
-									evalStageStr = QTConstants.TECHNICAL_EVALUATION_BY_ITEM;
+									evalStageStr = StringUtils.join(Arrays.asList(QTConstants.TECHNICAL_EVALUATION_BY_ITEM,
+												   QTConstants.PRESENTATION_DEMO_EVALUATION),",");//#36143 updated Vinod
 								} else {
 									evalStageStr = StringUtils.join(
 											Arrays.asList(evalStageStr, QTConstants.TECHNICAL_EVALUATION), ",");
@@ -10098,7 +10108,8 @@ private void retriveCommitteeRemarksList(){
 				//#21692 - start
 				if (null == contract.getUserScore() &&
 						null != this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod()
-						&& this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) {
+						&& (this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED
+								|| this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {//#21692 include not qualified
 					contract.setUserScore(new BigDecimal(0));
 				}
 				//#21692 - end
@@ -13704,7 +13715,8 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {//6906 
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906 //#21692 note-418 issue 6
 				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -13719,6 +13731,17 @@ private void retriveCommitteeRemarksList(){
 										new FacesScopes().getUserLocale())));
 
 			}
+			//#21692 note-418 issue 6 - Start
+			if (this.getManagedBean().isAllSupplierRejectEpv()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+								MessageUtils.getMessage(
+										MessageConst.WARN_760530,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+			//#21692 note-418 issue 6 - End
 		}
 
 	}
@@ -19097,10 +19120,7 @@ private void retriveCommitteeRemarksList(){
 			ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 			score = templateSpecSO.getMaxDemoScore(this.getManagedBean().getSinglesummaryItemList().getTplSpecQuestion().getSpecQuestionId());
-			if (score != null) {
-				score = this.getManagedBean().getDemoWeightage().equals(BigDecimal.ZERO) || this.getManagedBean().getDemoWeightage() == null ? score :
-					new BigDecimal(score).multiply(this.getManagedBean().getDemoWeightage()).toString();
-			} else {
+			if (score == null) {
 				score = SourcingConstants.NO_TS_DEMO_DATA_EXIST;
 			}
 		}

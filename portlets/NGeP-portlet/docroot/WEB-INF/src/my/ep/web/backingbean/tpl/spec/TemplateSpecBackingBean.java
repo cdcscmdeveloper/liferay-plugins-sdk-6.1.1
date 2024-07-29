@@ -1348,7 +1348,10 @@ public class TemplateSpecBackingBean extends
 								.getRoleCode());
 					}
 					
-					RoleCode[] r = {RoleCode.SC_SECRETARY};
+					RoleCode[] r = { RoleCode.SC_SECRETARY, 
+									RoleCode.SC_CHAIRPERSON, 
+									RoleCode.SC_MEMBER };
+					
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
 					}
@@ -2961,10 +2964,9 @@ public class TemplateSpecBackingBean extends
 	
 	public String replaceWithBR(String specDetails) {
 		// 35521 @zaim - start
-		String spec = specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); //36103 @zaim
 		spec = spec.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //36103 @zaim
 		return spec;
 		// 35521 @zaim - end
 	}

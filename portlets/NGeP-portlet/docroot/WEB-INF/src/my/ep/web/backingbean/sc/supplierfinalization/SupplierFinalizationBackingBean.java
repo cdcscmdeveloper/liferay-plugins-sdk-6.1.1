@@ -4001,28 +4001,25 @@ return	remarksNotFound;
 					
 					//#12487 
 					//send notification
-				
-					 if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) && 
-						  ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(this.getManagedBean().getFinalizationMethod())){
-						
-						if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION) || 
-							 currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)){				
-							//send prepare LOI
-							prepareNotification(CommonConstants.LOI);
-						}else if ( currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
-								   currentStatusId.equals(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION)){				
-							//send prepare LOA
-							prepareNotification(CommonConstants.LOA);
-						}
-					//#12487 - start Notification to prepare LOA (without LOI)
-					}else if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)&& 
-							   (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
-							   currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
-							   currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION))){				
-						//send prepare LOI/LOA
-						prepareNotification(CommonConstants.LOILOA);
-						
-					 }
+					if (!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+					    if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(this.getManagedBean().getFinalizationMethod())) {
+					        if (currentStatusId.equals(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION) || 
+								currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)) {
+					        	//send prepare LOI
+					            prepareNotification(CommonConstants.LOI);
+					        } else if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+									   currentStatusId.equals(QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION)) {
+					        	//send prepare LOA
+					            prepareNotification(CommonConstants.LOA);
+					        }
+					     //#12487 - start Notification to prepare LOA (without LOI)
+					    } else if (currentStatusId.equals(QTStatusConst.SF_PENDING_SIGN_OFF) || 
+								   currentStatusId.equals(QTStatusConst.SF_PENDING_ESCALATION_TO_BPK)||
+								   currentStatusId.equals(QTStatusConst.SF_PENDING_BIDDING_ESCALATION)) {
+					        prepareNotification(CommonConstants.LOILOA);
+					    }
+					}
+
 					//#12487 - end
 					
 					successMessage(msgCode, getMessageCommon(label), getManagedBean().getScQt()
@@ -11662,7 +11659,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		ScQtProposal proposal = evalResultDtl.getQtEvaluationResult().getScQtProposal();
 		SmSupplier supplier = proposal.getScQtSupplier().getSmSupplier();
 		boolean periodExtensionRejected = proposal.getIsAgreeQtExtendPeriod() == null ? false : proposal
-				.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+				.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) ||
+				proposal.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);//#21692 include not qualified;
 		boolean isBPKTaskAndClaimed = this.getManagedBean().isInitialDecisionFwdToBPK()
 				&& !this.getManagedBean().isReadOnly(); 
 		return Arrays.asList(
@@ -11686,17 +11684,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		SuppFinalizationReqDTO suppFinalizationReqDTO = new SuppFinalizationReqDTO();
 		suppFinalizationReqDTO.setScQt(this.getManagedBean().getScQt());
 		suppFinalizationReqDTO.setUserLocale(facesScopes.getUserLocale());
-		
-	
-		long currentUser = new FacesScopes().getUserSessionBean().getUserId();
-		long assignUser = 12345678910L;
-
-		
+			
 		if (getManagedBean().getScQtFinalization() != null && 
 			getManagedBean().getScQtFinalization().getLoiLoaById() != null) {
-				assignUser = getManagedBean().getScQtFinalization().getLoiLoaById();				
 			
-		}		
+			long currentUser = new FacesScopes().getUserSessionBean().getUserId();
+			long assignUser	 = getManagedBean().getScQtFinalization().getLoiLoaById();				
 			
 			Long profileId = suppFinalizationReqDTO.getScQt().getPmOrgProfile().getOrgProfileId();
 			Date createdDate = this.getManagedBean().getScQtFinalization().getCreatedDate();
@@ -11708,8 +11701,14 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			log.info(ptjCode);
 			log.info(ministryName);
 		
-		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.DASHBOARD);
-		getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.EMAIL);
+			getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.DASHBOARD);
+			getQTSuppFinalizationSO().sendPrepareLOILOANotification(suppFinalizationReqDTO,assignUser,ptjName,ptjCode,ministryName,currentUser,docType,CommonConstants.EMAIL);
+		}else{
+			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION,
+					ParameterConst.DOCTYPE_QUOTATION.toUpperCase(),
+					"SupplierFinalizationBackingBean.prepareNotification : No notification send", 
+					System.currentTimeMillis());
+		}	
 	}
 	//#12487 - end
 	

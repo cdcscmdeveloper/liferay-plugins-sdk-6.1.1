@@ -1874,6 +1874,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		getManagedBean().getBumiListDataModel().reloadDatatable();
 	}
 	
+	/**
+	 * @return true to show list of cancelled Bumiputera applications (status: 20210)
+	 */
 	public boolean showCancelledBumiApplList(){
 		if(getManagedBean().getShowCancelledBumiApplList() != null){
 			return getManagedBean().getShowCancelledBumiApplList();

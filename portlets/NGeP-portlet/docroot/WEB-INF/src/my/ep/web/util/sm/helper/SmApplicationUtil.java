@@ -5154,15 +5154,15 @@ public class SmApplicationUtil {
 			}
 			//#34397, #34398 - start
 			checkMOFExpiryDate(smSupplier, applicationType, false);
-			
-			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI) && smSupplier.isBumi()) {
-				throw new EpException(MessageConst.ERROR_722504);
-			
 			//#32304 - start
-			} else if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-					&& SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
+			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+				if(smSupplier.isBumi()){
+					throw new EpException(MessageConst.ERROR_722504);
+				}
+				if(SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
 							smSupplier.getSupplierId()).getSmAppl() != null){
-				throw new EpException(MessageConst.ERROR_722697);
+					throw new EpException(MessageConst.ERROR_722697);
+				}
 			}
 			//#32304 - end, #34397, #34398 - end			
 
@@ -9668,6 +9668,8 @@ public class SmApplicationUtil {
 				//#32627 END
 				.append(")");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setNotUsedConditionExpired(true);  //#36064 START
+		reqDTO.setCurrent(true);				  //#36064 END
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setWorkflowStatus(sb.toString());
 		reqDTO.setAppType(applType);
@@ -13245,10 +13247,12 @@ public class SmApplicationUtil {
 						retVal = false;
 					}
 					//27821
-					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())
-							|| smPersonnel.getIdentificationType() != null && ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ //#30064
+					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ 
 						retVal = false;
-					}
+					}//29582, 30064, 35300 start 
+					if (smPersonnel.getIdentificationType() != null && smPersonnel.isPermanentResident() ){
+						retVal = false;
+					}//29582, 30064, 35300 end 
 					// #28831 - start
 				} else {
 					if (smPersonnel.getIdentificationType() != null
@@ -13256,7 +13260,12 @@ public class SmApplicationUtil {
 							&& (smPersonnel.getPmCountry() != null && smPersonnel.getPmCountry().getCountryId() != 131)
 							&& !(smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 						retVal = false;
-					}
+					}//29582 strat
+					if (smPersonnel.getIdentificationType() != null
+							&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel
+									.getIdentificationType().getParameterCode())) {
+						retVal = false;
+					}//29582 end
 				}
 				// #28831 - start
 			}
@@ -14222,6 +14231,13 @@ public class SmApplicationUtil {
 				valid = false;
 			}
 		}
+		//#32304 - start
+		Long statusId = rejAppl.getPmStatus().getStatusId();
+		if(statusId.equals(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE)
+				|| statusId.equals(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_OTHER_APPL)){
+			valid = false;
+		}
+		//#32304 - end
 		return valid;
 	}
 

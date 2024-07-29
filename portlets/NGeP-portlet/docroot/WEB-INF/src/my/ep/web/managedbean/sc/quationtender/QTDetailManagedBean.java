@@ -1866,6 +1866,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<String, String> committeeMembersTypeMap; 
 	//12471 - end
 
+	//#29732
+	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11865,6 +11869,34 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
 	}
 	
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean isFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
 }
 
 // ***25201
