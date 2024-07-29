@@ -823,8 +823,8 @@ public class SmSideMenuIconUtil {
 					for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
 						if(doc.getSmApplDocFiles() != null){
 							for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
-								if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && doc.getVerifiedFlg() != null 
-										&& doc.getVerifiedFlg() == 0){
+								if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+										|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
 									nonMandatoryDocVerified = false;
 									break;
 								}
