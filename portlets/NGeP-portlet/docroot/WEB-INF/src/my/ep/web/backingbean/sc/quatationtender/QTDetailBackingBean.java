@@ -4135,7 +4135,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			// #30435- Start.
 			if (!getManagedBean().isApproverTabLoaded()) {
-				retrieveOthersApprovalTabDtl();	//Bug #36094@Syazani 26/07/2024
+				retrieveOthersApprovalTabDtl(); // Bug #36094@Syazani 26/07/2024
 				retrieveApprovalTabDtl();
 			}
 			// #30435 - End.
