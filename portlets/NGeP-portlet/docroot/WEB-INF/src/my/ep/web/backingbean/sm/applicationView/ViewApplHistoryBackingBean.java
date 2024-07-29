@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -79,6 +80,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
@@ -1498,7 +1500,13 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
-		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			//35336
+			if(!SmApplicationUtil.checkRejectedApplExpired(smAppl) 
+					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",MessageUtils.getMessage(MessageConst.ERROR_721099,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+			}
 		}
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
@@ -1537,6 +1545,11 @@ public class ViewApplHistoryBackingBean extends
 			button = false;
 		}
 		// #32628 - end
+		//#35336 START
+		if (smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+			button = false;
+		}
+		//#35336 END
 		
 		return button;
 		//32627 - END
@@ -1643,7 +1656,8 @@ public class ViewApplHistoryBackingBean extends
 		
 		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
 			return false;
-		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
+		}else if((this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ //#34483
 			return false;
 		}
 		
@@ -1727,22 +1741,4 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
-	
-	//35336 START
-	/**
-	 * Check whether the rejected application was expired
-	 * compare to no. of days allowed to resubmit after rejected
-	 * @param SmAppl appl
-	 * @return Boolean
-	 */
-	public Boolean checkRejectedApplExpired(SmAppl appl){
-		Boolean isExpired = false;
-		if(appl.getApplId() != null) {
-			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
-				isExpired = true;
-			}
-		}		
-		return isExpired;
-	}
-	//35336 END
 }

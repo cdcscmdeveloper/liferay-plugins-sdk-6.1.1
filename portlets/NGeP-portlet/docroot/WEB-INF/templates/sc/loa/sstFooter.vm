@@ -1,0 +1,22 @@
+<div class="footer" >
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	  <tr>
+			<td align="right"> <span id="pagenumber" style="font-family: Arial;font-size: 14.5px;font-weight: normal;font-style: normal;line-height: 20px;color: #333333;"> daripada </span><span style="font-family: Arial;font-size: 14.5px;font-weight: normal;font-style: normal;line-height: 20px;color: #333333;" id="pagecount"></span></td>
+	  </tr>
+		<tr>
+			<td>
+				<span class="standard">
+							Tandatangan & Cap (Kerajaan) : .......................
+							<br/><br/>
+							Tandatangan & Cap (Syarikat) : .......................<br/>
+				</span>
+				<div style="color:red; font-family: Arial; font-size:13px;">
+								<span>
+								Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
+								Pihak Syarikat : Penama pada sijil pendaftaran untuk menandatangi Surat ini
+								</span>
+				</div>	 
+			</td>
+		</tr>
+	</table>
+ </div>

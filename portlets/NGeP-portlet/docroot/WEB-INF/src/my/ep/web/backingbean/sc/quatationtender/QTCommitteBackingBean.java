@@ -120,6 +120,11 @@ import org.primefaces.model.TreeNode;
 public class QTCommitteBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(QTCommitteBackingBean.class);
@@ -1303,6 +1308,7 @@ public class QTCommitteBackingBean extends
 	/**
 	 * Ok committee action.
 	 */
+	@SuppressWarnings("deprecation")
 	public void okCommitteeAction() {
 		debugLogger("okCommitteeAction");
 
@@ -1593,81 +1599,7 @@ public class QTCommitteBackingBean extends
 	 * 
 	 */
 	public void preRenderView() {
-		/*
-		 * renewSesionObject(); HttpServletRequest servletRequest = PortalUtil
-		 * .getHttpServletRequest(new FacesScopes().getRequest());
-		 * HttpServletRequest originalServletRequest = PortalUtil
-		 * .getOriginalServletRequest(servletRequest); String taskId =
-		 * originalServletRequest.getParameter("taskId");
-		 * this.getManagedBean().setTaskId(taskId); log.info("taskId : " +
-		 * taskId); IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-		 * .getServiceObject(IBpmSO.class); // TODO FacesScopes facesScopes =
-		 * new FacesScopes(); String ctx =
-		 * facesScopes.getBPMAuthenticationCtxToken(); // String ctx =
-		 * bpmSO.authenticate("roslan", "welcome1"); BpmRequestDTO reqDTO = new
-		 * BpmRequestDTO(); reqDTO.setCtxToken(ctx); reqDTO.setTaskId(taskId);
-		 * BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO); Object obj =
-		 * res.getPojo(); this.getManagedBean().setOutComes(res.getAction());
-		 * SCQuotationTenderDataType quotationTenderDataType =
-		 * (SCQuotationTenderDataType) obj;
-		 * retrieveCommitteeAppointmentDetails(new Long(
-		 * quotationTenderDataType.getQtId()));
-		 * this.getManagedBean().setQuotationTenderDataType(
-		 * quotationTenderDataType);
-		 * this.getManagedBean().setProcessName(res.getProcessName());
-		 * FacesContext fc = FacesContext.getCurrentInstance();
-		 * fc.getApplication().getNavigationHandler() .handleNavigation(fc,
-		 * null, QTConstants.MAINTANANCE_PAGE); }
-		 * 
-		 * public void retrieveCommitteeAppointmentDetails(Long qtId) {
-		 * debugLogger("retrieveCommitteeAppointmentTabDtl"); //
-		 * this.getManagedBean().setActiveIndex(1);
-		 * 
-		 * IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		 * IQTDetailSO.class); QuationTenderReqDTO tenderReqDTO = new
-		 * QuationTenderReqDTO();
-		 * tenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-		 * tenderReqDTO.setQtId(qtId); QuationTenderResDTO tenderResDTO = new
-		 * QuationTenderResDTO(); tenderResDTO =
-		 * QtDetailsSO.retriveQTDetails(tenderReqDTO); if
-		 * (tenderResDTO.getQtDetail() != null) {
-		 * getManagedBean().setQt(tenderResDTO.getQtDetail()); } List<TabBean>
-		 * committeTabs = this.getManagedBean() .getScCommitteeMemberTabList();
-		 * // qtId = getManagedBean().getQt().getQtId(); if (null != qtId &&
-		 * null == committeTabs) { List<ScCommitteeMember> members=null; String
-		 * evaluationType = this.getManagedBean().getQt() .getEvaluationType();
-		 * committeTabs = new ArrayList<TabBean>(); // BO and specification
-		 * committe is common for both evaluations.. committeTabs.add(new
-		 * TabBean(QTConstants.BUSINESS_OWNER, getQtCommiteDtlsByQtIdNType("BO",
-		 * qtId),null)); committeTabs.add(new TabBean(
-		 * QTConstants.SPECIFICATION_COMMITTEE_TAB, getQtCommiteDtlsByQtIdNType(
-		 * CommitteType.getValue("SpecificationCommittee"), qtId),null)); //
-		 * evaluation type is one tier only oc is added.. if
-		 * ("1".equals(evaluationType)) { committeTabs.add(new TabBean(
-		 * QTConstants.EVALUATION_COMMITTEE_TAB, getQtCommiteDtlsByQtIdNType(
-		 * CommitteType.getValue("EvaluationCommittee"), qtId),null)); } else {
-		 * committeTabs .add(new TabBean(QTConstants.OPENING_COMMITTEE_TAB,
-		 * getQtCommiteDtlsByQtIdNType(CommitteType
-		 * .getValue("OpeningCommittee"), qtId),null)); committeTabs.add(new
-		 * TabBean("TEC", getQtCommiteDtlsByQtIdNType("TEC", qtId),null));
-		 * committeTabs.add(new TabBean("FEC",
-		 * getQtCommiteDtlsByQtIdNType("FEC", qtId),null)); } List<PmParameter>
-		 * finalizeList = retrieveFinalizationSecratryDtl(qtId);
-		 * log.info("Finalization Secratory Size : " + finalizeList.size());
-		 * this.getManagedBean().setFinalizationSecratary(finalizeList); String
-		 * pmCode = null; for (PmParameter pmParameter : finalizeList) { pmCode
-		 * = pmParameter.getParameterCode(); } if (null !=
-		 * getManagedBean().getQt().getEstimatedAmount() &&
-		 * getManagedBean().getQt().getEstimatedAmount().intValue() >
-		 * SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
-		 * committeTabs.add(new TabBean( QTConstants.FINALIZATION_SECRETARY_TAB,
-		 * getFinalizationCommitteeTypeDtl(pmCode, null),null)); } else { //
-		 * retrieveFinalizationSecratryDtl(qtId); committeTabs.add(new TabBean(
-		 * QTConstants.FINALIZATION_SECRETARY_TAB,
-		 * getFinalizationCommitteeTypeDtl(pmCode, null),null)); }
-		 * this.getManagedBean().setScCommitteeMemberTabList(committeTabs); }
-		 */
+
 	}
 
 	// To check whether committe needs to be clone or not..
@@ -2047,6 +1979,13 @@ public class QTCommitteBackingBean extends
 		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
+
+		// #25426 #36 #85 #95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow() && isDeskOfficer()) && !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// #25426 #36 #85 #95 ruzaimah - end
+
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
@@ -2062,6 +2001,7 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
+		
 		return false;
 	}
 
@@ -2497,4 +2437,11 @@ public class QTCommitteBackingBean extends
 	}
 	}
 	}
+
+	// #25426#36 ruzaimah - Start
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	// #25426#36 ruzaimah - end	
 }

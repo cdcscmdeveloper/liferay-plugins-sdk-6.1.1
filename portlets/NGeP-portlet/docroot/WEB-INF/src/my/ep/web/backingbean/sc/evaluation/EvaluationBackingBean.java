@@ -7251,6 +7251,26 @@ private void retriveEndorsmentList(){
 					new ArrayList<ScQtCommitteeActivity>());
 			for(ScQtCommitteeActivity committeeActivity:resDTO.getCommitteActivities()){
 				if(committeeActivity.isAttended()){
+						// #29668, #26474-start
+						if ((SCProcessNameConst.ENDORSE_EC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.ENDORSE_FEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.ENDORSE_TEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.ENDORSE_OC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName())) && ParameterConst.COMMITTEE_ROLE_SECRETARY 
+							.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode()) ){ 
+
+							committeeActivity.setSignedOff(Boolean.TRUE);
+						} else if ((SCProcessNameConst.SIGNOFF_EC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_FEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_TEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_OC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName())) && !ParameterConst.COMMITTEE_ROLE_CHAIRPERSON 
+							.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode()) ){
+
+							committeeActivity.setSignedOff(Boolean.TRUE);
+						}
+						// #29668, #26474-End
+
 					this.getManagedBean().getEndorscommitteeMemberList().add(committeeActivity);	
 				}
 			}

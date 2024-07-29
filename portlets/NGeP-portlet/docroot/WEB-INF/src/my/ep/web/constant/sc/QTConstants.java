@@ -31,6 +31,9 @@ public interface QTConstants {
 	public static final String BO_MAINTANANCE_PAGE = "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
+	// #9019 -start-
+	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true";
+	// #9019 -end-
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -264,6 +267,10 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
 	// #15391 -end-
 
+	// 9019 - Start (Harun) WIP transaction Pending QT Submission
+	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
+	// 9019 - End (Harun)
+
 	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
 	
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
@@ -280,4 +287,18 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	// Bug #35688@Syazani 10/07/2024 -- Start
+	public static final String TAB_SC_GENERAL_INFORMATION = "0";
+	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
+	public static final String TAB_SC_TECHNICAL_CHECKLIST = "2";
+	public static final String TAB_SC_FINANCIAL_CHECKLIST = "3";
+	public static final String TAB_SC_TECHNICAL_SCORING = "4";
+	public static final String TAB_SC_FINANCIAL_SCORING = "5";
+	public static final String TAB_SC_OVERALL_SCORING = "6";
+	public static final String TAB_SC_DELIVERY_ADDRESS = "7";
+//	public static final String TAB_SC_PAYMENT_DEDUCTION = "8";
+	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
+	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
+	// Bug #35688@Syazani 10/07/2024 -- End
 }
