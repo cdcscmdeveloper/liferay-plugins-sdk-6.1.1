@@ -9259,6 +9259,8 @@ public class SmApplicationUtil {
 				//#32627 END
 				.append(")");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setNotUsedConditionExpired(true);  //#36064 START
+		reqDTO.setCurrent(true);				  //#36064 END
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setWorkflowStatus(sb.toString());
 		reqDTO.setAppType(applType);
