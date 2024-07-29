@@ -197,7 +197,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String newOfferSpec;
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
-	//#28854 - end	
+	//#28854 - end
+	
+	//#29983 start
+	private String businessRegNoNew;
+	//#29983 end
 
 	/**
 	 * @return the fileDirectory
@@ -1481,6 +1485,22 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
 	/* #28854 end*/
+	
+	//#29983 start
+	/**
+	 * @return the businessRegNoNew
+	 */
+	public String getBusinessRegNoNew() {
+		return businessRegNoNew;
+	}
+
+	/**
+	 * @param businessRegNoNew the businessRegNoNew to set
+	 */
+	public void setBusinessRegNoNew(String businessRegNoNew) {
+		this.businessRegNoNew = businessRegNoNew;
+	}
+	//#29983 end
 	
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
 	public boolean isAmendFromTaskList() {

@@ -2416,10 +2416,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-			// Start Fix - #33952
+			// Start Fix - #33952, #25956
 			if ((ctBackingBean.getManagedBean().getContractVer()
 					.getCtAmendment().isContractExtend() && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
-					&& ctBackingBean.getManagedBean().isContractExpired())
+					&& ctBackingBean.getManagedBean().isContractExpired()){
 	
 					if ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean()
 								.getContractVer().getStatus().getStatusId()))
@@ -2483,8 +2483,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			   throw new EpException(MessageConst.ERROR_750048);
 			  }
 			}
-	 
-			// End Fix - #33952
+		  }		
+			// End Fix - #33952, #25956
 
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
