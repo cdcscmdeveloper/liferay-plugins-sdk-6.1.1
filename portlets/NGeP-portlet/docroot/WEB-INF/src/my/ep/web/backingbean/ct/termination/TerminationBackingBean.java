@@ -466,7 +466,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	public void validateContractTermination(String outcome){
 		this.getManagedBean().setAutoUpdate(true);
 
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) 
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {  //#36196 - Fixing 
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
 			if((remark == null || remark.length() == 0)) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
@@ -558,13 +559,13 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}
-
-		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().isMutualTermination()) {
+		/* //#36196 - Fixing
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) { 
 			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 			if(this.getManagedBean().getAttachmentList().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_750014);
 			}
-		}
+		}*/
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
