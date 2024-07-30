@@ -168,6 +168,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	//#28895_35501 Start - AUDIT TRAIL SM
 	private SmSupplier oldSmSupplier;
 	private String oldRole;
+	private String newRole;
 	private PmOrgProfile oldOrg;
 	//#28895_35501 End
 
@@ -1157,6 +1158,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setOldRole(String oldRole) {
 		this.oldRole = oldRole;
+	}
+
+	public String getNewRole() {
+		return newRole;
+	}
+
+	public void setNewRole(String newRole) {
+		this.newRole = newRole;
 	}
 
 	public PmOrgProfile getOldOrg() {
