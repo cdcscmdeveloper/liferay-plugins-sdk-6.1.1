@@ -50,7 +50,9 @@
 			<td width="20%" valign="top" class="sidemenutd">
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{panelBackingBean.managedBean.selectedTabIndex}">
-                    <p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.panel.panel.circular']}" update="@form">
+					<!-- 29891 -start- -->
+                    <p:menuitem style="white-space:normal; text-transform:uppercase;" value="#{lbl['lbl.ct.panel.panel.circular']}" update="@form">
+					<!-- 29891 -end- -->                    
 						<f:setPropertyActionListener target="#{panelBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
 					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.item']}" update="@form">
