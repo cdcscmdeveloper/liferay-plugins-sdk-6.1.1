@@ -22546,7 +22546,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			IQTSpecSO specSo = getSpecSO();
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
-			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+			specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		}
 		
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean()
