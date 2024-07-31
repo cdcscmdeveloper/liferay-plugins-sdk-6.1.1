@@ -16687,6 +16687,24 @@ private void retriveCommitteeRemarksList(){
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
+
+		//#36226 denominator bug - Start
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		
+		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+		reqDTO.setScQt(this.getManagedBean().getScQt());
+		int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+		List<Object[]> findSupplierProposal = new ArrayList<>();
+		List<Long> specQuestionIds = new ArrayList<>();
+		if (this.getManagedBean().getScQt().isZonal() && wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+			findSupplierProposal = evaluationSO
+					.getFindSupplierZone(proposalId);
+			for (Object[] specZoneId : findSupplierProposal) {
+				specQuestionIds.add((Long) specZoneId[3]);
+			}
+		}
+		//#36226 denominator bug - End
 		
 		int sumMaxScore = 0; int maxScore = 0;
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
@@ -16711,7 +16729,14 @@ private void retriveCommitteeRemarksList(){
 					
 					}
 					//=======#31902 bug related to #25138 ====== end
-					sumMaxScore = sumMaxScore + maxScore;
+					//#36226 denominator bug - Start
+					if (this.getManagedBean().getScQt().isZonal() && CollectionUtils.isNotEmpty(findSupplierProposal)
+							&& wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+						sumMaxScore = specQuestionIds.contains(specQuestion.getParentSpecQuestion().getSpecQuestionId()) ? sumMaxScore + maxScore : sumMaxScore;
+					} else {
+						sumMaxScore = sumMaxScore + maxScore;
+					}
+					//#36226 denominator bug - End
 		
 				}
 				
@@ -16719,8 +16744,6 @@ private void retriveCommitteeRemarksList(){
 			
 		}
 		if(this.getManagedBean().getScQt().isPartial() && this.getManagedBean().getScQt().isZonal()){//33812-start
-			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			EvaluationReqDTO reqDTo=new EvaluationReqDTO();
 			reqDTo.setQtproposalId(proposalId);
 			reqDTo.setQtId(this.getManagedBean().getScQt().getQtId());
