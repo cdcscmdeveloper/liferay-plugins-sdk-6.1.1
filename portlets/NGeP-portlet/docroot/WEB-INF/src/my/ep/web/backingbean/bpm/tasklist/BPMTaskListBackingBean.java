@@ -52,6 +52,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -1088,6 +1089,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			log.info("********getProcessName********" + process);
 			log.info("********getTaskName********" + taskName);
+			log.info("********getDocType********" + docType);
 			// this.getManagedBean().setProcessName(res.getProcessName());
 			// this.getManagedBean().setAction(res.getAction());
 			// Object obj = res.getPojo();
@@ -1095,16 +1097,21 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			String url = "";
 
 			if (!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0) {
-				log.info("********do Bpm Map********");
+				log.info("******["+process+"]["+taskName+"]["+docType+"]******");
 				url = (String) this.getManagedBean().getBpmMap().get(process);
-				if (url == null || url.isEmpty()) {
+				if (StringUtils.isBlank(url)) {
 					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
+
+					if(StringUtils.isBlank(url)){
+						url = (String) this.getManagedBean().getBpmMap().get(process + docType);
+					}
 				}
-				if (url == null || url.isEmpty()) {
-					url = (String) this.getManagedBean().getBpmMap().get(process + docType);
-				}
+				log.info("url after filter:" + url);
 			}
-			log.info("url:" + url);
+			if(StringUtils.isBlank(url)){
+				log.info("Unable to find portlet mapping for process name:"+process);
+				throw new EpException("Unable to find portlet mapping for process name:"+process);
+			}
 
 			FacesScopes facesScope = new FacesScopes();
 			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
