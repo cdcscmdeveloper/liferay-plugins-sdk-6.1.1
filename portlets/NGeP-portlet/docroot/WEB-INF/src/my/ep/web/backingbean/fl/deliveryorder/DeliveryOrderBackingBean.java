@@ -716,8 +716,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setModificationCancel(false);
 			
 			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
-			if (FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName())
-					|| getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", "")+"Submition")){
+			if (FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", "")+"Submition")){
 				FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
 				if(doModDataType.getErrorId() != null && doModDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -732,8 +731,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
-			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) 
-					|| getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))){
+			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))){
 				FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
 				if(doCancelDataType.getErrorId() != null && doCancelDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
