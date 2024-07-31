@@ -13063,8 +13063,8 @@ public class SmApplicationUtil {
 				countAuthorizedPersonnel++;
 			}
 			//#29616 -start
-			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm",
-					ISupplierSearchSO.class);
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					"sm", ISupplierSearchSO.class);
 			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 					|| supplierSearchSO.isSoftCeritificateActive(shr.getPmUser())) {
 				throw new EpException(MessageConst.ERROR_722685,
