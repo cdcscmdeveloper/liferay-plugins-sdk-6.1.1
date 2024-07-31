@@ -3682,8 +3682,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.setCreatedBy(loginSessionUserId);
 			}
 			
-			// #35489 - Start
 			// #35769 - Start // fixing null pointer after inactive user
+			// #35489 - Start
 			if (this.getManagedBean().isOrgUnitStatusChange()
 					&& isCheckSelectedReceivingAddrTypes()) {
 				for (PmAddressType addressType : this.getManagedBean()

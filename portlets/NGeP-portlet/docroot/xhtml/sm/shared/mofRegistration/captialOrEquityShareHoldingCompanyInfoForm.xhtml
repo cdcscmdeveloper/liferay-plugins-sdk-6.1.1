@@ -16,7 +16,8 @@
 					and backingBean.managedBean.smSupplier.businessType ne 'P' and backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}" />
 		<!-- 28466 - end -->
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<!-- Disable for UPS 32008 - START -->
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.equityCompVerifed}"
@@ -31,7 +32,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.equityCompVerifed}"
@@ -48,7 +49,7 @@
 		</table>
 
 		<p:outputPanel id="equiInfPan" layout="block">
-			<p:blockUI block=":form:tt:equiInfPan" widgetVar="buiPoEqui"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:equiInfPan" widgetVar="buiPoEqui"
 				id="poBasEqui"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.equityCompVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.equityCompVerifed : false)}" />
 			<p:dataTable var="equiBean" widgetVar="suppEquiCompDtWidVar"
@@ -68,7 +69,7 @@
 				<p:ajax event="rowDblselect" listener="#{backingBean.unSelectEquityCompany}"
 					update=":form:tt:eqiComDt"></p:ajax>
 
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smEquityCompanies}" disabledSelection="#{equiBean.ssmData}" />
+				<p:column selectionMode="multiple" width="1%" rendered="#{(not empty backingBean.managedBean.smAppl.smEquityCompanies) and (!backingBean.managedBean.upsCannotEdit)}" disabledSelection="#{equiBean.ssmData}" />
 				<!-- #34600 start -->
 				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-space: break-spaces;">
 					<h:outputText value="#{equiBean.companyName}" />
@@ -92,7 +93,7 @@
 								<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
 							</f:facet>
 							<!-- #30660 - disable edit -->
-							<p:inputText value="#{equiBean.shareAmt}" disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+							<p:inputText value="#{equiBean.shareAmt}" disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax event="blur" update="eqiComDt"
@@ -122,7 +123,8 @@
 							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 						</p:outputPanel>
 						<p:outputPanel rendered="#{!backingBean.managedBean.disAllowOwnerEdit}">
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+							<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+							<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 						</p:outputPanel>
 					</p:commandLink> 
 					<!-- #30660 end -->
@@ -133,11 +135,13 @@
 			<div align="right">
 				<!-- #30660 start - fix reopen -->
 				<p:commandButton
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
 					value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true" 
 					process="@this" update=":form:tt:eqiCompDialog" /> 
 				<p:commandButton
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					value="#{lbl['lbl.sm.button.delete']}" id="equiCompDelBtnId"
 					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies or backingBean.managedBean.disAllowOwnerEdit}"
 					oncomplete="equiCompDeletePopUp.show()" process="equiInfPan"
@@ -256,7 +260,7 @@
 	<!-- #30660 end -->
 	<p:dialog width="500px" height="450px"
 		header="#{lbl['lbl.sm.equiComp.dialHdr']}" id="eqiCompDialog"
-		widgetVar="eqiCompDialog" resizable="false" closable="false"
+		widgetVar="eqiCompDialog" resizable="false" closable="true"
 		showEffect="fade" hideEffect="fade" modal="true">
 		
 		<p:outputPanel layout="block" id="equiCompBlockPanel">
@@ -270,7 +274,7 @@
 							validator="#{backingBean.validateRequiredField}"
 							label="#{lbl['lbl.sm.equiComp.compName']}" id="supEquiCompName"
 							value="#{backingBean.managedBean.selectedEquityCompany.companyName}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.companyName}"
+							disabled ="#{(backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.companyName) or backingBean.managedBean.upsCannotEdit}"
 							size="35" >
 								<p:ajax event="blur" process="@this" update="@this"/>
 								<f:attribute name="labelName" value="#{lbl['lbl.sm.equiComp.compName']}" />
@@ -291,7 +295,7 @@
 							validator="#{backingBean.validateRequiredField}"
 							label="#{lbl['lbl.sm.equiComp.regNo']}" id="suppEquiCompRegNo"
 							value="#{backingBean.managedBean.selectedEquityCompany.regNo}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.regNo}"
+							disabled ="#{(backingBean.managedBean.selectedEquityCompany.ssmData and not empty backingBean.managedBean.selectedEquityCompany.regNo) or backingBean.managedBean.upsCannotEdit}"
 							size="35" > 
 							<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
 							<p:ajax event="blur" process="@this" update="equiCompBlockPanel" partialSubmit="true"
@@ -305,7 +309,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
 					<td>
 						<p:inputText value="#{backingBean.managedBean.selectedEquityCompany.mofNo}"
-							readonly="true" size="35" id="suppEquiMofNoId"/>
+							readonly="true" size="35" id="suppEquiMofNoId" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 					</td>
 				</tr>
 				<tr>
@@ -313,7 +317,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<!-- #28466 start - remove #27308 showstopper #30660 start - fix reopen -->
 					<td><p:inputText id="equiCompShrAmt"
-							disabled="#{backingBean.managedBean.disAllowOwnerEdit or !backingBean.managedBean.valueReqd}" 
+							disabled="#{backingBean.managedBean.disAllowOwnerEdit or !backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}" 
 							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 							label="#{lbl['lbl.sm.equiComp.shrAmt']}" 
 							validatorMessage="#{lbl['lbl.sm.equiComp.shrAmt']} - #{lbl['lbl.sm.minAmt.validMsg']}" 
@@ -361,7 +365,7 @@
 							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 							label="#{lbl['lbl.sm.equiComp.addr']}" id="suppEquiCompAddr" 
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
+							disabled ="#{(backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1) or backingBean.managedBean.upsCannotEdit}" 
 							size="35" />
 					<!-- #30660 end -->
 							<ac:smFieldChangeAlert 
@@ -378,7 +382,7 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"							
+							disabled ="#{(backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1) or backingBean.managedBean.upsCannotEdit}"							
 							size="35" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -391,7 +395,7 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}"
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1}"	
+							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.address1 or backingBean.managedBean.upsCannotEdit}"	
 							size="35" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -408,7 +412,7 @@
 							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry" 
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}" 
-							disabled ="#{backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId}"
+							disabled ="#{(backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId) or backingBean.managedBean.upsCannotEdit}"
 							style="width: 207px;margin-bottom: 5px;background-color:white;"> 
 					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -439,7 +443,7 @@
 							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 							label="#{lbl['lbl.sm.state']}" 
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.stateId}" 
-							id="equiState"> 
+							id="equiState" disabled="#{backingBean.managedBean.upsCannotEdit}"> 
 					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiState"
@@ -476,7 +480,8 @@
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.divisionId}"
 						required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 						style="width: 207px;margin-bottom: 5px;background-color:white;"
-						rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}">
+						rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{backingBean.managedBean.equiCompanyDivisions}"
@@ -508,7 +513,8 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
 							id="equiDist" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 							label="#{lbl['lbl.sm.district']}" 
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}"> 
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}"
+							disabled="#{backingBean.managedBean.upsCannotEdit}"> 
 					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiDist"
@@ -535,7 +541,8 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
 							id="equiCity" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
 							label="#{lbl['lbl.sm.towncity']}" 
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}"> 
+							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}"
+							disabled="#{backingBean.managedBean.upsCannotEdit}"> 
 					<!-- #30660 end -->
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCity"
@@ -567,7 +574,8 @@
 									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy" 
 									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-									size="35"> 
+									size="35"
+									disabled="#{backingBean.managedBean.upsCannotEdit}"> 
 								<!-- #30660 end -->
 									<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
@@ -588,7 +596,8 @@
 									label="#{lbl['lbl.sm.postcode']}" 
 									id="suppEquiCompPostCodeForeign" 
 									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
-									size="35"> 
+									size="35"
+									disabled="#{backingBean.managedBean.upsCannotEdit}"> 
 								<!-- #30660 end -->
 								</p:inputText>
 								<ac:smFieldChangeAlert 
@@ -609,7 +618,8 @@
 						countryCode="#{backingBean.managedBean.selectedEquityCompany.phoneCountry}" 
 						areaCode="#{backingBean.managedBean.selectedEquityCompany.phoneArea}" 
 						number="#{backingBean.managedBean.selectedEquityCompany.phoneNo}"  
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.phoneNo}" 
@@ -624,7 +634,8 @@
 						countryCode="#{backingBean.managedBean.selectedEquityCompany.faxCountry}" 
 						areaCode="#{backingBean.managedBean.selectedEquityCompany.faxArea}" 
 						number="#{backingBean.managedBean.selectedEquityCompany.faxNo}"  
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" /> 
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.faxNo}" 
@@ -638,6 +649,7 @@
 			<br />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
 					partialSubmit="true" process=":form:tt:eqiCompDialog"
 					onclick="equiCompBlockWidget.show();" oncomplete="equiCompBlockWidget.hide();"
@@ -645,8 +657,10 @@
 					<f:param name="validate" value="true" />
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelEquiCompFuntionc}" />
+					<!-- Disable for UPS 32008 - END -->
 			</div>
 			<p:blockUI block="equiCompBlockPanel" widgetVar="equiCompBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

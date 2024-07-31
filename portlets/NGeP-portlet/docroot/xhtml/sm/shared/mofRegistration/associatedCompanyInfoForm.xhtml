@@ -18,7 +18,8 @@
 			</p:tooltip>
 		</f:facet>
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<!-- Disable for UPS 32008 - START -->
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.associateVerified}"
@@ -33,7 +34,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.associateVerified}"
@@ -50,7 +51,7 @@
 		</table>
 
 		<p:outputPanel id="assocInfPan" layout="block">
-			<p:blockUI block=":form:tt:assocInfPan" widgetVar="buiPoAssoc"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:assocInfPan" widgetVar="buiPoAssoc"
 				id="poAssocBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.associateVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.associateVerified : false)}" />
 
@@ -61,7 +62,7 @@
 				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">
 				<ac:paginator for="asoc" />
 
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smAssociateCompanies}"/>
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smAppl.smAssociateCompanies and !backingBean.managedBean.upsCannotEdit}"/>
 
 				<p:column headerText="#{lbl['lbl.sm.assocCmpny.companyName']}">
 					<h:outputText value="#{assocBean.companyName}" />
@@ -78,8 +79,9 @@
 						action="#{backingBean.assignSelAssoc(assocBean)}"
 						partialSubmit="true" process="@this" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
-							style="margin-right:2px;" />
+						<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" style="margin-right:2px;" />
+						<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" style="margin-right:2px;" />
+						
 					</p:commandLink>
 					<ac:smFieldChangeTableAlert object="#{assocBean}" />
 				</p:column>
@@ -91,11 +93,13 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewAssocBean}" partialSubmit="true"
 					process="@this" update=":form:tt:asDisp" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					id="delAssocBtnId" disabled="#{empty backingBean.managedBean.smAppl.smAssociateCompanies}"
 					partialSubmit="true" process="assocInfPan" update=":form:tt:asoc,@this" 
-					oncomplete="assocDeletePopUp.show();" />
+					oncomplete="assocDeletePopUp.show();" 
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
 
 			</div>
 			<br />
@@ -135,7 +139,7 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="500px" height="435px" closable="false"
+	<p:dialog width="500px" height="435px" closable="true"
 		header="#{lbl['lbl.sm.assocCmpny.assocDiaHdr']}" id="asDisp"
 		widgetVar="assocDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
@@ -152,7 +156,8 @@
 							label="#{lbl['lbl.sm.assocCmpny.companyName']}"
 							id="asocCompCmpName" validator="#{backingBean.validateRequiredField}"
 							value="#{backingBean.managedBean.selectedAssocCompany.companyName}"
-							size="35" >
+							size="35" 
+							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 								<p:ajax event="blur" process="@this" update="@this"/>
 								<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
 								<f:attribute name="validate" value="N" />
@@ -173,7 +178,8 @@
 					<td><p:inputText validator="#{backingBean.validateRequiredField}"
 							label=" #{lbl['lbl.sm.assocCmpny.regNo']}" id="asocRegNo"
 							value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
-							size="35" maxlength="20" >
+							size="35" maxlength="20" 
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<p:ajax event="blur" process="@this" update="assocBlockPanel" partialSubmit="true" 
 								listener="#{backingBean.onBlurRegNo(backingBean.managedBean.selectedAssocCompany,'AssocCompanyPanel')}"/>
 							<f:attribute name="labelName" value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
@@ -194,7 +200,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.mofNo']}" /></td>
 					<td>
 						<p:inputText value="#{backingBean.managedBean.selectedAssocCompany.mofNo}"
-							readonly="true" size="35" id="assocMofNoId"/>
+							size="35" id="assocMofNoId"
+							disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 					</td>
 				</tr>
 				<tr>
@@ -204,7 +211,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.companyaddress']}" id="assocCompCmpAddr"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
-							size="35" /> 
+							size="35" 
+							disabled="#{backingBean.managedBean.upsCannotEdit}"/> 
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -220,7 +228,8 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}"
-							size="35" />
+							size="35" 
+							 disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 						<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -233,7 +242,8 @@
 					<td></td>
 					<td><p:inputText maxlength="100"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}"
-							size="35" />
+							size="35" 
+							disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 						<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -250,7 +260,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.country']}" id="asocCompCntrId"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId}"
-							style="width: 207px;margin-bottom: 5px;background-color:white;">
+							style="width: 207px;margin-bottom: 5px;background-color:white;"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assCountry"
 								value="#{backingBean.managedBean.countryItems}" />
@@ -280,7 +291,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.stateId}"
-							id="assocState">
+							id="assocState"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assState"
 								value="#{backingBean.managedBean.assocCompanyStates}"/>
@@ -317,7 +329,8 @@
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.divisionId}"
 						style="width: 207px;margin-bottom: 5px;background-color:white;"
-						rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}">
+						rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{backingBean.managedBean.assocCompanyDivisions}"
@@ -351,7 +364,8 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="assocDist" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.districtId}">
+							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.districtId}"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assDist"
 								value="#{backingBean.managedBean.assocCompanyDistricts}" />
@@ -377,7 +391,8 @@
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 							id="assocCity" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.cityId}">
+							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.cityId}"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="assCity"
 								value="#{backingBean.managedBean.assocCompanyCities}" />
@@ -408,7 +423,8 @@
 									label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeMy"
 									value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-									size="35">
+									size="35"
+									disabled="#{backingBean.managedBean.upsCannotEdit}">
 									<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
 								<ac:smFieldChangeAlert 
@@ -426,7 +442,8 @@
 									required="#{backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeForeign"
 									value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
-									size="35">
+									size="35"
+									disabled="#{backingBean.managedBean.upsCannotEdit}">
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges 
@@ -447,7 +464,8 @@
 						countryCode="#{backingBean.managedBean.selectedAssocCompany.phoneCountry}" 
 						areaCode="#{backingBean.managedBean.selectedAssocCompany.phoneArea}" 
 						number="#{backingBean.managedBean.selectedAssocCompany.phoneNo}"  
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" 
+						disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -463,7 +481,8 @@
 						countryCode="#{backingBean.managedBean.selectedAssocCompany.faxCountry}" 
 						areaCode="#{backingBean.managedBean.selectedAssocCompany.faxArea}" 
 						number="#{backingBean.managedBean.selectedAssocCompany.faxNo}"  
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}" />
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
@@ -478,6 +497,7 @@
 			<br />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="assocCompPopUpSaveBtn"
 					action="#{backingBean.addOrUpdateAssocToSmAppl}"
 					onclick="assocBlockWidget.show();" oncomplete="assocBlockWidget.hide();"
@@ -486,8 +506,10 @@
 					<f:param name="validate" value="true" />
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelAssocCompanyFuntion}" />
+				<!-- Disable for UPS 32008 - END -->
 			</div>
 			<p:blockUI block="assocBlockPanel" widgetVar="assocBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
