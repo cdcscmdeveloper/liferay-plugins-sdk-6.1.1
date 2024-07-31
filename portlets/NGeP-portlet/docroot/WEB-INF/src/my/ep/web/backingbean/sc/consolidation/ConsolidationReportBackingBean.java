@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -85,6 +86,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -2735,4 +2737,33 @@ public class ConsolidationReportBackingBean extends
 		}
 		//#32401 - end
 		//#21695 Fix bug 32401 add qualifiedSupplierBeans end	
+		
+		//#21692 - Start
+		/**
+		 * Created to make sure new instructions in Consolidation Report status
+		 * start with 4 and in sequence
+		 * 
+		 * @param qtId
+		 * @return
+		 */
+		public List<String> qualifiedSupplierInstructionList(Long qtId) {
+			Locale locale = new FacesScopes().getUserLocale();
+			List<String> instructionList = new ArrayList<>();
+			int condition = 3;
+			
+			//#28777#29729 condition
+			if (checkInstructionSupplierBranchDeleted(qtId)) {
+				condition = condition + 1;
+			}
+			
+			//#21692 condition
+			if (new ApprovalBackingBean().isEPVApprovalRequestAccepted(qtId)) {
+				condition = condition + 1;
+				instructionList.add(SourcingConstants.BREAK_LINE + condition + SourcingConstants.DOT
+						+ ResourceBundleUtils.getMessage("lbl.sc.qt.pending.rec.instruction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			}
+			
+			return instructionList;
+		}
+		//#21692 - End
 }

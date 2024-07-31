@@ -2064,15 +2064,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			for (ScQtApprovalRequest req : requestList) {
 				if (QTConstants.PORTLET_NAME_QT_MAINTENANCE
 						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
-					if ((null != req.getDecessionType() && req
-							.getDecessionType()
+					if ((null != req.getApproverAction() && req
+							.getApproverAction()
 							.getParameterCode()
 							.equals(ParameterConst.APPROVAL_DECISION_TYPE_REJECTED))) {
 						epv = true;
 					}
 				} else {
-					if ((null != req.getDecessionType() && req
-							.getDecessionType()
+					if ((null != req.getApproverAction() && req
+							.getApproverAction()
 							.getParameterCode()
 							.equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED))) {
 						epv = true;
