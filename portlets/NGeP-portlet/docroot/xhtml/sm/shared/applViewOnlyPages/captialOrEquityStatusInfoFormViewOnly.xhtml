@@ -38,12 +38,24 @@
 									<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiStatus.authCap']}" /></td>
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" />
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.authorizedCapital}" 
+											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" 
+											alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.authorizedCapital)}"/>
 									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiStatus.paidUpCap']}" /></td>
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital}" 
+											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
+											alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital)}"/>
 									</td>
 								</tr>
 							</table>
@@ -60,12 +72,24 @@
 									<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiStatus.ttlShare']}" /></td>
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}" />
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.totalShare}" 
+											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}" 
+											alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.totalShare)}"/>
 									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiStatus.accumShr']}" /></td>
 									<td>
 										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital}" 
+											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
+											alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.paidUpCapital)}"/>
 									</td>
 								</tr>
 							</table>
@@ -79,6 +103,12 @@
 									<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiStatus.members']}" /></td>
 									<td>
 										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}" />
+										<!-- #32008 -->
+										<ac:smFieldChangeAlertView 
+											isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+											oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.totalMember}" 
+											currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}" 
+											alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.totalMember}"/>
 									</td>
 								</tr>
 							</table>
@@ -98,37 +128,86 @@
 					</p:row>
 					<p:row id="row2Id">
 						<p:column><h:outputText value="#{lbl['lbl.sm.equiStatus.bumi']}" /></p:column>
-						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" styleClass="outputLabel-view" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.bumiEquity}" 
+									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" 
+									alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.bumiEquity)}"/>
+						</p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}" styleClass="outputLabel-view" /></p:column>
 					</p:row>
 					<p:row id="row3Id">
 						<p:column><h:outputText value="#{lbl['lbl.sm.equiStatus.nonBumi']}" /></p:column>
-						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" styleClass="outputLabel-view" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.nonBumiEquity}" 
+									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" 
+									alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.nonBumiEquity)}"/>
+						</p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiPercent}" styleClass="outputLabel-view" /></p:column>
 					</p:row>
 					<p:row id="row4Id">
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.nonMy']}" /></p:column>
-						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" styleClass="outputLabel-view" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.foreignerEquity}" 
+									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" 
+									alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.foreignerEquity)}"/>
+						</p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnerPercent}" styleClass="outputLabel-view" /></p:column>
 					</p:row>
 					<p:row id="row5Id">
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.utAgency']}" /></p:column>
-						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" styleClass="outputLabel-view" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.govtUnitrustEquity}" 
+									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" 
+									alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.govtUnitrustEquity)}"/>
+						</p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}" styleClass="outputLabel-view" /></p:column>
 					</p:row>
 					<p:row id="row6Id">
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.govtEquity']}" /></p:column>
-						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" styleClass="outputLabel-view" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.govtEquity}" 
+									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" 
+									alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.govtEquity)}"/>
+						</p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}" styleClass="outputLabel-view" /></p:column>
 					</p:row>
 					<p:row id="row7Id">
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.frgComp']}" /></p:column>
-						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" styleClass="outputLabel-view" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.foreignCompanyEquity}" 
+									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" 
+									alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.foreignCompanyEquity)}"/>
+						</p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}" styleClass="outputLabel-view" /></p:column>
 					</p:row>
 					<p:row id="row8Id">
 						<p:column><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.equiStatus.lclComp']}" /></p:column>
-						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" styleClass="outputLabel-view" /></p:column>
+						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" styleClass="outputLabel-view" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.localCompanyEquity}" 
+									currValue="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" 
+									alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.smCompanyBasic.localCompanyEquity)}"/>
+						</p:column>
 						<p:column><ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}" styleClass="outputLabel-view" /></p:column>
 					</p:row>
 				</p:panelGrid>

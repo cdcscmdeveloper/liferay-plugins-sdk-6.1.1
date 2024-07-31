@@ -1918,6 +1918,10 @@ public class SmApplicationUtil {
 								*/
 								break;
 							}
+							//#35086 - start
+							if(cat.getPoDecFlg() == null){
+								cat.setPoDecFlg(0);
+							}
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
@@ -4268,6 +4272,7 @@ public class SmApplicationUtil {
 
 		// no category at all approved
 		if (isPendingApprovedCatExist && !isAtLeastOneCatApproved) {
+			assignValReqdToFalse(managedBean);	//#35059
 			throw new EpException(MessageConst.ERROR_722655);
 		}
 	}
@@ -7476,9 +7481,9 @@ public class SmApplicationUtil {
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode()
 							.getParameterId() != null
-					&& cat.getRecordStatusFlg() != null
-					&& cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0
+					//#32008 - after approval bug
+					&& (cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+						|| isActiveCategoryAfterApproval(cat, managedBean.getSmAppl().getApplId()))
 					&& !isCategoryRejected(cat)) {
 				String catType = "";
 				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
@@ -10392,6 +10397,7 @@ public class SmApplicationUtil {
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						|| isActiveCategoryAfterApproval(cat, appl.getApplId()) //#32008 - after approval bug
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -11413,11 +11419,10 @@ public class SmApplicationUtil {
 				&& !EntityHelper.isCollectionEmpty(smAppl
 						.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if ((cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-						.getRecordStatusFlg()
-						.compareTo(
-								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+				//#32008 - after approval bug
+				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
 						&& (cat.getPmCategoryL3() != null
 								&& !StringUtils.isBlank(cat.getPmCategoryL3()
 										.getFacilityType()) && cat
@@ -11473,11 +11478,10 @@ public class SmApplicationUtil {
 			SmMachineDtl machDtlTmp = null;
 			boolean isNew = false;
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if ((cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-						.getRecordStatusFlg()
-						.compareTo(
-								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+				//#32008 - after approval bug
+				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -14133,8 +14137,17 @@ public class SmApplicationUtil {
 		SmApplSectionReview apprApplSecRev = new SmApplSectionReview();
 		for (SmApplSectionReview applSecRev : managedBean.getSmAppl()
 				.getSmApplSectionReviews()) {
-			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev,
-					new String[] { "applSectionReviewId" });
+			//#35086 - start
+			String[] exclude = new String[] {"applSectionReviewId", "associateRemark",
+					"bankRemark", "basicRemark", "branchRemark", "capitalRemark",
+					"categoryRemark", "certRemark", "equityCompRemark",
+					"experienceRemark", "factoryRemark", "assocBodyRemark",
+					"machineryRemark", "supplierSystemRemark", "manufacturingRemark",
+					"officeFacilityRemark", "personnelRemark", "licenseRemarks",
+					"shareholderRemark", "sitevisitRemark", "siteVisitVerifiedRemark",
+					"staffRemark", "trnsNetworkRemark"};
+			EntityHelper.copyEntityProperties(applSecRev, apprApplSecRev, exclude);
+			//#35086 - end
 			apprApplSecRev.setSmAppl(managedBean.getSmAppl());
 			apprApplSecRev
 					.setRoleType(SupplierManagementConst.SECTION_REV_ROLE_APP);
@@ -14848,4 +14861,10 @@ public class SmApplicationUtil {
 		}
 		return validPersonnels;
 	}// 29616-end
+
+	//#32008 - after approval bug
+	private static boolean isActiveCategoryAfterApproval(SmSupplierCategory cat, Long applId){
+		return cat.getRecordStatusFlg().intValue() == SupplierManagementConst.APPROVED_RECORD_STATUS
+				&& applId.equals(cat.getApplRefId());
+	}
 }

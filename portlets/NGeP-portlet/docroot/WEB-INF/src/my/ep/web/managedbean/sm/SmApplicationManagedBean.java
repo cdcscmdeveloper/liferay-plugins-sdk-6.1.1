@@ -640,6 +640,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String personnelRoleMsg; 
 	//#30762-end 
 	
+	//32008
+	private boolean upsCannotEdit;
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4463,6 +4465,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.smApplDocFile = smApplDocFile;
 	}
 	//#28807 - End
+	
 	//#12483 - START
 	public SmApplRevise getSmApplRevise() {
 		return smApplRevise;
@@ -4496,6 +4499,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return reviseApprover;
 	}
 	// #12483 - END
+	
 	//#15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
 		return selectedRecommendReasonDescs;
@@ -4545,6 +4549,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+	
 	// #31461-start
 	public boolean isPoApproverEquityErr() {
 		return poApproverEquityErr;
@@ -4626,6 +4631,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showDifferenceBankInfoAction = showDifferenceBankInfoAction;
 	}
 	//#12492 - end
+	
 	//#32968 START
 	public boolean isCheckBranch() {
 		return checkBranch;
@@ -4700,18 +4706,28 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//30762-Start 171123
 	public boolean isPoApproverPersonnelRoleMsg() {
 		return poApproverPersonnelRoleMsg;
-		}
-	
+	}
+
 	public void setPoApproverPersonnelRoleMsg(boolean poApproverPersonnelRoleMsg) {
 		this.poApproverPersonnelRoleMsg = poApproverPersonnelRoleMsg;
-		}
-	
+	}
+
 	public String getPersonnelRoleMsg() {
 		return personnelRoleMsg;
-		}
-	
+	}
+
 	public void setPersonnelRoleMsg(String personnelRoleMsg) {
 		this.personnelRoleMsg = personnelRoleMsg;
-		}
+	}
 	//30762-End 
+	
+	//Start 32008
+	public boolean isUpsCannotEdit() {
+		return upsCannotEdit;
+	}
+
+	public void setUpsCannotEdit(boolean upsCannotEdit) {
+		this.upsCannotEdit = upsCannotEdit;
+	}
+	//end 32008
 }

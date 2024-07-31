@@ -24,10 +24,12 @@
 		<td><p:outputLabel value="#{lbl['lbl.sm.facility.address.same.as']}" /></td>
 		<td>
 			<!-- #13320 - added division id in update -->
+			<!-- Disable for UPS 32008 - START -->
 			<p:selectOneMenu id="sameAsAddrId"
 				label="#{lbl['lbl.sm.facility.address.same.as']}"
 				value="#{cc.attrs.backingBean.managedBean.facAddresSameAs}"
-				style="width: 207px;margin-bottom: 5px;background-color:white;">
+				style="width: 207px;margin-bottom: 5px;background-color:white;"
+				disabled="#{backingBean.managedBean.upsCannotEdit}">
 				<f:selectItems 
 					value="#{cc.attrs.backingBean.managedBean.addrSameAsItems}" />
 				<p:ajax event="change" process="@this"
@@ -58,7 +60,8 @@
 			<p:outputPanel id="addr1InputId">
 				<p:inputText maxlength="100" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.address']}" id="addr1Id"
-					value="#{cc.attrs.facility.smAddress.address1}" size="35" /> 
+					value="#{cc.attrs.facility.smAddress.address1}" size="35"
+					disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
 				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" />
 			</p:outputPanel>
 		</td>
@@ -68,7 +71,8 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr2InputId">
-				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address2}" size="35" />
+				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address2}" size="35"
+				disabled="#{backingBean.managedBean.upsCannotEdit}" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -76,7 +80,8 @@
 		<td></td>
 		<td>
 			<p:outputPanel id="addr3InputId">
-				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address3}" size="35" />
+				<p:inputText maxlength="100" value="#{cc.attrs.facility.smAddress.address3}" size="35"
+				disabled="#{backingBean.managedBean.upsCannotEdit}" />
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -94,7 +99,8 @@
 					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.country']}"
 					value="#{cc.attrs.facility.smAddress.countryId}"
-					style="width: 207px;margin-bottom: 5px;background-color:white;">
+					style="width: 207px;margin-bottom: 5px;background-color:white;"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.countryItems}" />
@@ -120,7 +126,8 @@
 					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.state']}"
 					value="#{cc.attrs.facility.smAddress.stateId}"
-					id="stateId">
+					id="stateId"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.stateItems}" />
@@ -150,7 +157,8 @@
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					id="divisionId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.division']}"
-					value="#{cc.attrs.facility.smAddress.divisionId}">
+					value="#{cc.attrs.facility.smAddress.divisionId}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.divisionItems}" />
@@ -178,7 +186,8 @@
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					id="districtId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.district']}"
-					value="#{cc.attrs.facility.smAddress.districtId}">
+					value="#{cc.attrs.facility.smAddress.districtId}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.districtItems}" />
@@ -202,7 +211,8 @@
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
 					id="cityId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.towncity']}"
-					value="#{cc.attrs.facility.smAddress.cityId}">
+					value="#{cc.attrs.facility.smAddress.cityId}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{cc.attrs.cityItems}" />
@@ -230,7 +240,8 @@
 						label="#{lbl['lbl.sm.postcode']}" id="posCodeMyId"
 						value="#{cc.attrs.facility.smAddress.postcode}"
 						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-						size="35">
+						size="35"
+						disabled="#{backingBean.managedBean.upsCannotEdit}">
 						<f:validator validatorId="postcodeValidator" />
 					</p:inputText>
 					<p:message id="posCodeMyIdMsg" for="posCodeMyId"
@@ -242,7 +253,8 @@
 						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.postcode']}" id="posCodeForeignId"
 						value="#{cc.attrs.facility.smAddress.postcode}"
-						size="35">
+						size="35"
+						disabled="#{backingBean.managedBean.upsCannotEdit}">
 					</p:inputText>
 					<p:message id="posCodeForeignIdMsg"
 						for="posCodeForeignId" showSummary="true"
@@ -277,7 +289,8 @@
 						latitude="#{cc.attrs.facility.smAddress.mapLatitude}"
 						longitude="#{cc.attrs.facility.smAddress.mapLongitude}" 
 						showButton="true"
-						disabled="false" />
+						disabled="#{backingBean.managedBean.upsCannotEdit}" />
+						<!-- Disable for UPS 32008 - END -->
 				</p:outputPanel></td>
 		</tr>
 	</cc:implementation>

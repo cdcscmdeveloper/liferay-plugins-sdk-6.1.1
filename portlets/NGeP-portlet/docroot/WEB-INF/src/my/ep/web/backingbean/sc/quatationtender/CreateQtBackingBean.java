@@ -2651,6 +2651,16 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		valueBean.setNewValue(newValue);
 
+		// #29425 - start
+		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+
+		if (field.equalsIgnoreCase(SourcingConstants.QT_VALIDITY_PERIOD)) {
+			if (null != newValue) {
+				qtDtl.validateNewValueForValidityDays((int) newValue);
+			}
+		}
+		// #29425 - end
+
 		if (valueBean.getOldValue() != null && newValue != null) {
 			if (!valueBean.getOldValue().equals(newValue)) {
 				if (ptjApprovalReqFlg) {
