@@ -51,6 +51,7 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.compat.portal.util.PortalUtil;
@@ -1242,6 +1243,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
+			
 			//#25037-START
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME)
 					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
@@ -1252,8 +1254,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			//#25037-END
 
 			// #9019 START
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.START_QUOTATION_TENDER_CREATION) + SCProcessNameConst.SUBMIT_QUOTATION_TENDER,
-					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.START_QUOTATION_TENDER_CREATION) + SCProcessNameConst.SUBMIT_QUOTATION_TENDER, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			// temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION+SCProcessNameConst.CANCEL_QT, SourcingConstants.NAV_PAGE_A)
 			// #9019-END
 
@@ -1347,6 +1348,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			log.info("********getProcessName********" + process);
 			log.info("********getTaskName********" + taskName);
+			log.info("********getDocType********" + docType);
 			// this.getManagedBean().setProcessName(res.getProcessName());
 			// this.getManagedBean().setAction(res.getAction());
 			// Object obj = res.getPojo();
@@ -1354,16 +1356,21 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			String url = "";
 
 			if (!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0) {
-
+				log.info("******["+process+"]["+taskName+"]["+docType+"]******");
 				url = (String) this.getManagedBean().getBpmMap().get(process);
-				if (url == null || url.isEmpty()) {
+				if (StringUtils.isBlank(url)) {
 					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
+
+					if(StringUtils.isBlank(url)){
+						url = (String) this.getManagedBean().getBpmMap().get(process + docType);
+					}
 				}
-				if (url == null || url.isEmpty()) {
-					url = (String) this.getManagedBean().getBpmMap().get(process + docType);
-				}
+				log.info("url after filter:" + url);
 			}
-			log.info("url:" + url);
+			if(StringUtils.isBlank(url)){
+				log.info("Unable to find portlet mapping for process name:"+process);
+				throw new EpException("Unable to find portlet mapping for process name:"+process);
+			}
 
 			FacesScopes facesScope = new FacesScopes();
 			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
@@ -1565,8 +1572,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		this.getManagedBean().setMyTaskCreatedDateTo(null);	
 		this.getManagedBean().setGroupTaskCreatedDateFrom(null);
 		this.getManagedBean().setGroupTaskCreatedDateTo(null);
-		//29810 - end
-		//this.getManagedBean().setAssignment("ALL");
+		// 29810 - end
 
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
