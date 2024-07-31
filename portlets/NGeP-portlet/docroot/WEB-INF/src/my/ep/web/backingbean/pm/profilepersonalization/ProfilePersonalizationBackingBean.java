@@ -451,7 +451,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 		} catch (Exception e) {
 			LogKey logKey = new LogKey();
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "retrieve", id.toString(), "UserSO", logKey.getUserId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "retrieve", id.toString(), "UserSO",
+					logKey.getUserId(), e);
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}
 	}
@@ -958,7 +959,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogKey logKey = new LogKey();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "save", user.getUserId().toString(),
+					"UserSO", logKey.getUserId(), e);
 			throw e;
 			// throw new EpException(MessageConst.ERROR_770050, new
 			// String[]{e.getMessage()});

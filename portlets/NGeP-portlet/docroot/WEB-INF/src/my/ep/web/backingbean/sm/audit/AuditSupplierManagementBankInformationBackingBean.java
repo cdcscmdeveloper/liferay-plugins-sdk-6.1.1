@@ -64,11 +64,14 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 	private void auditModifiedDataBankName(List<PmFinancialOrg> bankList,
 			List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank, SmSupplierBank newBank) {
 		if (!oldBank.getPmFinancialOrg().getFinancialOrgId().equals(newBank.getPmFinancialOrg().getFinancialOrgId())) {
+			String oldBankName = oldBank.getPmFinancialOrg().getFinOrgName();
+			String newBankName = getFinOrgName(bankList, newBank.getPmFinancialOrg().getFinancialOrgId());
+			Long oldBankId = oldBank.getPmFinancialOrg().getFinancialOrgId();
+			Long newBankId = newBank.getPmFinancialOrg().getFinancialOrgId();
+
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, oldBank.getPmFinancialOrg()
-							.getFinOrgName(), getFinOrgName(bankList, newBank.getPmFinancialOrg().getFinancialOrgId()),
-					oldBank.getPmFinancialOrg().getFinancialOrgId(), newBank.getPmFinancialOrg().getFinancialOrgId(),
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, oldBankName, newBankName, oldBankId,
+					newBankId, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
 		}
 	}
 
@@ -86,10 +89,14 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 		// Expected Max Size in loop (93) based on NGEP_PDS database
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
+
+			String oldBankName = oldBank.getPmFinancialOrg().getFinOrgName();
+			Long oldBankId = oldBank.getPmFinancialOrg().getFinancialOrgId();
+
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, oldBank.getPmFinancialOrg()
-							.getFinOrgName(), null, oldBank.getPmFinancialOrg().getFinancialOrgId(), null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, oldBankName, null, oldBankId, null,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
+
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, oldBank.getAccountNo(), null, null,
 					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_ACC_NO));
@@ -122,6 +129,7 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 			for (PmFinancialOrg finOrg : bankList) {
 				if (finOrg.getFinancialOrgId().compareTo(finOrgId) == 0) {
 					finName = finOrg.getFinOrgName();
+					break;
 				}
 			}
 		}

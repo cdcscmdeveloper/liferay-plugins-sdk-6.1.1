@@ -51,7 +51,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			}
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null,
-					"AuditSupplierManagementSO", logKey.getUserId(), ex);
+					"AuditSupplierManagementSO", userId, ex);
 		}
 
 	}
@@ -80,10 +80,10 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		return new FacesScopes();
 	}
 
-	private PmOrgProfile retriveUserOrg(Long userOrgId) {
+	private PmOrgProfile retriveUserOrg(Long userId) {
 		PmOrgProfile orgProfile = new PmOrgProfile();
-		if (userOrgId != null) {
-			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userOrgId);
+		if (userId != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userId);
 			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
 			}
@@ -132,6 +132,9 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			auObj.setOrgProfileId(null);
 			auObj.setOrgName(null);
 		} else {
+			// Both Supplier and Approver organization ID stored in orgProfile
+			// but organization name were store in SmSupplier for Supplier and
+			// orgProfile for Approver
 			auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
 			if (org.getPmOrgValidityList().isEmpty()) {
 				auObj.setOrgName(org.getSmSupplier().getCompanyName());

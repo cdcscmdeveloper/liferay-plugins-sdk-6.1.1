@@ -60,6 +60,7 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 			for (PmStatusDesc status : statusList) {
 				if ("ms".equals(status.getLanguageCode()) && status.getPmStatus().getStatusId().equals(pmStatusId)) {
 					statusName = status.getStatusName();
+					break;
 				}
 			}
 		}
