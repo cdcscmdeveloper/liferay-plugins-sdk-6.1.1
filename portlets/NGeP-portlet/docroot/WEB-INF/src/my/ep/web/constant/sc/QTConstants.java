@@ -263,9 +263,9 @@ public interface QTConstants {
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
 
-	// #15391 -start-
+	// #15391  #11104  -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
-	// #15391 -end-
+	// #15391 #11104 -end-
 
 	// 9019 - Start (Harun) WIP transaction Pending QT Submission
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
@@ -286,4 +286,11 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	//#11104
+	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148&11104
+	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
+	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148&11104
 }
