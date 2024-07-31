@@ -2847,6 +2847,9 @@ public class SPDetailBackingBean extends
 							sampleSubmissionDtls.get(0));
 				}
 			}
+			if(null!=resDTO.getScQtProposal()){//33509 &33191&11104 - start
+				getManagedBean().setQtProposal(resDTO.getScQtProposal());	
+			}//33509 &33191&11104 - End
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 			return NAV_TO_SAMPLING_ADDRESS_PAGE;
 		} finally {
@@ -5211,7 +5214,7 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 		title = title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("QTTitle", title);
-
+		context.put("bean", this);//11104
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.SUPPLIER_PROPOSAL_PRINT_LABEL, context,
 				new FileOutputStream(getActualFilePath(attachment)));

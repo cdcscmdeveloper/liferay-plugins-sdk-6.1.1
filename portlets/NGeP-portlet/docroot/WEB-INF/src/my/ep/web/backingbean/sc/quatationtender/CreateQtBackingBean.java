@@ -114,6 +114,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -3487,5 +3488,65 @@ public class CreateQtBackingBean extends
 
 	}
 	// 9019 End
+	
+	/** #11104  START */	
+	/**
+	 * sample change.change sample(yes/no) radion button in 
+	 * owner.
+	 * 
+	 * @param event
+	 *            (String Samplechange)
+	 */
+	public void sampleChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getQt().setSampleReq(type);
+		List<ScQtCheckList> st2technicalproposalList = getManagedBean()
+				.getScQtCheckSt2techProposal();
+
+		if (null == st2technicalproposalList) {
+			st2technicalproposalList = new ArrayList<>();
+
+		}
+		if(type){
+			//this.getManagedBean().getQt().setPartial(Boolean.FALSE);	
+		}else{
+			this.getManagedBean().getQt().setDemoNotificationCheck(null);//11104-Reendorse
+			List<ScQtCheckList> deltechnicalproposalList =	getManagedBean().getMarkDeletedTechChecklist();
+			if (deltechnicalproposalList == null) {
+				deltechnicalproposalList= new ArrayList<>();
+			}
+			if(null==st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)){//11104-start
+				SpecificationBackingBean spBB=new SpecificationBackingBean();
+				spBB.retriveTechnicalCheckList();
+				st2technicalproposalList= this.getManagedBean().getScQtCheckSt2techProposal();
+			}//11104-End
+			if(CollectionUtils.isNotEmpty(st2technicalproposalList)){
+				for(ScQtCheckList checklist:st2technicalproposalList){
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
+							.getDefinationType().getParameterCode())) {
+						deltechnicalproposalList.add(checklist);
+						getManagedBean().setMarkDeletedTechChecklist(deltechnicalproposalList);
+						st2technicalproposalList.remove(checklist);
+						break;
+					}
+				}
+			}
+		}
+	}
+	/***11104
+	 * check portlet is specpreparation or not
+	 */
+	public boolean isSpecScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	/***
+	 * 11104
+	 * check portlet is specmaintennace or not
+	 */
+	public boolean isSpecEndorsmentScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+//#11104-end
 
 }

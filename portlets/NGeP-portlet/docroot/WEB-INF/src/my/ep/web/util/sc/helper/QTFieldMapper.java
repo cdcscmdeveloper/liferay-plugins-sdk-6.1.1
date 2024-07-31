@@ -3,6 +3,7 @@
  */
 package my.ep.web.util.sc.helper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -127,8 +128,10 @@ public class QTFieldMapper {
 				
 		// QT_PENDING_BPK_APPROVAL
 		QT_PENDING_BPK_APPROVAL(
-				QTStatusConst.QT_PENDING_BPK_APPROVAL, 
-				QT_PENDING_PB_APPROVAL.value()),
+				QTStatusConst.QT_PENDING_BPK_APPROVAL,
+				merge(new String[] { 
+						QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER },// #11104
+				QT_PENDING_PB_APPROVAL.value())),// #11104
 				
         // Pending QT publication Approval
 		QT_PENDING_PUBLICATION_APPROVAL(
@@ -140,7 +143,8 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_SUPPQUALIFICATION,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
 						QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
-						QTFieldConst.FIELD_QT_DOCUMENTS }),
+						QTFieldConst.FIELD_QT_DOCUMENTS,//#11104
+						QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER}),//#11104
 						
 		// QT_PENDING_PUBLICATION_REVISION_APPROVAL
 		QT_PENDING_PUBLICATION_REVISION_APPROVAL(
@@ -154,7 +158,8 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
-						QTFieldConst.FIELD_QT_DOCUMENTS }),
+						QTFieldConst.FIELD_QT_DOCUMENTS,//#11104
+						QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER}),//#11104
 						
 		/*// QT_PENDING_SPEC_CHNAGES_ENDORSEMENT
 		QT_PENDING_SPEC_CHNAGES_ENDORSEMENT(
@@ -256,6 +261,17 @@ public class QTFieldMapper {
 			}
 			return null;
 		}
+		
+		// #25037, #11104 - start
+		private static String[] merge(String[] arr1, String[] arr2){//#25037&&11104
+			List<String> merged = new ArrayList<String>(Arrays.asList(arr1));
+			merged.addAll(Arrays.asList(arr2));
+			String[] mergedArr = new String[merged.size()];
+			for(int i=0;i<mergedArr.length;i++){
+				mergedArr[i] = merged.get(i);
+			}
+			return mergedArr;
+		}// #25037, #11104 - end
 
 	}
 
@@ -331,7 +347,8 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_FILE_NO,
-						QTFieldConst.FIELD_QT_OBTAIN_SPEC_APPROVAL}), 
+						QTFieldConst.FIELD_QT_OBTAIN_SPEC_APPROVAL,//#11104
+						QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER}),//#11104 
 						
 		//QT_PENDING_SCHEDULE_REVISION				
 		QT_PENDING_SCHEDULE_REVISION(
@@ -358,7 +375,8 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_PUB_APPROVAL,
 						QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD}),
+						QTFieldConst.FIELD_QT_VALIDITY_PERIOD, //#11104
+						QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER}), //#11104
 						
 		// QT_PENDING_BPK_APPROVAL
 		QT_PENDING_BPK_APPROVAL(
