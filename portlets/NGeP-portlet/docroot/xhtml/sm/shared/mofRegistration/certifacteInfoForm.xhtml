@@ -8,8 +8,9 @@
 
 	<p:panel header="#{lbl['lbl.sm.panHdr.certInfo']}" toggleable="true"
 		id="certPanHead">
+		<!-- Disable for UPS 32008 - START -->
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.certVerified}"
@@ -24,7 +25,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.certVerified}"
@@ -41,7 +42,7 @@
 		</table>
 
 		<p:outputPanel id="certInfPan" layout="block">
-			<p:blockUI block=":form:tt:certInfPan" widgetVar="buiPoCert"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:certInfPan" widgetVar="buiPoCert"
 				id="poCertBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.certVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.certVerified : false)}" />
 
@@ -105,18 +106,20 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}" 
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					disabled="true" process="@this"
 					action="#{backingBean.assignNewCert}" update=":form:tt:certPop" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 					<!--  Refs #28766 - add on changes - 24/2/2021 - start -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="certInfPan"
 					disabled="#{empty backingBean.managedBean.smAppl.smSupplierCerts or empty backingBean.managedBean.selectedCertList}"
 					update=":form:tt:certDt,@this" 
 					id="delCertBtnId" oncomplete="certDeletePopUp.show();" />
 					<!--  Refs #28766 - add on changes - 24/2/2021 - end -->
-
+			<!-- Disable for UPS 32008 - END -->
 			</div>
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">

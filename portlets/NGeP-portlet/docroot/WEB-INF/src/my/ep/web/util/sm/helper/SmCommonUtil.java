@@ -3636,7 +3636,8 @@ public class SmCommonUtil {
 		if (divisionId != null) {
 			DivisionReqDTO reqDTO = new DivisionReqDTO();
 			reqDTO.setDivisionId(divisionId);
-			return SmServiceLookup.getDivisionSO().retriveDivisionListByState(reqDTO)
+			//#35086
+			return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
 					.getPmDivision();
 		} else {
 			return null;

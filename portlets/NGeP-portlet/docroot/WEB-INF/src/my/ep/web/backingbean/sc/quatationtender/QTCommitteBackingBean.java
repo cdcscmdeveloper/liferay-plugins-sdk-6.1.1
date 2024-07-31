@@ -1979,13 +1979,6 @@ public class QTCommitteBackingBean extends
 		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
-
-		// #25426 #36 #85 #95 ruzaimah - Start
-		if ((this.getManagedBean().isMaintanceFlow() && isDeskOfficer()) && !this.getManagedBean().isReadOnly()) {
-			return true;
-		}
-		// #25426 #36 #85 #95 ruzaimah - end
-
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
@@ -2001,7 +1994,6 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
-		
 		return false;
 	}
 
@@ -2437,11 +2429,4 @@ public class QTCommitteBackingBean extends
 	}
 	}
 	}
-
-	// #25426#36 ruzaimah - Start
-	private boolean isDeskOfficer() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
-	}
-	// #25426#36 ruzaimah - end	
 }

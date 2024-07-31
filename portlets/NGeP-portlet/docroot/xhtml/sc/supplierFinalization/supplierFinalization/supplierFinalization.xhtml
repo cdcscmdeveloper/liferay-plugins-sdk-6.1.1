@@ -376,11 +376,8 @@
 						<!-- 19336,25201,17376,19287 -end- -->
 						<f:selectItems
 									value="#{suppFinalizationBackingBean.getDropdownValues(ParameterTypeConst.rePublishOption)}" />
-						<ui:remove> 25426 ruzaimah - Start </ui:remove>
 						<p:ajax event="change" partialSubmit="true" update="@this"
-							process="@this" 
-							listener="#{suppFinalizationBackingBean.CheckInactiveCommiteeRole(suppFinalizationBackingBean.managedBean.scQtFinalization,'ALL')}"/>
-						<ui:remove> 25426 End </ui:remove>
+							process="@this" />
 					</p:selectOneMenu>
 					</td>
 					<td style="margin-top: -3px;"><ac:iconTooltip value="#{lbl['lbl.sc.required.specification.changes.tooltip']}" /></td>

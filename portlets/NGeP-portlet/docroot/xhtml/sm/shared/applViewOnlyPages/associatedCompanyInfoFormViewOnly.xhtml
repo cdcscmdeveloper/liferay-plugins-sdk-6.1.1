@@ -30,7 +30,8 @@
 						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
-
+					<!-- #32008 -->
+					<ac:smFieldChangeTableAlertView object="#{assocBean}" />
 				</p:column>
 			</p:dataTable>
 			
@@ -48,7 +49,14 @@
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.companyName}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.companyName}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+						isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+							and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+						oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.companyName}" 
+						currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.companyName}" 
+						alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.companyName}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.assocCmpny.regNo']}" /></td>
@@ -62,25 +70,66 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address1}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address1}"/></td>
 				</tr>
 	
 				<tr>
 					<td></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address2}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address2}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address2}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address2}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address2}"/></td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address3}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address3}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address3}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address3}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.address3}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryName}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryName}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+							and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
+								not empty viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress) ?
+								viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId)
+								: lbl['lbl.txt.na']}"/></td>
 				</tr>
 	
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateName}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateName}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmState.stateId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
+							 	not empty viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress) ?
+								viewSmApplBackingBean.getStateLabelById(viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmState.stateId)
+								: lbl['lbl.txt.na']}"/></td>
 				</tr>
 				
 				<!-- 13320 -->
@@ -90,30 +139,82 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
 										rendered="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}"/></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDivision.divisionName}"
-										rendered="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}"/></td>
+										rendered="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.adoptDivision
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDivision.divisionId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
+							 	not empty viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress) ?
+								viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId)
+								: lbl['lbl.txt.na']}"/></td>
 					<!-- #13320 - render division - end-->
 				</tr>
 	
 	
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtName}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtName}"/>
+					<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDistrict.districtId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
+								not empty viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress) ?
+								viewSmApplBackingBean.getDistrictLabelById(viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmDistrict.districtId)
+								: lbl['lbl.txt.na']}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityName}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityName}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCity.cityId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestAssocCompany and 
+								not empty viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress) ?
+								viewSmApplBackingBean.getCityLabelById(viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.pmCity.cityId) 
+								: lbl['lbl.txt.na']}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.postcode}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.postcode}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.postcode}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.postcode}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.smAddress.postcode}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneFull}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneFull}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.phoneNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.phoneNo}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxFull}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxFull}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestAssocCompany.associateCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.faxNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestAssocCompany.faxNo}"/></td>
 				</tr>
 			</table>
 		</p:scrollPanel>
