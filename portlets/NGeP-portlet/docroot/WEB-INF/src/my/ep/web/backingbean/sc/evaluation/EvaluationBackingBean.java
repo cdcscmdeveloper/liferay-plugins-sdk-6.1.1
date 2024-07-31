@@ -16244,7 +16244,7 @@ private void retriveCommitteeRemarksList(){
 							.getQtProposalAmounts().isEmpty()){
 				for(ScQtProposalAmount amountScore : this.getManagedBean().getQtProposalAmounts()){
 
-					if(amountScore.getTotalScore()!=null && !this.getManagedBean().getScQt().isPartial()){
+					if(amountScore.getTotalScore()!=null && !this.getManagedBean().getScQt().isPartial()){ //#36213
 						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
 								.getWithInVarieance().intValue()){
 							this.getManagedBean().setFinPackageScore(false);
