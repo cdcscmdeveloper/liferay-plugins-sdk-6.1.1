@@ -2741,7 +2741,10 @@ public class ConsolidationReportBackingBean extends
 		//#21692 - Start
 		/**
 		 * Created to make sure new instructions in Consolidation Report status
-		 * start with 4 and in sequence
+		 * start with 4 and in sequence.
+		 * 
+		 * Each TRUE condition is a + 1, meaning, first TRUE condition is 4, second is 5
+		 * and so on.
 		 * 
 		 * @param qtId
 		 * @return
@@ -2749,20 +2752,21 @@ public class ConsolidationReportBackingBean extends
 		public List<String> qualifiedSupplierInstructionList(Long qtId) {
 			Locale locale = new FacesScopes().getUserLocale();
 			List<String> instructionList = new ArrayList<>();
-			int condition = 3;
+			int condition = 3;//Initial instruction number, after 3 default (as-is) instructions
 			
 			//#28777#29729 condition
 			if (checkInstructionSupplierBranchDeleted(qtId)) {
 				condition = condition + 1;
 			}
 			
-			//#21692 condition
+			//#21692 condition, should be 5th instruction if above condition is TRUE, else 4th
 			if (new ApprovalBackingBean().isEPVApprovalRequestAccepted(qtId)) {
 				condition = condition + 1;
 				instructionList.add(SourcingConstants.BREAK_LINE + condition + SourcingConstants.DOT
 						+ ResourceBundleUtils.getMessage("lbl.sc.qt.pending.rec.instruction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			}
 			
+			//Will be the list of instruction(s) above, can be empty if no condition met.
 			return instructionList;
 		}
 		//#21692 - End
