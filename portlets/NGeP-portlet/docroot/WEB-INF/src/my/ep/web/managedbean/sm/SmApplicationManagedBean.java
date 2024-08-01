@@ -604,12 +604,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showFacilityMachine;
 	// 31043 END
 	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
-	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
@@ -642,6 +636,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	//32008
 	private boolean upsCannotEdit;
+	//#31043 START
+	private boolean allowedToSiteVisit;
+	//#31043 END
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4651,32 +4648,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showFacilityMachine = showFacilityMachine;
 	}
 	// 26671 - Site Visit Grouping Enhancement -28775 END
-	
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 
 	//31130-start
 	public boolean isPoApproverPersonnelErr() {
@@ -4730,4 +4701,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.upsCannotEdit = upsCannotEdit;
 	}
 	//end 32008
+	//#31043 START
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
 }
