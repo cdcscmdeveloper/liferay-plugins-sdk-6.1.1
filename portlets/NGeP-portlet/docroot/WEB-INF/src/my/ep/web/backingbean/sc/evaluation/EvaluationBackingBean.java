@@ -16279,23 +16279,10 @@ private void retriveCommitteeRemarksList(){
 					this.getManagedBean().setQtProposalAmountByProposal(null);
 					this.getManagedBean().setQtProposalAmountByProposal(evalResDTO.getProposalAmountListbyProposal());
 					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
-					List<ScQtProposalAmount> proposalAmounts = new ArrayList<>();
 
-					evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-					EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
-				    EvaluationResDTO amountResDto = new EvaluationResDTO();
+					List<ScQtProposalAmount> proposalAmounts = new ArrayList<>();
 					for (ScQtProposalAmount newList : evalResDTO.getProposalAmountListbyProposal()) {
-						
-						amountReqDto.setProposalId(newList.getScQtProposal().getQtProposalId());
-						amountReqDto.setSpeZoneId(newList.getTplSpecZoneDtl().getSpecZoneId());
-						amountReqDto.setQtSupplierId(newList.getScQtProposal()
-								.getScQtSupplier().getQtSupplierId());
-						amountReqDto.setPropAmount(newList);
-						amountResDto=evaluationSO.excludeProposalIdNotOfferByPackage(amountReqDto);
-						
-						if(newList.getTplSpecZoneDtl()!=null && newList.getTplSpecZoneDtl().getSpecZoneId().equals(getManagedBean().getSelectedZone().getSpecZoneId())
-								&& !newList.getScQtProposal().getQtProposalId().equals(amountResDto.getQtProposalId())){
+						if(newList.getTplSpecZoneDtl()!=null && newList.getTplSpecZoneDtl().getSpecZoneId().equals(getManagedBean().getSelectedZone().getSpecZoneId())){
 							proposalAmounts.add(newList);
 						}
 					}
