@@ -62,7 +62,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "bpmTasklistBackingBean")
 @RequestScoped
-public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean> implements Serializable {
+public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean>{
 
 	/**
 	 * 
