@@ -619,7 +619,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
 
-			if (!changedCatCodeList.isEmpty()) {
+			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().isReadOnly()) {
 				redirect = false;
 				this.getManagedBean().setActiveIndex(1);
 				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
