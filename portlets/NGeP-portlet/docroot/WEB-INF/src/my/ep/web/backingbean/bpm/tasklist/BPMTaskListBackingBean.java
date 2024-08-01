@@ -52,8 +52,8 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import com.liferay.compat.portal.util.PortalUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -129,7 +129,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME, SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
 			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
-			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865				
+			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -421,7 +421,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);			
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_LOI,
 					SourcingConstants.NAV_PAGE_REVIEW_LOI);
@@ -444,11 +444,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
 			
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_SECRETARY, 
+					+ SCProcessNameConst.ASSIGN_FC_SECRETARY,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_MEMBER, 
+					+ SCProcessNameConst.ASSIGN_FC_MEMBER,
 					SourcingConstants.NAV_PAGE_FC_APPOINT_MEMBERS);
 
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
@@ -530,10 +530,10 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			//#25037-END
-			//#9019 START
+			// #9019 START
 			temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION + SCProcessNameConst.SUBMIT_QUOTATION_TENDER, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			//temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION+SCProcessNameConst.CANCEL_QT, SourcingConstants.NAV_PAGE_A)
-			//#9019-END
+			// #9019-END
 			
 			//#28784  - start
 			temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
@@ -593,7 +593,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUBMIT_DIRECT_PURCHASE), SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME), SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);				
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -681,13 +681,13 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME) + FLProcessNameConst.REVISE_PR_HT, purchaseRequestConstStr);
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME) + FLProcessNameConst.PR_ACK_HT, purchaseOrderConstStr);
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME) + FLProcessNameConst.REVIEW_REJECTED_PO_HT, purchaseOrderConstStr);
-			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME) + FLProcessNameConst.ACK_MODIFIED_DO_HT, deliveryOrderConstStr);
+			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME) + "Submition" + FLProcessNameConst.ACK_MODIFIED_DO_HT, deliveryOrderConstStr);
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME) + FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, invoiceConstStr);
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME) + FLProcessNameConst.REVIEW_CANCEL_DO_HT, deliveryOrderConstStr);
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME) + FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, deliveryOrderConstStr);			
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME) + FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, invoiceConstStr);
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME), "remove-factoring-company");
-			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION) + FLProcessNameConst.RESUBMIT_AP59_ORDER, "resubmit-ap59-order");
+			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.RESUBMIT_ORDER_CANCELLATION + FLProcessNameConst.RESUBMIT_AP59_ORDER), "resubmit-ap59-order");
 			/*#28375 - Logan - YEP Process Beginning*/
 			//temp.put(FLProcessNameConst.PROCEED_TO_BPM_CARRY_FORWARD_PO, "po-carryForward");
 			//temp.put(FLProcessNameConst.PROCEED_TO_BPM_CARRY_FORWARD_CO, "co-carryForward");
@@ -1088,6 +1088,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			log.info("********getProcessName********" + process);
 			log.info("********getTaskName********" + taskName);
+			log.info("********getDocType********" + docType);
 			// this.getManagedBean().setProcessName(res.getProcessName());
 			// this.getManagedBean().setAction(res.getAction());
 			// Object obj = res.getPojo();
@@ -1095,16 +1096,21 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			String url = "";
 
 			if (!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0) {
-				log.info("********do Bpm Map********");
+				log.info("******["+process+"]["+taskName+"]["+docType+"]******");
 				url = (String) this.getManagedBean().getBpmMap().get(process);
-				if (url == null || url.isEmpty()) {
+				if (StringUtils.isBlank(url)) {
 					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
+
+					if(StringUtils.isBlank(url)){
+						url = (String) this.getManagedBean().getBpmMap().get(process + docType);
+					}
 				}
-				if (url == null || url.isEmpty()) {
-					url = (String) this.getManagedBean().getBpmMap().get(process + docType);
-				}
+				log.info("url after filter:" + url);
 			}
-			log.info("url:" + url);
+			if(StringUtils.isBlank(url)){
+				log.info("Unable to find portlet mapping for process name:"+process);
+				throw new EpException("Unable to find portlet mapping for process name:"+process);
+			}
 
 			FacesScopes facesScope = new FacesScopes();
 			ThemeDisplay themeDisplay = (ThemeDisplay) facesScope
@@ -1770,4 +1776,3 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	}
 	// 29810 - end
 }
-
