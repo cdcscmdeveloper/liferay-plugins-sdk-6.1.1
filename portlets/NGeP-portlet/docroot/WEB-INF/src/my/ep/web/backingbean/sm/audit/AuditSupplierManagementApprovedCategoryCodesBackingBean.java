@@ -54,9 +54,11 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 			// Expected Max Size in loop (30) based on NGEP_PDS database
 			while (newApprovedCategories.hasNext()) {
 				SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
+				checkOtherDesc(auDetails, oldApprovedCategory, newApprovedCategory);
 				if (oldApprovedCategory.getSupplierCategoryId().equals(newApprovedCategory.getSupplierCategoryId())) {
 					oldApprovedCategories.remove();
 					newApprovedCategories.remove();
+					break;
 				}
 			}
 			newApprovedCategories = mBean.getSmAppl().getSmSupplierCategories().listIterator();
@@ -71,6 +73,29 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVE_CATEGORY_CODES);
 
 		return auObj;
+	}
+
+	private void checkOtherDesc(List<AuditSupplierManagementDetailDTO> auDetails,
+			SmSupplierCategory oldApprovedCategory, SmSupplierCategory newApprovedCategory) {
+		if (oldApprovedCategory.getOtherDesc() == null && newApprovedCategory.getOtherDesc() != null) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION, null,
+					newApprovedCategory.getOtherDesc(), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OTHER_DESCRIPTION));
+		} else if (oldApprovedCategory.getOtherDesc() != null) {
+			if (newApprovedCategory.getOtherDesc() != null && newApprovedCategory.getOtherDesc().isEmpty()) {
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION,
+						oldApprovedCategory.getOtherDesc(), null, null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OTHER_DESCRIPTION));
+			} else if (newApprovedCategory.getOtherDesc() != null
+					&& !oldApprovedCategory.getOtherDesc().equalsIgnoreCase(newApprovedCategory.getOtherDesc())) {
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION,
+						oldApprovedCategory.getOtherDesc(), newApprovedCategory.getOtherDesc(), null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OTHER_DESCRIPTION));
+			}
+		}
 	}
 
 	private String codeToString(SmSupplierCategory catCode) {
