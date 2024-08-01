@@ -16240,11 +16240,17 @@ private void retriveCommitteeRemarksList(){
 			evalReqDTO.setCheckList(
 					this.getManagedBean().getScQtChecklist());
 			this.getManagedBean().setFinPackageScore(true);
+			//#36213 Start
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+			//#36213 end
 			if(this.getManagedBean().getQtProposalAmounts() != null && !this.getManagedBean()
 							.getQtProposalAmounts().isEmpty()){
 				for(ScQtProposalAmount amountScore : this.getManagedBean().getQtProposalAmounts()){
 
-					if(amountScore.getTotalScore()!=null && !this.getManagedBean().getScQt().isPartial()){ //#36213 
+					if(amountScore.getTotalScore()!=null && !this.getManagedBean().getScQt().isPartial() 
+							&& wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){//#36213
 						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
 								.getWithInVarieance().intValue()){
 							this.getManagedBean().setFinPackageScore(false);
@@ -16274,8 +16280,22 @@ private void retriveCommitteeRemarksList(){
 					this.getManagedBean().setQtProposalAmountByProposal(evalResDTO.getProposalAmountListbyProposal());
 					this.getManagedBean().setQtProposalAmounts(evalResDTO.getProposalAmountListbyProposal());
 					List<ScQtProposalAmount> proposalAmounts = new ArrayList<>();
+
+					evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+					EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+				    EvaluationResDTO amountResDto = new EvaluationResDTO();
 					for (ScQtProposalAmount newList : evalResDTO.getProposalAmountListbyProposal()) {
-						if(newList.getTplSpecZoneDtl()!=null && newList.getTplSpecZoneDtl().getSpecZoneId().equals(getManagedBean().getSelectedZone().getSpecZoneId())){
+						
+						amountReqDto.setProposalId(newList.getScQtProposal().getQtProposalId());
+						amountReqDto.setSpeZoneId(newList.getTplSpecZoneDtl().getSpecZoneId());
+						amountReqDto.setQtSupplierId(newList.getScQtProposal()
+								.getScQtSupplier().getQtSupplierId());
+						amountReqDto.setPropAmount(newList);
+						amountResDto=evaluationSO.excludeProposalIdNotOfferByPackage(amountReqDto);
+						
+						if(newList.getTplSpecZoneDtl()!=null && newList.getTplSpecZoneDtl().getSpecZoneId().equals(getManagedBean().getSelectedZone().getSpecZoneId())
+								&& !newList.getScQtProposal().getQtProposalId().equals(amountResDto.getQtProposalId())){
 							proposalAmounts.add(newList);
 						}
 					}
