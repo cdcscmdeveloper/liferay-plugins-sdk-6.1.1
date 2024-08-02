@@ -1021,9 +1021,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//END SSM CHANGES #27201		
 		smAppl.getSmPersonnels().add(smPersonnel);
 		//#27691 START - Comment this line to proceed testing basic account maintenance-issue duplicate personnel for SSM company
-		//32764 - start
-		/*if(!getManagedBean().isSameAsOwner() && getManagedBean().getSmSuppOwners() != null
-				&& getManagedBean().getSmSuppOwners().size() > 0){
+		//32764 && 29582- start
+		if(!getManagedBean().isSameAsOwner() && getManagedBean().getSmSuppOwners() != null
+				&& getManagedBean().getSmSuppOwners().size() > 0 && !getManagedBean().isCompanyValidWithSSM()){
 			SmPersonnel per = new SmPersonnel();
 			SmSupplierOwner owner = getManagedBean().getSmSuppOwners().get(0);
 			per.setName(owner.getOwnerName());
@@ -1033,8 +1033,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			per.setEquityOwner(true);
 			per.setSmAppl(smAppl);
 			smAppl.getSmPersonnels().add(per);			
-		}*/
-		//32764 - end
+		}
+		//32764 && 29582- end
 		//#27691 END
 		//#16052019 - SSM INTEGRATION CR
 		//add list all personel & check if smPersonnel contain in this.getManagedBean().getSmPersonnelAll(), use smPersonnel to add into appl, otherwise use personnel
