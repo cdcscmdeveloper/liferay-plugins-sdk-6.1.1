@@ -36,6 +36,8 @@ public class PendingPaymentRest {
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
 				try {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
+					//#32510
+					SmServiceLookup.getPersonnelSO().checkSiteVisitAfterApprovalWorkflow(smPendingProcess.getApplId(), false);
 				} catch (Exception e) {
 					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
 					smPendingProcess.setErrorMsg(e.getMessage());
