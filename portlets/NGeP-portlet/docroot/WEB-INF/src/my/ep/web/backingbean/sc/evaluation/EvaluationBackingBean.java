@@ -8187,9 +8187,9 @@ public class EvaluationBackingBean extends
 
 								this.getManagedBean().setTabTechnicalIndex(3); // #25138, #21695
 
-								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
-										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
-												.getManagedBean().getScQt().getEvaluationType())) {
+
+								if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+										.getManagedBean().getScQt().getEvaluationType())) { //36228 issue have to double click next button to enter report
 									retrieveReportTabDtl();									
 									outputTab = 4;
 
@@ -16187,7 +16187,37 @@ private void retriveCommitteeRemarksList(){
 						}	
 				}
 				}//32458-End
-				evalReqDTO.setProposalAmounts(scoreDtls);
+				//36213-Start
+				if (this.getManagedBean().getScQt().isPartial()) {
+					List<ScQtProposalAmount> amounts = new ArrayList<ScQtProposalAmount>();
+					EvaluationReqDTO amountReqDto = new EvaluationReqDTO();
+					EvaluationResDTO amountResDto = new EvaluationResDTO();
+					amountReqDto.setQtId(this.getManagedBean().getScQt().getQtId());
+					if (getManagedBean().getScQt().isDemoRequired()) {
+						// #28784 - FEC by item eval = TI, package = P
+						amountReqDto.setEvalStage(QTConstants.PRESENTATION_DEMO_EVALUATION);
+					}
+					amountResDto = evaluationSO.retrieveProposals(amountReqDto);
+					for (ScQtProposal amtbyproposal : amountResDto.getProposalList()) {
+						amountReqDto.setScQt(this.getManagedBean().getScQt());// #31525
+						amountReqDto.setProposalId(amtbyproposal.getQtProposalId());
+						amountResDto = evaluationSO.retrieveProposalAmountbyProposal(amountReqDto);
+						amounts.addAll(amountResDto.getProposalAmountListbyProposal());
+					}
+					List<ScQtProposalAmount> newscoredtlslist = new ArrayList<ScQtProposalAmount>();
+					for (ScQtProposalAmount checkSupplier : amounts) {
+						for (ScQtProposalAmount beanSupplier : scoreDtls) {
+							if (checkSupplier.getQtProposalAmtId().equals(beanSupplier.getQtProposalAmtId())) {
+								newscoredtlslist.add(beanSupplier);
+							}
+						}
+					}
+					evalReqDTO.setProposalAmounts(newscoredtlslist);
+
+				} else {
+					evalReqDTO.setProposalAmounts(scoreDtls);
+				}
+				//36213-End
 				evalReqDTO.setProposalAmountByZone(scoreDtlsByZone);
 			}else{
 				List<ScQtProposalAmount> scoreDtls = this.getManagedBean()
@@ -16200,11 +16230,17 @@ private void retriveCommitteeRemarksList(){
 			evalReqDTO.setCheckList(
 					this.getManagedBean().getScQtChecklist());
 			this.getManagedBean().setFinPackageScore(true);
+			//#36213 Start
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setScQt(this.getManagedBean().getScQt());
+			int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+			//#36213 end
 			if(this.getManagedBean().getQtProposalAmounts() != null && !this.getManagedBean()
 							.getQtProposalAmounts().isEmpty()){
 				for(ScQtProposalAmount amountScore : this.getManagedBean().getQtProposalAmounts()){
 
-					if(amountScore.getTotalScore()!=null){
+					if(amountScore.getTotalScore()!=null && !this.getManagedBean().getScQt().isPartial() 
+							&& wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){//#36213
 						if(amountScore.getTotalScore().intValue() > this.getManagedBean()
 								.getWithInVarieance().intValue()){
 							this.getManagedBean().setFinPackageScore(false);
