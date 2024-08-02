@@ -2657,7 +2657,7 @@ public class SmPersonnelBackingBean extends
 			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm",
 					ISupplierSearchSO.class);
 			if (getManagedBean().getUpdateSmPersonnel().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-					|| supplierSearchSO.isSoftCeritificateActive(getManagedBean().getBasicSmPersonnel().getPmUser())) {
+					|| supplierSearchSO.isSoftCeritificateActive(getManagedBean().getUpdateSmPersonnel().getPmUser())) {
 				throw new EpException(MessageConst.ERROR_722685, new String[] { getManagedBean().getUpdateSmPersonnel().getName() });
 			}// #29616 -end
 			

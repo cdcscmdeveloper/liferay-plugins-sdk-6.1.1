@@ -20,7 +20,10 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 	public static Logger log = Logger.getLogger(CategoryStatRptBackingBean.class);
 	
 	public CategoryStatRptBackingBean(){
-		initStates();
+		//#7754_#35984 - Start
+		getZoneByUser();
+		initStatesByZone();
+		//#7754_#35954 - End
 		getManagedBean().setRegStatusLs(retrieveRegStatusList());
 		//#32521 - START
 		setDefaultDateFromAndDateTo();
