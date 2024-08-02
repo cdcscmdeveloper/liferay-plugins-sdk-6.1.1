@@ -15490,7 +15490,7 @@ public class SmApplicationUtil {
 
 		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
 			for (SmPersonnel per : latestActivePersonnels) {
-				if (per.getSoftcertFlg() != DbValueConst.RECORD_STATUS_ACTIVE 
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE 
 						 || supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
 					sb.append(++i + ". ");
 					sb.append(per.getName());
