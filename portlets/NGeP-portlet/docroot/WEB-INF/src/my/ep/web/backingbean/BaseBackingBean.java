@@ -2749,6 +2749,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(smSupplier.getRegNo());
 			ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+			//#29582
+			ssmReqDTO.setSmSupp(smSupplier);
 			//27329
 			ssmReqDTO.setPreRegistration(true);
 			//ssmReqDTO.setCheckOnly(true);

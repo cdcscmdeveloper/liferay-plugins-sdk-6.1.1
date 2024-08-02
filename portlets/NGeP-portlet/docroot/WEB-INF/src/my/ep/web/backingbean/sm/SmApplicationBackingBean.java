@@ -1914,6 +1914,8 @@ public class SmApplicationBackingBean extends
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+					//29582
+					ssmReqDTO.setSmSupp(this.getManagedBean().getSmSupplier());
 					if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
 						ssmReqDTO.setBasicAcc(true);
 					}else{
@@ -7647,6 +7649,8 @@ public class SmApplicationBackingBean extends
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+			//29582
+			ssmReqDTO.setSmSupp(this.getManagedBean().getSmSupplier());
 			if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
 				ssmReqDTO.setBasicAcc(true);
 			}else{
