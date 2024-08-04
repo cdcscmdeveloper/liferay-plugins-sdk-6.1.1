@@ -74,17 +74,26 @@
 
 
 				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
-
-					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
-
+                      <ui:remove> #11104 - start </ui:remove>
+					<h:outputText value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.itemName)}"
+					escape="false" 
+					style="white-space: normal;word-wrap: break-word;" />
+                   <ui:remove> #11104 - end </ui:remove>
 
 				</p:column>
+				
+				<ui:remove> #11104 - start </ui:remove>
+				<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}" style="width:10%;">
+			<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>
+			<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
+			</p:column>
+				
 				<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}"
-					style="width:10%">
-					<h:outputText value="#{sampleItem.subLableNo}"></h:outputText>
+					style="width:15%">
+					#{evaluationBackingBean.managedBean.scQtSampleLbl.lableNo} - #{sampleItem.subLableNo}
 
 				</p:column>
-
+              <ui:remove> #11104 - end </ui:remove>
 
 
 				<p:column style="width:20%">
@@ -96,10 +105,10 @@
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 						label="#{lbl['lbl.sc.submission.status']}"
 						value="#{sampleItem. submissionStatus.parameterId}">
-
+                         <ui:remove> #11104 - start </ui:remove>
 						<f:selectItems
-							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.sampleSubmissionStatus)}"></f:selectItems>
-
+							value="#{evaluationBackingBean.getSampleSubmissionDropDownValues(ParameterTypeConst.sampleSubmissionStatus,sampleItem)}"></f:selectItems>
+                         <ui:remove> #11104 - end </ui:remove>
 
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{evaluationBackingBean.changeSampleStatus(sampleItem,evaluationBackingBean.managedBean.complianceSampleItemListDM)}"></p:ajax>
@@ -107,7 +116,8 @@
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
+                <ui:remove> #11104 - start </ui:remove>
+				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:20%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100" onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);"
 						onmouseout="limitTextArea(this,100);"
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"

@@ -6,7 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
+	<!-- #11104 Reendorse -start- -->
+	<ui:param name="isSampleExist"
+		value="#{qTScheduleDetailBackingBean.checkISSampleExistWIPChecklist(supplierProposalDetailBackingBean.managedBean.qt)}"></ui:param>
+	<!-- #11104 Reendorse -end- -->
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 
@@ -38,6 +41,19 @@
 				<p:outputLabel style="float : left"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.scAddress)}" />
 			</p:column>
+			
+			<ui:remove> #11104 - start </ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}" rendered="#{isSampleExist}">
+				<p:outputLabel style="float : left;white-space: normal;"
+					value="#{samplesubmissiondtl.scAddress.contactPerson}" />
+			</p:column>
+			<p:column
+				headerText="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" rendered="#{isSampleExist}">
+				<p:outputLabel style="float : left"
+					value="#{samplesubmissiondtl.scAddress.contactMobileNo}" />
+			</p:column>
+			<ui:remove> #11104 - end </ui:remove>
+			
 		</p:dataTable>
 
 		<br />
@@ -52,9 +68,9 @@
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"  update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
-						partialSubmit="true" process="@this" /></td>
+						partialSubmit="true" process="@this" /><ui:remove> #11104 - start </ui:remove></td>
 				<td />
 			</tr>
 		</table>
@@ -83,6 +99,31 @@
 				<td />
 				<td />
 			</tr>
+			
+            <ui:remove> #11104 - start </ui:remove>
+            <ui:fragment rendered="#{isSampleExist}">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" /></td>
+				<td><p:inputText style="margin-top:5px;" disabled="true"
+						readonly="true"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactPerson}"
+						size="30" /></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" /></td>
+				<td><p:inputText style="margin-top:5px;" disabled="true"
+						readonly="true"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactMobileNo}"
+						size="30" /></td>
+				<td />
+				<td />
+			</tr>
+			</ui:fragment>
+			<ui:remove> #11104 - end </ui:remove>
+
 			<tr>
 				<td colspan="4"><br /> <h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
@@ -93,9 +134,9 @@
 				<td><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
+				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
-						partialSubmit="true" process="@this" /></td>
+						partialSubmit="true" process="@this" /><ui:remove> #11104 - start </ui:remove></td>
 				<td />
 			</tr>
 		</table>
@@ -107,14 +148,35 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
 			<!--#11104 Bug #35473 start-->
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;width:85%;">
+			<p:column headerText="#{lbl['lbl.sc.item']}"  style="white-space: normal;width:55%;">
 				<h:outputText
 				value="#{supplierProposalDetailBackingBean.replaceWithBR(sampleitemdtl.scRequestItem.itemName)}"
 				escape="false"
 				style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}" style="width:15%;">
+			
+			<ui:remove> #11104 - start </ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}" style="width:15%;" rendered="#{isSampleExist}">
+			<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{sampleitemdtl.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>
+			<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}" rendered="#{sampleitemdtl.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
+			</p:column>
+			<ui:remove> #11104 - end </ui:remove>
+			
+			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}" style="width:15%;"><ui:remove> #11104 - start </ui:remove>
 					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
+				</p:column>
+				
+				<ui:remove> #11104 - start </ui:remove>
+				<p:column style="width:15%;" rendered="#{isSampleExist}">
+					<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.qt.sample.quantity.proposal']}" />
+							&#160;
+							<p:graphicImage id="pnpImg" value="/css/images/design/ico-tooltips.png" />
+							<p:tooltip id="pnptt" for="pnpImg">
+								<p:outputLabel escape="false" value="#{lbl['lbl.sc.qt.sample.quantity.proposal.tooltip']}"  />
+							</p:tooltip>
+						</f:facet>
+				<h:outputText value="#{sampleitemdtl.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleQuantity}"></h:outputText>
 				</p:column>
 			<!--#11104 Bug #35473  end-->
 		</p:dataTable>
