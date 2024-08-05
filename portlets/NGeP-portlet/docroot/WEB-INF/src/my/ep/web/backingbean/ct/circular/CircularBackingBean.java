@@ -545,12 +545,13 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterCode(parameterCode);
 			reqDTO.setParameterType(paramenterType);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				pmParam = resDTO.getPmParameter();
-				getManagedBean().setPmParameterId(pmParam.getParameterId());
-				getManagedBean().setProcurementModeCode(pmParam.getParameterCode());
+			if (parameterCode != null) {
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				if (resDTO.isSuccessful()) {
+					pmParam = resDTO.getPmParameter();
+					getManagedBean().setPmParameterId(pmParam.getParameterId());
+					getManagedBean().setProcurementModeCode(pmParam.getParameterCode());
+				}
 			}
 		} catch (NoResultException e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularBackingBean", null,
@@ -567,12 +568,17 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * selected by the user
 	 */
 	public void getCircularTypeOnChange() {
-		if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-			getManagedBean().setPqCircularType(true);
+		if (getManagedBean().getSearchCircularDocType() != null) {
+			if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				getManagedBean().setPqCircularType(true);
+			} else {
+				getManagedBean().setPqCircularType(false);
+				getManagedBean().setProcurementMode(null);
+				getManagedBean().setProcurementModeCode(null);
+			}
 		} else {
+			// case when user choose (select one) in drop-down menu
 			getManagedBean().setPqCircularType(false);
-			getManagedBean().setProcurementMode(null);
-			getManagedBean().setProcurementModeCode(null);
 		}
 	}
 
