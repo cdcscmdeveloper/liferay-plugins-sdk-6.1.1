@@ -42,6 +42,7 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 	}
 	
 	//#7754_#35984 - Start
+	@Override
 	public void initStatesByZone() {
 		getManagedBean().setDistrictLst(new ArrayList<SelectItem>());
 		if (StringUtils.isBlank(getManagedBean().getZone())) {
@@ -56,11 +57,18 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		}
 	}
 	
+	/**
+	 * If there is no zone, it will input all states without by zone for report
+	 * SM_002
+	 */
 	public void initStatesForCatStat() {
 		PmCountry country = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		getManagedBean().setStateLstByZone(SmCommonUtil.getStateList(country.getCountryId()));
 	}
 	
+	/**
+	 * To generate district list based from state id by zone for report SM_002
+	 */
 	public void onChangeStateByZone() {
 		if (StringUtils.isNotBlank(getManagedBean().getStateByZone())) {
 			Long stateId = Long.parseLong(getManagedBean().getStateByZone());
