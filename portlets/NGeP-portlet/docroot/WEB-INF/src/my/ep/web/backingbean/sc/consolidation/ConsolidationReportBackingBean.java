@@ -2091,7 +2091,7 @@ public class ConsolidationReportBackingBean extends
 				 * BUG 32373 #83
 				 */
 				//#36239 4serangkai -adding to check zonal
-				if(selectedZoneId != null){
+				if(null != selectedZoneId){
 					reqDTO.setZonal(true);
 				}
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO

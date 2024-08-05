@@ -8786,7 +8786,7 @@ return	remarksNotFound;
 				reqDTO.setRequestItemId(selectedItemId); //PUT THIS CODE INTO SIT
 				reqDTO.setEvaluationStage(evaluationStage); //PUT THIS CODE INTO SIT
 				//#36239 4serangkai -adding to check zonal
-				if(selectedZoneId != null){
+				if(null != selectedZoneId){
 					reqDTO.setZonal(true);
 				}
 				/*
@@ -9007,7 +9007,7 @@ return	remarksNotFound;
 				 * Development 32311: SLA LOG START
 				 */
 				//#36239 4serangkai -adding to check zonal
-				if(selectedZoneId != null){
+				if(null != selectedZoneId){
 					reqDTO.setZonal(true);
 				}
 				long startTime = System.currentTimeMillis();
