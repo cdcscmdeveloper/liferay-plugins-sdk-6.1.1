@@ -86,6 +86,7 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -2694,11 +2695,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		//start loop list #28454
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		this.getManagedBean().setDowngradeRole(true);  //#29956
 		for(SmPersonnel personnel : this.getManagedBean().getPersonnelsRole()){
 			//27951
 			if(!personnel.isClerical() && !personnel.isHigherManagement() && !personnel.isManagement()){
 				this.getManagedBean().getPersonnelsRole().clear();
 				this.getManagedBean().setCheckRoleSSM(false);
+				this.getManagedBean().setDowngradeRole(false); //#29956
 				throw new EpException(MessageConst.ERROR_722535); 
 			}else{
 				//27951
@@ -2706,11 +2709,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				personnel.setDirector(false);
 				this.getManagedBean().setCheckRoleSSM(true);
 				//START 28454
-				if(this.getManagedBean().isResubmitAppl()){
+		//	if (this.getManagedBean().isResubmitAppl()) {  #29956
+					
 					reqDTO.setPersonnelId(personnel.getPersonnelId());			
 					PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 					String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 					EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
+					resDTO.getSmPersonnel().setSsmData(false); //#29956
+					resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+					resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 					reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 					//update latest data to active supplier admin
 					resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -2719,7 +2726,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}else{
 						//close popup
 					}
-				}
+			//	}
 				//END 28454
 			}
 		}
@@ -2811,6 +2818,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 				}
 				//END 27329
+				//START #29956
+				if(postRegBean.isResubmitAppl()){
+					SmAppl smAppl = SmCommonUtil.getLatestRejectedApplBySupplier(smSupplier);
+					displayPopupDowngradeSSMOwner(smAppl, ssmResDTO);
+				} else {
+					displayPopupDowngradeSSMOwner(postRegBean.getSmSupplier().getSmAppl(), ssmResDTO);
+				}
+				//END #29956
 			} else {					
 				SmCommonUtil.ssmError(ssmResDTO);
 			}
@@ -3538,4 +3553,194 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//#21387 - End
+	
+	//29956 START
+    	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
+		Boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
+		}
+		return retVal;
+	}
+    	//29956 END
+	
+	//start #29956
+	/**
+	 * Compare all list in params with epRole
+	 * 
+	 * @param String
+	 *            roleCode
+        
+	 * @return String
+	 */
+	public Boolean compareSmPersonnelRoleAndStringRole(String[] params, String epRole) {
+		Boolean available = false;
+		String epRoleDesc = getEpRoleDescByRoleCode(epRole);
+		if (params != null && params.length > 0) {
+			for (int x=0; x<params.length; x++) {
+				if (params[x]!=null && params[x].equals(epRoleDesc)) {
+					available = true;
+				}
+			}
+		}
+		return available;
+	}
+	
+	/**
+	 * Get no eP Role by language
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getNoEpRoleDescByLanguage() {
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		String noEp;
+		if(language.equalsIgnoreCase("en")){
+			noEp = "no EP Role";
+		}else{
+			noEp = "profil yang tiada peranan";
+		}
+		return noEp;
+	}
+	
+	/**
+	 * Get eP Role for Downgrade Popup by personnel
+	 * 
+	 * @param String
+	 *            roleCode
+	 * @return String
+	 */
+	public String getEpRoleDowngradePopupByPersonnel(List<SmPersonnel> personnelsRole) {
+		String[] params = new String[50];
+		StringBuilder sb = new StringBuilder();
+		int x = 0;
+		Boolean noEp = false;
+		if (!personnelsRole.isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelsRole) {
+				int countRole=0;
+				if(smPersonnel.isHigherManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isManagement()){
+					countRole++;
+				}
+				if(smPersonnel.isEquityOwner()){
+					countRole++;
+				}
+				if(countRole>1){
+					if(smPersonnel.isHigherManagement()){
+						smPersonnel.setManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}else if(smPersonnel.isManagement()){
+						smPersonnel.setHigherManagement(false);
+						smPersonnel.setEquityOwner(false);
+					}
+				}
+				if (x != 0) {
+					for (String roles : params) {
+						if(roles!=null){
+							if (smPersonnel.getEpRole() == null && !roles.equals(getNoEpRoleDescByLanguage()) && !roles.equals("/ ")
+									&& !noEp) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getNoEpRoleDescByLanguage();
+								sb.append(getNoEpRoleDescByLanguage());
+								x++;
+								noEp = true;
+							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) 
+									&& !compareSmPersonnelRoleAndStringRole(params, smPersonnel.getEpRole()) && !roles.equals("/ ")) {
+								params[x] = "/ ";
+								sb.append("/ ");
+								x++;
+								params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+								sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+								x++;
+							}
+						}
+					}
+				} else {
+					if(smPersonnel.getEpRole() == null){
+						params[x] = getNoEpRoleDescByLanguage();
+						sb.append(getNoEpRoleDescByLanguage());
+						x++;
+						noEp = true;
+					}else{
+						params[x] = getEpRoleDescByRoleCode(smPersonnel.getEpRole());
+						sb.append(getEpRoleDescByRoleCode(smPersonnel.getEpRole()));
+						x++;
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
+	//end #29956
+	
+	//START #29956
+	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
+		getManagedBean().getPersonnelsRole().clear();
+		getManagedBean().setDowngradeRole(false);
+		getManagedBean().setDisAllowOwnerEdit(false);
+		
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
+		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+		
+		PersonnelReqDTO reqDto = new PersonnelReqDTO();
+		reqDto.setApplId(smAppl.getApplId());
+		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
+			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
+				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+			
+				if(shouldAddPersonnel){
+					getManagedBean().getPersonnelsRole().add(personnel);
+				}
+				
+				if(isPersonnelAdminRole
+						&& !isMofAccEffDatePassed6MonthCurrDate
+						&& !isBasicAccount){
+					getManagedBean().setDisAllowOwnerEdit(true);
+					break;
+				}
+			}
+		}
+		if(getManagedBean().getPersonnelsRole() != null 
+				&& !getManagedBean().getPersonnelsRole().isEmpty()) {			
+			getManagedBean().setDowngradeRole(true);
+			
+			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
+			getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole }));
+			getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
+			getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
+			getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
+			
+			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+		}
+		return getManagedBean().isDowngradeRole();
+	}
+	
+	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){
+		return smPersonnel.getEpRole() != null 
+				&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(smPersonnel.getEpRole());
+	}
+	
+	public Boolean isPersonnelOwnerDirectorNull(SmPersonnel smPersonnelOwner,SmPersonnel smPersonnelDirector){
+		Boolean isPersonnelOwnerDirectorNull = false;
+		if(isNull(smPersonnelOwner) && isNull(smPersonnelDirector)){
+			isPersonnelOwnerDirectorNull = true;
+		}
+		return isPersonnelOwnerDirectorNull;
+	}
+	//END #29956
 }
