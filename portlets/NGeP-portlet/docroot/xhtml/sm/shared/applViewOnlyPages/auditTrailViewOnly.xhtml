@@ -30,24 +30,25 @@
 				</tr>
 				<tr>
 					<td><p:tabView id="tabViewCommon">
+							<p:ajax event="tabChange" listener="#{viewSmApplBackingBean.onAuditTrailTabChange}" update=""/>
 							<c:choose>
 								<c:when
 									test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
-									<p:tab id="tab1"
+									<p:tab id="AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO"
 										title="#{lbl['lbl.audit.tab.approve.bank.information']}">
 										<ui:include
 											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailBankInformation.xhtml"></ui:include>
 									</p:tab>
-									<p:tab id="tab2" title="#{lbl['lbl.audit.tab.user.profile']}">
+									<p:tab id="AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO" title="#{lbl['lbl.audit.tab.user.profile']}">
 										<ui:include
 											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailUserProfile.xhtml"></ui:include>
 									</p:tab>
-									<p:tab id="tab3"
+									<p:tab id="AuditSupplierManagementConst.AuditSupplierManagementConst."
 										title="#{lbl['lbl.audit.tab.disciplinary.action']}">
 										<ui:include
 											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailDisciplinaryAction.xhtml"></ui:include>
 									</p:tab>
-									<p:tab id="tab4"
+									<p:tab id="AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO"
 										title="#{lbl['lbl.audit.tab.deactive.replace.sup.admin']}">
 										<ui:include
 											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailDeactiveReplaceSupplierAdmin.xhtml"></ui:include>

@@ -194,7 +194,11 @@ public class ViewApplHistoryBackingBean extends
 					initFifthTabInfo();
 				}
 
-			}
+			// #28895_35501 Start - AUDIT TRAIL SM
+			} else if (outputTab == 5) {
+				initAuditTrailTabInfo(0);
+			} 
+			// #28895_35501 End
 			
 		}
 		// 25792 - end
