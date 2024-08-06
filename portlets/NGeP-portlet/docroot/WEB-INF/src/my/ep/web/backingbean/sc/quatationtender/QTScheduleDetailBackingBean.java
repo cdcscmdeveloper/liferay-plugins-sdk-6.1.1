@@ -60,6 +60,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -74,6 +75,10 @@ import org.primefaces.context.RequestContext;
 public class QTScheduleDetailBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
