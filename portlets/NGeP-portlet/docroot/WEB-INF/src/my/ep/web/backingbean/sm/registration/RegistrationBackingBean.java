@@ -1449,7 +1449,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			reqDTO.getSmSupp().setSmSupplierOwners(getManagedBean().getSmSupp().getSmSupplierOwners());
 		}else{
 			if (smSupp.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
-					&& getManagedBean().getSmSuppOwners().size() > 0) {
+					&& getManagedBean().getSmSuppOwners() != null) {
+				//to handle data that have same ic with same appl id
+				List<SmPersonnel> duplicatePersonnelList = new ArrayList<>();
+		        for(SmPersonnel pers : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+		        	for(SmPersonnel allPers : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+		        		if(pers.getIdentificationNo().equals(allPers.getIdentificationNo())
+		        				&& pers.getCreatedDate().compareTo(allPers.getCreatedDate()) < 0){
+		        			duplicatePersonnelList.add(pers);
+		        		}
+		        	}
+		        }
 				for (SmSupplierOwner smSupplierOwner : getManagedBean().getSmSuppOwners()) {
 					Boolean personnelAvailable = false;
 					if (!this.getManagedBean().getDelSuppOwnerLs().isEmpty()) {
@@ -1466,50 +1476,54 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					for (SmPersonnel smPersonnel : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()) {
 						if (smSupplierOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())) {
 							personnelAvailable = true;
-							//For existing personnel with wrong data
-							if(smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2)){
-								smPersonnel.setEquityOwner(false);
-								smPersonnel.setDirector(true);
-							}else if(smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-									|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
-								smPersonnel.setEquityOwner(true);
-								smPersonnel.setDirector(false);
-							}else if(smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)){
-								if(smPersonnel.isEquityOwner() != smSupplierOwner.isOwnerIsEquity()){
-									smPersonnel.setEquityOwner(smSupplierOwner.isOwnerIsEquity());
+							if(!duplicatePersonnelList.contains(smPersonnel)){
+								//For existing personnel with wrong data
+								if(smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2)){
+									smPersonnel.setEquityOwner(false);
+									smPersonnel.setDirector(true);
+								}else if(smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_PROFESSIONAL_BODY)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+										|| smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)){
+									smPersonnel.setEquityOwner(true);
+									smPersonnel.setDirector(false);
+								}else if(smSupp.getBusinessType().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)){
+									if(smPersonnel.isEquityOwner() != smSupplierOwner.isOwnerIsEquity()){
+										smPersonnel.setEquityOwner(smSupplierOwner.isOwnerIsEquity());
+									}
+									if(smPersonnel.isDirector() != smSupplierOwner.isOwnerIsDirector()){
+										smPersonnel.setDirector(smSupplierOwner.isOwnerIsDirector());
+									}
 								}
-								if(smPersonnel.isDirector() != smSupplierOwner.isOwnerIsDirector()){
-									smPersonnel.setDirector(smSupplierOwner.isOwnerIsDirector());
+								if(smPersonnel.getRevNo() != SupplierManagementConst.DEFAULT_REV_NO){
+									smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 								}
+								if(smPersonnel.getName() != smSupplierOwner.getOwnerName()){
+									smPersonnel.setName(smSupplierOwner.getOwnerName());
+								}
+								if(smPersonnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+										&& smSupplierOwner.getRecordStatusFlg().intValue()== DbValueConst.RECORD_STATUS_ACTIVE){
+									smPersonnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+									smPersonnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+									smPersonnel.setCreatedBy(getUserIdSessionFromLoginId());
+								}
+								//reactivate personnel thru basic maintenance
+								if (smSupplierOwner.isReactivateOwner() && smPersonnel.getRecordStatusFlg().equals(
+										DbValueConst.RECORD_STATUS_DELETED)) {
+									smPersonnel
+											.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+								}
+								reqDTO.setSmPersonnel(smPersonnel);
+							}else{
+								smPersonnel.setRevNo(0);
 							}
-							if(smPersonnel.getRevNo() != SupplierManagementConst.DEFAULT_REV_NO){
-								smPersonnel.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
-							}
-							if(smPersonnel.getName() != smSupplierOwner.getOwnerName()){
-								smPersonnel.setName(smSupplierOwner.getOwnerName());
-							}
-							if(smPersonnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
-									&& smSupplierOwner.getRecordStatusFlg().intValue()== DbValueConst.RECORD_STATUS_ACTIVE){
-								smPersonnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-								smPersonnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-								smPersonnel.setCreatedBy(getUserIdSessionFromLoginId());
-							}
-							//reactivate personnel thru basic maintenance
-							if (smSupplierOwner.isReactivateOwner() && smPersonnel.getRecordStatusFlg().equals(
-									DbValueConst.RECORD_STATUS_DELETED)) {
-								smPersonnel
-										.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-							}
-							reqDTO.setSmPersonnel(smPersonnel);
 						}
 					}
 					if (personnelAvailable == false) {
@@ -2561,7 +2575,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							this.getManagedBean().getSmSuppOwners().add(suppOwnerDirector);
 							resDTO.getSmSupp().getSmSupplierOwners().add(suppOwnerDirector);
 						}
-						if(personnel.getRevNo() == 0){ //#27691 Set rev_no=1 
+						if(personnel.getRevNo() == 0 && !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){ //#27691 Set rev_no=1 
 							personnel.setRevNo(1);
 						}
 					}
@@ -2654,7 +2668,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							if (personnel.isEquityOwner()
 									&& personnel.getIdentificationType() != null				//start - #30064
 									&& personnel.getIdentificationType().getParameterCode()		
-											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)) {	//end - #30064
+											.equals(ParameterConst.IDENTIFICATION_TYPES_IC)		//end - #30064
+											&& !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {	//#27691
 								if(personnel.getPmCountry() == null){
 									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 									personnel.setPmCountry(defaultCountry);
@@ -2702,11 +2717,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									|| smSupp.getBusinessType().equals("I")){
 								if (personnel.isDirector() && personnel.getIdentificationType() != null			
 										&& personnel.getIdentificationType().getParameterCode()		
-										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
+										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)
+										&& !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
 								}
 							}
-							if(personnel.getRevNo() == 0){ //#27691 set rev_no=1
+							if(personnel.getRevNo() == 0 && !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){ //#27691 set rev_no=1
 								personnel.setRevNo(1);
 							}
 							// 27691 - End
@@ -2969,7 +2985,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									for(SmPersonnel currPersonnel : this.getManagedBean().getSmSupp().getSmAppl().getSmPersonnels()){
 										if(personnel.getIdentificationNo().equals(currPersonnel.getIdentificationNo())){
 											existPerson = true;
-											if(personnel.isEquityOwner() != currPersonnel.isEquityOwner()){
+											if(personnel.isEquityOwner()){
 												currPersonnel.setEquityOwner(personnel.isEquityOwner());
 												//27691 start
 												Boolean existOwner = false;
@@ -2994,7 +3010,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 													}
 												}
 											}
-											if(personnel.isDirector() != currPersonnel.isDirector()){
+											if(personnel.isDirector()){
 												currPersonnel.setDirector(personnel.isDirector());
 												Boolean existDirector = false;
 												if(this.getManagedBean().getSmPersonnelDirector() != null){
@@ -3011,7 +3027,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 												}
 											}
 											//27691 END
-											if(currPersonnel.getRevNo() == 0){
+											if(currPersonnel.getRevNo() == 0 && !currPersonnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
 												currPersonnel.setRevNo(1);
 											}
 										}
