@@ -199,7 +199,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(reqDTO);
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-			ctBB.renewSesionObject();
+//			ctBB.renewSesionObject(); //#36196 - Fixing Bugs on Remark.
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
