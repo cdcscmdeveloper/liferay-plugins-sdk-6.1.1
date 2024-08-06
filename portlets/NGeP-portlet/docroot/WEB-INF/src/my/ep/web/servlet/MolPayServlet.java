@@ -13,11 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -32,6 +27,7 @@ import my.ep.persistence.entity.py.PyPayment;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -358,6 +354,9 @@ public class MolPayServlet extends HttpServlet {
 						log.info(">>>>paymentType<<<"+paymentType);
 					}else if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 						paymentType = SupplierManagementConst.SOFTCERT_PAYMENT;
+						//START 35182
+						smPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
+						//END 35182
 						log.info(">>>>paymentType<<<"+paymentType);
 					}
 					pymtReqDTO.setPaymentType(paymentType);

@@ -89,7 +89,9 @@
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 						<p:scrollPanel mode="native" style="height:100px;">
 							<h:outputText value="#{aprvdCatBean.approverRemarks}" rendered="#{not empty aprvdCatBean.apprvrDecFlg}"/>
-							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" />
+							<!-- #34549 Start -->
+							<!-- <h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" /> -->
+							<!-- #34549 end -->
 						</p:scrollPanel></td>
 					</tr>
 				</table>

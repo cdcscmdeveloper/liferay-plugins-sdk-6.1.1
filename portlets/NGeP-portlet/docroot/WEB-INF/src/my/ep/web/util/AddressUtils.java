@@ -8,6 +8,7 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.web.constant.sm.SupplierManagementConst;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -54,6 +55,14 @@ public class AddressUtils {
 				address.append(smAddress.getPmCity().getCityName());
 				address.append(separator).append(htmlLineSeparator);
 			}
+			
+			//#34159 - START - Rearrange address as in comment/log #36 of this Redmine
+			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0
+					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				address.append(smAddress.getPmDivision().getDivisionName());
+				address.append(separator).append(htmlLineSeparator);
+			}
+			//#34159 - END
 
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(smAddress.getPmState().getStateName());
@@ -104,6 +113,14 @@ public class AddressUtils {
 				address.append(smAddress.getPmCity().getCityName());
 				address.append(separator);
 			}
+			
+			//#34159 - START - Rearrange address as in comment/log #36 of this Redmine
+			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0
+					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				address.append(smAddress.getPmDivision().getDivisionName());
+				address.append(separator);
+			}
+			//#34159 - END
 
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(System.getProperty("line.separator"));
@@ -434,14 +451,8 @@ public class AddressUtils {
 				address.append(smAddress.getAddress3());
 				address.append(separator);
 			}
-			//#34135 START
-			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0
-					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase("13")) {
-				address.append(smAddress.getPmDivision().getDivisionName());
-				address.append(separator);
-			}
-			
 			if (smAddress.getPmDistrict() != null && smAddress.getPmDistrict().getDistrictName() !=null && smAddress.getPmDistrict().getDistrictName().length() > 0) {
+			
 				address.append(smAddress.getPmDistrict().getDistrictName());
 				address.append(separator);
 			}
@@ -455,6 +466,14 @@ public class AddressUtils {
 				address.append(smAddress.getPmCity().getCityName());
 				address.append(separator);
 			}
+			//#34159 - START - Rearrange address as in comment/log #36 of this Redmine
+			//#34135 START
+			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0
+					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase("13")) {
+				address.append(smAddress.getPmDivision().getDivisionName());
+				address.append(separator);
+			}
+			//#34159 - END
 
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(System.getProperty("line.separator"));

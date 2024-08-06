@@ -17,10 +17,15 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO; //#21387
 import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO; //#21387
+import my.ep.constant.MessageConst;
+import my.ep.constant.ct.ContractConst; //#21387
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.PPProcessNameConst;
@@ -33,14 +38,17 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -57,10 +65,13 @@ public class BPMTaskListBackingBean extends
 BaseBackingBean<BPMTaskListManagedBean> {
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
-	
+
 	private String language = new FacesScopes().getUserLocale().getLanguage();
 
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
+	
+	private static boolean sortAscending = true;
+	private static boolean fromSearchBttn = false;
 
 	public BPMTaskListBackingBean() {
 
@@ -107,7 +118,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
 			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
-			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865				
+			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -156,6 +167,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"contract-suspension");
 			temp.put(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME,
 					"contract-suspension");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME,
+					"contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME, 
+					"contract-reqadmin");
+			temp.put(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME,
+					"contract-reqadmin");
 			temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME
 					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
@@ -186,6 +203,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME
 					+ CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME,
 					"change-bank-account");
+			
+			temp.put(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_NAME,
+					"contract-owner-management");
+			temp.put(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME,
+					"contract-owner-management");
+			
 
 			// Fulfilment Management - Start
 			temp.put(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME
@@ -269,7 +292,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
 					+ FLProcessNameConst.REVIEW_CANCEL_DO_HT, "delivery-order");
 			temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
-					+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");			
+					+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");
 			temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
 					+ FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
 			temp.put(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME,
@@ -288,7 +311,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			
+
 			temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_BUDGET,
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
@@ -307,7 +330,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 			temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			
+
 
 			temp.put(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_PCB,
@@ -350,13 +373,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, 
+					+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE, 
+					+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE, 
+					+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 					+ SCProcessNameConst.COORDINATE_EC_MEETING,
@@ -519,7 +542,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);			
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 					+ SCProcessNameConst.APPROVE_LOI,
 					SourcingConstants.NAV_PAGE_REVIEW_LOI);
@@ -540,13 +563,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					+ SCProcessNameConst.COORDINATE_FC_MEETING,
 					SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
-			
+
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_SECRETARY, 
+					+ SCProcessNameConst.ASSIGN_FC_SECRETARY,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 			temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					+ SCProcessNameConst.ASSIGN_FC_MEMBER, 
+					+ SCProcessNameConst.ASSIGN_FC_MEMBER,
 					SourcingConstants.NAV_PAGE_FC_APPOINT_MEMBERS);
 
 			temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
@@ -595,11 +618,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 					+ SCProcessNameConst.VERIFY_MANUAL_LOA,
 					SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
-			
+
 			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
-			
+
 			temp.put(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
@@ -617,7 +640,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
-			
+
+			// #9019 START
+			temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION + SCProcessNameConst.SUBMIT_QUOTATION_TENDER,
+					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			// #9019-END
+
 			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"]");
 			temp.put(getProcessNameRemoveSpace("UNSPSC Code Request"), "review-unspsc-code");
 			temp.put(getProcessNameRemoveSpace("Extension Code Request"), "review-extension");
@@ -657,7 +685,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME),
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
 
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);			
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.VERIFY_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.APPROVE_PID, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -698,7 +726,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					"contract-suspension");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME),
 					"contract-suspension");
-			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME),
+					"contract-reqadmin");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME), 
+					"contract-reqadmin");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME),
+					"contract-reqadmin");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)
+					+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_NOTIFICATION_SETTING, "fulfilment-details");
@@ -720,6 +755,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)+ CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME,
 					"change-bank-account");
+			
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_NAME),
+					"contract-owner-management");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME),
+					"contract-owner-management");
 
 			// Fulfilment Management - Start
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME)+ FLProcessNameConst.SUBMIT_PHIS_CR, "contract-request");
@@ -770,7 +810,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME)+ FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, "invoice");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME)+ FLProcessNameConst.REVIEW_CANCEL_DO_HT, "delivery-order");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME
-					)+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");			
+					)+ FLProcessNameConst.REVIEW_FAILED_CANCEL_DO_HT, "delivery-order");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
 					)+ FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME),
@@ -789,7 +829,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					)+ SCProcessNameConst.REVISE_QT_SCHEDULE, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					)+ SCProcessNameConst.REVISE_QT_DOCUMENT, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_BUDGET,
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
@@ -808,7 +848,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					)+ SCProcessNameConst.VIEW_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 					)+ SCProcessNameConst.SIGNOFF_SCORING, SourcingConstants.NAV_PAGE_PREPARE_CHECKLIST_SCORING);
-			
+
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PCB_APPROVAL_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_PCB,
@@ -851,13 +891,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, 
+					)+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE, 
+					)+ SCProcessNameConst.ASSIGN_TEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE, 
+					)+ SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 					)+ SCProcessNameConst.COORDINATE_EC_MEETING,
@@ -983,15 +1023,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.RECOMMEND_MA_SUPPLIER,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
+			//Bug_34625 - Start 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
-					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
+					)+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
 					SourcingConstants.NAV_PAGE_MULTIPLE_LOI_RECOMMENDATION);
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
-					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_LOI_LIST);
+			//Bug_34625 - End
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME)
 					+ SCProcessNameConst.PREPARE_LOI, SourcingConstants.NAV_PAGE_LOI_LIST);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
@@ -1022,7 +1061,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.ENDORSE_FC_SELECTION,
-					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);			
+					SourcingConstants.NAV_PAGE_ONLINE_BIDDING_ENDORSEMENT);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.LOI_ACCEPTANCE_PROCESS_NAME
 					)+ SCProcessNameConst.APPROVE_LOI,
 					SourcingConstants.NAV_PAGE_REVIEW_LOI);
@@ -1043,13 +1082,13 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 					)+ SCProcessNameConst.COORDINATE_FC_MEETING,
 					SourcingConstants.NAV_PAGE_FC_COORDINATE_MEETING);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_FC_SECRETARY, 
+					)+ SCProcessNameConst.ASSIGN_FC_SECRETARY,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
-					)+ SCProcessNameConst.ASSIGN_FC_MEMBER, 
+					)+ SCProcessNameConst.ASSIGN_FC_MEMBER,
 					SourcingConstants.NAV_PAGE_FC_APPOINT_MEMBERS);
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.EVALUATION_PROCESS_NAME
@@ -1098,11 +1137,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.LOA_MANUAL_PROCESS_NAME
 					)+ SCProcessNameConst.VERIFY_MANUAL_LOA,
 					SourcingConstants.NAV_PAGE_REVIEW_DIRECT_LOA);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					)+ SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
-			
+
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SPEC_MAINTENANCE_PROCESS_NAME
 					)+ SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING,
 					SourcingConstants.NAV_PAGE_SPECIFICATION_ENDORSMENT);
@@ -1119,13 +1158,19 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.DIRECT_PURCHASE_MAINTENANCE
 					)+ ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
+
+			// #9019 START
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.START_QUOTATION_TENDER_CREATION)
+					+ SCProcessNameConst.SUBMIT_QUOTATION_TENDER, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
+			// #9019-END
+
 			this.getManagedBean().setBpmMap(temp);
 		}
 
 		log.info("testing BPM******");
 
 	}
-	
+
 	private String getProcessNameRemoveSpace(String processName) {
 		processName = capitalizeWord(processName);
 		String retVal = processName.replaceAll("\\s", "");
@@ -1133,16 +1178,16 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		return retVal;
 	}
 	
-	private String capitalizeWord(String str){  
-	    String words[]=str.split("\\s");  
-	    String capitalizeWord="";  
-	    for(String w:words){  
-	        String first=w.substring(0,1);  
-	        String afterfirst=w.substring(1);  
-	        capitalizeWord+=first.toUpperCase()+afterfirst+" ";  
-	    }  
-	    return capitalizeWord.trim();  
-	}  
+	private String capitalizeWord(String str){
+	    String words[]=str.split("\\s");
+	    String capitalizeWord="";
+	    for(String w:words){
+	        String first=w.substring(0,1);
+	        String afterfirst=w.substring(1);
+	        capitalizeWord+=first.toUpperCase()+afterfirst+" ";
+	    }
+	    return capitalizeWord.trim();
+	}
 
 	// public void retrieveWorklistItems(String status, String viewBy, String
 	// assignment) {
@@ -1213,6 +1258,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		String taskName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("taskName");
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
+		//26238 -  Disciplinary Action - 28111
+		String docNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
 
 		String claim = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("isClaim");
@@ -1240,7 +1287,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				url = (String) this.getManagedBean().getBpmMap().get(process);
 				if (StringUtils.isBlank(url)) {
 					url = (String) this.getManagedBean().getBpmMap().get(process + taskName);
-					
+
 					if(StringUtils.isBlank(url)){
 						url = (String) this.getManagedBean().getBpmMap().get(process + docType);
 					}
@@ -1266,13 +1313,30 @@ BaseBackingBean<BPMTaskListManagedBean> {
 							+ themeDisplay.getLayout().getGroup()
 							.getFriendlyURL().length());
 			log.info("commonUrl" + commonUrl);
+			
+			/*#31422-basri 190821*/			
+			StringBuilder strbuildtask = new StringBuilder();
+			if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+				List<WorklistItemVO>  list = this.getManagedBean().getTaskListGroupDataModel().getList();
+			    
+				    for(WorklistItemVO a : list){
+				    	String var = a.getDocNumber();
+				    	String taski = a.getTaskId();
+				    	if(var.equalsIgnoreCase(docNo) && !taski.equalsIgnoreCase(taskId)){
+				    		strbuildtask.append(taski);
+				    	}
+				    }
+				}else{
+					strbuildtask = null; //#31681 - basri 22/10/21
+				}
+			/*#31422-basri 190821*/
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance()
 					.getExternalContext();
 
 			// externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			externalContext.redirect(commonUrl + "/" + url + "?taskId="
-					+ taskId + "&claim=" + claim);
+					+ taskId + "&taskIdPair="+strbuildtask+"&claim=" + claim+"&docNo="+docNo);/*#31422-basri 190821*/
 			// externalContext.redirect("http://localhost:8080/web/guest/" +url
 			// +"?taskId="+taskId);
 		} catch (IOException e) {
@@ -1304,14 +1368,14 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	/*
 	 * public void filterStatus() {
-	 * 
+	 *
 	 * BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED" ,this
 	 * .getManagedBean().getStatus()); }
 	 */
 
 	/*
 	 * public void tempFilterLogin() {
-	 * 
+	 *
 	 * BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED" ,this
 	 * .getManagedBean().getStatus()); }
 	 */
@@ -1326,7 +1390,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(docInt.longValue());
 
 		if (log.isDebugEnabled()) {
-			log.debug("docInt:" + docInt);	
+			log.debug("docInt:" + docInt);
 		}
 
 		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
@@ -1339,17 +1403,45 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	}
 
 	public void refreshAdvanceTaskList() {
-
+		//29810 - start
+		if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null
+				&& this.getManagedBean().getGroupTaskCreatedDateTo() == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateTo", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		} else if (this.getManagedBean().getGroupTaskCreatedDateFrom() == null
+				&& this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		compareDate("advance", "fromDate");
+		//29810 - end
+		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 
 	}
 
 
 	public void refreshNormalTaskList(){
-
+		//29810 - start
+		if (this.getManagedBean().getMyTaskCreatedDateFrom() != null
+				&& this.getManagedBean().getMyTaskCreatedDateTo() == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateTo", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		} else if (this.getManagedBean().getMyTaskCreatedDateFrom() == null
+				&& this.getManagedBean().getMyTaskCreatedDateTo() != null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.bpm.createdDateFrom", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) });
+		}
+		compareDate("normal", "fromDate");
+		//29810 - end
+		this.getManagedBean().setFromSearchBttn(true);
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 	}
-	
+
 	//Enhancement #24714
 	public void refreshBothTaskList(){
 
@@ -1422,6 +1514,17 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		this.getManagedBean().setDocStatusGroup(0);
 		this.getManagedBean().setDocTypeGroup("");
 		//this.getManagedBean().setAssignment("ALL");
+		// 29810 - start
+		this.getManagedBean().setSort_by(BpmConstants.SORT_BY_CREATEDATE);
+		this.getManagedBean().setAscending(false);
+		this.getManagedBean().setSort_byGroup(BpmConstants.SORT_BY_CREATEDATE);
+		this.getManagedBean().setAscendingGroup(false);
+		this.getManagedBean().setFromSearchBttn(true);
+		this.getManagedBean().setMyTaskCreatedDateFrom(null);
+		this.getManagedBean().setMyTaskCreatedDateTo(null);	
+		this.getManagedBean().setGroupTaskCreatedDateFrom(null);
+		this.getManagedBean().setGroupTaskCreatedDateTo(null);
+		// 29810 - end
 
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -1438,15 +1541,22 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		//this.getManagedBean().getTaskListDataModel().reloadData();
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		
+
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
 		
+		// 29810 - start
+		FacesScopes sc = new FacesScopes();
+		if (sc.hasRoleUser(RoleCode.UPS_PO.value())) {
+			getManagedBean().setRoleType("PO");
+		}
+		// 29810 - start
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "taskListView");
-	
+
 	}
-	
+
 	// #24714
 	public void preRenderTaskViewCombined() {
 		log.info("......................preRenderTaskView (Combined)");
@@ -1474,11 +1584,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		} else {
 			this.getManagedBean().setDocType("");
 		}
-		
+
 		this.getManagedBean().getTaskListBothDataModel().reloadData();
-		
+
 		getManagedBean().setSdoWithMultipleRoles(sdoWithMultipleRole());
-		
+
 		FacesScopes sc = new FacesScopes();
 		getManagedBean().setLoginIc(sc.getUserSessionBean().getLoginId());
 
@@ -1492,12 +1602,32 @@ BaseBackingBean<BPMTaskListManagedBean> {
 	public String claimTask()  {
 
 		log.info("**********claimTask");
-		
-			claimBpmTask();
-			
-			this.getManagedBean().getTaskListGroupDataModel().reloadData();
-			this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
+		/*21387 - basri*/
+		String docNumber = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNumber");		 
+		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
+			 
+		if(docType.equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || docType.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+			//#21387 - Start
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(docNumber);
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
+			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+					 if(getDocNumber.getDocNumber().equalsIgnoreCase(docNumber) && getDocNumber.getAcquiredBy() == null){
+						 claimTaskByTaskId(getDocNumber.getTaskId());
+		
+					 } 	   
+				 } 
+			}//#21387 - End			
+		}else{
+			claimBpmTask();
+		}
+		/*21387 - basri*/
+		
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
 		return "taskListView?faces-redirect=true";
 
 	}
@@ -1505,35 +1635,35 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	public String releaseTask()  {
 		log.info("**********releaseTask");
-		
+
 		releaseBpmTask();
-		
+
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
 
 		return "taskListView?faces-redirect=true";
 	}
-	
-	
+
+
 	public String claimTaskCombined()  {
 
 		log.info("**********claimTaskCombined");
-		
+
 			claimBpmTask();
-			
+
 			this.getManagedBean().getTaskListBothDataModel().reloadData();
 			//this.getManagedBean().getTaskListGroupDataModel().reloadData();
 			//this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
-		
+
 		return "taskListCombined?faces-redirect=true";
 
 	}
-	
+
 	public String releaseTaskCombined()  {
 		log.info("**********releaseTaskCombined");
-		
+
 		releaseBpmTask();
-		
+
 		this.getManagedBean().getTaskListBothDataModel().reloadData();
 
 		return "taskListCombined?faces-redirect=true";
@@ -1557,10 +1687,25 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setCtxToken(token);
-		bpmSO.claimTask(reqDTO);
-
+		
+		//#21387 - Start
+		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+			
+			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+			bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
+			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
+			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+					 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
+						 claimTaskByTaskId(getDocNumber.getTaskId());
+					 } 
+				 } 
+			}//#21387 - End			
+		}else{
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+	    	reqDTO.setCtxToken(token);
+	    	bpmSO.claimTask(reqDTO);
+		}
 
 		this.getManagedBean().getTaskListGroupDataModel().reloadData();
 		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
@@ -1578,11 +1723,11 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		IParameterSO statusSO = (IParameterSO) BusinessDelegate
 				.getInstance().getServiceObject("pm",
 						IParameterSO.class);
-		
+
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		
+
 		ParameterResDTO resDTO = statusSO.findDOcTypeList(reqDTO);
-		
+
 		StringBuilder docType = new StringBuilder();
 		docType.append("CD,");
 		if(resDTO.getDocTypeLs()!=null && resDTO.getDocTypeLs().size()>0){
@@ -1590,10 +1735,10 @@ BaseBackingBean<BPMTaskListManagedBean> {
 				docType.append(doc+",");
 			}
 		}
-		
+
 		String outCome = docType.substring(0, docType.length()-1);
 		log.info("outCome:"+outCome);
-		
+
 		StringBuilder sb = new StringBuilder();
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
@@ -1606,7 +1751,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("sb.toString()"+sb.toString());
 		return sb.toString();
 	}
-	
+
 	public void findDocStatus() {
 		if (this.getManagedBean().getDocType() != null) {
 				log.info("*********findDocStatus*********");
@@ -1649,7 +1794,7 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			this.getManagedBean().setDocStatusList(null);
 		}
 	}
-	
+
 	public void findDocStatusGroup() {
 		if (this.getManagedBean().getDocTypeGroup() != null) {
 				log.info("*********findDocStatusGroup*********");
@@ -1699,15 +1844,15 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("***********hasManyRole**********");
 		FacesScopes fs = new FacesScopes();
 		long roleCount = PmCommonUtil.retrieveActiveOrg(fs.getUserSessionBean().getUserId()).get(0).getPmUserRoles().size();
-		
+
 		if(roleCount > 1){
 			return true;
 		}
-		
+
 		return false;
 
 	}
-	
+
 	public String poKpiByCompanyState(int docId, int statusId) {
 
 		String retVal = SmApplicationUtil.getInstance()
@@ -1717,17 +1862,125 @@ BaseBackingBean<BPMTaskListManagedBean> {
 
 	}
 	
+	public void orderByMyTaskList() {
+		
+		this.getManagedBean().setFromSearchBttn(false);
+		this.getManagedBean().setAscending(sortAscending);
+		
+		if (sortAscending) {
+			sortAscending =  false;
+		} else {
+			sortAscending = true;
+		}		
+		
+//		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+	}
+	
+	public void orderByGroupTaskList() {
+
+		this.getManagedBean().setFromSearchBttn(false);
+		this.getManagedBean().setAscendingGroup(sortAscending);
+		
+		if (sortAscending) {
+			sortAscending =  false;
+		} else {
+			sortAscending = true;
+		}		
+		
+		this.getManagedBean().getTaskListGroupDataModel().reloadData();
+//		this.getManagedBean().getTaskListMyTaskDataModel().reloadData();
+		
+
+	}
+	
 	// 25627 - Start.
 	public boolean isCommitteeApproverWithQT(StatusReqDTO reqDTO) {
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(reqDTO.getDocType())) {
 			FacesScopes fs = new FacesScopes();
-			
+
 			if (fs.hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 	// 25627 -End.
+	
+	// 29810 - start
+	public void compareDate(String taskType, String dateType) {
+
+		if (taskType.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_NORMAL)) {
+			if (this.getManagedBean().getMyTaskCreatedDateFrom() != null && this.getManagedBean().getMyTaskCreatedDateTo() != null) {
+				if (this.getManagedBean().getMyTaskCreatedDateFrom().after(this.getManagedBean().getMyTaskCreatedDateTo())) {
+					if (dateType.equalsIgnoreCase(BpmConstants.FROM_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to", null));
+					} else if (dateType.equalsIgnoreCase(BpmConstants.TO_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from", null));
+					}
+				} else {
+					Long date = DateUtils.getDaysDifference(this.getManagedBean().getMyTaskCreatedDateFrom(), this.getManagedBean().getMyTaskCreatedDateTo());
+					if (date > 30) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate", null));
+					}
+				}
+			}
+		} else if (taskType.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_ADVANCE)) {
+			if (this.getManagedBean().getGroupTaskCreatedDateFrom() != null && this.getManagedBean().getGroupTaskCreatedDateTo() != null) {
+				if (this.getManagedBean().getGroupTaskCreatedDateFrom().after(this.getManagedBean().getGroupTaskCreatedDateTo())) {
+					if (dateType.equalsIgnoreCase(BpmConstants.FROM_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.to", null));
+					} else if (dateType.equalsIgnoreCase(BpmConstants.TO_DATE)) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.date.from", null));
+					}
+				} else {
+					Long date = DateUtils.getDaysDifference(this.getManagedBean().getGroupTaskCreatedDateFrom(), this.getManagedBean().getGroupTaskCreatedDateTo());
+					if (date > 30) {
+						throw new EpException(SmCommonUtil.getMessage("lbl.bpm.dialog.maximumDate", null));
+					}
+				}
+			}
+		}
+	}
+
+	public void resetDate(String type) {
+		this.getManagedBean().setSelectedStatusDesc(new PmStatusDesc());
+		this.getManagedBean().setSelectedStatusDescAdvance(new PmStatusDesc());
+		if (type.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_NORMAL)) {
+			this.getManagedBean().setMyTaskCreatedDateFrom(null);
+			this.getManagedBean().setMyTaskCreatedDateTo(null);
+			this.getManagedBean().setDocStatusList(null);
+			this.getManagedBean().setDocStatus(0);
+			this.getManagedBean().setViewBy("");
+			this.getManagedBean().setDocNo("");
+			this.getManagedBean().setTaskDesc("");
+			this.getManagedBean().setSort_by(BpmConstants.SORT_BY_CREATEDATE);
+			this.getManagedBean().setAscending(false);
+
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String docTypeId = originalServletRequest.getParameter("docTypeId");
+
+			if (docTypeId != null && !docTypeId.isEmpty()) {
+				this.getManagedBean().setDocType(docTypeId);
+				originalServletRequest.getParameterMap().remove("docTypeId");
+			} else {
+				this.getManagedBean().setDocType("");
+			}
+		} else if (type.equalsIgnoreCase(BpmConstants.TASK_LIST_TYPE_ADVANCE)) {
+			this.getManagedBean().setGroupTaskCreatedDateFrom(null);
+			this.getManagedBean().setGroupTaskCreatedDateTo(null);
+			this.getManagedBean().setDocStatusListGroup(null);
+			this.getManagedBean().setDocStatusGroup(0);
+			this.getManagedBean().setDocTypeGroup("");
+			this.getManagedBean().setDocNoGroup("");
+			this.getManagedBean().setTaskDescGroup("");
+			this.getManagedBean().setViewByGroup("");
+			this.getManagedBean().setSort_byGroup(BpmConstants.SORT_BY_CREATEDATE);
+			this.getManagedBean().setAscendingGroup(false);
+		}
+	}
+
+	// 29810 - end
 }

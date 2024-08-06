@@ -46,7 +46,8 @@
 					<div align="right">
 						<!-- #34166 - Start  -->
 						<p:commandButton value="#{lbl['lbl.btn.save']}" action="#{svoSiteVisitBackingBean.saveSiteVisitReport('')}"
-						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}"/>
+						disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}" onclick="blockWidget.show()" oncomplete="blockWidget.hide();">
+						</p:commandButton>
 						<!-- #34166 - End  -->
 
 						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" action="#{svoSiteVisitBackingBean.submitDialogShow}" 

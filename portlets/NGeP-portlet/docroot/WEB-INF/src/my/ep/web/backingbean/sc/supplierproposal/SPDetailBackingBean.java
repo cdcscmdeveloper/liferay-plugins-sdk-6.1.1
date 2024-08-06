@@ -61,7 +61,6 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -116,7 +115,6 @@ import my.ep.util.SLAUtils;
 import my.ep.util.encrypt.BouncyCastleProvider_AES_CBC;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -1541,7 +1539,8 @@ public class SPDetailBackingBean extends
 								.setCompliance(ParameterConst.COMPLIANCE_STATUS__COMPLIANCE);
 
 				} else{
-					if (finProposalChecklist.isSubmitted()){
+					//#34493,#34427 - start
+					/*if (finProposalChecklist.isSubmitted()){
 						if (finProposalChecklist
 								.getScQtProposalChecklistAttachment() == null) {
 							finProposalChecklist.setSubmitted(false);
@@ -1554,7 +1553,15 @@ public class SPDetailBackingBean extends
 					}else{
 						finProposalChecklist
 						.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
-					}
+					}*/
+					if (finProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+						finProposalChecklist.setSubmitted(false);
+						finProposalChecklist.setCompliance(null);
+					} else{
+						finProposalChecklist.setSubmitted(true);
+						finProposalChecklist.setCompliance(null);
+					} 
+					//34493,#34427 - end
 				}
 			}
 
@@ -2095,8 +2102,9 @@ public class SPDetailBackingBean extends
 					//end Bug #28887
 
 				} else {
+						//#34493,#34427 - start
 						//start Bug #28887
-						if (null != assetProposalChecklist) {
+						/*if (null != assetProposalChecklist) {
 							if (assetProposalChecklist.isSubmitted()) {
 								if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null 
 										|| (scQtPRPAssetLiability.getCurrentAssets() != null)
@@ -2116,8 +2124,16 @@ public class SPDetailBackingBean extends
 								assetProposalChecklist.setSubmitted(false);
 								assetProposalChecklist.setCompliance(ParameterConst.COMPLIANCE_STATUS__NOTAPPLICABLE);
 							}
-						}
+						}*/
 						//end Bug #28887
+						if (assetProposalChecklist.getScQtProposalChecklistAttachment() == null) {
+							assetProposalChecklist.setSubmitted(false);
+							assetProposalChecklist.setCompliance(null);
+						} else{
+							assetProposalChecklist.setSubmitted(true);
+							assetProposalChecklist.setCompliance(null);
+						} 
+						//#34493,#34427 - end
 				}
 			}
 			
@@ -4534,6 +4550,15 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			context.put("title", title);
 			context.put("qtNo", scQt.getQtNo());
 		}
+		
+		// #32648 - start
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date currentDate = new Date();
+
+		if (null != currentDate) {
+			context.put("currentDate", formatter.format(currentDate));
+		}
+		// #32648 - start
 
 		if (pmUser != null) {
 			context.put("userName", pmUser.getUserName());
@@ -5841,23 +5866,23 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	
 	//#28785-Start
 	public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSpecBean value) {
-		  TplSpecZoneDtl specZoneDetail=null;
-		  try{
-	    for (Entry<Long, TemplateSpecBean> entry : map.entrySet()) {
-	        if (Objects.equals(value, entry.getValue())) {
-	        if(null!=getManagedBean().getZones() && getManagedBean().getZones().size()>0){
-	            for(TplSpecZoneDtl specZoneDtl:getManagedBean().getZones()){
-	            if(entry.getKey().equals(specZoneDtl.getSpecZoneId())){	
-	            	  return specZoneDtl;
-	            }
-	            }
-	        	}
-	        }
-	    }
-		  }finally{
-			  
-		  }
-	    return specZoneDetail;
+		TplSpecZoneDtl specZoneDetail = null;
+		try {
+			for (Entry<Long, TemplateSpecBean> entry : map.entrySet()) {
+				if (Objects.equals(value, entry.getValue())) {
+					if (null != getManagedBean().getZones() && getManagedBean().getZones().size() > 0) {
+						for (TplSpecZoneDtl specZoneDtl : getManagedBean().getZones()) {
+							if (entry.getKey().equals(specZoneDtl.getSpecZoneId())) {
+								return specZoneDtl;
+							}
+						}
+					}
+				}
+			}
+		} finally {
+
+		}
+		return specZoneDetail;
 	}
 	//#28785-End	
 }

@@ -177,8 +177,8 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+// #29832
 
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class SimpleQuoteBackingBean.
@@ -459,6 +459,8 @@ public class SimpleQuoteBackingBean extends
 	 * add panel or contract and non contract to simple quote from search
 	 * catalogue.
 	 * 
+	 * @param supplierId
+	 *            the supplier id
 	 * @param docId
 	 *            the doc id
 	 * @param panelItemFlag
@@ -467,7 +469,8 @@ public class SimpleQuoteBackingBean extends
 	 *            the compare supplier items
 	 * @return the string page navigate to simple quote page.
 	 */
-	public String simpleQuoteAction(Long docId, boolean panelItemFlag,
+	// #34579 - add new parameter on simpleQuoteAction method
+	public String simpleQuoteAction(Long supplierId, Long docId, boolean panelItemFlag,
 			List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		boolean isGovtSeller = Boolean.FALSE;
@@ -875,6 +878,15 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// #29800 - end
+		// #34579 - start
+		if (supplierId != null && supplierId != 0) {
+			if (scQuote.getSupplierId() == 0)
+				scQuote.setSupplierId(supplierId);
+		} else if (supplierId == 0) {
+			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
+				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
+		}
+		// #34579 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -2385,6 +2397,34 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35514 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if (tplSpecQuestion.getCmItem() != null
+									&& tplSpecQuestion.getCmItem().getExtensionCode() != null) {
+								ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+								String serviceOrProduct = catalogueSO.checkProductOrService(tplSpecQuestion.getCmItem()
+										.getExtensionCode());
+								if (serviceOrProduct.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
+									if ((tplSpecQuestion.getAnswerTypeCode() != null)
+											&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+										if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+												.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+											if (tplSpecQuestion.getClUomFrequency() != null) {
+												tplSpecQuestion.setClUomFrequency(null);
+											}
+											if (tplSpecQuestion.getClDurationMonth() != null) {
+												tplSpecQuestion.setClDurationMonth(null);
+											}
+
+										}
+									}
+								}
+							}
+						}
+						// Bug #35514 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2405,6 +2445,29 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35514 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if ((tplSpecQuestion.getAnswerTypeCode() != null)
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+								if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+									if (tplSpecQuestion.getClFulfilmentTypeCode() != null
+											&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+													.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+										if (tplSpecQuestion.getClUomFrequency() != null) {
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if (tplSpecQuestion.getClDurationMonth() != null) {
+											tplSpecQuestion.setClDurationMonth(null);
+										}
+									}
+								}
+							}
+						}
+						// Bug #35514 - end
+						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2585,19 +2648,21 @@ public class SimpleQuoteBackingBean extends
 		
 		// when procurement type as pk7 selected 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			//Temp(#34274 - Start)
 			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+//			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
 									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
+									null,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
+			//Temp(#34274 - End)
 
 		}
 		// #28536 - start
@@ -4382,7 +4447,11 @@ public class SimpleQuoteBackingBean extends
 				Long itemSpecQuestionId = null;
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
-
+				
+				//Bug #35514 start - get value for fulfilment type one-off
+				PmParameter FTypeOneOff = getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				//Bug #35514 end
+				
 				if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
 					for(TplSpecQuestion question: cloneSpecMaster.getTplSpecQuestions()) {
 						//if item already codified, check by extension code. 
@@ -4396,6 +4465,17 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
+											
+											// #35514 @zaim start
+											question.setClFulfilmentTypeCode(FTypeOneOff);
+											if (question.getClDurationMonth() != null) {
+												question.setClDurationMonth(null);
+											}
+											if (question.getClUomFrequency() != null) {
+												question.setClUomFrequency(null);
+											}
+											// #35514 @zaim end
+											
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;
@@ -8022,4 +8102,35 @@ public class SimpleQuoteBackingBean extends
 		preRenderView();
 	}
 	// #29800 - end
+
+	// #29832 @zaim added method to pass the value into lovBackingBean
+	
+	/**
+	 * @return SimpleQuoteManagedBean that contain SimpleQuoteManagedBean object.
+	 *
+	 */
+	
+	public SimpleQuoteManagedBean deleteSuccess(){
+		
+		return getManagedBean();
+	}
+	// #29832 end
+	
+    //29832 start
+	/**
+	 * @return list of PmBusinessNature level code 
+	 * that need to exclude.
+	 * The selected Business Nature will be exclude 
+	 * from Business Nature popup view.
+	 */
+	public String excludeLevelCodeSupplier(){
+		StringBuilder sb = new StringBuilder();
+		if (getManagedBean().getScQuote().getBusinessNatureCriterias() != null) {
+			for(ScBusinessNatureQuoteCriteria quoteCriteria: getManagedBean().getScQuote().getBusinessNatureCriterias() ){
+				sb.append("|levelCode^" +quoteCriteria.getPmBusinessNature().getLevelCode());
+			}
+		}
+		return sb.toString();
+	}
+    //29832 - end
 }

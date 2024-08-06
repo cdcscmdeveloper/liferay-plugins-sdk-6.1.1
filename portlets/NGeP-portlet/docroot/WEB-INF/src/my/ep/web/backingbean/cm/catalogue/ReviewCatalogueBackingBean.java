@@ -52,6 +52,7 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.cm.catalog.CmImage; //30457
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -181,11 +182,12 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 
 
 		CatalogueBackingBean.retriveSupplierGstInfomation(catResDTO.getSupplierItem().getSmSupplier());
-
-
-		//return "editCatalogItem";
+		
+		//#30457,#33806 - Start
+		bb.getGroupedRejectReasons();
+	    //#30457,#33806 - End
+		
 		return "addCatalogItem";
-
 	}
 
 
@@ -227,6 +229,18 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 		// [SIR#24977] Khirul modified on 2019-05-06 - End
 
 		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
+		
+		//#30457 - Start
+		if (bb.getManagedBean().getSelectedMaintainItem().getCmImages() != null
+				&& bb.getManagedBean().getSelectedMaintainItem().getCmImages().size() > 0) {
+			for (int j = 0; j < bb.getManagedBean().getSelectedMaintainItem().getCmImages().size(); j++) {
+				CmImage image = bb.getManagedBean().getSelectedMaintainItem().getCmImages().get(j);
+				if (!image.isImageReviewed()) {
+					bb.getManagedBean().getSelectedMaintainItem().getCmImages().get(j).setImageReviewed(true);
+				}
+			}
+		}
+		//#30457 - End
 
 		reqDTO.getSaveSupplierItems().add(
 				bb.getManagedBean().getSelectedMaintainItem());		

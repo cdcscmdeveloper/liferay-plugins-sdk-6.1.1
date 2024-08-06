@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<table style="width: 100%">
@@ -31,8 +32,20 @@
 			<td>
 				<TABLE style="width: 100%">
 					<tr>
-						<td><h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
-								style="float :left" escape="false" /> <h:inputHidden
+						<!-- #12483 - START, #34892 -->
+						<ac:smReviseReason bBean="#{backingBean}"/>
+						<!-- #12483 - END -->
+						<td><!-- #28776 - start -->
+							<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
+								<h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote.old']}" 
+								style="float :left" escape="false" /> 
+							</c:if> 
+							<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+								<h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
+								style="float :left" escape="false" />
+							</c:if>
+							<!-- #28776 - end -->
+								<h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <p:spacer
 								height="10px" />
 							<p:commandButton value="#{lbl['lbl.sm.valid.all']}" style="float:right;" 

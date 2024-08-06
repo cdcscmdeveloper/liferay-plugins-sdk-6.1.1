@@ -46,6 +46,7 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -62,6 +63,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -101,6 +103,7 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -1604,6 +1607,48 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #32929 - start
 	private boolean zoneRdbButtonChecked = Boolean.FALSE;
 	// #32929 - end
+	
+	// #25077 - Start
+	private ScQtApprovalRequest historyApprovalRequests;
+	private boolean showPopUpBPKApprovalNeeded = false;
+	private boolean resetBpkCurrentArea = false;
+	private String previousApprovalTabName;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT;
+	private ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI;
+	private boolean flagFileAttahmentDeletedICT = false;
+	private boolean flagFileAttahmentDeletedMITI = false;
+	private boolean firstPagePA = false;
+	private List<TabBean> tabOtherApproval; // #34694
+	// #25077 - End
+
+	// bug #30435, Enhancement #25077 -start-
+	private PmParameter pmParam;
+	private String scQtAppRequestRemarkICT; // #34694
+	private String scQtAppRequestRemarkMITI; // #34694
+	private boolean approverTabLoaded = false;
+	// bug #30435, Enhancement #25077 -end-
+
+	// #9019 (Harun) -start-
+	private Long qtRemarksIdRemove;
+
+	/** The qt remark missing issues. */
+	private boolean scQtRemarksEmpty = false;
+	// #9019 08082022 (Harun) -end-
+
+	// #1873 -start
+	private boolean technicalOtherCheckList;
+	private boolean technicalTemplateEdited;
+	private boolean fromSubmit;
+	private ScQtCheckList tempScQtChecklist; // 1873 - note 97
+	private ScQtCheckList finTempScQtChecklist; // 1873 - note 97
+	// #1873 -end
+	
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
+	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
+	// Bug #35219@Syazani 07/11/2023 -- End
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -7358,6 +7403,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtCheckSt2techProposal(
 			List<ScQtCheckList> scQtCheckSt2techProposal) {
+		this.scQtCheckSt2techProposalLstClone = CustomUtils.getInstance().deepCopyArrayList(scQtCheckSt2techProposal);	// Bug #35219@Syazani 07/11/2023
 		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
 	}
 
@@ -7388,6 +7434,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtCheckSt2financeProposalList(
 			List<ScQtCheckList> scQtCheckSt2financeProposalList) {
+		this.scQtCheckSt2financeProposalLstClone = CustomUtils.getInstance().deepCopyArrayList(scQtCheckSt2financeProposalList); // Bug #35219@Syazani 07/11/2023
 		this.scQtCheckSt2financeProposalList = scQtCheckSt2financeProposalList;
 	}
 
@@ -10097,7 +10144,248 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zoneRdbButtonChecked = zoneRdbButtonChecked;
 	}
 	// #32929 - end
+	
+	//#25077 - Start
+	public ScQtApprovalRequest getHistoryApprovalRequests() {
+		return historyApprovalRequests;
+	}
 
+	public void setHistoryApprovalRequests(ScQtApprovalRequest historyApprovalRequests) {
+		this.historyApprovalRequests = historyApprovalRequests;
+	}
+	
+	public boolean isShowPopUpBPKApprovalNeeded() {
+		return showPopUpBPKApprovalNeeded;
+	}
+
+	public void setShowPopUpBPKApprovalNeeded(boolean showPopUpBPKApprovalNeeded) {
+		this.showPopUpBPKApprovalNeeded = showPopUpBPKApprovalNeeded;
+	}
+	
+	public boolean isResetBpkCurrentArea() {
+		return resetBpkCurrentArea;
+	}
+
+	public void setResetBpkCurrentArea(boolean resetBpkCurrentArea) {
+		this.resetBpkCurrentArea = resetBpkCurrentArea;
+	}	
+	
+	/**
+	 * @return the previousApprovalTabName
+	 */
+	public String getPreviousApprovalTabName() {
+		return previousApprovalTabName;
+	}
+	
+	/**
+	 * @param previousApprovalTabName the previousApprovalTabName to set
+	 */
+	public void setPreviousApprovalTabName(String previousApprovalTabName) {
+		this.previousApprovalTabName = previousApprovalTabName;
+	}
+	
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryICT() {
+		return scQtApprovalReqAttachementHistoryICT;
+	}
+
+	public void setScQtApprovalReqAttachementHistoryICT(ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryICT) {
+		this.scQtApprovalReqAttachementHistoryICT = scQtApprovalReqAttachementHistoryICT;
+	}
+
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementHistoryMITI() {
+		return scQtApprovalReqAttachementHistoryMITI;
+	}
+
+	public void setScQtApprovalReqAttachementHistoryMITI(
+			ScQtApprovalReqAttachement scQtApprovalReqAttachementHistoryMITI) {
+		this.scQtApprovalReqAttachementHistoryMITI = scQtApprovalReqAttachementHistoryMITI;
+	}
+
+	public boolean isFlagFileAttahmentDeletedICT() {
+		return flagFileAttahmentDeletedICT;
+	}
+
+	public void setFlagFileAttahmentDeletedICT(boolean flagFileAttahmentDeletedICT) {
+		this.flagFileAttahmentDeletedICT = flagFileAttahmentDeletedICT;
+	}
+
+	public boolean isFlagFileAttahmentDeletedMITI() {
+		return flagFileAttahmentDeletedMITI;
+	}
+
+	public void setFlagFileAttahmentDeletedMITI(boolean flagFileAttahmentDeletedMITI) {
+		this.flagFileAttahmentDeletedMITI = flagFileAttahmentDeletedMITI;
+	}
+	
+	public boolean isFirstPagePA() {
+		return firstPagePA;
+	}
+
+	public void setFirstPagePA(boolean firstPagePA) {
+		this.firstPagePA = firstPagePA;
+	}
+
+	// #34694 -start-
+	public List<TabBean> getTabOtherApproval() {
+		return tabOtherApproval;
+	}
+
+	public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
+		this.tabOtherApproval = tabOtherApproval;
+	}
+	// #34694 -end-
+
+	/**
+	 * @return the scQtApprovalReqAttachementICT
+	 */
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementICT() {
+		return scQtApprovalReqAttachementICT;
+	}
+
+	/**
+	 * @param scQtApprovalReqAttachementICT the scQtApprovalReqAttachementICT to set
+	 */
+	public void setScQtApprovalReqAttachementICT(ScQtApprovalReqAttachement scQtApprovalReqAttachementICT) {
+		this.scQtApprovalReqAttachementICT = scQtApprovalReqAttachementICT;
+	}
+	
+	/**
+	 * @return the scQtApprovalReqAttachementMITI
+	 */
+	public ScQtApprovalReqAttachement getScQtApprovalReqAttachementMITI() {
+		return scQtApprovalReqAttachementMITI;
+	}
+
+	/**
+	 * @param scQtApprovalReqAttachementMITI the scQtApprovalReqAttachementMITI to set
+	 */
+	public void setScQtApprovalReqAttachementMITI(ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
+		this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
+	}
+
+	// #34694 -start-	
+	/**
+	 * @return the scQtAppRequestRemarkICT
+	 */
+	public String getScQtAppRequestRemarkICT() {
+		return scQtAppRequestRemarkICT;
+	}
+
+	/**
+	 * @param scQtAppRequestRemarkICT the scQtAppRequestRemarkICT to set
+	 */
+	public void setScQtAppRequestRemarkICT(String scQtAppRequestRemarkICT) {
+		this.scQtAppRequestRemarkICT = scQtAppRequestRemarkICT;
+	}
+
+	/**
+	 * @return the scQtAppRequestRemarkMITI
+	 */
+	public String getScQtAppRequestRemarkMITI() {
+		return scQtAppRequestRemarkMITI;
+	}
+
+	/**
+	 * @param scQtAppRequestRemarkMITI the scQtAppRequestRemarkMITI to set
+	 */
+	public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
+		this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
+	}
+	// #34694 -end-
+	// #25077 - End
+
+	// bug #30435, Enhancement #25077 - start
+	/**
+	 * @return the pmParam
+	 */
+	public PmParameter getPmParam() {
+		return pmParam;
+	}
+
+	/**
+	 * @param pmParam
+	 *            the pmParam to set
+	 */
+	public void setPmParam(PmParameter pmParam) {
+		this.pmParam = pmParam;
+	}
+
+	/**
+	 * @return the approverTabLoaded
+	 */
+	public boolean isApproverTabLoaded() {
+		return approverTabLoaded;
+	}
+
+	/**
+	 * @param approverTabLoaded
+	 *            the approverTabLoaded to set
+	 */
+	public void setApproverTabLoaded(boolean approverTabLoaded) {
+		this.approverTabLoaded = approverTabLoaded;
+	}
+	// bug #30435, Enhancement #25077 - end
+
+	// #9019 - Start (Harun)
+	public Long getQtRemarksIdRemove() {
+		return qtRemarksIdRemove;
+	}
+
+	public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
+		this.qtRemarksIdRemove = qtRemarksIdRemove;
+	}
+
+	public boolean isScQtRemarksEmpty() {
+		return scQtRemarksEmpty;
+	}
+
+	public void setScQtRemarksEmpty(boolean scQtRemarksEmpty) {
+		this.scQtRemarksEmpty = scQtRemarksEmpty;
+	}
+	// #9019 - End (Harun)
+
+	// 1873 - start
+	public boolean isTechnicalOtherCheckList() {
+		return technicalOtherCheckList;
+	}
+
+	public void setTechnicalOtherCheckList(boolean technicalOtherCheckList) {
+		this.technicalOtherCheckList = technicalOtherCheckList;
+	}
+
+	public boolean isTechnicalTemplateEdited() {
+		return technicalTemplateEdited;
+	}
+
+	public void setTechnicalTemplateEdited(boolean technicalTemplateEdited) {
+		this.technicalTemplateEdited = technicalTemplateEdited;
+	}
+
+	public boolean isFromSubmit() {
+		return fromSubmit;
+	}
+
+	public void setFromSubmit(boolean fromSubmit) {
+		this.fromSubmit = fromSubmit;
+	}
+
+	public ScQtCheckList getTempScQtChecklist() {
+		return tempScQtChecklist;
+	}
+
+	public void setTempScQtChecklist(ScQtCheckList tempScQtChecklist) {
+		this.tempScQtChecklist = tempScQtChecklist;
+	}
+
+	public ScQtCheckList getFinTempScQtChecklist() {
+		return finTempScQtChecklist;
+	}
+
+	public void setFinTempScQtChecklist(ScQtCheckList finTempScQtChecklist) {
+		this.finTempScQtChecklist = finTempScQtChecklist;
+	}
+	// 1873 - end
+	
 	// Bug #33661@Syazani 07/10/2022 -- Start
 	public boolean isFromSpecEndorse() {
 		return isFromSpecEndorse;
@@ -10107,5 +10395,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
+	
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	public List<ScQtCheckList> getScQtCheckSt2techProposalLstClone() {
+		return scQtCheckSt2techProposalLstClone;
+	}
+
+	public void setScQtCheckSt2techProposalLstClone(List<ScQtCheckList> scQtCheckSt2techProposalLstClone) {
+		this.scQtCheckSt2techProposalLstClone = scQtCheckSt2techProposalLstClone;
+	}
+
+	public List<ScQtCheckList> getScQtCheckSt2financeProposalLstClone() {
+		return scQtCheckSt2financeProposalLstClone;
+	}
+
+	public void setScQtCheckSt2financeProposalLstClone(List<ScQtCheckList> scQtCheckSt2financeProposalLstClone) {
+		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
+	}
+	// Bug #35219@Syazani 07/11/2023 -- End
 	
 }

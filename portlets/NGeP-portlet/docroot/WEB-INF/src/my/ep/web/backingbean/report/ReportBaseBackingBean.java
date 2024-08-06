@@ -28,10 +28,13 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.dto.rpt.PMReportReqDTO;
 import my.ep.biz.dto.rpt.PMReportResDTO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.rpt.PMReport;
@@ -43,6 +46,7 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -484,4 +488,30 @@ public abstract class ReportBaseBackingBean<T extends ReportBaseManagedBean> ext
 		return cellStyle;
 	}	
 	//end 27472
+	
+	//30824 START
+	public void setLocaleLanguageToLoginUser(){
+		FacesScopes faceScope = new FacesScopes();
+		Locale locale = faceScope.getUserLocale();
+		String localeLanguage = locale.getLanguage();
+		String dispName = faceScope.getUserScreenName();
+		
+		try {
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+			
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setLoginId(dispName);
+			UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+			
+			if(resDTO.getPmUser() != null){
+				reqDTO.setPmUser(resDTO.getPmUser());
+				userSO.updateLocaleLanguagetoLoginUser(reqDTO,localeLanguage);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		}
+	}
+	//30824 END
 }

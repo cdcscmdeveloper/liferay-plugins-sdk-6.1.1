@@ -236,6 +236,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #11134 - Start
 	private boolean haveSupplierRejection;
 	// #11134 - End
+	
+	// 28834 starts
+	private boolean disableBfButton;
+	private boolean ktReportGenerated;
+	private boolean disableJustifications;
+	// 28834 end
 
 	/**
 	 * @return the activeIndex
@@ -2122,4 +2128,44 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.haveSupplierRejection = haveSupplierRejection;
 	}
 	// #11134 -end-
+	
+	// 28834 start
+	public boolean isDisableBfButton() {
+		return disableBfButton;
+	}
+
+	public void setDisableBfButton(boolean disableBfButton) {
+		this.disableBfButton = disableBfButton;
+	}
+
+	/**
+	 * @return the ktReportGenerated
+	 */
+	public boolean isKtReportGenerated() {
+		return ktReportGenerated;
+	}
+
+	/**
+	 * @param ktReportGenerated
+	 *            the ktReportGenerated to set
+	 */
+	public void setKtReportGenerated(boolean ktReportGenerated) {
+		this.ktReportGenerated = ktReportGenerated;
+	}
+
+	/**
+	 * @return the disableJustifications
+	 */
+	public boolean isDisableJustifications() {
+		return disableJustifications;
+	}
+
+	/**
+	 * @param disableJustifications
+	 *            the disableJustifications to set
+	 */
+	public void setDisableJustifications(boolean disableJustifications) {
+		this.disableJustifications = disableJustifications;
+	}
+	// 28834 end
 }

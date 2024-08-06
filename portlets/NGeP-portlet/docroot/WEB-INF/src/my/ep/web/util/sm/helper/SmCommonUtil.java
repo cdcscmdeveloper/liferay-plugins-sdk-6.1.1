@@ -3636,7 +3636,8 @@ public class SmCommonUtil {
 		if (divisionId != null) {
 			DivisionReqDTO reqDTO = new DivisionReqDTO();
 			reqDTO.setDivisionId(divisionId);
-			return SmServiceLookup.getDivisionSO().retriveDivisionListByState(reqDTO)
+			//#35086
+			return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
 					.getPmDivision();
 		} else {
 			return null;
@@ -4395,40 +4396,7 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
 			}//END 27329
-			//#29582- Start
-			log.info("ssm status: "+ resDTO.getStatusCode());
-			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
-				boolean errMsg = false;
-				int i = 0;
-				for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
-					if (per.getIdentificationTypeSsm() != null) {
-						String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
-								ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
-						if (ssmTypeDesc == null){
-							ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
-									ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
-						}
-						sb.append("<br/>");
-						sb.append(++i + ". ");
-						sb.append(per.getName() + " ");
-						sb.append("("
-								+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-								+ " ");
-						sb.append(per.getIdentificationNo() + ", ");
-						sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
-						sb.append(per.getIdentificationTypeSsm() + " = ");
-						sb.append(ssmTypeDesc + ")");
-						sb.append("<br/>");
-						errMsg = true;
-					}
-				}
-				if (errMsg) {
-					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
-				}
-			}//#29582- end
-
+			
 			return resDTO;
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
@@ -4439,10 +4407,7 @@ public class SmCommonUtil {
 				if(MessageConst.ERROR_721085.equalsIgnoreCase(ex.getMessage()) && sb != null){
 					throw new EpException(MessageConst.ERROR_721085,new String[] { sb.toString() });
 				}
-				//#29582
-				if(MessageConst.ERROR_721088.equalsIgnoreCase(ex.getMessage()) && sb != null){
-					throw new EpException(MessageConst.ERROR_721088,new String[] { sb.toString() });
-				}else{
+				else{
 					throw new EpException(message + "(ERR-"
 							+ ex.getMessage().toString() + ")");
 				}
@@ -4659,25 +4624,20 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
+			//29582, 30064, 35300 start
+			PmParameter ic = retrieveParameterByTypeAndCode(
+					ParameterTypeConst.IDENTIFICATION_TYPES,
+					SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 			if (per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)
-					|| (per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per // start #30064
-							.getIdentificationType().getParameterCode()
-							.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES))) { // end #30064
-				PmParameter ic = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				per.setIdentificationTypeId(ic.getParameterId());
-				//start #30064
-				if(per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per 
-						.getIdentificationType().getParameterCode()
-						.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
-					per.setIdentificationType(per.getIdentificationType());
-				}else{
-					per.setIdentificationType(ic);
-				}
-				//end #30064
-			} else {
+				per.setIdentificationType(ic);
+			}	else if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) 
+					&& per.isPermanentResident()){
+				per.setIdentificationType(per.getIdentificationType());
+				per.setIdentificationType(ic);
+			}//29582, 30064, 35300 end
+		else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
 						StringUtils.EMPTY);
@@ -5294,7 +5254,13 @@ public class SmCommonUtil {
 			String applCatTyep) {
 
 		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setZoneCode(zoneZode);
+		//#12483 - START
+		if(supplierType.equals(SupplierManagementConst.STYPE_CONSULTANT)){
+			userReqDTO.setZoneCode("1");
+		}else{
+			userReqDTO.setZoneCode(zoneZode);
+		}
+		//#12483 - END
 		userReqDTO.setRoleCode(roleCode);
 		userReqDTO.setSupplierType(supplierType);
 		userReqDTO.setApplicationType(applType);
@@ -6086,4 +6052,44 @@ public class SmCommonUtil {
 			}
 		}
 		//13320-End
+		//#29582- start
+		public static void ssmIdentificationTypeError(SsmResDTO resDTO){
+			log.info("ssm status: "+ resDTO.getStatusCode());
+			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
+				boolean errMsg = false;
+				StringBuilder sb = new StringBuilder();
+				int i = 0;
+				for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
+					if (per.getIdentificationTypeSsm() != null) {
+						String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+								ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+						if (ssmTypeDesc == null){
+							ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
+									ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+						}
+						sb.append("<br/>");
+						sb.append(++i + ". ");
+						sb.append(per.getName() + " ");
+						sb.append("("
+								+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+								+ " ");
+						sb.append(per.getIdentificationNo() + ", ");
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+						sb.append(per.getIdentificationTypeSsm() + " = ");
+						sb.append(ssmTypeDesc + ")");
+						sb.append("<br/>");
+						errMsg = true;
+					}
+				}
+				if (errMsg) {
+					if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())){
+						throw new EpException(MessageConst.ERROR_775196);
+					}else{
+						throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+					}
+				}
+			}//#29582- end
+		}
 }

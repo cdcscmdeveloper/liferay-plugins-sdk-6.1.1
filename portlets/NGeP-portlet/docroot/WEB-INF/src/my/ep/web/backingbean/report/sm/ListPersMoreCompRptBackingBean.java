@@ -54,6 +54,11 @@ public class ListPersMoreCompRptBackingBean extends
 		params.put(SmReportConst.PARAM_ZONE,
 				getManagedBean().getZone() == null ? StringUtils.EMPTY
 						: getManagedBean().getZone());
+		
+		//#7754 - Start
+		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
+		//#7754 - End
+		
 		generateSmReport(params);
 	}
 

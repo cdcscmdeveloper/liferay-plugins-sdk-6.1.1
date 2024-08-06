@@ -102,8 +102,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private PmUser loginUser;
 	private String certIssuer;
 	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
-	//test #30425
+	//#30425 - Start
 	public static Logger log = Logger.getLogger(SpkiBackingBean.class);
+	//#30425 - End
 
 	public SpkiBackingBean() {
 	}
@@ -124,21 +125,24 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		// #30425 - Start
-		
-			//start checking for validation
-			validateInternalSPKI(getSupplier().getEpNo());
-			//end checking for validation
-		
+		// start checking for validation
+		validateInternalSPKI(getSupplier().getEpNo());
+		// end checking for validation
 		// #30425 - End
-		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> into trustgate <<<<<<<<<<<<<");
+				// #30425 - End
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(),
 						getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> Into Digicert <<<<<<<<<");
+				// #30425 - End
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo());
 			}
@@ -146,30 +150,37 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
-	
+
 	public void getChallengeQuestions(String identificationNo) {
-		//#30425 - Start
+		// #30425 - Start
+		// start checking for validation (for checking cert expiration)
+		validateInternalSPKI(getSupplier().getEpNo());
+		// end checking for validation
+		// #30425 - End
 		
-			//start checking for validation (for checking cert expiration)
-			validateInternalSPKI(getSupplier().getEpNo());
-			//end checking for validation
-		
-		//#30425 - End
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			// #30425 - Start
 			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+			// #30425 - End
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> into trustgate param <<<<<<<<<<<<<");
+				// #30425 - End
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				log.info(">>>>>>>>>>>>>>> masuk dalam certIssuer gate <<<<<<<<<");
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> Into Digicert param <<<<<<<<<");
+				// #30425 - End
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						identificationNo);
 			}
+			// #30425 - Start
 			log.info("The properties of challs >>>>>>>>>>" + challs);
 			log.info("challs size >>>>>>>>>>>>>>>>>>>>>>>" + challs.size());
+			// #30425 - End
 			setChallengeQues1(challs.get(0));
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
@@ -458,7 +469,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
 				identificationNo, getSupplier().getEpNo());
 	}
-	
+
 	//#30425 - Start
 	private String getTypeOfCert(String identificationNo){
 		return PmCommonUtil.getTypeOfCertIssuer(
@@ -481,31 +492,39 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		
 		// if process checking validation is successful
 		if (validateDigiCertDate.isSuccessful()) {
-			// if return with results, then personnel have record in Pm Digi Cert
+			// if return with results, then personnel have record in pmDigiCert
 			if(validateDigiCertDate.isHasRecord()){
-				// akan masuk if ni bila dia expired sahaja
-				if (validateDigiCertDate.isExpired()) {
-					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-						log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+				// if the validation from pmDigiCert status = 1, then it will proceed check the date is expired or not
+				if (!validateDigiCertDate.isStatusNotValid()) {
+					// if the pmDigicert date is expired
+					if (validateDigiCertDate.isExpired()) {
+						if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+							log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+							// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+						} else {
+							StringBuilder sb = new StringBuilder();
+							sb.append(roleDesc());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
+							// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
 					} else {
-						StringBuilder sb = new StringBuilder();
-						sb.append(roleDesc());
-						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
-						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
-						
+						//if it is not expired, but it is revoked, it will going into this block
+						if(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REVOKED){
+							StringBuilder sb = new StringBuilder();
+							sb.append(roleDesc());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
+							// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
 					}
 				} else {
-					//if it is not expired, but it is revoked, it will going into this block
-					if(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REVOKED){
-						StringBuilder sb = new StringBuilder();
-						sb.append(roleDesc());
-						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
-						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
-					}
+					// if softcert in pmDigiCert status = 0, then the softcert might be not useful anymore even the date is not expired
+					StringBuilder sb = new StringBuilder();
+					sb.append(roleDesc());
+					throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+					// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
 				}
 			} else {
 				// if return with 0 results, then personnel didn't have record in Pm Digi Cert

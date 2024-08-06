@@ -33,6 +33,10 @@ public class ThresholdValueRptBackingBean extends
 
 		params.put(SmReportConst.PARAM_FROM_YEAR, getManagedBean().getYear());
 		params.put(SmReportConst.PARAM_TO_YEAR, getManagedBean().getYearTo());
+		
+		//#7754 - Start
+		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
+		//#7754 - End
 
 		generateSmReport(params);
 	}

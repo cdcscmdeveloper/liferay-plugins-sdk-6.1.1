@@ -89,8 +89,8 @@ public class SupplierManagementConst {
 	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
 	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
-	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 7;
-	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 12;
+	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 13; //#31043 start
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17; //#31043 end
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
@@ -137,6 +137,12 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_STORE = "S";
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
+	
+	//#34711 - START
+	// Facility Ownership
+	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
+	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
+	//#34711 - END
 
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
@@ -210,11 +216,11 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
+	public static final String IDENTIFICATION_TYPE_IC = "I";//#35314
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
-	//30865 Start & #34098 - START
+	//34098
 	public static final int CANCEL_RECORD_STATUS = 2;
-	//30865 End & #34098 - END
 	public static final int DELETED_RECORD_STATUS = 9;
 	public static final int MIGRATION_DATA_RECORD_STATUS = 7;
 	public static final int PENDING_RE_APPROVAL_STATUS = 6;
@@ -464,6 +470,9 @@ public class SupplierManagementConst {
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_PO_INQUIRY = "20121";//#32627 START
 	public static final String PM_STATUS_REJECTED_BY_SYSTEM_SDO_INQUIRY = "20122";//#32627 END
 	public static final String PM_STATUS_PENDING_PAYMENT_PROCESSING_FEE = "20114";
+	// #12483 - START
+	public static final String PM_STATUS_PENDING_REVISE_APPLICATION = "20398";
+	// #12483 - END
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
@@ -477,6 +486,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
+	public static final long PM_STATUS_PENDING_PAYMENT_SOFT_CERT = 20252; //#35579
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
@@ -508,6 +518,8 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_FACTORY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY;
 	public static final String SM_APPL_PAGE_TYPE_EQUIP = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP;
 	public static final String SM_APPL_PAGE_TYPE_SUPPORTDOCS = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS;
+	//28767 14530
+	public static final String SM_APPL_PAGE_TYPE_ANNUALINFO = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_ANNUALINFO;
 	public static final String SM_APPL_PAGE_TYPE_VIRTUAL_CERT = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT;
 	public static final String SM_APPL_PAGE_TYPE_TRACKING_DIARY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY;
 	public static final String SM_APPL_PAGE_TYPE_PO_APPR_DEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC;
@@ -611,6 +623,11 @@ public class SupplierManagementConst {
 	public static final String PO_ESCALATE_APPROVER = "PO hantar permohonan kepada Pelulus untuk keputusan akhir";
 	public static final String SUPP_REGISTRATION = "Pendaftaran Pembekal";
 	public static final String SUPP_ACCOUNT_ACTIVATION = "Pengaktifan Akaun Pendaftaran";
+	// #12483 - START
+	public static final String APPROVER_SEND_REVISE_APPL = "Pelulus hantar permohonan kaji semula";
+	public static final String STATUS_REVISE_ENG = "Pending Revise Application";
+	public static final String STATUS_REVISE_BM = "Menunggu Kaji Semula Permohonan";
+	// #12483 - END
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -635,6 +652,8 @@ public class SupplierManagementConst {
 	public static final String SM_REASON_CODE_OTHER = "OTHER";
 
 	public static final String GST_FILE_PATH = "/SM/GST/";
+	// #29617
+	public static final String SME_FILE_PATH = "/SM/SME/";
 	public static final String SITE_VISIT_REPORT_PATH = "/SM/SITE_VISIT/";
 	public static final String OFFLINE_DOC_CHECKLIST_PATH = "/SM/OFFLINE_DOC/CHECKLIST/";
 	public static final String SUPPORTING_DOC_TEMP_PATH = "/SM/SUPPORTING_TEMP_DOWNLOAD/";
@@ -669,6 +688,11 @@ public class SupplierManagementConst {
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
 	
+	//14530
+	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
+	public static final int NOTIFICATION_ID_401189 = 401189;
+	public static final int NOTIFICATION_ID_401190 = 401190;
+
 	//9569
 	public static final String EPROLE_DELETED = "Delete";
 	public static final String ROLE_CODE_SM_1 = "MOF_SUPPLIER_ADMIN";
@@ -1094,12 +1118,11 @@ public class SupplierManagementConst {
 	public int getAPPROVED_RECORD_STATUS() {
 		return APPROVED_RECORD_STATUS;
 	}
-
-	//30865 Start & #34098 - START
+	
+	//34098
 	public int getCANCEL_RECORD_STATUS() {
 		return CANCEL_RECORD_STATUS;
 	}
-	//30865 End & #34098 - END
 	
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
@@ -1233,6 +1256,38 @@ public class SupplierManagementConst {
 	}
 	// 26555 -END
 	
+	// #12483 - START
+	public long getPM_STATUS_PENDING_REVISE_APPLICATION_LONG_VALUE() {
+		return Long.parseLong(PM_STATUS_PENDING_REVISE_APPLICATION);
+	}
+
+	public String getSTATUS_REVISE_ENG(){
+		return STATUS_REVISE_ENG;
+	}
+	
+	public String getSTATUS_REVISE_BM(){
+		return STATUS_REVISE_BM;
+	}
+	// #12483 - END
+
+	public String getSM_APPL_PAGE_TYPE_ANNUALINFO() {
+		return SM_APPL_PAGE_TYPE_ANNUALINFO;
+	}
+	
+	//14530 - START
+	public String getPORTAL_URL() {
+		return PORTAL_URL;
+	}
+	
+	public int getNOTIFICATION_ID_401189() {
+		return NOTIFICATION_ID_401189;
+	}
+	
+	public int getNOTIFICATION_ID_401190() {
+		return NOTIFICATION_ID_401190;
+	}
+	
+	//14530 - END
 	//9569
 	public String getEPROLE_DELETED() {
 		return EPROLE_DELETED;
@@ -1261,4 +1316,19 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
+	
+	//#34711 - START
+	public String getSM_FACILITY_OWNERSHIP_OWN(){
+		return SM_FACILITY_OWNERSHIP_OWN;
+	}
+	public String getSM_FACILITY_OWNERSHIP_RENTED(){
+		return SM_FACILITY_OWNERSHIP_RENTED;
+	}
+	//#34711 - END
+
+	// #35314 - START 
+	public static String getIdentificationTypeIc() {
+		return IDENTIFICATION_TYPE_IC;
+	}
+	// #35314 - END 
 }

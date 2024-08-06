@@ -33,9 +33,17 @@
 			<td>
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.suppDoc.reviewNote']}" style="float :left"
-								escape="false" /> <p:spacer height="10px" /></td>
+						<td><!-- #28776 - start -->
+							<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_OFFLINE}">
+								<h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote.old']}" 
+								style="float :left" escape="false" /> 
+							</c:if> 
+							<c:if test="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+								<h:outputText value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
+								style="float :left" escape="false" />
+							</c:if>
+							<!-- #28776 - end -->
+							<p:spacer height="10px" /></td>
 					</tr>
 					<tr>
 						<td><c:if

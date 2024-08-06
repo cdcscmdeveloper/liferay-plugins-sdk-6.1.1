@@ -20,7 +20,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
-import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
@@ -73,7 +74,6 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
-import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.type.aut.SearchOperator;
@@ -93,7 +93,6 @@ import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
-import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmPaymentDetailsVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 import my.ep.web.vo.SmSectionEditorVO;
@@ -137,6 +136,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBranch selectedBranchPrev;
 	private int selectedBranchIndex;
 	private List<SmSupplierBranch> selectedBranches;
+	private List<SmSupplierBranch> displayBranches;  //#34135 - commit part from redmine 29727
 	private SmAssociateCompany selectedAssocCompany;
 	private List<SmAssociateCompany> selectedAssocCompanies;
 	private List<SmSupplierCert> selectedCertList;
@@ -240,7 +240,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean mofSupplier;
 	private boolean inDbAlreadyAuth;
 	private String decisionAckMsg;
-	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
 	private String[] bpmActions;
 	private String bpmTaskName;
@@ -568,12 +567,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	//#16052019 - SSM INTEGRATION CR
 	private List<SmEquityCompany> smEquityCompanyTemp;
-	private List<SmPersonnel> personnelsOwner = new ArrayList();
-	private List<SmPersonnel> personnelsDirector  = new ArrayList();
-	private List<SmPersonnel> personnelsSsm  = new ArrayList();
-	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList();
-	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList();
-	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList();
+	private List<SmPersonnel> personnelsOwner = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsDirector  = new ArrayList<SmPersonnel>();
+	private List<SmPersonnel> personnelsSsm  = new ArrayList<SmPersonnel>();
+	private List<SmSupplierBranch>  smSupplierBranchSsm = new ArrayList<SmSupplierBranch>();
+	private List<SmSupplierBusiness> smSupplierBusinessSsm   = new ArrayList<SmSupplierBusiness>();
+	private List<SmEquityCompany> smEquityCompaniesSsm   = new ArrayList<SmEquityCompany>();
 	//#29315
 	private boolean flagMandatoryEpfNo;
 	
@@ -585,7 +584,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplDocFile smApplDocFile;
 	//#28807 - END
 	
-	//#15629 - START
+	//#12483 - START
+	private SmApplRevise smApplRevise;
+	private String reviseReason;
+	private boolean reviseMandatory;
+	private PmUser reviseApprover;
+	// #12483 - END
+
+	// #15629 - START
 	private List<PmReasonDesc> selectedRecommendReasonDescs;
 	private List<PmReasonDesc> recommendReasonDescList;
 	private List<PmReasonDesc> recommendReasonDescInitList;
@@ -597,12 +603,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 31043 START
 	private boolean showFacilityMachine;
 	// 31043 END
-	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
@@ -628,10 +628,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//32968 START
 	private boolean checkBranch;
 	//32968 END
-	//#34135 START
-	private List<SmSupplierBranch> displayBranches;
-	//#34135 END
 	
+	//#30762-Start 171123
+	private boolean poApproverPersonnelRoleMsg;
+	private String personnelRoleMsg; 
+	//#30762-end 
+	
+	//32008
+	private boolean upsCannotEdit;
+	//#31043 START
+	private boolean allowedToSiteVisit;
+	//#31043 END
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -651,7 +658,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			try {
 				return getRejectDescResultBean(reqDTO);
 			} catch (Exception ex) {
-				return new SearchResultBean();
+				return new SearchResultBean<PmReasonDesc>();
 			} finally {
 				reqDTO = null;
 			}
@@ -691,7 +698,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 
 	public SmApplicationManagedBean() {
-		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
 		List<Role> loginUserRoles = sc.getUserRoleList();
 		poSecReview = new SmApplSectionReview();
@@ -4457,6 +4463,40 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	//#28807 - End
 	
+	//#12483 - START
+	public SmApplRevise getSmApplRevise() {
+		return smApplRevise;
+	}
+
+	public void setSmApplRevise(SmApplRevise smApplRevise) {
+		this.smApplRevise = smApplRevise;
+	}
+
+	public String getReviseReason() {
+		return reviseReason;
+	}
+
+	public void setReviseReason(String reviseReason) {
+		this.reviseReason = reviseReason;
+	}
+
+	public boolean isReviseMandatory() {
+		return reviseMandatory;
+	}
+
+	public void setReviseMandatory(boolean reviseMandatory) {
+		this.reviseMandatory = reviseMandatory;
+	}
+	
+	public void setReviseApprover(PmUser reviseApprover) {
+		this.reviseApprover = reviseApprover;
+	}
+	
+	public PmUser getReviseApprover() {
+		return reviseApprover;
+	}
+	// #12483 - END
+	
 	//#15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
 		return selectedRecommendReasonDescs;
@@ -4506,6 +4546,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+	
 	// #31461-start
 	public boolean isPoApproverEquityErr() {
 		return poApproverEquityErr;
@@ -4523,6 +4564,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.msgEquityErr = msgEquityErr;
 	}
 	// #31461-end
+	
+	//#34135 - START - Commit part from Redmine 29727
+	public List<SmSupplierBranch> getDisplayBranches() {
+		return displayBranches;
+	}
+
+	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
+		this.displayBranches = displayBranches;
+	}
+	//#34135 END
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
@@ -4577,6 +4628,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showDifferenceBankInfoAction = showDifferenceBankInfoAction;
 	}
 	//#12492 - end
+	
 	//#32968 START
 	public boolean isCheckBranch() {
 		return checkBranch;
@@ -4596,32 +4648,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showFacilityMachine = showFacilityMachine;
 	}
 	// 26671 - Site Visit Grouping Enhancement -28775 END
-	
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 
 	//31130-start
 	public boolean isPoApproverPersonnelErr() {
@@ -4647,13 +4673,41 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
 		this.poApproverAcedemicErr = poApproverAcedemicErr;
 	}//31130-end
-	//#34135 START
-	public List<SmSupplierBranch> getDisplayBranches() {
-		return displayBranches;
+
+	//30762-Start 171123
+	public boolean isPoApproverPersonnelRoleMsg() {
+		return poApproverPersonnelRoleMsg;
 	}
 
-	public void setDisplayBranches(List<SmSupplierBranch> displayBranches) {
-		this.displayBranches = displayBranches;
+	public void setPoApproverPersonnelRoleMsg(boolean poApproverPersonnelRoleMsg) {
+		this.poApproverPersonnelRoleMsg = poApproverPersonnelRoleMsg;
 	}
-	//#34135 END
+
+	public String getPersonnelRoleMsg() {
+		return personnelRoleMsg;
+	}
+
+	public void setPersonnelRoleMsg(String personnelRoleMsg) {
+		this.personnelRoleMsg = personnelRoleMsg;
+	}
+	//30762-End 
+	
+	//Start 32008
+	public boolean isUpsCannotEdit() {
+		return upsCannotEdit;
+	}
+
+	public void setUpsCannotEdit(boolean upsCannotEdit) {
+		this.upsCannotEdit = upsCannotEdit;
+	}
+	//end 32008
+	//#31043 START
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
 }

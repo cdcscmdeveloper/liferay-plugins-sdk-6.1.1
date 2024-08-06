@@ -308,6 +308,12 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	// Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
 	// Bug #33674@Syazani - End	
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	private Boolean downloadLOADisabled = true;
+
+	private Boolean readOnlyLOADownload = true;
+	// Bug #35078@Syazani -- 22/09/2023 -- End
 
 	/**
 	 * Gets the spki backing bean.
@@ -1901,4 +1907,22 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.supplierBankId = supplierBankId;
 	}
 	// Bug #33674@Syazani - End
+	
+	// Bug #35078@Syazani -- 22/09/2023 -- Start
+	public Boolean getDownloadLOADisabled() {
+		return downloadLOADisabled;
+	}
+
+	public void setDownloadLOADisabled(Boolean downloadLOADisabled) {
+		this.downloadLOADisabled = downloadLOADisabled;
+	}
+
+	public Boolean getReadOnlyLOADownload() {
+		return readOnlyLOADownload;
+	}
+
+	public void setReadOnlyLOADownload(Boolean readOnlyLOADownload) {
+		this.readOnlyLOADownload = readOnlyLOADownload;
+	}
+	// Bug #35078@Syazani -- 22/09/2023 -- End
 }

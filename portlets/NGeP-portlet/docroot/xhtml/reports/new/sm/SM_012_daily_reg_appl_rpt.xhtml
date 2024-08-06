@@ -7,6 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<table class="customTbl">
+	
+	<!-- #7754 - Start -->
+		<tr>
+			<td class="tdTitle"><p:outputLabel
+					value="#{lbl['lbl.rpt.zone']}" /> <p:outputLabel value="*"
+					styleClass="mandatory" /></td>
+
+			<td class="tdContent"><ac:smReportZoneList
+					bBean="#{dailyRegApplRptBB}" showItemAll="true" /></td>
+		</tr>
+	<!-- #7754 - End -->
+	
 		<tr>
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}" />

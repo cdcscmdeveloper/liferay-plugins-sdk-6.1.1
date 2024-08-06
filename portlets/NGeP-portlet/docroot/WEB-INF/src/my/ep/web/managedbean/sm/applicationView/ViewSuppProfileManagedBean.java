@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
@@ -56,7 +57,7 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-
+	
 	private SmSupplierBank[] selectedSuppBanks;
 	//13320-Start
 	private List<SelectItem> businessDivisionLs;
@@ -65,6 +66,8 @@ public class ViewSuppProfileManagedBean extends
 	private Long divisionId;
 	private boolean divisionBox = true;
 	//13320-End
+	
+	private SmPersonnel smPersonnel;
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -322,6 +325,15 @@ public class ViewSuppProfileManagedBean extends
 		this.selectedSuppBanks = selectedSuppBanks;
 	}
 	
+	public SmPersonnel getSmPersonnel() {
+		if(smPersonnel == null)
+			smPersonnel = new SmPersonnel();
+		return smPersonnel;
+	}
+
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
 	public List<SelectItem> getBusinessDivisionLs() {
 		return businessDivisionLs;
 	}

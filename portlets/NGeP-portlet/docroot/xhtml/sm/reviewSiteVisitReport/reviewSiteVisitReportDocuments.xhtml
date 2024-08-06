@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
@@ -29,8 +30,11 @@
 					<ui:include
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
-			<td style="vertical-align: top;"><h:inputHidden
-					value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <br />
+			<td style="vertical-align: top;">
+			<!-- #12483 - START, #34892 -->
+			<ac:smReviseReason bBean="#{backingBean}"/><br/>
+			<!-- #12483 - END -->
+			<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <br />
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<table style="width: 100%">
 						<tr>

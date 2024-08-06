@@ -70,6 +70,7 @@
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
+			<ui:param name="isWeightageReq" value="#{templateSpecBean.specMaster.weightageReq}" />	<!-- Bug #35307@Syazani 12/12/2023 -->
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">

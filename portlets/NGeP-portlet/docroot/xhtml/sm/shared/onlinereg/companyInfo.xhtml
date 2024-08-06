@@ -329,7 +329,8 @@
 				<td class="tdContent">
 				<p:outputPanel id="divisionDropdownPanelId">
 					<!-- <ui:fragment rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}"> -->
-						<p:selectOneMenu id="busDivision"
+						<!-- #34159 - START -->
+						<p:selectOneMenu id="busDivision" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDivision.divisionId}"
 						rendered="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.adoptDivision}"
@@ -343,6 +344,8 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('business', true)}"
 							update="divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
 					</p:selectOneMenu>
+					<p:message id="busDivisionMsg" for="busDivision" display="icon" />
+					<!-- #34159 - END -->
 			<!-- 		</ui:fragment> -->
 				</p:outputPanel>
 				</td>

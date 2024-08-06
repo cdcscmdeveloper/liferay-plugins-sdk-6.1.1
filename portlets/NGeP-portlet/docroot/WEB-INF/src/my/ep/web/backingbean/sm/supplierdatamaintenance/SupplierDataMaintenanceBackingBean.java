@@ -15,12 +15,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
-import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -38,20 +36,18 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
-import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -60,8 +56,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.model.Role;
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
 @RequestScoped
@@ -135,10 +129,16 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setExistingRegStatus(getManagedBean().getSmAppl().getPmRegStatus());
 		getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId());
 		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
+		//#32792 START
 		if (getManagedBean().getSmMofAccount() != null) {
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
+		}else if(getManagedBean().getSmSupplier()!= null && getManagedBean().getSmSupplier().getSmMofAccounts()!= null && getManagedBean().getSmSupplier().getSmMofAccounts().size()>0){
+			getManagedBean().setSmMofAccount(getManagedBean().getSmSupplier().getSmMofAccounts().get(0));
+			getManagedBean().setExistingMofExpiryDate(
+					getManagedBean().getSmMofAccount().getExpDate());
 		}
+		//#32792 END
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
 			getManagedBean().getSmAppl().setPmRegStatus(new PmRegStatus());
 		}
@@ -945,6 +945,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						apprCat.setCancelledDate(new Date());
+						apprCat.setChangedBy(null); //#34209 - START_END
 						getManagedBean().getDeleteApprovedCategories().add(apprCat);
 					}
 				}
@@ -1495,4 +1496,18 @@ public class SupplierDataMaintenanceBackingBean extends
 		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
 	}
 	//End 17906
+	
+	//32792 START
+	public String getLatestMOFNo(List<SmMofAccount> mofList){
+		// sort by latest created date 
+		Collections.sort(mofList,new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount mof1, SmMofAccount mof2) {
+				return Integer.valueOf(mof2.getCreatedDate().compareTo(mof1.getCreatedDate()));
+				
+			}
+		});
+		return mofList.get(0).getMofNo();
+	}
+	//32792 - END
 }

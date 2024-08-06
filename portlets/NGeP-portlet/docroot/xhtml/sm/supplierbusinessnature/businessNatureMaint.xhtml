@@ -90,13 +90,16 @@
 						<a href="#{DocumentRepositoryUtils.baseRepo}shared/SM/Piawaian_Klasifikasi_Industri_Malaysia_2008.pdf">#{lbl['lbl.sm.payment.here']}</a>
 			#{lbl['lbl.sm.download.natureofbusiness']}
 			
+			
+			<!-- 9442 - START -->	
 		    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 				postUpdateListener="supplierBusinessNatureBackingBean.postUpdateBizNature"
 				headerText="#{lbl['lbl.sm.natureofbusiness']}" buttonLabel="#{lbl['lbl.btn.add']}"
 			    selectionMode="multiple"
 				saveObject="supplierBusinessNatureBackingBean.managedBean.bizNatures"
-				conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}"
-				update=":form:suppBizNatureId" />
+				conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}#{supplierBusinessNatureBackingBean.excludeLevelCodeSupplier()}"
+				update=":#{p:component('natureBusinessId')}" />
+			<!-- 9442 - END -->	
 
 			<p:commandButton id="btnRemove" update="natureBusinessId" partialSubmit="true" process="@this,suppBizNatureId"
 				value="#{lbl['lbl.btn.delete']}" oncomplete="businessNatureDeletePopUp.show();" 

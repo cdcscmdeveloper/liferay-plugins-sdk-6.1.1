@@ -92,26 +92,30 @@
 			readonly="#{readOnly}" numberOfCols="80" />
 		<ui:remove> #19287 - end </ui:remove>
 
+		 <!-- 29705,28834 remove -start- -->
 		<p:panel id="panelJustificationId"
-			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true"
-			rendered="#{suppFinalizationBackingBean.managedBean.finalizationMethod ne null and 
-			(suppFinalizationBackingBean.managedBean.finalizationMethod eq ParameterConst.recommendByAward or 
-			suppFinalizationBackingBean.managedBean.finalizationMethod eq ParameterConst.recommendBySingleAward)}">
+			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true">
+		 <!-- 29705,28834 remove -end- -->
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 20%; margin-left: 55px;"><p:outputLabel
-							value="#{lbl['lbl.sc.sf.justification.selection']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sc.sf.justification.selection']}" />
+						<!-- 28834 -start- -->
+						<p:outputLabel value="*" styleClass="mandatory"
+							rendered="#{!suppFinalizationBackingBean.managedBean.disableJustifications}" />
+						<!-- 28834 -end- -->
+					</td>
 
+					<ui:remove> #19287 - start </ui:remove>
 					<td style="margin-left: 55px;">
-						<!-- 19287 -start- -->
+						<!-- 19287,28834 -start- -->
 						<p:selectOneMenu
 							id="justificationDDId"
 							value="#{suppFinalizationBackingBean.managedBean.justification.reasonCode}"
 							style="width: 300px;margin-bottom: 5px;"
 							label="#{lbl['lbl.sc.sf.justification.selection']}"
-							disabled="#{readOnly}">
-						<!-- 19287 -end- -->
+							disabled="#{readOnly or suppFinalizationBackingBean.managedBean.disableJustifications}">
+							<!-- 19287,28834 -end- -->
 							<f:selectItems
 								value="#{suppFinalizationBackingBean.managedBean.justDropdown}" />
 							<!-- 19287 -start- -->

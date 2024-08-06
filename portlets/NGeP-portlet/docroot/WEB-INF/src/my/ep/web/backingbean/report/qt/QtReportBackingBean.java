@@ -239,8 +239,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		List<SelectItem> approverNayakTarafList=retrieveApprovarNaikTarafSCS2();
 		List<String> authoriztionList = retriveUserrloeByUserId();
 		
-		if (approverNayakTarafList.size() > 0) {
+		// Bug #34996@Syazani 17/08/2023 -- Start
+		if (approverNayakTarafList.size() > 0
+				|| (authoriztionList.contains(ReportConst.AUDITOR_GENERAL) || authoriztionList
+						.contains(ReportConst.AUDITOR_INTERNAL))) {
 			userRoleLogin = ReportConst.APPROVERNT;
+			// Bug #34996@Syazani 17/08/2023 -- End
 		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
 				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
 				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 

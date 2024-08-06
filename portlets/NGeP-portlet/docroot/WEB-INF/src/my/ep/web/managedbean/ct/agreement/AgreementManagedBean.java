@@ -87,6 +87,10 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private List<CtAgreementParty> selectedAgencySigner;
 	private List<CtAgreementParty> selectedSupplierWitnes;
 	private List<CtAgreementParty> selectedSupplierSigner;
+	//#29417 - Start
+	private String buttonProcess;
+	//#29417 - End
+
 	/**
 	 * @return the action
 	 */
@@ -783,5 +787,21 @@ public class AgreementManagedBean extends BaseManagedBean {
 	 */
 	public void setBondReq(boolean bondReq) {
 		this.bondReq = bondReq;
-	}	
+	}
+
+	// 29417 - START
+	/**
+	 * @return buttonProcess the buttonProcess
+	 */
+	public String getButtonProcess() {
+		return buttonProcess;
+	}
+
+	/**
+	 * @param buttonProcess the buttonProcess to set
+	 */
+	public void setButtonProcess(String buttonProcess) {
+		this.buttonProcess = buttonProcess;
+	}
+	// 29417 - END
 }

@@ -19,7 +19,9 @@
 
 	<ui:define name="contentSection">
 		<p:outputPanel id="verification2Panel">
-		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+		<!-- #34159 - START -->
+		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>
+		<!-- #34159 - END -->
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

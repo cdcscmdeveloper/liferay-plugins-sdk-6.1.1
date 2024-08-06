@@ -86,40 +86,7 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
-							
-							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
-								<p:commandButton value="#{lbl['lbl.btn.supplierAction']}"
-									rendered="#{isPendingVerification and isSqStillValid}"
-									onstart="blockWidget.show();cd.show();"
-									oncomplete="blockWidget.hide();" />
-								<p:confirmDialog
-									message="#{lbl['lbl.sc.loa.supplier.reviseDocument']}"
-									header="#{lbl['lbl.sc.dialog.cofirm.header']}"
-									severity="alert" widgetVar="cd">
-									<div class="ppRightBtn">
-										<p:commandButton value="#{lbl['lbl.btn.yes']}"
-											process="@form"
-											update="@all"
-											actionListener="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
-											onclick="blockWidget.show();"
-											oncomplete="cd.hide();blockWidget.hide();" id="submitReviseLOA"
-											partialSubmit="true" immediate="true" />
-										<p:commandButton value="#{lbl['lbl.btn.no']}"
-											oncomplete="cd.hide();" />
-									</div>
-								</p:confirmDialog>
-								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" onstart="blockWidget.show();"
-									rendered="#{!isPendingVerification and isSqStillValid}"
-									oncomplete="blockWidget.hide();"
-									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
-									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-									update="#{isReject ? '@this' : '@form'}" />
-							</h:panelGroup>
-							
-							<!-- #29838- Start -->
-							<h:panelGroup id="buttonsPG" rendered="#{(bpmAction != 'CANCEL') and (bpmAction !='REVISE') and (bpmAction !='REJECT')}">
-							<!-- #29838- End -->
+							<h:panelGroup rendered="#{bpmAction != 'CANCEL'}">	
 	                            <!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
