@@ -196,7 +196,9 @@ public class ViewApplHistoryBackingBean extends
 
 			// #28895_35501 Start - AUDIT TRAIL SM
 			} else if (outputTab == 5) {
-				initAuditTrailTabInfo(0);
+				FacesContext context = FacesContext.getCurrentInstance();
+		        String viewId = context.getViewRoot().getViewId();
+				initAuditTrailTabInfo(viewId);
 			} 
 			// #28895_35501 End
 			

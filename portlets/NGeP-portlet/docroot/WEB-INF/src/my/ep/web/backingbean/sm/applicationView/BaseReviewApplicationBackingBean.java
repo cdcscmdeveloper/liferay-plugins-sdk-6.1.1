@@ -162,6 +162,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
+//#28895_35501 - AUDIT TRAIL SM
+import org.primefaces.event.TabChangeEvent;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -5322,5 +5324,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public void ontAuditTrailTabChange(TabChangeEvent event) {
+		initAuditTrailTabInfo(event.getTab().getId());
+	}
+	
+	public void initAuditTrailTabInfo(String tab) {
+		log.info(tab);
+	}
+	// #28895_35501 End
 	
 }
