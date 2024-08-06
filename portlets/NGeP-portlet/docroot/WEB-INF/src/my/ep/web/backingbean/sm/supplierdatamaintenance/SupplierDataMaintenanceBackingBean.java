@@ -888,9 +888,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
 		if (selectedCategories != null && selectedCategories.size() > 0) {
-			List<SmSupplierCategory> categories = selectedCategories;
-			deleteCatCodes(categories);
-
+			//#34209 - START
+			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()){
+				throw new EpException(MessageConst.ERROR_722708);
+			} else {
+				List<SmSupplierCategory> categories = selectedCategories;
+				deleteCatCodes(categories);
+			}
+			//#34209 - END
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			//Redmine #18959 - no need to check overlapping
 			//setOverLappingCategories();
