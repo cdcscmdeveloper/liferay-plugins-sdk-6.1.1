@@ -17,10 +17,10 @@
 			</p:commandLink>
 			&#160;
 		</div>
-		<p:dataTable id="searchApproverRemarksId" var="obj" rows="10" width="100%"
-			value="#{auditSearchDPRequestNoteBackingBean.searchDP}"
+		<p:dataTable id="searchAuSmId" var="obj" rows="10" width="100%"
+			value="#{AuditSupplierManagementViewBackingBean.searchAuSm}"
 			rowIndexVar="index" lazy="true">
-			<ac:paginator for="searchApproverRemarksId"></ac:paginator>
+			<ac:paginator for="searchAuSmId"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
 				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.createdDate}">
