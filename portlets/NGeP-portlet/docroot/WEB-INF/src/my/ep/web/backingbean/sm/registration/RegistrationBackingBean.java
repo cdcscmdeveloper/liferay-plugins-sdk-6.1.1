@@ -1391,7 +1391,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}
-		
+		//to handle data that have same ic with same appl id
+		List<SmPersonnel> duplicatePersonnelList = new ArrayList<>();
+        for(SmPersonnel pers : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+        	for(SmPersonnel allPers : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+        		if(pers.getIdentificationNo().equals(allPers.getIdentificationNo())
+        				&& pers.getCreatedDate() != null && allPers.getCreatedDate() != null
+        				&& pers.getCreatedDate().compareTo(allPers.getCreatedDate()) < 0){
+        			duplicatePersonnelList.add(pers);
+        		}
+        	}
+        }
 		// added business type validation for SSM
 		if(SmCommonUtil.getInstance().ssmActive() 
 				&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this.getManagedBean().getSmSupp().getBusinessType())){
@@ -1415,51 +1425,46 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}//end #28888
 */			getManagedBean().getSmSupp().setSmSupplierOwners(currSuppOwnerList);
 			for(SmPersonnel personnel : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
-				if(personnel.isSsmData() && personnel.getIdentificationType() != null				//start - #30064
-						&& personnel.getIdentificationType().getParameterCode()		
-						.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
-					//readding&check owner or director if not exist in sm supplier owner, if exist maintain the data
-					boolean isExistedInOwner = false;
-					if(getManagedBean().getSmSupp().getSmSupplierOwners().size() != 0){
-						for(SmSupplierOwner suppOwner : getManagedBean().getSmSupp().getSmSupplierOwners()){
-							if(personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
-								suppOwner.setOwnerIsEquity(personnel.isEquityOwner());
-								suppOwner.setOwnerIsDirector(personnel.isDirector());
-								isExistedInOwner = true;
+				if(!duplicatePersonnelList.contains(personnel)){
+					if(personnel.isSsmData() && personnel.getIdentificationType() != null				//start - #30064
+							&& personnel.getIdentificationType().getParameterCode()		
+							.equals(ParameterConst.IDENTIFICATION_TYPES_IC)){
+						//readding&check owner or director if not exist in sm supplier owner, if exist maintain the data
+						boolean isExistedInOwner = false;
+						if(getManagedBean().getSmSupp().getSmSupplierOwners().size() != 0){
+							for(SmSupplierOwner suppOwner : getManagedBean().getSmSupp().getSmSupplierOwners()){
+								if(personnel.getIdentificationNo().equals(suppOwner.getIdentificationNo())){
+									suppOwner.setOwnerIsEquity(personnel.isEquityOwner());
+									suppOwner.setOwnerIsDirector(personnel.isDirector());
+									isExistedInOwner = true;
+								}
+							}
+						}
+						if(!isExistedInOwner){
+							if((personnel.isEquityOwner() || personnel.isDirector()) && personnel.getRecordStatusFlg()!=9){
+								SmSupplierOwner suppOwnerNewList = new SmSupplierOwner();
+								suppOwnerNewList.setSmSupplier(this.getManagedBean().getSmSupp());
+								suppOwnerNewList.setOwnerName(personnel.getName());
+								suppOwnerNewList.setNationality(personnel.getPmCountry());
+								suppOwnerNewList.setIdentificationType(personnel.getIdentificationType());
+								suppOwnerNewList.setIdentificationTypeId(personnel.getIdentificationTypeId());
+								suppOwnerNewList.setIdentificationNo(personnel.getIdentificationNo());
+								suppOwnerNewList.setOwnerIsEquity(personnel.isEquityOwner());
+								suppOwnerNewList.setOwnerIsDirector(personnel.isDirector());
+								getManagedBean().getSmSupp().getSmSupplierOwners().add(suppOwnerNewList);
+								
 							}
 						}
 					}
-					if(!isExistedInOwner){
-						if((personnel.isEquityOwner() || personnel.isDirector()) && personnel.getRecordStatusFlg()!=9){
-							SmSupplierOwner suppOwnerNewList = new SmSupplierOwner();
-							suppOwnerNewList.setSmSupplier(this.getManagedBean().getSmSupp());
-							suppOwnerNewList.setOwnerName(personnel.getName());
-							suppOwnerNewList.setNationality(personnel.getPmCountry());
-							suppOwnerNewList.setIdentificationType(personnel.getIdentificationType());
-							suppOwnerNewList.setIdentificationTypeId(personnel.getIdentificationTypeId());
-							suppOwnerNewList.setIdentificationNo(personnel.getIdentificationNo());
-							suppOwnerNewList.setOwnerIsEquity(personnel.isEquityOwner());
-							suppOwnerNewList.setOwnerIsDirector(personnel.isDirector());
-							getManagedBean().getSmSupp().getSmSupplierOwners().add(suppOwnerNewList);
-							
-						}
-					}
+				}else{
+					personnel.setRevNo(0);
+					personnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				}
 			}
 			reqDTO.getSmSupp().setSmSupplierOwners(getManagedBean().getSmSupp().getSmSupplierOwners());
 		}else{
 			if (smSupp.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE
 					&& getManagedBean().getSmSuppOwners() != null) {
-				//to handle data that have same ic with same appl id
-				List<SmPersonnel> duplicatePersonnelList = new ArrayList<>();
-		        for(SmPersonnel pers : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
-		        	for(SmPersonnel allPers : reqDTO.getSmSupp().getSmAppl().getSmPersonnels()){
-		        		if(pers.getIdentificationNo().equals(allPers.getIdentificationNo())
-		        				&& pers.getCreatedDate().compareTo(allPers.getCreatedDate()) < 0){
-		        			duplicatePersonnelList.add(pers);
-		        		}
-		        	}
-		        }
 				for (SmSupplierOwner smSupplierOwner : getManagedBean().getSmSuppOwners()) {
 					Boolean personnelAvailable = false;
 					if (!this.getManagedBean().getDelSuppOwnerLs().isEmpty()) {
@@ -1523,6 +1528,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								reqDTO.setSmPersonnel(smPersonnel);
 							}else{
 								smPersonnel.setRevNo(0);
+								smPersonnel.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 							}
 						}
 					}
@@ -2589,6 +2595,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					// #27691 - Start
 					if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm()){
+						//to handle data that have same ic with same appl id
+						List<SmPersonnel> duplicatePersonnelList = new ArrayList<>();
+				        for(SmPersonnel pers : resDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+				        	for(SmPersonnel allPers : resDTO.getSmSupp().getSmAppl().getSmPersonnels()){
+				        		if(pers.getIdentificationNo().equals(allPers.getIdentificationNo())
+				        				&& pers.getCreatedDate().compareTo(allPers.getCreatedDate()) < 0){
+				        			duplicatePersonnelList.add(pers);
+				        		}
+				        	}
+				        }
 						// for view director.Display supplier owner with record status 1 or 8 only
 						for (SmSupplierOwner smSuppOwner: resDTO.getSmSupp().getSmSupplierOwners()){
 							if(smSuppOwner.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_DELETED
@@ -2596,7 +2612,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								this.getManagedBean().getSupplierOwnerls().add(smSuppOwner);
 								}	
 							for (SmPersonnel smPersonnel: resDTO.getSmSupp().getSmAppl().getSmPersonnels()){
-								if(smSuppOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())){ //#27691
+								if(smSuppOwner.getIdentificationNo().equals(smPersonnel.getIdentificationNo())
+										&& !duplicatePersonnelList.contains(smPersonnel)){ //#27691
 									smSuppOwner.setHasPersonnel(true);
 									smSuppOwner.setOwnerIsEquity(smPersonnel.isEquityOwner());
 									smSuppOwner.setOwnerIsDirector(smPersonnel.isDirector());
@@ -2646,12 +2663,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								ownerLs.remove();
 							}
 						}
-						this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
+						this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners() == null ? resDTO.getSmSupp().getSmSupplierOwners().get(0) : null);
 						this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
 						resDTO.getSmSupp().getSmSupplierOwners().removeAll(this.getManagedBean().getSupplierOwnerls());
 					}
 				// #27691 - End
-					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
+					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners() == null ? resDTO.getSmSupp().getSmSupplierOwners().get(0) : null);
 					// start #29956
 					//27691 START
 					if (SmCommonUtil.getInstance().ssmActive()
