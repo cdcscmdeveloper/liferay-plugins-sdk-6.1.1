@@ -1915,41 +1915,8 @@ public class SupplierFinalizationBackingBean extends
 //							this.getManagedBean().getResetSupplierList());
 					
 					// #25426 ruzaimah - Start
-					// inactive role checking
-					ScQt scQt = getManagedBean().getScQt();	
-					String stageType = null;
-					if (ParameterConst.DECISION_RE_PUBLISH
-							.equals(decisionTypeCode)) {
-						stageType = "ALL";
-						CheckInactiveCommiteeRole(scQtFinalization,stageType);
-						
-					} else if (ParameterConst.DECISION_RE_EVALUATION
-						.equals(decisionTypeCode)) {
-						if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType())) {
-							if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){
-							//Checking on inactive EC Chairperson/Secretary/Member
-								stageType = "EC";
-								CheckInactiveCommiteeRole(scQtFinalization,stageType);
-							}
-						}
-						else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType())) {
-							if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){								
-								if (scQtFinalization.isReEvaluateCompReq()) {
-									// Document Compliance Stage, check inactive role Committee (OC/TEC/FEC)
-									stageType = "OC/TEC/FEC";									
-								}	
-								else if (scQtFinalization.isReEvaluateTechReq()) {
-									// Technical Stage, check inactive role Committee (TEC/FEC)
-									stageType = "TEC/FEC";
-								}
-								else if (scQtFinalization.isReEvaluateFinReq()) {
-									// Financial Stage, check inactive role Committee (FEC)
-									stageType = "FEC";
-								}
-								CheckInactiveCommiteeRole(scQtFinalization,stageType);
-							}
-						}
-					}
+					// 202407252@haziq #25426
+					validateInactiveRole(scQtFinalization,decisionTypeCode);
 					// #25426 ruzaimah - End
 					
 					break;
@@ -3136,41 +3103,8 @@ return	remarksNotFound;
 //								this.getManagedBean().getResetSupplierList());
 						
 						// #25426 ruzaimah - Start
-						// inactive role checking
-						ScQt scQt = getManagedBean().getScQt();	
-						String stageType = null;
-						if (ParameterConst.DECISION_RE_PUBLISH
-								.equals(decisionTypeCode)) {
-							stageType = "ALL";
-							CheckInactiveCommiteeRole(scQtFinalization,stageType);
-							
-						} else if (ParameterConst.DECISION_RE_EVALUATION
-							.equals(decisionTypeCode)) {
-							if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType())) {
-								if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){
-								//Checking on inactive EC Chairperson/Secretary/Member
-									stageType = "EC";
-									CheckInactiveCommiteeRole(scQtFinalization,stageType);
-								}
-							}
-							else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType())) {
-								if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){								
-									if (scQtFinalization.isReEvaluateCompReq()) {
-										// Document Compliance Stage, check inactive role Committee (OC/TEC/FEC)
-										stageType = "OC/TEC/FEC";									
-									}	
-									else if (scQtFinalization.isReEvaluateTechReq()) {
-										// Technical Stage, check inactive role Committee (TEC/FEC)
-										stageType = "TEC/FEC";
-									}
-									else if (scQtFinalization.isReEvaluateFinReq()) {
-										// Financial Stage, check inactive role Committee (FEC)
-										stageType = "FEC";
-									}
-									CheckInactiveCommiteeRole(scQtFinalization,stageType);
-								}
-							}
-						}
+						// 202407252@haziq #25426
+						validateInactiveRole(scQtFinalization,decisionTypeCode);
 						// #25426 ruzaimah - End
 						
 						break;
@@ -10032,11 +9966,57 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				;
 	}
 	
-	/*
-	 * #25426 ruzaimah - Start
-	 * check inactive role for commitee user 
+	//#25426 ruzaimah - Start
+	/**
+	 * 202407252@haziq #25426
+	 * To checking inactive role
+	 * @param scQtFinalization
+	 * @param decisionTypeCode
 	 */
-	public void CheckInactiveCommiteeRole(ScQtFinalization scQtFinalization, String stageType) {
+	public void validateInactiveRole(ScQtFinalization scQtFinalization, String decisionTypeCode){
+		// inactive role checking
+		scQt = getManagedBean().getScQt();	
+		String stageType = null;
+		if (ParameterConst.DECISION_RE_PUBLISH
+				.equals(decisionTypeCode)) {
+			stageType = "ALL";
+			checkInactiveCommiteeRole(scQtFinalization,stageType);
+			
+		} else if (ParameterConst.DECISION_RE_EVALUATION
+			.equals(decisionTypeCode)) {
+			if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType()) &&
+				ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){	
+				//Checking on inactive EC Chairperson/Secretary/Member
+					stageType = "EC";
+					checkInactiveCommiteeRole(scQtFinalization,stageType);							
+			}
+			else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType()) &&
+					 ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){		
+					if (scQtFinalization.isReEvaluateCompReq()) {
+						// Document Compliance Stage, check inactive role Committee (OC/TEC/FEC)
+						stageType = "OC/TEC/FEC";									
+					}	
+					else if (scQtFinalization.isReEvaluateTechReq()) {
+						// Technical Stage, check inactive role Committee (TEC/FEC)
+						stageType = "TEC/FEC";
+					}
+					else if (scQtFinalization.isReEvaluateFinReq()) {
+						// Financial Stage, check inactive role Committee (FEC)
+						stageType = "FEC";
+					}
+					checkInactiveCommiteeRole(scQtFinalization,stageType);
+				
+			}
+		}
+	}
+	
+	/**
+	 * 202407252@haziq #25426
+	 * To check Inactive Commitee Role
+	 * @param scQtFinalization
+	 * @param stageType
+	 */
+	public void checkInactiveCommiteeRole(ScQtFinalization scQtFinalization, String stageType) {
 		IParameterSO parameterSO = null;
 		try {
 			
@@ -10046,63 +10026,78 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			
 			String decisionTypeCode = scQtFinalization.getDecision()
 													  .getParameterCode();
+			
+			boolean isECNotSelected = false;
+			
+			if (null!=scQtFinalization.getReEvaluateCommitte() 
+				||(!scQtFinalization.isReEvaluateCompReq()
+				&& !scQtFinalization.isReEvaluateTechReq()
+				&& !scQtFinalization.isReEvaluateFinReq())){// #25426#264 if evaluationcommitee not selected
+				isECNotSelected = true;
+			}
+			
 			if (ParameterConst.DECISION_RE_PUBLISH
 					.equals(decisionTypeCode)) {
 				Long parameterId = scQtFinalization.getRePublishOption().getParameterId();
 				reqDTO.setParameterId(parameterId);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				if ((ParameterConst.WITH_OUT_SPEC_CHANGES
-						.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode()))
-					|| (ParameterConst.WITH__SPEC_CHANGES
-							.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode()))){
-					if (isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) { //#25426#264
-						throw new EpException(MessageConst.ERROR_760486);
-					}
+						.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode())
+					|| ParameterConst.WITH__SPEC_CHANGES
+							.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode())) &&
+					isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)){ //#25426#264
+						throw new EpException(MessageConst.ERROR_760486);					
 				} 
 				
 			} else if (ParameterConst.DECISION_RE_EVALUATION
-				.equals(decisionTypeCode)) {
-				scQt = getManagedBean().getScQt();
-				if(null!=scQtFinalization.getReEvaluateCommitte() 
-						|| (!scQtFinalization.isReEvaluateCompReq()
-						&& !scQtFinalization.isReEvaluateTechReq()
-						&& !scQtFinalization.isReEvaluateFinReq())){	// #25426#264 if evaluationcommitee not selected						
-					if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType())) {
-						if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){								
-							//Checking on inactive EC Chairperson/Secretary/Member
-							if (isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {//#25426#264
-									throw new EpException(MessageConst.ERROR_760487);
-							}
-						}
+				.equals(decisionTypeCode) &&
+				isECNotSelected) {// #25426#264 if evaluationcommitee not selected
+				 scQt = getManagedBean().getScQt();						
+					if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType()) &&
+						ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())&&
+						//Checking on inactive EC Chairperson/Secretary/Member
+						isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {//#25426#264
+							throw new EpException(MessageConst.ERROR_760487);
+							
 					}
 					else if (ParameterConst.EVALUATION_TYPES_TWO_TIER
-						.equals(scQt.getEvaluationType())) {
-						if (ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte())){
-							if (isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {//#25426#264
-									throw new EpException(MessageConst.ERROR_760488);
-							}
-						}
+						.equals(scQt.getEvaluationType()) &&
+						ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization.getReEvaluateCommitte()) &&
+						isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {//#25426#264
+							throw new EpException(MessageConst.ERROR_760488);
 					}
-				}
 			}
 			
-		} finally {
-			parameterSO = null;
-		}		
+		} catch (Exception e) {
+	        // Log the exception and handle it as needed
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SUPPLIER_FINALIZATION_BACKINGBEAN,scQtFinalization.getScQt().getQtNo(),
+					"checkInactiveCommiteeRole", getUserIdSessionFromLoginId(), e);			
+	    }	
 	}
 	
+	/**
+	 * 202407252@haziq #25426
+	 * To check is inactive committee role
+	 * @param scQtFinalization
+	 * @param stageType
+	 * @param decisionTypeCode
+	 * @return
+	 */
 	public boolean isInactiveCommiteeRole(ScQtFinalization scQtFinalization, String stageType, String decisionTypeCode) { //#25426#264
 		Long qtId = Long.valueOf(scQtFinalization.getScQt().getQtId());
-		System.out.println("--isInactiveRole QTID "+qtId);	
+		log.info("--isInactiveRole QTID "+qtId);	
 		ICommitteSO committeeSO = null;
 		try {
 			committeeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			boolean checkStatus = committeeSO.retrieveInactiveCommittesByQtId(qtId, stageType, decisionTypeCode); //#25426#264
-			return checkStatus;
-		} finally {
-			committeeSO = null;
-		}
+			return committeeSO.retrieveInactiveCommittesByQtId(qtId, stageType, decisionTypeCode); //#25426#264
+		
+		} catch (Exception e) {
+	        // Log the exception and handle it as needed
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SUPPLIER_FINALIZATION_BACKINGBEAN,scQtFinalization.getScQt().getQtNo(),
+					"isInactiveCommiteeRole", getUserIdSessionFromLoginId(), e);			
+	        return true; 
+	    }
 	}
 	// #25426 ruzaimah - End	
 	
