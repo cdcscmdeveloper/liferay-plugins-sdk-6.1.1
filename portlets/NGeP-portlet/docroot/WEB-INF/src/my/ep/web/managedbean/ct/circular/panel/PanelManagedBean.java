@@ -129,6 +129,12 @@ public class PanelManagedBean extends BaseManagedBean {
 	private SCDirectPurchaseDataType preRenderViewDirectPurchaseDataTypeSession;
 	// #29800 - end
 
+	//#33533 start
+	private String backToPreviousPage; 
+	private String taskIdFromTaskList;
+	private String[] outComesFromTaskList;
+	//#33533 end
+	
 	/**
 	 * @return the circular
 	 */
@@ -1000,5 +1006,27 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.preRenderViewDirectPurchaseDataTypeSession = preRenderViewDirectPurchaseDataTypeSession;
 	}
 	// #29800 - end
+	
+	//#33533 start
+	public String getBackToPreviousPage(){
+		return backToPreviousPage;
+	}
+	public void setBackToPreviousPage(String backToPreviousPage){
+		this.backToPreviousPage=backToPreviousPage;
+	}
+	public String getTaskIdFromTaskList(){
+		return taskIdFromTaskList;
+	}
+	public void setTaskIdFromTaskList(String taskIdFromTaskList){
+		this.taskIdFromTaskList=taskIdFromTaskList;
+	}
+	public String[] getOutComesFromTaskList() {
+		return outComesFromTaskList;
+	}
+	public void setOutComesFromTaskList(String[] outComesFromTaskList) {
+		this.outComesFromTaskList = outComesFromTaskList;
+	}
+
+	//#33533 end
 
 }
