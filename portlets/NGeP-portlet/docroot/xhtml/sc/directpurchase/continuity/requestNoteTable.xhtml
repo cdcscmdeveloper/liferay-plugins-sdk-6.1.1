@@ -5,6 +5,27 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<style>
+        .aligned-text {
+            vertical-align: middle;
+        }
+        .command-link {
+            display: inline-block; /* Ensures the command link is treated like an inline element */
+            float:left; /* Aligns the command link with other inline elements */
+            color: #009ae5 !important; /* Ensures the link color is applied */
+            text-decoration: none; /* Removes the underline */
+            padding-top: 6px; /* Adjust top padding to move text down */
+        }
+        .command-link:hover {
+            text-decoration: underline; /* Adds underline on hover */
+        }
+        .dataTableColumn {
+            text-align: center; /* Centers text in columns */
+        }
+        .dataTableColumn p {
+            margin: 0; /* Removes default margin */
+        }
+    </style>
 
 	<p:dataTable id="requestNoteInfo" value="" var="requestNoteInfo" style="width:75%">
 		<p:column style="text-align:center;" headerText="#{lbl['lbl.sc.document.type']}">
@@ -14,7 +35,7 @@
 			headerText="#{lbl['lbl.sc.document.no']}">
 			<p:commandLink
 				value="#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}"
-				style="float:left;"
+				styleClass="command-link"
 				action="#{requestNoteBackingBean.viewRequestNote(requestNoteBackingBean.managedBean.requestNote.requestNoteId)}"
 				immediate="true" />
 		</p:column>
