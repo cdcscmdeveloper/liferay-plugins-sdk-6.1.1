@@ -162,8 +162,12 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
-//#28895_35501 - AUDIT TRAIL SM
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 import org.primefaces.event.TabChangeEvent;
+//#28895_35501 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -5325,12 +5329,42 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
 	// #28895_35501 Start - AUDIT TRAIL SM
-	public void ontAuditTrailTabChange(TabChangeEvent event) {
+	public void onAuditTrailTabChange(TabChangeEvent event) {
 		initAuditTrailTabInfo(event.getTab().getId());
 	}
 	
 	public void initAuditTrailTabInfo(String tab) {
-		log.info(tab);
+		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+		
+		SmAppl smAppl = this.getManagedBean().getSmAppl();
+		Long auGroupSection = null;
+		String doctype = "";
+		
+		switch (tab) {
+		case SupplierManagementConst.AU_TAB_ID_BANK_INFO:
+			auGroupSection = 1L;
+			break;
+		case SupplierManagementConst.AU_TAB_ID_USER_INFO:
+			auGroupSection = 2L;
+			break;
+		case SupplierManagementConst.AU_TAB_ID_ADMIN_INFO:
+			auGroupSection = 4L;
+			break;
+		}
+
+		if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+			doctype = AuditSupplierManagementConst.AU_DOC_TYPE_BASIC;
+		} else if (smAppl.getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+				|| smAppl.getSupplierType()
+						.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+			doctype = AuditSupplierManagementConst.AU_DOC_TYPE_MOF;
+		} else if (smAppl.getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+			doctype = AuditSupplierManagementConst.AU_DOC_TYPE_G2G;
+		}
+		
+		auSmView.loadAuditSupplierManagement(auGroupSection, smAppl.getApplId(), doctype);
 	}
 	// #28895_35501 End
 	
