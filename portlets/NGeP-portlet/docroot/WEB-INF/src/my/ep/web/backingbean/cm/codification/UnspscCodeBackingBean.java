@@ -4,11 +4,9 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -77,6 +75,7 @@ import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -2997,7 +2996,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		
-		};
+		}
 
 		//20190830@emy CR15028 - end
 		
@@ -3025,7 +3024,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				log.info("Submit extension for endorsement.");
 				statusReqDTO.setStatusId(15004L);
 				actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan";
-			};
+			}
 			
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
@@ -3137,7 +3136,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			return 1;
 		}
 		return last;
-	}; 
+	} 
 	
 	private void arrangeOutcomeButton(){
 		String[] actions=this.getManagedBean().getAction();
@@ -3562,7 +3561,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			}else{
 				this.getManagedBean().setSelectedLovUnspscSegment(null);
-				this.getManagedBean().setSelectedLovUnspscfamily(null);;
+				this.getManagedBean().setSelectedLovUnspscfamily(null);
 				this.getManagedBean().setSelectedLovUnspscClass(null);
 				this.getManagedBean().setSelectedLovUnspsc(null);
 				checkIfLovEditable(null);

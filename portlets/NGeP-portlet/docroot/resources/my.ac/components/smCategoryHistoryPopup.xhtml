@@ -48,7 +48,8 @@
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 							<p:column headerText="#{lbl['lbl.pm.table.history.action.date']}">
 								<h:outputText value="#{history.createdDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy h:mm a" />
+									<!-- #28175 ReOpen note110 -->
+									<f:convertDateTime pattern="dd/MM/yyyy hh:mm a" />
 								</h:outputText>
 							</p:column>
 							<p:column headerText="#{lbl['lbl.pm.table.history.old.desc']}">

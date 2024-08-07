@@ -25,6 +25,7 @@
 			</table>
 
 			<h:panelGroup id="technicalviewSummary">
+				<ui:param name="isDisqualified" value="#{evaluationBackingBean.renderDisqialified()}" /><!-- #29187 Added Vinod -->
 				<c:if
 					test="#{evaluationBackingBean.managedBean.technicalSummaryView eq 'TPM'}">
 					<ui:param name="passingScore"
@@ -77,17 +78,7 @@
 					<p:column headerText="#{lbl['lbl.sc.total.score']}"
 						style="width:30%;white-space: normal;text-align:right;">
 						<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
-					</p:column>
-					
-					<p:column style="width:25%;white-space: normal;text-align:center;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.rating']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
-					</f:facet>
-					<h:outputText
-						value="#{empty qualifiedSupplier.totalRating? 0: qualifiedSupplier.totalRating}" />
-					</p:column>
-					
+					</p:column>					
 				</p:dataTable>
 				<p:spacer height="10px" />
 				<table>
@@ -137,16 +128,6 @@
 						style="width:50%;white-space: normal;text-align:right;">
 						<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 					</p:column>
-					
-					<p:column style="width:25%;white-space: normal;text-align:center;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.rating']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
-					</f:facet>
-					<h:outputText
-						value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}" />
-					</p:column>
-
 				</p:dataTable>
 
 				<p:spacer height="10px" />

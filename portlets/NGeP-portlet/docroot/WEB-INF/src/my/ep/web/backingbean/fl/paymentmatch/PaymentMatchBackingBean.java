@@ -150,7 +150,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -1446,7 +1445,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
 				ParameterReqDTO reqType = new ParameterReqDTO();
 				ParameterResDTO resType = new ParameterResDTO();
-				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();;
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 				reqType.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
 				reqType.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				

@@ -68,7 +68,10 @@ label.ui-button>span.ui-button-text {
 						immediate="true"
 						action="#{specificationBackingBean.demoBackAction}" /> <p:commandButton
 						value="#{lbl['lbl.btn.save']}"
-						rendered="#{((specificationBackingBean.isQTStatusChecklistScoring()) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}"
+						rendered="#{!specificationBackingBean.managedBean.readOnly and ((specificationBackingBean.isQTStatusChecklistScoring()) or
+							(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoringRevision()) or
+							(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq 
+							specificationBackingBean.getSpecMaintenance()))}"
 						style="float:right;" update="@all" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{specificationBackingBean.saveDemoTemplateSpecDetails(ParameterConst.committeeTypeSpecificationCommittee,1)}" />

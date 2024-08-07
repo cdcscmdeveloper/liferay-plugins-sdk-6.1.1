@@ -16446,17 +16446,30 @@ public class ReportBackingBean extends
 					}
 				}
 				
+				//#35015
 				if (this.getManagedBean().getReportValue()
 						.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+						|| this.getManagedBean()
+								.getReportValue()
+								.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP)
 						|| this.getManagedBean()
 								.getReportValue()
 								.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
 						|| this.getManagedBean()
 								.getReportValue()
+								.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP)
+						|| this.getManagedBean()
+								.getReportValue()
 								.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
 						|| this.getManagedBean()
 								.getReportValue()
-								.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
+								.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP)
+						|| this.getManagedBean()
+								.getReportValue()
+								.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)
+						|| this.getManagedBean()
+								.getReportValue()
+								.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP)) {
 
 					getEstimatedAmtByQtID();
 
@@ -16464,7 +16477,10 @@ public class ReportBackingBean extends
 						.equals(ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL)						
 						|| this.getManagedBean()
 								.getReportValue()
-						.equals(ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL))) {
+						.equals(ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL)
+						|| this.getManagedBean()
+								.getReportValue()
+						.equals(ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP))) {
 
 					getEncryptedDataByQTR();
 
@@ -16569,8 +16585,14 @@ public class ReportBackingBean extends
 				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ + "\""
 						+ this.getScQuotationId() + "\"");
 			}	
+			//#35015
 			if (this.getManagedBean().getReportValue().trim()
 					.equalsIgnoreCase(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP)
 					|| this.getManagedBean()
 							.getReportValue()
 							.trim()
@@ -16580,12 +16602,27 @@ public class ReportBackingBean extends
 							.getReportValue()
 							.trim()
 							.equalsIgnoreCase(
+									ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP)
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
 									ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
 					|| this.getManagedBean()
 							.getReportValue()
 							.trim()
 							.equalsIgnoreCase(
-									ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
+									ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP)
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)
+					|| this.getManagedBean()
+							.getReportValue()
+							.trim()
+							.equalsIgnoreCase(
+									ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP)) {
 				rptGenBean
 						.setEstimatedAmntTotVar(ReportConst.SC_ESTIMATED_AMNT_EQ + "\""
 								+ this.getScEstimatedAmount() + "\"");
@@ -16961,12 +16998,20 @@ public class ReportBackingBean extends
 			BigDecimal estimatedAmount = QtDetailsSO
 					.getdecryptedEstAmount(tenderReqDTO.getQtId());
 			
+			//#35015
 			if (reportCode.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL)
 					|| reportCode
-							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
-					|| reportCode.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
+							.equals(ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP)
 					|| reportCode
-							.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)) {
+							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL)
+					|| reportCode
+							.equals(ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP)
+					|| reportCode.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL)
+					|| reportCode.equals(ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP)
+					|| reportCode
+							.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL)
+					|| reportCode
+							.equals(ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP)) {
 				this.setScEstimatedAmount(estimatedAmount != null ? estimatedAmount
 						.toString() : "");
 			} else {

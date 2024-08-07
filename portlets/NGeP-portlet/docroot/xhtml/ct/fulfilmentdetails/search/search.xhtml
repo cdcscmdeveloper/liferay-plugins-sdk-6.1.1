@@ -109,6 +109,8 @@
 	  	<ac:lovPopup />
 	  </p:panel>
 		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.result']}" toggleable="true"	toggleSpeed="500">
+			<h:outputText rendered="#{contractDetailsBackingBean.isAuditCheck()}"
+				styleClass="instruction" value="#{lbl['lbl.ct.instruction.audit.contractsearch']}" escape="false" style="color: blue"/><br /><br />	<!-- #30866 -->
 			<div style="overflow-x: auto">				
 				<p:dataTable id="contractTbl" value="#{contractDetailsBackingBean.managedBean.contractDataModel}"
 					var="data" lazy="true" rowIndexVar="index" rowKey="#{data}" rows="10">
@@ -175,8 +177,9 @@
 							
 								 <p:menuitem id="menuItemId" value="#{lbl['lbl.ct.view']}"  icon="ui-icon-view"
 								    process="@this" partialSubmit="true"
+								    rendered="#{!contractDetailsBackingBean.isAuditCheck()}"
 							        action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
-						   	    	onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+						   	    	onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()"> <!-- #30866 -->
 						   	   	 </p:menuitem>
 					   	   
                                  <p:menuitem id="menuItemId1" value="#{lbl['lbl.ct.suspend.contract']}"   icon="ui-icon-suspension"
@@ -278,7 +281,16 @@
 					     				and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
 					     				and  !data.allowAgreementCreation}" action="#{contractDetailsBackingBean.goToRequestCtAdmin(data.ctContract.contractId,(data.assignedCtAdminFlag == 0) ? lbl['lbl.ct.request.ct.admin'] : lbl['lbl.ct.remove.ct.admin'])}"
 					     		onStart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-					     </p:menuitem>  
+					     </p:menuitem>
+					     <!-- Start - #30866 -->
+						<p:menuitem id="menuItemId17" value="#{lbl['lbl.ct.view']}" 
+								icon="ui-icon-view" process="@this" partialSubmit="true"
+								rendered="#{contractDetailsBackingBean.isAuditCheck()}"
+								action="#{contractDetailsBackingBean.searchContractCtFlForAudit(data.contractNo, data)}"
+								onstart="blkContractSearchTable.show()"
+								oncomplete="blkContractSearchTable.hide()">
+						</p:menuitem>
+						<!-- End - #30866 -->  
                        </p:menuButton>
 					</p:column>
 					<!-- Supplier's action -->
@@ -288,8 +300,9 @@
 					     	<p:menuitem id="menuItemId11" value="#{lbl['lbl.ct.view']}"  
 					   	     	icon="ui-icon-view" 
 					   	     	process="@this" partialSubmit="true"
+					   	     	rendered="#{!contractDetailsBackingBean.isAuditCheck()}" 
                             	action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
-					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()"> <!-- #30866 -->
 					     	</p:menuitem>
 					     	<p:menuitem id="menuItemId12" value="#{lbl['lbl.ct.request.change.bank.acc']}"
 					     		icon="ui-icon-change-bank" 
@@ -318,6 +331,15 @@
 					   	     		and !data.allowAgreementCreation and data.ctContract.factored}"
                             	action="#{contractDetailsBackingBean.gotoFactoringPage(data.ctContract.contractId,true)}"
 					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					     	</p:menuitem>
+					     	<!-- Start - #30866 -->
+					     	<p:menuitem id="menuItemId18" value="#{lbl['lbl.ct.view']}"  
+					   	     	icon="ui-icon-view" 
+					   	     	process="@this" partialSubmit="true"
+					   	     	rendered="#{contractDetailsBackingBean.isAuditCheckForSupplier()}"
+								action="#{contractDetailsBackingBean.searchContractCtFlForAudit(data.contractNo, data)}"
+					   			onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+					   		<!-- End - #30866 -->
 					     	</p:menuitem>
 						</p:menuButton>
 					</p:column>

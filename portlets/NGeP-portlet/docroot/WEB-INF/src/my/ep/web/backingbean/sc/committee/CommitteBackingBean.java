@@ -1811,20 +1811,20 @@ public class CommitteBackingBean extends
 			}
 
 			private int roleValue(String memberRole) {
-				Integer value = null;
+				Integer value = ParameterConst.COMMITTEE_ROLE_OTHER_VALUE; //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 
 				if (memberRole == null) {
-					value = 4;
+					value = ParameterConst.COMMITTEE_ROLE_OTHER_VALUE;
 				} else {
 					if (memberRole
 							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-						value = 1;
+						value = ParameterConst.COMMITTEE_ROLE_CHAIRPERSON_VALUE;
 					} else if (memberRole
 							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-						value = 2;
+						value = ParameterConst.COMMITTEE_ROLE_SECRETARY_VALUE;
 					} else if (memberRole
 							.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
-						value = 3;
+						value = ParameterConst.COMMITTEE_ROLE_MEMBER_VALUE;
 					}
 				}
 				return value;
@@ -2591,7 +2591,7 @@ public class CommitteBackingBean extends
 
 	//25037 - start	
 	/**
-	 * TODO revert to previous settings once all old QT's with not one to one FC committee ends.
+	 * Evaluate active flag for scCommittee
 	 * @return boolean isCommitteeRecordStatusActive
 	 */
 	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {
@@ -2599,11 +2599,8 @@ public class CommitteBackingBean extends
 			return false;
 		String committeeType = committee.getCommitteeType().getParameterCode();
 		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
-		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType)) {
-			if (qtCommittees != null && qtCommittees.size()<=1) {
-				return true; 
-			} 
-		} 
+		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees && qtCommittees.size()<=1)
+			return true; 
 		return committee.isRecordStatus();
 	}
 	//25037 - end	

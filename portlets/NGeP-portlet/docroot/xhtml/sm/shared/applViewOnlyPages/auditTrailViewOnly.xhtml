@@ -1,0 +1,122 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:tp="http://java.sun.com/jsf/composite/ep"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<div align="right" style="vertical-align: top; width: 100%">
+							<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
+								ajax="false">
+								<!-- 								<p:fileDownload value="" /> -->
+							</p:commandLink>
+							&#160;
+							<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
+								ajax="false">
+								<!-- 								<p:fileDownload value="" /> -->
+							</p:commandLink>
+							&#160;
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><p:tabView id="tabViewCommon">
+							<c:choose>
+								<c:when
+									test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
+									<p:tab id="tab1"
+										title="#{lbl['lbl.audit.tab.approve.bank.information']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailBankInformation.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab2" title="#{lbl['lbl.audit.tab.user.profile']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailUserProfile.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab3"
+										title="#{lbl['lbl.audit.tab.disciplinary.action']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailDisciplinaryAction.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab4"
+										title="#{lbl['lbl.audit.tab.deactive.replace.sup.admin']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailDeactiveReplaceSupplierAdmin.xhtml"></ui:include>
+									</p:tab>
+								</c:when>
+								<c:when
+									test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
+									<p:tab id="tab1"
+										title="#{lbl['lbl.audit.tab.approve.bank.information']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailBankInformation.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab2" title="#{lbl['lbl.audit.tab.user.profile']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailUserProfile.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab3"
+										title="#{lbl['lbl.audit.tab.deactive.replace.sup.admin']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailDeactiveReplaceSupplierAdmin.xhtml"></ui:include>
+									</p:tab>
+								</c:when>
+								<c:when
+									test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType ne SupplierManagementConst.SUPP_TYPE_BASIC and
+								 viewSmApplBackingBean.managedBean.smAppl.supplierType ne SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
+									<p:tab id="tab1"
+										title="#{lbl['lbl.audit.tab.supplier.information']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailSupplierInformation.xhtml" />
+									</p:tab>
+									<p:tab id="tab2" title="#{lbl['lbl.audit.tab.user.profile']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailUserProfile.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab3"
+										title="#{lbl['lbl.audit.tab.disciplinary.action']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailDisciplinaryAction.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab4"
+										title="#{lbl['lbl.audit.tab.approver.remark']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailApproverRemarks.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab5"
+										title="#{lbl['lbl.audit.tab.deactive.replace.sup.admin']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailDeactiveReplaceSupplierAdmin.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab6"
+										title="#{lbl['lbl.audit.tab.overlapping.category']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailOverlappingCategory.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab7"
+										title="#{lbl['lbl.audit.tab.cancel.registered.category']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailCancelRegisteredCategory.xhtml"></ui:include>
+									</p:tab>
+									<p:tab id="tab8"
+										title="#{lbl['lbl.audit.tab.approve.category.codes']}">
+										<ui:include
+											src="/xhtml/sm/shared/applViewOnlyPages/auditTrailApprovedCategoryCodes.xhtml"></ui:include>
+									</p:tab>
+								</c:when>
+							</c:choose>
+						</p:tabView></td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:define>
+</ui:composition>

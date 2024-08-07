@@ -28,24 +28,23 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 
 public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 
-	public static Logger log = Logger.getLogger(ExtLayoutLocalServiceWrapper.class);
+	private static final Logger log = Logger.getLogger(ExtLayoutLocalServiceWrapper.class);
 	
-	public final String RENEW_MOF_URL = "/renew-mof-account";
-	public final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
+	public static final String RENEW_MOF_URL = "/renew-mof-account";
+	public static final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
+	//#35580 - Start
+	public static final String BASIC_ACCOUNT_STATUS_URL = "/basic-account-deactivation";
+	public static final String CANCEL_MOF_URL = "/cancel-mof-registered";
+	//#35580 - End
 	
-	public final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
-	public final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
+	public static final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
+	public static final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
 	
-	public final String USER_ROLE_SESSION_KEY = "USER_ROLE_SESSION_KEY";
+	public static final String USER_ROLE_SESSION_KEY = "USER_ROLE_SESSION_KEY";
 	
 	public ExtLayoutLocalServiceWrapper(LayoutLocalService layoutLocalService) {
 		super(layoutLocalService);
-		// TODO Auto-generated constructor stub
 	}
-
-	/*public List<Layout>	getLayouts(int start, int end) throws SystemException {
-		return super.getLayouts(start, end);
-	}*/
 	
 	public List<Layout>	getLayouts(long groupId, boolean privateLayout) throws SystemException {
 		
@@ -63,7 +62,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			while (iter.hasNext()) {
 				Layout layout = iter.next();
 				
-				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL) || layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) || layout.getFriendlyURL().equals(CANCEL_MOF_URL)) {
 	
 					if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
 						log.info("11 removing register MOF");
@@ -74,6 +73,17 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 						log.info("11 removing renew MOF");
 						iter.remove();
 					}
+					//#35580 - Start
+					if(layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
+						log.info("11 removing basic account status");
+						iter.remove();
+					}
+					
+					if(layout.getFriendlyURL().equals(CANCEL_MOF_URL) && ( validBasicToRenewMOF == SupplierManagementConst.BASIC_ONLY || validBasicToRenewMOF == SupplierManagementConst.MOF_EXPIRED_CANNOT_RENEW )) {
+						log.info("11 removing cancel mof");
+						iter.remove();
+					}
+					//35580 - End
 				}
 			}
 		}
@@ -95,7 +105,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			while (iter.hasNext()) {
 				Layout layout = iter.next();
 				
-				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL) || layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) || layout.getFriendlyURL().equals(CANCEL_MOF_URL)) {
 					
 					if(layout.getFriendlyURL().equals(REGISTER_MOF_URL)  && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
 						log.info("22 removing register MOF");
@@ -105,7 +115,18 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 					if(layout.getFriendlyURL().equals(RENEW_MOF_URL) && ( validBasicToRenewMOF == SupplierManagementConst.BASIC_ONLY || validBasicToRenewMOF == SupplierManagementConst.MOF_EXPIRED_CANNOT_RENEW )) {
 						log.info("22 removing renew MOF");
 						iter.remove();
+					}					
+					//#35580 - Start
+					if(layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
+						log.info("22 removing basic account status");
+						iter.remove();
 					}
+					
+					if(layout.getFriendlyURL().equals(CANCEL_MOF_URL) && ( validBasicToRenewMOF == SupplierManagementConst.BASIC_ONLY || validBasicToRenewMOF == SupplierManagementConst.MOF_EXPIRED_CANNOT_RENEW )) {
+						log.info("22 removing cancel mof");
+						iter.remove();
+					}
+					//#35580 - End
 				}
 			}
 		}
@@ -159,13 +180,11 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			}
 		}
 		
-//		return SupplierManagementConst.BASIC_ONLY;
 		return SupplierManagementConst.MOF_CAN_RENEW;
 	}	
 	
 	public long getLoggedInUserId() {
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-//		long logedInUserId = 0;
 		if(serviceContext != null) {
 			return serviceContext.getUserId();
 		}
@@ -174,24 +193,15 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public boolean isBasicSupplier(long userId) {
 		boolean isBasic = false;
-        try {
-			isBasic = UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-					userId,
-					Long.valueOf(
-							EpPropertiesUtils.getInstance().getProperty(
-									EpPropertiesConst.PORTAL_SITE_ID))
-							.longValue(), BASIC_SUPPLIER_ADMIN, true)
-					|| UserGroupRoleLocalServiceUtil
-							.hasUserGroupRole(
-									userId,
-									Long.valueOf(
-											EpPropertiesUtils.getInstance().getProperty(
-															EpPropertiesConst.PORTAL_SITE_ID))
-											.longValue(), BASIC_SUPPLIER_USER, true);
-        } catch(Exception e) {
-        	System.err.println(e);
-        } 
-        return isBasic;
+		try {
+			isBasic = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, Long.valueOf(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_SITE_ID)).longValue(),
+					BASIC_SUPPLIER_ADMIN, true)
+					|| UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, Long.valueOf(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_SITE_ID)).longValue(),
+							BASIC_SUPPLIER_USER, true);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+		return isBasic;
 	}
 	
 }

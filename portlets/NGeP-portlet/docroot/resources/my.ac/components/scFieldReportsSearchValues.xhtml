@@ -67,15 +67,21 @@
 			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL and qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}"></ui:param>
 		<ui:param name="statusEnabelDisable"
 			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_PRAPOSAL_SUB_LST_OR_RPT_VAL and qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_SUMMRY_SRC_OR_RPT_VAL}"></ui:param>
+		<ui:remove>#29580 add SC_PRICE_SCHEDULE_OR_RPT_VAL -start</ui:remove>
 		<ui:param name="publishDateEnableDisable"
-			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}"></ui:param>
+			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL and qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL}"></ui:param>
+		<ui:remove>#29580 add SC_PRICE_SCHEDULE_OR_RPT_VAL -end</ui:remove>	
 		<!--#29580 - Start (Harun)-->
 		<ui:param name="createdDateEnableDisable"
 			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL}"></ui:param>
 		<ui:param name="brifSiteStatusEnabelDisable"
 			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_BRIF_SITE_VISIT_OR_RPT_VAL}"></ui:param>
 		<ui:param name="priceSchStatusEnabelDisable"
-			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL}"></ui:param>		
+			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL}"></ui:param>
+		<ui:remove>#29580-start</ui:remove>
+		<ui:param name="qtTitleEnabelDisable"
+			value="#{qtReportMainBB.managedBean.reportCode eq QtReportConst.SC_PRICE_SCHEDULE_OR_RPT_VAL}"></ui:param>
+		<ui:remove>#29580-end</ui:remove>		
 	    <!--#29580 - End (Harun)-->
 		
 		<ui:param name="deskofficerEnableDisable"
@@ -135,6 +141,16 @@
 								partialSubmit="true" process="@this"
 								update="@([id$=procureAllChk],[id$=quotationChk],[id$=tenderChk])" />
 						</p:selectManyCheckbox>
+						
+						<ui:remove>#29580-start</ui:remove>
+						<c:if test="#{qtTitleEnabelDisable}">	
+							<p:outputLabel value="#{lbl['lbl.sc.title']}"
+								style="margin-top:5px;width:100px;" />
+							<p:inputText id="rptTitle"
+								value="#{cc.attrs.bBean.managedBean.quotationTitle}"
+								style="margin-top:5px;width:255px;"/>
+						</c:if>
+						<ui:remove>#29580-end</ui:remove>
 
 						<c:if test="#{qtNumEnabelDisable}">
 							<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"

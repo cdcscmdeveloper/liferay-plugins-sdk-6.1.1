@@ -217,7 +217,8 @@ public class SuppPerformRptBackingBean extends
 
 		if (dateType.equalsIgnoreCase("from")) {
 			addedCal.add(Calendar.MONTH, 12);
-			if (1 == currDate.compareTo(addedCal.getTime())) {
+			//SQ change from == 1 to > 0
+			if (currDate.compareTo(addedCal.getTime())>0) {
 				if(getManagedBean().getDateTo().compareTo(addedCal.getTime()) < 0){
 					if(getManagedBean().getDateFrom().compareTo(getManagedBean().getDateTo()) > 0){
 						getManagedBean().setDateTo(addedCal.getTime());

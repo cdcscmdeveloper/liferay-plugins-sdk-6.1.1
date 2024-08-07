@@ -78,7 +78,6 @@ import org.jsoup.safety.Whitelist;
 import org.primefaces.context.RequestContext;//#33346
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfPTable;
@@ -984,7 +983,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			File file = new File(filePath);
 			file.mkdirs();
 			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-			filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);;
+			filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);
 			String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), "", "P");
 			//html = html.replaceAll("&#160;","");
 			//html = html.replaceAll("&lt;","(");

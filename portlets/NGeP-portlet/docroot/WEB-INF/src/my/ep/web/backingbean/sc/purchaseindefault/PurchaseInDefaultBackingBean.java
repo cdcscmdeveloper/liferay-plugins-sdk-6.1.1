@@ -964,7 +964,7 @@ public class PurchaseInDefaultBackingBean extends
 					BigDecimal qtyByRequisitioner = getManagedBean().getPurchaseInDefault().getReqQuantity();
 					BigDecimal qtyBySupplier = getManagedBean().getPurchaseInDefault().getSuppQuantity();
 
-					if (qtyByRequisitioner.compareTo(qtyBySupplier) == -1)
+					if (qtyByRequisitioner.compareTo(qtyBySupplier) < 0)
 						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getSuppQuantity());
 					else
 						scPID.setQuantity(getManagedBean().getPurchaseInDefault().getReqQuantity());

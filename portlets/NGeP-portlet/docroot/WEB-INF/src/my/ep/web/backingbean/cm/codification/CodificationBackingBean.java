@@ -630,7 +630,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			return 1;
 		}
 		return last;
-	}; 
+	} 
 	
 	public String codificationSearch() {
 

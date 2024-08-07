@@ -45,12 +45,12 @@
 						rendered="#{!supplierDataMaintenanceBackingBean.managedBean.supplierUser}">
 						<h:outputText value="#{smSupplier.companyName}" />
 					</p:column>
-					
+					<!-- 32792 START -->
 					<p:column headerText="#{lbl['lbl.sm.mof.no']}">
-						<h:outputText value="#{smSupplier.smMofAccounts[0].mofNo}" rendered="#{not empty smSupplier.smMofAccounts}"/>
+						<h:outputText value="#{supplierDataMaintenanceBackingBean.getLatestMOFNo(smSupplier.smMofAccounts)}" rendered="#{not empty smSupplier.smMofAccounts}"/>
 						<h:outputText value="#{lbl['lbl.txt.na']}" rendered="#{empty smSupplier.smMofAccounts}"/>
 					</p:column>
-		
+					<!-- 32792 END -->
 					    <!-- new requirement for wording #29778 -START -->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
 						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE}" />
@@ -198,7 +198,13 @@
 				</p:outputPanel>
 				
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/supplierInfoMaintenance.xhtml" />
-				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+				<!-- #33783 - start, #32008 -->
+				<c:if test="#{!supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" >
+						<ui:param name="isSuppDataMaintenance" value="true"/> <!-- #24819 -->
+					</ui:include>
+				</c:if>
+				<!-- #33783 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regOwnerAndDirectorMaintenance.xhtml" /> <!-- 26238 -->
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regCatCodesMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/approverRemarkMaintenance.xhtml" />

@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.loa;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -25,6 +26,8 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	private Long periodicAsAndWhenParamId;
 	
 	private Long periodicScheduleParamId;
+	//20230111@Haziq - #12487&29693
+	private PmUserOrg selectedUserPtj;
 
 	public PmParameter getSelectedOrgType() {
 		if (this.selectedOrgType == null) {
@@ -115,4 +118,13 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	public void setPeriodicScheduleParamId(Long periodicScheduleParamId) {
 		this.periodicScheduleParamId = periodicScheduleParamId;
 	}
+
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+	
 }

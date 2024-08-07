@@ -213,16 +213,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<String> disqualifiedStages;
 	private boolean hasSupplierQualifiedForCurrentSelection;//6906 note 202
 	//6906 note 117 - end
+	private ScQtRecommend lastSelectedItem;//35157
 
-	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
-		{
-			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
-			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
-			add(SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT);
-			add(SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
-			add(SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT);
-		}
-	};
+	
+	//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+    private final static List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
+	private static List<String> setDirectDownloadDocDefKeys(){
+		List<String> list = new ArrayList<String>();
+			
+		list.add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		list.add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
+		list.add(SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT);
+			
+	  return list;
+	}
 	
 	private String subject;
 	private String message;
@@ -315,6 +321,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//29562 - END
 	
 	private ScQt checkCategoryCodeQt;//#29466
+	
+	//#30008 - start
+	private boolean notReachAgrm;
 	
 	/**
 	 * @return the activeIndex
@@ -2568,6 +2577,23 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	//6906 note 202 - end
+	//35157 - start
+	public ScQtRecommend getLastSelectedItem() {
+		return lastSelectedItem;
+	}
+	
+	public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
+		this.lastSelectedItem = lastSelectedItem;
+	}
+	//35157 - end
+
+	public boolean isNotReachAgrm() {
+		return notReachAgrm;
+	}
+
+	public void setNotReachAgrm(boolean notReachAgrm) {
+		this.notReachAgrm = notReachAgrm;
+	}
 
 }
 // ***25201
