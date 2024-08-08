@@ -227,6 +227,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 				// #21695 - Farid
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
