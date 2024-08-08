@@ -1,4 +1,4 @@
-rna/* 
+/* 
  ***************************************************   
  * Product nextgen
  *                ePerolehan 
@@ -610,6 +610,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#33795 - end
 		//#15391 - end		
 		
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());//#29732 
 		// #29732 @idham 25/07/2023 - Start
 		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
 				&& !isQtRevisePubNqtPendingScheDoc()) {
