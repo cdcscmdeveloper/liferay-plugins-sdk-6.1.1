@@ -164,8 +164,10 @@ import org.primefaces.model.StreamedContent;
 import com.liferay.compat.portal.util.PortalUtil;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 //#28895_35501 Start - AUDIT TRAIL SM
+import java.math.BigInteger;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
+import my.ep.web.bean.sm.AuSmSearchBean;
 import org.primefaces.event.TabChangeEvent;
 //#28895_35501 End
 
@@ -5335,36 +5337,43 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	
 	public void initAuditTrailTabInfo(String tab) {
 		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		
-		SmAppl smAppl = this.getManagedBean().getSmAppl();
-		Long auGroupSection = null;
-		String doctype = "";
-		
+		AuSmSearchBean auSmSearchBean = new AuSmSearchBean();
+
+		SmAppl smAppl = getManagedBean().getSmAppl();
+
+		auSmSearchBean.setDocId(BigInteger.valueOf(smAppl.getSmSupplier().getSupplierId()));
+
 		switch (tab) {
 		case SupplierManagementConst.AU_TAB_ID_BANK_INFO:
-			auGroupSection = 1L;
+			auSmSearchBean.setAuGroupSection(BigInteger.valueOf(1));
+			auSmSearchBean.setTabName(SupplierManagementConst.AU_TAB_ID_BANK_INFO + "Id");
 			break;
 		case SupplierManagementConst.AU_TAB_ID_USER_INFO:
-			auGroupSection = 2L;
+			auSmSearchBean.setAuGroupSection(BigInteger.valueOf(2));
+			auSmSearchBean.setTabName(SupplierManagementConst.AU_TAB_ID_USER_INFO + "Id");
 			break;
 		case SupplierManagementConst.AU_TAB_ID_ADMIN_INFO:
-			auGroupSection = 4L;
+			auSmSearchBean.setAuGroupSection(BigInteger.valueOf(4));
+			auSmSearchBean.setTabName(SupplierManagementConst.AU_TAB_ID_ADMIN_INFO + "Id");
 			break;
+		default:
 		}
 
 		if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
-			doctype = AuditSupplierManagementConst.AU_DOC_TYPE_BASIC;
-		} else if (smAppl.getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
-				|| smAppl.getSupplierType()
-						.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
-			doctype = AuditSupplierManagementConst.AU_DOC_TYPE_MOF;
-		} else if (smAppl.getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
-			doctype = AuditSupplierManagementConst.AU_DOC_TYPE_G2G;
+			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
+		} else if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+				|| smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
+		} else if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 		}
-		
-		auSmView.loadAuditSupplierManagement(auGroupSection, smAppl.getApplId(), doctype);
+
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		auSmSearchBean.setLanguage(language);
+
+		auSmView.getManagedBean().setAuSmSearchBean(auSmSearchBean);
+
+		auSmView.loadAuditSupplierManagement();
 	}
 	// #28895_35501 End
 	

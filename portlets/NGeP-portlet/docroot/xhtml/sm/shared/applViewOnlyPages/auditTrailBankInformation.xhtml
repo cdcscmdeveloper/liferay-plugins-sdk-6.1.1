@@ -17,10 +17,10 @@
 			</p:commandLink>
 			&#160;
 		</div>
-		<p:dataTable id="searchAuSmId" var="obj" rows="10" width="100%"
+		<p:dataTable id="bankInfoId" var="obj" rows="10" width="100%"
 			value="#{AuditSupplierManagementViewBackingBean.searchAuSm}"
 			rowIndexVar="index" lazy="true">
-			<ac:paginator for="searchAuSmId"></ac:paginator>
+			<ac:paginator for=bankInfoId></ac:paginator>
 			<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
 				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.createdDate}">
@@ -41,27 +41,27 @@
 				<h:outputText value="#{obj.orgName}" escape="false" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.role']}"
-				style="width :5%">
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.roleName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.docType']}"
-				style="width :5%">
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.docType}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.docNo']}"
-				style="width :10%">
+				style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.docNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
-				style="width :5%">
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.fieldName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
-				style="width :5%">
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.oldValue}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
-				style="width :5%">
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.newValue}" />
 			</p:column>
 		</p:dataTable>

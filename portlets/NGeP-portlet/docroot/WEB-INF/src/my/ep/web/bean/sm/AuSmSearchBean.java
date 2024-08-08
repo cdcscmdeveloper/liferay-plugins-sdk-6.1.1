@@ -15,10 +15,11 @@ public class AuSmSearchBean implements Serializable {
 	private String language;
 	private BigInteger docId;
 	private String docType;
+	private String tabName;
+	private BigInteger auGroupSection;
 	private boolean isSearching = true;
 
 	public AuSmSearchBean() {
-
 	}
 
 	public AuSmSearchBean(String language, BigInteger docId) {
@@ -56,5 +57,21 @@ public class AuSmSearchBean implements Serializable {
 
 	public void setDocType(String docType) {
 		this.docType = docType;
+	}
+
+	public String getTabName() {
+		return tabName;
+	}
+
+	public void setTabName(String tabName) {
+		this.tabName = tabName;
+	}
+
+	public BigInteger getAuGroupSection() {
+		return auGroupSection;
+	}
+
+	public void setAuGroupSection(BigInteger auGroupSection) {
+		this.auGroupSection = auGroupSection;
 	}
 }
