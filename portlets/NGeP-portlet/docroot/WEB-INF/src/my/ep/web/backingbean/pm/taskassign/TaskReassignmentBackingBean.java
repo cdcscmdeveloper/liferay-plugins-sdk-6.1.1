@@ -2750,9 +2750,11 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			if(vo.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			// #35396 - Start
+			if (orgProfileId != null) {
+				orgProfile = PmCommonUtil.retrievePmOrgProfileDtl(orgProfileId);
 			}
+			// #35396 - End
 			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(

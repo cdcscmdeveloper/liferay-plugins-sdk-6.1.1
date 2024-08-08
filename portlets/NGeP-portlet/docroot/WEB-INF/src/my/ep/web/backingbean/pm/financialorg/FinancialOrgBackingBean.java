@@ -890,7 +890,10 @@ public class FinancialOrgBackingBean extends
 		if(pmAddressType != null && !pmAddressType.isBrandNew() && pmAddressType.getAddressTypeId() != null){
 			log.info("updateMainAddress - update");			
 			pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
-			
+			//#35489 - Start
+			pmAddressType.getPmAddress().setChangedBy(getUserIdSessionFromLoginId());
+			//#35489 - End
+						
 			if(pmAddressType.getPmContacts()==null){
 				pmAddressType.setPmContacts(new ArrayList<PmContact>());
 			}

@@ -22,20 +22,13 @@ public class SupplierManagementConst {
 	public static final Map<String, String> APPLICATION_BASE_PAGE_BY_TYPE;
 	static {
 		Map<String, String> tmp = new HashMap<String, String>();
-		tmp.put("N",
-				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-		tmp.put("C",
-				"/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
-		tmp.put("A",
-				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-		tmp.put("B",
-				"/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
-		tmp.put("U",
-				"/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
-		tmp.put("R",
-				"/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
-		tmp.put("RE",
-				"/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
+		tmp.put("N", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("C", "/xhtml/sm/NewMofApplication/smMofRegSideMenu_BasePage.xhtml");
+		tmp.put("A", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		tmp.put("B", "/xhtml/sm/bumiPuteraApplication/smBumiSideMenu_BasePage.xhtml");
+		tmp.put("U", "/xhtml/sm/updateMofDetails/smUpdateMofSideMenu_BasePage.xhtml");
+		tmp.put("R", "/xhtml/sm/renewMofApplication/smRenewRegSideMenu_BasePage.xhtml");
+		tmp.put("RE", "/xhtml/sm/NewMofApplication/mofRegSmUser_BaseWizardPage.xhtml");
 		APPLICATION_BASE_PAGE_BY_TYPE = Collections.unmodifiableMap(tmp);
 	}
 	// Navigation
@@ -149,18 +142,12 @@ public class SupplierManagementConst {
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
 		FACILITY_TYPE_MAP = new HashMap<String, String>();
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_DOCKYARD,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_WORKSHOP,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE, SmCommonUtil
-				.getMessage("lbl.sm.facility.type.home.office", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE, SmCommonUtil
-				.getMessage("lbl.sm.facility.type.business.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY, SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_DOCKYARD, SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_WORKSHOP, SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE, SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE, SmCommonUtil.getMessage("lbl.sm.facility.type.home.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE, SmCommonUtil.getMessage("lbl.sm.facility.type.business.office", null));
 	}
 
 	public static String[] CAT_TYPE_CODES = new String[] {
@@ -172,14 +159,10 @@ public class SupplierManagementConst {
 			SupplierManagementConst.CAT_TYPE_PRINTING,
 			SupplierManagementConst.CAT_TYPE_TRAVEL };
 
-	public static List<String> PROF_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3" });
-	public static List<String> SEMI_PROF_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3", "4" });
-	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3", "4", "5" });
-	public static List<String> EQUI_OWNER_EDU_LEVEL_CODES = Arrays
-			.asList(new String[] { "1", "2", "3" });
+	public static List<String> PROF_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3" });
+	public static List<String> SEMI_PROF_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3", "4" });
+	public static List<String> CLERICAL_STAFF_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3", "4", "5" });
+	public static List<String> EQUI_OWNER_EDU_LEVEL_CODES = Arrays.asList(new String[] { "1", "2", "3" });
 
 	// Application Category Type
 	public static final String SM_APPL_CATEGORY_TYPE_NORMAL = "N";
@@ -227,6 +210,7 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
+	public static final String IDENTIFICATION_TYPE_IC = "I";//#35314
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	//30865 Start
@@ -518,6 +502,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
+	public static final long PM_STATUS_PENDING_PAYMENT_SOFT_CERT = 20252; //#35579
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
@@ -1281,12 +1266,12 @@ public class SupplierManagementConst {
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
-
-//25792 - start
+	
+	//25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
 		return SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL;
 	}
-//25792 - end
+	//25792 - end
 	
 	// 25792 - end
 
@@ -1399,4 +1384,10 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
+
+	// #35314 - START 
+	public static String getIdentificationTypeIc() {
+		return IDENTIFICATION_TYPE_IC;
+	}
+	// #35314 - END 
 }

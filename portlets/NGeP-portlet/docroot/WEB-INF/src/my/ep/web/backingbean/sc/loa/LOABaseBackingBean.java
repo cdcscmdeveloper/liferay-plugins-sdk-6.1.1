@@ -3,8 +3,6 @@ package my.ep.web.backingbean.sc.loa;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -24,7 +22,9 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.LOABaseManagedBean;
+import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang.StringUtils;
@@ -153,6 +153,7 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		} else {
 			getManagedBean().getScLoa().setBondReq(false);
 		}
+		calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
 	}
 	
 	/**
@@ -167,6 +168,12 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		}
 	}
 	//#24540 - end -
+	
+	// Bug #35227@Syazani 20/10/2022 -- Start
+	public boolean isDirectLOA() {
+		return QTConstants.PORTLET_NAME_DL_CREATE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// Bug #35227@Syazani 20/10/2022 -- End
 	
 	// #26770 - Start.
 	/**
