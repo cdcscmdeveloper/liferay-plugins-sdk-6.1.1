@@ -53,6 +53,7 @@ import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -153,6 +154,7 @@ import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractManagedBean;
@@ -3897,13 +3899,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	// 21533 - start
+	//#29418 start
+	/**
+	 * This function is used to filter and sort the agreement when user change reference no at the fulfilment details page.
+	 * 
+	 * @return newCtAgreementList
+	 */
 	public List<CtAgreement> filterAgreementList() {
 		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 		CtAgreement tempCtAgreement = null;
 		int index = 0;
 
-		if(currentCtAgreementList != null && !currentCtAgreementList.isEmpty())
+		if(CollectionUtils.isNotEmpty(currentCtAgreementList))
 		{
 			//currentCtAgreementList is sorted by created date in descending order
 			for(index = 0; index < currentCtAgreementList.size(); index++)
@@ -3936,6 +3944,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return newCtAgreementList;
 	}
+	//#29418 end
 	
 	public String getAgreementLoaPhysicalNo(CtAgreement ctAgreement) {
 		IContractSO contractSO = null;
@@ -4355,6 +4364,100 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	//End Fix - #35202
 			
+	//Enhancement 29418 - shaqimi start
+	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+	/**
+	 * Generate report.
+	 *
+	 * @param dpObj the dp obj
+	 */
+	public void generateReportPDF(CtAgreement agreement){
+		log.info("generateReportPDF");
+		
+		IContractAmendmentSO caSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		
+		Map<String, Boolean> downloadReports = new HashMap<String, Boolean>();
+		Map<String, Map<String, String>> paramMaps = new HashMap<String, Map<String, String>>();
+		Map<String, String> paramMap = new HashMap<String, String>();
+		Map<String, Integer> reports = new HashMap<String, Integer>();
+		List<String> reportNames = new ArrayList<String>();
+		
+		Long contractId = agreement.getCtContract().getContractId();
+		String contractNo = agreement.getCtContract().getContractNo();
+		
+		Long prvContractVerId = caSO.getFDContractVerIdByContractId(contractId);
+		Long currContractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId();
+		
+		//checking for previous agreement in list. the last agreementid that is less than currentagreementid is the direct previous agreement
+		for(CtAgreement currAgreement : filterAgreementList()){
+			if((currAgreement.getCreatedDate().equals(agreement.getCreatedDate())
+					|| currAgreement.getCreatedDate().before(agreement.getCreatedDate())) 
+					&& currAgreement.getCtAmendment() != null
+					&& currContractVerId!=currAgreement.getCtAmendment().getCtContractVer().getContractVerId()){
+				//set previous amendment data for retrieval
+				prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
+			}
+		}
+	
+		reports = caSO.callAmendmentReportSP(currContractVerId, prvContractVerId);
+		
+		for(Map.Entry<String, Integer> entry : reports.entrySet()){
+			if(entry.getValue() != null){
+				if(entry.getValue() > 0){
+					switch(entry.getKey()){
+					case "P_AMENDMENT_DETAIL":
+						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL, true);
+						break;
+					case "P_ZONE":
+						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE, true);
+						break;
+					case "P_AGENCY":
+						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY, true);
+						break;
+					case "P_ITEM_ZONAL":
+						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
+						break;
+					case "P_ITEM_NON_ZONAL":
+						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
+						break;
+					case "P_DEDUCTION":
+						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION, true);
+						break;
+					case "P_SCHEDULE":
+						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE, true);
+						break;
+					}
+				}
+			}
+		}
+		
+		//download reports
+		for (Map.Entry<String, Boolean> entry : downloadReports.entrySet()) {
+			if(entry.getValue()){
+				paramMap.put(ReportConst.PARAM_PREV_VER_ID, prvContractVerId.toString());
+				paramMap.put(ReportConst.PARAM_CURRENT_VER_ID, currContractVerId.toString());
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				paramMaps.put(entry.getKey(), paramMap);
+				reportNames.add(entry.getKey());
+			}
+		}
+		
+		try {
+			generateReportPDF(contractNo, reportNames, paramMaps);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	//Enhancement 29418 - shaqimi end
+		
 	//Enhancement 15851 - Start
 	/**
 	 * The method used to navigate to Original contract details screen

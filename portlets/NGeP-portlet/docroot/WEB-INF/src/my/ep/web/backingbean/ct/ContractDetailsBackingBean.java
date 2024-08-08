@@ -3259,6 +3259,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			PmOrgProfile orgProfile = null;
+			
+			//Enhancement 29418 - shaqimi start 21/10/2022
+			Boolean hasPBQCRole = 
+					(getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value()));
+			//Enhancement 29418 - shaqimi end 21/10/2022
+			
 			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
 				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 			}
@@ -3270,7 +3280,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+					|| hasPBQCRole) {//Enhancement 29418 - shaqimi 21/10/2022
 				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {
