@@ -6645,7 +6645,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 				asnwerList.add(retrieveAns);
 			}
 			// Technical Item
-			if (retrieveAns != null && this.getManagedBean().getZones().size() == 1) {
+			if (retrieveAns != null && this.getManagedBean().getZones().size() >= 1) {//#36226 more than 1 zones also included
 				for (TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()) {
 					if (specZonedtl != null) {
 						for (TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()) {
@@ -6653,7 +6653,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							boolean hasPositiveQty = specZoneQty != null && specZoneQty.getQty().compareTo(BigDecimal.ZERO) > 0;
 							boolean hasMatchingSpecZoneId = specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId());
 
-							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId) {
+							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId
+									&& !retrieveAns.getTplSpecQuestion().getSpecQuestionId()
+									.equals(specquestionidItem)) {//#36226 oncce per item per zone
 								specquestionidItem = retrieveAns.getTplSpecQuestion().getSpecQuestionId();
 								asnwerList.add(retrieveAns);
 							}
