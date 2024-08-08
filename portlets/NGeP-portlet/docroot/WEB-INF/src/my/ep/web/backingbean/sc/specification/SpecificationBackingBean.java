@@ -6222,6 +6222,7 @@ public class SpecificationBackingBean extends
 				.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 
 				if (this.getManagedBean().getQt().isZonal()
 						&& this.getManagedBean()

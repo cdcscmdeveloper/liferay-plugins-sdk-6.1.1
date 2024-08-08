@@ -3320,6 +3320,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 											.getSpecZoneId()));
 					TemplateSpecBean templateSpecbean=	getManagedBean().getTemplateSpecBean(); //#28785-start
 					if(null!=templateSpecbean && null!=templateSpecbean.getSpecAnswerList() && templateSpecbean.getSpecAnswerList().size()>0){
+					templateSpecbean.setWordBreakForQT(true);//#29007 Added Vinod
 					List<TplSpecAnswer> specAnswerList=	templateSpecbean.getSpecAnswerList();
 						for(int i=0;i<specAnswerList.size();i++){	
 							if(null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ 
@@ -3406,6 +3407,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			templateSpecBean.setContentType(reqDTO.getContentType());
 			templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 			templateSpecBean.setSelectedSpecQuestion(null);
+			templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 			//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
 			this.getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(templateSpecBean);
 			//#21695 Farid end				
