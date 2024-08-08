@@ -34,7 +34,7 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 	
 	@Override
 	public void resetSearch() {
-		// TODO Auto-generated method stub
+		// Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 		
 		log.debug("resetSearch: ccContractItemMonitoringRptBB");
 		getManagedBean().setPopUpMsg(null);
@@ -61,7 +61,7 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 	}
 	@Override
 	public LinkedHashMap<String, String> getparams() {
-		// TODO Auto-generated method stub
+		// Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
