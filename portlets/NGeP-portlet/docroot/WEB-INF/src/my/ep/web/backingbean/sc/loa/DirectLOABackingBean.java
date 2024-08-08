@@ -316,7 +316,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateDeductionPaymentDtls(scLoa);
 			validateLOAReportAttachments(scLoa);
 			validateContractNGovtSignDate(scLoa);
-			
+
 			//#34413 - Start
 		    if(scLoa.getJustificationType()!=null && !isPk7Periodic()){
 		    	scLoa.setJustificationType(null);
@@ -1406,7 +1406,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			//Bug #24061
 			//#29164 CR 26474: Static Code Analysis Start
 			//if(scLoa.getScLoiLoa() != null){
-			if(scLoa.getScLoiLoa() != null && ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())){
+			//Bug #36120 (adding param NPS for schedule validation DLOA)
+			if(scLoa.getScLoiLoa() != null && (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode())
+					|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode()))){
 				if (scLoa.getScQtProgPayments() != null && !scLoa.getScQtProgPayments().isEmpty()) {
 					for (ScQtProgressivePayment progressivePayment : scLoa
 							.getScQtProgPayments()) {
@@ -3881,6 +3883,43 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 
+	//25726 note 298 - issue 3
+	/**
+	 * To update value for Bond and agreement
+	 * 
+	 * @param isPK7
+	 * @param isOneOff
+	 * @param isNonPeriodic
+	 */
+	public void updateBondAndAgreement(boolean isPK7, boolean isOneOff, boolean isNonPeriodic ){
+		
+		if (!isPK7){
+			if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K()){
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
+				getManagedBean().getScLoa().setAgreementReq(false);
+			}else{
+				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
+				getManagedBean().getScLoa().setAgreementReq(true);
+			}
+			
+			if(!this.getManagedBean().isAbove500K()){
+				getManagedBean().getScLoa().setBondReq(false);
+			}
+			getManagedBean().setAgreementReqChange(false);
+			getManagedBean().getScLoa().setScLoaAttachment(null);
+			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+		}else if (isPK7){
+			getManagedBean().setBondReqSelectedVal(null);
+	    	getManagedBean().setAgreemetSelectedVal(null);
+	    	getManagedBean().getScLoa().setBondReq(false);
+	    	getManagedBean().getScLoa().setAgreementReq(false);
+	    	getManagedBean().setAgreementReqChange(false);
+	    	getManagedBean().getScLoa().setScLoaAttachment(null);
+	    	RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
+		}
+		
+	}
+	
 	/**
 	 * Fulfilment change.changed Fulfilemnt Dropdown in specification committee.
 	 * 
@@ -3957,27 +3996,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 
 		// Set to default value if there is changes in fulfilment type
-		 if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() && !isPK7) {
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
-				getManagedBean().getScLoa().setAgreementReq(false);
-				getManagedBean().setAgreementReqChange(false);
-				getManagedBean().getScLoa().setScLoaAttachment(null);
-				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-			}  else if (!isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
-				getManagedBean().getScLoa().setAgreementReq(true);
-				getManagedBean().setAgreementReqChange(false);
-				getManagedBean().getScLoa().setScLoaAttachment(null);
-				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-		    }else if (isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
-		    	getManagedBean().setBondReqSelectedVal(null);
-		    	getManagedBean().setAgreemetSelectedVal(null);
-		    	getManagedBean().getScLoa().setBondReq(false);
-		    	getManagedBean().getScLoa().setAgreementReq(false);
-		    	getManagedBean().setAgreementReqChange(false);
-		    	getManagedBean().getScLoa().setScLoaAttachment(null);
-		    	RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-		    }
+		updateBondAndAgreement(isPK7, isOneOff, isNonPeriodic);//25726 note 298 - issue 3
 		// #25726 END
 
 	}
@@ -8748,27 +8767,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			// Set to default value if there is changes in qt type
-			if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() && !isPK7) {
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
-				getManagedBean().getScLoa().setAgreementReq(false);
-				getManagedBean().setAgreementReqChange(false);
-				getManagedBean().getScLoa().setScLoaAttachment(null);
-				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-			}  else if (!isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
-				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
-				getManagedBean().getScLoa().setAgreementReq(true);
-				getManagedBean().setAgreementReqChange(false);
-				getManagedBean().getScLoa().setScLoaAttachment(null);
-				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-		    }else if (isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
-		    	getManagedBean().setBondReqSelectedVal(null);
-		    	getManagedBean().setAgreemetSelectedVal(null);
-		    	getManagedBean().getScLoa().setBondReq(false);
-		    	getManagedBean().getScLoa().setAgreementReq(false);
-		    	getManagedBean().setAgreementReqChange(false);
-		    	getManagedBean().getScLoa().setScLoaAttachment(null);
-		    	RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-		    }
+			updateBondAndAgreement(isPK7, isOneOff, isNonPeriodic);//25726 note 298 - issue 3
 
 
 			// #25726 END
@@ -11445,27 +11444,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				}
 
 				// Set to default value if there is changes in qt type
-				if ((isOneOff || isNonPeriodic) && !this.getManagedBean().isAbove500K() && !isPK7) {
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getNoParameterId());
-					getManagedBean().getScLoa().setAgreementReq(false);
-					getManagedBean().setAgreementReqChange(false);
-					getManagedBean().getScLoa().setScLoaAttachment(null);
-					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-				}  else if (!isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
-					getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
-					getManagedBean().getScLoa().setAgreementReq(true);
-					getManagedBean().setAgreementReqChange(false);
-					getManagedBean().getScLoa().setScLoaAttachment(null);
-					RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-			    }else if (isPK7){ //20231122@asyrafhaziq_25726 - Issue 16
-				    getManagedBean().setBondReqSelectedVal(null);
-			    	getManagedBean().setAgreemetSelectedVal(null);
-			    	getManagedBean().getScLoa().setBondReq(false);
-			    	getManagedBean().getScLoa().setAgreementReq(false);
-			    	getManagedBean().setAgreementReqChange(false);
-			    	getManagedBean().getScLoa().setScLoaAttachment(null);
-			    	RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-			    }
+				updateBondAndAgreement(isPK7, isOneOff, isNonPeriodic);
 				
 			} finally {
 				parameterSO = null;

@@ -612,7 +612,7 @@
 							<td>
 								<h:panelGroup id="bondReqPG">
 									<c:choose>
-										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and !directLOABackingBean.managedBean.readOnly}">
+										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 											<c:choose>
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 													<p:selectOneMenu id="bondReqPk7Per" required="true"
