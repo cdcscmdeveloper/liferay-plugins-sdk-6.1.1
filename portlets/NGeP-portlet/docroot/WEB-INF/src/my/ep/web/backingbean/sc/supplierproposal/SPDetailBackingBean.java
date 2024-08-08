@@ -3328,6 +3328,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 											.getSpecZoneId()));
 					TemplateSpecBean templateSpecbean=	getManagedBean().getTemplateSpecBean(); //#28785-start
 					if(null!=templateSpecbean && null!=templateSpecbean.getSpecAnswerList() && templateSpecbean.getSpecAnswerList().size()>0){
+					templateSpecbean.setWordBreakForQT(true);//#29007 Added Vinod
 					List<TplSpecAnswer> specAnswerList=	templateSpecbean.getSpecAnswerList();
 						for(int i=0;i<specAnswerList.size();i++){	
 							if(null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ 
@@ -3414,6 +3415,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			templateSpecBean.setContentType(reqDTO.getContentType());
 			templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 			templateSpecBean.setSelectedSpecQuestion(null);
+			templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 			//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
 			this.getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(templateSpecBean);
 			//#21695 Farid end				
@@ -6643,7 +6645,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 				asnwerList.add(retrieveAns);
 			}
 			// Technical Item
-			if (retrieveAns != null && this.getManagedBean().getZones().size() == 1) {
+			if (retrieveAns != null && this.getManagedBean().getZones().size() >= 1) {//#36226 more than 1 zones also included
 				for (TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()) {
 					if (specZonedtl != null) {
 						for (TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()) {
@@ -6651,7 +6653,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							boolean hasPositiveQty = specZoneQty != null && specZoneQty.getQty().compareTo(BigDecimal.ZERO) > 0;
 							boolean hasMatchingSpecZoneId = specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId());
 
-							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId) {
+							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId
+									&& !retrieveAns.getTplSpecQuestion().getSpecQuestionId()
+									.equals(specquestionidItem)) {//#36226 oncce per item per zone
 								specquestionidItem = retrieveAns.getTplSpecQuestion().getSpecQuestionId();
 								asnwerList.add(retrieveAns);
 							}

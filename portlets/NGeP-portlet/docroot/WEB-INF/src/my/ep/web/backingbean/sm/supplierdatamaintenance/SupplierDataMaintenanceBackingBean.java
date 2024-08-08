@@ -370,6 +370,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setOldApproverRemark(this.getManagedBean().getApproverRemark());
 		// #28895_35501 End
 		
+		//#34209 - START
+			getManagedBean().setTempCategoryLs(new HashMap<Long, String>());
+			for(SmSupplierCategory supCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()){
+				if(supCat.getRecordStatusFlg().equals(SupplierManagementConst.RECORD_STATUS_ACTIVE) && supCat.isSpecialCategory()){
+					getManagedBean().getTempCategoryLs().put(supCat.getSupplierCategoryId(), supCat.getOtherDesc());
+				}
+			}
+		//#34209 - END
 	}
 
 	/**
@@ -822,6 +830,14 @@ public class SupplierDataMaintenanceBackingBean extends
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
+			
+			//#34209 - START
+			//set tracking diary for other description if changed
+			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+													getManagedBean().getSmAppl(),
+													getTrackingActionDesc(reqDTO,"OD"));
+			listSmTrackingDiary.add(smTrackingDairyVO);
+			//#34209 - END
 			
 			//26238 - Disciplinary Action - 29227 - start
 			if(!getManagedBean().isWarning() 
@@ -2396,6 +2412,24 @@ public class SupplierDataMaintenanceBackingBean extends
 				.append(oriPoApprOverlappedRemark).append(" kepada ")
 				.append(latestPoApprOverlappedRemark).append(" oleh ").append(user.getUserName());
 		break;
+		//#34209 - START
+		case "OD": //Other Description
+			PmUser curUser = new FacesScopes().getUserSessionBean();
+			for(SmSupplierCategory latestCat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if(latestCat.getRecordStatusFlg().equals(SupplierManagementConst.RECORD_STATUS_ACTIVE) 
+						&& latestCat.isSpecialCategory() 
+						&& this.getManagedBean().getTempCategoryLs().containsKey(latestCat.getSupplierCategoryId())){
+					sb.append("Keterangan Lain bagi bidang ");
+					sb.append(latestCat.getPmCategoryL1().getCategoryL1Code() + latestCat.getPmCategoryL2().getCategoryL2Code() + latestCat.getPmCategoryL3().getCategoryL3Code());
+					sb.append(" telah diubah daripada ");
+					sb.append(this.getManagedBean().getTempCategoryLs().get(latestCat.getSupplierCategoryId()));
+					sb.append(" kepada ");
+					sb.append(latestCat.getOtherDesc());
+					sb.append(" oleh ").append(curUser.getUserName());
+				}
+			}
+		break;
+		//#34209 - END
 		default:
 			sb = new StringBuffer();
 			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);

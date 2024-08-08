@@ -4165,61 +4165,82 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 	}
 
+	// #28854 - Start
 	/**
-	 * The method used to invoke 
-	 * and initiate the item specification dialog.
+	 * The method used to invoke and initiate the item specification dialog.
 	 */
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
-		/*#28854 start*/
-		IRequestItemSO requestItemSO = null;
+		// Start of method implementation
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
-		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-		
-		Long requestItemId = this.getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();	
-		
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-			List<String> itemSpecList = new ArrayList<>();
-			List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);			
-			
-			for(ScRequestItemSpecOffer itemSpecOffer: itemSpecOfferList){
-				if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
-					if(itemSpecOffer.getSupplierOffer() != null && !itemSpecOffer.getSupplierOffer().isEmpty()){
-						getManagedBean().setSupplierOffer(itemSpecOffer.getSupplierOffer());
-					}else{
-						getManagedBean().setSupplierOffer(null);
-					}	
-											
-					if(itemSpecOffer.getNewOfferSpec() != null && !itemSpecOffer.getNewOfferSpec().isEmpty()){	
-						getManagedBean().setNewOfferSpec(itemSpecOffer.getNewOfferSpec());
-					}else{
-						getManagedBean().setNewOfferSpec(null);
-					}
-				}
-				else if(itemSpecOffer.getQuestionType().equals(ContractConst.QUESTION_TYPE_SPEC)){
-					itemSpecList.add(itemSpecOffer.getItemSpec());				
-				}	
-			}
-			getManagedBean().setItemSpecification(itemSpecList);
+		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IRequestItemSO.class);
+		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
+		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
+
+		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			handleDirectPurchaseMode(requestItemSO, requestItemId);
+		} else if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)
+				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+			handleQuotationTenderOrDirectNegoMode(requestItemSO, requestItemId);
 		}
-		
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER) || getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)){
-			List<ScRequestItemSpecOffer> scRequestItemSpecOffer = requestItemSO.retrieveNewOfferSpec(requestItemId);	
-			
-			Iterator<ScRequestItemSpecOffer> itr = scRequestItemSpecOffer.iterator();
-			while (itr.hasNext()){
-				ScRequestItemSpecOffer scRequestItemSpecOfferTemp = itr.next();
-				if(scRequestItemSpecOfferTemp.getQuestionType().equals(ContractConst.QUESTION_TYPE_ITEM)){
-					itr.remove();
-					}
-			}
-		
-			getManagedBean().setScRequestItemSpecOfferList(scRequestItemSpecOffer);		
-		}		
-		/*#28854 end*/
-		log.info("HHHHHHH");
+
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
+	
+	/**
+	 * Handles the logic specific to the direct purchase procurement mode.
+	 * 
+	 * @param requestItemSO
+	 *            the service object used to retrieve item specifications; must
+	 *            not be null
+	 * @param requestItemId
+	 *            the ID of the request item; must not be null
+	 */
+	private void handleDirectPurchaseMode(IRequestItemSO requestItemSO, Long requestItemId) {
+		List<String> itemSpecList = new ArrayList<String>();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+
+		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
+			String questionType = itemSpecOffer.getQuestionType();
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
+				itemSpecList.add(itemSpecOffer.getItemSpec());
+			}
+		}
+		getManagedBean().setItemSpecification(itemSpecList);
+	}
+	
+	/**
+	 * Handles the logic for procurement modes that involve quotations, tenders,
+	 * or direct negotiations.
+	 * 
+	 * @param requestItemSO
+	 *            the service object used to retrieve item specifications; must
+	 *            not be null
+	 * @param requestItemId
+	 *            the ID of the request item; must not be null
+	 */
+	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
+		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
+		Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator();
+
+		while (iterator.hasNext()) {
+			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
+			if (itemSpecOffer.getNewOfferSpec() != null) {
+				itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+			}
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
+				iterator.remove();
+			}
+		}
+
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
+	}
+
+	// #28854 - End
 
 	/**
 	 * The method used to set  bond 
@@ -4724,7 +4745,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 			//Sonarqube #G29 - start
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
 			//Sonarqube #G29 - end

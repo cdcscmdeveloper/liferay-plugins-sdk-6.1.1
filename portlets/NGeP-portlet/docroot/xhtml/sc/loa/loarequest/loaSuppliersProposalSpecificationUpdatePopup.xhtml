@@ -89,7 +89,7 @@
 				</td>
 				<td colspan="3">
 					<br /><br />
-					<h:outputText style="width:24%;white-space: normal;"
+					<h:outputText style="width:24%;white-space: normal;word-break:break-all;"
 					value="#{lOADetailBackingBean.managedBean.itemNamePopup}" />
 				</td>
 			</tr>
@@ -135,7 +135,7 @@
 		</p:columnGroup>
 		
 		<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;" value="#{spec.tplSpecQuestion.clSpecDetail}" /><br/>
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" value="#{spec.tplSpecQuestion.clSpecDetail}" /><br/>
 			<p:commandLink id="addNewSpec" update="specList"
 						action="#{lOADetailBackingBean.addNewOfferedSpec(spec)}"
 						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
@@ -154,7 +154,7 @@
 			</p:commandLink>
 		</p:column>
 		<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;" value="#{lOADetailBackingBean.supplierRemarks(spec.answerRemark)}" />
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" value="#{lOADetailBackingBean.supplierRemarks(spec.answerRemark)}" />
 		</p:column>
 		<p:column style="width:40%; text-align: center;">
 			<p:inputTextarea id="newOfferedSpec"
