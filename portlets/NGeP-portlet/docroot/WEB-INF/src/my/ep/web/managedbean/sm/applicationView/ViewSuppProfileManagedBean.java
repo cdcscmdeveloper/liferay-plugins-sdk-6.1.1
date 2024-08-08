@@ -1015,5 +1015,4 @@ public class ViewSuppProfileManagedBean extends
 		this.hasActiveDA = hasActiveDA;
 	}
 	//#34626 - end
-
 }
