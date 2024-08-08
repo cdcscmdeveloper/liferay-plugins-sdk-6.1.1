@@ -4724,7 +4724,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 			//Sonarqube #G29 - start
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
 			//Sonarqube #G29 - end
