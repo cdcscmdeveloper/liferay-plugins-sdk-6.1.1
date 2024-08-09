@@ -7899,7 +7899,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean qtStatusWorkflow = workflowStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
 					|| workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || workflowStatusId
 					.equals(QTStatusConst.SE_PENDING_SIGNOFF) || workflowStatusId
-					.equals(QTStatusConst.SE_PENDING_REVISION) || workflowStatusId
+					.equals(QTStatusConst.SE_PENDING_REVISION)  || workflowStatusId
+					.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)|| workflowStatusId
 					.equals(QTStatusConst.SE_COMPLETED);
 			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -9425,7 +9426,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public int manipulateIndexNumber(int activeIndex){
 		
 		int changedIndex = activeIndex;
-		if (isMaintancePendingChklistStatus()) {
+		if (isMaintancePendingChklistStatus()
+				&& !this.getManagedBean().getTaskName().equalsIgnoreCase(SCProcessNameConst.APPROVE_COMMITTEE)) {
 			if (activeIndex == 4) {
 				changedIndex = QTConstants.DEDUCTION_TAB_INDEX;
 			} else if (activeIndex == 5) {
