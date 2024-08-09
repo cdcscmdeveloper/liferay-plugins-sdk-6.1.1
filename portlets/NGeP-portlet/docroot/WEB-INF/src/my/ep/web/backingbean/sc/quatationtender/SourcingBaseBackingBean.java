@@ -6569,7 +6569,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		//#26130 start
 		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties) {
-			StringBuilder sb = new StringBuilder(); 
+			StringBuilder sb = new StringBuilder();
 			if (!listTplSpecTierQties.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				for (TplSpecTierQty qty : listTplSpecTierQties) {
 					sb.append(qty.getFromQty() + " - " + qty.getToQty() + "<br />");
