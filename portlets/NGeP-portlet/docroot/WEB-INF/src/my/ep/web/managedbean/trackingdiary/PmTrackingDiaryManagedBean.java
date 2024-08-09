@@ -1027,25 +1027,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		public SearchTrackingDiaryPagingDataModel() {
 			super("trackingDiaryTableID");
 		}
-		
-		//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-		// to get list of all supplier role
-		// Start - #25396
-		private List<String> getAllSupplierRole() {
-			List<String> supplierRoles = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-
-			supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
-			supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
-			supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
-			supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
-			supplierRoles.add(RoleCode.FL_USER.value());
-			supplierRoles.add(RoleCode.GOVT_SELLER.value());
-			supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
-			supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
-
-			return supplierRoles;
-		}
-		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		@Override
 		protected ISearchResultBean<PmTrackingDiary> pageChangeListener(ISearchBean<PmTrackingDiary> searchBean) {
@@ -1185,7 +1166,24 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		return pmOrgProfile;
 	}
 
-	
+	//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+	// to get list of all supplier role
+	// Start - #25396
+	private List<String> getAllSupplierRole() {
+		List<String> supplierRoles = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.BASIC_SUPPLIER_USER.value());
+		supplierRoles.add(RoleCode.FL_USER.value());
+		supplierRoles.add(RoleCode.GOVT_SELLER.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		supplierRoles.add(RoleCode.G2G_SUPPLIER_USER.value());
+
+		return supplierRoles;
+	}
+	//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 	// End - #25396
 

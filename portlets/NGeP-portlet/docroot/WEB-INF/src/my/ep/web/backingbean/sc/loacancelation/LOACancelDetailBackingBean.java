@@ -2761,7 +2761,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}
 		//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		minSL1M = integerDF.format(
-			    totalAmount.divide(hundred, RoundingMode.HALF_UP)
+			    (totalAmount.divide(hundred))
 			    .divide(value, RoundingMode.HALF_UP));
 		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		context.put("minSL1M", minSL1M);
