@@ -953,7 +953,10 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		
 		reqDTO.setFlOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
 		reqDTO.setDocType(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocType());
-		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_STOP_DELIVERY); //36247
+		// 36247-Start
+		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
+		reqDTO.setActionCode(FulfilmentConst.STOP_FULFILMENT);
+		// 36247-End
 		resDTO= orderSO.validatePOCOCurrentStatus(reqDTO);
 		
 		allowToProceed = resDTO.isFlag();		
