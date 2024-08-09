@@ -4016,6 +4016,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP 
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4038,6 +4039,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4059,6 +4061,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														.getSpecQuestionId()))) {
 
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4076,6 +4079,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								 **/
 								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4189,6 +4193,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4211,6 +4216,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4232,6 +4238,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														.getSpecQuestionId()))) {
 
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4249,6 +4256,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								 **/
 								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4627,34 +4635,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (question.getClItem() == null) {
 			question.setClItem("");
 		}else{
-		    String clItem = question.getClItem();
-		//20190513@asyrafhaziq - 25812 - Start
-		// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
-		    String[] words = clItem.split(" "); //get array of words
-		    StringBuilder sb = new StringBuilder();
-		    StringBuilder subSb = new StringBuilder();//this is for perfomance
-		    for(String word : words) //affect each word in string
-		    {
-		      int length = word.length();
-		      if ( length >= 20)
-		    	{
-		    	  String subWord;
-		            for (int i = 0; i < length; i += 20) {
-		            	subWord = word.substring(i, Math.min(length, i + 20));
-		            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-		            }
-		    		word = subSb.toString();	
-		    	}
-		        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-		    }
-		    clItem =  sb.toString();
-		    //20190513@asyrafhaziq - 25812 - End
-			clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-			question.setClItem(clItem);
-			//log.info("CIItem  ----------->"+question.getClItem());
+			//36122 - start @zaim - prevent data from dp execute due to performance in zonal.
+			if (!master.isSpecCreatedBySQ()) {
+				String clItem = question.getClItem();
+				// 20190513@asyrafhaziq - 25812 - Start
+				// add a condition to filter the character (character after
+				// space and before space) length for data 'ITEM'.
+				String[] words = clItem.split(" "); // get array of words
+				StringBuilder sb = new StringBuilder();
+				StringBuilder subSb = new StringBuilder();// this is for
+															// perfomance
+				for (String word : words) // affect each word in string
+				{
+					int length = word.length();
+					if (length >= 20) {
+						String subWord;
+						for (int i = 0; i < length; i += 20) {
+							subWord = word.substring(i, Math.min(length, i + 20));
+							subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+						}
+						word = subSb.toString();
+					}
+					sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+				}
+				clItem = sb.toString();
+				// 20190513@asyrafhaziq - 25812 - End
+				clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+				clItem = clItem.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+				clItem = clItem.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+				clItem = clItem.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+				question.setClItem(clItem);
+			}
+		    // 36122 - end @zaim
 		}
 		if (question.getClSpecDetail() == null) {
 			question.setClSpecDetail(dafaltValue);

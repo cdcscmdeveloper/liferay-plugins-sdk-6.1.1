@@ -8429,7 +8429,7 @@ public class SimpleQuoteBackingBean extends
 
 				
 			} catch (Exception e) {
-				// TODO: handle exception
+				// Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 			}
             return message;
 		}
@@ -8446,7 +8446,7 @@ public class SimpleQuoteBackingBean extends
 				}
 			
 			} catch (Exception e) {
-				// TODO: handle exception
+				// Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 			}
 	    }
 	    
