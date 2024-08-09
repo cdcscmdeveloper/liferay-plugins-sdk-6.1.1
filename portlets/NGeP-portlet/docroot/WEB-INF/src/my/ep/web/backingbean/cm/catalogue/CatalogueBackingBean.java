@@ -1975,7 +1975,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					cmSupplierItem.setCmItem(cmItem);
 				}
 				cmSupplierItem.setPmUom(ctPanelItem.getPmUom());
-				cmSupplierItem.setMinOrder(Double.valueOf(ctPanelItem.getMinimumOrderQty()).intValue());
+				cmSupplierItem.setMinOrder((int)ctPanelItem.getMinimumOrderQty()); //SQ: remove Double
 				// Set the panel item specification
 				if (ctPanelItem.getItemCategoryId().getParameterId() == getParameterByTypeAndCode(
 						ParameterTypeConst.ITEM_CATEGORY_TYPE, ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)
@@ -2020,7 +2020,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					cmSupplierItem.setCmItem(cmItem);
 				}
 				cmSupplierItem.setPmUom(ctContractItem.getScRequestItem().getUom());
-				cmSupplierItem.setMinOrder(Double.valueOf(ctContractItem.getMinimumOrderQty()).intValue());
+				cmSupplierItem.setMinOrder((int)ctContractItem.getMinimumOrderQty()); //SQ: remove Double
 				cmSupplierItem.setSkuNumber(ctContractItem.getSku());
 				cmSupplierItem.setLeadTime(new BigDecimal(String.valueOf(ctContractItem.getCtContractVer()
 						.getCtContractValue().getDeliveryTerm())));

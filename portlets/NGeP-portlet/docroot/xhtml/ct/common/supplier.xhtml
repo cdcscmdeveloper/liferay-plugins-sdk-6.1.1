@@ -180,7 +180,7 @@
                   <h:panelGrid columns="4">
                         <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 			                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
-			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress" />
+			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress, contactPersonSupplier, faxNoSupplier, phoneNoSupplier, contactEmailSupplier" /> <!--Fix #35358 -->
 			                 </p:selectBooleanCheckbox>
 			                               <p:spacer width="2" />	
 			                               <p:outputLabel value="#{lbl['lbl.ct.update.address']}" style="width:120px;text-align:left;"/>
@@ -203,8 +203,8 @@
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
                 <td>  
-                <!-- #30453 start -->
-                <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
+                <!-- #30453, #35358 start -->
+                <p:inputText id="contactPersonSupplier" disabled="true" style="width:265px;margin-bottom: 5px;" 
                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.pmUser.salutationCode.salutationName.concat(' ').concat(ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson)}" />
                 <!-- #30453 end -->
                 </td>
@@ -216,15 +216,16 @@
                       <td style="width:383px;">
                           <table>
                                  <tr>
-                                    <td>
-                                           <p:inputText  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNoFull}"  
+                                    <td>   <!--Fix -#35358  -->
+                                           <p:inputText id="phoneNoSupplier" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNoFull}"  
                                              disabled="true" style="width:97px;" />
                              </td> <td><p:spacer width="4"></p:spacer>
                                
                                <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/>
                 </td>
                  <td>
-                <p:inputText  disabled="true" style="width:97px;"  
+                 <!--Fix -#35358  -->
+                <p:inputText id="faxNoSupplier"  disabled="true" style="width:97px;"  
                    value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNoFull}"/>  
                  </td>
                  </tr>
@@ -237,8 +238,8 @@
                        <td>
                  <p:outputLabel  value="#{lbl['lbl.ct.email']}"/>  
                  </td>
-                 <td>
-                 <p:inputText disabled="true" style="width:265px;" 
+                 <td><!--Fix -#35358  -->
+                 <p:inputText id="contactEmailSupplier" disabled="true" style="width:265px;" 
                        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactEmail}"/>
                        </td>
                        </tr>

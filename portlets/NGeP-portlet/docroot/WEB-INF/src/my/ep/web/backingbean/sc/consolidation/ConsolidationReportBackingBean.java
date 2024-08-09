@@ -28,6 +28,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -42,9 +43,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
@@ -68,7 +68,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -76,7 +76,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 // #31443 Start
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -85,6 +84,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -1376,6 +1376,10 @@ public class ConsolidationReportBackingBean extends
 
 			resDTO = qtSuppFinalizationSO
 					.retrieveQtEvaluationResultDtls(reqDTO);
+			
+			// #28777 & #29729 - Start
+			this.getManagedBean().setCountSupplierBranchDeleted(resDTO.getTotalQualifiedSuppliersBranchDeleted());
+			// #28777 & #29729 - End
 
 			if (resDTO.isSuccessful()) {
 				return resDTO;
@@ -1666,6 +1670,12 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
+		
+		//#28777 & #29729 - Start
+		if(this.getManagedBean().getCountSupplierBranchDeleted() > 0){
+			minRankCount -= this.getManagedBean().getCountSupplierBranchDeleted(); 
+		}
+		//#28777 & #29729 - End
 
 		if (totalRanksCount < minRankCount) {
 			setZoneAndTabIndexOnException(isItemized, specZoneDtl);
@@ -2080,6 +2090,10 @@ public class ConsolidationReportBackingBean extends
 				/*
 				 * BUG 32373 #83
 				 */
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
@@ -2369,18 +2383,17 @@ public class ConsolidationReportBackingBean extends
 	
 	//#28777 & #29729 - Start
 	/**
-	* Method to display list of supplier branch had deleted or not with related current QT
-	**/
+	  * Method to display list of supplier branch had deleted or not with related current QT
+	  **/
     public void showSupplierBranchList(Long supplierId) {
 
-		List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		
 		SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
 	    suppSearchDeletedReqDTO.setSupplierId(supplierId);
     	SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
-		supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
+    	List<SmSupplierBranch> supplierBranchListDeleted  = suppSearchDeletedResDTO.getSmSupplierBranchList();
 	
 		for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
 			int statusFlag = supplierBranch.getRecordStatusFlg();
@@ -2397,40 +2410,51 @@ public class ConsolidationReportBackingBean extends
     		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
     		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
     	}
-		
 	}
+    //#28777 & #29729 - End
 	
+    //#28777 & #29729 - Start
+    /**
+	  * Method to display list of supplier branch
+	  **/
 	private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
-		List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
 		
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		
 		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
 		suppSearchReqDTO.setSupplierId(supplierId);
     	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
-    	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
-    	  
-    	return supplierBranchList;
+        return suppSearchResDTO.getSmSupplierBranchList();
 	}
+	//#28777 & #29729 - End
 	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplier id 
-	* @return true or false
-	**/
-	public boolean disableRankIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
-		
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-		
-		boolean isSupplierBranchDeleted = false;
-		if(supplierId != null && scQt != null){
-			if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = true;
-		    }
+	//#28777 & #29729 - Start
+    /**
+	  * Method disable rank if record status is disqualified
+	  **/
+	public Boolean checkDisableRankSupplierBranchDeleted(ScQtSupplier scQtSupplier){
+		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
+			return Boolean.TRUE;
 		}
-	    return isSupplierBranchDeleted;
+		return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
+	
+	//#28777 & #29729 - Start
+    /**
+	  * Method to display instruction when had supplier deleted branch
+	  **/
+	public Boolean checkInstructionSupplierBranchDeleted(Long qtId){
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		
+		 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
+		 searchReqDTO.setDocId(qtId);
+		 if(sourcingIntegrationSO.checkListQualifiedSupplierBranchDeleted(qtId)){
+			 return Boolean.TRUE;
+		 }
+		 return Boolean.FALSE;
 	}
 	//#28777 & #29729 - End
 	
@@ -2542,9 +2566,10 @@ public class ConsolidationReportBackingBean extends
 //-------------> HERE #31556 & #31555 related to #21695 Farid START				 
 					else {
 						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
-							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-									&& item.getRequestItem().getQuantity() != null 
-										&& item.getRequestItem().getQuantity().compareTo(BigDecimal.ZERO) > 0){
+							BigDecimal rpUOM=finditemOfferNonZonal!=null && finditemOfferNonZonal.getRatePerUom()!=null ? finditemOfferNonZonal.getRatePerUom() : BigDecimal.ZERO;//35329-start
+							BigDecimal quantity=item.getRequestItem()!=null && item.getRequestItem().getQuantity()!=null ? item.getRequestItem().getQuantity() : BigDecimal.ZERO;
+							if (rpUOM.compareTo(BigDecimal.ZERO) > 0
+									&& quantity.compareTo(BigDecimal.ZERO) > 0) {//35329-End
 								log.info("validate nonzonal offer");
 								validateRankingPO(qualifiedSupplierBeans, true, item,
 										specZoneDtl, totalQualifiedSuppliers);

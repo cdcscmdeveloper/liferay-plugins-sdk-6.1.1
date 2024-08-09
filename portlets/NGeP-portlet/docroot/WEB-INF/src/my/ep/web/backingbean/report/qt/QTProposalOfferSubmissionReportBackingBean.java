@@ -62,12 +62,9 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 	private static final Logger log = EpLogger
 			.getLogger(QTProposalOfferSubmissionReportBackingBean.class);
 
-//	private static final Logger log = EpLogger.getLogger(ScPropValidPeriodExtReportBackingBean.class);
-
 	@PostConstruct
 	public void init() {
 		log.info("=====init executed QTProposalOfferSubmissionReportBackingBean====");
-		//this.getManagedBean().setReportCode(QtReportConst.SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL);
 		
 		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
 		
@@ -86,10 +83,18 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 		log.info("=====QTProposalOfferSubmissionReportBackingBean generateReport====");
 		generateSCReport(params);
 	}
-
+	
 	@Override
 	public void resetSearch() {
-		resetSearchBB();
+		this.getManagedBean().setQuotationNumber(null);
+		this.getManagedBean().setQuotationId(null);
+		this.getManagedBean().getAutoScQt().setQtNo(null);
+		this.getManagedBean().getAutoScQt().setQtTitle(null);
+		this.getManagedBean().getAutoScQtProposal().setProposalNo(null);
+		ScReportFieldsSearchBean reportFileSearchBean=this.getManagedBean().getScReportSearchBean();
+		reportFileSearchBean=new ScReportFieldsSearchBean();
+		reportFileSearchBean=getDefaultValuesFromAndToDate(reportFileSearchBean);
+		this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
 	}
 	
 	//14306 - Start (Harun)
@@ -120,6 +125,10 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 			params.put(QtReportConst.PARAM_SUBMIT_FR_DT, reportFieldBean.getScPropSubmitFromYear());
 			params.put(QtReportConst.PARAM_SUBMIT_TO_DT, reportFieldBean.getScPropSubmitToYear());
 			
+		}
+		
+		if (null != this.getManagedBean().getSupplierId()) {
+			params.put(QtReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSupplierId()));
 		}
 		
 		if (StringUtils.isNotEmpty(this.getManagedBean().getAutoScQt().getQtNo())) {
@@ -168,6 +177,7 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 				for (PmUserOrg pmUserOrg : resDTO.getPmUser().getPmUserOrgs()){
 					this.getManagedBean().setSupplierName(pmUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName());
 					this.getManagedBean().setLatestApplId(pmUserOrg.getPmOrgProfile().getSmSupplier().getSmAppl().getApplId());
+					this.getManagedBean().setSupplierId(pmUserOrg.getPmOrgProfile().getSmSupplier().getSupplierId());
 				}
 			}
 		}
@@ -209,8 +219,6 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 			SLAUtils.getInstance().logSLAError("QT", "RetrieveWildsearchForQtTitle", "qtTitle",
 					"autoCompleteQtTitle", getUserIdSessionFromLoginId(), e);
 
-		} finally {
-			qtDetailSO = null;
 		}
 
 		return qtTitleLs;
@@ -252,8 +260,6 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "RetrieveWildsearchForProposalNo", "proposalNo",
 					"autoCompleteProposalNo", getUserIdSessionFromLoginId(), e);
-		} finally {
-			qtDetailSO = null;
 		}
 
 		return proposalNoLs;
@@ -293,8 +299,6 @@ QtReportBackingBean<QTProposalOfferSubmissionReportManagedBean> implements Seria
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "RetrieveWildsearchForQtNo", "qtNo", "autoCompleteQtNo",
 					getUserIdSessionFromLoginId(), e);
-		} finally {
-			qtDetailSO = null;
 		}
 
 		return qtNoLs;

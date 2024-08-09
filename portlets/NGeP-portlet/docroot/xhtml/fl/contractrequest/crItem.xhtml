@@ -83,15 +83,17 @@
 				<f:facet name="header" style="white-space:normal;">
 					<h:outputText value="#{lbl['lbl.fl.delivery.start']}"/>
 					<c:choose>
-							<c:when test="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}">
+		<!--#35357--><c:when test="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing
+							and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}">
 						 		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}"/>
 						 	</c:when>
 						 </c:choose>
 				</f:facet>
-				<p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;" mindate="#{contractRequestBackingBean.managedBean.minContractDate}"
+	<!--#35357--><p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;" mindate="#{contractRequestBackingBean.managedBean.minContractDate}"
 				 maxdate="#{contractRequestBackingBean.managedBean.maxContractDate}"
 					readonlyInput="true"
-					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
+					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing
+					and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					size="6" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
@@ -105,11 +107,12 @@
 			</p:column>
 			<!--#17087 calendarEndDate -->
 			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;text-align:center">				
-				<p:calendar value="#{address.endDate}" id="calEndDate" 
+<!--#35357-->  <p:calendar value="#{address.endDate}" id="calEndDate" 
 					mindate="#{address.startDate}"
 					style="float:right;"
 					readonlyInput="true"
-					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing }"
+					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing 
+					and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					size="6"
 					maxdate="#{address.endDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -272,7 +275,7 @@
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
-				<p:column>
+<!-- #35159--><p:column style="white-space:normal;width:40%">
 					<f:facet name="header" style="width:8%;text-align:center">
 <!-- #16344 START-->	<h:outputText value="#{lbl['lbl.fl.item.details']}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details(a)']}" />

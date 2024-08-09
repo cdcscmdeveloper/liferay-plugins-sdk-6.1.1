@@ -853,16 +853,19 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
 				scDescOfficerList.add(selectItem);
 			} else {
-				Long orgProfileId = findScQtByQuotationNumber().getOrgProfileId();
+				ScQt qt = findScQtByQuotationNumber();
 				
-				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
-						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
-				if (CollectionUtils.isNotEmpty(reqLst)) {
-					for (Object[] object : reqLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						scDescOfficerList.add(selectItem);
+				if (qt != null) {
+					Long orgProfileId = qt.getOrgProfileId();
+					List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+							new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+					if (CollectionUtils.isNotEmpty(reqLst)) {
+						for (Object[] object : reqLst) {
+							SelectItem selectItem = new SelectItem();
+							selectItem.setLabel(object[0].toString());
+							selectItem.setValue(object[1]);
+							scDescOfficerList.add(selectItem);
+						}
 					}
 				}
 			}
@@ -1230,8 +1233,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToYear 
 	 */
 	public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		
-		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScPropSubmitFromYear());
+		reportSearchbean.setScCreatedToYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitFromYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScCreatedFromYear());
 	}
 
 	/**
@@ -1242,7 +1246,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToMonth
 	 */
 	public void propSubmitToMonthUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScPropSubmitFromMonth());
+		reportSearchbean.setScCreatedToMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitFromMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScCreatedFromMonth());
 	}
 	//#14306 - End
 }

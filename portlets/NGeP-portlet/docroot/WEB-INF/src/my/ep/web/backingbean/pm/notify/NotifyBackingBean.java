@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.NotificationTextConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.notify.NotifyReqDTO;
 import my.ep.dto.pm.common.notify.NotifyResDTO;
 import my.ep.exception.EpException;
@@ -511,6 +512,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			FacesContext fc = FacesContext.getCurrentInstance();
 		
 			checkNotifyRemoveSupplierBranchDeleted();
+			
+			checkNotifyBiddingRemoveSupplierBranchDeleted();
 
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PmConstants.PM_NOTIFICATION_PAGE);
 			
@@ -534,7 +537,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				logger.error("User is empty.");
 			} else {
 				
-				ntfSO = (INotifySO) BusinessDelegate.getInstance().getServiceObject(
+				ntfSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,INotifySO.class);
 			
 				NotifyReqDTO reqDTO = new NotifyReqDTO();
@@ -548,12 +551,46 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				}
 		
 			}
+		
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("PM", "checkNotifyRemoveSupplierBranchDeleted", null, "checkNotifyRemoveSupplierBranchDeleted",getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_PROFILE_MANAGEMENT, null, "notifyBackingBean.checkNotifyRemoveSupplierBranchDeleted",getUserIdSessionFromLoginId(), e);
 			throw new EpException(MessageConst.ERROR_722632);
-		} finally {
-			ntfSO = null;
 		}
+	}
+	
+	/**
+	 * To check whether supplier branch has been deleted during bidding notification
+	 * @param reqDTO (Long getUserId(Manditory))     
+	 * @return resDTO (Boolean isSuccess)
+	 */
+	public void checkNotifyBiddingRemoveSupplierBranchDeleted() {
+		INotifySO ntfSO;
+		try {
+			FacesScopes facesScopes = new FacesScopes();
+			PmUser user = facesScopes.getUserSessionBean();
+			
+			if (user == null) {
+				logger.error("User is empty.");
+			} else {
+				
+				ntfSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT,INotifySO.class);
+			
+				NotifyReqDTO reqDTO = new NotifyReqDTO();
+				reqDTO.setUserId(user.getUserId());
+				NotifyResDTO resDTO = ntfSO.isCheckNotifyBiddingCurrentSupplierBranchDeleted(reqDTO);
+				
+				if (resDTO.isSuccessful()) {
+					logger.error("Sucess.");
+				}else{
+					logger.error("Fail.");
+				}
+		
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_PROFILE_MANAGEMENT, null, "notifyBackingBean.checkNotifyBiddingRemoveSupplierBranchDeleted",getUserIdSessionFromLoginId(), e);
+			throw new EpException(MessageConst.ERROR_722632);
+		} 
 	}
 	// #29729 & #28777 - End
 	

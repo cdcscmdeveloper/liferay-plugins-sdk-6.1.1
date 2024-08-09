@@ -347,7 +347,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	 * This  method used to set retrieve value from BPM or contract maintenance
 	 */
 	public void setRequestCtAdminContractVer(ContractReqDTO reqDTO){
-		ctBB.renewSesionObject();
+//		ctBB.renewSesionObject();
 		IRequestContractAdminSO reqCtAdminSO= null;
 		ContractResDTO resDTO = null;
 		if(ctBB.getManagedBean().getDeleteAttachmentList() != null ){
@@ -550,8 +550,10 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 
 		// 20997 - end
 		/*Return when not call from tasklist*/
-		if(taskId==null) 
+		if(taskId==null)
 			return;
+ 
+			
 
 		getManagedBean().setViewOnly(false);
 		CTContractReqadminDataType dataType =  super.getBpmTaskDetails(CTContractReqadminDataType.class, new String[]{BpmOutcomeConst.BPM_SAVE});		

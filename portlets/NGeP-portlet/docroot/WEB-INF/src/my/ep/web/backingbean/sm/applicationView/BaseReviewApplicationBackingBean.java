@@ -933,7 +933,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				if (personnel.isSsmData()!= true){
 					this.getManagedBean().getPersonnelDirectorManager().remove(personnel);
 				}
-				if(personnel.isEquityOwner()){
+				//#35130
+				if(personnel.isEquityOwnerSsm() && personnel.isSsmData()){
 					if(shareAmtSsm != null && !(personnel.getShareAmtSsm() == null)){
 						sum =  sum.add(shareAmtSsm);
 						getManagedBean().setTotalShare(sum);
@@ -1337,8 +1338,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
 					//#33467 - start, #32809 - nested loop for checking each SmManufacturingDtl for every SmSupplierCategory
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) continue;
-						if(activeManufacturingDtls.size() == 0) activeManufacturingDtls.add(manuFacDtl);
+						//Sonarqube #G22
+						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+							continue;
+						}
+						if(activeManufacturingDtls.isEmpty()){
+							activeManufacturingDtls.add(manuFacDtl);
+						}
 						SmManufacturingDtl manDtl = (SmManufacturingDtl) EntityHelper.getEntityBySinglePropertyFromList(
 								manuFacDtl.getManufacturingDtlId(), activeManufacturingDtls, "manufacturingDtlId");
 						if(manDtl == null){
@@ -4660,6 +4666,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//27915: Disciplinary Action - end - 26238
 		
 		if(discList != null && discList.size() > 0){
+			//26238 - START
+			this.getManagedBean().setNoDisciplinary(false);
+			//26238 - END
 			for(SmDisciplinaryAction disc : discList){
 				if(disc.isWarning() || disc.isCancelCategory() || disc.isSuspendRegistration() 
 						|| disc.isCancelRegistration() || disc.isBlacklistOwner()
@@ -5303,4 +5312,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 	//#32008 - end
+	//29380 - Site Visit Grouping Enhancement -28775 - start
+	/**
+	 * @param catL3
+	 * @return other description for category code
+	 */
+	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		return SmApplicationUtil.getCategoryCodeOtherDesc(
+				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
+	}
+	//29380 - Site Visit Grouping Enhancement -28775 - end
+	
 }

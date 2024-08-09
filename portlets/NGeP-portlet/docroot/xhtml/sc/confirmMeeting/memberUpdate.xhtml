@@ -101,7 +101,14 @@
 				</p:column>
 				<p:column style="width:29%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.name']}">
-					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					<!-- #12471 Start -->
+					<p:commandLink
+						actionListener="#{evaluationMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						process="@this" update="@([id$=memberInfoPopup])">
+						<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					</p:commandLink>
+					<!-- #12471 End -->
 				</p:column>
 				<p:column style="width:15%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.identification.no']}">
@@ -158,6 +165,10 @@
 					</ui:fragment>
 				</p:column>
 			</p:dataTable>
+			<!-- #12471 Start -->
+			<ac:qtCommitteMemberInfoPopup bBean="#{evaluationMeetingBackingBean}"
+				widget="memberInfoPopUp" />
+			<!-- #12471 End -->
 			<ui:fragment rendered="#{isCommitteeUpdatable}">
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"

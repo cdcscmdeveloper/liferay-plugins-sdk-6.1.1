@@ -96,7 +96,11 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	//#21695 End
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
-	private List<SmSupplierBranch> supplierBranchList; //#29729
+	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList; 
+	private Integer countSupplierBranchDeleted = 0;
+	// #28777 & #29729 - End
 	
 	private boolean isSetNull ; //Bug #31364
 	
@@ -630,7 +634,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#21695 End
 
-	//#29729 - Start
+	//#28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -638,7 +642,15 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
-	//#29729 - End
+	
+	public Integer getCountSupplierBranchDeleted() {
+		return countSupplierBranchDeleted;
+	}
+
+	public void setCountSupplierBranchDeleted(Integer countSupplierBranchDeleted) {
+		this.countSupplierBranchDeleted = countSupplierBranchDeleted;
+	}
+	//#28777 & #29729 - End
 
 	public boolean isSetNull() {
 		return isSetNull;
@@ -655,4 +667,5 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setDemoReq(boolean isDemoReq) {
 		this.isDemoReq = isDemoReq;
 	}
+
 }

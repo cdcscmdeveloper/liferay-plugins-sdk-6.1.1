@@ -223,11 +223,21 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 				if ((getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && !getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
 						|| getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
 						|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
-					getManagedBean().setSelectedMinistry(
-							retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
-					getManagedBean().setSelectedKumpulanPTJ(
-							retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
-					getManagedBean().setSelectedPTJ(pmOrgProfile);
+					
+					if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+						getManagedBean().setSelectedMinistry(pmOrgProfile);
+					} else {
+						getManagedBean().setSelectedMinistry(retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+					}
+					getManagedBean().setSelectedKumpulanPTJ(retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+					if (!getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+						getManagedBean().setSelectedPTJ(pmOrgProfile);
+					}
+//					getManagedBean().setSelectedMinistry(
+//							retrieveMinistryOrgProfile(pmOrgProfile.getOrgProfileId()));
+//					getManagedBean().setSelectedKumpulanPTJ(
+//							retrieveJabatanOrgProfile(pmOrgProfile.getOrgProfileId()));
+//					getManagedBean().setSelectedPTJ(pmOrgProfile);
 					
 				
 					//#Assign val to ContractItemMonitoringCCRptBakingBean

@@ -17,6 +17,13 @@
 					size="35" >
 						<p:ajax process="@this" partialSubmit="true"/>
 					</p:inputText> 
+					<!-- 35194 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
+						oriValue="#{backingBean.managedBean.latestBranch.branchName}" 
+						currValue="#{backingBean.managedBean.selectedBranch.branchName}" 
+						alertValue="#{backingBean.managedBean.latestBranch.branchName}"/>
 					<p:message id="supBranchNameMsg" for="supBranchName"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>

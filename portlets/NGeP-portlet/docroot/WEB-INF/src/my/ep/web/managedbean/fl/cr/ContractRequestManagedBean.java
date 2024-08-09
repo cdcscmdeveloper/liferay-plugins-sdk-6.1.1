@@ -361,6 +361,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
   //11076 - end
     private boolean bondIncomplete = false;//35024
     
+    private String backToNtf; //35357
+    
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3410,4 +3412,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		}
 		
 		//35024-End		
+		//35357-Start
+		public String getBackToNtf() {
+			return backToNtf;
+		}
+
+		public void setBackToNtf(String backToNtf) {
+			this.backToNtf = backToNtf;
+		}
+		//35357-Start
 }

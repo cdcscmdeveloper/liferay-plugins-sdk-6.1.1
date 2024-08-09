@@ -12,7 +12,9 @@ package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -611,7 +613,22 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal otherScore;
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
+	private int retainPageNumber;//#28784 WIP @Idham
+	private String otherchecklistScore;
+	private BigDecimal maxPackageTsScore;
+	private BigDecimal maxPackageOtherElementsScore;
+	private BigDecimal maxItemAllOtherElementsScore;
+	private BigDecimal maxItemOtherElementsScore;
+	private String maxDemoScore;//Needed String for (-) if not select item yet or no demo for selected item
+	private BigDecimal demoWeightage;
+	private BigDecimal maxItemTsPercentage;
+	private BigDecimal maxItemAllOtherElementsPercentage;
+	private BigDecimal itemTsPercentage;
+	private BigDecimal itemAllOtherElementsPercentage;
+	private BigDecimal maxItemTsScore;
 	//#28784 - end
+	private boolean fecIndexPreRender;//#10542
+	private boolean allSupplierRejectEpv;//#21692
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -648,6 +665,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	
 	//#10542 - start
 	private String downloadBy;
+	private byte[] technicalZipFileDownloadByDocument;
+	private byte[] technicalZipFileDownloadBySupplier;
+	private byte[] financialZipFileDownloadByDocument;
+	private byte[] financialZipFileDownloadBySupplier;
+	private String mainDocumentTitle;
 	//#10542 - end
 	
 	//#6906 start
@@ -668,6 +690,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//34528-uat 4serangkai 
 	private Paginator financialPackagePaginator;
 
+	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
 	
 	/**tabIndex
 	 * Gets the today.
@@ -4215,6 +4238,46 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public String getDownloadBy(){
 		return downloadBy;
 	}
+	
+	public byte[] getTechnicalZipFileDownloadByDocument() {
+		return technicalZipFileDownloadByDocument;
+	}
+	
+	public void setTechnicalZipFileDownloadByDocument(byte[] technicalZipFileDownloadByDocument){
+		this.technicalZipFileDownloadByDocument = technicalZipFileDownloadByDocument;
+	}
+	
+	public byte[] getTechnicalZipFileDownloadBySupplier() {
+		return technicalZipFileDownloadBySupplier;
+	}
+	
+	public void setTechnicalZipFileDownloadBySupplier(byte[] technicalZipFileDownloadBySupplier){
+		this.technicalZipFileDownloadBySupplier = technicalZipFileDownloadBySupplier;
+	}
+	
+	public byte[] getFinancialZipFileDownloadByDocument(){
+		return financialZipFileDownloadByDocument;
+	}
+	
+	public void setFinancialZipFileDownloadByDocument(byte[] financialZipFileDownloadByDocument){
+		this.financialZipFileDownloadByDocument = financialZipFileDownloadByDocument;
+	}
+	
+	public byte[] getFinancialZipFileDownloadBySupplier(){
+		return financialZipFileDownloadBySupplier;
+	}
+	
+	public void setFinancialZipFileDownloadBySupplier(byte[] financialZipFileDownloadBySupplier){
+		this.financialZipFileDownloadBySupplier = financialZipFileDownloadBySupplier;
+	}
+	
+	public void setMainDocumentTitle(String mainDocumentTitle){
+		this.mainDocumentTitle = mainDocumentTitle;
+	}
+	
+	public String getMainDocumentTitle(){
+		return mainDocumentTitle;
+	}
 	//#10542 - end
 
 	//#6906 - start
@@ -4329,4 +4392,135 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setDemoWip(boolean demoWip) {
 		this.demoWip = demoWip;
 	}
+	
+	//#10542
+	public boolean getFecIndexPreRender() {
+		return fecIndexPreRender;
+	}
+
+	public void setFecIndexPreRender(boolean fecIndexPreRender) {
+		this.fecIndexPreRender = fecIndexPreRender;
+	}
+
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+
+	public Map<String, Object> getEvaluationContext() {
+		return evaluationContext;
+	}
+
+	public void setEvaluationContext(Map<String, Object> evaluationContext) {
+		this.evaluationContext = evaluationContext;
+	}
+
+	public String getOtherchecklistScore() {
+		return otherchecklistScore;
+	}
+
+	public void setOtherchecklistScore(String otherchecklistScore) {
+		this.otherchecklistScore = otherchecklistScore;
+	}
+
+	public BigDecimal getMaxPackageTsScore() {
+		return maxPackageTsScore;
+	}
+
+	public void setMaxPackageTsScore(BigDecimal maxPackageTsScore) {
+		this.maxPackageTsScore = maxPackageTsScore;
+	}
+
+	public BigDecimal getMaxPackageOtherElementsScore() {
+		return maxPackageOtherElementsScore;
+	}
+
+	public void setMaxPackageOtherElementsScore(BigDecimal maxPackageOtherElementsScore) {
+		this.maxPackageOtherElementsScore = maxPackageOtherElementsScore;
+	}
+
+	public BigDecimal getMaxItemAllOtherElementsScore() {
+		return maxItemAllOtherElementsScore;
+	}
+
+	public void setMaxItemAllOtherElementsScore(BigDecimal maxItemAllOtherElementsScore) {
+		this.maxItemAllOtherElementsScore = maxItemAllOtherElementsScore;
+	}
+
+	public BigDecimal getMaxItemOtherElementsScore() {
+		return maxItemOtherElementsScore;
+	}
+
+	public void setMaxItemOtherElementsScore(BigDecimal maxItemOtherElementsScore) {
+		this.maxItemOtherElementsScore = maxItemOtherElementsScore;
+	}
+
+	public String getMaxDemoScore() {
+		return maxDemoScore;
+	}
+
+	public void setMaxDemoScore(String maxDemoScore) {
+		this.maxDemoScore = maxDemoScore;
+	}
+
+	public BigDecimal getDemoWeightage() {
+		return demoWeightage;
+	}
+
+	public void setDemoWeightage(BigDecimal demoWeightage) {
+		this.demoWeightage = demoWeightage;
+	}
+
+	public BigDecimal getMaxItemTsPercentage() {
+		return maxItemTsPercentage;
+	}
+
+	public void setMaxItemTsPercentage(BigDecimal maxItemTsPercentage) {
+		this.maxItemTsPercentage = maxItemTsPercentage;
+	}
+
+	public BigDecimal getMaxItemAllOtherElementsPercentage() {
+		return maxItemAllOtherElementsPercentage;
+	}
+
+	public void setMaxItemAllOtherElementsPercentage(BigDecimal maxItemAllOtherElementsPercentage) {
+		this.maxItemAllOtherElementsPercentage = maxItemAllOtherElementsPercentage;
+	}
+
+	public BigDecimal getItemTsPercentage() {
+		return itemTsPercentage;
+	}
+
+	public void setItemTsPercentage(BigDecimal itemTsPercentage) {
+		this.itemTsPercentage = itemTsPercentage;
+	}
+
+	public BigDecimal getItemAllOtherElementsPercentage() {
+		return itemAllOtherElementsPercentage;
+	}
+
+	public void setItemAllOtherElementsPercentage(BigDecimal itemAllOtherElementsPercentage) {
+		this.itemAllOtherElementsPercentage = itemAllOtherElementsPercentage;
+	}
+
+	public BigDecimal getMaxItemTsScore() {
+		return maxItemTsScore;
+	}
+
+	public void setMaxItemTsScore(BigDecimal maxItemTsScore) {
+		this.maxItemTsScore = maxItemTsScore;
+	}
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 }
