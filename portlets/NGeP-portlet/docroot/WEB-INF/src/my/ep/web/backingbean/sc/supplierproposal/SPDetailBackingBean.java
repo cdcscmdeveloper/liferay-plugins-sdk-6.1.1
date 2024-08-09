@@ -2898,36 +2898,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 		// #21695 Farid Start 2/4/2021
 		if (scQT.isZonal()) {
-<<<<<<< HEAD
-		populateZoneDetailIntoTreeNode(templateSpecBean);
-		
-		IQTProposalSO proposalSO = null;
-		proposalSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-		ScQt scQt = getManagedBean().getQt();
-		ProposalReqDTO reqDTO = new ProposalReqDTO();
-		reqDTO.setScQt(scQt);
-		reqDTO.setQtSupplierId(getManagedBean().getSupplierId());
-		reqDTO.setQtId(scQt.getQtId());
-		// To retrieve financial specification details
-		ProposalResDTO resDTO = proposalSO
-				.retrieveTechnicalSpecZoneDtlsSupplier(reqDTO);
-		
-		List<TplSpecZoneDtl> zones = resDTO.getZones();
-		if (CollectionUtils.isNotEmpty(zones)) {
-			this.getManagedBean().setZones(zones);
-			// wip doesnt need to execute this code below
-			IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);
-			SpecificationReqDTO specReqDto=new SpecificationReqDTO();
-			specReqDto.setScQt(this.getManagedBean().getQt());
-			if (specSo.checkWipScoreSettingMax(specReqDto) > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-				if (this.getManagedBean().getQt().isPartial()) {
-					disableDefaultSelected();
-				} else {
-					// for proposal technical item & spec
-					removeItemBaseOnSuppZoneQtyZero(templateSpecBean);
-=======
 			populateZoneDetailIntoTreeNode(templateSpecBean);
 
 			IQTProposalSO proposalSO = null;
@@ -2954,7 +2924,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						// for proposal technical item & spec
 						removeItemBaseOnSuppZoneQtyZero(templateSpecBean);
 					}
->>>>>>> refs/remotes/origin/release-sit
 				}
 			}
 		}
