@@ -2918,7 +2918,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		if (CollectionUtils.isNotEmpty(zones)) {
 			this.getManagedBean().setZones(zones);
 			// wip doesnt need to execute this code below
-			if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+			IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+			specReqDto.setScQt(this.getManagedBean().getQt());
+			if (specSo.checkWipScoreSettingMax(specReqDto) > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				if (this.getManagedBean().getQt().isPartial()) {
 					disableDefaultSelected();
 				} else {
