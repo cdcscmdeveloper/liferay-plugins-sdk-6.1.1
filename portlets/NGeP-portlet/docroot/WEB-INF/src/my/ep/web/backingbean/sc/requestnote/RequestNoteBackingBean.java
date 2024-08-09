@@ -5865,7 +5865,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
 							.retrieveActiveSmDisciplinaryActionRemarksByDA(disciplinaryAction);
 
-					if (remarksList != null && !remarksList.isEmpty()) {
+					if (remarksList != null && !remarksList.isEmpty()) { //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 						for (SmDisciplinaryActionRemarks remarks : remarksList) {
 							DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
 							rem1.setRemarks(remarks.getRemark());
