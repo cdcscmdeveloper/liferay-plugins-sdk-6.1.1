@@ -322,6 +322,10 @@ public class SmSideMenuIconUtil {
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditBank(false);
+				
+				//28895
+				bean.getEditVO().setSuppEditAduitTrail(false);
+				
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -334,6 +338,10 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
+				
+				//28895
+				bean.getEditVO().setSuppEditAduitTrail(false);
+				
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -348,6 +356,10 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
+				
+				//28895
+				bean.getEditVO().setSuppEditAduitTrail(false);
+				
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -811,8 +823,8 @@ public class SmSideMenuIconUtil {
 					for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
 						if(doc.getSmApplDocFiles() != null){
 							for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
-								if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && doc.getVerifiedFlg() != null 
-										&& doc.getVerifiedFlg() == 0){
+								if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+										|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
 									nonMandatoryDocVerified = false;
 									break;
 								}
@@ -1824,6 +1836,9 @@ public class SmSideMenuIconUtil {
 		}
 		
 		bean.getEditVO().setSuppEditBank(false);
+		
+		//28895
+		bean.getEditVO().setSuppEditAduitTrail(false);
 		if (step5BankHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
 			bean.getEditVO().setSuppEditBank(true);
 		}

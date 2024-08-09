@@ -73,7 +73,8 @@ public class SupplierUserActivationBackingBean extends
 	private static final String[] ADMIN_ROLES = new String[] {
 		RoleCode.SUPPLIER_TEMP.value(),
 		RoleCode.MOF_SUPPLIER_ADMIN.value(),
-		RoleCode.BASIC_SUPPLIER_ADMIN.value() };
+		RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+		RoleCode.G2G_SUPPLIER_ADMIN.value() };
 	
 		
 	public SupplierUserActivationBackingBean(){
@@ -188,12 +189,12 @@ public class SupplierUserActivationBackingBean extends
 					if(personnel.getEpRole() != null){
 						if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
 							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
-									new String[] { SmRuleHelper.getInstance()
-									.getEmailActivationDays() + "" });
+									new String[] { Integer.toString(SmRuleHelper.getInstance()
+											.getEmailActivationDays()) });
 						}else{
 							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired.user",
-									new String[] { SmRuleHelper.getInstance()
-									.getEmailActivationDays() + "" , adminName });
+									new String[] { Integer.toString(SmRuleHelper.getInstance()
+											.getEmailActivationDays()) , adminName });
 						}
 					}
 				}
@@ -204,12 +205,12 @@ public class SupplierUserActivationBackingBean extends
 				if(personnel.getEpRole() != null){
 					if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
 						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
-								new String[] { SmRuleHelper.getInstance()
-								.getEmailActivationDays() + "" });
+								new String[] { Integer.toString(SmRuleHelper.getInstance()
+										.getEmailActivationDays()) });
 					}else{
 						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired.user",
-								new String[] { SmRuleHelper.getInstance()
-								.getEmailActivationDays() + "" , adminName });
+								new String[] { Integer.toString(SmRuleHelper.getInstance()
+										.getEmailActivationDays()) , adminName });
 					}
 				}
 				
