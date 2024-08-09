@@ -1852,11 +1852,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 							finOrgReqDTO.setAccountNo(getManagedBean().getInvoice().getAccountNo());
 							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgIdAccNo(finOrgReqDTO);							
 							
-							if (finOrgResDTO.getPmFinancialAcc()==null ||
-									finOrgResDTO.getPmFinancialAcc()!=null 
-									&& !getManagedBean().getInvoice().getAccountNo()
-									.equals(finOrgResDTO.getPmFinancialAcc().getAccountNo().trim())){
-								throw new EpException(MessageConst.ERROR_770263);
+							String pmAccountNo = (finOrgResDTO.getPmFinancialAcc() != null) ? finOrgResDTO.getPmFinancialAcc().getAccountNo().trim() : "null";
+							String invoiceAccountNo = (getManagedBean().getInvoice().getAccountNo() != null) ? getManagedBean().getInvoice().getAccountNo().trim() : "null";
+
+							if (finOrgResDTO.getPmFinancialAcc() == null ||
+							    (finOrgResDTO.getPmFinancialAcc() != null &&
+							    !invoiceAccountNo.equals(pmAccountNo))) {
+							    throw new EpException(MessageConst.ERROR_770263);
 							}
 						}			
 					}
