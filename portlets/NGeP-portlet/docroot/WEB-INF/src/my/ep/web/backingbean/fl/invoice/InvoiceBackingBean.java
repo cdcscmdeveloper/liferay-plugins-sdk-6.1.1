@@ -121,7 +121,7 @@ import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
-import my.ep.web.backingbean.fl.audit.FulfilmentAuditBackingBean;
+import my.ep.web.backingbean.fl.audit.AuditFulfilmentBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
@@ -356,7 +356,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 				//#35508 fl audit trail - inv modification start
-				FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+				AuditFulfilmentBackingBean auflBB = new AuditFulfilmentBackingBean();
 				if (resDTO.isSuccessful() && auflBB.getAuditFlConfigState()) {
 					insertAuditFulfilmentInvoice(action);
 				}
@@ -2689,7 +2689,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * 
 	 */
 	private void insertAuditFulfilmentInvoice(String action) {
-		PmUser userAudit = getFacesScopes().getUserSessionBean();
+		Long userAuditId = getUserIdSessionFromLoginId();
 		IAuditFulfilmentSO auditFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IAuditFulfilmentSO.class);
 
@@ -2697,20 +2697,20 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		List<FlAuditTrail> objList = new ArrayList<>();
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-			auFlAuditTrailObj = setAuditFulfilmentInvoice(userAudit, action, null, null, null);
+			auFlAuditTrailObj = setAuditFulfilmentInvoice(userAuditId, action, null, null, null);
 			objList.add(auFlAuditTrailObj);
 		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 			// audit fl for supplier invoice reference
 			FlInvoice flinv = getManagedBean().getInvoice();
 			if (!flinv.getSupplierInvoiceRef().equals(getManagedBean().getOriginalSupplierInvRef())) {
-				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAudit, action,
+				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAuditId, action,
 						AuditFLConst.FL_AU_INV_NO_FIELDLABELCODE, getManagedBean().getOriginalSupplierInvRef(),
 						flinv.getSupplierInvoiceRef());
 				objList.add(auFlAuditTrailObj);
 			}
 			String newBankAccNoNameInv = flinv.getAccountNo() + " " + flinv.getPaymentBankName();
 			if (!newBankAccNoNameInv.equals(getManagedBean().getOriginalBankAccNoName())) {
-				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAudit, action,
+				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAuditId, action,
 						AuditFLConst.FL_AU_BANK_ACC_FIELDLABELCODE, getManagedBean().getOriginalBankAccNoName(),
 						newBankAccNoNameInv);
 				objList.add(auFlAuditTrailObj);
@@ -2743,7 +2743,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * @return FlAuditTrail FlAuditTrail obj
 	 * 
 	 */
-	public FlAuditTrail setAuditFulfilmentInvoice(PmUser userAudit, String action, String fieldLabelCode,
+	public FlAuditTrail setAuditFulfilmentInvoice(Long userAuditId, String action, String fieldLabelCode,
 			String oldValueInv, String newValueInv) {
 		// add audit set
 		FlInvoice flinv = getManagedBean().getInvoice();
@@ -2764,14 +2764,14 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(userAudit.getUserId());
+			userReqDTO.setUserId(userAuditId);
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 
 			auditActionType = null;
 			orgProfileId = pmOrgAudit.getOrgProfileId();
 			orgName = pmOrgAudit.getOrgName();
-			statusId = FulfilmentStatusConst.SUBMITTED;
+			statusId = FulfilmentStatusConst.IN_SUBMITTED;
 		}
 		// insert for DO
 		FlAuditTrail auFlAuditTrail = new FlAuditTrail();
@@ -2786,8 +2786,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		auFlAuditTrail.setFulfilmentRequestId(flinv.getFlRequest().getFulfilmentReqId());
 		auFlAuditTrail.setOldValue(oldValueInv);
 		auFlAuditTrail.setNewValue(newValueInv);
-		auFlAuditTrail.setCreatedBy(userAudit.getUserId());
-		auFlAuditTrail.setChangedBy(userAudit.getUserId());
+		auFlAuditTrail.setCreatedBy(userAuditId);
+		auFlAuditTrail.setChangedBy(userAuditId);
 		auFlAuditTrail.setFieldLabelCode(fieldLabelCode);
 
 		return auFlAuditTrail;

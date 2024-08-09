@@ -98,7 +98,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
-import my.ep.web.backingbean.fl.audit.FulfilmentAuditBackingBean;
+import my.ep.web.backingbean.fl.audit.AuditFulfilmentBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -351,10 +351,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
 				//#35508 fl audit trail - DO modification start
-				FulfilmentAuditBackingBean auflBB = new FulfilmentAuditBackingBean();
+				AuditFulfilmentBackingBean auflBB = new AuditFulfilmentBackingBean();
 				if (resDTO.isSuccessful() && auflBB.getAuditFlConfigState()) {
-					PmUser userAudit = getFacesScopes().getUserSessionBean();
-					insertAuditTrailFl(userAudit, action);
+					Long userAuditId = getUserIdSessionFromLoginId(); 
+					insertAuditTrailFl(userAuditId, action);
 				}
 				//#35508 fl audit trail - DO modification end
 			}
@@ -1750,7 +1750,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 *            action type for audit
 	 * 
 	 */
-	public void insertAuditTrailFl(PmUser userAudit, String action) {
+	public void insertAuditTrailFl(Long userAuditId, String action) {
 		// add audit insert
 		IAuditFulfilmentSO auditFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IAuditFulfilmentSO.class);
@@ -1779,7 +1779,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(userAudit.getUserId());
+			userReqDTO.setUserId(userAuditId);
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 
@@ -1788,7 +1788,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			oldSupplierDoRef = null;
 			orgProfileId = pmOrgAudit.getOrgProfileId();
 			orgName = pmOrgAudit.getOrgName();
-			statusId = FulfilmentStatusConst.SUBMITTED;
+			statusId = FulfilmentStatusConst.DO_SUBMITTED;
 			fieldAuditCode = null;
 		}
 		// insert for DO audit
@@ -1805,8 +1805,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			auFLSPDTO.setFulfilmentRequestId(fldo.getFlRequest().getFulfilmentReqId());
 			auFLSPDTO.setOldValue(newSupplierDoRef);
 			auFLSPDTO.setNewValue(oldSupplierDoRef);
-			auFLSPDTO.setCreatedBy(userAudit.getUserId());
-			auFLSPDTO.setChangedBy(userAudit.getUserId());
+			auFLSPDTO.setCreatedBy(userAuditId);
+			auFLSPDTO.setChangedBy(userAuditId);
 			auFLSPDTO.setFieldLabelCode(fieldAuditCode);
 
 			objList.add(auFLSPDTO);
