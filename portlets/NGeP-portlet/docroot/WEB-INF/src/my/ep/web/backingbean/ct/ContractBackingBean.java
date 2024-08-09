@@ -4198,19 +4198,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 *            the ID of the request item; must not be null
 	 */
 	private void handleDirectPurchaseMode(IRequestItemSO requestItemSO, Long requestItemId) {
-		List<String> itemSpecList = new ArrayList<String>();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+	    List<String> itemSpecList = new ArrayList<>();
+	    List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
 
-		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
-			String questionType = itemSpecOffer.getQuestionType();
-			if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
-				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
-				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-				itemSpecList.add(itemSpecOffer.getItemSpec());
-			}
-		}
-		getManagedBean().setItemSpecification(itemSpecList);
+	    for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
+	        String questionType = itemSpecOffer.getQuestionType();
+	        if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+	            getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+	            getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+	        } else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
+	            itemSpecList.add(itemSpecOffer.getItemSpec());
+	        }
+	    }
+	    getManagedBean().setItemSpecification(itemSpecList);
 	}
 	
 	/**
