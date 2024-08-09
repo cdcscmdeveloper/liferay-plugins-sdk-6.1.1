@@ -547,7 +547,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			reqDTO.setSoftcertDocNo(getManagedBean().getSoftcertDocNo());
 			reqDTO.setFreeSofcertPersonnelList(getFinalFreePersonnels());
 			reqDTO.setDigiSign(getManagedBean().getDigiSign());
-			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());	//#32510
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			resDTO = SmServiceLookup.getPersonnelSO()
