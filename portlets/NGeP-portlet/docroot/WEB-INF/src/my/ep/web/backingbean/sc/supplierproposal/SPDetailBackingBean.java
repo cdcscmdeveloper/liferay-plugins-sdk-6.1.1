@@ -40,6 +40,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -62,6 +63,7 @@ import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -2871,68 +2873,61 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	 *            the sc qt proposal checklist
 	 * @return the string
 	 */
-	private String retrieveTemplateSpecDtls(
-			ScQtProposalChecklist scQtProposalChecklist) {
-		debugLogger("retrieveTechnicalTemplateSpecDtls:::SupplierId:::"+this.getManagedBean().getSupplierId()+"QTID:::"+this.getManagedBean().getQt().getQtId());
+	private String retrieveTemplateSpecDtls(ScQtProposalChecklist scQtProposalChecklist) {
+		debugLogger("retrieveTechnicalTemplateSpecDtls:::SupplierId:::" + this.getManagedBean().getSupplierId() + "QTID:::" + this.getManagedBean().getQt().getQtId());
 		ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList().getScQtDoc();
-		this.getManagedBean().setScQtDoc(
-				scQtProposalChecklist.getScQtCheckList().getScQtDoc());
+		this.getManagedBean().setScQtDoc(scQtProposalChecklist.getScQtCheckList().getScQtDoc());
 
 		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-		TemplateSpecBean templateSpecBean = getManagedBean()
-				.getTemplateSpecBean();
+		TemplateSpecBean templateSpecBean = getManagedBean().getTemplateSpecBean();
 		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
 		templateSpecBean.setSpecMaster(specMaster);
 		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 
 		SmSupplier smSupplier = new SmSupplier();
-		//#21695 Farid Start
+		// #21695 Farid Start
 		ScQt scQT = this.getManagedBean().getQt();
-		//#21695 Farid End
+		// #21695 Farid End
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		templateSpecBean.setSupplier(smSupplier);
-		//#21695 Farid Start
+		// #21695 Farid Start
 		templateSpecBackingBean.getManagedBean().setScQt(scQT);
-		//#21695 Farid End
-		templateSpecBackingBean.getManagedBean().setDocType(
-				ParameterConst.DOCTYPE_QUOTATION);
+		// #21695 Farid End
+		templateSpecBackingBean.getManagedBean().setDocType(ParameterConst.DOCTYPE_QUOTATION);
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
-		//#21695 Farid Start 2/4/2021
+		// #21695 Farid Start 2/4/2021
 		if (scQT.isZonal()) {
-		populateZoneDetailIntoTreeNode(templateSpecBean);
-		
-		IQTProposalSO proposalSO = null;
-		proposalSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-		ScQt scQt = getManagedBean().getQt();
-		ProposalReqDTO reqDTO = new ProposalReqDTO();
-		reqDTO.setScQt(scQt);
-		reqDTO.setQtSupplierId(getManagedBean().getSupplierId());
-		reqDTO.setQtId(scQt.getQtId());
-		// To retrieve financial specification details
-		ProposalResDTO resDTO = proposalSO
-				.retrieveTechnicalSpecZoneDtlsSupplier(reqDTO);
-		
-		List<TplSpecZoneDtl> zones = resDTO.getZones();
-		if (CollectionUtils.isNotEmpty(zones)) {
-			this.getManagedBean().setZones(zones);
-			// wip doesnt need to execute this code below
-			IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);
-			SpecificationReqDTO specReqDto=new SpecificationReqDTO();
-			specReqDto.setScQt(this.getManagedBean().getQt());
-			if (specSo.checkWipScoreSettingMax(specReqDto) > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-				if (this.getManagedBean().getQt().isPartial()) {
-					disableDefaultSelected();
-				} else {
-					// for proposal technical item & spec
-					removeItemBaseOnSuppZoneQtyZero(templateSpecBean);
+			populateZoneDetailIntoTreeNode(templateSpecBean);
+
+			IQTProposalSO proposalSO = null;
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			ScQt scQt = getManagedBean().getQt();
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setScQt(scQt);
+			reqDTO.setQtSupplierId(getManagedBean().getSupplierId());
+			reqDTO.setQtId(scQt.getQtId());
+			// To retrieve financial specification details
+			ProposalResDTO resDTO = proposalSO.retrieveTechnicalSpecZoneDtlsSupplier(reqDTO);
+
+			List<TplSpecZoneDtl> zones = resDTO.getZones();
+			if (CollectionUtils.isNotEmpty(zones)) {
+				this.getManagedBean().setZones(zones);
+				// wip doesnt need to execute this code below
+				IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				SpecificationReqDTO specReqDto = new SpecificationReqDTO();
+				specReqDto.setScQt(this.getManagedBean().getQt());
+				if (specSo.checkWipScoreSettingMax(specReqDto) > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					if (this.getManagedBean().getQt().isPartial()) {
+						disableDefaultSelected();
+					} else {
+						// for proposal technical item & spec
+						removeItemBaseOnSuppZoneQtyZero(templateSpecBean);
+					}
 				}
 			}
 		}
-		}
-		//#21695 Farid end 2/4/2021
+		// #21695 Farid end 2/4/2021
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
 	}
 
