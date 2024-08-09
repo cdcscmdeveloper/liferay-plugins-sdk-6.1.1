@@ -5330,51 +5330,5 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
-	// #28895_35501 Start - AUDIT TRAIL SM
-	public void onAuditTrailTabChange(TabChangeEvent event) {
-		initAuditTrailTabInfo(event.getTab().getId());
-	}
-	
-	public void initAuditTrailTabInfo(String tab) {
-		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		AuSmSearchBean auSmSearchBean = new AuSmSearchBean();
-
-		SmAppl smAppl = getManagedBean().getSmAppl();
-
-		auSmSearchBean.setDocId(BigInteger.valueOf(smAppl.getSmSupplier().getSupplierId()));
-
-		switch (tab) {
-		case SupplierManagementConst.AU_TAB_ID_BANK_INFO:
-			auSmSearchBean.setAuGroupSection(BigInteger.valueOf(1));
-			auSmSearchBean.setTabName(SupplierManagementConst.AU_TAB_ID_BANK_INFO + "Id");
-			break;
-		case SupplierManagementConst.AU_TAB_ID_USER_INFO:
-			auSmSearchBean.setAuGroupSection(BigInteger.valueOf(2));
-			auSmSearchBean.setTabName(SupplierManagementConst.AU_TAB_ID_USER_INFO + "Id");
-			break;
-		case SupplierManagementConst.AU_TAB_ID_ADMIN_INFO:
-			auSmSearchBean.setAuGroupSection(BigInteger.valueOf(4));
-			auSmSearchBean.setTabName(SupplierManagementConst.AU_TAB_ID_ADMIN_INFO + "Id");
-			break;
-		default:
-		}
-
-		if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
-			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
-		} else if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
-				|| smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
-			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
-		} else if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
-			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
-		}
-
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		auSmSearchBean.setLanguage(language);
-
-		auSmView.getManagedBean().setAuSmSearchBean(auSmSearchBean);
-
-		auSmView.loadAuditSupplierManagement();
-	}
-	// #28895_35501 End
 	
 }

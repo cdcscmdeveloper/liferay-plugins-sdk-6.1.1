@@ -1,7 +1,10 @@
 package my.ep.web.bean.sm;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import my.ep.web.constant.sm.SupplierManagementConst;
 
 /**
  * @author Firdaus Omar
@@ -15,16 +18,11 @@ public class AuSmSearchBean implements Serializable {
 	private String language;
 	private BigInteger docId;
 	private String docType;
-	private String tabName;
-	private BigInteger auGroupSection;
+	private String dataTable;
+	private BigDecimal auGroupSection;
 	private boolean isSearching = true;
-
-	public AuSmSearchBean() {
-	}
-
-	public AuSmSearchBean(String language, BigInteger docId) {
-		this.language = language;
-		this.docId = docId;
+	
+	public AuSmSearchBean(){
 	}
 
 	public String getLanguage() {
@@ -59,19 +57,19 @@ public class AuSmSearchBean implements Serializable {
 		this.docType = docType;
 	}
 
-	public String getTabName() {
-		return tabName;
+	public String getDataTable() {
+		return dataTable;
 	}
 
-	public void setTabName(String tabName) {
-		this.tabName = tabName;
+	public void setDataTable(String dataTable) {
+		this.dataTable = dataTable;
 	}
 
-	public BigInteger getAuGroupSection() {
+	public BigDecimal getAuGroupSection() {
 		return auGroupSection;
 	}
 
-	public void setAuGroupSection(BigInteger auGroupSection) {
+	public void setAuGroupSection(BigDecimal auGroupSection) {
 		this.auGroupSection = auGroupSection;
 	}
 }

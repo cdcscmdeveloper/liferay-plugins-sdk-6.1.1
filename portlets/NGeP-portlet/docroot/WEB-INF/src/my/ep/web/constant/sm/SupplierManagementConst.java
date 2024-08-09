@@ -744,9 +744,12 @@ public class SupplierManagementConst {
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	// #28895_35501 Start - AUDIT TRAIL SM
-	public static final String AU_TAB_ID_BANK_INFO = "bankInfo";
-	public static final String AU_TAB_ID_USER_INFO = "userInfo";
-	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfo";
+	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
+	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
+	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
+	public static final String AU_DATATABLE_ID_BANK_INFO = "bankInfoDataTable";
+	public static final String AU_DATATABLE_ID_USER_INFO = "userInfoDataTable";
+	public static final String AU_DATATABLE_ID_ADMIN_INFO = "adminInfoDataTable";
 	// #28895_35501 End
 	
 	public String getCOMPANY_TYPE_CLBG() {
@@ -1458,6 +1461,7 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
 		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
 	}
+
 	// #28895_35501 Start - AUDIT TRAIL SM
 	public String getAuTabIdBankInfo() {
 		return AU_TAB_ID_BANK_INFO;
@@ -1469,6 +1473,18 @@ public class SupplierManagementConst {
 
 	public String getAuTabIdAdminInfo() {
 		return AU_TAB_ID_ADMIN_INFO;
+	}
+
+	public String getAuDataTableIdBankInfo() {
+		return AU_DATATABLE_ID_BANK_INFO;
+	}
+
+	public String getAuDataTableIdUserInfo() {
+		return AU_DATATABLE_ID_USER_INFO;
+	}
+
+	public String getAuDataTableIdAdminInfo() {
+		return AU_DATATABLE_ID_ADMIN_INFO;
 	}
 	// #28895_35501 End
 

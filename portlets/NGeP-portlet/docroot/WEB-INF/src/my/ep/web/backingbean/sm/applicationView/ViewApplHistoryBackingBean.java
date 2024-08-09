@@ -89,6 +89,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
@@ -107,6 +108,7 @@ import my.ep.web.vo.SmOverlapCategoryVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
@@ -2054,5 +2056,18 @@ public class ViewApplHistoryBackingBean extends
 		}
 	}
 	// #32628 - end
+
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public void onAuditTrailTabChange(TabChangeEvent event) {
+		String tabName = event.getTab().getId();
+		initAuditTrailTabInfo(tabName);
+	}
+
+	public void initAuditTrailTabInfo(String tabName) {
+		SmAppl suppAppl = getManagedBean().getSmAppl();
+		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+		auSmView.loadAuditSupplierManagement(tabName, suppAppl);
+	}
+	// #28895_35501 End
 
 }

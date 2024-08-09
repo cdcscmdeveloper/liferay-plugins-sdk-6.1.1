@@ -17,13 +17,13 @@
 			</p:commandLink>
 			&#160;
 		</div>
-		<p:dataTable id="bankInfoId" var="obj" rows="10" width="100%"
-			value="#{AuditSupplierManagementViewBackingBean.searchAuSm}"
+		<p:dataTable id="#{SupplierManagementConst.auDataTableIdBankInfo}" var="obj" rows="10" width="100%"
+			value="#{AuditSupplierManagementViewBackingBean.searchAuSmBankInfo}"
 			rowIndexVar="index" lazy="true">
-			<ac:paginator for=bankInfoId></ac:paginator>
+			<ac:paginator for="#{SupplierManagementConst.auDataTableIdBankInfo}"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
 				style="white-space: normal!important;" width="5%">
-				<h:outputText value="#{obj.createdDate}">
+				<h:outputText value="#{obj.actionDate}">
 					<f:convertDateTime
 						pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
 				</h:outputText>
@@ -38,11 +38,11 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.org.name']}"
 				style="white-space: normal!important;" width="10%">
-				<h:outputText value="#{obj.orgName}" escape="false" />
+				<h:outputText value="#{obj.org}" escape="false" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.role']}"
 				style="white-space: normal!important;" width="5%">
-				<h:outputText value="#{obj.roleName}" />
+				<h:outputText value="#{obj.role}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.docType']}"
 				style="white-space: normal!important;" width="5%">

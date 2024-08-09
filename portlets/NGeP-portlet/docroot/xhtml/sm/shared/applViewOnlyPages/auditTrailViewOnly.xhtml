@@ -31,7 +31,7 @@
 				<tr>
 					<td><p:tabView id="tabViewCommon">
 							<p:ajax event="tabChange"
-								listener="#{viewSmApplBackingBean.onAuditTrailTabChange}" />
+								listener="#{viewApplHistoryBackingBean.onAuditTrailTabChange}" />
 							<c:choose>
 								<c:when
 									test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
