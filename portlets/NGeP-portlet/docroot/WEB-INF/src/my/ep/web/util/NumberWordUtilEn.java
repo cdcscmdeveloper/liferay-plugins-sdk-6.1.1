@@ -5,6 +5,7 @@
 package my.ep.web.util;
 
 import java.text.DecimalFormat;
+import org.apache.commons.lang.StringUtils;
 
 public class NumberWordUtilEn {
 
@@ -51,16 +52,31 @@ public class NumberWordUtilEn {
 		}
 
 		if (dollars == 0 && cent != 0) {
-			return convert(cent) + " SEN";
+			return convert(cent) + " " + centTypes(cent); //#35977
 		} else if (cent == 0 && dollars != 0) {
 			return convert(dollars);
 		} else if(cent == 0 && dollars == 0){
 			return "";
 		} else{
-			return convert(dollars) + " DAN " + convert(cent) + " SEN";
+			return convert(dollars) + " AND " + convert(cent) + " " + centTypes(cent); //#35977
 		}
 
 	}
+	
+	//#35977 - Start
+	/**
+	 * To compare types of 1 is cent and more then 1 is cents
+	 */
+	private static String centTypes(long cent){
+		String centStr = StringUtils.EMPTY;
+		if(cent == 1){
+			centStr = "CENT";
+		}else if(cent > 1){
+			centStr = "CENTS";
+		}
+		return centStr;
+	}
+	//#35977 - End
 
 	public static String convert(long number) {
 		// 0 to 999 999 999 999

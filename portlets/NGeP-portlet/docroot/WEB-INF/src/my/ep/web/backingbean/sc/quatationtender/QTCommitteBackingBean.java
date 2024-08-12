@@ -84,6 +84,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -92,6 +93,7 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.DateUtils;
@@ -217,73 +219,74 @@ public class QTCommitteBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 
-				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
+				//12471 - start
+				if (null != userCommitteeSearchBean) {
+					populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
+					populateOrganizationSearchCriteria(userCommitteeSearchBean, searchBean);
+				}
+				//12471 - end
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
 				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
-			} finally {
-				committeSO = null;
+			} catch (Exception e) {
+				ScQt scQt = getManagedBean().getQt();
+				String qtNo = null != scQt ? scQt.getQtNo() : "";
+				SLAUtils.getInstance().logSLAError(
+						SLALogConstant.QT_MODULE,
+						SLALogConstant.QT_COMMITTEE_BACKINGBEAN, qtNo,
+						SLALogConstant.QT_USER_COMMITTEE_PAGING_DATA_MODEL.concat(SLALogConstant.QT_SLA_DOT_SEPARATOR)
+								.concat(SLALogConstant.QT_PAGE_CHANGE_LISTENER), getUserIdSessionFromLoginId(), e);
+			}
+			return null;
+		}
+		//12471 - start
+		private void populateUserSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
+				ISearchBean<PmUser> userSearchBean) {
+			String name = userCommitteeSearchBean.getName();
+			if (StringUtils.isNotBlank(name)) {
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTConstants.USER_NAME, SearchOperator.OPERATOR_LIKE.value(), name, true));
+			}
+			String identificationNo = userCommitteeSearchBean.getIdentificationNo();
+			if (StringUtils.isNotBlank(identificationNo)) {
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTConstants.IDENTIFICATION_NO, SearchOperator.OPERATOR_LIKE.value(),
+								identificationNo, true));
+			}
+			String identificationType = userCommitteeSearchBean.getIdentificationType();
+			if (StringUtils.isNotBlank(identificationType)) {
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTSearchBeanConst.SEARCH_IDENTIFICATIONCODE_PARAMETERCODE,
+								SearchOperator.OPERATOR_EQUALS.value(), identificationType, true));
 			}
 		}
-	}
-
-	/**
-	 * Method to prepare user search criteria.
-	 * 
-	 * @param userCommitteeSearchBean
-	 *            the user committee search bean
-	 * @param userSearchBean
-	 *            the user search bean
-	 */
-	private void populateUserSearchCriteria(
-			UserCommitteeSearchBean userCommitteeSearchBean,
-			ISearchBean<PmUser> userSearchBean) {
-		if (userCommitteeSearchBean != null) {
-
-			String name = userCommitteeSearchBean.getName();
-			if (!StringUtils.isBlank(name)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.USER_NAME,
-								SearchOperator.OPERATOR_LIKE.value(), name,
-								true));
-			}
-			String idno = userCommitteeSearchBean.getIdentificationNo();
-			if (!StringUtils.isBlank(idno)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.IDENTIFICATION_NO,
-								SearchOperator.OPERATOR_LIKE.value(), idno,
-								true));
-			}
-			String idtype = userCommitteeSearchBean.getIdentificationType();
-			if (!StringUtils.isBlank(idtype)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"identificationCode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(), idtype,
-								true));
-			}
-			// #12471 Start
-			String orgCategory = null == userCommitteeSearchBean.getOrgCat() ? "": userCommitteeSearchBean.getOrgCat();
+		
+		private void populateOrganizationSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean,
+				ISearchBean<PmUser> userSearchBean) {
+			String orgCategory = null == userCommitteeSearchBean.getOrgCat() ? "" : userCommitteeSearchBean.getOrgCat();
 			if (ParameterConst.ORG_CATEGORY_PTJ.equalsIgnoreCase(orgCategory)) {
 				String ministry = userCommitteeSearchBean.getMinistry();
 				if (StringUtils.isNotBlank(ministry)) {
 					userSearchBean.getDataFilterBeans().add(
-							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE
+									.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ministry, true));
 				}
 				String ptjGroup = userCommitteeSearchBean.getPtjGroup();
 				if (StringUtils.isNotBlank(ptjGroup)) {
 					userSearchBean.getDataFilterBeans().add(
-							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE
+									.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ptjGroup, true));
 				}
 				String ptj = userCommitteeSearchBean.getPtj();
 				if (StringUtils.isNotBlank(ptj)) {
 					userSearchBean.getDataFilterBeans().add(
-							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
+							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE
+									.concat(QTSearchBeanConst.SEARCH_DOT_SEPARATOR)
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), ptj, true));
 				}
@@ -291,9 +294,11 @@ public class QTCommitteBackingBean extends
 			} else if (ParameterConst.ORG_CATEGORY_OTHERS.equalsIgnoreCase(orgCategory)) {
 				String orgType = userCommitteeSearchBean.getOrgType();
 				if (StringUtils.isNotBlank(orgType)) {
-					userSearchBean.getDataFilterBeans().add(
-							new SearchFilterBean(QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE_ORGTYPECODE_PARAMETERID
-									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.OTHERS.value()),
+					userSearchBean
+							.getDataFilterBeans()
+							.add(new SearchFilterBean(
+									QTSearchBeanConst.SEARCH_PMUSERORGS_PMORGPROFILE_ORGTYPECODE_PARAMETERID
+											+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.OTHERS.value()),
 									SearchOperator.OPERATOR_EQUALS.value(), orgType, true));
 				}
 				String orgName = userCommitteeSearchBean.getOrgName();
@@ -304,8 +309,8 @@ public class QTCommitteBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(), orgName, true));
 				}
 			}
-			// #12471 End
 		}
+		//12471 - end
 	}
 
 	/**
@@ -2239,20 +2244,16 @@ public class QTCommitteBackingBean extends
 		}
 		// end
 		
-		if (this.getManagedBean().isMaintanceFlow()) {
-			if (isQTStatusInBetween(currentQtStatus,
-					QTStatusConst.QT_PENDING_PB_APPROVAL,
-					QTStatusConst.QT_CONSOLIDATION_REPORT)) {
-				return !this.getManagedBean().isReadOnly();
-			} 	
-		}else {
-			if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT)) {
-				return true;
-			} else if (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(currentQtStatus)) {
-				if (SCProcessNameConst.ASSIGN_FC_SECRETARY.equals(getManagedBean().getTaskName())) {
-					return true;	
-				}
-			}
+		if (this.getManagedBean().isMaintanceFlow() &&
+			isQTStatusInBetween(currentQtStatus,
+				QTStatusConst.QT_PENDING_PB_APPROVAL,
+				QTStatusConst.QT_CONSOLIDATION_REPORT)	) {
+			 return !this.getManagedBean().isReadOnly();
+				
+		}else if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT) ||
+				  (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(currentQtStatus) && 
+				   SCProcessNameConst.ASSIGN_FC_SECRETARY.equals(getManagedBean().getTaskName()))) {
+			 return true;
 		}
 		
 		return false;
@@ -2678,39 +2679,40 @@ public class QTCommitteBackingBean extends
 		return true;
 	}
 	
-	public void addNewCommiteteUsers(IPagingDataModel<PmUser> dataModel){
-		if(null!=dataModel){
-		List<PmUser> modelList=dataModel.getList();
-		log.debug("start addNewCommiteteUsers");
-		List<PmUser> userList=this.getManagedBean().getSelectedPmUser();
-		if(null==userList){
-			log.debug("nullList addNewCommiteteUsers");
-			userList=new ArrayList<PmUser>();
+	//12471 - start
+	/**
+	 * Validate and add selected new user into the list of selected users.
+	 * @param dataModel 
+	 * */
+	public void addNewCommitteeUsers(IPagingDataModel<PmUser> dataModel) {
+		if (null == dataModel || CollectionUtils.isEmpty(dataModel.getList()))
+			return;
+		List<PmUser> users = new ArrayList<>();
+		List<Long> approvers = this.getApproversUserIds();
+		for (PmUser entity : dataModel.getList()) {
+			if (!entity.isSelected())
+				continue;
+			if (approvers.contains(entity.getUserId()))
+				throw new EpException(MessageConst.ERROR_775301, new String[] { entity.getUserName() });
+			users.add(entity);
 		}
-		if (modelList != null) {
-			List<PmUser> user=new ArrayList<PmUser>();
-			for (PmUser entity : modelList) {
-			if (entity.isSelected()) {
-				// #12471 Start
-				ScQtApproval approval = this.getManagedBean().getScQtApproval();
-				if (approval != null && approval.getApproverSettings() != null) {
-					for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
-						if (approvalUser.getPmUser().getUserId().equals(entity.getUserId())) {
-							throw new EpException(MessageConst.ERROR_775301,
-									new String[] { entity.getUserName() });
-						}
-					}
-				}
-				// #12471 End
-				user.add(entity);
+		if(null == this.getManagedBean().getSelectedPmUser()){
+			this.getManagedBean().setSelectedPmUser(new ArrayList<PmUser>());
+		}
+		this.getManagedBean().getSelectedPmUser().addAll(users);	
+	}
+
+	private List<Long> getApproversUserIds() {
+		List<Long> approverUserIds = new ArrayList<>();
+		ScQtApproval approval = this.getManagedBean().getScQtApproval();
+		if (approval != null && approval.getApproverSettings() != null) {
+			for (ScQtApproverSettings approvalUser : approval.getApproverSettings()) {
+				approverUserIds.add(approvalUser.getPmUser().getUserId());
 			}
 		}
-			userList.addAll(user);
-			this.getManagedBean().setSelectedPmUser(userList);
-			//log.info("end addNewCommiteteUsers"+this.getManagedBean().getSelectedPmUser().size());
+		return approverUserIds;
 	}
-	}
-	}
+	//12471 - end
 	//#25037
 	private Long getCurrentQtStatusId(){
 		Long status = null;

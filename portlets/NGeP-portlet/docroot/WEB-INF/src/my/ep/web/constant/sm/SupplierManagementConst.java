@@ -560,6 +560,8 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_PODEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC;
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC;
 	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY;
+	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL; //35501
+
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
 	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
@@ -572,6 +574,7 @@ public class SupplierManagementConst {
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -738,9 +741,6 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
 	
-	//#34159
-	public static final String STATE_ID_SARAWAK = "14";
-		
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	
@@ -1447,10 +1447,11 @@ public class SupplierManagementConst {
 		return IDENTIFICATION_TYPE_IC;
 	}
 
-	public static String getStateIdSarawak() {
-		return STATE_ID_SARAWAK;
+	/**
+	 * @return the smApplPageTypeAuditTrail
+	 */
+	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
+		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
 	}
-	
-	
 
 }
