@@ -168,12 +168,6 @@
 								});
 			}
 			
-			function signSkipToken(){
-				var textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
-				console.log("sign skip token");
-				postSignAction([ {name : 'textBeforeSign', value : textBeforeSign} ]);
-			}
-			
 			var runGPKIEnableAutoUpdate = true;
 			function setRunGPKIEnableAutoUpdate(runGPKIEnableAutoUpdate) {
 			  this.runGPKIEnableAutoUpdate = runGPKIEnableAutoUpdate;
@@ -212,9 +206,9 @@
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="DigiSign();" />
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
-				<p:commandButton id="signButtonId1" value="Sign W/O Token"  
-					onstart="gpkiBlockWidget.show(); signSkipToken();" 
-					oncomplete="gpkiBlockWidget.hide();"  rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" />
+				<p:commandButton id="signButtonId1" value="Sign W/O Token"  onstart="setRunGPKIEnableAutoUpdate(false);gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();"  rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" >
+					<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
+				</p:commandButton>	
 				
 				<!--20220909@Nasim - #33986 MyGPKI POC START-->
 				<p:commandButton id="signButtonId2" value="Signing OTP"  onstart="setRunGPKIEnableAutoUpdate(false);gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();" rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.nexusSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate, pin.value)}">
