@@ -2251,6 +2251,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				parameterReqDTO.setParameterId(requestdetails.getDecessionType().getParameterId());
 				requestdetails.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 			}
+			//#21692 note-418 issue 3 - Start
+			else {
+				requestdetails.setDecessionType(new PmParameter());
+			}
+			//#21692 note-418 issue 3 - End
 		}
 	}
 
@@ -3238,11 +3243,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#30477 - Start
 		
 		//#25426 - Start
+		/**
+		 * 202407252@haziq #25426
+		 * To remove EXIST DOA when approve cancel QT
+		 * @param scQt
+		 * @param taskName
+		 * @param action
+		 */
 		private void approveCancelQTwithDOASenariosExists(ScQt scQt, String taskName, String action){
 			if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) && BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)){
-				String docNo = null;
-				docNo = scQt.getQtNo();
-				if (docNo != null) {
+				String docNo = scQt.getQtNo();
 				
 					BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 					IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -3274,7 +3284,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 				}
 			}
-		}
 		//#25426 - End
 		
 		//#28784
