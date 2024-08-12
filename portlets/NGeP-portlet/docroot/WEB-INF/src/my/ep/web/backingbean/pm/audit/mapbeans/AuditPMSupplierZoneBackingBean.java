@@ -144,8 +144,9 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				dtlObjStateCodeAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				dtlObjStateCodeAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 				dtlObjStateCodeAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateCodeAdd.setNewValue(st.getPmState().getStateCode());
-				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
+				dtlObjStateCodeAdd.setOldValue(st.getPmState().getStateCode());
+				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
+				dtlObjStateCodeAdd.setDocGroupId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
 				dtlObjStateCodeAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID);
 				dtlObjStateCodeAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
 				objList.add(dtlObjStateCodeAdd);
@@ -160,8 +161,9 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				dtlObjStateNameAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				dtlObjStateNameAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 				dtlObjStateNameAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateNameAdd.setNewValue(st.getPmState().getStateName());
-				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
+				dtlObjStateNameAdd.setOldValue(st.getPmState().getStateName());
+				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
+				dtlObjStateNameAdd.setDocGroupId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
 				dtlObjStateNameAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID);
 				dtlObjStateNameAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
 				objList.add(dtlObjStateNameAdd);
@@ -186,7 +188,8 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				dtlObjStateCodeAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 				dtlObjStateCodeAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 				dtlObjStateCodeAdd.setNewValue(st.getPmState().getStateCode());
-				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
+				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
+				dtlObjStateCodeAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
 				dtlObjStateCodeAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID);
 				dtlObjStateCodeAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(dtlObjStateCodeAdd);
@@ -202,7 +205,8 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				dtlObjStateNameAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 				dtlObjStateNameAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 				dtlObjStateNameAdd.setNewValue(st.getPmState().getStateName());
-				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
+				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
+				dtlObjStateNameAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
 				dtlObjStateNameAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID);
 				dtlObjStateNameAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(dtlObjStateNameAdd);
@@ -226,7 +230,8 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				dtlObjStateCodeAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 				dtlObjStateCodeAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 				dtlObjStateCodeAdd.setNewValue(st.getPmState().getStateCode());
-				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(st.getPmZone().getZoneId()));
+				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
+				dtlObjStateCodeAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
 				dtlObjStateCodeAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID);
 				dtlObjStateCodeAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(dtlObjStateCodeAdd);
@@ -242,7 +247,8 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				dtlObjStateNameAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 				dtlObjStateNameAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 				dtlObjStateNameAdd.setNewValue(st.getPmState().getStateName());
-				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(st.getPmZone().getZoneId()));
+				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
+				dtlObjStateNameAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
 				dtlObjStateNameAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID);
 				dtlObjStateNameAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(dtlObjStateNameAdd);

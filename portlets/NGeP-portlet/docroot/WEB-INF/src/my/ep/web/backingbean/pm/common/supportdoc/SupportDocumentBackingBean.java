@@ -539,7 +539,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 						checklistRestriction.add(pmDocumentRestr);
 					}
 				}
-				this.getManagedBean().setCheckListRestrictions(checklistRestriction);
+				this.getManagedBean().setCheckListRestrictions(checklistRestriction); //after update
 
 			}
 		}
@@ -1922,6 +1922,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				System.out.println("2. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				messageId = MessageConst.TD_80801;
 				getManagedBean().setUpdated(true);
+				getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
 			}
 			log.info("setChangedBy|| userId == " + user.getUserId() + "| userName == " + user.getUserName());
 			pmDocument.setChangedBy(user != null ? user.getUserId() : null);
@@ -1948,6 +1949,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				reqDTO.setDocumentId(reqDTO.getPmDocument().getDocumentId());
 				DocumentResDTO resDTOOld = reqSO.retrieveDocumentDtlById(reqDTO);
 				getManagedBean().setSelectedDocumentOld(resDTOOld.getDocument());
+//				getManagedBean().setMandatoryUpdatedPmDocumentRestrList(reqDTO.getPmDocument().getPmDocumentRestrs());
 			}
 			/************ AUDIT *************/
 

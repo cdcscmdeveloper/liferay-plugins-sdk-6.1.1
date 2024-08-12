@@ -207,6 +207,8 @@ public class CalendarBackingBean extends
 				
 //				/************ AUDIT *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CALENDAR)) {
+					resDTO.setHoliday(holiday);
+					getManagedBean().getResCalendarDTO().setHoliday(holiday);
 					getManagedBean().setResCalendarDTO(resDTO);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CALENDAR);
 				}

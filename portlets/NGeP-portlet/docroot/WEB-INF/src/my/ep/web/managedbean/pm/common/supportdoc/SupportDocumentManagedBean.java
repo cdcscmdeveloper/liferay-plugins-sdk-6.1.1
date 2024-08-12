@@ -66,6 +66,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List<PmDocumentRestr> pmDocumentRestrList;
 	private List<PmDocumentRestr> deletedPmDocumentRestrList;
 	private List<PmDocumentRestr> updatedPmDocumentRestrList;
+	private List<PmDocumentRestr> mandatoryUpdatedPmDocumentRestrList;
 	
 	boolean updated;
 
@@ -535,5 +536,13 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 
 	public void setUpdatedPmDocumentRestrList(List<PmDocumentRestr> updatedPmDocumentRestrList) {
 		this.updatedPmDocumentRestrList = updatedPmDocumentRestrList;
+	}
+
+	public List<PmDocumentRestr> getMandatoryUpdatedPmDocumentRestrList() {
+		return mandatoryUpdatedPmDocumentRestrList;
+	}
+
+	public void setMandatoryUpdatedPmDocumentRestrList(List<PmDocumentRestr> mandatoryUpdatedPmDocumentRestrList) {
+		this.mandatoryUpdatedPmDocumentRestrList = mandatoryUpdatedPmDocumentRestrList;
 	}
 }
