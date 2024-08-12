@@ -2393,19 +2393,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		//#34209 - START
 		case "OD": //Other Description
 			PmUser curUser = new FacesScopes().getUserSessionBean();
-			for(SmSupplierCategory latestCat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
-				if(latestCat.getRecordStatusFlg().equals(SupplierManagementConst.RECORD_STATUS_ACTIVE) 
-						&& latestCat.isSpecialCategory() 
-						&& this.getManagedBean().getTempCategoryLs().containsKey(latestCat.getSupplierCategoryId())){
-					sb.append("Keterangan Lain bagi bidang ");
-					sb.append(latestCat.getPmCategoryL1().getCategoryL1Code() + latestCat.getPmCategoryL2().getCategoryL2Code() + latestCat.getPmCategoryL3().getCategoryL3Code());
-					sb.append(" telah diubah daripada ");
-					sb.append(this.getManagedBean().getTempCategoryLs().get(latestCat.getSupplierCategoryId()));
-					sb.append(" kepada ");
-					sb.append(latestCat.getOtherDesc());
-					sb.append(" oleh ").append(curUser.getUserName());
-				}
-			}
+			sb.append("Keterangan Lain bagi bidang ");
+			sb.append(reqDTO.getCatCodeChanged());
+			sb.append(" telah diubah daripada ");
+			sb.append(reqDTO.getOldDesc());
+			sb.append(" kepada ");
+			sb.append(reqDTO.getNewDesc());
+			sb.append(" oleh ").append(curUser.getUserName());
 		break;
 		//#34209 - END
 		default:
