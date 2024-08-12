@@ -366,7 +366,7 @@
 											id="basicPermAddCountryList" label="#{lbl['lbl.sm.country']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
 											<!-- #13320 - added division -->
@@ -387,7 +387,7 @@
 											label="#{lbl['lbl.sm.state']}" id="basicPermAddStateList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmState.stateId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 											<!-- #13320 - added division -->
@@ -420,7 +420,7 @@
 											label="#{lbl['lbl.sm.division']}" id="basicPermAddDivisionList"
 											value="#{smPersonnelBackingBean.managedBean.divisionId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddDivisionList}" />
 											<!-- #13320 - added division -->
@@ -445,7 +445,7 @@
 											label="#{lbl['lbl.sm.district']}" id="basicPermAddDistrictList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddDistrictList}" />
 											<!-- #13320 - added division -->
@@ -464,7 +464,7 @@
 											label="#{lbl['lbl.sm.towncity']}" id="basicPermAddCityList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCity.cityId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.permAddCityList}" />
 											<p:ajax event="change" update="@this" process="@this"/>
@@ -577,7 +577,7 @@
 											label="#{lbl['lbl.sm.country']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 											<!-- #13320 - added division -->
@@ -601,7 +601,7 @@
 											label="#{lbl['lbl.sm.state']}" id="basicMailAddStateList"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmState.stateId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 											<!-- #33592-->
@@ -637,7 +637,8 @@
 														readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 														disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 														style="width: 207px;margin-bottom: 5px;">
-														<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+														<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+															itemValue="" />
 														<f:selectItems
 															value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
 														<p:ajax event="change"
@@ -664,7 +665,7 @@
 											id="basicMailAddDistrictList" label="#{lbl['lbl.sm.district']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDistrict.districtId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
 											<!-- #13320 - added division -->
@@ -686,7 +687,7 @@
 											id="basicMailAddCityList" label="#{lbl['lbl.sm.towncity']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCity.cityId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 - set select one value to 0 in order to trigger listener-->
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
 										</p:selectOneMenu>
