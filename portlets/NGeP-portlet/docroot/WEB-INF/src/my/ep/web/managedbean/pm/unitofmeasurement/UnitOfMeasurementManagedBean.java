@@ -5,6 +5,8 @@ package my.ep.web.managedbean.pm.unitofmeasurement;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -34,6 +36,11 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	private boolean isLazy = false;
 	
 	private PmUom oldPmUom;
+	
+	private UomResDTO uomResDTO ;
+	
+	/** The AUDIT PM UOM OLD Value. */
+	private PmUom auditUomOldVal;
 
 	public UnitOfMeasurementManagedBean(){}
 	
@@ -119,4 +126,19 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 		this.oldPmUom = oldPmUom;
 	}
 
+	public PmUom getAuditUomOldVal() {
+		return auditUomOldVal;
+	}
+
+	public void setAuditUomOldVal(PmUom auditUomOldVal) {
+		this.auditUomOldVal = auditUomOldVal;
+	}
+
+	public UomResDTO getUomResDTO() {
+		return uomResDTO;
+	}
+
+	public void setUomResDTO(UomResDTO uomResDTO) {
+		this.uomResDTO = uomResDTO;
+	}
 }

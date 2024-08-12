@@ -26,8 +26,10 @@ public class RaceManagedBean extends BaseManagedBean {
 	private String raceNames;
 	private Long recordStatus;
 	private boolean isLazy;
-	
-	public RaceManagedBean(){}
+	private PmRace oldPmRace;
+
+	public RaceManagedBean() {
+	}
 
 	/**
 	 * @return the pmRace
@@ -37,7 +39,8 @@ public class RaceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmRace the pmRace to set
+	 * @param pmRace
+	 *            the pmRace to set
 	 */
 	public void setPmRace(PmRace pmRace) {
 		this.pmRace = pmRace;
@@ -51,7 +54,8 @@ public class RaceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param raceCode the raceCode to set
+	 * @param raceCode
+	 *            the raceCode to set
 	 */
 	public void setRaceCode(String raceCode) {
 		this.raceCode = raceCode;
@@ -65,7 +69,8 @@ public class RaceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param raceNames the raceNames to set
+	 * @param raceNames
+	 *            the raceNames to set
 	 */
 	public void setRaceNames(String raceNames) {
 		this.raceNames = raceNames;
@@ -79,7 +84,8 @@ public class RaceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param recordStatus the recordStatus to set
+	 * @param recordStatus
+	 *            the recordStatus to set
 	 */
 	public void setRecordStatus(Long recordStatus) {
 		this.recordStatus = recordStatus;
@@ -93,11 +99,19 @@ public class RaceManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isLazy the isLazy to set
+	 * @param isLazy
+	 *            the isLazy to set
 	 */
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
 	}
 
-	
+	public PmRace getOldPmRace() {
+		return oldPmRace;
+	}
+
+	public void setOldPmRace(PmRace oldPmRace) {
+		this.oldPmRace = oldPmRace;
+	}
+
 }

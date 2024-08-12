@@ -8,6 +8,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -21,33 +24,33 @@ import my.ep.web.managedbean.BaseManagedBean;
  * 
  * @author RAIN POH
  * @since 8/7/2013
- *
+ * 
  */
 @ManagedBean(name = "supportDocManagedBean")
 @SessionScoped
 public class SupportDocumentManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	
+
 	private SupportDocumentSearchBean supportDocSearchBean;
 	private PmDocument selectedDocument;
 	private boolean checkList;
-	private List <PmDocumentRestr> appTypeRestrictions;
-	private List <PmDocumentRestr> comTypeRestrictions;
-	private List <PmDocumentRestr> suppTypeRestrictions;
-	private List <PmDocumentRestr> categoryRestrictions;
-	private List <PmDocumentRestr> certBodyRestrictions;
-	private List <PmDocumentRestr> checkListRestrictions;
-	private List <PmDocumentRestr> deleteAppTypeRestrictions;
-	private List <PmDocumentRestr> deleteComTypeRestrictions;
-	private List <PmDocumentRestr> deleteSuppTypeRestrictions;
-	private List <PmDocumentRestr> deleteCategoryRestrictions;
-	private List <PmDocumentRestr> deleteCertBodyRestrictions;
-	private List <PmDocumentRestr> deleteCheckListRestrictions;
-	private List <PmDocumentRestr> deleteRestrictions;
+	private List<PmDocumentRestr> appTypeRestrictions;
+	private List<PmDocumentRestr> comTypeRestrictions;
+	private List<PmDocumentRestr> suppTypeRestrictions;
+	private List<PmDocumentRestr> categoryRestrictions;
+	private List<PmDocumentRestr> certBodyRestrictions;
+	private List<PmDocumentRestr> checkListRestrictions;
+	private List<PmDocumentRestr> deleteAppTypeRestrictions;
+	private List<PmDocumentRestr> deleteComTypeRestrictions;
+	private List<PmDocumentRestr> deleteSuppTypeRestrictions;
+	private List<PmDocumentRestr> deleteCategoryRestrictions;
+	private List<PmDocumentRestr> deleteCertBodyRestrictions;
+	private List<PmDocumentRestr> deleteCheckListRestrictions;
+	private List<PmDocumentRestr> deleteRestrictions;
 	private SelectItem[] supplierActionItems;
 	private SelectItem[] docDefinitionOptions;
 	private PmCategoryL3 selectedCategoryL3;
-	private List <PmCertBody> selectedCertBodies;
+	private List<PmCertBody> selectedCertBodies;
 	private int selectedTabIndex;
 	private PmParameter supplierDocParameter;
 	private Integer deleteRowIndex;
@@ -57,8 +60,17 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private boolean isPersonnelBranchChanged;
 	private boolean isCapitalEquityChanged;
 	private boolean isBankChanged;
+	private PmDocument selectedDocumentOld;
+	private DocumentReqDTO reqDTO;
+	private DocumentResDTO resDTO;
+	private List<PmDocumentRestr> pmDocumentRestrList;
+	private List<PmDocumentRestr> deletedPmDocumentRestrList;
+	private List<PmDocumentRestr> updatedPmDocumentRestrList;
 	
-	public SupportDocumentManagedBean(){}
+	boolean updated;
+
+	public SupportDocumentManagedBean() {
+	}
 
 	/**
 	 * @return the selectedTabIndex
@@ -68,7 +80,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedTabIndex the selectedTabIndex to set
+	 * @param selectedTabIndex
+	 *            the selectedTabIndex to set
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
@@ -82,7 +95,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param appTypeRestrictions the appTypeRestrictions to set
+	 * @param appTypeRestrictions
+	 *            the appTypeRestrictions to set
 	 */
 	public void setAppTypeRestrictions(List<PmDocumentRestr> appTypeRestrictions) {
 		this.appTypeRestrictions = appTypeRestrictions;
@@ -96,7 +110,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param comTypeRestrictions the comTypeRestrictions to set
+	 * @param comTypeRestrictions
+	 *            the comTypeRestrictions to set
 	 */
 	public void setComTypeRestrictions(List<PmDocumentRestr> comTypeRestrictions) {
 		this.comTypeRestrictions = comTypeRestrictions;
@@ -110,7 +125,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param suppTypeRestrictions the suppTypeRestrictions to set
+	 * @param suppTypeRestrictions
+	 *            the suppTypeRestrictions to set
 	 */
 	public void setSuppTypeRestrictions(List<PmDocumentRestr> suppTypeRestrictions) {
 		this.suppTypeRestrictions = suppTypeRestrictions;
@@ -124,7 +140,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param categoryRestrictions the categoryRestrictions to set
+	 * @param categoryRestrictions
+	 *            the categoryRestrictions to set
 	 */
 	public void setCategoryRestrictions(List<PmDocumentRestr> categoryRestrictions) {
 		this.categoryRestrictions = categoryRestrictions;
@@ -138,7 +155,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkList the checkList to set
+	 * @param checkList
+	 *            the checkList to set
 	 */
 	public void setCheckList(boolean checkList) {
 		this.checkList = checkList;
@@ -148,16 +166,16 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	 * @return the supportDocSearchBean
 	 */
 	public SupportDocumentSearchBean getSupportDocSearchBean() {
-		if(supportDocSearchBean==null)
+		if (supportDocSearchBean == null)
 			supportDocSearchBean = new SupportDocumentSearchBean();
 		return supportDocSearchBean;
 	}
 
 	/**
-	 * @param supportDocSearchBean the supportDocSearchBean to set
+	 * @param supportDocSearchBean
+	 *            the supportDocSearchBean to set
 	 */
-	public void setSupportDocSearchBean(
-			SupportDocumentSearchBean supportDocSearchBean) {
+	public void setSupportDocSearchBean(SupportDocumentSearchBean supportDocSearchBean) {
 		this.supportDocSearchBean = supportDocSearchBean;
 	}
 
@@ -169,7 +187,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedDocument the selectedDocument to set
+	 * @param selectedDocument
+	 *            the selectedDocument to set
 	 */
 	public void setSelectedDocument(PmDocument selectedDocument) {
 		this.selectedDocument = selectedDocument;
@@ -183,10 +202,10 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deleteAppTypeRestrictions the deleteAppTypeRestrictions to set
+	 * @param deleteAppTypeRestrictions
+	 *            the deleteAppTypeRestrictions to set
 	 */
-	public void setDeleteAppTypeRestrictions(
-			List<PmDocumentRestr> deleteAppTypeRestrictions) {
+	public void setDeleteAppTypeRestrictions(List<PmDocumentRestr> deleteAppTypeRestrictions) {
 		this.deleteAppTypeRestrictions = deleteAppTypeRestrictions;
 	}
 
@@ -198,10 +217,10 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deleteComTypeRestrictions the deleteComTypeRestrictions to set
+	 * @param deleteComTypeRestrictions
+	 *            the deleteComTypeRestrictions to set
 	 */
-	public void setDeleteComTypeRestrictions(
-			List<PmDocumentRestr> deleteComTypeRestrictions) {
+	public void setDeleteComTypeRestrictions(List<PmDocumentRestr> deleteComTypeRestrictions) {
 		this.deleteComTypeRestrictions = deleteComTypeRestrictions;
 	}
 
@@ -213,10 +232,10 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deleteSuppTypeRestrictions the deleteSuppTypeRestrictions to set
+	 * @param deleteSuppTypeRestrictions
+	 *            the deleteSuppTypeRestrictions to set
 	 */
-	public void setDeleteSuppTypeRestrictions(
-			List<PmDocumentRestr> deleteSuppTypeRestrictions) {
+	public void setDeleteSuppTypeRestrictions(List<PmDocumentRestr> deleteSuppTypeRestrictions) {
 		this.deleteSuppTypeRestrictions = deleteSuppTypeRestrictions;
 	}
 
@@ -228,10 +247,10 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deleteCategoryRestrictions the deleteCategoryRestrictions to set
+	 * @param deleteCategoryRestrictions
+	 *            the deleteCategoryRestrictions to set
 	 */
-	public void setDeleteCategoryRestrictions(
-			List<PmDocumentRestr> deleteCategoryRestrictions) {
+	public void setDeleteCategoryRestrictions(List<PmDocumentRestr> deleteCategoryRestrictions) {
 		this.deleteCategoryRestrictions = deleteCategoryRestrictions;
 	}
 
@@ -250,7 +269,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkListRestrictions the checkListRestrictions to set
+	 * @param checkListRestrictions
+	 *            the checkListRestrictions to set
 	 */
 	public void setCheckListRestrictions(List<PmDocumentRestr> checkListRestrictions) {
 		this.checkListRestrictions = checkListRestrictions;
@@ -264,50 +284,50 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deleteCheckListRestrictions the deleteCheckListRestrictions to set
+	 * @param deleteCheckListRestrictions
+	 *            the deleteCheckListRestrictions to set
 	 */
-	public void setDeleteCheckListRestrictions(
-			List<PmDocumentRestr> deleteCheckListRestrictions) {
+	public void setDeleteCheckListRestrictions(List<PmDocumentRestr> deleteCheckListRestrictions) {
 		this.deleteCheckListRestrictions = deleteCheckListRestrictions;
 	}
 
 	/**
-	 * @param selectedCategoryL3 the selectedCategoryL3 to set
+	 * @param selectedCategoryL3
+	 *            the selectedCategoryL3 to set
 	 */
 	public void setSelectedCategoryL3(PmCategoryL3 selectedCategoryL3) {
 		this.selectedCategoryL3 = selectedCategoryL3;
 	}
 
-	public List <PmDocumentRestr> getCertBodyRestrictions() {
+	public List<PmDocumentRestr> getCertBodyRestrictions() {
 		return certBodyRestrictions;
 	}
 
-	public void setCertBodyRestrictions(List <PmDocumentRestr> certBodyRestrictions) {
+	public void setCertBodyRestrictions(List<PmDocumentRestr> certBodyRestrictions) {
 		this.certBodyRestrictions = certBodyRestrictions;
 	}
 
-	public List <PmDocumentRestr> getDeleteCertBodyRestrictions() {
+	public List<PmDocumentRestr> getDeleteCertBodyRestrictions() {
 		return deleteCertBodyRestrictions;
 	}
 
-	public void setDeleteCertBodyRestrictions(
-			List <PmDocumentRestr> deleteCertBodyRestrictions) {
+	public void setDeleteCertBodyRestrictions(List<PmDocumentRestr> deleteCertBodyRestrictions) {
 		this.deleteCertBodyRestrictions = deleteCertBodyRestrictions;
 	}
 
-	public List <PmCertBody> getSelectedCertBodies() {
+	public List<PmCertBody> getSelectedCertBodies() {
 		return selectedCertBodies;
 	}
 
-	public void setSelectedCertBodies(List <PmCertBody> selectedCertBodies) {
+	public void setSelectedCertBodies(List<PmCertBody> selectedCertBodies) {
 		this.selectedCertBodies = selectedCertBodies;
 	}
 
-	public List <PmDocumentRestr> getDeleteRestrictions() {
+	public List<PmDocumentRestr> getDeleteRestrictions() {
 		return deleteRestrictions;
 	}
 
-	public void setDeleteRestrictions(List <PmDocumentRestr> deleteRestrictions) {
+	public void setDeleteRestrictions(List<PmDocumentRestr> deleteRestrictions) {
 		this.deleteRestrictions = deleteRestrictions;
 	}
 
@@ -319,7 +339,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierActionItems the supplierActionItems to set
+	 * @param supplierActionItems
+	 *            the supplierActionItems to set
 	 */
 	public void setSupplierActionItems(SelectItem[] supplierActionItems) {
 		this.supplierActionItems = supplierActionItems;
@@ -333,7 +354,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param docDefinitionOptions the docDefinitionOptions to set
+	 * @param docDefinitionOptions
+	 *            the docDefinitionOptions to set
 	 */
 	public void setDocDefinitionOptions(SelectItem[] docDefinitionOptions) {
 		this.docDefinitionOptions = docDefinitionOptions;
@@ -347,13 +369,12 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deleteRowIndex the deleteRowIndex to set
+	 * @param deleteRowIndex
+	 *            the deleteRowIndex to set
 	 */
 	public void setDeleteRowIndex(Integer deleteRowIndex) {
 		this.deleteRowIndex = deleteRowIndex;
 	}
-
-
 
 	/**
 	 * @return the supplierDocParameter
@@ -362,10 +383,9 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 		return supplierDocParameter;
 	}
 
-
-
 	/**
-	 * @param supplierDocParameter the supplierDocParameter to set
+	 * @param supplierDocParameter
+	 *            the supplierDocParameter to set
 	 */
 	public void setSupplierDocParameter(PmParameter supplierDocParameter) {
 		this.supplierDocParameter = supplierDocParameter;
@@ -379,7 +399,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedAppTypeRestr the selectedAppTypeRestr to set
+	 * @param selectedAppTypeRestr
+	 *            the selectedAppTypeRestr to set
 	 */
 	public void setSelectedAppTypeRestr(PmDocumentRestr selectedAppTypeRestr) {
 		this.selectedAppTypeRestr = selectedAppTypeRestr;
@@ -393,7 +414,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isCompanyInfoChanged the isCompanyInfoChanged to set
+	 * @param isCompanyInfoChanged
+	 *            the isCompanyInfoChanged to set
 	 */
 	public void setCompanyInfoChanged(boolean isCompanyInfoChanged) {
 		this.isCompanyInfoChanged = isCompanyInfoChanged;
@@ -407,7 +429,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isAsscProjChanged the isAsscProjChanged to set
+	 * @param isAsscProjChanged
+	 *            the isAsscProjChanged to set
 	 */
 	public void setAsscProjChanged(boolean isAsscProjChanged) {
 		this.isAsscProjChanged = isAsscProjChanged;
@@ -421,7 +444,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isPersonnelBranchChanged the isPersonnelBranchChanged to set
+	 * @param isPersonnelBranchChanged
+	 *            the isPersonnelBranchChanged to set
 	 */
 	public void setPersonnelBranchChanged(boolean isPersonnelBranchChanged) {
 		this.isPersonnelBranchChanged = isPersonnelBranchChanged;
@@ -435,7 +459,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isCapitalEquityChanged the isCapitalEquityChanged to set
+	 * @param isCapitalEquityChanged
+	 *            the isCapitalEquityChanged to set
 	 */
 	public void setCapitalEquityChanged(boolean isCapitalEquityChanged) {
 		this.isCapitalEquityChanged = isCapitalEquityChanged;
@@ -449,11 +474,66 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isBankChanged the isBankChanged to set
+	 * @param isBankChanged
+	 *            the isBankChanged to set
 	 */
 	public void setBankChanged(boolean isBankChanged) {
 		this.isBankChanged = isBankChanged;
 	}
 
-	
+	public PmDocument getSelectedDocumentOld() {
+		return selectedDocumentOld;
+	}
+
+	public void setSelectedDocumentOld(PmDocument selectedDocumentOld) {
+		this.selectedDocumentOld = selectedDocumentOld;
+	}
+
+	public DocumentReqDTO getReqDTO() {
+		return reqDTO;
+	}
+
+	public void setReqDTO(DocumentReqDTO reqDTO) {
+		this.reqDTO = reqDTO;
+	}
+
+	public DocumentResDTO getResDTO() {
+		return resDTO;
+	}
+
+	public void setResDTO(DocumentResDTO resDTO) {
+		this.resDTO = resDTO;
+	}
+
+	public List<PmDocumentRestr> getPmDocumentRestrList() {
+		return pmDocumentRestrList;
+	}
+
+	public void setPmDocumentRestrList(List<PmDocumentRestr> pmDocumentRestrList) {
+		this.pmDocumentRestrList = pmDocumentRestrList;
+	}
+
+	public boolean isUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(boolean updated) {
+		this.updated = updated;
+	}
+
+	public List<PmDocumentRestr> getDeletedPmDocumentRestrList() {
+		return deletedPmDocumentRestrList;
+	}
+
+	public void setDeletedPmDocumentRestrList(List<PmDocumentRestr> deletedPmDocumentRestrList) {
+		this.deletedPmDocumentRestrList = deletedPmDocumentRestrList;
+	}
+
+	public List<PmDocumentRestr> getUpdatedPmDocumentRestrList() {
+		return updatedPmDocumentRestrList;
+	}
+
+	public void setUpdatedPmDocumentRestrList(List<PmDocumentRestr> updatedPmDocumentRestrList) {
+		this.updatedPmDocumentRestrList = updatedPmDocumentRestrList;
+	}
 }

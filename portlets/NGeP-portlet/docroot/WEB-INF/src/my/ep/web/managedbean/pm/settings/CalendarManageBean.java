@@ -13,6 +13,8 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
+import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
+import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -36,6 +38,15 @@ public class CalendarManageBean extends BaseManagedBean {
 	private boolean isNewEvent;
 	private Date initialDate;
 	private boolean disabledUpdate;
+	private boolean deletedEvent = false;
+	private CalendarResDTO resCalendarDTO ;
+	private CalendarReqDTO reqCalendarDTO;
+	private String newTitleValue;	
+	private Date newStartDate;
+	private Date newEndDate;
+	private String OldTitleValue;
+	private Date oldEndDate;
+	private Date oldStartDate;
 
 	public CalendarManageBean(){}
 
@@ -149,6 +160,78 @@ public class CalendarManageBean extends BaseManagedBean {
 	 */
 	public void setDisabledUpdate(boolean disabledUpdate) {
 		this.disabledUpdate = disabledUpdate;
+	}
+
+	public boolean isDeletedEvent() {
+		return deletedEvent;
+	}
+
+	public void setDeletedEvent(boolean deletedEvent) {
+		this.deletedEvent = deletedEvent;
+	}
+
+	public CalendarResDTO getResCalendarDTO() {
+		return resCalendarDTO;
+	}
+
+	public void setResCalendarDTO(CalendarResDTO resCalendarDTO) {
+		this.resCalendarDTO = resCalendarDTO;
+	}
+
+	public CalendarReqDTO getReqCalendarDTO() {
+		return reqCalendarDTO;
+	}
+
+	public void setReqCalendarDTO(CalendarReqDTO reqCalendarDTO) {
+		this.reqCalendarDTO = reqCalendarDTO;
+	}
+
+	public String getNewTitleValue() {
+		return newTitleValue;
+	}
+
+	public void setNewTitleValue(String newTitleValue) {
+		this.newTitleValue = newTitleValue;
+	}
+
+	public Date getOldStartDate() {
+		return oldStartDate;
+	}
+
+	public void setOldStartDate(Date oldStartDate) {
+		this.oldStartDate = oldStartDate;
+	}
+
+	public Date getNewStartDate() {
+		return newStartDate;
+	}
+
+	public void setNewStartDate(Date newStartDate) {
+		this.newStartDate = newStartDate;
+	}
+
+	public Date getNewEndDate() {
+		return newEndDate;
+	}
+
+	public void setNewEndDate(Date newEndDate) {
+		this.newEndDate = newEndDate;
+	}
+
+	public String getOldTitleValue() {
+		return OldTitleValue;
+	}
+
+	public void setOldTitleValue(String oldTitleValue) {
+		OldTitleValue = oldTitleValue;
+	}
+
+	public Date getOldEndDate() {
+		return oldEndDate;
+	}
+
+	public void setOldEndDate(Date oldEndDate) {
+		this.oldEndDate = oldEndDate;
 	}
 	
 }

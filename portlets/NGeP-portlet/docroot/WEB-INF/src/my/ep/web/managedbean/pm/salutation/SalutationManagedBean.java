@@ -6,6 +6,8 @@ package my.ep.web.managedbean.pm.salutation;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
+import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -30,6 +32,12 @@ public class SalutationManagedBean extends BaseManagedBean {
 	private Long status;
 
 	private boolean isLazy;
+	
+	private CalendarResDTO resCalendarDTO;
+	
+	private CalendarReqDTO reqCalendarDTO;
+	
+	private PmSalutation oldPmSalutation;
 	
 	public SalutationManagedBean(){}
 
@@ -99,6 +107,30 @@ public class SalutationManagedBean extends BaseManagedBean {
 
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+
+	public CalendarResDTO getResCalendarDTO() {
+		return resCalendarDTO;
+	}
+
+	public void setResCalendarDTO(CalendarResDTO resCalendarDTO) {
+		this.resCalendarDTO = resCalendarDTO;
+	}
+
+	public CalendarReqDTO getReqCalendarDTO() {
+		return reqCalendarDTO;
+	}
+
+	public void setReqCalendarDTO(CalendarReqDTO reqCalendarDTO) {
+		this.reqCalendarDTO = reqCalendarDTO;
+	}
+
+	public PmSalutation getOldPmSalutation() {
+		return oldPmSalutation;
+	}
+
+	public void setOldPmSalutation(PmSalutation oldPmSalutation) {
+		this.oldPmSalutation = oldPmSalutation;
 	}
 
 }
