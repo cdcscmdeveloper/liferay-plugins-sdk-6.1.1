@@ -10025,7 +10025,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
 
 			String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 
@@ -10040,34 +10039,15 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			}
 
 			if (ParameterConst.DECISION_RE_PUBLISH.equals(decisionTypeCode)) {
-				Long parameterId = scQtFinalization.getRePublishOption().getParameterId();
-				reqDTO.setParameterId(parameterId);
-				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-				if ((ParameterConst.WITH_OUT_SPEC_CHANGES.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode()) || ParameterConst.WITH__SPEC_CHANGES
-						.equalsIgnoreCase(resDTO.getPmParameter().getParameterCode()))
-						&& isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) { // #25426#264
-					throw new EpException(MessageConst.ERROR_760486);
-				}
+				
+				handleRePublishDecision(scQtFinalization, parameterSO, decisionTypeCode, stageType);
 
 			} else if (ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode) && isECNotSelected) {// #25426#264
 																											// if
 																											// evaluationcommitee
 																											// not
 																											// selected
-				scQt = getManagedBean().getScQt();
-				if (ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType())
-						&& ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization
-								.getReEvaluateCommitte()) &&
-						// Checking on inactive EC Chairperson/Secretary/Member
-						isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {// #25426#264
-					throw new EpException(MessageConst.ERROR_760487);
-
-				} else if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType())
-						&& ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization
-								.getReEvaluateCommitte())
-						&& isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {// #25426#264
-					throw new EpException(MessageConst.ERROR_760488);
-				}
+				handleReEvaluationDecision(scQtFinalization, stageType, decisionTypeCode);
 			}
 
 		} catch (Exception e) {
@@ -10075,6 +10055,50 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SUPPLIER_FINALIZATION_BACKINGBEAN, scQtFinalization.getScQt().getQtNo(),
 					"checkInactiveCommiteeRole", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	
+	/**
+	 * 202407252@haziq #25426
+	 * To handle Re Publish Decision
+	 * @param scQtFinalization
+	 * @param parameterSO
+	 * @param decisionTypeCode
+	 * @param stageType
+	 */
+	private void handleRePublishDecision(ScQtFinalization scQtFinalization, IParameterSO parameterSO,
+			String decisionTypeCode, String stageType) {
+		Long parameterId = scQtFinalization.getRePublishOption().getParameterId();
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(parameterId);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+
+		String parameterCode = resDTO.getPmParameter().getParameterCode();
+		if (ParameterConst.WITH_OUT_SPEC_CHANGES.equalsIgnoreCase(parameterCode)
+				|| ParameterConst.WITH__SPEC_CHANGES.equalsIgnoreCase(parameterCode)
+				&& isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {// #25426#264
+			throw new EpException(MessageConst.ERROR_760486);
+		}
+	}
+	
+	/**
+	 * 202407252@haziq #25426
+	 * To handle Re Evaluation Decision
+	 * @param scQtFinalization
+	 * @param stageType
+	 * @param decisionTypeCode
+	 */
+	private void handleReEvaluationDecision(ScQtFinalization scQtFinalization, String stageType, String decisionTypeCode) {
+		scQt = getManagedBean().getScQt();
+		boolean isOneTierEvaluation = ParameterConst.EVALUATION_TYPES_ONE_TIER.equals(scQt.getEvaluationType());
+		boolean isTwoTierEvaluation = ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType());
+		boolean isExistingCommittee = ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization
+				.getReEvaluateCommitte());
+
+		if ((isOneTierEvaluation && isExistingCommittee || isTwoTierEvaluation && isExistingCommittee)
+				&& isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {
+			String errorMessage = isOneTierEvaluation ? MessageConst.ERROR_760487 : MessageConst.ERROR_760488;
+			throw new EpException(errorMessage);
 		}
 	}
 	
