@@ -140,6 +140,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayReviseInstrn;
 	// #25638 - End
 	
+	//#25037-start
+	private String currentTaskDocType;
+	
+	//27346-start
 	// start #29956
 	private String termAndConditionCheckOwner;
 	private String termAndConditionCheckOwnerA;
@@ -147,11 +151,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerChangeRole;
 	private Boolean isDowngradeRole;
 	// end #29956
-
-	//#25037-start
-	private String currentTaskDocType;
-	
-	//27346-start 
 	// 27346
 	private StreamedContent downloadfile;
 	
@@ -889,60 +888,6 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25638 - End
 	
-	// start #29956
-	public String getTermAndConditionCheckOwner() {
-		return termAndConditionCheckOwner;
-	}
-
-	public void setTermAndConditionCheckOwner(String termAndConditionCheckOwner) {
-		this.termAndConditionCheckOwner = termAndConditionCheckOwner;
-	}
-
-	public String getTermAndConditionCheckOwnerA() {
-		return termAndConditionCheckOwnerA;
-	}
-
-	public void setTermAndConditionCheckOwnerA(String termAndConditionCheckOwnerA) {
-		this.termAndConditionCheckOwnerA = termAndConditionCheckOwnerA;
-	}
-
-	public String getTermAndConditionCheckOwnerC() {
-		return termAndConditionCheckOwnerC;
-	}
-
-	public void setTermAndConditionCheckOwnerC(String termAndConditionCheckOwnerC) {
-		this.termAndConditionCheckOwnerC = termAndConditionCheckOwnerC;
-	}
-
-	public String getTermAndConditionCheckOwnerChangeRole() {
-		return termAndConditionCheckOwnerChangeRole;
-	}
-
-	public void setTermAndConditionCheckOwnerChangeRole(String termAndConditionCheckOwnerChangeRole) {
-		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
-	}
-
-	// end #29956
-
-	
-	//start #29956
-	public Boolean isDowngradeRole() {
-		return isDowngradeRole;
-	}
-
-	public void setDowngradeRole(Boolean isDowngradeRole) {
-		this.isDowngradeRole = isDowngradeRole;
-	}
-	//end #29956
-
-	public String getOutputPage() {
-		return outputPage;
-	}
-
-	public void setOutputPage(String outputPage) {
-		this.outputPage = outputPage;
-	}
-	
 	// #25037 - start
 	public String getCurrentTaskDocType() {
 		return currentTaskDocType;
@@ -976,5 +921,55 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setTotalShare(BigDecimal totalShare) {
 		this.totalShare = totalShare;
+	}
+	
+	// start #29956
+	public String getTermAndConditionCheckOwner() {
+		return termAndConditionCheckOwner;
+	}
+
+	public void setTermAndConditionCheckOwner(String termAndConditionCheckOwner) {
+		this.termAndConditionCheckOwner = termAndConditionCheckOwner;
+	}
+
+	public String getTermAndConditionCheckOwnerA() {
+		return termAndConditionCheckOwnerA;
+	}
+
+	public void setTermAndConditionCheckOwnerA(String termAndConditionCheckOwnerA) {
+		this.termAndConditionCheckOwnerA = termAndConditionCheckOwnerA;
+	}
+
+	public String getTermAndConditionCheckOwnerC() {
+		return termAndConditionCheckOwnerC;
+	}
+
+	public void setTermAndConditionCheckOwnerC(String termAndConditionCheckOwnerC) {
+		this.termAndConditionCheckOwnerC = termAndConditionCheckOwnerC;
+	}
+
+	public String getTermAndConditionCheckOwnerChangeRole() {
+		return termAndConditionCheckOwnerChangeRole;
+	}
+
+	public void setTermAndConditionCheckOwnerChangeRole(String termAndConditionCheckOwnerChangeRole) {
+		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
+	}
+
+	public Boolean isDowngradeRole() {
+		return isDowngradeRole;
+	}
+
+	public void setDowngradeRole(Boolean isDowngradeRole) {
+		this.isDowngradeRole = isDowngradeRole;
+	}
+	// end #29956
+
+	public String getOutputPage() {
+		return outputPage;
+	}
+
+	public void setOutputPage(String outputPage) {
+		this.outputPage = outputPage;
 	}
 }
