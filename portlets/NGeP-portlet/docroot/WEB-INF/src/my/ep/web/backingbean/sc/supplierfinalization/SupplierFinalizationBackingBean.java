@@ -8719,6 +8719,10 @@ return	remarksNotFound;
 				 */
 				reqDTO.setRequestItemId(selectedItemId); //PUT THIS CODE INTO SIT
 				reqDTO.setEvaluationStage(evaluationStage); //PUT THIS CODE INTO SIT
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				/*
 				 * BUG 34212 - FIX SORT ITEMIZE & PACKAGE IN SUPPLIER FINALIZATION START
 				 */
@@ -8936,6 +8940,10 @@ return	remarksNotFound;
 				/*
 				 * Development 32311: SLA LOG START
 				 */
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				long startTime = System.currentTimeMillis();
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 							.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
@@ -10013,6 +10021,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 	}
 	
+	
 	/**
 	 * 202407252@haziq #25426
 	 * To check Inactive Commitee Role
@@ -10095,7 +10104,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		boolean isExistingCommittee = ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization
 				.getReEvaluateCommitte());
 
-		if ((isOneTierEvaluation && isExistingCommittee || isTwoTierEvaluation && isExistingCommittee)
+		if (((isOneTierEvaluation || isTwoTierEvaluation) && isExistingCommittee)
 				&& isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {
 			String errorMessage = isOneTierEvaluation ? MessageConst.ERROR_760487 : MessageConst.ERROR_760488;
 			throw new EpException(errorMessage);
