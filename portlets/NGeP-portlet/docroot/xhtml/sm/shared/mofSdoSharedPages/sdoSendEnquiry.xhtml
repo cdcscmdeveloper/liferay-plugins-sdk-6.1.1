@@ -72,8 +72,8 @@
 			<p:column headerText="#{lbl['lbl.sm.remarks']}"
 				style="width : 27% !important;"
 				rendered="#{table.pmDocument.mandatory}">
-				<h:inputTextarea value="#{table.inquiryRemark}"
-					style="float: left;white-space: normal;width:97% !important;" />
+				<p:inputTextarea value="#{table.inquiryRemark}"
+					style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
 			</p:column>
 		</p:dataTable>
 		<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
@@ -145,8 +145,8 @@
 			<p:column headerText="#{lbl['lbl.sm.remarks']}"
 				style="width : 27% !important;"
 				rendered="#{!table.pmDocument.mandatory}">
-				<h:inputTextarea value="#{table.inquiryRemark}"
-					style="float: left;white-space: normal;width:97% !important;" />
+				<p:inputTextarea value="#{table.inquiryRemark}"
+					style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
 			</p:column>
 		</p:dataTable>
 		<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
