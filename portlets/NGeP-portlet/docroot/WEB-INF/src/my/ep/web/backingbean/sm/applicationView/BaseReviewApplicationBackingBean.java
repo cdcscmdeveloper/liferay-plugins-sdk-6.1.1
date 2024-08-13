@@ -163,13 +163,6 @@ import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
-//#28895_35501 Start - AUDIT TRAIL SM
-import java.math.BigInteger;
-import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
-import my.ep.web.bean.sm.AuSmSearchBean;
-import org.primefaces.event.TabChangeEvent;
-//#28895_35501 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
