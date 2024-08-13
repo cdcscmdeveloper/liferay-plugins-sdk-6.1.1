@@ -112,7 +112,7 @@
 					<p:column headerText="#{lbl['lbl.sm.remarks']}"
 						style="width : 27% !important;"
 						rendered="#{table.pmDocument.mandatory}">
-						<p:inputTextarea value="#{table.inquiryRemark}"
+						<h:inputTextarea value="#{table.inquiryRemark}"
 							style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
 					</p:column>
 				</p:dataTable>
@@ -187,7 +187,7 @@
 					<p:column headerText="#{lbl['lbl.sm.remarks']}"
 						style="width : 27% !important;"
 						rendered="#{!table.pmDocument.mandatory}">
-						<p:inputTextarea value="#{table.inquiryRemark}"
+						<h:inputTextarea value="#{table.inquiryRemark}"
 							style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
 					</p:column>
 				</p:dataTable>
