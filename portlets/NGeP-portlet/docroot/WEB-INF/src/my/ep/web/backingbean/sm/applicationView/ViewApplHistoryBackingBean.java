@@ -2057,17 +2057,5 @@ public class ViewApplHistoryBackingBean extends
 	}
 	// #32628 - end
 
-	// #28895_35501 Start - AUDIT TRAIL SM
-	public void onAuditTrailTabChange(TabChangeEvent event) {
-		String tabName = event.getTab().getId();
-		initAuditTrailTabInfo(tabName);
-	}
-
-	public void initAuditTrailTabInfo(String tabName) {
-		SmAppl suppAppl = getManagedBean().getSmAppl();
-		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		auSmView.loadAuditSupplierManagement(tabName, suppAppl);
-	}
-	// #28895_35501 End
 
 }
