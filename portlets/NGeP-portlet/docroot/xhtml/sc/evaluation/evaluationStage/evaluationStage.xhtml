@@ -255,7 +255,8 @@
 				</ui:fragment></td>
 			<td><ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '1'}">
+					and (evaluationBackingBean.managedBean.tabTechnicalIndex eq '1' or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
+					or evaluationBackingBean.managedBean.tabTechnicalIndex eq '3')}">
 
 
 
@@ -268,70 +269,27 @@
 
 
 				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-
-				</ui:fragment><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '3'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-
-				</ui:fragment>
-				<ui:remove>#28784 - start</ui:remove>
-				<ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee 
+					and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
 					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '4'}">
 
-
-
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right" disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
+						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
+						disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
 						update=":form" /><!-- #28784 -->
 
 
 				</ui:fragment>
-				<ui:remove>#28784 - end</ui:remove><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '5'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right" disabled="#{!evaluationBackingBean.managedBean.afterDemoInv}"
-						update=":form" /><!-- #28784 -->
-
-
-				</ui:fragment><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'false'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '1'}">
-
 
 <ui:remove> 2tier </ui:remove>
+					<ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'false'}">
+
+
+
 					<p:commandButton value="#{lbl['lbl.btn.next']}"
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -341,79 +299,7 @@
 
 
 				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'false'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-
-				</ui:fragment><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'false'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '3'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '1'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-
-				</ui:fragment> 
-				<!-- #34588 start cater WIP -->
-				<ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
-					and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
-					
-					 <p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-					
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'
-					and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
-					
-					 <p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-					
-				</ui:fragment>
-<!-- #34588 start cater WIP -->
-				<ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabTechnicalIndex eq '3'}">
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
 
 
 
@@ -438,42 +324,8 @@
 						update=":form" />
 
 
-				</ui:fragment> 
-				<!-- EC, Financial Tab -start -->
-				<ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabFinancialIndex eq '1'}">
-			<ui:remove>
-				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
-			</ui:remove>
-						<c:if test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
-							<p:commandButton value="#{lbl['lbl.btn.next']}"
-								style="float:right;" styleClass="BtnSpacing"
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-								action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-								update=":form" />
-						</c:if>
-						
-<!-- #34588 start cater WIP -->
-
 				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabFinancialIndex eq '2'}">
-
-
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-
-				</ui:fragment><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'
-					and evaluationBackingBean.managedBean.tabFinancialIndex eq '3'}">
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' }">
 
 
 
@@ -481,23 +333,6 @@
 						style="float:right;" styleClass="BtnSpacing"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
-						update=":form" />
-
-
-				</ui:fragment>
-				<!-- EC, Financial Tab  -end -->
-				
-				<ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC' 
-					and (evaluationBackingBean.managedBean.tabFinancialIndex eq '1' 
-					or evaluationBackingBean.managedBean.tabFinancialIndex eq '2'
-					or evaluationBackingBean.managedBean.tabFinancialIndex eq '3')}">
-
-					<p:commandButton value="#{lbl['lbl.btn.next']}"
-						style="float:right;" styleClass="BtnSpacing"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex('2','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" iconPos="right"
 						update=":form" />
 

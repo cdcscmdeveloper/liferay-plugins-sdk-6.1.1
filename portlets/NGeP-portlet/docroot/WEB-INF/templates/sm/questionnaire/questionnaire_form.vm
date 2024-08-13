@@ -27,7 +27,12 @@
 			
 			<td class="txtBold" width="15%">MOF No. </td>
 			<td width="5%">:</td>
-			<td width="20%"> $mof </td>
+			##34920
+			<td width="20%"> 
+				#if($mof != $null) $mof 
+				#else N/A
+				#end
+			</td>
 			<td width="5%"> </td>
 			<br/><br/>
 		</tr>
@@ -35,7 +40,12 @@
 		<tr align="left">
 			<td class="txtBold" width="15%">Application Reference No. </td>
 			<td width="5%">:</td>
-			<td width="20%"> $applNo </td>
+			##34920
+			<td width="20%"> 
+				#if($applNo != $null) $applNo
+				#else N/A
+				#end
+			</td>
 			<td width="5%"> </td>
 			
 			<td class="txtBold" width="15%">Type of Application </td>

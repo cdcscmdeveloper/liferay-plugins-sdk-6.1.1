@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -80,6 +81,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
@@ -391,92 +393,14 @@ public class ViewApplHistoryBackingBean extends
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
-		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
-			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){
 			//start #29956
-			if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
-				personnelsRole.clear();
+			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
+			if(displayPopupDowngradeSSMOwner){
+				proceed = false;
 			}
-			// start #29956
-			Boolean dontShowDowngradePopup = false;
-			this.getManagedBean().setDisAllowOwnerEdit(isMofAccEffDateBefore6Months(this.getManagedBean().getSmSupplier()));
-			if (this.getManagedBean().isDisAllowOwnerEdit()) {
-				if (personnelsRole != null && personnelsRole.size() <= 0) {
-					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
-						if (personnel.getEpRole() == null
-								|| (personnel.getEpRole() != null && !my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
-										.contains(personnel.getEpRole()))) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
-							if (personnelDirectorSSM == null && personnelSSM == null) {
-								dontShowDowngradePopup = true;
-							}
-						}
-					}
-					for (SmPersonnel personnel : this.getManagedBean().getSmAppl().getSmPersonnels()) {
-						if (personnel.getEpRole() != null
-								&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
-										.contains(personnel.getEpRole())) {
-							SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(), "identificationNo");
-							SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
-									.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-											this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(), "identificationNo");
-							if (personnelDirectorSSM == null && personnelSSM == null) {
-								dontShowDowngradePopup = false;
-							}
-						}
-					}
-				}
-			}
-			// end #29956
-			//end #29956
-			for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
-				if (personnel.isEquityOwner() || personnel.isDirector()) {
-						SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelOwners(),"identificationNo");
-						SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),this.getManagedBean().getSsmResDTO().getSmPersonnelDirector(),"identificationNo");
-						if(personnelDirectorSSM == null && personnelSSM == null){
-							personnelsRole.add(personnel);
-					}
-				}
-			}
-			
-			// start #29956 smOwnerSsmPopup
-			String epRole = getEpRoleDowngradePopupByPersonnel(personnelsRole);
-
-			this.getManagedBean().setTermAndConditionCheckOwner(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole}));
-			this.getManagedBean().setTermAndConditionCheckOwnerA(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole}));
-			this.getManagedBean().setTermAndConditionCheckOwnerC(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-			this.getManagedBean().setTermAndConditionCheckOwnerChangeRole(
-					SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-			// end #29956
-			
-			log.info("--------------------------------personnelsRole.size()-----------------------------------"+personnelsRole.size());
-			//#start #29956
-			if(personnelsRole != null && personnelsRole.size() > 0 && !dontShowDowngradePopup) {
-				if (this.getManagedBean().isDisAllowOwnerEdit()) {
-					this.getManagedBean().setDontGetSsmData(true);
-				} else {
-					this.getManagedBean().setDontGetSsmData(false);
-				}
-				//#end #29956
-					proceed = false;
-					getManagedBean().setPreRegistration(false);  //#29956
-					getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
-					this.getManagedBean().setPersonnelsRole(personnelsRole);
-					RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-					RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-			}
-			
 		}
+		//end #29956
 		if(proceed){
 			if(resubmission){
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
@@ -643,13 +567,18 @@ public class ViewApplHistoryBackingBean extends
 			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
 			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
 					.getSmApplInquiries()) {
-				if (!StringUtils.isBlank(inquiry.getInquirySubject())
-						&& inquiry
-								.getInquirySubject()
-								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+				//#34392 - start
+//				if (!StringUtils.isBlank(inquiry.getInquirySubject())
+//						&& inquiry
+//								.getInquirySubject()
+//								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
 					inquiry.getSmApplSupportDocInquiries().size();
 					this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
-				}
+					//#34392 - start
+					POinquiryRowSelect(inquiry);
+					
+//				}
+				//#34392 - end
 			}
 		}		
 		//END 14530
@@ -1872,6 +1801,53 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
 		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		//#34392 - start
+		getManagedBean().setMandatoryDocsInquiry(
+				new ArrayList<SmApplSupportDocInquiry>());
+		getManagedBean().setNonMandatoryDocsInquiry(
+				new ArrayList<SmApplSupportDocInquiry>());
+		
+		for (SmApplSupportDocInquiry doc : applInquiry
+				.getSmApplSupportDocInquiries()) {
+			doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
+			if (doc.getPmDocument().isMandatory()) {
+				getManagedBean().getMandatoryDocsInquiry().add(doc);
+			} else if (!doc.getPmDocument().isMandatory()) {
+				getManagedBean().getNonMandatoryDocsInquiry().add(doc);
+			}
+
+		}
+
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())){
+			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+		
+		if(!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())){
+			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if(doc1.getPmDocument().getDisplaySeq() == null){
+						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
+					}
+					if(doc2.getPmDocument().getDisplaySeq() == null){
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+		//#34392 - end
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
@@ -1889,9 +1865,20 @@ public class ViewApplHistoryBackingBean extends
 				.getMofRegistrationSO()
 				.retrieveLatestRejectedApplicationBySupplierId(mofReqDTO)
 				.getSmAppl();
+		// #35336 START
+		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
+			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
+			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())) {
+				showErrorAdminHasBeenReplace();
+			}
+		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
+			showErrorAdminHasBeenReplace();
+		}
+		// #35336 END
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
-		smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
+			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
 		}
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
@@ -1929,7 +1916,11 @@ public class ViewApplHistoryBackingBean extends
 			button = false;
 		}
 		// #32628 - end
-		
+		//#35336 START
+		if (smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
+			button = false;
+		}
+		//#35336 END
 		return button;
 		//32627 - END
 	}
@@ -1957,7 +1948,8 @@ public class ViewApplHistoryBackingBean extends
 		
 		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
 			return false;
-		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
+		}else if((this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ //#34483
 			return false;
 		}
 		
@@ -2021,4 +2013,25 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		// #32628 - end
+		
+	// #35336 - START
+	private boolean isValidDateComparison(SmAppl latestRegisteredAppl, SmAppl latestRejectedAppl) {
+		return latestRegisteredAppl != null && latestRegisteredAppl.getChangedDate() != null
+			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
+	}
+
+	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
+		return latestRejectedAppl != null && latestRejectedAppl.getApplId() == smAppl.getApplId()
+			&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED);
+	}
+
+	private void showErrorAdminHasBeenReplace() {
+		FacesContext.getCurrentInstance().addMessage(
+			null,
+			new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
+				MessageConst.ERROR_721099, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale())));
+	}
+	// #35336 - END
+	
 }

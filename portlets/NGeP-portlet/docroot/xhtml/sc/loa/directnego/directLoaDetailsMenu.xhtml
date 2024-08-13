@@ -29,6 +29,9 @@
 	<ui:remove>Reopen #25726 note 110</ui:remove>
 	<ui:param name="StatusLOARevision" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION}"></ui:param>
 	<ui:remove>#25726 end</ui:remove>
+	<ui:remove>Reopen #25726 note 220 - issue 1</ui:remove>
+	<ui:param name="StatusLOAApproval" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_APPROVAL || directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
+	<ui:remove>#25726 end</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -359,7 +362,7 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />
@@ -409,22 +412,24 @@
 						id="fileExtNoMsg" for="fileExtNo" display="icon" />
 				</td>
 				<!-- 29468 Start Vinod -->
-				<td width="160px">
-					<p:outputLabel	value="#{lbl['lbl.sc.procurement.category']}" /> 
-					<p:outputLabel	value="*" styleClass="mandatory" />
-				</td>
+				<td width="160px"><p:outputLabel
+						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><c:choose>
-							<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
-							<p:selectOneMenu id="procBoCategory" 
+						<c:when
+							test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
+							<p:selectOneMenu id="procBoCategory"
+								required="true"
+								requiredMessage="#{directLOABackingBean.errorMessageForProcCat()}"
 								style="margin-bottom:5px;width:206px;"
 								value="#{directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory.parameterId}">
 								<f:selectItems
 									value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
-							 <p:ajax event="change" 
-									process="@this" partialSubmit="true" update="procBoCategory"
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="procBoCategory"
 									listener="#{directLOABackingBean.procCategoryChanged(directLOABackingBean.managedBean.scLoa)}" />
 							</p:selectOneMenu>
-							<p:message id="procBoCategoryMsg" for="procBoCategory"
+							<p:message id="procBoCategoryMsg" for="procBoCategory" 
 								display="icon" />
 						</c:when>
 						<c:otherwise>
@@ -432,7 +437,7 @@
 								value="#{directLOABackingBean.getParameterDesc(directLOABackingBean.managedBean.scLoa.scQt.pmProcurementCategory)}"
 								size="35" disabled="true" />
 						</c:otherwise>
-				</c:choose></td>
+					</c:choose></td>
 				<!-- 29468 End Vinod -->
 			</tr>
 			
@@ -484,7 +489,9 @@
 						<tr>
 							<td>
 								<c:choose>
-									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
+									<!-- 20231122@asyrafhaziq_25726 - Issue 17 --><!-- #29468 Added !isPendingApprovalStatus and !isPendingRevApprovalStatus Vinod -->
+									<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly and !isContractTypeAsCentral 
+									and !isPendingApprovalStatus and !isPendingRevApprovalStatus}">
 									<p:selectOneMenu id="fulfilId"
 										required="true"
 										label="#{lbl['lbl.sc.fullfillent.type']}"
@@ -516,10 +523,11 @@
 											size="35" disabled="true" />							
 									</c:otherwise>
 								</c:choose>
-							</td>
-							<td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
-							</td>
+							</td>	
+							<!-- Reopen #25726 note 187 - issue 10 -->	
+							  <td style="margin-top: -3px">
+							  <ac:iconTooltip  rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+							  </td>
 						</tr>
 					</table>
 				</td>
@@ -604,7 +612,7 @@
 							<td>
 								<h:panelGroup id="bondReqPG">
 									<c:choose>
-										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and !directLOABackingBean.managedBean.readOnly}">
+										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 											<c:choose>
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 													<p:selectOneMenu id="bondReqPk7Per" required="true"
@@ -616,14 +624,18 @@
 															
 														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+													    <!--  Reopen #25726 note 220 - issue 5	 -->
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
 													</p:selectOneMenu>
 												</c:when>
 												<c:otherwise>
 													<p:selectOneRadio id="bondReq" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.scLoa.bondReq}"
 														required="true"
-														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}">
-								
+														label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
+														disabled="true"> <!--  Reopen #25726 note 220 - issue 4	 -->
+
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 														<p:ajax partialSubmit="true" process="@this" update="menuTab" />
@@ -638,7 +650,7 @@
 													<c:choose>
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 															<c:choose>
-															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+															<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 																<p:inputText 
 																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 																size="28" disabled="true" />
@@ -653,6 +665,10 @@
 																	
 																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 																 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+															     <!--  Reopen #25726 note 220 - issue 5	 -->
+																 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 		listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
+															     
 															</p:selectOneMenu>
 															</c:otherwise>
 															</c:choose>
@@ -666,7 +682,7 @@
 												</c:when>
 												<c:otherwise>
 													<c:choose>
-													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
+													<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
 														<p:inputText 
 														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 														size="28" disabled="true" />
@@ -682,6 +698,10 @@
 															
 														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
 														 listener="#{directLOABackingBean.performanceBondChanged(directLOABackingBean.managedBean.bondReqSelectedVal)}"/>
+														<!--  Reopen #25726 note 220 - issue 5	 -->
+														 <p:ajax partialSubmit="true" process="@this" update="menuTab" 
+														 listener="#{directLOABackingBean.updatePerformanceBond(directLOABackingBean.managedBean.scLoa)}"/>
+													
 													</p:selectOneMenu>
 													</c:otherwise>
 													</c:choose>
@@ -735,7 +755,9 @@
 				</td>
 				<td>
 					<p:outputLabel style="width:145%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
-					<p:outputLabel style="width: 151%;text-align:left;margin-top: -40px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					<!-- 26770 start -->
+					<p:outputLabel style="width: 151%;text-align:left;margin-top: -63px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					<!-- 26770 end -->
 				</td>
 				<td>
 					<table>
@@ -879,14 +901,15 @@
 				 <p:outputLabel value="*" styleClass="mandatory"/>
 				</td>
 				<td colspan="3"><p:inputText style="text-align: right;" required="true" label="#{lbl[lblContractDuration]}"
-						id="contractDuration" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
+						id="#{QTFieldConst.FIELD_LOA_CONTRACT_PERIOD_ID}" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}"
 						value="#{directLOABackingBean.managedBean.scLoa.contractDuration}"
 						size="35">
-						<p:ajax event="blur" update="@this contractDuration,effdate,expdate,contractDurationMsg"
-							process="@this contractDuration"
+						<p:ajax event="blur" update="@this,effdate,expdate,contractDurationMsg"
+							process="@this"
 							partialSubmit="true"
 							listener="#{directLOABackingBean.resetContractDates()}"></p:ajax>
-					</p:inputText>  <p:message id="contractDurationMsg" for="contractDuration" display="icon" /></td>
+						<f:converter converterId="periodConverter"/>
+					</p:inputText>  <p:message id="contractDurationMsg" for="#{QTFieldConst.FIELD_LOA_CONTRACT_PERIOD_ID}" display="icon" /></td>
 			</tr>
 			<ui:param name="lbleffDate"  
 				value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
@@ -931,7 +954,7 @@
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{!StatusLOASubmission}">
+														disabled="#{!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 														<!-- #25726 START -->
@@ -944,7 +967,7 @@
 													<p:selectOneRadio id="agreementReq" styleClass="commonLabel"
 														value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.disabledButton() || !StatusLOASubmission}">
+														disabled="#{directLOABackingBean.disabledButton() || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
 														<f:selectItems
 															value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
@@ -972,7 +995,7 @@
 																style="margin-bottom:5px;width:246px;"
 																value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 																label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-																disabled="#{!StatusLOASubmission}">
+																disabled="#{!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval}">
 																<f:selectItems
 																	value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 																<!-- #25726 START -->
@@ -1002,7 +1025,7 @@
 														style="margin-bottom:5px;width:246px;"
 														value="#{directLOABackingBean.managedBean.agreemetSelectedVal}"
 														label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-														disabled="#{directLOABackingBean.managedBean.disableFields || !StatusLOASubmission}">
+														disabled="#{directLOABackingBean.managedBean.disableFields || (!StatusLOASubmission and !StatusLOARevision and !StatusLOAApproval)}">
 														<f:selectItems
 															value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.yesNoFlag)}" />
 															<!-- #25726 START -->
@@ -1019,10 +1042,18 @@
 								</h:panelGroup>
 							</td>
 							<td style="margin-top: -3px">
-								<!-- #25726 START -->
-								<ac:iconTooltip
+							<c:choose>
+								<c:when test="#{isContractTypeAsCentral}">
+								  <ac:iconTooltip
+									value="#{lbl['lbl.sc.required.agreement.qt.central.tooltip']}" />
+								</c:when>
+								<c:otherwise>
+								 <!-- #25726 START -->
+								  <ac:iconTooltip
 									value="#{lbl['lbl.sc.required.agreement.qt.tooltip']}" />
 								<!-- #25726 END -->
+								</c:otherwise>
+							</c:choose>
 							</td>
 						</tr>
 					</table>

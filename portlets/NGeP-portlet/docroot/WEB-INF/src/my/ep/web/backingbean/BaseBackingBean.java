@@ -68,7 +68,6 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
-import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -94,10 +93,9 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
-import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -141,10 +139,12 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.format.AttachmentDateFormat;
@@ -759,11 +759,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -1098,11 +1097,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}	
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//Sonarqube QT Vulnerability Minor Danial [3/8/2023] START			 
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "",
+					SLALogConstant.COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
 							e.getMessage()));
+
 		}
 
 		return items;
@@ -1262,11 +1266,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				//33849-End
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "",
+					SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+
 		}
 
 		return items;
@@ -1296,11 +1298,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+
 		}
 
 		return items;
@@ -2051,6 +2053,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//start #29956
 	/**
+	 * Compare all list in params with epRole
+	 * 
+	 * @param String
+	 *            roleCode
+        
+	 * @return String
+	 */
+	public Boolean compareSmPersonnelRoleAndStringRole(String[] params, String epRole) {
+		Boolean available = false;
+		String epRoleDesc = getEpRoleDescByRoleCode(epRole);
+		if (params != null && params.length > 0) {
+			for (int x=0; x<params.length; x++) {
+				if (params[x]!=null && params[x].equals(epRoleDesc)) {
+					available = true;
+				}
+			}
+		}
+		return available;
+	}
+	
+	/**
 	 * Get no eP Role by language
 	 * 
 	 * @param String
@@ -2113,7 +2136,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								sb.append(getNoEpRoleDescByLanguage());
 								x++;
 								noEp = true;
-							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) && !roles.equals("/ ")) {
+							} else if (smPersonnel.getEpRole() != null&& !roles.equals(getEpRoleDescByRoleCode(smPersonnel.getEpRole())) 
+									&& !compareSmPersonnelRoleAndStringRole(params, smPersonnel.getEpRole()) && !roles.equals("/ ")) {
 								params[x] = "/ ";
 								sb.append("/ ");
 								x++;
@@ -2456,7 +2480,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
-
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());//25037
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2975,6 +2999,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
+						resDTO.getSmPersonnel().setSsmData(false); //#29956
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -3074,6 +3101,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+				//#29582
+				ssmReqDTO.setSmSupp(smSupplier);
 				//27329
 				ssmReqDTO.setPreRegistration(true);
 				//ssmReqDTO.setCheckOnly(true);
@@ -3127,7 +3156,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								}
 							}
 							
-							if(personnelsRole != null && personnelsRole.size() > 0) {
+							if(personnelsRole.size() > 0) {
 								postRegBean.setDontGetSsmData(false);
 								postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());	
 								postRegBean.setShowPopup(true);
@@ -3149,40 +3178,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						}
 					}
 					//END 27329
-						// start #29956
-						if (postRegBean.getSmSupplier() != null && postRegBean.getSmSupplier().getSupplierId() != null) {
-
-							List<SmPersonnel> personnelsRole = postRegBean.getPersonnelsRole();
-							if(this.getManagedBean().isDowngradeRole()==null || !this.getManagedBean().isDowngradeRole()){
-								personnelsRole.clear();
-							}
-							if (personnelsRole != null && personnelsRole.size() <= 0) {
-								if (postRegBean.getSmSupplier().getSmAppl() != null
-										&& postRegBean.getSmSupplier().getSmAppl().getSmPersonnels() != null) {
-									for (SmPersonnel personnel : postRegBean.getSmSupplier().getSmAppl().getSmPersonnels()) {
-										if (personnel.isEquityOwner() || personnel.isDirector()) {
-												SmPersonnel personnelSSM = (SmPersonnel) EntityHelper
-														.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-																ssmResDTO.getSmPersonnelOwners(), "identificationNo");
-												SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper
-														.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),
-																ssmResDTO.getSmPersonnelDirector(), "identificationNo");
-												if (personnelDirectorSSM == null && personnelSSM == null) {
-													personnelsRole.add(personnel);
-												}
-										}
-									}
-								}
-							}
-
-							if (personnelsRole != null && personnelsRole.size() > 0) {
-								postRegBean.setDontGetSsmData(false);
-								postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());
-								postRegBean.setShowPopup(true);
-								postRegBean.setPersonnelsRole(personnelsRole);
-							}
-						}
-						// end #29956
+					
+					//START #29956
+					if(postRegBean.isResubmitAppl()){
+						SmAppl smAppl = SmCommonUtil.getLatestRejectedApplBySupplier(smSupplier);
+						displayPopupDowngradeSSMOwner(smAppl, ssmResDTO);
+					} else {									 
+						displayPopupDowngradeSSMOwner(postRegBean.getSmSupplier().getSmAppl(), ssmResDTO);
+					}
+					// end #29956
 				} 
 			else{					
 					SmCommonUtil.ssmError(ssmResDTO);
@@ -3431,6 +3435,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return retVal;
 	}	
+	
+	//29956 START
+	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
+		Boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
+		}
+		return retVal;
+	}
+	//29956 END
+		
 	public static void checkEquityOwnerUpdateAllowance(
 			BaseManagedBean managedBean) {
 		//#27165
@@ -4004,23 +4021,161 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//#21387 - End
 	
-	//#28175
+	//#28175 - start
 	/**
-	 * @param appl
 	 * @param catL3
+	 * @param isSupplierProfile
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3){
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile){
 		if(catL3 == null){
 			return null;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(appl == null || appl.isActiveAppl() || EntityHelper.isCollectionEmpty(
-				appl.getSmSupplierCategories())){
+		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
 			return catL3.getCategoryName();
 		}
 		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
 				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
 		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
 	}
+	
+	/**
+	 * @param catL3
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3){
+		return getSupplierCategoryName(catL3, false);
+	}
+	
+	/**
+	 * @param isSupplierProfile
+	 * @return
+	 */
+	public boolean isLatestCatCodeDesc(boolean isSupplierProfile){
+		return isLatestCatCodeDesc(isSupplierProfile, getManagedBean().getSmAppl());
+	}
+	
+	/**
+	 * @param isSupplierProfile
+	 * @param appl
+	 * @return
+	 */
+	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
+		if(appl == null || appl.getPmStatus() == null){
+			return false;
+		}
+		Long status = appl.getPmStatus().getStatusId();
+		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
+				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
+		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
+	}
+	//#28175 - end
+	
+	//START #29956
+	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
+		getManagedBean().getPersonnelsRole().clear();
+		getManagedBean().setDowngradeRole(false);
+		getManagedBean().setDisAllowOwnerEdit(false);
+		
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
+		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+		
+		PersonnelReqDTO reqDto = new PersonnelReqDTO();
+		reqDto.setApplId(smAppl.getApplId());
+		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
+			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
+				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				
+				if(shouldAddPersonnel){
+					getManagedBean().getPersonnelsRole().add(personnel);
+				}
+				
+				if(isPersonnelAdminRole
+						&& !isMofAccEffDatePassed6MonthCurrDate
+						&& !isBasicAccount){
+					getManagedBean().setDisAllowOwnerEdit(true);
+					break;
+				}
+			}
+		}
+		if(getManagedBean().getPersonnelsRole() != null 
+				&& !getManagedBean().getPersonnelsRole().isEmpty()) {
+			getManagedBean().setDowngradeRole(true);
+			
+			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
+			getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole }));
+			getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
+			getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
+			getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
+			
+			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+		}
+		return getManagedBean().isDowngradeRole();
+	}
+	
+	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){
+		return smPersonnel.getEpRole() != null 
+				&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(smPersonnel.getEpRole());
+	}
+	
+	public Boolean isPersonnelOwnerDirectorNull(SmPersonnel smPersonnelOwner,SmPersonnel smPersonnelDirector){
+		Boolean isPersonnelOwnerDirectorNull = false;
+		if(isNull(smPersonnelOwner) && isNull(smPersonnelDirector)){
+			isPersonnelOwnerDirectorNull = true;
+		}
+		return isPersonnelOwnerDirectorNull;
+	}
+	//END #29956
+	
+	// #28854 - Start
+	/**
+	 * Processes the given String value by replacing newline characters with
+	 * HTML line break tags and encoding the < and > characters to their HTML
+	 * entity equivalents.
+	 * 
+	 * @param value
+	 *            the string to be processed
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively
+	 */
+	public String encodeHtmlString(String value) {
+		if (value == null) {
+			return "";
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace newline characters with <br/>
+		return formatted.replace("\n", "<br/>");
+	}
+
+	/**
+	 * Encodes the given string as HTML if it is not null or empty.
+	 * 
+	 * <p>
+	 * This method checks if the input string is neither null nor empty. If the
+	 * string is valid, it is passed to the {@link #encodeHtmlString(String)}
+	 * method for encoding. If the string is null or empty, the method returns
+	 * null.
+	 * </p>
+	 * 
+	 * @param value
+	 *            the string to encode; may be null
+	 * @return the HTML-encoded string if {@code value} is not null or empty;
+	 *         {@code null} otherwise
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+		return (value != null && !value.isEmpty()) ? encodeHtmlString(value) : null;
+	}
+	// #28854 - End
 }

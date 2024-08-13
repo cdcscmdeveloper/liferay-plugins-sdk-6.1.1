@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,6 +66,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -3290,4 +3293,17 @@ public class SupplierDataMaintenanceBackingBean extends
 		return resDTO.getSmSupplierCategoryList();
 	}
 	//32891 - Checking category code for activeappl - 26238 - end
+	//32792 START
+	public String getLatestMOFNo(List<SmMofAccount> mofList){
+		// sort by created date 
+		Collections.sort(mofList,new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount mof1, SmMofAccount mof2) {
+				return Integer.valueOf(mof2.getCreatedDate().compareTo(mof1.getCreatedDate()));
+				
+			}
+		});
+		return mofList.get(0).getMofNo();
+	}
+	//32792 END
 }
