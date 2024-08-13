@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
@@ -106,7 +105,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 public class ViewApplHistoryBackingBean extends
-		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> implements Serializable{
+		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> {
 
 	/**
 	 * 
@@ -211,7 +210,8 @@ public class ViewApplHistoryBackingBean extends
 				SmSupplier paramSupplier = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(reqDTO).getSmSupplier();
 				getManagedBean().setSearchSupplier(new SmSupplier());
 				getManagedBean().getSearchSupplier().setRegNo(paramSupplier.getRegNo());
-				if (paramSupplier.getSmAppl() != null) {getManagedBean().setSearchSuppType(paramSupplier.getSmAppl().getSupplierType());
+				if (paramSupplier.getSmAppl() != null) {
+					getManagedBean().setSearchSuppType(paramSupplier.getSmAppl().getSupplierType());
 					if (paramSupplier.getSmAppl().getSmCompanyBasic() != null && !EntityHelper.isCollectionEmpty(paramSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses())) {
 						SmAddress address = paramSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
 						if (address != null && address.getPmState() != null) {
@@ -227,7 +227,7 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 
-		SmCommonUtil.redirectToPage("/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml","", null);
+		SmCommonUtil.redirectToPage("/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml", "", null);
 	}
 
 	/**
@@ -661,7 +661,7 @@ public class ViewApplHistoryBackingBean extends
 					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)) {
 						isPoUser = true;
 					}
-
+					
 					if (roleType.equals(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_APP)) {
 						isApproverUser = true;
 					}
@@ -963,10 +963,10 @@ public class ViewApplHistoryBackingBean extends
 	
 	public StreamedContent commonDownload(String path, String displayFileName)
 			throws IOException {
-
+		
 		String filePath = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-
+		
 		filePath += "/" + path;
 
 		commonDownloadUtil(filePath, displayFileName);
@@ -1259,7 +1259,7 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return retVal;
 	}
-
+	
 	public String onDisplayConfirmCanceMofRegistration() {
 		String page = null;
 		Locale locale = new FacesScopes().getUserLocale();
@@ -1270,7 +1270,7 @@ public class ViewApplHistoryBackingBean extends
 					"lbl.sm.mof.reg.reason.delete",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			sb.append(" is mandatory </br>");
-
+			
 		}
 		if (getManagedBean().getCancellationAttachment().getFileName() == null
 				|| getManagedBean().getCancellationAttachment().getFileName()
@@ -1278,7 +1278,7 @@ public class ViewApplHistoryBackingBean extends
 			sb.append(ResourceBundleUtils.getMessage("lbl.sm.suppdoc.attach",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			sb.append(" is mandatory ");
-
+			
 		}
 		return page;
 	}
@@ -1549,6 +1549,7 @@ public class ViewApplHistoryBackingBean extends
 			button = false;
 		}
 		// #32628 - end
+		
 		//#35336 START
 		if (smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 			button = false;
@@ -1669,19 +1670,6 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//#29823 - END
 	
-	// #32424 - start
-	public void updateRoleCode(Long applId, Long remarkId, String docType, String poRoleCode) {
-		System.out.println("ViewApplHistoryBackingBean.updateRoleCode()");
-		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-		reqDTO.setDocId(applId);
-		reqDTO.setRemarkId(remarkId);
-		reqDTO.setDocType(docType);
-		reqDTO.setRoleCode(poRoleCode);
-		
-		SmServiceLookup.getSmRemarksSO().updateRoleCode(reqDTO);
-	}
-	// #32424 - end
-	
 	//#32002 - start
 	public Boolean checkStatusMofNoBySupplierId(SmAppl smAppl){
 		
@@ -1792,4 +1780,18 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
+	
+	// #32424 - start
+	public void updateRoleCode(Long applId, Long remarkId, String docType, String poRoleCode) {
+		System.out.println("ViewApplHistoryBackingBean.updateRoleCode()");
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocId(applId);
+		reqDTO.setRemarkId(remarkId);
+		reqDTO.setDocType(docType);
+		reqDTO.setRoleCode(poRoleCode);
+
+		SmServiceLookup.getSmRemarksSO().updateRoleCode(reqDTO);
+	}
+	// #32424 - end
+	
 }
