@@ -2057,5 +2057,4 @@ public class ViewApplHistoryBackingBean extends
 	}
 	// #32628 - end
 
-
 }
