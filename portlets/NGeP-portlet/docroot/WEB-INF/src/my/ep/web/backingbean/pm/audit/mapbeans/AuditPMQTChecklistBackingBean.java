@@ -3,14 +3,11 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
-import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -34,10 +31,6 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 	AuditPMSPDTO detailObjSupplierAction = new AuditPMSPDTO();
 	AuditPMSPDTO detailObjScoringRequired = new AuditPMSPDTO();
 	AuditPMSPDTO detailObjStatus = new AuditPMSPDTO();
-	// AuditPMSPDTO detailObjProcurementCategory = new AuditPMSPDTO();
-	// AuditPMSPDTO detailObjMandatory = new AuditPMSPDTO();
-	// AuditPMSPDTO detailObjProcCatDelete = new AuditPMSPDTO();
-	// AuditPMSPDTO detailObjMandatoryDelete = new AuditPMSPDTO();
 	boolean updated = false;
 
 	@Override
@@ -55,9 +48,6 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 	public AuditPMReqDTO insert(BaseManagedBean managedBean, String roleCode) {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		SupportDocumentManagedBean managedBeans = (SupportDocumentManagedBean) managedBean;
-		// String pmCodeLevel3 = pmCodeLevel3(managedBeans);
-		// managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
-		// PM_LVL_CODE_3_FC
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		if (null != managedBeans.getResDTO().getDocument().getDocumentId()
 				&& null != managedBeans.getSelectedDocumentOld() && managedBeans.isUpdated()) {
@@ -171,9 +161,9 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			updateList(managedBeans, auditPMReqDTO, objList, roleCode);
 		}
 
-		managedBeans.getResDTO().getUpdatedPmDocumentRestrList().clear();
-		managedBeans.getResDTO().getDeletedProcurementCatCodeList().clear();
-		managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().clear();
+		managedBeans.setSelectedDocumentOld(null);
+		managedBeans.getResDTO().setUpdatedPmDocumentRestrList(null);
+		managedBeans.getResDTO().setDeletedProcurementCatCodeList(null);
 
 		return auditPMReqDTO;
 	}
@@ -181,8 +171,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 	private AuditPMReqDTO updateDetail(SupportDocumentManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
 			ArrayList<AuditPMSPDTO> objList, String roleCode) {
 		/* Display priority */
-		if (managedBeans.getSelectedDocumentOld().getRecordStatusFlg() != managedBeans.getResDTO().getDocument()
-				.getRecordStatusFlg()) {
+		if (managedBeans.getSelectedDocumentOld().getDisplaySeq() != managedBeans.getResDTO().getDocument()
+				.getDisplaySeq()) {
 			detailObjDisplayPriority.setRoleCode(roleCode);
 			detailObjDisplayPriority.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
 			detailObjDisplayPriority.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
@@ -254,120 +244,37 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 
 	private void updateList(SupportDocumentManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
 			ArrayList<AuditPMSPDTO> objList, String roleCode) {
-		
-		List<PmDocumentRestr> checklistRestrictionMandatoryNew = new ArrayList<PmDocumentRestr>();
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-			if (managedBeans.getSelectedDocument().isByProcureCat() && pmDocumentRestr.getProcurementCatCode() != null
-					&& DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
-				checklistRestrictionMandatoryNew.add(pmDocumentRestr);
-			}
+		if (null != managedBeans.getResDTO().getUpdatedPmDocumentRestrList()
+				&& !managedBeans.getResDTO().getUpdatedPmDocumentRestrList().isEmpty()) {
+			updatedPmDocumentRestrList(managedBeans, auditPMReqDTO, objList, roleCode);
 		}
-		
-		List<PmDocumentRestr> checklistRestrictionMandatoryOld = new ArrayList<PmDocumentRestr>();
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getSelectedDocument().getPmDocumentRestrs()) {
-			if (managedBeans.getSelectedDocument().isByProcureCat() && pmDocumentRestr.getProcurementCatCode() != null
-					&& DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
-				checklistRestrictionMandatoryOld.add(pmDocumentRestr);
-			}
-		}
-		
-		if(!checklistRestrictionMandatoryNew.isEmpty() && !checklistRestrictionMandatoryOld.isEmpty()){
-			for(PmDocumentRestr res : checklistRestrictionMandatoryNew){
-				for(PmDocumentRestr oldValue : checklistRestrictionMandatoryOld){
-					if(res.getDocumentRestrId() == oldValue.getDocumentRestrId() && res.isMandatory() != oldValue.isMandatory()){
-						AuditPMSPDTO detailObjMandatory = new AuditPMSPDTO();
-						detailObjMandatory.setRoleCode(roleCode);
-						detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-						detailObjMandatory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-						detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-						detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-						detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-						detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-								.getParameterCode());
-						detailObjMandatory.setDocId(BigInteger.valueOf(res.getDocumentRestrId()));
-						detailObjMandatory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-								.getDocumentId()));
-						detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-						detailObjMandatory.setNewValue(res.isMandatory() ? AuditConst.PM_AUD_YES
-								: AuditConst.PM_AUD_NO);
-						if (updated) {
-							detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-						} else {
-							detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-						}
-						objList.add(detailObjMandatory);
-						auditPMReqDTO.setObjList(objList);
-					}
-				}
-			}
-		}
-		
-		
-		
-//		if (!managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().isEmpty()
-//				&& !managedBeans.getSelectedDocument().getPmDocumentRestrs().isEmpty()
-//				&& managedBeans.getResDTO().getUpdatedPmDocumentRestrList().isEmpty()
-//				&& managedBeans.getResDTO().getDeletedProcurementCatCodeList().isEmpty()) {
-//			for (PmDocumentRestr pmDocumentRestrOld : managedBeans.getSelectedDocumentOld().getPmDocumentRestrs()) {
-//				for (PmDocumentRestr pmDocumentRestrResponse : managedBeans.getSelectedDocument().getPmDocumentRestrs()) {
-//					if (pmDocumentRestrResponse.getProcurementCatCode().getParameterId()
-//							.equals(pmDocumentRestrOld.getProcurementCatCode().getParameterId())
-//							&& pmDocumentRestrResponse.isMandatory() != pmDocumentRestrOld.isMandatory()) {
-//						AuditPMSPDTO detailObjMandatory = new AuditPMSPDTO();
-//						detailObjMandatory.setRoleCode(roleCode);
-//						detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-//						detailObjMandatory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-//						detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-//						detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-//						detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-//						detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-//								.getParameterCode());
-//						detailObjMandatory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-//								.getDocumentId()));
-//						detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-//						detailObjMandatory.setNewValue(pmDocumentRestrResponse.isMandatory() ? AuditConst.PM_AUD_YES
-//								: AuditConst.PM_AUD_NO);
-//						if (updated) {
-//							detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-//						} else {
-//							detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-//						}
-//						objList.add(detailObjMandatory);
-//						auditPMReqDTO.setObjList(objList);
-//					}
-//				}
-//			}			
-//		}
 
-		if (!managedBeans.getResDTO().getUpdatedPmDocumentRestrList().isEmpty()
-				&& null != managedBeans.getResDTO().getUpdatedPmDocumentRestrList()) {
-			for (PmDocumentRestr pmDocumentRestr : managedBeans.getResDTO().getUpdatedPmDocumentRestrList()) {
-				if (pmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
-					AuditPMSPDTO detailObjProcurementCategory = new AuditPMSPDTO();
-					detailObjProcurementCategory.setRoleCode(roleCode);
-					detailObjProcurementCategory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-					detailObjProcurementCategory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-					detailObjProcurementCategory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-					detailObjProcurementCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-					detailObjProcurementCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-					detailObjProcurementCategory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-							.getParameterCode());
-					detailObjProcurementCategory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
-					detailObjProcurementCategory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-							.getDocumentId()));
-					detailObjProcurementCategory
-							.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-					detailObjProcurementCategory.setNewValueId(BigInteger.valueOf(pmDocumentRestr
-							.getProcurementCatCode().getParameterId()));
-					if (updated) {
-						detailObjProcurementCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-					} else {
-						detailObjProcurementCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-					}
-					objList.add(detailObjProcurementCategory);
-					auditPMReqDTO.setObjList(objList);
-				}
-				if (pmDocumentRestr.isMandatory() || !pmDocumentRestr.isMandatory()) {
+		if (null != managedBeans.getResDTO().getDeletedProcurementCatCodeList()
+				&& !managedBeans.getResDTO().getDeletedProcurementCatCodeList().isEmpty()) {
+			deletedProcurementCatCodeList(managedBeans, auditPMReqDTO, objList, roleCode);
+		}
+		if (managedBeans.isUpdated() && managedBeans.getSelectedDocumentOld() != null
+				&& managedBeans.getMandatoryUpdatedPmDocumentRestrList() != null) {
+			List<PmDocumentRestr> checklistRestrictionMandatoryNew = getMandatoryNewValue(managedBeans);
+			List<PmDocumentRestr> checklistRestrictionMandatoryOld = getMandatoryOldValue(managedBeans);
+			if (checklistRestrictionMandatoryNew != null && checklistRestrictionMandatoryOld != null) {
+				updateMandatoryList(managedBeans, auditPMReqDTO, objList, roleCode, checklistRestrictionMandatoryNew,
+						checklistRestrictionMandatoryOld);
+			}
+		}
+
+		managedBeans.setSelectedDocumentOld(null);
+		managedBeans.getResDTO().setUpdatedPmDocumentRestrList(null);
+		managedBeans.getResDTO().setDeletedProcurementCatCodeList(null);
+	}
+
+	private AuditPMReqDTO updateMandatoryList(SupportDocumentManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
+			ArrayList<AuditPMSPDTO> objList, String roleCode, List<PmDocumentRestr> checklistRestrictionMandatoryNew,
+			List<PmDocumentRestr> checklistRestrictionMandatoryOld) {
+		for (PmDocumentRestr res : checklistRestrictionMandatoryNew) {
+			for (PmDocumentRestr oldValue : checklistRestrictionMandatoryOld) {
+				if (res.getDocumentRestrId() == oldValue.getDocumentRestrId()
+						&& res.isMandatory() != oldValue.isMandatory()) {
 					AuditPMSPDTO detailObjMandatory = new AuditPMSPDTO();
 					detailObjMandatory.setRoleCode(roleCode);
 					detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
@@ -377,418 +284,147 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 					detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
 					detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
 							.getParameterCode());
-					detailObjMandatory.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
+					detailObjMandatory.setDocId(BigInteger.valueOf(res.getDocumentRestrId()));
 					detailObjMandatory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
 							.getDocumentId()));
 					detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-					detailObjMandatory.setNewValue(pmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES
+					detailObjMandatory.setNewValue(res.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
+					detailObjMandatory.setOldValue(oldValue.isMandatory() ? AuditConst.PM_AUD_YES
 							: AuditConst.PM_AUD_NO);
-					if (updated) {
-						detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-					} else {
-						detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-					}
+					detailObjMandatory.setActionType(isUpdated(managedBeans.isUpdated()));
 					objList.add(detailObjMandatory);
 					auditPMReqDTO.setObjList(objList);
 				}
-			}			
+			}
 		}
-
-		if (!managedBeans.getResDTO().getDeletedProcurementCatCodeList().isEmpty()
-				&& null != managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
-			for (PmDocumentRestr deletepmDocumentRestr : managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
-				if (deletepmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
-					AuditPMSPDTO detailObjProcCatDelete = new AuditPMSPDTO();
-					detailObjProcCatDelete.setRoleCode(roleCode);
-					detailObjProcCatDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-					detailObjProcCatDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-					detailObjProcCatDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-					detailObjProcCatDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-					detailObjProcCatDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-					detailObjProcCatDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-							.getParameterCode());
-					detailObjProcCatDelete.setDocId(BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId()));
-					detailObjProcCatDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-							.getDocumentId()));
-					detailObjProcCatDelete
-							.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-					detailObjProcCatDelete.setOldValueId(BigInteger.valueOf(deletepmDocumentRestr
-							.getProcurementCatCode().getParameterId()));
-					detailObjProcCatDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-
-					objList.add(detailObjProcCatDelete);
-					auditPMReqDTO.setObjList(objList);
-				}
-				if (deletepmDocumentRestr.isMandatory() || !deletepmDocumentRestr.isMandatory()) {
-					AuditPMSPDTO detailObjMandatoryDelete = new AuditPMSPDTO();
-					detailObjMandatoryDelete.setRoleCode(roleCode);
-					detailObjMandatoryDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-					detailObjMandatoryDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-					detailObjMandatoryDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-					detailObjMandatoryDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-					detailObjMandatoryDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-					detailObjMandatoryDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-							.getParameterCode());
-					detailObjMandatoryDelete.setDocId(BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId()));
-					detailObjMandatoryDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-							.getDocumentId()));
-					detailObjMandatoryDelete.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-					detailObjMandatoryDelete.setOldValue(deletepmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES
-							: AuditConst.PM_AUD_NO);
-					detailObjMandatoryDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-					objList.add(detailObjMandatoryDelete);
-					auditPMReqDTO.setObjList(objList);
-				}
-			}			
-		}
-		managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().clear();
-		managedBeans.getResDTO().getUpdatedPmDocumentRestrList().clear();
-		managedBeans.getResDTO().getDeletedProcurementCatCodeList().clear();
+		return auditPMReqDTO;
 	}
 
-	// private void updateList(SupportDocumentManagedBean managedBeans,
-	// AuditPMReqDTO auditPMReqDTO,
-	// ArrayList<AuditPMSPDTO> objList, String roleCode) {
-	// ArrayList<AuditPMSPDTO> objListCatProcCat = new ArrayList<>();
-	// ArrayList<AuditPMSPDTO> objListMandatory = new ArrayList<>();
-	// if (!managedBeans.getResDTO().getUpdatedPmDocumentRestrList().isEmpty()
-	// && null != managedBeans.getResDTO().getUpdatedPmDocumentRestrList()) {
-	// objListCatProcCat.addAll(objList);
-	// objListMandatory.addAll(objList);
-	// PmParameter pmprm = new PmParameter();
-	// for (PmParameterDesc desc :
-	// managedBeans.getResDTO().getUpdatedPmParameterDescList()) {
-	// // for (PmDocumentRestr pmDocumentRestr :
-	// managedBeans.getResDTO().getUpdatedPmDocumentRestrList()) {
-	// // pmprm = pmDocumentRestr.getProcurementCatCode();
-	// //for (PmParameterDesc desc : pmprm.getPmParameterDescs()) {
-	// // Long index = 0L;
-	// // System.out.println("index CCCC ===>>>> ::: " + index);
-	// // if (desc.getParameterDescId() != index) {
-	// detailObjProcurementCategory.setRoleCode(roleCode);
-	// detailObjProcurementCategory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjProcurementCategory
-	// .setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjProcurementCategory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjProcurementCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjProcurementCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjProcurementCategory.setLvlCode3(managedBeans.getSelectedDocument()
-	// .getDocCategoryCode().getParameterCode());
-	// detailObjProcurementCategory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-	// .getDocumentId()));
-	// detailObjProcurementCategory
-	// .setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-	// detailObjProcurementCategory.setNewValue(desc.getCodeName());
-	// if (updated) {
-	// detailObjProcurementCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-	// } else {
-	// detailObjProcurementCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-	// }
-	// objListCatProcCat.add(detailObjProcurementCategory);
-	// auditPMReqDTO.setObjList(objListCatProcCat);
-	//
-	// detailObjMandatory.setRoleCode(roleCode);
-	// detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjMandatory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjMandatory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-	// .getDocumentId()));
-	// detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-	// detailObjMandatory.setNewValue(desc.isMandatory() ? AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// if (updated) {
-	// detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-	// } else {
-	// detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-	// }
-	// objListMandatory.add(detailObjMandatory);
-	// auditPMReqDTO.setObjList(objListMandatory);
-	// // }
-	// //index = desc.getParameterDescId();
-	// // System.out.println("index EEEE ===>>>> ::: " + index);
-	// //}
-	//
-	// }
-	// //auditPMReqDTO.setObjList(objListCatProcCat);
-	// //auditPMReqDTO.setObjList(objListMandatory);
-	// }
-	//
-	// if
-	// (!managedBeans.getResDTO().getDeletedProcurementCatCodeList().isEmpty()
-	// && null != managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
-	// for (PmParameterDesc delete :
-	// managedBeans.getResDTO().getUpdatedPmParameterDescList()) {
-	// //for (PmDocumentRestr deletepmDocumentRestr :
-	// managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
-	// //for (PmParameterDesc delete :
-	// deletepmDocumentRestr.getProcurementCatCode().getPmParameterDescs()) {
-	// //Long index = 0L;
-	// //System.out.println("index AAA ===>>>> ::: " + index);
-	// //if (delete.getParameterDescId() != index) {
-	// detailObjProcCatDelete.setRoleCode(roleCode);
-	// detailObjProcCatDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjProcCatDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjProcCatDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjProcCatDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjProcCatDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjProcCatDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjProcCatDelete.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-	// .getDocumentId()));
-	// detailObjProcCatDelete
-	// .setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-	// detailObjProcCatDelete.setOldValue(delete.getCodeName());
-	// detailObjProcCatDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-	// objListCatProcCat.add(detailObjProcCatDelete);
-	// //auditPMReqDTO.setObjList(objList);
-	//
-	// detailObjMandatoryDelete.setRoleCode(roleCode);
-	// detailObjMandatoryDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjMandatoryDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjMandatoryDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjMandatoryDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjMandatoryDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjMandatoryDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjMandatoryDelete.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-	// .getDocumentId()));
-	// detailObjMandatoryDelete
-	// .setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-	// detailObjMandatoryDelete
-	// .setOldValue(delete.isMandatory() ? AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// detailObjMandatoryDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-	// objListMandatory.add(detailObjMandatoryDelete);
-	// //auditPMReqDTO.setObjList(objList);
-	// //}
-	// //index = delete.getParameterDescId();
-	// //System.out.println("index BBB ===>>>> ::: " + index);
-	// //auditPMReqDTO.setObjList(objList);
-	// }
-	// //}
-	// auditPMReqDTO.setObjList(objListCatProcCat);
-	// auditPMReqDTO.setObjList(objListMandatory);
-	// }
-	// managedBeans.getResDTO().getUpdatedPmDocumentRestrList().clear();
-	// managedBeans.getResDTO().getDeletedProcurementCatCodeList().clear();
-	// }
-
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////
-	// for (PmDocumentRestr pmDocumentRestr :
-	// managedBeans.getPmDocumentRestrList()) {
-	// if (managedBeans.isUpdated() && !pmDocumentRestr.isBrandNew() &&
-	// !pmDocumentRestr.isDeleted()) {
-	// if
-	// (!managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().isEmpty())
-	// {
-	// for (PmDocumentRestr doc :
-	// managedBeans.getSelectedDocumentOld().getPmDocumentRestrs()) {
-	// if (pmDocumentRestr.isMandatory() != doc.isMandatory()) {
-	// detailObjMandatory.setOldValue(doc.isMandatory() ?
-	// AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// }
-	// }
-	// }
-	// detailObjMandatory.setRoleCode(roleCode);
-	// detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjMandatory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjMandatory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
-	// detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-	// detailObjMandatory.setNewValue(pmDocumentRestr.isMandatory() ?
-	// AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-	// objList.add(detailObjMandatory);
-	// auditPMReqDTO.setObjList(objList);
-	// }
-	//
-	//
-	// System.out.println("pmDocumentRestr.isMandatory() ::::: >>> :" +
-	// pmDocumentRestr.getDocumentRestrId()
-	// + " ///// " +
-	// pmDocumentRestr.getProcurementCatCode().getParameterCode() +
-	// " ##### "
-	// + pmDocumentRestr.isMandatory());
-	// System.out.println("managedBeans.getSelectedDocument().isMandatory() ::::: >>> :"
-	// + pmDocumentRestr.getDocumentRestrId() + " ///// "
-	// + pmDocumentRestr.getProcurementCatCode().getParameterCode() +
-	// " ##### "
-	// + managedBeans.getSelectedDocument().isMandatory());
-	// }
-	// managedBeans.getPmDocumentRestrList().clear();
-	// managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().clear();
-
-	// private void updateList(SupportDocumentManagedBean managedBeans,
-	// AuditPMReqDTO auditPMReqDTO,
-	// ArrayList<AuditPMSPDTO> objList, String roleCode) {
-	// for (PmDocumentRestr pmDocumentRestr :
-	// managedBeans.getPmDocumentRestrList()) {
-	// if (pmDocumentRestr.isBrandNew()) {
-	// detailObjProcurementCategory.setRoleCode(roleCode);
-	// detailObjProcurementCategory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjProcurementCategory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjProcurementCategory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjProcurementCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjProcurementCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjProcurementCategory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjProcurementCategory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-	// .getDocumentId()));
-	// detailObjProcurementCategory
-	// .setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-	// for(PmParameterDesc desc :
-	// pmDocumentRestr.getProcurementCatCode().getPmParameterDescs()){
-	// detailObjProcurementCategory.setNewValue(desc.getCodeName());
-	// }
-	//
-	//
-	// //
-	// detailObjProcurementCategory.setNewValue(procCatNew(pmDocumentRestr.getProcurementCatCode()
-	// // .getPmParameterDescs()));
-	// //
-	// if(!managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().isEmpty()){
-	// // for(PmDocumentRestr doc :
-	// // managedBeans.getSelectedDocumentOld().getPmDocumentRestrs()){
-	// //
-	// detailObjProcurementCategory.setOldValue(doc.getProcurementCatCode().getParameterCode());
-	// // }
-	// // }
-	// // if
-	// //
-	// (!pmDocumentRestr.getProcurementCatCode().getPmParameterDescs().isEmpty())
-	// // {
-	// // for (PmParameterDesc cat :
-	// // pmDocumentRestr.getProcurementCatCode().getPmParameterDescs())
-	// // {
-	// // detailObjProcurementCategory.setNewValue(cat.getCodeName());
-	// // }
-	// // }
-	// if (!managedBeans.isUpdated()) {
-	// detailObjProcurementCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-	// } else if (managedBeans.isUpdated()) {
-	// detailObjProcurementCategory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-	// }
-	// objList.add(detailObjProcurementCategory);
-	// auditPMReqDTO.setObjList(objList);
-	//
-	// detailObjMandatory.setRoleCode(roleCode);
-	// detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjMandatory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjMandatory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
-	// detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-	// detailObjMandatory.setNewValue(pmDocumentRestr.isMandatory() ?
-	// AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// if (!managedBeans.isUpdated()) {
-	// detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-	// } else if (managedBeans.isUpdated()) {
-	// detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-	// }
-	// objList.add(detailObjMandatory);
-	// auditPMReqDTO.setObjList(objList);
-	// }
-	// if (managedBeans.isUpdated() && !pmDocumentRestr.isBrandNew() &&
-	// !pmDocumentRestr.isDeleted()) {
-	// if
-	// (!managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().isEmpty())
-	// {
-	// for (PmDocumentRestr doc :
-	// managedBeans.getSelectedDocumentOld().getPmDocumentRestrs()) {
-	// if (pmDocumentRestr.isMandatory() != doc.isMandatory()) {
-	// detailObjMandatory.setOldValue(doc.isMandatory() ? AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// }
-	// }
-	// }
-	// detailObjMandatory.setRoleCode(roleCode);
-	// detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjMandatory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjMandatory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
-	// detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-	// detailObjMandatory.setNewValue(pmDocumentRestr.isMandatory() ?
-	// AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// detailObjMandatory.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-	// objList.add(detailObjMandatory);
-	// auditPMReqDTO.setObjList(objList);
-	// }
-	//
-	// if (pmDocumentRestr.isDeleted()) {
-	// detailObjProcCatDelete.setRoleCode(roleCode);
-	// detailObjProcCatDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjProcCatDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjProcCatDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjProcCatDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjProcCatDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjProcCatDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjProcCatDelete.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-	// .getDocumentId()));
-	// detailObjProcCatDelete
-	// .setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-	// detailObjProcCatDelete.setOldValue(procCatNew(pmDocumentRestr.getProcurementCatCode()
-	// .getPmParameterDescs()));
-	// detailObjProcCatDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-	// objList.add(detailObjProcCatDelete);
-	// auditPMReqDTO.setObjList(objList);
-	//
-	// detailObjMandatoryDelete.setRoleCode(roleCode);
-	// detailObjMandatoryDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
-	// detailObjMandatoryDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
-	// detailObjMandatoryDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
-	// detailObjMandatoryDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-	// detailObjMandatoryDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-	// detailObjMandatoryDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-	// .getParameterCode());
-	// detailObjMandatoryDelete.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-	// .getDocumentId()));
-	// detailObjMandatoryDelete.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-	// detailObjMandatoryDelete.setOldValue(pmDocumentRestr.isMandatory() ?
-	// AuditConst.PM_AUD_YES
-	// : AuditConst.PM_AUD_NO);
-	// detailObjMandatoryDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-	// objList.add(detailObjMandatoryDelete);
-	// auditPMReqDTO.setObjList(objList);
-	// }
-	//
-	// System.out.println("pmDocumentRestr.isMandatory() ::::: >>> :" +
-	// pmDocumentRestr.getDocumentRestrId()
-	// + " ///// " + pmDocumentRestr.getProcurementCatCode().getParameterCode()
-	// + " ##### "
-	// + pmDocumentRestr.isMandatory());
-	// System.out.println("managedBeans.getSelectedDocument().isMandatory() ::::: >>> :"
-	// + pmDocumentRestr.getDocumentRestrId() + " ///// "
-	// + pmDocumentRestr.getProcurementCatCode().getParameterCode() + " ##### "
-	// + managedBeans.getSelectedDocument().isMandatory());
-	// }
-	// managedBeans.getPmDocumentRestrList().clear();
-	// managedBeans.getSelectedDocumentOld().getPmDocumentRestrs().clear();
-	// }
-
-	private String procCatNew(List<PmParameterDesc> pmParameterDescs) {
-		for (PmParameterDesc cat : pmParameterDescs) {
-			return cat.getCodeName();
+	private AuditPMReqDTO updatedPmDocumentRestrList(SupportDocumentManagedBean managedBeans,
+			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList, String roleCode) {
+		for (PmDocumentRestr pmDocumentRestr : managedBeans.getResDTO().getUpdatedPmDocumentRestrList()) {
+			if (pmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
+				AuditPMSPDTO detailObjProcurementCategory = new AuditPMSPDTO();
+				detailObjProcurementCategory.setRoleCode(roleCode);
+				detailObjProcurementCategory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
+				detailObjProcurementCategory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
+				detailObjProcurementCategory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
+				detailObjProcurementCategory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+				detailObjProcurementCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
+				detailObjProcurementCategory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
+						.getParameterCode());
+				detailObjProcurementCategory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
+						.getDocumentId()));
+				detailObjProcurementCategory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
+						.getDocumentId()));
+				detailObjProcurementCategory
+						.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
+				detailObjProcurementCategory.setNewValueId(BigInteger.valueOf(pmDocumentRestr.getProcurementCatCode()
+						.getParameterId()));
+				detailObjProcurementCategory.setActionType(isUpdated(managedBeans.isUpdated()));
+				objList.add(detailObjProcurementCategory);
+				auditPMReqDTO.setObjList(objList);
+			}
+			if (pmDocumentRestr.isMandatory() || !pmDocumentRestr.isMandatory()) {
+				AuditPMSPDTO detailObjMandatory = new AuditPMSPDTO();
+				detailObjMandatory.setRoleCode(roleCode);
+				detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
+				detailObjMandatory.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
+				detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
+				detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+				detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
+				detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
+						.getParameterCode());
+				detailObjMandatory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+				detailObjMandatory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
+						.getDocumentId()));
+				detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
+				detailObjMandatory.setNewValue(pmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES
+						: AuditConst.PM_AUD_NO);
+				detailObjMandatory.setActionType(isUpdated(managedBeans.isUpdated()));
+				objList.add(detailObjMandatory);
+				auditPMReqDTO.setObjList(objList);
+			}
 		}
-		return null;
+		return auditPMReqDTO;
+	}
+
+	private AuditPMReqDTO deletedProcurementCatCodeList(SupportDocumentManagedBean managedBeans,
+			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList, String roleCode) {
+		for (PmDocumentRestr deletepmDocumentRestr : managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
+			if (deletepmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
+				AuditPMSPDTO detailObjProcCatDelete = new AuditPMSPDTO();
+				detailObjProcCatDelete.setRoleCode(roleCode);
+				detailObjProcCatDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
+				detailObjProcCatDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
+				detailObjProcCatDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
+				detailObjProcCatDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+				detailObjProcCatDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
+				detailObjProcCatDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
+						.getParameterCode());
+				detailObjProcCatDelete.setDocId(BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId()));
+				detailObjProcCatDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
+						.getDocumentId()));
+				detailObjProcCatDelete
+						.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
+				detailObjProcCatDelete.setOldValueId(BigInteger.valueOf(deletepmDocumentRestr.getProcurementCatCode()
+						.getParameterId()));
+				detailObjProcCatDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
+
+				objList.add(detailObjProcCatDelete);
+				auditPMReqDTO.setObjList(objList);
+			}
+			if (deletepmDocumentRestr.isMandatory() || !deletepmDocumentRestr.isMandatory()) {
+				AuditPMSPDTO detailObjMandatoryDelete = new AuditPMSPDTO();
+				detailObjMandatoryDelete.setRoleCode(roleCode);
+				detailObjMandatoryDelete.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
+				detailObjMandatoryDelete.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
+				detailObjMandatoryDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
+				detailObjMandatoryDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+				detailObjMandatoryDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
+				detailObjMandatoryDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
+						.getParameterCode());
+				detailObjMandatoryDelete.setDocId(BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId()));
+				detailObjMandatoryDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
+						.getDocumentId()));
+				detailObjMandatoryDelete.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
+				detailObjMandatoryDelete.setOldValue(deletepmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES
+						: AuditConst.PM_AUD_NO);
+				detailObjMandatoryDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
+				objList.add(detailObjMandatoryDelete);
+				auditPMReqDTO.setObjList(objList);
+			}
+		}
+		return auditPMReqDTO;
+	}
+
+	private List<PmDocumentRestr> getMandatoryNewValue(SupportDocumentManagedBean managedBeans) {
+		List<PmDocumentRestr> checklistRestrictionMandatoryNew = new ArrayList<>();
+		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
+			if (managedBeans.getSelectedDocument().isByProcureCat() && pmDocumentRestr.getProcurementCatCode() != null
+					&& DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
+				checklistRestrictionMandatoryNew.add(pmDocumentRestr);
+			}
+		}
+		return checklistRestrictionMandatoryNew;
+	}
+
+	private List<PmDocumentRestr> getMandatoryOldValue(SupportDocumentManagedBean managedBeans) {
+		List<PmDocumentRestr> checklistRestrictionMandatoryOld = new ArrayList<>();
+		for (PmDocumentRestr pmDocumentRestr : managedBeans.getSelectedDocumentOld().getPmDocumentRestrs()) {
+			if (managedBeans.getSelectedDocument().isByProcureCat() && pmDocumentRestr.getProcurementCatCode() != null
+					&& DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
+				checklistRestrictionMandatoryOld.add(pmDocumentRestr);
+			}
+		}
+		return checklistRestrictionMandatoryOld;
+	}
+
+	private String isUpdated(boolean updated) {
+		if (updated) {
+			return AuditConst.PM_AUD_ACTION_TYPE_UPD;
+		} else {
+			return AuditConst.PM_AUD_ACTION_TYPE_INS;
+		}
 	}
 }

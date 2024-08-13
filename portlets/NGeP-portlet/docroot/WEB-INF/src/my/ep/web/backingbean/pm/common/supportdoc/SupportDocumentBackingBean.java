@@ -539,7 +539,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 						checklistRestriction.add(pmDocumentRestr);
 					}
 				}
-				this.getManagedBean().setCheckListRestrictions(checklistRestriction); //after update
+				this.getManagedBean().setCheckListRestrictions(checklistRestriction);
 
 			}
 		}
@@ -1880,7 +1880,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * 
 	 * @return xhtml
 	 */
-	public String saveSupportDoc() { // //////////////audit
+	public String saveSupportDoc() {
 		log.info("saveSupportDoc - Start");
 
 		// #26666 - start
