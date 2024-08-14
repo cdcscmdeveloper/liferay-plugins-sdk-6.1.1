@@ -156,20 +156,75 @@ public class VmUtil {
 		if (key == null || maxLength <= 0) {
 			return key;
 		}
+		int newMaxLength;
 		String[] stringArray = key.split("\\s+");
 		StringBuilder updatedKey = new StringBuilder();
 		for (String s : stringArray) {
 			if (s.length() > maxLength) {
-				updatedKey.append(s.replaceAll("(.{" + maxLength + "})(?!$)",
-						"$1" + TemplateSpecConst.HTML_NEW_LINE_CHARACTER).concat(SSTConstant.ADD_WHITESPACE));
+				newMaxLength = isStringContainHTMLEntity(maxLength, s);
+				String chopString = s.replaceAll("(.{" + newMaxLength + "})(?!$)",
+						"$1" + TemplateSpecConst.HTML_NEW_LINE_CHARACTER).concat(SSTConstant.ADD_WHITESPACE);
+				chopString = validateHtmlEntitySyntax(chopString);
+				updatedKey.append(chopString);
+				
 			} else {
 				updatedKey.append(s.concat(SSTConstant.ADD_WHITESPACE));
 			}
-			log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
 		}
+		log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
 		return updatedKey.toString();
 	}
 	
+	/**
+	 * @param chopString
+	 * @param isHtmlSyntaxIncomplete
+	 * @return
+	 */
+	public String validateHtmlEntitySyntax(String chopString) {
+		String newChopString = chopString;
+		if (newChopString.contains("<br<br /> />")){
+			newChopString = newChopString.replaceAll("<br<br />/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}else if (newChopString.contains("<b<br />r />")){
+			newChopString = newChopString.replaceAll("<b<br />r/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}else if (newChopString.contains("<b<br />r")){
+			newChopString = newChopString.replaceAll("<b<br />r", "<br");
+		}else if (newChopString.contains("<<br />br")){
+			newChopString = newChopString.replaceAll("<<br />br", "<br");
+		}
+		
+		if (newChopString.contains("&#<br />60;")) {
+			newChopString = newChopString.replaceAll("&#<br />60;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (newChopString.contains("&#60<br />;")){
+			newChopString = newChopString.replaceAll("&#60<br />;", SSTConstant.LESS_THAN_SYMBOL);
+		}
+		
+		if (newChopString.contains("&#<br />62;")) {
+			newChopString = newChopString.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (newChopString.contains("&#62<br />;")){
+			newChopString = newChopString.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL);
+		}
+		
+		return newChopString;
+	}
+
+	/**
+	 * @param maxLength
+	 * @param s
+	 * @return
+	 */
+	private int isStringContainHTMLEntity(int maxLength, String s) {
+		int newMaxlength = maxLength;
+		if (s.contains(TemplateSpecConst.HTML_NEW_LINE_CHARACTER) || s.contains("<b")){
+			newMaxlength = newMaxlength+TemplateSpecConst.HTML_NEW_LINE_CHARACTER.length();
+		}
+		if (s.contains(SSTConstant.LESS_THAN_SYMBOL)){
+			newMaxlength = newMaxlength+SSTConstant.LESS_THAN_SYMBOL.length();
+		}
+		if (s.contains(SSTConstant.GREATER_THAN_SYMBOL)){
+			newMaxlength = newMaxlength+SSTConstant.GREATER_THAN_SYMBOL.length();
+		}
+		return newMaxlength;
+	}
 	//36122 - end
 	
 }
