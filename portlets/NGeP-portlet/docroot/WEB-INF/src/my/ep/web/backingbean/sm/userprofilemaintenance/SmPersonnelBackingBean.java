@@ -2068,8 +2068,8 @@ public class SmPersonnelBackingBean extends
 			for (SmPersonnelAddress per : getManagedBean()
 					.getBasicSmPersonnel().getSmPersonnelAddresses()) {
 				// #33592-start
-				if (per.getSmAddress().getPmState().getStateCode() != null
-						&& !per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)) {
+				if ((per.getSmAddress() != null) && (per.getSmAddress().getPmState().getStateCode() != null
+						&& !per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE))) {
 					per.getSmAddress().setPmDivision(null);
 				}// #33592-end
 			}

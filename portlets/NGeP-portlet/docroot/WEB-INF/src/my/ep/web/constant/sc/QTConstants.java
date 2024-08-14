@@ -312,6 +312,7 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	public static final String LAMPIRAN_A3_JUSTIFICATION = "Dikemas kini atas sebab ";
 	//#29007 End Vinod
 	// #29007 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
