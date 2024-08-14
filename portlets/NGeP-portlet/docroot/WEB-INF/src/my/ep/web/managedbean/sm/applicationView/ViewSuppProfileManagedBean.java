@@ -2,6 +2,7 @@ package my.ep.web.managedbean.sm.applicationView;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -66,6 +67,8 @@ public class ViewSuppProfileManagedBean extends
 	private Long divisionId;
 	private boolean divisionBox = true;
 	//13320-End
+	
+	private Map<Long, String> tempCategoryLs; //#34209
 	
 	private SmPersonnel smPersonnel;
 	public ViewSuppProfileManagedBean() {
@@ -372,5 +375,13 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
+	}
+
+	public Map<Long, String> getTempCategoryLs() {
+		return tempCategoryLs;
+	}
+
+	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
+		this.tempCategoryLs = tempCategoryLs;
 	}
 }
