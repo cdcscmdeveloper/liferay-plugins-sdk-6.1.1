@@ -196,12 +196,20 @@ public class VmUtil {
 			newChopString = newChopString.replaceAll("&#<br />60;", SSTConstant.LESS_THAN_SYMBOL);
 		}else if (newChopString.contains("&#60<br />;")){
 			newChopString = newChopString.replaceAll("&#60<br />;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (newChopString.contains("&#6<br />0;")){
+			newChopString = newChopString.replaceAll("&#6<br />0;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (newChopString.contains("&<br />#60;")){
+			newChopString = newChopString.replaceAll("&<br />#60;", SSTConstant.LESS_THAN_SYMBOL);
 		}
 		
 		if (newChopString.contains("&#<br />62;")) {
 			newChopString = newChopString.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL);
 		}else if (newChopString.contains("&#62<br />;")){
 			newChopString = newChopString.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (newChopString.contains("&#6<br />2;")){
+			newChopString = newChopString.replaceAll("&#6<br />2;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (newChopString.contains("&<br />#62;")){
+			newChopString = newChopString.replaceAll("&<br />#62;", SSTConstant.GREATER_THAN_SYMBOL);
 		}
 		
 		return newChopString;
