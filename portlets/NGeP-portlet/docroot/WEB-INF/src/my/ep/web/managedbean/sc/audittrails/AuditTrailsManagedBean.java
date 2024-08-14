@@ -14,7 +14,7 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 
 	private String moduleSelected="";
 	private String previousSelectedModule="";
-	private String backUrl="";
+	private String backURL="";
 	
 	//#35500
 	private Long qtId;
@@ -23,6 +23,7 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	private List searchGeneralInfo;
 	private AuditTrailsSearchBean auditTrailsSearchBean;
 	private boolean isLazy = false;
+	private Long groupSectionId;
 
 	public String getModuleSelected() {
 		return moduleSelected;
@@ -36,11 +37,11 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	public void setPreviousSelectedModule(String previousSelectedModule) {
 		this.previousSelectedModule = previousSelectedModule;
 	}
-	public String getBackUrl() {
-		return backUrl;
+	public String getBackURL() {
+		return backURL;
 	}
-	public void setBackUrl(String backUrl) {
-		this.backUrl = backUrl;
+	public void setBackURL(String backURL) {
+		this.backURL = backURL;
 	}
 	public String getPreviousPageUrl() {
 		return previousPageUrl;
@@ -80,6 +81,12 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	}
 	public void setSearchGeneralInfo(List searchGeneralInfo) {
 		this.searchGeneralInfo = searchGeneralInfo;
+	}
+	public Long getGroupSectionId() {
+		return groupSectionId;
+	}
+	public void setGroupSectionId(Long groupSectionId) {
+		this.groupSectionId = groupSectionId;
 	}
 	
 	
