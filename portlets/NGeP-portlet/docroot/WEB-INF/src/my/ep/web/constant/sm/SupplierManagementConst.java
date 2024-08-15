@@ -745,11 +745,13 @@ public class SupplierManagementConst {
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	// #28895_35501 Start - AUDIT TRAIL SM
 	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
+	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
+	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
+	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
+	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
 	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
-	public static final String AU_DATATABLE_ID_BANK_INFO = "bankInfoDataTable";
-	public static final String AU_DATATABLE_ID_USER_INFO = "userInfoDataTable";
-	public static final String AU_DATATABLE_ID_ADMIN_INFO = "adminInfoDataTable";
 	// #28895_35501 End
 	
 	public String getCOMPANY_TYPE_CLBG() {
@@ -1467,24 +1469,32 @@ public class SupplierManagementConst {
 		return AU_TAB_ID_BANK_INFO;
 	}
 
+	public String getAuTabIdCategoryCodeInfo() {
+		return AU_TAB_ID_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdSupplierInfo() {
+		return AU_TAB_ID_SUPPLIER_INFO;
+	}
+
+	public String getAuTabIdApprovedCategoryCodeInfo() {
+		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdOverlappingRemarkInfo() {
+		return AU_TAB_ID_OVERLAPPING_REMARK_INFO;
+	}
+
+	public String getAuTabIdApproverRemarkInfo() {
+		return AU_TAB_ID_APPROVER_REMARK_INFO;
+	}
+
 	public String getAuTabIdUserInfo() {
 		return AU_TAB_ID_USER_INFO;
 	}
 
 	public String getAuTabIdAdminInfo() {
 		return AU_TAB_ID_ADMIN_INFO;
-	}
-
-	public String getAuDataTableIdBankInfo() {
-		return AU_DATATABLE_ID_BANK_INFO;
-	}
-
-	public String getAuDataTableIdUserInfo() {
-		return AU_DATATABLE_ID_USER_INFO;
-	}
-
-	public String getAuDataTableIdAdminInfo() {
-		return AU_DATATABLE_ID_ADMIN_INFO;
 	}
 	// #28895_35501 End
 

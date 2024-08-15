@@ -198,7 +198,9 @@ public class ViewApplHistoryBackingBean extends
 
 			// #28895_35501 Start - AUDIT TRAIL SM
 			} else if (outputTab == 5) {
-				initAuditTrailTabInfo(SupplierManagementConst.AU_TAB_ID_BANK_INFO);
+				SmAppl suppAppl = getManagedBean().getSmAppl();
+				AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+				auSmView.initAuditTab(suppAppl);
 			} 
 			// #28895_35501 End
 			
@@ -2082,16 +2084,4 @@ public class ViewApplHistoryBackingBean extends
 						new FacesScopes().getUserLocale())));
 	}
 	// #35336 - END
-	// #28895_35501 Start - AUDIT TRAIL SM
-	public void onAuditTrailTabChange(TabChangeEvent event) {
-		String tabName = event.getTab().getId();
-		initAuditTrailTabInfo(tabName);
-	}
-
-	public void initAuditTrailTabInfo(String tabName) {
-		SmAppl suppAppl = getManagedBean().getSmAppl();
-		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		auSmView.loadAuditSupplierManagement(tabName, suppAppl);
-	}
-	// #28895_35501 End
 }

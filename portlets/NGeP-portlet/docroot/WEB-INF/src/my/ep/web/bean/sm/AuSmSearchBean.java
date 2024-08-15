@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import my.ep.web.constant.sm.SupplierManagementConst;
-
 /**
  * @author Firdaus Omar
  * @since 06.08.2024 #28895_35501
@@ -18,11 +16,10 @@ public class AuSmSearchBean implements Serializable {
 	private String language;
 	private BigInteger docId;
 	private String docType;
-	private String dataTable;
 	private BigDecimal auGroupSection;
 	private boolean isSearching = true;
-	
-	public AuSmSearchBean(){
+
+	public AuSmSearchBean() {
 	}
 
 	public String getLanguage() {
@@ -41,14 +38,6 @@ public class AuSmSearchBean implements Serializable {
 		this.docId = docId;
 	}
 
-	public boolean isSearching() {
-		return isSearching;
-	}
-
-	public void setSearching(boolean isSearching) {
-		this.isSearching = isSearching;
-	}
-
 	public String getDocType() {
 		return docType;
 	}
@@ -57,19 +46,19 @@ public class AuSmSearchBean implements Serializable {
 		this.docType = docType;
 	}
 
-	public String getDataTable() {
-		return dataTable;
-	}
-
-	public void setDataTable(String dataTable) {
-		this.dataTable = dataTable;
-	}
-
 	public BigDecimal getAuGroupSection() {
 		return auGroupSection;
 	}
 
 	public void setAuGroupSection(BigDecimal auGroupSection) {
 		this.auGroupSection = auGroupSection;
+	}
+
+	public boolean isSearching() {
+		return isSearching;
+	}
+
+	public void setSearching(boolean isSearching) {
+		this.isSearching = isSearching;
 	}
 }
