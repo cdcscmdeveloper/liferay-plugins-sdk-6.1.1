@@ -1865,15 +1865,28 @@ public class ViewApplHistoryBackingBean extends
 				.getMofRegistrationSO()
 				.retrieveLatestRejectedApplicationBySupplierId(mofReqDTO)
 				.getSmAppl();
+		// #35336 START
+		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
+			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl);
+		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl.getCreatedDate());
+		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl);
+		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl.getCreatedDate());
+		log.info("#35336 -> isValidDateComparison(latestRegisteredAppl, latestRejectedAppl) ->" + isValidDateComparison(latestRegisteredAppl, latestRejectedAppl));
+		log.info("#35336 -> isMatchingDeletedApplication(latestRejectedAppl, smAppl)" + isMatchingDeletedApplication(latestRejectedAppl, smAppl));
+		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
+			log.info("#35336 -> latestRegisteredAppl.getCreatedDate() ->" + latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate()));
+			log.info("#35336 -> latestRejectedAppl.getCreatedDate() ->" + latestRejectedAppl.getCreatedDate());
+			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())) {
+				showErrorAdminHasBeenReplace();
+			}
+		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
+			showErrorAdminHasBeenReplace();
+		}
+		// #35336 END
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
 			smWorkFlowStatusReqDTO.setApplId(smAppl.getApplId());
-			//35336
-			if(!SmApplicationUtil.checkRejectedApplExpired(smAppl) 
-					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",MessageUtils.getMessage(MessageConst.ERROR_721099,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-			}
 		}
 		List<String> rejectedStatus = Arrays
 				.asList(SupplierManagementConst.REJECTED_STATUSES);
@@ -2008,4 +2021,26 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		// #32628 - end
+		
+	// #35336 - START
+	private boolean isValidDateComparison(SmAppl latestRegisteredAppl, SmAppl latestRejectedAppl) {
+		return latestRegisteredAppl != null && latestRegisteredAppl.getChangedDate() != null
+			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
+	}
+
+	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
+		return latestRejectedAppl != null && latestRejectedAppl.getApplId() == smAppl.getApplId()
+			&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED);
+	}
+
+	private void showErrorAdminHasBeenReplace() {
+		log.info("#35336 - START -> showErrorAdminHasBeenReplace");
+		FacesContext.getCurrentInstance().addMessage(
+			null,
+			new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
+				MessageConst.ERROR_721099, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale())));
+	}
+	// #35336 - END
+	
 }
