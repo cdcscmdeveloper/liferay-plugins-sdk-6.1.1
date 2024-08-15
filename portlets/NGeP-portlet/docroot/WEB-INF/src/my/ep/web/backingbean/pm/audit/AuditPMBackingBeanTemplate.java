@@ -27,7 +27,7 @@ public abstract class AuditPMBackingBeanTemplate implements Serializable {
 
 		AuditPMReqDTO auObjLocation = insert(manageBean, roleCode);
 
-		pmAuditSO(auObjLocation,modName);
+		pmAuditSO(auObjLocation, modName);
 	}
 
 	/**
@@ -47,10 +47,10 @@ public abstract class AuditPMBackingBeanTemplate implements Serializable {
 	/**
 	 * @param auditPMReqDTO
 	 */
-	private void pmAuditSO(AuditPMReqDTO auditPMReqDTO,String modName) {
+	private void pmAuditSO(AuditPMReqDTO auditPMReqDTO, String modName) {
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
 
-		auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(),modName);
+		auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
 	}
 }

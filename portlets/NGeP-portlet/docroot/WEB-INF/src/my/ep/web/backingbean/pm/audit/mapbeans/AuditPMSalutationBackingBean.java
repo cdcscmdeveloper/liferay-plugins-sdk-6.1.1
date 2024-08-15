@@ -50,7 +50,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 		detailObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObjName.setLvlCode2(AuditConst.PM_LVL_CODE_2_SAL);
 		detailObjName.setLvlCode3(AuditConst.PM_LVL_CODE_3_SAL);
-		
+
 		detailSatus.setRoleCode(roleCode);
 		detailSatus.setDoctype(AuditConst.PM_AUD_SALUTATION);
 		detailSatus.setPmParameterLvlId(AuditConst.PM_AUD_SALUTATION_PMPARAMETERLVLID);
@@ -118,7 +118,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 
 		managedBeans.setPmSalutation(null);
 		managedBeans.setOldPmSalutation(null);
-		
+
 		return auditPMReqDTO;
 	}
 }

@@ -14,8 +14,7 @@ import my.ep.web.managedbean.pm.settings.CalendarManageBean;
 /**
  * AuditPMCalendarBackingBean
  * 
- * @author normuliana
- * 28895_35509
+ * @author normuliana 28895_35509
  * 
  */
 public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
@@ -46,9 +45,9 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		CalendarManageBean managedBeans = (CalendarManageBean) manageBean;
-		
+
 		if (managedBeans.getEvent().getId() != null) {
-			updateDetail(managedBeans, auditPMReqDTO,roleCode);
+			updateDetail(managedBeans, auditPMReqDTO, roleCode);
 		} else {
 			AuditPMSPDTO dtlObjStateId = new AuditPMSPDTO();
 			dtlObjStateId.setRoleCode(roleCode);
@@ -116,26 +115,27 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO updateDetail(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,String roleCode) {
+	private AuditPMReqDTO updateDetail(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO, String roleCode) {
 		if (managedBeans.getNewTitleValue() != null
 				&& !managedBeans.getOldTitleValue().equalsIgnoreCase(managedBeans.getNewTitleValue())
-				|| managedBeans.isDeletedEvent()) { // true
-			detailObjTitleUpdate(managedBeans, auditPMReqDTO,roleCode);
+				|| managedBeans.isDeletedEvent()) {
+			detailObjTitleUpdate(managedBeans, auditPMReqDTO, roleCode);
 		}
 		if (managedBeans.getOldStartDate() != null && managedBeans.getNewStartDate() != null
-				|| managedBeans.isDeletedEvent()) { // true
-			detailObjFromDateUpdate(managedBeans, auditPMReqDTO,roleCode);
+				|| managedBeans.isDeletedEvent()) {
+			detailObjFromDateUpdate(managedBeans, auditPMReqDTO, roleCode);
 		}
 		if (managedBeans.getOldEndDate() != null && managedBeans.getNewEndDate() != null
-				|| managedBeans.isDeletedEvent()) { // true
-			detailObjToDateUpdate(managedBeans, auditPMReqDTO,roleCode);
+				|| managedBeans.isDeletedEvent()) {
+			detailObjToDateUpdate(managedBeans, auditPMReqDTO, roleCode);
 		}
 		managedBeans.setDeletedEvent(false);
 
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO detailObjTitleUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,String roleCode) {
+	private AuditPMReqDTO detailObjTitleUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,
+			String roleCode) {
 		detailObjTitle.setRoleCode(roleCode);
 		detailObjTitle.setDoctype(AuditConst.PM_AUD_CALENDAR);
 		detailObjTitle.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
@@ -157,11 +157,12 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO detailObjFromDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,String roleCode) {
+	private AuditPMReqDTO detailObjFromDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,
+			String roleCode) {
 		String oldStartDate = simpleDateFormat.format(managedBeans.getOldStartDate());
 		String newStartDate = managedBeans.getNewStartDate() != null ? simpleDateFormat.format(managedBeans
 				.getNewStartDate()) : null;
-		if (!oldStartDate.equalsIgnoreCase(newStartDate) || managedBeans.isDeletedEvent()) { // true
+		if (!oldStartDate.equalsIgnoreCase(newStartDate) || managedBeans.isDeletedEvent()) {
 			detailObjFromDate.setRoleCode(roleCode);
 			detailObjFromDate.setDoctype(AuditConst.PM_AUD_CALENDAR);
 			detailObjFromDate.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
@@ -182,11 +183,12 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO detailObjToDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,String roleCode) {
+	private AuditPMReqDTO detailObjToDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,
+			String roleCode) {
 		String oldEndDate = simpleDateFormat.format(managedBeans.getOldEndDate());
 		String newEndDate = managedBeans.getNewEndDate() != null ? simpleDateFormat
 				.format(managedBeans.getNewEndDate()) : null;
-		if (!oldEndDate.equalsIgnoreCase(newEndDate) || managedBeans.isDeletedEvent()) { // true
+		if (!oldEndDate.equalsIgnoreCase(newEndDate) || managedBeans.isDeletedEvent()) {
 			detailObjToDate.setRoleCode(roleCode);
 			detailObjToDate.setDoctype(AuditConst.PM_AUD_CALENDAR);
 			detailObjToDate.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
@@ -206,10 +208,10 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 			managedBeans.setOldEndDate(null);
 			managedBeans.setNewEndDate(null);
 		}
-		
+
 		managedBeans.setOldStartDate(null);
 		managedBeans.setNewStartDate(null);
-		
+
 		return auditPMReqDTO;
 	}
 }

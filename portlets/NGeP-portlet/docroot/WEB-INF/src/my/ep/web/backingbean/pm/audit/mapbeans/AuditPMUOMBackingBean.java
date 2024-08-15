@@ -47,7 +47,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 		detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_UOM);
 		detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_UOM);
-		
+
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		if (null != managedBeans.getAuditUomOldVal() && managedBeans.getAuditUomOldVal().getUomId() > 0) {
 			if (managedBeans.getAuditUomOldVal().getRecordStatusFlg() != managedBeans.getPmUom().getRecordStatusFlg()) {

@@ -13,8 +13,7 @@ import my.ep.web.managedbean.pm.race.RaceManagedBean;
 /**
  * AuditPMRaceBackingBean
  * 
- * @author normuliana
- * 28895_35509
+ * @author normuliana 28895_35509
  * 
  */
 public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
@@ -27,6 +26,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 	AuditPMSPDTO dtlObjName = new AuditPMSPDTO();
 	AuditPMSPDTO dtlSatus = new AuditPMSPDTO();
 	AuditPMSPDTO dtlCode = new AuditPMSPDTO();
+
 	@Override
 	public String getRoleCode() {
 		AuditPMRoleBackingBean auditPMRoleBackingBean = new AuditPMRoleBackingBean();
@@ -50,7 +50,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 		dtlSatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		dtlSatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_RACE);
 		dtlSatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_RACE);
-		
+
 		dtlObjName.setRoleCode(roleCode);
 		dtlObjName.setDoctype(AuditConst.PM_AUD_RACE);
 		dtlObjName.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
@@ -58,23 +58,26 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		dtlObjName.setLvlCode2(AuditConst.PM_LVL_CODE_2_RACE);
 		dtlObjName.setLvlCode3(AuditConst.PM_LVL_CODE_3_RACE);
-		
+
 		if (managedBeans.getOldPmRace() != null && managedBeans.getOldPmRace().getRaceId() != null) {
 			if (managedBeans.getPmRace().getRaceName() != null
-					&& !managedBeans.getOldPmRace().getRaceName().equalsIgnoreCase(managedBeans.getPmRace().getRaceName())) {			
+					&& !managedBeans.getOldPmRace().getRaceName()
+							.equalsIgnoreCase(managedBeans.getPmRace().getRaceName())) {
 				dtlObjName.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
 				dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_RACE_NAME_FIELDLABELID);
 				dtlObjName.setOldValue(managedBeans.getOldPmRace().getRaceName());
 				dtlObjName.setNewValue(managedBeans.getPmRace().getRaceName());
 				dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(dtlObjName);
-				auditPMReqDTO.setObjList(objList);			
+				auditPMReqDTO.setObjList(objList);
 			}
 			if (managedBeans.getOldPmRace().getRecordStatusFlg() != managedBeans.getPmRace().getRecordStatusFlg()) {
 				dtlSatus.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
 				dtlSatus.setFieldLabelCode(AuditConst.PM_AUD_RACE_STATUS_FIELDLABELID);
-				dtlSatus.setOldValue(managedBeans.getOldPmRace().getRecordStatusFlg()==1?AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
-				dtlSatus.setNewValue(managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
+				dtlSatus.setOldValue(managedBeans.getOldPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
+				dtlSatus.setNewValue(managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				dtlSatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(dtlSatus);
 				auditPMReqDTO.setObjList(objList);
@@ -92,23 +95,24 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 			dtlCode.setNewValue(managedBeans.getPmRace().getRaceCode());
 			dtlCode.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(dtlCode);
-			auditPMReqDTO.setObjList(objList);	
-			
+			auditPMReqDTO.setObjList(objList);
+
 			dtlObjName.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
 			dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_RACE_NAME_FIELDLABELID);
 			dtlObjName.setNewValue(managedBeans.getPmRace().getRaceName());
 			dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(dtlObjName);
-			auditPMReqDTO.setObjList(objList);		
+			auditPMReqDTO.setObjList(objList);
 
 			dtlSatus.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
 			dtlSatus.setFieldLabelCode(AuditConst.PM_AUD_RACE_STATUS_FIELDLABELID);
-			dtlSatus.setNewValue(managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
+			dtlSatus.setNewValue(managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 			dtlSatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(dtlSatus);
 			auditPMReqDTO.setObjList(objList);
 		}
-		
+
 		managedBeans.setPmRace(null);
 		managedBeans.setOldPmRace(null);
 
