@@ -25,6 +25,16 @@
 		<!-- Header file for all sub screens -->
 		<ui:param name="scQtCheckList"
 					value="#{supplierProposalDetailBackingBean.managedBean.financialQtChecklist}"></ui:param>
+		<c:if test="#{supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}">
+			<div class="ui-messages ui-widget">
+				<div class="ui-messages-warn ui-corner-all">
+					<span class="ui-messages-warn-icon"></span>
+					<ul>
+						<li><span class="ui-messages-warn-detail">#{lbl['lbl.sc.branch.deactivated']}</span></li>
+					</ul>
+				</div>
+			</div>
+		</c:if>
 		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<!-- inclueded page for respecitive checklist -->
 		<p:spacer height="4"></p:spacer>

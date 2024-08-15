@@ -208,33 +208,38 @@
 				<table class="customTbl">
 					
 					<tr>
-						<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
+							<td class="tdTitle"><p:outputLabel
+									value="#{lbl['lbl.sm.businesscomptype']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 						<td style="text-align:left;width:30%;word-wrap: break-word;">
-							<p:outputLabel styleClass="outputLabel-view" value="#{supplierDataMaintenanceBackingBean.managedBean.supplierBusinessTypeVal}" />
+								<p:outputLabel styleClass="outputLabel-view"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.supplierBusinessTypeVal}" />
 						</td>
-						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.basic.account.created.date']}" /></td>
+							<td class="tdTitle"><p:outputLabel
+									value="#{lbl['lbl.sm.basic.account.created.date']}" /></td>
 						<td class="tdContent"><p:calendar id="createdDateId"
-						navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.basic.account.created.date']}"
-						value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.createdDate}" rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smSupplier.createdDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  disabled="true"
-						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
-						</td>
+									navigator="true"
+									required="#{!empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.basic.account.created.date']}"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.createdDate}"
+									rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smSupplier.createdDate}"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									display="inline" disabled="true" readonlyInput="true" size="30"
+									showOn="button" yearRange="-99:+0"
+									maxdate="#{CommonConstants.CURRENT_DATE}" /></td>
 					 </tr>
 					 <tr>
-					 	<td class="tdTitle">
-							<p:outputLabel value="#{lbl['lbl.sm.businessregno']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
+							<td class="tdTitle"><p:outputLabel
+									value="#{lbl['lbl.sm.businessregno']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td class="tdContent"><p:inputText readonly="true"
+									value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.regNo}" />
 						</td>
-					 	<td class="tdContent">
-					 	<p:inputText readonly="true" value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.regNo}" />
-						</td>
-						<td class="tdTitle">
-						<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
-						<td class="tdContent">
-							<h:inputText value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" 
+							<!-- #24819 - start -->
+							<td class="tdTitle"><p:outputLabel
+									value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+							<td class="tdContent"><h:inputText
+									value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
 							rendered="#{!empty supplierDataMaintenanceBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
 							disabled="#{!supplierDataMaintenanceBackingBean.managedBean.smSupp.brandNew}"
 									size="30" label="#{lbl['lbl.sm.new.business.regNo']}"  />
@@ -245,7 +250,8 @@
 					&#160;
 						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"/>
 						<p:tooltip id="newRegNott" for="newRegNoti">
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
+									<p:outputLabel escape="false"
+										value="#{lbl['tt.sm.new.business.regNo']}" />
 						</p:tooltip>&#160;
 			</td>	
 					 </tr>
@@ -253,11 +259,10 @@
 				<td></td>
 				<td></td>
 				<td class="header-info-text"></td>
-				<td><ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
-				</td>
+							<td><ac:instructionText
+									value="#{lbl['lbl.sm.new.business.regNo.notes']}" /></td>
 			</tr>
-		
-					 
+						<!-- #24819 - end -->
 				</table>
 			</p:panel>
 			

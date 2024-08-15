@@ -157,6 +157,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -2364,7 +2365,7 @@ public class SimpleQuoteBackingBean extends
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
 						
-						// Bug #35298 - start
+						// Bug #35514 - start
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
 							if (tplSpecQuestion.getCmItem() != null
@@ -2390,7 +2391,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							}
 						}
-						// Bug #35298 - end
+						// Bug #35514 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2412,7 +2413,7 @@ public class SimpleQuoteBackingBean extends
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
 						
-						// Bug #35298 - start
+						// Bug #35514 - start
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
 							if ((tplSpecQuestion.getAnswerTypeCode() != null)
@@ -2432,7 +2433,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							}
 						}
-						// Bug #35298 - end
+						// Bug #35514 - end
 						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
@@ -4364,7 +4365,7 @@ public class SimpleQuoteBackingBean extends
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
 				
-				//Bug #35298 - get value for fulfilment type one-off
+				//Bug #35514 - get value for fulfilment type one-off
 				PmParameter FTypeOneOff = getParameterByTypeAndCode(
 						ParameterTypeConst.FULFILMENT_TYPE,
 						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
@@ -4382,7 +4383,15 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
-											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35298 - Assigning value one-off to product
+											//#35514 @zaim start
+											question.setClFulfilmentTypeCode(FTypeOneOff);
+											if (question.getClDurationMonth() != null){
+												question.setClDurationMonth(null);
+											}
+											if (question.getClUomFrequency() != null){
+												question.setClUomFrequency(null);
+											}
+											//#35514 @zaim end
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;
@@ -8258,7 +8267,9 @@ public class SimpleQuoteBackingBean extends
 					minMinutes = ruleValue.getFromValue();
 					maxMinutes = ruleValue.getToValue();
 					minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-					maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+					//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+					maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
+					//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 				}
 				if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
 					maxiDays = maxiDays + maxDays.intValue();
@@ -8271,7 +8282,9 @@ public class SimpleQuoteBackingBean extends
 					}
 
 					BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
-					diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+					//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+					diff = diff.divide(BigDecimal.valueOf(60L*1000), 2, RoundingMode.HALF_UP);
+					//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 					/*
 					
 					BigDecimal twentyFour = BigDecimal.valueOf(24);
@@ -8312,7 +8325,9 @@ public class SimpleQuoteBackingBean extends
 				Date startDate = quote.getStartDate();
 				
 				maxMinutes = new BigDecimal(4320); // equals to 3 days
-				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
+				//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 				quote.setEndDate(DateUtils.addDays(startDate, maxDays.intValue()));
 			}			
 		}
@@ -8373,4 +8388,18 @@ public class SimpleQuoteBackingBean extends
 			return sb.toString();
 		}
 	    //29832 - end
+		
+	// start - #25790
+	/**
+	 * Redirect to purchase in default view.
+	 * 
+	 * @param purchaseInDefaultId
+	 *            the purchase in default id
+	 */
+	public void viewPurchaseInDefault(long purchaseInDefaultId) {
+		PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+		pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
+	}
+	// end - #25790
 }
