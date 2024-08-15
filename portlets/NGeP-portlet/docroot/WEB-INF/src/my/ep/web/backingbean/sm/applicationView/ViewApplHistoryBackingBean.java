@@ -1868,7 +1868,15 @@ public class ViewApplHistoryBackingBean extends
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
 			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl);
+		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl.getCreatedDate());
+		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl);
+		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl.getCreatedDate());
+		log.info("#35336 -> isValidDateComparison(latestRegisteredAppl, latestRejectedAppl) ->" + isValidDateComparison(latestRegisteredAppl, latestRejectedAppl));
+		log.info("#35336 -> isMatchingDeletedApplication(latestRejectedAppl, smAppl)" + isMatchingDeletedApplication(latestRejectedAppl, smAppl));
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
+			log.info("#35336 -> latestRegisteredAppl.getCreatedDate() ->" + latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate()));
+			log.info("#35336 -> latestRejectedAppl.getCreatedDate() ->" + latestRejectedAppl.getCreatedDate());
 			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())) {
 				showErrorAdminHasBeenReplace();
 			}
@@ -2026,6 +2034,7 @@ public class ViewApplHistoryBackingBean extends
 	}
 
 	private void showErrorAdminHasBeenReplace() {
+		log.info("#35336 - START -> showErrorAdminHasBeenReplace");
 		FacesContext.getCurrentInstance().addMessage(
 			null,
 			new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
