@@ -17972,18 +17972,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @param cat
 	 * @return latest or old category code description
 	 */
-	public String getCompanyExpCatName(PmCategoryL1 cat){
-		if(cat == null){
+	public String getCompanyExpCatName(PmCategoryL1 cat) {
+		if (cat == null) {
 			return null;
 		}
-		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
-						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+		if (getManagedBean().getSmAppl().isActiveAppl()
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getSelectedCompanyExperience()
+						.getSmCompanyExperienceCats())) {
 			return cat.getCategoryName();
 		}
-		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
-				getEntityBySinglePropertyFromList(cat.getCategoryL1Id(), 
-				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL1");
-		
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.getEntityBySinglePropertyFromList(
+				cat.getCategoryL1Id(), getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(),
+				"pmCategoryL1");
+
 		return expCat != null ? expCat.getCategoryL1Name() : cat.getCategoryName();
 	}
 	
@@ -17991,18 +17992,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @param cat
 	 * @return latest or old category code description
 	 */
-	public String getCompanyExpCatName(PmCategoryL2 cat){
-		if(cat == null){
+	public String getCompanyExpCatName(PmCategoryL2 cat) {
+		if (cat == null) {
 			return null;
 		}
-		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
-						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+		if (getManagedBean().getSmAppl().isActiveAppl()
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getSelectedCompanyExperience()
+						.getSmCompanyExperienceCats())) {
 			return cat.getCategoryName();
 		}
-		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
-				getEntityBySinglePropertyFromList(cat.getCategoryL2Id(), 
-				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL2");
-		
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.getEntityBySinglePropertyFromList(
+				cat.getCategoryL2Id(), getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(),
+				"pmCategoryL2");
+
 		return expCat != null ? expCat.getCategoryL2Name() : cat.getCategoryName();
 	}
 	
@@ -18010,45 +18012,49 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @param cat
 	 * @return latest or old category code description
 	 */
-	public String getCompanyExpCatName(PmCategoryL3 cat){
-		if(cat == null){
+	public String getCompanyExpCatName(PmCategoryL3 cat) {
+		if (cat == null) {
 			return null;
 		}
-		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
-						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+		if (getManagedBean().getSmAppl().isActiveAppl()
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getSelectedCompanyExperience()
+						.getSmCompanyExperienceCats())) {
 			return cat.getCategoryName();
 		}
-		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
-				getEntityBySinglePropertyFromList(cat.getCategoryL3Id(), 
-				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL3");
-		
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.getEntityBySinglePropertyFromList(
+				cat.getCategoryL3Id(), getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(),
+				"pmCategoryL3");
+
 		return expCat != null ? expCat.getCategoryL3Name() : cat.getCategoryName();
 	}
 	
-	private void updateCategoryCodeNames(){
-		if(!getManagedBean().getSmAppl().isActiveAppl()){
+	private void updateCategoryCodeNames() {
+		if (!getManagedBean().getSmAppl().isActiveAppl()) {
 			return;
 		}
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
-			for(SmSupplierCategory cat : appl.getSmSupplierCategories()){
+		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			//Max loop 30
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
 				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 			}
 		}
-		if(!EntityHelper.isCollectionEmpty(appl.getSmCompanyExperiences())){
-			for(SmCompanyExperience exp : appl.getSmCompanyExperiences()){
+		if (!EntityHelper.isCollectionEmpty(appl.getSmCompanyExperiences())) {
+			//Max loop 30
+			for (SmCompanyExperience exp : appl.getSmCompanyExperiences()) {
 				updateCompanyExpCatNames(exp);
 			}
 		}
 	}
 	
-	private void updateCompanyExpCatNames(SmCompanyExperience exp){
-		if(EntityHelper.isCollectionEmpty(exp.getSmCompanyExperienceCats())){
+	private void updateCompanyExpCatNames(SmCompanyExperience exp) {
+		if (EntityHelper.isCollectionEmpty(exp.getSmCompanyExperienceCats())) {
 			return;
 		}
-		for(SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()){
+		//Max loop 30
+		for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
 			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
 			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
