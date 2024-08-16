@@ -2326,7 +2326,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		userReqDTO.setUserId(approverUserId);
-		return userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		return userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser(); //return the current Approval User Profile //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	}
 
 	/**

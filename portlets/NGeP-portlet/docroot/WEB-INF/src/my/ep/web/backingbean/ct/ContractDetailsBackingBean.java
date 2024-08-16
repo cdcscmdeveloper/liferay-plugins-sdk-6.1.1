@@ -1514,9 +1514,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				
 				// Start - 28292
 				if (!item.getCtItemMaxQties().isEmpty()) {
-					//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-					double maxValue = 0;
-					//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+					Double maxValue = new Double(0);
 					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
 						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
 							maxValue = maxQty.getMaxQuantity().doubleValue();				
