@@ -513,6 +513,7 @@ public class ViewApplHistoryBackingBean extends
 	 *            applNo
 	 */
 	public void initSmApplByApplNo(Long applId, String status) {
+		log.info("#35336 - initSmApplByApplNo(long,String");
 		getManagedBean().setResubmitUrl(StringUtils.EMPTY);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplId(applId);
@@ -537,6 +538,7 @@ public class ViewApplHistoryBackingBean extends
 		log.info("Supplier type: " + smAppl.getSupplierType());
 		getManagedBean().setTabActiveIndex(0);
 		//#31248 - START
+		log.info("#35336 -> setDisplayResubmitButton");
 		getManagedBean().setDisplayResubmitButton(setResubmitButton(smAppl)) ; //#31248  - END
 		viewApplication(smAppl);
 		initWorkflowStatus(getManagedBean().getSmAppl(), status);	
@@ -1854,6 +1856,7 @@ public class ViewApplHistoryBackingBean extends
 	
 	//#31248 - START
 	public Boolean setResubmitButton(SmAppl smAppl){
+		log.info("#35336 - START setResubmitButton(smAppl)");
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
 		//32627 - START
