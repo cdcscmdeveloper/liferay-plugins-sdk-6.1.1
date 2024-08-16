@@ -2036,8 +2036,11 @@ public class ViewApplHistoryBackingBean extends
 	}
 
 	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
+		log.info("#35336 - latestRejectedAppl.applId ==>" +latestRejectedAppl.getApplId());
+		log.info("#35336 - smAppl.applId ==>" + smAppl.getApplId());
+		log.info("#35336 - smAppl.getRecordStatusFlg ==>" + smAppl.getRecordStatusFlg());
 		return latestRejectedAppl != null && latestRejectedAppl.getApplId() == smAppl.getApplId()
-			&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED);
+			&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
 	}
 
 	private void showErrorAdminHasBeenReplace() {
