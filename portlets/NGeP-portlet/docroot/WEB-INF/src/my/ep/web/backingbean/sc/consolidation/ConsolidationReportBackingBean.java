@@ -2756,7 +2756,7 @@ public class ConsolidationReportBackingBean extends
 		public List<String> qualifiedSupplierInstructionList(Long qtId) {
 			Locale locale = new FacesScopes().getUserLocale();
 			List<String> instructionList = new ArrayList<>();
-			int condition = 3;//Initial instruction number, after 3 default (as-is) instructions
+			int condition = SourcingConstants.DEFAULT_INSTRUCTIONS_MESSAGE_NUMBERING;//Initial instruction number, after 3 default (as-is) instructions
 			
 			//#28777#29729 condition
 			if (checkInstructionSupplierBranchDeleted(qtId)) {
