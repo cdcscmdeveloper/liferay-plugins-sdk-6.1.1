@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,9 +40,9 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886 
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886 
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -168,7 +167,6 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -5751,13 +5749,12 @@ public class SimpleQuoteBackingBean extends
 		boolean isServiceContainPrice = Boolean.FALSE;
 		boolean isZonalChecking = Boolean.FALSE;
 		// validate tpl spec - product before spki authenticate
-		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
-				.getSpecAnswerList();
+		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
 		
 		Locale locale = new FacesScopes().getUserLocale();
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
 			//30552 - start
-			getManagedBean().getProductTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			getManagedBean().getProductTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			// 30552 - end
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
@@ -5771,7 +5768,7 @@ public class SimpleQuoteBackingBean extends
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
 			// 30552 - start
-			getManagedBean().getServiceTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			getManagedBean().getServiceTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			// 30552 - end
 			//#Newly add
 			///#21695 farid start
@@ -5866,13 +5863,11 @@ public class SimpleQuoteBackingBean extends
 			if (getManagedBean().getProductTemplateSpecBean()
 					.getSpecAnswerList() != null) {
 				// #30552 - start
-				if (isProdContainPrice){
-					specAnswers.addAll(getManagedBean()
-							.getProductTemplateSpecBean().getSpecAnswerList());
+				if (isProdContainPrice) {
+					specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList());
 				}else {
-					if (getManagedBean().getProductTemplateSpecBean().getBackupspecAnswerList() != null){
-						specAnswers.addAll(getManagedBean()
-								.getProductTemplateSpecBean().getBackupspecAnswerList());
+					if (getManagedBean().getProductTemplateSpecBean().getBackupSpecAnswerList() != null) {
+						specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getBackupSpecAnswerList());
 					}
 				}
 			
@@ -5914,8 +5909,8 @@ public class SimpleQuoteBackingBean extends
 							.getServiceTemplateSpecBean().getSpecAnswerList());
 				}else {
 					if (!isProduct){
-						if (getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList() != null){
-							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList());
+						if (getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList() != null){
+							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList());
 						}
 					}
 				}

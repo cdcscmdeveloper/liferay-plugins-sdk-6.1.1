@@ -2402,24 +2402,24 @@ public class PurchaseInquiryBackingBean extends
 		List<ScSupplierItemPrice> scSupplierItemPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		
 		switch (priceType) {
-		case "07":
-			scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
-			break;
-		case "08":
-			scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
-			break;
-		default:
-			// do nothing
-			break;
+			case "07":
+				scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
+				break;
+			case "08":
+				scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
+				break;
+			default:
+				// do nothing
+				break;
 		}
 		
 		if(specZoneId != null){
-//			int countZoneId = 0; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+			//int countZoneId = 0; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
 				
 				if(scSupplierItemPrice.getTplSpecZone().getSpecZoneId() != null){
 					if (specZoneId.compareTo(scSupplierItemPrice.getTplSpecZone().getSpecZoneId()) == 0 ){
-						countZoneId++;
+						//countZoneId++;
 					}
 				}
 			}
@@ -2485,7 +2485,7 @@ public class PurchaseInquiryBackingBean extends
 								"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 					}
 					
-					range = scSupplierItemPrice.getToQty().subtract(scSupplierItemPrice.getFromQty());					
+					//range = scSupplierItemPrice.getToQty().subtract(scSupplierItemPrice.getFromQty());					
 				}else{
 					ScSupplierItemPrice prevScSupplierItemPrice = scSupplierItemPrices.get(index - 1);
 					if (scSupplierItemPrice.getToQty() == null) {
