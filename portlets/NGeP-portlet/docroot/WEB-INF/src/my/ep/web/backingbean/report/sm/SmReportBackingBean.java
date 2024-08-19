@@ -54,6 +54,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -3430,4 +3431,19 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		return getManagedBean().getApplStatusList();
 	}
 	//#32521 - END
+	
+	////#7754_#35984 - Start
+	public String getZoneByUser(){
+		PmZone zone = SmCommonUtil.getInstance().getUserZone();
+		
+		if(zone != null){
+			getManagedBean().setZone(zone.getZoneName());
+		}else{
+			getManagedBean().setZone(null);
+		}
+		
+		log.info("User Zone>>>>>" + getManagedBean().getZone());
+		return getManagedBean().getZone();
+	}
+	//#7754_#35984 - End
 }
