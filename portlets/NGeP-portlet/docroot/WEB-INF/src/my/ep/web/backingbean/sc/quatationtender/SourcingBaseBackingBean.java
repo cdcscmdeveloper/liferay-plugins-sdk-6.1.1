@@ -2599,8 +2599,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		if (null != clsDate) {
 			clsDate = DateUtils.setDefaultDateTime(clsDate);
-			proposalValidityEndDate = DateUtils.addDays(clsDate,
-					scQt.getQtValidityPeriod());
+			// 25635&33724-proposal validity days null -start-  Bug #36221
+			if (null != scQt.getQtValidityPeriod()) {
+				proposalValidityEndDate = DateUtils.addDays(clsDate,
+						scQt.getQtValidityPeriod());
+			} // 25635&33724-proposal validity days null Bug #36221
 		}
 		scQt.setProposalValidityEndDate(proposalValidityEndDate);
 	}
