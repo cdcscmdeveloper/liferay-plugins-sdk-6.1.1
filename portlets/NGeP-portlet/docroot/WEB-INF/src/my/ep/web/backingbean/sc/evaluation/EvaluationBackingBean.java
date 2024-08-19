@@ -5998,8 +5998,7 @@ public void saveComplianceSample() {
 							
 
 						}
-						 final List<TplSpecScoring> scoringList = new ArrayList<TplSpecScoring>(
-								distinctScoring.values());
+						 final List<TplSpecScoring> scoringList = new ArrayList<>(distinctScoring.values()); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 						 
 						this.getManagedBean().setSpecItemScoringList(
 								scoringList);
