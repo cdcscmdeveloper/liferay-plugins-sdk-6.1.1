@@ -182,29 +182,67 @@ public class VmUtil {
 	 */
 	public String validateHtmlEntitySyntax(String chopString) {
 		String newChopString = chopString;
-		if (newChopString.contains("<br<br /> />")){
-			newChopString = newChopString.replaceAll("<br<br />/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-		}else if (newChopString.contains("<b<br />r />")){
-			newChopString = newChopString.replaceAll("<b<br />r/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-		}else if (newChopString.contains("<b<br />r")){
-			newChopString = newChopString.replaceAll("<b<br />r", "<br");
-		}else if (newChopString.contains("<<br />br")){
-			newChopString = newChopString.replaceAll("<<br />br", "<br");
-		}
+		newChopString = validateBreakLine(newChopString);
 		
-		if (newChopString.contains("&#<br />60;")) {
-			newChopString = newChopString.replaceAll("&#<br />60;", SSTConstant.LESS_THAN_SYMBOL);
-		}else if (newChopString.contains("&#60<br />;")){
-			newChopString = newChopString.replaceAll("&#60<br />;", SSTConstant.LESS_THAN_SYMBOL);
-		}
+		newChopString = validateLessThanBracket(newChopString);
 		
-		if (newChopString.contains("&#<br />62;")) {
-			newChopString = newChopString.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL);
-		}else if (newChopString.contains("&#62<br />;")){
-			newChopString = newChopString.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL);
-		}
+		newChopString = validateGreaterThanBracket(newChopString);
 		
 		return newChopString;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateGreaterThanBracket(String newChopString) {
+		String checkBracket = newChopString;
+		if (checkBracket.contains("&#<br />62;")) {
+			checkBracket = checkBracket.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#62<br />;")){
+			checkBracket = checkBracket.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#6<br />2;")){
+			checkBracket = checkBracket.replaceAll("&#6<br />2;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (checkBracket.contains("&<br />#62;")){
+			checkBracket = checkBracket.replaceAll("&<br />#62;", SSTConstant.GREATER_THAN_SYMBOL);
+		}
+		return checkBracket;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateLessThanBracket(String newChopString) {
+		String checkBracket = newChopString;
+		if (checkBracket.contains("&#<br />60;")) {
+			checkBracket = checkBracket.replaceAll("&#<br />60;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#60<br />;")){
+			checkBracket = checkBracket.replaceAll("&#60<br />;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#6<br />0;")){
+			checkBracket = checkBracket.replaceAll("&#6<br />0;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (checkBracket.contains("&<br />#60;")){
+			checkBracket = checkBracket.replaceAll("&<br />#60;", SSTConstant.LESS_THAN_SYMBOL);
+		}
+		return checkBracket;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateBreakLine(String newChopString) {
+		String checkBreakLine = newChopString;
+		if (checkBreakLine.contains("<br<br /> />")){
+			checkBreakLine = checkBreakLine.replaceAll("<br<br />/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}else if (checkBreakLine.contains("<b<br />r />")){
+			checkBreakLine = checkBreakLine.replaceAll("<b<br />r/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}else if (checkBreakLine.contains("<b<br />r")){
+			checkBreakLine = checkBreakLine.replaceAll("<b<br />r", "<br");
+		}else if (checkBreakLine.contains("<<br />br")){
+			checkBreakLine = checkBreakLine.replaceAll("<<br />br", "<br");
+		}
+		return checkBreakLine;
 	}
 
 	/**
