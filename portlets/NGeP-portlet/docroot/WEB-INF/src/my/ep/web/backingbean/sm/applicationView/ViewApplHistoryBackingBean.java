@@ -1888,7 +1888,8 @@ public class ViewApplHistoryBackingBean extends
 				.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
 
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
-			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())) {
+			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())
+					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
 		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
