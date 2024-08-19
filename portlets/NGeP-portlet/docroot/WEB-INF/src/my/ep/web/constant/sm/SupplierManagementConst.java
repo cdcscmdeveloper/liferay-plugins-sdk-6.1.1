@@ -149,15 +149,11 @@ public class SupplierManagementConst {
 	static {
 		FACILITY_TYPE_MAP = new HashMap<String, String>();
 		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY, SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
-		FACILITY_TYPE_MAP
-				.put(SM_FACILITY_TYPE_DOCKYARD, SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
-		FACILITY_TYPE_MAP
-				.put(SM_FACILITY_TYPE_WORKSHOP, SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_DOCKYARD, SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_WORKSHOP, SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
 		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE, SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.home.office", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.business.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE, SmCommonUtil.getMessage("lbl.sm.facility.type.home.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE, SmCommonUtil.getMessage("lbl.sm.facility.type.business.office", null));
 	}
 
 	public static String[] CAT_TYPE_CODES = new String[] { SupplierManagementConst.CAT_TYPE_TRANSPORTATION,
@@ -542,6 +538,7 @@ public class SupplierManagementConst {
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -1123,7 +1120,7 @@ public class SupplierManagementConst {
 	public int getCANCEL_RECORD_STATUS() {
 		return CANCEL_RECORD_STATUS;
 	}
-	
+
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
 	}
