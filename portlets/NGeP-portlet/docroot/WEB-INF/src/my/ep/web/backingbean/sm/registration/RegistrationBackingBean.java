@@ -158,6 +158,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, PmCertBody> profCertBodyMap;
 	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G", "H");
 	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
+	private static List<String> regNoValidityList = Arrays.asList("O","M","R","A"); //#35581
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	boolean fromtncProceed = false;
 	boolean fromBankAccount = false;
@@ -322,6 +323,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+		}
+		//#35581
+		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())
+				&& !getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+			if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+				throw new EpException(MessageConst.ERROR_723100,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (regNoValidityList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+				throw new EpException(MessageConst.ERROR_723101,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
 		}
 		PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 
@@ -1912,6 +1926,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		// #32713 - Start
 		// to validate if there is same reg_no that has inProgress status
 		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())) {
+			//#35581
+			if (!getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+				if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+					throw new EpException(MessageConst.ERROR_723100,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				} else if (regNoValidityList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+					throw new EpException(MessageConst.ERROR_723101,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
 
 			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 			reqDTO.setRegNo(getManagedBean().getSmSupp().getRegNo());
@@ -4094,6 +4120,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				&& StringUtils.isNotBlank(getManagedBean().getSmSupp()
 						.getRegNo())) {
 			String bussType = getManagedBean().getSmSupp().getBusinessType();
+			//#35581
+			if (!getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+				if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+					throw new EpException(MessageConst.ERROR_723100,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				} else if (regNoValidityList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+					throw new EpException(MessageConst.ERROR_723101,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}
 			//#29114, CR 27382: Static Code Analysis Start
 			/*
 			if (sabahSarawakRemoveWhiteSpaceList.contains(bussType)) {
@@ -5532,4 +5570,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	//#27691 - END 
+	//#35581 START
+	/**
+	 * check validity character RegNo
+	 */
+	public void regNoValidity() {
+		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())
+				&& !getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+			if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+				throw new EpException(MessageConst.ERROR_723100,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (regNoValidityList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+				throw new EpException(MessageConst.ERROR_723101,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+		}
+	}
+	//#35581
 }
