@@ -139,7 +139,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBusiness;
+//import my.ep.persistence.entity.sm.SmSupplierBusiness; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -8392,8 +8392,8 @@ public class SimpleQuoteBackingBean extends
 
 		public String addingZeroInfront(Long number){
 			String newnumber ="";
-			if (number < 10 && number >=0){
-				newnumber = "0"+String.valueOf(number);
+			if (number < 10 && number >=0){ //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+				newnumber = "0" + number;
 			}else if (number >= 10 ) {
 				return String.valueOf(number);
 			}
