@@ -2039,7 +2039,8 @@ public class ViewApplHistoryBackingBean extends
 		log.info("#35336 - latestRejectedAppl.applId ==>" +latestRejectedAppl.getApplId());
 		log.info("#35336 - smAppl.applId ==>" + smAppl.getApplId());
 		log.info("#35336 - smAppl.getRecordStatusFlg ==>" + smAppl.getRecordStatusFlg());
-		return latestRejectedAppl != null && latestRejectedAppl.getApplId().equals(smAppl.getApplId())
+		return latestRejectedAppl != null && latestRejectedAppl.getApplId() != null 
+			&& latestRejectedAppl.getApplId().equals(smAppl.getApplId()) 
 			&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
 	}
 
