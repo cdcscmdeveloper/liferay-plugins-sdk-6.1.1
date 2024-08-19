@@ -22843,7 +22843,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		//start insert and update into tplSpecZoneDtlHistory
 		// check existing in TplSpecZoneDtlHistory
 		// listZone == null = non zonal
-		if (null != listZone && listZone.size() > 0) {
+		if (null != listZone && !listZone.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 			if (null != specificationReqDTO.getSpecZoneId()) {
 				SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
 				if (!resDTO.isSuccessful()) {
@@ -23598,4 +23598,44 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value()); 
 	}
     //29732 end
+    
+    
+	/**
+	 * #28784 - Move scoringOkActionDemo from templateSpecBb to specBB due
+	 * to demo scoring
+	 * 
+	 * @param templateSpecBean
+	 * @return void
+	 */
+	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
+		ITemplateSpecSO templateSpecSO = null;
+		BigDecimal demoNewScore = null;
+		try {
+			TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+			List<TplSpecScoring> specScorings = selectedSpecQuestion.getTplSpecScorings();
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+					ITemplateSpecSO.class);
+
+			BigDecimal demoScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings,
+					new FacesScopes().getUserLocale());
+			demoNewScore = this.getManagedBean().getTemplateSpecBean().getSelectedSpecQuestion().getDemoScore();
+
+			if (demoScore != null && demoScore.equals(new BigDecimal(0))) {
+				throw new EpException(MessageConst.ERROR_760476);
+			}
+			if (demoScore != null) {
+				selectedSpecQuestion.setDemoScore(demoScore);
+			}
+
+		} finally {
+			templateSpecSO = null;
+		}
+		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setTemplateSpecBean(templateSpecBean);
+
+		if (demoNewScore != null) {
+			RequestContext.getCurrentInstance().execute("scoringSetPopup.hide()");
+		}
+
+	}
 }
