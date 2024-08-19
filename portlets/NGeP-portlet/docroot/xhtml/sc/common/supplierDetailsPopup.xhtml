@@ -34,7 +34,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supplierInfo.newSSMNo']}" /></td>
 				<td>
-					<p:inputText disabled="true" readonly="true" size="30"
+					<p:inputText disabled="true" readonly="true" size="20"
 						value="#{empty supplierDetailBackingBean.managedBean.smSupplier.ssmNewRegNo ? lbl['lbl.txt.na']: supplierDetailBackingBean.managedBean.smSupplier.ssmNewRegNo}" />
 					<ac:iconTooltip id="ssmIcoTooltipId" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.tooltip']}"  />
 					<h:outputText styleClass="instruction" style="display: block; margin-top: -4px;" value="#{lbl['lbl.sc.supplierInfo.newSSMNo.note']}"/>

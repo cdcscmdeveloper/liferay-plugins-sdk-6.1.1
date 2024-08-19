@@ -12,6 +12,10 @@ public class ScheduleInfo {
 	private String crNoStatus;
 	private String coNo;
 	private String coNoStatus;
+	
+	public ScheduleInfo() {
+        // Default constructor logic
+    }
 
 	public ScheduleInfo(String schNo, String crNo, String crNoStatus, String coNo, String coNoStatus) {
 		super();

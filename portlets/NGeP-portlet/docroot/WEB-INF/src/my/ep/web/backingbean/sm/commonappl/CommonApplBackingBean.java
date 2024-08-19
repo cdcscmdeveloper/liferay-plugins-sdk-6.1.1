@@ -491,50 +491,33 @@ public class CommonApplBackingBean extends
 				String currentStatus = bpmBean.applicationStatus(resDTO
 						.getDocStatus());
 				smApplBB.getManagedBean().setCurrentStatus(currentStatus);
-				//#32304 - start
-				if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL) || resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", ""))
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_SPLCAT) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", ""))
-						|| resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""))) {
+				//#32304
+				if (isTaskForPO(resDTO.getTaskName(), appl.getPoUserId())) {
 					smApplBB.getManagedBean().setPoUser(true);
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
 					// #29664 - end
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(false);
-				} else if (resDTO.getTaskName().equalsIgnoreCase(
-						SMProcessNameConst.REVIEW_APPL_ESCALATED) || resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))
-						|| ((resDTO.getTaskName().equalsIgnoreCase(
-								SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(
-										SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))
-										&& (new FacesScopes()).hasRoleUser(RoleCode.UPS_APPROVER.value()))) {
-					//#32304 - end
+				//#32304
+				} else if (isTaskForApprover(resDTO.getTaskName())) {
 					smApplBB.getManagedBean().setPoUser(false);
 					smApplBB.getManagedBean().setSupplierUser(false);
 					smApplBB.getManagedBean().setApproverUser(true);
 					// #29664 - start
 					smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
 					// #29664 - end
-					// #28778 - Site Visit Grouping Enhancement - 28775 - Start
-					this.getManagedBean().setSpecialCategoryRechecked(specialCategoryRechecked(appl));
-					if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW ) && this.getManagedBean().isSpecialCategoryRechecked()){
+					// #28778 - Site Visit Grouping Enhancement -28775 - Start
+					if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+							&& SmApplicationUtil.hasSpecialCategory(appl)){
+						smApplBB.getManagedBean().setSpecialCategoryRechecked(true);
+					}
+					if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+							|| appl.getApplCategoryType().equals(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL)
+							|| smApplBB.getManagedBean().isSpecialCategoryRechecked()) {
 						setSiteVisitView(smApplBB.getManagedBean(), appl);
 					}
-					// #28778 - Site Visit Grouping Enhancement - 28775 - End
-					if (appl.getApplType().equals(
-							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-						setSiteVisitView(smApplBB.getManagedBean(), appl);
-					} else {
-						if (appl.getApplCategoryType().equals("S")) {
-							setSiteVisitView(smApplBB.getManagedBean(), appl);
-						}
-					}
+					// #28778 - Site Visit Grouping Enhancement -28775 - End
 				}
 				if (resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(
@@ -870,18 +853,6 @@ public class CommonApplBackingBean extends
 	}
 
 	}
-	
-	//28778 - Site Visit Grouping Enhancement - 28775 - Start
-	private boolean specialCategoryRechecked(SmAppl Appl){
-		for(SmSupplierCategory smSuppCat : Appl.getSmSupplierCategories()){
-		    if (smSuppCat.isSpecialCategory()){
-		    	log.info("IS IT A SPECIAL CATEGORY ? ============================== " + true);
-			 return true;
-		    }
-		}
-	  return false;
-	}
-	//28778 - Site Visit Grouping Enhancement - 28775 - End
 
 	private void setSiteVisitView(SmApplicationManagedBean bean, SmAppl appl) {
 		SmWorkflowStatus workFlow = getWorkFlowStatusByMultipleStatusAndApplId(
@@ -1343,4 +1314,26 @@ public class CommonApplBackingBean extends
 		SmCommonUtil.redirectToPage("commonSmOverviewInfo.xhtml", "", null, null);
 	}
 	//10724 END
+	//#32304 - start
+	private boolean isTaskForPO(String taskName, Long poUserId){
+		if((taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) 
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", "")))
+					&& (new FacesScopes()).getUserSessionBean().getUserId().equals(poUserId)){
+			return true;	
+		}
+		return taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL) 
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL.replaceAll("\\s", ""))
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT) 
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_SPLCAT.replaceAll("\\s", ""))
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) 
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", ""));
+	}
+	
+	private boolean isTaskForApprover(String taskName){
+		return taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED) 
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_APPL_ESCALATED.replaceAll("\\s", ""))
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) 
+				|| taskName.equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE.replaceAll("\\s", ""));
+	}
+	//#32304 - end
 }

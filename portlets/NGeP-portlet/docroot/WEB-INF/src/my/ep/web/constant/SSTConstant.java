@@ -134,5 +134,34 @@ public class SSTConstant {
 	 * the table border missing at the bottom. 
 	 */
 	public static final String LAST_INDEX_WIP = "lastIndexWip";
+	
+	/**
+	 * Represent HTML Entity line break.
+	 */
+	public static final String HTML_ENTITY_LINE_SEPARATOR = "<br/>";
 	//29006 end
+	//35295 @zaim - start
+	/**
+	 * Represent rowspan needed for item and spec in SST
+	 */
+	 public static final String ROWSPAN_ITEM_NAME = "rowSpanItem";
+	/**
+	 * Represent rowspan needed for item for zonal in SST
+	 */
+	public static final String ROWSPAN_ZONE_QUANTITY = "rowSpanZone";
+	/**
+	 * Represent number of row for non zonal
+	 */
+	public static final Integer NON_ZONAL_ROW = 1;
+	/**
+	 * Represent list of purchase request that contain data to generate Surat Setuju Terima
+	 */
+	public static final String LIST_PURCHASE_REQUEST_SST = "PRSSTList";	
+	//35295 @zaim - end
+	//36122 - start
+	/**
+	 * Add whitespace to the text
+	 */
+	public static final String ADD_WHITESPACE = " ";
+	//36122 - end
 }

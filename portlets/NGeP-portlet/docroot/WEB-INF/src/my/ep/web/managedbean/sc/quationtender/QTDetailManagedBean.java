@@ -1801,10 +1801,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
 	private String catCodeList;
+	private boolean currentInSpecMaint;//#29732 first time spec maint
+	private boolean categoryDescriptionChange;//#29732 flag to check category has change
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
-	private BigDecimal totalmaxscore;
+	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 	
 	private List<BriefingZoneBean> sampleAddressBean;//11104-start
@@ -1848,6 +1850,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
 	private ScQtEpvSupplierResponse suppResp;//#21692
+	private boolean chmnFinalizationRejectEpv;//#21692
 				
 	// #29521 - end
 	//Bug #35061 - asyrafhaziq 
@@ -1864,6 +1867,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<String, String> committeeMembersTypeMap; 
 	//12471 - end
 
+	//#29732
+	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11846,7 +11853,61 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
 		this.committeeMembersTypeMap = committeeMembersTypeMap;
 	}
+
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean categoryDescriptionChange) {
+		this.currentInSpecMaint = currentInSpecMaint;
+	}
 	
+	public boolean isCategoryDescriptionChange() {
+		return categoryDescriptionChange; //#29732(#232)
+	}
+
+	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
+		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
+	}
+	
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean isFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
+
+	//#21692 - Start
+	public boolean isChmnFinalizationRejectEpv() {
+		return chmnFinalizationRejectEpv;
+	}
+
+	public void setChmnFinalizationRejectEpv(boolean chmnFinalizationRejectEpv) {
+		this.chmnFinalizationRejectEpv = chmnFinalizationRejectEpv;
+	}
+	//#21692 - End
 }
 
 // ***25201

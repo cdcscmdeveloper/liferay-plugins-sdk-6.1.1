@@ -23,14 +23,18 @@ public class SLALogConstant {
 	public static final String QT_NOTICE_BOARD_BACKINGBEAN = "NoticeBoardBackingBean"; //Development #35054
 	//12471 - start
 	public static final String QT_COMMITTEE_BACKINGBEAN = "QTCommitteBackingBean";
+	public static final String QT_EVALUATION_MEETING_BACKINGBEAN = "EvaluationMeetingBackingBean";
 	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
 	public static final String QT_SOURCING_BACKINGBEAN = "SourcingBaseBackingBean";
+	public static final String QT_USER_COMMITTEE_PAGING_DATA_MODEL = "UserCommitteePagingDataModel";
+	public static final String QT_USER_QC_PAGING_DATA_MODEL = "UserQCPagingDataModel";
+	public static final String QT_SLA_DOT_SEPARATOR = ".";
 	//12471 - end
 
 	//#29187 Start Vinod
 	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
-	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	/*
@@ -57,6 +61,7 @@ public class SLALogConstant {
 	//#29468 Start Vinod
 	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
+	public static final String QT_PROC_CATEGORY_CHANGED = "procCategoryChanged";
 	//#29468 End Vinod
 	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
 	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";
@@ -64,7 +69,11 @@ public class SLALogConstant {
 	//12471 - start
 	public static final String QT_BUILD_ORG_NAME_DD = "buildOrgNameDD";
 	public static final String QT_BUILD_PTJ_DD = "buildPtjDD";
+	public static final String QT_PAGE_CHANGE_LISTENER = "pageChangeListener";
 	//12471 - end
+	//06022024@Sonarqube QT#58 - haziq
+	public static final String QT_CALC_TOTAL_AMOUNT = "calcTotalAmount";
+
 	private SLALogConstant(){
 		
 	}	

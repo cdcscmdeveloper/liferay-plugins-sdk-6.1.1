@@ -222,7 +222,7 @@ public class SvcSiteAssignBackingBean extends
 			}
 		}
 		//#32304 - start
-		if(SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmAppl())){
+		if(SmCommonUtil.checkCancelBumiApplFromBumiStatus(getManagedBean().getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
 			return;
 		}
@@ -345,6 +345,9 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
+	/**
+	 * Get a list of all non-duplicate category codes for site visit
+	 */
 	private void getAllSiteVisitCategoryCode(){
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		
@@ -360,16 +363,17 @@ public class SvcSiteAssignBackingBean extends
 			}
 		}
 		for(SmSupplierCategory catTemp : tempL){
-			boolean dupe = false;
+			boolean duplicate = false;
 			for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
 				if(catTemp.getPmCategoryL3().getCategoryL3Id().equals(
 						catBean.getPmCategoryL3().getCategoryL3Id())){
-					dupe = true;
+					duplicate = true;
 					break;
 				}
 			}
-			if(!dupe)	
+			if(!duplicate){
 				getManagedBean().getCategoryLs().add(catTemp);
+			}
 		}
 		SmApplicationUtil.sortSupplierCategory(getManagedBean().getCategoryLs());
 	}
@@ -378,8 +382,8 @@ public class SvcSiteAssignBackingBean extends
 		if(appl == null || l3 == null || appl.getApplId() == null || l3.getCategoryL3Id() == null){
 			return new ArrayList<>();
 		}
-		return SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-			(appl.getApplId(), l3.getCategoryL3Id(), appl.getApplType());
+		return SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId(
+				appl.getApplId(), l3.getCategoryL3Id(), appl.getApplType());
 	}
 	//28775 - Site Visit Grouping Enhancement - 28775 - end
 	
@@ -410,27 +414,33 @@ public class SvcSiteAssignBackingBean extends
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	/**
-	 * Display facility type and category code(s)
 	 * @param svTask
-	 * @return
+	 * @return facility type and category code(s)
 	 */
 	public String getFacilityType(SmSvTask svTask){
-		String s = svTask.getSmSvAddress().getFacilityType();
+		if(svTask == null || svTask.getSmSvAddress() == null){
+			return "";
+		}
+		String s = "";
+		if(svTask.getSmSvAddress().getFacilityType() != null){
+			s = svTask.getSmSvAddress().getFacilityType();
+		}
 		if(svTask.getPmCategoryL3() != null){
-			s = s.concat("<br/>"
-					+ svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+			s += "<br/>" + svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
-					+ svTask.getPmCategoryL3().getCategoryL3Code());
+					+ svTask.getPmCategoryL3().getCategoryL3Code();
 		}		
-		if(!getManagedBean().getSmAppl().isSiteVisitGroup()) 
+		if(!getManagedBean().getSmAppl().isSiteVisitGroup()){
 			return s;
+		}
 		
 		for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
 			String catCode = svTGroup.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTGroup.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
 					+ svTGroup.getPmCategoryL3().getCategoryL3Code();
-			if(!s.contains(catCode))
+			if(!s.contains(catCode)){
 				s = s.concat("<br/>"+catCode);
+			}
 		}
 		return s;
 	}

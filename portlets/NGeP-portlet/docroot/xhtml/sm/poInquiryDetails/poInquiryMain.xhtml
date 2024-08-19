@@ -27,8 +27,8 @@
 			<td>
 				<!-- #12483 - START, #34892 -->
 				<ac:smReviseReason bBean="#{backingBean}"/>
-				<!-- #12483 - END -->
 				<div style="width: 100%" align="right">
+				<!-- #12483 - END -->
 					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
@@ -40,7 +40,7 @@
 		</tr>
 	</table>
 	
-	<p:dialog width="1050px" header="#{lbl['lbl.sm.send.enquiry']}"
+	<p:dialog width="1000px" height="450px" header="#{lbl['lbl.sm.send.enquiry']}"
 		id="sendInqDialog" widgetVar="sendInqDialog" resizable="false"
 		showEffect="fade" hideEffect="fade" modal="true" closable="false">
 					
@@ -50,7 +50,7 @@
 				
 			<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 				id="inquiryMainSuppDocPanel">
-		
+				<!--#34392 Start -->
 				<!-- <p:dataTable var="onTable" id="inquiryMainSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{backingBean.managedBean.missinDocs}">
 					<ac:paginator for="inquiryMainSdList" />
@@ -75,9 +75,9 @@
 		
 				</p:dataTable> -->
 				<p:dataTable var="table"
-					value="#{backingBean.managedBean.mandatoryDocs}"
+					value="#{backingBean.managedBean.missinDocsMandatory}"
 					id="onlineMandatoryListMain" rowIndexVar="index"
-					rendered="#{not empty backingBean.managedBean.mandatoryDocs}"
+					rendered="#{not empty backingBean.managedBean.missinDocsMandatory}"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 					<p:columnGroup type="header">
@@ -112,13 +112,13 @@
 					<p:column headerText="#{lbl['lbl.sm.remarks']}"
 						style="width : 27% !important;"
 						rendered="#{table.pmDocument.mandatory}">
-						<h:inputTextarea value="#{table.inquiryRemark}"
-							style="float: left;white-space: normal;width:97% !important;" />
+						<p:inputTextarea value="#{table.inquiryRemark}"
+							style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
 					</p:column>
 				</p:dataTable>
 				<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
 				<p:dataTable var="" value="" id="EmptyOnlineMandatoryListMain"
-					rendered="#{empty backingBean.managedBean.mandatoryDocs}"
+					rendered="#{empty backingBean.managedBean.missinDocsMandatory}"
 					rowIndexVar="index"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -149,9 +149,9 @@
 				</p:dataTable>
 				<!-- datatable for non-mandatory support doc with record to display -->
 				<p:dataTable var="table"
-					value="#{backingBean.managedBean.nonMandatoryDocs}"
+					value="#{backingBean.managedBean.missinDocsNonMandatory}"
 					id="onlineNonMandatoryListMain" rowIndexVar="index"
-					rendered="#{not empty backingBean.managedBean.nonMandatoryDocs}"
+					rendered="#{not empty backingBean.managedBean.missinDocsNonMandatory}"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
@@ -187,13 +187,13 @@
 					<p:column headerText="#{lbl['lbl.sm.remarks']}"
 						style="width : 27% !important;"
 						rendered="#{!table.pmDocument.mandatory}">
-						<h:inputTextarea value="#{table.inquiryRemark}"
-							style="float: left;white-space: normal;width:97% !important;" />
+						<p:inputTextarea value="#{table.inquiryRemark}"
+							style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
 					</p:column>
 				</p:dataTable>
 				<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
 				<p:dataTable var="" value="" id="EmptyOnlineNonMandatoryListMain"
-					rendered="#{empty backingBean.managedBean.nonMandatoryDocs}"
+					rendered="#{empty backingBean.managedBean.missinDocsNonMandatory}"
 					rowIndexVar="index"
 					style="width:1000px !important; table-layout: fixed !important;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -223,7 +223,7 @@
 					</p:columnGroup>
 				</p:dataTable>
 			</p:panel>
-			
+			<!--#34392 End -->
 			<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryOtherMainPanelId" 
 				rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
 				<h:outputText value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.valueReqd}"/>&#160;

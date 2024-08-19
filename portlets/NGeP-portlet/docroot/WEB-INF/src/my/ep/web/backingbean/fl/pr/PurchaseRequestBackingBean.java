@@ -334,6 +334,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setSqNumber(getManagedBean().getSqNumber());
 			reqDTO.setRequestNoteId(getManagedBean().getRequestNoteId());
 			// 12177 - End
+			// start - #25790
+			if (BpmOutcomeConst.BPM_DRAFT.equals(action) && flFulfilmentRequest.getCreatedOrgProfile() != null) {
+				reqDTO.setPtjOfOrgProfileId(retrievePTJByOrgProfileId(flFulfilmentRequest.getCreatedOrgProfile()
+						.getOrgProfileId(), flFulfilmentRequest.getCreatedOrgProfile().getCreatedDate()));
+			}// end - #25790
 			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
@@ -1111,7 +1116,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
-			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}	
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
@@ -1561,9 +1565,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//Redmine Enhancement #12177
 	    addButton();
 	    log.info("end - addButton");
-	    //29555 start
-	    getPreparedByName();
-	    //29555 end
+
 	    MDC.clear();
 	    if(sqExpiredMessageFlag){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -1710,6 +1712,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		getManagedBean().setPmUserOrg(userOrg);
 	}
 	//29555 start
+	/*
+	 * set preparedby for managedbean by retrieving requistioner and docid
+	 */
 	public void getPreparedByName() {
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FlActor actor = null;
@@ -3928,7 +3933,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		RequestNoteBackingBean reqNoteBB = new RequestNoteBackingBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		reqNoteBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		// start - #25790
+		reqNoteBB.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 		reqNoteBB.viewRequestNote(requestNoteId);
+		// end - #25790
 	}
 	
 	/**
@@ -4474,9 +4482,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prRenderer?faces-redirect=true");
-			//29555 start
-			getPreparedByName();
-		    //29555 end
 		}
 	}
 	
