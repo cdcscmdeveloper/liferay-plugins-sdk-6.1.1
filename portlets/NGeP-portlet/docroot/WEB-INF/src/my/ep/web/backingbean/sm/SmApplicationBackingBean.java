@@ -16759,6 +16759,7 @@ public class SmApplicationBackingBean extends
 				new ArrayList<SmApplSupportDocInquiry>());
 		for (SmApplSupportDocInquiry doc : applInquiry
 				.getSmApplSupportDocInquiries()) {
+			doc.setSmApplInquiry(applInquiry);
 			doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
 			if (doc.getPmDocument().isMandatory()) {
 				getManagedBean().getMandatoryDocsInquiry().add(doc);
