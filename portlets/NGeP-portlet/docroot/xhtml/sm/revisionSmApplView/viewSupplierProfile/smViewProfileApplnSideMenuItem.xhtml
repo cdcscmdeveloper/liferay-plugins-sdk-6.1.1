@@ -298,7 +298,7 @@
 					tabNo="7" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP}"
 					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditEquipment}" />
 			</p:menuitem>
-			<p:menuitem>
+			<p:menuitem rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}" >
 				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.audit.link.auditTrail']}"
 					tabNo="8" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}"
 					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditAduitTrail}" />
@@ -425,7 +425,7 @@
 		<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}" 
 		onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 		actionListener="#{viewSmApplBackingBean.setTabValue('5',null)}"
-		update=":form" />
+		update=":form" rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}" />
 		</c:if>
 		</c:when>
 		<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
@@ -443,7 +443,7 @@
 						update=":form" />
 		<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						actionListener="#{viewSmApplBackingBean.setTabValue('4',null)}"
-						update=":form" />	
+						update=":form" rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}" />	
 		</c:when>
 		</c:choose>
 	</p:tabMenu>

@@ -194,17 +194,24 @@ public class ViewApplHistoryBackingBean extends
 								.equalsIgnoreCase(getManagedBean()
 										.getSmSupplier().getBusinessType())) {
 					initFifthTabInfo();
+				// #28895_35501 Start - AUDIT TRAIL SM
+				} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getManagedBean()
+						.getAccountType())) {
+					SmAppl suppAppl = getManagedBean().getSmAppl();
+					AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+					auSmView.initAuditTab(suppAppl);
 				}
-
-			// #28895_35501 Start - AUDIT TRAIL SM
 			} else if (outputTab == 5) {
 				SmAppl suppAppl = getManagedBean().getSmAppl();
 				AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
 				auSmView.initAuditTab(suppAppl);
-			} 
-			// #28895_35501 End
-			
+			}
+		} else if (outputTab == 8) {
+			SmAppl suppAppl = getManagedBean().getSmAppl();
+			AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+			auSmView.initAuditTab(suppAppl);
 		}
+		// #28895_35501 End
 		// 25792 - end
 	}
 

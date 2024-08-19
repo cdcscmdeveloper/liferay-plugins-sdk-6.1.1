@@ -93,6 +93,7 @@ import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.util.CustomUtils;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.util.FacesScopes;
 //#28895_35501 End
 
 
@@ -946,8 +947,20 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
 						IAuditTrailsSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					String roles[] = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+							RoleCode.G2G_SUPPLIER_USER.value(), RoleCode.G2G_SUPPLIER_ADMIN.value(),
+							RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value() };
+					boolean isSupplier = false;
+					for (String role : roles) {
+						if (getFacesScopes().hasRoleUser(role)) {
+							isSupplier = true;
+							break;
+						}
+					}
+					if (isSupplier) {
+						AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
+						auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					}
 				}
 				// #28895_35501 End
 				loadUserProfile(user.getUserId());

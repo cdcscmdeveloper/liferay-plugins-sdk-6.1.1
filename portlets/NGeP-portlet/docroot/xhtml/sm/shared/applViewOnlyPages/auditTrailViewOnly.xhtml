@@ -54,8 +54,8 @@
 										title="#{lbl['lbl.audit.tab.deactive.replace.sup.admin']}" />
 								</c:when>
 								<c:when
-									test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC or 
-									AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
+									test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_CONSULTANT or 
+									AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_CONTRACTOR}">
 									<p:tab id="#{SupplierManagementConst.auTabIdCategoryCodeInfo}"
 										title="#{lbl['lbl.audit.tab.cancel.registered.category']}" />
 									<p:tab id="#{SupplierManagementConst.auTabIdSupplierInfo}"
@@ -64,7 +64,7 @@
 										id="#{SupplierManagementConst.auTabIdApprovedCategoryCodeInfo}"
 										title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
 									<p:tab
-										id="#{SupplierManagementConst.auTabIdOverlappingRemarkInfo(}"
+										id="#{SupplierManagementConst.auTabIdOverlappingRemarkInfo}"
 										title="#{lbl['lbl.audit.tab.overlapping.category']}" />
 									<p:tab
 										id="#{SupplierManagementConst.auTabIdApproverRemarkInfo}"
