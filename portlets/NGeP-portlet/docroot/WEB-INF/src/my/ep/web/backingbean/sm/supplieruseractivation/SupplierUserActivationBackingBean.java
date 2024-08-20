@@ -78,7 +78,8 @@ public class SupplierUserActivationBackingBean extends
 	private static final String[] ADMIN_ROLES = new String[] {
 		RoleCode.SUPPLIER_TEMP.value(),
 		RoleCode.MOF_SUPPLIER_ADMIN.value(),
-		RoleCode.BASIC_SUPPLIER_ADMIN.value() };
+		RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+		RoleCode.G2G_SUPPLIER_ADMIN.value() };
 		
 	public SupplierUserActivationBackingBean(){
 		if (MDC.get(LogKey.USER_ID) == null) {
