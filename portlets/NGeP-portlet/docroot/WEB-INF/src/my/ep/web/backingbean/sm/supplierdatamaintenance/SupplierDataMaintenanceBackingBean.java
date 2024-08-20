@@ -540,9 +540,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				
 			}
 			//26238 - Disciplinary Action - 28798 - end
-			// #28895_35501 Start - AUDIT TRAIL SM
-			
-			// #28895_35501 End
 			
 		} catch (NullPointerException nex) {
 			throw new EpException(nex.getMessage());

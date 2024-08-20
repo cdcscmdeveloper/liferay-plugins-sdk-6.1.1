@@ -100,7 +100,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementPersonnelBackingBean;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 //#28895_35501 End
 
@@ -2087,10 +2086,10 @@ public class SmPersonnelBackingBean extends
 				getManagedBean().getEpRoleTrans() != null && !getManagedBean().getEpRoleTrans().equals(getManagedBean().getBasicSmPersonnel().getEpRole()) &&
 				getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			
-			// #28895_35501 - AUDIT TRAIL SM
+			// #28895_35501 Start - AUDIT TRAIL SM
 			getManagedBean().setOldRole(getManagedBean().getEpRoleTrans());
 			getManagedBean().setNewRole(getManagedBean().getBasicSmPersonnel().getEpRole());
-			// #28895_35501 Start - AUDIT TRAIL SM
+			// #28895_35501 End
 			String name = getManagedBean().getBasicSmPersonnel().getName();
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());//#33592-start
@@ -3526,10 +3525,10 @@ public class SmPersonnelBackingBean extends
 			//The whole changing delete and changing role process start here
 			if (getManagedBean().getEpRoleTrans() != null
 					&& !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
-				// #28895_35501 - AUDIT TRAIL SM
+				// #28895_35501 Start - AUDIT TRAIL SM
 				getManagedBean().setOldRole(personnel.getEpRole());
 				getManagedBean().setNewRole(getManagedBean().getEpRoleTrans());
-				// #28895_35501 Start - AUDIT TRAIL SM
+				// #28895_35501 End
 				//If user has a pmUser or active role
 				if (personnel.getPmUser() != null) {
 					//If supplier admin want to delete the role

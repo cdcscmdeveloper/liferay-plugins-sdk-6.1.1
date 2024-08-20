@@ -135,11 +135,11 @@
 							</p:column>
 							<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
 								style="white-space: normal!important;" width="5%">
-								<h:outputText value="#{obj.oldValue}" />
+								<h:outputText value="#{obj.oldValue}" escape="false" />
 							</p:column>
 							<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
 								style="white-space: normal!important;" width="5%">
-								<h:outputText value="#{obj.newValue}" />
+								<h:outputText value="#{obj.newValue}"  escape="false"/>
 							</p:column>
 						</p:dataTable></td>
 				</tr>

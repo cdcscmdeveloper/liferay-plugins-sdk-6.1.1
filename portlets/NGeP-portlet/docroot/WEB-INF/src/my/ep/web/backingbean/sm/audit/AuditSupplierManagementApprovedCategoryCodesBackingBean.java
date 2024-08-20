@@ -77,7 +77,9 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 
 	private void checkOtherDesc(List<AuditSupplierManagementDetailDTO> auDetails,
 			SmSupplierCategory oldApprovedCategory, SmSupplierCategory newApprovedCategory) {
-		if (oldApprovedCategory.getOtherDesc() == null && newApprovedCategory.getOtherDesc() != null) {
+		if (oldApprovedCategory.getOtherDesc() == null
+				&& (newApprovedCategory.getOtherDesc() != null && !newApprovedCategory.getOtherDesc().equalsIgnoreCase(
+						""))) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION, null,
 					newApprovedCategory.getOtherDesc(), null, null,
