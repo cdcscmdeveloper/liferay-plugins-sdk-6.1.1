@@ -28,7 +28,10 @@
 				</p:column>
 	
 				<p:column headerText="#{lbl['lbl.sm.enquiry.po.inquiry']}" style="width : 35%;white-space : normal;word-break: break-all">
-					<h:outputText value="#{inqHistVar.inquiryText}" />
+				<!-- #34392 - Start -->
+					<h:outputText value="N/A" rendered="#{inqHistVar.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}"/>
+					<h:outputText value="#{inqHistVar.inquiryText}" rendered="#{inqHistVar.inquirySubject eq 'INQUIRY_PO_SUPPLIER'}"/>
+				<!-- #34392 - End -->
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.enquiry.supplier.respond']}" style="width : 35%;white-space : normal">
@@ -52,14 +55,17 @@
 			<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}"
 				id="pnlInquiryId">
 				<table>
-					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
-					</tr>
-					<tr>
-						<td><p:inputText size="50" id="resInquirySubId"
-								disabled="true"
-								value="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject}" /></td>
-					</tr>
+					<c:if
+						test="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+						<tr>
+							<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+						</tr>
+						<tr>
+							<td><p:inputText size="50" id="resInquirySubId"
+									disabled="true"
+									value="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject}" /></td>
+						</tr>
+					</c:if>
 
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>

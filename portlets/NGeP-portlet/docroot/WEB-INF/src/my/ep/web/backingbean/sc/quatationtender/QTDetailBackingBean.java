@@ -7903,7 +7903,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			boolean qtStatusWorkflow = workflowStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
 					|| workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || workflowStatusId
 					.equals(QTStatusConst.SE_PENDING_SIGNOFF) || workflowStatusId
-					.equals(QTStatusConst.SE_PENDING_REVISION) || workflowStatusId
+					.equals(QTStatusConst.SE_PENDING_REVISION)  || workflowStatusId
+					.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)|| workflowStatusId
 					.equals(QTStatusConst.SE_COMPLETED);
 			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -13211,7 +13212,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				List<String> listCatCodeHistory = new ArrayList<>();
 				List<String> listCatCode = new ArrayList<>();
 				
-				if (null != listScQTCategoriesHistory && listScQTCategoriesHistory.size() > 0){
+				if (null != listScQTCategoriesHistory && !listScQTCategoriesHistory.isEmpty()){ //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					for(ScQtCategoryHistory catHis : listScQTCategoriesHistory){
 						scqtcathistid.add(catHis.getPmCategoryL3().getCategoryL3Id());
 						String catcode = catHis.getPmCategoryL1().getCategoryL1Code()+catHis.getPmCategoryL2().getCategoryL2Code()+catHis.getPmCategoryL3().getCategoryL3Code();
@@ -13219,7 +13220,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 					}
 				}
 				
-				if (null !=listScQtCategories && listScQtCategories.size() > 0 ){
+				if (null !=listScQtCategories && !listScQtCategories.isEmpty()){ //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					for (ScQtCategory cat:listScQtCategories){
 						String catcode = cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code();
 						listCatCode.add(catcode);
@@ -13231,11 +13232,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				
 				if (null != listScQtCategories && null != listScQTCategoriesHistory){
 					if (listScQtCategories.size() == listScQTCategoriesHistory.size()) {
-						if (listCatCodeHistory.containsAll(listCatCode)){
-							getManagedBean().setIsScEditSupplierQualificationCriteria(false);
-						}else {
-							getManagedBean().setIsScEditSupplierQualificationCriteria(true);
-						}
+						getManagedBean().setIsScEditSupplierQualificationCriteria(!listCatCodeHistory.containsAll(listCatCode)); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					} else {
 						getManagedBean().setIsScEditSupplierQualificationCriteria(true);
 					}
