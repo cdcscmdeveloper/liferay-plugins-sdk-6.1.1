@@ -55,14 +55,17 @@
 			<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}"
 				id="pnlInquiryId">
 				<table>
-					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
-					</tr>
-					<tr>
-						<td><p:inputText size="50" id="resInquirySubId"
-								disabled="true"
-								value="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject}" /></td>
-					</tr>
+					<c:if
+						test="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+						<tr>
+							<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+						</tr>
+						<tr>
+							<td><p:inputText size="50" id="resInquirySubId"
+									disabled="true"
+									value="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject}" /></td>
+						</tr>
+					</c:if>
 
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>

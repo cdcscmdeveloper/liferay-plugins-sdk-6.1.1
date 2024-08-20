@@ -1514,7 +1514,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				
 				// Start - 28292
 				if (!item.getCtItemMaxQties().isEmpty()) {
-					Double maxValue = new Double(0);							
+					Double maxValue = new Double(0);
 					for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
 						if(maxQty.getMaxQuantity().doubleValue() > maxValue)
 							maxValue = maxQty.getMaxQuantity().doubleValue();				
