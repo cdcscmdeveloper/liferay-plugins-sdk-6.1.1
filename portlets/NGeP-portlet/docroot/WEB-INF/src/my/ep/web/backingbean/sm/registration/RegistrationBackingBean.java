@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -158,7 +160,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static Map<Long, PmCertBody> profCertBodyMap;
 	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G", "H");
 	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
-	private static List<String> regNoValidityList = Arrays.asList("O","M","R","A"); //#35581
+	private static List<String> regNoValidityList = Arrays.asList("O","M","R","A"); //#35581 START
+	private static List<String> validators = Arrays.asList("^[a-zA-Z\\-\\/\\(\\)]+$","[a-zA-Z]+-[a-zA-Z]+","\\d+",
+			"[a-zA-Z0-9]+","^(?=[a-zA-Z])(?=[0-9])[a-zA-Z0-9\\/\\-\\(\\)]*[\\/\\-\\(\\)].*[a-zA-Z0-9\\/\\-\\(\\)]*$",
+			"^[a-zA-Z/\\-()]*[a-zA-Z]$","^[a-zA-Z0-9/\\-()]*[a-zA-Z0-9]$","^[a-zA-Z0-9/\\-()]*$"); //#35581 END
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	boolean fromtncProceed = false;
 	boolean fromBankAccount = false;
@@ -326,7 +331,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		//#35581
 		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())
-				&& !getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+				&& !validateString(getManagedBean().getSmSupp().getRegNo())) {
 			if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
 				throw new EpException(MessageConst.ERROR_723100,
 						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
@@ -1927,7 +1932,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		// to validate if there is same reg_no that has inProgress status
 		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())) {
 			//#35581
-			if (!getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+			if (!validateString(getManagedBean().getSmSupp().getRegNo())) {
 				if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
 					throw new EpException(MessageConst.ERROR_723100,
 							new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
@@ -4121,7 +4126,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						.getRegNo())) {
 			String bussType = getManagedBean().getSmSupp().getBusinessType();
 			//#35581
-			if (!getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+			if (!validateString(getManagedBean().getSmSupp().getRegNo())) {
 				if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
 					throw new EpException(MessageConst.ERROR_723100,
 							new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
@@ -4144,6 +4149,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmSupp().setRegNo(StringUtils.deleteWhitespace(getManagedBean().getSmSupp().getRegNo()));
 			} 
 			//#29114, CR 27382: Static Code Analysis End
+		}else{//35581
+			if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+				throw new EpException(MessageConst.ERROR_723100,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (regNoValidityList.contains(getManagedBean().getSmSupp().getBusinessType())) {
+				throw new EpException(MessageConst.ERROR_723101,
+						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			}
+			
 		}
 	}
 	
@@ -5572,11 +5588,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//#27691 - END 
 	//#35581 START
 	/**
-	 * check validity character RegNo
+	 * check validity RegNo
 	 */
 	public void regNoValidity() {
 		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())
-				&& !getManagedBean().getSmSupp().getRegNo().matches("^[a-zA-Z\\-\\/\\(\\)]+$")) {
+				&& !validateString(getManagedBean().getSmSupp().getRegNo())) {
 			if (sabahSarawakRemoveWhiteSpaceList.contains(getManagedBean().getSmSupp().getBusinessType())) {
 				throw new EpException(MessageConst.ERROR_723100,
 						new String[] {ResourceBundleUtils.getMessage("lbl.sm.businessregno", 
@@ -5588,5 +5604,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 	}
-	//#35581
+	
+	/**
+	 * check validity string
+	 */
+	public static boolean validateString(String regNo) {
+        for (String validator : validators) {
+            Pattern pattern = Pattern.compile(validator);
+            Matcher matcher = pattern.matcher(regNo);
+            if (matcher.matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+	//#35581 END
 }
