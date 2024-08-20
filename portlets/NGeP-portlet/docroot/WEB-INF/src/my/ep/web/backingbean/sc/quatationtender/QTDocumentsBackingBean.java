@@ -3121,6 +3121,7 @@ public class QTDocumentsBackingBean extends
 				 */
 
 				tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
+				Map<TplDocSection, TplDocSection> originalToCloneMap = new HashMap<>(); //#34873
 				List<TplDocSection> docSectionCOllection = templateDocMaster
 						.getTplDocSectionCollection();
 				for (TplDocSection tplDocSection : docSectionCOllection) {
@@ -3132,13 +3133,25 @@ public class QTDocumentsBackingBean extends
 						section.setSectionTitle(title);
 					}
 					section.setDocSectionId(null);
-					section.setParent(null); // Temporarily am setting null, need to
+					//#34873
+					//section.setParent(null); // Temporarily am setting null, need to
 												// confirm once
 					section.setTplDocMaster(tplDocMaster);
 
 					setUserDetails(section);
 					tplDocMaster.getTplDocSectionCollection().add(section);
+					originalToCloneMap.put(tplDocSection, section); //#34873
 				}
+				
+				//#34873 - start
+				for (TplDocSection section : tplDocMaster.getTplDocSectionCollection()) {
+			        TplDocSection originalParent = section.getParent();
+			        if (originalParent != null) {
+			            TplDocSection cloneParent = originalToCloneMap.get(originalParent);
+			            section.setParent(cloneParent);
+			        }
+			    }
+				//#34873 - end
 
 				// Procurement Category
 				PmParameter procurementCategory = scQtDocReport.getScQt()
