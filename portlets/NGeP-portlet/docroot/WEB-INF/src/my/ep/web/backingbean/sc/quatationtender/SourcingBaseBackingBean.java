@@ -3827,13 +3827,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				        boolean shouldBreak = false;
 
 				        if (tempSpecZoneQty > 0) {
-				            if (tempFeedbackIndex >= tempSpecZoneQty) {
-				                if (indexFeedbackStore == 0 || tempFeedbackIndex > indexFeedbackStore) {
-				                    map.put(SSTConstant.Feedback, tempFeedback);
-				                    indexFeedbackStore = tempFeedbackIndex;
-				                    shouldBreak = true;
-				                }
-				            }
+				        	//[Start] - #36325- Sqube DP Code Smell Major 
+				        	if (tempFeedbackIndex >= tempSpecZoneQty && (indexFeedbackStore == 0 || tempFeedbackIndex > indexFeedbackStore)) {
+				        	    map.put(SSTConstant.Feedback, tempFeedback);
+				        	    indexFeedbackStore = tempFeedbackIndex;
+				        	    shouldBreak = true;
+				        	}
+				        	//[End] - #36325- Sqube DP Code Smell Major
 				        } else {
 				            if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore) {
 				                map.put(SSTConstant.Feedback, tempFeedback);
@@ -3857,13 +3857,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				            tempRemark = SSTConstant.TB;
 				        } else {
 				            if (tempSpecZoneQty > 0) {
-				                if (tempRemarkIndex >= tempSpecZoneQty) {
-				                    if (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore) {
-				                        map.put(SSTConstant.Remark, tempRemark);
-				                        indexRemarkStore = tempRemarkIndex;
-				                        shouldBreak = true;
-				                    }
+				            	//[Start] - #36326- Sqube DP Code Smell Major 
+				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
+				                    map.put(SSTConstant.Remark, tempRemark);
+				                    indexRemarkStore = tempRemarkIndex;
+				                    shouldBreak = true;
 				                }
+				            	//[End] - #36326- Sqube DP Code Smell Major 
 				            } else {
 				                if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
 				                    map.put(SSTConstant.Remark, tempRemark);
