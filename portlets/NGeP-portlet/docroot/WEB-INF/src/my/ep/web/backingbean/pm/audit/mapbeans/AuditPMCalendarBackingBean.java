@@ -53,7 +53,7 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 			dtlObjStateId.setRoleCode(roleCode);
 			dtlObjStateId.setDoctype(AuditConst.PM_AUD_CALENDAR);
 			dtlObjStateId.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
-			dtlObjStateId.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
+			dtlObjStateId.setDocNo(managedBeans.getEvent().getTitle());
 			dtlObjStateId.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			dtlObjStateId.setLvlCode2(AuditConst.PM_LVL_CODE_2_CAL);
 			dtlObjStateId.setLvlCode3(AuditConst.PM_LVL_CODE_3_CAL);
@@ -111,7 +111,7 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 			managedBeans.setNewStartDate(null);
 			managedBeans.setNewEndDate(null);
 		}
-
+		managedBeans.setDeletedEvent(false);
 		return auditPMReqDTO;
 	}
 
@@ -121,6 +121,7 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 				|| managedBeans.isDeletedEvent()) {
 			detailObjTitleUpdate(managedBeans, auditPMReqDTO, roleCode);
 		}
+
 		if (managedBeans.getOldStartDate() != null && managedBeans.getNewStartDate() != null
 				|| managedBeans.isDeletedEvent()) {
 			detailObjFromDateUpdate(managedBeans, auditPMReqDTO, roleCode);
@@ -136,22 +137,24 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 
 	private AuditPMReqDTO detailObjTitleUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,
 			String roleCode) {
-		detailObjTitle.setRoleCode(roleCode);
-		detailObjTitle.setDoctype(AuditConst.PM_AUD_CALENDAR);
-		detailObjTitle.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
-		detailObjTitle.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
-		detailObjTitle.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-		detailObjTitle.setLvlCode2(AuditConst.PM_LVL_CODE_2_CAL);
-		detailObjTitle.setLvlCode3(AuditConst.PM_LVL_CODE_3_CAL);
-		detailObjTitle.setDocId(BigInteger.valueOf(managedBeans.getResCalendarDTO().getHoliday().getHolidayId()));
-		detailObjTitle.setFieldLabelCode(AuditConst.PM_AUD_CALENDAR_TITLE_FIELDLABELID);
-		detailObjTitle.setOldValue(managedBeans.getOldTitleValue());
-		detailObjTitle.setNewValue(!managedBeans.isDeletedEvent() ? managedBeans.getNewTitleValue() : null);
-		detailObjTitle.setActionType(!managedBeans.isDeletedEvent() ? AuditConst.PM_AUD_ACTION_TYPE_UPD
-				: AuditConst.PM_AUD_ACTION_TYPE_DEL);
-		objList.add(detailObjTitle);
-		auditPMReqDTO.setObjList(objList);
-
+		if (!managedBeans.getOldTitleValue().equalsIgnoreCase(managedBeans.getNewTitleValue())
+				|| managedBeans.isDeletedEvent()) {
+			detailObjTitle.setRoleCode(roleCode);
+			detailObjTitle.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			detailObjTitle.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
+			detailObjTitle.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
+			detailObjTitle.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+			detailObjTitle.setLvlCode2(AuditConst.PM_LVL_CODE_2_CAL);
+			detailObjTitle.setLvlCode3(AuditConst.PM_LVL_CODE_3_CAL);
+			detailObjTitle.setDocId(BigInteger.valueOf(managedBeans.getResCalendarDTO().getHoliday().getHolidayId()));
+			detailObjTitle.setFieldLabelCode(AuditConst.PM_AUD_CALENDAR_TITLE_FIELDLABELID);
+			detailObjTitle.setOldValue(managedBeans.getOldTitleValue());
+			detailObjTitle.setNewValue(!managedBeans.isDeletedEvent() ? managedBeans.getNewTitleValue() : null);
+			detailObjTitle.setActionType(!managedBeans.isDeletedEvent() ? AuditConst.PM_AUD_ACTION_TYPE_UPD
+					: AuditConst.PM_AUD_ACTION_TYPE_DEL);
+			objList.add(detailObjTitle);
+			auditPMReqDTO.setObjList(objList);
+		}
 		managedBeans.setOldTitleValue(null);
 		managedBeans.setNewTitleValue(null);
 		return auditPMReqDTO;

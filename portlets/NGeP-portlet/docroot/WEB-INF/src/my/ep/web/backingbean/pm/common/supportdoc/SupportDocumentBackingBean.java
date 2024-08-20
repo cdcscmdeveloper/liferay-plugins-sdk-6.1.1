@@ -1949,7 +1949,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				reqDTO.setDocumentId(reqDTO.getPmDocument().getDocumentId());
 				DocumentResDTO resDTOOld = reqSO.retrieveDocumentDtlById(reqDTO);
 				getManagedBean().setSelectedDocumentOld(resDTOOld.getDocument());
-//				getManagedBean().setMandatoryUpdatedPmDocumentRestrList(reqDTO.getPmDocument().getPmDocumentRestrs());
 			}
 			/************ AUDIT *************/
 

@@ -47,6 +47,7 @@ public class CalendarManageBean extends BaseManagedBean {
 	private String OldTitleValue;
 	private Date oldEndDate;
 	private Date oldStartDate;
+	private CalendarResDTO resCalendarDTOOld;
 
 	public CalendarManageBean(){}
 
@@ -233,5 +234,12 @@ public class CalendarManageBean extends BaseManagedBean {
 	public void setOldEndDate(Date oldEndDate) {
 		this.oldEndDate = oldEndDate;
 	}
-	
+
+	public CalendarResDTO getResCalendarDTOOld() {
+		return resCalendarDTOOld;
+	}
+
+	public void setResCalendarDTOOld(CalendarResDTO resCalendarDTOOld) {
+		this.resCalendarDTOOld = resCalendarDTOOld;
+	}
 }

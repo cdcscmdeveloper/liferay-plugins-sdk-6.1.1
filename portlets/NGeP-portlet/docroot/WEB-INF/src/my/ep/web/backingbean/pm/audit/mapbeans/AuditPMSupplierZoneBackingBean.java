@@ -99,6 +99,11 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 
+		managedBeans.setZoneResDTO(null);
+		managedBeans.setPmZoneOld(null);
+		managedBeans.setZoneStateListNewAdded(null);
+		managedBeans.setZoneStateListDeleted(null);
+
 		return auditPMReqDTO;
 	}
 

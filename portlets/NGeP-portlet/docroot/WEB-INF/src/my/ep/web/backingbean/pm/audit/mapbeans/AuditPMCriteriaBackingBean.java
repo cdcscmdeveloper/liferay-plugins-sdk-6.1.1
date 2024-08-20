@@ -41,82 +41,23 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		CriteriaManagedBean managedBeans = (CriteriaManagedBean) manageBean;
 
-		detailObjStatus.setRoleCode(roleCode);
-		detailObjStatus.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
-		detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
-		detailObjStatus.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
-		detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-		detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
-		detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
-
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		if (null != managedBeans.getPmCriteriaOld()) {
 			if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria()
 					.getRecordStatusFlg()) {
-				detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getPmCriteriaOld().getCriteriaId()));
-				detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getPmCriteriaOld().getCriteriaId()));
-				detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_STATUS_FIELDLABELID);
-				detailObjStatus
-						.setOldValue(managedBeans.getPmCriteriaOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
-				detailObjStatus
-						.setNewValue(managedBeans.getSelectedCriteria().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
-				detailObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				objList.add(detailObjStatus);
-				auditPMReqDTO.setObjList(objList);
+				updateSatus(managedBeans, roleCode, auditPMReqDTO, objList);
 			}
 			if (managedBeans.getPmCriteriaOld().getPmCriteriaDescs() != null) {
-				for (PmCriteriaDesc descOld : managedBeans.getPmCriteriaOld().getPmCriteriaDescs()) {
-					for (PmCriteriaDesc desc : managedBeans.getSelectedCriteria().getPmCriteriaDescs()) {
-						if (descOld.getCriteriaDescId() == desc.getCriteriaDescId()
-								&& descOld.getCriteria() != desc.getCriteria()) {
-							if (descOld.getLanguageCode().equals("en")) {
-								AuditPMSPDTO langCodeEn = new AuditPMSPDTO();
-								langCodeEn.setRoleCode(roleCode);
-								langCodeEn.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
-								langCodeEn.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
-								langCodeEn.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
-								langCodeEn.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-								langCodeEn.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
-								langCodeEn.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
-								langCodeEn.setDocId(BigInteger.valueOf(descOld.getCriteriaDescId()));
-								langCodeEn.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria()
-										.getCriteriaId()));
-								langCodeEn.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_EN_FIELDLABELID);
-								langCodeEn.setNewValue(desc.getCriteria());
-								langCodeEn.setOldValue(descOld.getCriteria());
-								langCodeEn.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-								objList.add(langCodeEn);
-								auditPMReqDTO.setObjList(objList);
-							}
-
-							if (descOld.getLanguageCode().equals("ms")) {
-								AuditPMSPDTO langCodeBM = new AuditPMSPDTO();
-								langCodeBM.setRoleCode(roleCode);
-								langCodeBM.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
-								langCodeBM.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
-								langCodeBM.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
-								langCodeBM.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-								langCodeBM.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
-								langCodeBM.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
-								langCodeBM.setDocId(BigInteger.valueOf(descOld.getCriteriaDescId()));
-								langCodeBM.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria()
-										.getCriteriaId()));
-								langCodeBM.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_BM_FIELDLABELID);
-								langCodeBM.setNewValue(desc.getCriteria());
-								langCodeBM.setOldValue(descOld.getCriteria());
-								langCodeBM.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-								objList.add(langCodeBM);
-								auditPMReqDTO.setObjList(objList);
-							}
-						}
-					}
-				}
+				updateCriteriaDesc(managedBeans, roleCode, auditPMReqDTO, objList);
 			}
-
-			managedBeans.setPmCriteriaOld(null);
 		} else {
+			detailObjStatus.setRoleCode(roleCode);
+			detailObjStatus.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
+			detailObjStatus.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
+			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+			detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
+			detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
 			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
 			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
 			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_STATUS_FIELDLABELID);
@@ -128,45 +69,127 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			auditPMReqDTO.setObjList(objList);
 
 			if (managedBeans.getSelectedCriteria().getPmCriteriaDescs() != null) {
-				for (PmCriteriaDesc desc : managedBeans.getSelectedCriteria().getPmCriteriaDescs()) {
-					if (desc.getLanguageCode().equals("en")) {
-						AuditPMSPDTO langCodeEn = new AuditPMSPDTO();
-						langCodeEn.setRoleCode(roleCode);
-						langCodeEn.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
-						langCodeEn.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
-						langCodeEn.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
-						langCodeEn.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-						langCodeEn.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
-						langCodeEn.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
-						langCodeEn.setDocId(BigInteger.valueOf(desc.getCriteriaDescId()));
-						langCodeEn
-								.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
-						langCodeEn.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_EN_FIELDLABELID);
-						langCodeEn.setNewValue(desc.getCriteria());
-						langCodeEn.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-						objList.add(langCodeEn);
-						auditPMReqDTO.setObjList(objList);
-					}
+				createNewLanguageCode(managedBeans, roleCode, auditPMReqDTO, objList);
+			}
+		}
+		managedBeans.setPmCriteriaOld(null);
+		return auditPMReqDTO;
+	}
 
-					if (desc.getLanguageCode().equals("ms")) {
-						AuditPMSPDTO langCodeBM = new AuditPMSPDTO();
-						langCodeBM.setRoleCode(roleCode);
-						langCodeBM.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
-						langCodeBM.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
-						langCodeBM.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
-						langCodeBM.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-						langCodeBM.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
-						langCodeBM.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
-						langCodeBM.setDocId(BigInteger.valueOf(desc.getCriteriaDescId()));
-						langCodeBM
-								.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
-						langCodeBM.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_BM_FIELDLABELID);
-						langCodeBM.setNewValue(desc.getCriteria());
-						langCodeBM.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-						objList.add(langCodeBM);
-						auditPMReqDTO.setObjList(objList);
-					}
+	private AuditPMReqDTO updateSatus(CriteriaManagedBean managedBeans, String roleCode, AuditPMReqDTO auditPMReqDTO,
+			ArrayList<AuditPMSPDTO> objList) {
+		if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria()
+				.getRecordStatusFlg()) {
+			detailObjStatus.setRoleCode(roleCode);
+			detailObjStatus.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
+			detailObjStatus.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
+			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+			detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
+			detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
+			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getPmCriteriaOld().getCriteriaId()));
+			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getPmCriteriaOld().getCriteriaId()));
+			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_STATUS_FIELDLABELID);
+			detailObjStatus
+					.setOldValue(managedBeans.getPmCriteriaOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+							: AuditConst.PM_AUD_INACTIVE);
+			detailObjStatus
+					.setNewValue(managedBeans.getSelectedCriteria().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+							: AuditConst.PM_AUD_INACTIVE);
+			detailObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			objList.add(detailObjStatus);
+			auditPMReqDTO.setObjList(objList);
+			return auditPMReqDTO;
+		}
+		return null;
+	}
+
+	private AuditPMReqDTO updateCriteriaDesc(CriteriaManagedBean managedBeans, String roleCode,
+			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList) {
+		for (PmCriteriaDesc descOld : managedBeans.getPmCriteriaOld().getPmCriteriaDescs()) {
+			for (PmCriteriaDesc desc : managedBeans.getSelectedCriteria().getPmCriteriaDescs()) {
+				if (descOld.getCriteriaDescId() == desc.getCriteriaDescId()
+						&& !descOld.getCriteria().equalsIgnoreCase(desc.getCriteria())
+						&& desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
+					AuditPMSPDTO langCodeEn = new AuditPMSPDTO();
+					langCodeEn.setRoleCode(roleCode);
+					langCodeEn.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+					langCodeEn.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
+					langCodeEn.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
+					langCodeEn.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+					langCodeEn.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
+					langCodeEn.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
+					langCodeEn.setDocId(BigInteger.valueOf(desc.getCriteriaDescId()));
+					langCodeEn.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
+					langCodeEn.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_EN_FIELDLABELID);
+					langCodeEn.setNewValue(desc.getCriteria());
+					langCodeEn.setOldValue(descOld.getCriteria());
+					langCodeEn.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+					objList.add(langCodeEn);
+					auditPMReqDTO.setObjList(objList);
 				}
+				if (descOld.getCriteriaDescId() == desc.getCriteriaDescId()
+						&& !descOld.getCriteria().equalsIgnoreCase(desc.getCriteria())
+						&& desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+					AuditPMSPDTO langCodeBM = new AuditPMSPDTO();
+					langCodeBM.setRoleCode(roleCode);
+					langCodeBM.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+					langCodeBM.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
+					langCodeBM.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
+					langCodeBM.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+					langCodeBM.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
+					langCodeBM.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
+					langCodeBM.setDocId(BigInteger.valueOf(desc.getCriteriaDescId()));
+					langCodeBM.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
+					langCodeBM.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_BM_FIELDLABELID);
+					langCodeBM.setNewValue(desc.getCriteria());
+					langCodeBM.setOldValue(descOld.getCriteria());
+					langCodeBM.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+					objList.add(langCodeBM);
+					auditPMReqDTO.setObjList(objList);
+				}
+			}
+		}
+		return auditPMReqDTO;
+	}
+
+	private AuditPMReqDTO createNewLanguageCode(CriteriaManagedBean managedBeans, String roleCode,
+			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList) {
+		for (PmCriteriaDesc desc : managedBeans.getSelectedCriteria().getPmCriteriaDescs()) {
+			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
+				AuditPMSPDTO langCodeEn = new AuditPMSPDTO();
+				langCodeEn.setRoleCode(roleCode);
+				langCodeEn.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+				langCodeEn.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
+				langCodeEn.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
+				langCodeEn.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+				langCodeEn.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
+				langCodeEn.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
+				langCodeEn.setDocId(BigInteger.valueOf(desc.getCriteriaDescId()));
+				langCodeEn.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
+				langCodeEn.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_EN_FIELDLABELID);
+				langCodeEn.setNewValue(desc.getCriteria());
+				langCodeEn.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+				objList.add(langCodeEn);
+				auditPMReqDTO.setObjList(objList);
+			}
+
+			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+				AuditPMSPDTO langCodeBM = new AuditPMSPDTO();
+				langCodeBM.setRoleCode(roleCode);
+				langCodeBM.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+				langCodeBM.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
+				langCodeBM.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
+				langCodeBM.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+				langCodeBM.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
+				langCodeBM.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
+				langCodeBM.setDocId(BigInteger.valueOf(desc.getCriteriaDescId()));
+				langCodeBM.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
+				langCodeBM.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_BM_FIELDLABELID);
+				langCodeBM.setNewValue(desc.getCriteria());
+				langCodeBM.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+				objList.add(langCodeBM);
+				auditPMReqDTO.setObjList(objList);
 			}
 		}
 		return auditPMReqDTO;
