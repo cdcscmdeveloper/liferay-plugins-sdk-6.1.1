@@ -50,7 +50,7 @@ public class TemplateSpecBean implements Serializable {
 	/** The evaluatio stage active index. */
 	private int evaluatioStageActiveIndex;
 	// #30552 - start
-	private List<TplSpecAnswer> BackupspecAnswerList;
+	private List<TplSpecAnswer> backupSpecAnswerList; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 	//#30552 - end
 	private String answerRemove;//32453-start
 	private ScQtProposalChecklist qtProposalChecklist;
@@ -288,19 +288,21 @@ public class TemplateSpecBean implements Serializable {
 	}
 
 	// #30552 - start
+	//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 	/**
-	 * @return the backupspecAnswerList
+	 * @return the backupSpecAnswerList
 	 */
-	public List<TplSpecAnswer> getBackupspecAnswerList() {
-		return BackupspecAnswerList;
+	public List<TplSpecAnswer> getBackupSpecAnswerList() {
+		return backupSpecAnswerList;
 	}
 
 	/**
-	 * @param backupspecAnswerList the backupspecAnswerList to set
+	 * @param backupSpecAnswerList the backupSpecAnswerList to set
 	 */
-	public void setBackupspecAnswerList(List<TplSpecAnswer> backupspecAnswerList) {
-		BackupspecAnswerList = backupspecAnswerList;
+	public void setBackupSpecAnswerList(List<TplSpecAnswer> backupSpecAnswerList) {
+		this.backupSpecAnswerList = backupSpecAnswerList;
 	}
+	//[End] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 	// #30552 - end
 
 	/**
