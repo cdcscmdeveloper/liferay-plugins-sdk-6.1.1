@@ -2959,7 +2959,7 @@ public class PurchaseInquiryBackingBean extends
 
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
 		
-		//[Start] - #36324 - Sqube DP Code Smell Major
+		//[Start] - #36313 - Sqube DP Code Smell Major
 		if (scSupplierItemPrices != null && !scSupplierItemPrices.isEmpty()) {
 		    for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
 		        if (!scSupplierItemPrice.isSelected()) {
@@ -2975,7 +2975,7 @@ public class PurchaseInquiryBackingBean extends
 		} else {
 		    this.getManagedBean().setEnableZonalTierNormalDel(false);
 		}
-		//[End] - #36324 - Sqube DP Code Smell Major
+		//[End] - #36313 - Sqube DP Code Smell Major
 		
 		this.getManagedBean().setPricingTabIndex(3); 
 		this.getManagedBean().setZonalTierPricingIndex(0);
@@ -2990,7 +2990,7 @@ public class PurchaseInquiryBackingBean extends
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
 		
-		//[Start] - #36324 - Sqube DP Code Smell Major
+		//[Start] - #36314 - Sqube DP Code Smell Major
 		if (scSupplierItemPrices != null && !scSupplierItemPrices.isEmpty()) {
 		    for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
 		        // [Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
@@ -3001,7 +3001,7 @@ public class PurchaseInquiryBackingBean extends
 		} else {
 		    this.getManagedBean().setEnableZonalTierNormalDel(false);
 		}
-		//[End] - #36324 - Sqube DP Code Smell Major
+		//[End] - #36314 - Sqube DP Code Smell Major
 
 		this.getManagedBean().setPricingTabIndex(3); 
 		this.getManagedBean().setZonalTierPricingIndex(0);
@@ -3138,7 +3138,7 @@ public class PurchaseInquiryBackingBean extends
 
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
 
-		//[Start] - #36324 - Sqube DP Code Smell Major
+		//[Start] - #36315 - Sqube DP Code Smell Major
 		if (scSupplierItemPrices != null && !scSupplierItemPrices.isEmpty()) {
 		    for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
 		        if (!scSupplierItemPrice.isSelected()) {
@@ -3154,7 +3154,7 @@ public class PurchaseInquiryBackingBean extends
 		} else {
 		    this.getManagedBean().setEnableZonalTierPromoDel(false);
 		}
-		//[End] - #36324 - Sqube DP Code Smell Major
+		//[End] - #36315 - Sqube DP Code Smell Major
 
 		this.getManagedBean().setPricingTabIndex(3);
 		this.getManagedBean().setZonalTierPricingIndex(1);
