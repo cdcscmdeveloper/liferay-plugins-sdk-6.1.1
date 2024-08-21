@@ -3681,6 +3681,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& this.getManagedBean().getQt().getProposalValidityEndDate().before(new Date())) {
 				this.getManagedBean().getScQtApprovalRequestList().get(0).setDecisionCertPBM(new PmParameter());
 			}
+			
+			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode() != null
+					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
+				this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.TRUE);
+				this.getManagedBean().getQt().setMofDate(null);//Null date after hide
+			}
 		}
 		//#21692 - End
 }
