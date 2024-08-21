@@ -95,36 +95,9 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 	}
 	@Override
 	public LinkedHashMap<String, String> getparams() {
-		LinkedHashMap<String, String> params=new LinkedHashMap<String,String>();
+		LinkedHashMap<String, String> params=new LinkedHashMap<>();
 		ScReportFieldsSearchBean reportFieldBean=this.getManagedBean().getScReportSearchBean();
-		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
-				QtReportConst.URL_RPT_DATE_ANOTHER_FORMAT);
-		if (StringUtils.isNotEmpty(reportFieldBean.getScCreatedToMonth())
-				&& StringUtils.isNotEmpty(reportFieldBean
-						.getScCreatedFromMonth())) {
-			StringBuilder createFromDate=new StringBuilder();
-			createFromDate.append(reportFieldBean
-						.getScCreatedFromMonth()).append(reportFieldBean.getScCreatedFromYear());
-			params.put(QtReportConst.PARAM_CREAT_FRM_DT_EQ, createFromDate.toString());
-			log.info("createFromDate"+createFromDate.toString());
-			StringBuilder createToDate=new StringBuilder();
-			createToDate.append(reportFieldBean
-						.getScCreatedToMonth()).append(reportFieldBean.getScCreatedToYear());
-			params.put(QtReportConst.PARAM_CREAT_TO_DT_EQ, createToDate.toString());
-			log.info("createToDate"+createToDate.toString());
-			
-		} else {
-			params.put(QtReportConst.PARAM_CREAT_FRM_DT_EQ, reportFieldBean.getScCreatedFromYear());
-			params.put(QtReportConst.PARAM_CREAT_TO_DT_EQ, reportFieldBean.getScCreatedToYear());
-			
-		}
-		
-		if(null!=reportFieldBean.getScPublishFromDate() && reportFieldBean.getScPublishFromDate().toString() != QtReportConst.EMPTY_VAL){
-			params.put(QtReportConst.PARAM_PUB_FRM_DT_EQ,  outputDateFormat.format(reportFieldBean.getScPublishFromDate()));	
-		}
-       if(null!=reportFieldBean.getScPublishToDate() && reportFieldBean.getScPublishToDate().toString() != QtReportConst.EMPTY_VAL){
-    	   params.put(QtReportConst.PARAM_PUB_TO_DT_EQ, outputDateFormat.format(reportFieldBean.getScPublishToDate()));	
-		}
+		//Disable #29580
        StringBuilder procureMethod = new StringBuilder();
 		if ( null!=reportFieldBean.getAllCheckboxValue() && reportFieldBean.getAllCheckboxValue().length > 0) {
 			 params.put(QtReportConst.PARAM_PROCURE_METHOD_EQ, returnProcurementValue(reportFieldBean.getAllCheckboxValue()));
@@ -143,18 +116,20 @@ QtReportBackingBean<FinancialTableReportManagedBean> implements Serializable{
 			}
 		}
 		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
-			//quotationNumberValidation();
 			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
 		}
-		if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
-			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
-		}
+		//Disable #29580
 		if(StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())){
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());	
 		}
 		if(StringUtils.isNotEmpty(reportFieldBean.getScPtj())){
 			params.put(QtReportConst.PARAM_PROCURE_PTJ_EQ, reportFieldBean.getScPtj());	
 		}
+		//#29580 -start
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationTitle())) { 
+			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getQuotationTitle());
+		}
+		//#29580 -end
 		return params;
 	}
 

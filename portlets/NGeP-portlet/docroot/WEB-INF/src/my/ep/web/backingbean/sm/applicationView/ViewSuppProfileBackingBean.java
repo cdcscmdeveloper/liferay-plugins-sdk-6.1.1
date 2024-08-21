@@ -48,6 +48,8 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28175 ReOpen
+import my.ep.web.constant.sm.SupplierManagementConst;
 //#28175 end
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
@@ -595,8 +597,18 @@ public class ViewSuppProfileBackingBean extends
 	}
 	//#29482 - End
 	// #28175 start
+	/**
+	 * Handles the click event for the category codes history.
+	 * 
+	 * This method retrieves the category code details based on the provided category code level and ID.
+	 * It then updates the managed bean with the retrieved details and shows the remark history popup.
+	 * 
+	 * @param catCode the category code
+	 * @param catCodeLevel the category code level (1, 2, or 3)
+	 * @param catCodeID the category code ID
+	 */
 	public void onClickCatCodesHistory(String catCode, int catCodeLevel, Long catCodeID) {
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
 		if(catCodeLevel == 1){
@@ -609,9 +621,30 @@ public class ViewSuppProfileBackingBean extends
 			reqDTO.setCategoryL3Id(catCodeID);
 			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 		}
+		// #28175 ReOpen - start
+		if (hasSupplierRole()) {
+			getManagedBean().setSupplierUser(true);
+		}
+		// #28175 ReOpen - End
 		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 		getManagedBean().setCatCode(catCode);
 		RequestContext.getCurrentInstance().execute("remarkHisCatCodePopup.show()");
+	}
+	//28175
+	private boolean hasSupplierRole() {
+		String[] roles = { SupplierManagementConst.BASIC_SUPPLIER_ADMIN, SupplierManagementConst.BASIC_SUPPLIER_USER,
+				SupplierManagementConst.MOF_SUPPLIER_ADMIN, SupplierManagementConst.MOF_SUPPLIER_USER,
+				RoleCode.FL_USER.value(), SupplierManagementConst.SUPPLIER_ADMIN,
+				SupplierManagementConst.SUPPLIER_USER, RoleCode.SUPPLIER_TEMP.value(),
+				RoleCode.G2G_SUPPLIER_ADMIN.value(), RoleCode.G2G_SUPPLIER_USER.value() };
+
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {

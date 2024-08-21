@@ -114,6 +114,6 @@ public class StopInstructionBySupplierRptBackingBean extends FlReportBackingBean
 			getManagedBean().setPtj(null);
 		}
 		getManagedBean().setSiNo(null);
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 }

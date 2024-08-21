@@ -1826,8 +1826,8 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {		
 				
-						if (getManagedBean().getInvoice().getPaymentBank()!=null){
-							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId());
+						if (getManagedBean().getInvoice().getFlFulfilmentOrder()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finOrgReqDTO);
 							if (finOrgResDTO.getPmFinancialOrg()!=null && !finOrgResDTO.getPmFinancialOrg()
 									.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -1840,19 +1840,20 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 							finOrgReqDTO.setAccountNo(getManagedBean().getInvoice().getAccountNo());
 							finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgIdAccNo(finOrgReqDTO);							
 							
-							if (finOrgResDTO.getPmFinancialAcc()==null ||
-									finOrgResDTO.getPmFinancialAcc()!=null 
-									&& !getManagedBean().getInvoice().getAccountNo()
-									.equals(finOrgResDTO.getPmFinancialAcc().getAccountNo().trim())){
-								throw new EpException(MessageConst.ERROR_770263);
+							String pmAccountNo = (finOrgResDTO.getPmFinancialAcc() != null) ? finOrgResDTO.getPmFinancialAcc().getAccountNo().trim() : "null";
+							String invoiceAccountNo = (getManagedBean().getInvoice().getAccountNo() != null) ? getManagedBean().getInvoice().getAccountNo().trim() : "null";
+
+							if (finOrgResDTO.getPmFinancialAcc() == null ||
+							    (finOrgResDTO.getPmFinancialAcc() != null &&
+							    !invoiceAccountNo.equals(pmAccountNo))) {
+							    throw new EpException(MessageConst.ERROR_770263);
 							}
 						}			
 					}
 				} else if (getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					if(getManagedBean().getInvoice().getStatus().getStatusId().equals(FulfilmentStatusConst.IN_PENDING_INVOICE)) {
-						
-						if (getManagedBean().getInvoice().getPaymentBank()!=null){
-							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getPaymentBank().getFinancialOrgId());
+						if (getManagedBean().getInvoice().getFlFulfilmentOrder()!=null){
+							finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrgId());
 							finOrgResDTO = financialOrgSO.retrieveOrgProfileIdByFinancialId(finOrgReqDTO);
 							if (finOrgResDTO.getPmFinancialOrg()!=null && !finOrgResDTO.getPmFinancialOrg()
 									.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -2082,6 +2083,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 				flBB.getManagedBean().setHideRemarks(true);
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				//#34686 start
+				orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+				//#34686 end
 				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 				if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 					return NAV_PO;

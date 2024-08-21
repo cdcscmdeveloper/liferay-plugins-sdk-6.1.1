@@ -7,8 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.profBody.panHdr']}" toggleable="true">
+		<!-- Disable for UPS 32008 - START -->
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.assocBodyVerified}"
@@ -23,7 +24,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.assocBodyVerified}"
@@ -40,7 +41,7 @@
 		</table>
 
 		<p:outputPanel id="profInfPan" layout="block">
-			<p:blockUI block=":form:tt:profInfPan" widgetVar="buiPoProf"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:profInfPan" widgetVar="buiPoProf"
 				id="poProfBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.assocBodyVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.assocBodyVerified : false)}" />
 
@@ -50,7 +51,7 @@
 				selection="#{backingBean.managedBean.selectedAssocBodyList}"
 				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
 				<ac:paginator for="profDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="5%" rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
 				<!-- START - 32053 -->
 				<p:ajax event="rowSelect"
 						update=":#{p:component('profBodyDelBtnId')}"></p:ajax>
@@ -94,17 +95,19 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{backingBean.assignSelAssocBody(profBean)}"
 						partialSubmit="true" process="@this" update=":form:tt:profPop">
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
+						<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
+							style="margin-right:2px;" />
+						<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				<p:commandButton rendered="#{!backingBean.managedBean.upsCannotEdit}" value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewAssocBody}" partialSubmit="true"
 					process="@this" update=":form:tt:profPop" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				<p:commandButton rendered="#{!backingBean.managedBean.upsCannotEdit}" value="#{lbl['lbl.sm.button.delete']}"
 					disabled="#{empty backingBean.managedBean.nonPersonnelProfBodyList}"
 					id="profBodyDelBtnId" oncomplete="profBodyDeletePopUp.show()" />
 
@@ -148,7 +151,7 @@
 	<p:dialog width="630px"
 		header="#{lbl['lbl.sm.profBody.profBodDiaHdr']}"
 		widgetVar="profDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="profPop" closable="false">
+		hideEffect="fade" modal="true" id="profPop" closable="true">
 		<!-- <p:panel header="profificate Details"> -->
 		<p:messages id="profDialogInfoMsg" showSummary="false"
 			showDetail="true" autoUpdate="true" closable="true" />
@@ -161,7 +164,8 @@
 				<td><p:selectOneMenu style="width: 430px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.profBody.profBody']}" id="profBodyBdy"
-						value="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId}">
+						value="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="profBody"
 							value="#{backingBean.managedBean.profBodyLs}"
@@ -184,7 +188,7 @@
 						label="#{lbl['lbl.sm.profBody.others']}"
 						required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId eq 10}"
 						value="#{backingBean.managedBean.selectedAssocBody.otherAssociation}"
-						disabled="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId ne 10}" />
+						disabled="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId ne 10 or backingBean.managedBean.upsCannotEdit}" />
 					<p:message id="profBodyOthersAssocMsg" for="profBodyOthersAssoc"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -198,7 +202,7 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.profBody.regNo']}" id="profBodyRegNo"
 						value="#{backingBean.managedBean.selectedAssocBody.regNo}"
-						maxlength="30" /> <p:message id="profBodyRegNoMsg"
+						maxlength="30" disabled="#{backingBean.managedBean.upsCannotEdit}" /> <p:message id="profBodyRegNoMsg"
 						for="profBodyRegNo" showSummary="true" showDetail="false"
 						display="icon" /></td>
 				<!-- 31763 END-->
@@ -212,20 +216,20 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						mindate="#{CommonConstants.THREE_MONTHS_LATER_DATE}"
 						yearRange="0:+20" readonlyInput="true"
-						value="#{backingBean.managedBean.selectedAssocBody.expDate}" /> <p:message
+						value="#{backingBean.managedBean.selectedAssocBody.expDate}" disabled="#{backingBean.managedBean.upsCannotEdit}" /> <p:message
 						id="profBodyExpDateMsg" for="profBodyExpDate" showSummary="true"
-						showDetail="false" display="icon" /></td>
+						showDetail="false" display="icon" disabled="#{backingBean.managedBean.upsCannotEdit}" /></td>
 			</tr>
 
 		</table>
 		<!-- </p:panel> -->
 		<br />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+			<p:commandButton rendered="#{!backingBean.managedBean.upsCannotEdit}" value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateAssocBodiesToSmAppl}"
 				partialSubmit="true" process="profPop" id="suppProfBodyPopUpSaveBtn"
 				update=":form:tt:profDt, @([id$=Msg])" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+			<p:commandButton rendered="#{!backingBean.managedBean.upsCannotEdit}" value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelSelProfBody}" partialSubmit="true"
 				process="@this" />
 		</div>
@@ -233,6 +237,7 @@
 	</p:dialog>
 	
 	<ac:confirmationPopup id="profBodyDeletePopUpId"
+		rendered="#{!backingBean.managedBean.upsCannotEdit}"
 		widget="profBodyDeletePopUp"
 		okAction="backingBean.deleteSelectedAssocBodies"
 		width="400" height="100"

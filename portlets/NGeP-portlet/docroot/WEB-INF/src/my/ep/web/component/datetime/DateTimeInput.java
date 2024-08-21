@@ -79,7 +79,7 @@ public class DateTimeInput extends UIOutput implements ClientBehaviorHolder {
 		HtmlSelectOneMenu hourComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calHour"));
 		HtmlSelectOneMenu minuteComponent = ((HtmlSelectOneMenu)facesScopes.findComponentById(this, "calMin"));	
 		dateComponent.resetValue();
-		hourComponent.resetValue();;
+		hourComponent.resetValue();
 		minuteComponent.resetValue();
 	}
 }

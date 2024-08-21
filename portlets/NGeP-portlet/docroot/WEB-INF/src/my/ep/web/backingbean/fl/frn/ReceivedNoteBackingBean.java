@@ -183,6 +183,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				
+				// 36247-Start
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					validatePOCOCurrentStatus();
+				}
+				// 36247-End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
@@ -570,6 +575,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				reqDTO.setAmount(sumReceivedAmt);
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
+				//35024-Start - for performance bond checking
+				if(!resDTOInvoice.isBondComplete() && !resDTOInvoice.isCrComplete()) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+					
+				}
+				else //35024-End
 				//28719-start
 				if(!resDTOInvoice.isSupplementContractComplete() && !resDTOInvoice.isCrComplete()) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -1044,6 +1056,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			//#34686 start
+			orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			orderBackingBean.getManagedBean().setSupplier(hasSupplierRole());
 			 
@@ -1881,4 +1896,28 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				
 	}
 	//#21416 end
+	
+	// 36247-start
+	/**
+	 * validate current POCO work flow status
+	 * 
+	 */
+	private void validatePOCOCurrentStatus() {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlOrderId(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()
+				.getFulfilmentOrderId());
+		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
+		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+		reqDTO.setActionCode(BpmOutcomeConst.BPM_CANCEL);
+		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
+
+		Boolean allowToProceed = resDTO.isFlag();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+	}
+	// 36247-end
 }

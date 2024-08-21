@@ -124,6 +124,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	private String className="@(.myDoClassName)";
+	private static final int SUPPLIER_DO_REF_LENGTH  = 30; //36247
 	
 	/**
 	 * @return the className
@@ -188,6 +189,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		try {
 			String actionName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
 			Long flOrderId;
+			BigDecimal delAmtCal= BigDecimal.ZERO; //34881
 			if(actionName != null && actionName != ""){
 				flOrderId = this.getManagedBean().getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId();
 			}else{
@@ -239,6 +241,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
 								//26338-end								
 								flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
+								
+								//34881-start
+								if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+									delAmtCal =itemAddress.getDeliveredQty().multiply(itemAddress.getDoGstUnitPrice());
+									flDelOrderItem.setDeliveredAmt(delAmtCal.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP));
+								}								
+								//34881-end	
+								
 								flDelOrderItem.setGstAmount(itemAddress.getDoGstAmt());
 								flDelOrderItem.setGstUnitPrice(itemAddress.getDoGstUnitPrice());
 								delOrderList.add(flDelOrderItem);
@@ -264,6 +274,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
 						//26338-end		
 						itemAddress.getFlTempDoItem().setDeliveryAmt(itemAddress.getDeliveredAmt());
+						
+						//34881-start
+						if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+							delAmtCal =itemAddress.getDeliveredQty().multiply(itemAddress.getDoGstUnitPrice());
+							itemAddress.getFlTempDoItem().setDeliveryAmt(delAmtCal.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP));
+						}								
+						//34881-end	
+						
 					}
 				}
 			}
@@ -739,6 +757,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+				
+				//35429-Start
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
+					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
+						String[] outcome = new String[1];
+						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
+						this.getManagedBean().setOutComes(outcome);
+					}
+				}
+				//35429-End
+				
 			}
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -1036,6 +1066,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				//29234 end
+				
+				validateSupplierDoRefLength(getManagedBean().getFlDeliveryOrder().getSupplierDoRef()); //36247
+				
 				IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				supplierDoNoList = new ArrayList<String>();
 				supplierDoNoList.add(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());
@@ -1108,6 +1141,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				// 36247-Start
+				if (flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef() != null) {
+					validateSupplierDoRefLength(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
+				}
+				// 36247-End
+
 				if(supplierDoNoList.contains(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef())){
 					throw new EpException(MessageConst.ERROR_740042, new String[]{flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef(),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 				}else{
@@ -1685,4 +1724,20 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		return itemName;		
 	}
 	//#21416 end
+	// 36247-Start
+	/**
+	 * 
+	 * Validation for Supplier Do Reference length Maximum length is 30
+	 * 
+	 * @param supplierDoRef
+	 */
+	private void validateSupplierDoRefLength(String supplierDoRef) {
+		if (supplierDoRef.length() > SUPPLIER_DO_REF_LENGTH ) {
+			String label = ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new EpException(MessageConst.ERROR_721114,
+					new String[] { label, String.valueOf(SUPPLIER_DO_REF_LENGTH ) });
+		}
+	}
+	// 36247-End
 }

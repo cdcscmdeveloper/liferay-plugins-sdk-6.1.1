@@ -2209,22 +2209,24 @@ public class QTDocumentsBackingBean extends
 						 String clSpecDetail = question.getClSpecDetail();
 						 String[] words = clSpecDetail.split(" ");
 						 StringBuilder sb = new StringBuilder();
-						 for(String word : words){
-							 int length = word.length();
-							 if ( length >= 20){
-								 StringBuilder subSb = new StringBuilder();
-								  String newWord = new String();	
-						    	  String subWord = new String();	
-						            for (int i = 0; i < length; i += 70) {
-						            	subWord = word.substring(i, Math.min(length, i + 70));
-						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-						            }
-						    		newWord = subSb.toString();	
-									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
-						    	}else{
-									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-							 }
-						 }
+						for (String word : words) {
+							int length = word.length();
+							if (length >= 20) {
+								StringBuilder subSb = new StringBuilder();
+								String newWord = new String();
+								String subWord = new String();
+								// Bug #34894@Syazani 11/07/2023 -- Start
+								for (int i = 0; i < length; i += 61) {
+									subWord = word.substring(i, Math.min(length, i + 61));
+									// Bug #34894@Syazani 11/07/2022 -- End
+									subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+								}
+								newWord = subSb.toString();
+								sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
+							} else {
+								sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+							}
+						}
 						 clSpecDetail=sb.toString();
 						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
 						 //end Bug #28274
@@ -2427,7 +2429,7 @@ public class QTDocumentsBackingBean extends
 		title=title.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
 		title=title.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-		context.put("title", StringUtil.upperCase(title));
+		context.put("title", title);//#32648 remove uppercase
 		context.put("qtNo", qt.getQtNo());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
@@ -3119,6 +3121,7 @@ public class QTDocumentsBackingBean extends
 				 */
 
 				tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
+				Map<TplDocSection, TplDocSection> originalToCloneMap = new HashMap<>(); //#34873
 				List<TplDocSection> docSectionCOllection = templateDocMaster
 						.getTplDocSectionCollection();
 				for (TplDocSection tplDocSection : docSectionCOllection) {
@@ -3130,13 +3133,25 @@ public class QTDocumentsBackingBean extends
 						section.setSectionTitle(title);
 					}
 					section.setDocSectionId(null);
-					section.setParent(null); // Temporarily am setting null, need to
+					//#34873
+					//section.setParent(null); // Temporarily am setting null, need to
 												// confirm once
 					section.setTplDocMaster(tplDocMaster);
 
 					setUserDetails(section);
 					tplDocMaster.getTplDocSectionCollection().add(section);
+					originalToCloneMap.put(tplDocSection, section); //#34873
 				}
+				
+				//#34873 - start
+				for (TplDocSection section : tplDocMaster.getTplDocSectionCollection()) {
+			        TplDocSection originalParent = section.getParent();
+			        if (originalParent != null) {
+			            TplDocSection cloneParent = originalToCloneMap.get(originalParent);
+			            section.setParent(cloneParent);
+			        }
+			    }
+				//#34873 - end
 
 				// Procurement Category
 				PmParameter procurementCategory = scQtDocReport.getScQt()

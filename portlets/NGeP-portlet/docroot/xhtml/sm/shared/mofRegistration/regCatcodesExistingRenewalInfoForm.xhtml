@@ -36,7 +36,9 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 				selection="#{backingBean.managedBean.deleteExistingCategoryList}">
 				<ac:paginator for="catExistDt" />
-				<p:column selectionMode="multiple" style="width:2%" rendered="#{!backingBean.managedBean.approverUser}" disabledSelection="#{aprvdCatBean.cancelCategory}"/>
+				<!-- 32008 disable for ups -->
+				<p:column selectionMode="multiple" style="width:2%" rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}" 
+					disabledSelection="#{aprvdCatBean.cancelCategory}" />
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:outputLabel value="#{index + 1}"
 						style="float: left;white-space: normal;" />
@@ -44,21 +46,24 @@
 				<!-- 32348 START - adjust width -->
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}"  style="width :350px;white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
 				<!-- 32348 END - adjust width -->
-					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{empty aprvdCatBean.categoryL1Name ? aprvdCatBean.pmCategoryL1.categoryName : aprvdCatBean.categoryL1Name}" />
-					<br />
-					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{empty aprvdCatBean.categoryL2Name ? aprvdCatBean.pmCategoryL2.categoryName : aprvdCatBean.categoryL2Name}" />
-					<br />
-					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
+					<!-- #28175 Reopen Start -->
+					<h:outputText 
+						value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+					<br/>
+					<h:outputText 
+						value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+					<br/>
+					<h:outputText 
+						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+					<!-- #28175 Reopen End -->
 					<!-- 30865 Start -->
 					<p:outputLabel rendered="#{aprvdCatBean.cancelCategory}" styleClass="warning" style="color:red !important; text-align:left;">
 						<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 					</p:outputLabel>
 					<!-- 30865 End -->
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
+				<!-- 30766 START - adjust width to be dynamic -->
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" width="#{backingBean.dynamicTableColumnWidth('20%', 'auto', 'auto')}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc}" />
@@ -69,7 +74,7 @@
 						<p:inputTextarea id="otherDesc" maxlength="100"
 							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
-							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20">
+							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" > <!-- #36289 -->
 						</p:inputTextarea>
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc 
@@ -80,14 +85,14 @@
 					</p:outputPanel>
 				</p:column>
 				<!-- 32348 START - adjust width -->
-				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 8%;white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" width="#{backingBean.dynamicTableColumnWidth('16%', '8%', '8%')}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
 				<!-- 32348 END - adjust width -->
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 						rendered="#{!aprvdCatBean.specialCategory}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 						rendered="#{aprvdCatBean.specialCategory}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
+				<p:column headerText="#{lbl['lbl.sm.status']}" width="#{backingBean.dynamicTableColumnWidth('20%', '10%', '10%')}" style="white-space : normal" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingVer']}"
@@ -102,6 +107,7 @@
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
+				<!-- 30766 END - adjust width to be dynamic -->
 				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}" rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:selectOneRadio layout="pageDirection" id="catPoApprR" disabled="#{aprvdCatBean.cancelCategory}"
 						value="#{aprvdCatBean.poDecFlg}"
@@ -140,8 +146,8 @@
 								<td
 									style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 									<p:scrollPanel mode="native" style="height:100px; width:auto;">
-										<h:outputText value="#{catBean.poRemarks}"
-											rendered="#{not empty catBean.poRemarks}" />
+										<h:outputText value="#{aprvdCatBean.poRemarks}"
+											rendered="#{not empty aprvdCatBean.poRemarks}" />
 									</p:scrollPanel>
 								</td>
 							</tr>
@@ -328,8 +334,9 @@
 					</p:outputPanel>
 				</p:column>
 			</p:dataTable>
+			<!-- 32008 disable for ups -->
 			<p:spacer height="2px;" />
-			<c:if test="#{!backingBean.managedBean.approverUser}">
+			<c:if test="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"

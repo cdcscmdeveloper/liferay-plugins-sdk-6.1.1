@@ -44,7 +44,8 @@
 								<f:selectItems
 									value="#{evaluationBackingBean.downloadByDropDownValues()}"></f:selectItems>
 
-								<p:ajax event="change"
+								<p:ajax 
+									listener="#{evaluationBackingBean.onSelectDownloadByValue}"
 									update="@([id$=downloadButtonComplianceTechnincal])"></p:ajax>
 
 							</p:selectOneMenu></td>
@@ -57,13 +58,32 @@
 
 			<h:panelGroup id="downloadButtonComplianceTechnincal" style="display: inline-block; width: 16.5%;">
 				<table width="100%" class="BtnSpacing">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.downloadBy ne null}">
-						<tr>
-							<p:commandButton value="#{lbl['lbl.btn.download']}"
-								style="float:right;" ajax="false"
-								action="#{evaluationBackingBean.downloadAllTechnicallDocumentCompliance}"
-								rendered="#{evaluationBackingBean.managedBean.downloadBy ne null}" />
+					<c:if test="#{evaluationBackingBean.managedBean.downloadBy ne null}">
+						<tr style="display: flex; justify-content: space-between">
+							<c:if test="#{evaluationBackingBean.managedBean.downloadBy eq SourcingConstants.DOWNLOADBY_DOCUMENT}">
+								<p:commandButton value="#{lbl['lbl.btn.preparezip']}"
+									style="float:left;" ajax="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									process="@this" update="@form @([id$=downloadButtonComplianceTechnincal])"
+									actionListener="#{evaluationBackingBean.generateAllDocumentComplianceZip}"
+									rendered="#{empty evaluationBackingBean.managedBean.technicalZipFileDownloadByDocument}" />
+								<p:commandButton value="#{lbl['lbl.btn.download']}"
+							    	style="float:right;"
+							    	ajax="false"
+							    	rendered="#{not empty evaluationBackingBean.managedBean.technicalZipFileDownloadByDocument}"
+							    	action="#{evaluationBackingBean.downloadZippedFile}" />
+							</c:if>
+							<c:if test="#{evaluationBackingBean.managedBean.downloadBy eq SourcingConstants.DOWNLOADBY_SUPPLIER}">
+								<p:commandButton value="#{lbl['lbl.btn.preparezip']}"
+									style="float:left;" ajax="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									process="@this" update="@form @([id$=downloadButtonComplianceTechnincal])"
+									actionListener="#{evaluationBackingBean.generateAllDocumentComplianceZip}"
+									rendered="#{empty evaluationBackingBean.managedBean.technicalZipFileDownloadBySupplier}" />
+								<p:commandButton value="#{lbl['lbl.btn.download']}"
+							    	style="float:right;"
+							    	ajax="false"
+							    	rendered="#{not empty evaluationBackingBean.managedBean.technicalZipFileDownloadBySupplier}"
+							    	action="#{evaluationBackingBean.downloadZippedFile}" />
+							</c:if>
 						</tr>
 					</c:if>
 				</table>

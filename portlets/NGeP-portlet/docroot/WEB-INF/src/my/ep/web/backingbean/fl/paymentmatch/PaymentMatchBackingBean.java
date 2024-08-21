@@ -150,7 +150,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -1446,7 +1445,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			if(getManagedBean().getPaymentAdvice().getFlPaymentDeduction() != null && !getManagedBean().getPaymentAdvice().getFlPaymentDeduction().isEmpty()){
 				ParameterReqDTO reqType = new ParameterReqDTO();
 				ParameterResDTO resType = new ParameterResDTO();
-				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();;
+				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 				reqType.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
 				reqType.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 				
@@ -1796,6 +1795,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 			flBB.getManagedBean().setHideRemarks(true);
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			//#34686 start
+			orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			if(resDTO.getFlOrder().isFactored()) {
 				orderBackingBean.getManagedBean().setFactoringCheck("true");

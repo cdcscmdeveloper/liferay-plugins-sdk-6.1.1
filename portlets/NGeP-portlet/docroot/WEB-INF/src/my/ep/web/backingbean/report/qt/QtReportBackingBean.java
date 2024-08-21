@@ -37,6 +37,7 @@ import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -48,6 +49,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
@@ -187,6 +189,69 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 						IRPTRequestSO.class);
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
+		//#35015 Wip 4ser - Start
+		if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())
+				|| QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+		
+		long qtId4ser = Long.parseLong(this.getManagedBean().getQuotationId());
+		
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qtId4ser);
+		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		
+		String reportCode = StringUtils.EMPTY;
+		String reportName = StringUtils.EMPTY;
+		if (QtReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_EVALUATION_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_EC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_OPENING_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_OPENING_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_OC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_TEC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL;
+				reportName = ReportConst.SC_FEC_RPT_JSP;
+			}
+		} else if (QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode())) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL_WIP;
+				reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
+			} else {
+				reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL;
+				reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+			}
+		}
+		this.getManagedBean().setReportName(reportName);
+		this.getManagedBean().setReportCode(reportCode);
+		}
+		//#35015 Wip 4ser - End
 		params.put(QtReportConst.PARAM_KEY_REPORT, getManagedBean()
 				.getReportName());
 		params.put(QtReportConst.PARAM_REPORT_CODE, getManagedBean()
@@ -214,14 +279,15 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			//R5 #14076 start		
 			RPTRequestDtlReqDTO restDtlDTO = new RPTRequestDtlReqDTO();
 			restDtlDTO.getRptRequestDtl().setRequestId(resDTO.getRequestId());
-			
-			if(params.get(QtReportConst.QUOTATION_TENDER_ID) != null){
-				if(getManagedBean().getQuotationNumber()!= null){
+
+			if (params.get(QtReportConst.QUOTATION_TENDER_ID) != null) {
+				if (getManagedBean().getQuotationNumber() != null) {
 					restDtlDTO.getRptRequestDtl().setDocumentNo01(getManagedBean().getQuotationNumber());
-				}		
-			}	
-			if(restDtlDTO.getRptRequestDtl().getDocumentNo01() != null ){
-				addRptRequestDetail(restDtlDTO);		
+				}
+			}
+
+			if (restDtlDTO.getRptRequestDtl().getDocumentNo01() != null) {
+				addRptRequestDetail(restDtlDTO);
 			}
 			//R5 #14076 end
 			
@@ -249,13 +315,16 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		
 		List<SelectItem> approverNayakTarafList=retrieveApprovarNaikTarafSCS2();
 		List<String> authoriztionList = retriveUserrloeByUserId();
-		
-		if (approverNayakTarafList.size() > 0) {
+		//Bug #34996@Syazani 17/08/2023 -- Start
+		if (approverNayakTarafList.size() > 0
+				|| (authoriztionList.contains(ReportConst.AUDITOR_GENERAL) || authoriztionList
+						.contains(ReportConst.AUDITOR_INTERNAL))) {
 			userRoleLogin = ReportConst.APPROVERNT;
+			// Bug #34996@Syazani 17/08/2023 -- End
 		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
 				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
 				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 
-				|| authoriztionList .contains(ReportConst.PUBLICATION_APPROVER)) {
+				|| authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)) {
 			userRoleLogin = ReportConst.APPROVER;
 		} else if (authoriztionList.contains(ReportConst.DESK_OFFICER)) {
 			userRoleLogin = ReportConst.DESKOFFR;
@@ -746,7 +815,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
 		}
 	}
-
+	/**
+	 * Retrieve the QT Agency by Quotation/Tender Number
+	 * 
+	 * @param scQt
+	 */
 	public void retrieveAgencyByQuotationNumber(ScQt scQt) {
 		String ptjName = "";
 		String ptjCode = "";
@@ -765,32 +838,34 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			this.getManagedBean().getScReportSearchBean().setScPtjName(ptjName);
 		}
 	}
-
+	/**
+	 * Retrieve List of QT Desk Officer By Quotation/Tender Agency
+	 * 
+	 * @return
+	 */
 	public List<SelectItem> retrieveDescOfficerByAgency() {
-		List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
+		List<SelectItem> scDescOfficerList = new ArrayList<>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			if (isDeskOfficer()) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
-				selectItem.setValue(new FacesScopes().getUserSessionBean().getUserId());
+				selectItem.setValue(getUserIdSessionFromLoginId());
 				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
 				scDescOfficerList.add(selectItem);
 			} else {
-				ScQt scQt = findScQtByQuotationNumber();
+				ScQt qt = findScQtByQuotationNumber();
 				
-				Long orgProfileId = null;
-				if (scQt != null) {
-					orgProfileId = scQt.getOrgProfileId();
-				}
-				
-				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
-						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
-				if (CollectionUtils.isNotEmpty(reqLst)) {
-					for (Object[] object : reqLst) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1]);
-						scDescOfficerList.add(selectItem);
+				if (qt != null) {
+					Long orgProfileId = qt.getOrgProfileId();
+					List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+							new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+					if (CollectionUtils.isNotEmpty(reqLst)) {
+						for (Object[] object : reqLst) {
+							SelectItem selectItem = new SelectItem();
+							selectItem.setLabel(object[0].toString());
+							selectItem.setValue(object[1]);
+							scDescOfficerList.add(selectItem);
+						}
 					}
 				}
 			}
@@ -1158,8 +1233,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToYear 
 	 */
 	public void propSubmitToDtUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		
-		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScPropSubmitFromYear());
+		reportSearchbean.setScCreatedToYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitFromYear(reportSearchbean.getScCreatedFromYear());
+		reportSearchbean.setScPropSubmitToYear(reportSearchbean.getScCreatedFromYear());
 	}
 
 	/**
@@ -1170,7 +1246,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 * @return ScPropSubmitToMonth
 	 */
 	public void propSubmitToMonthUpdate(ScReportFieldsSearchBean reportSearchbean) {
-		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScPropSubmitFromMonth());
+		reportSearchbean.setScCreatedToMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitFromMonth(reportSearchbean.getScCreatedFromMonth());
+		reportSearchbean.setScPropSubmitToMonth(reportSearchbean.getScCreatedFromMonth());
 	}
 	//#14306 - End
 }

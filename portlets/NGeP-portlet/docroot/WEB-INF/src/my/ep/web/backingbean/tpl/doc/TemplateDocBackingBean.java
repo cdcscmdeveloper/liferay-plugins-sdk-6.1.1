@@ -78,7 +78,6 @@ import org.jsoup.safety.Whitelist;
 import org.primefaces.context.RequestContext;//#33346
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfPTable;
@@ -275,7 +274,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				getManagedBean().setSelectedSectionTitle(selectedSection.getSectionTitle());
 				String content=selectedSection.getSectionContent();
 				log.info("before replacing editContent content"+content);
-				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty()){
+				if(null!=this.getManagedBean().getDocParamValues() && !this.getManagedBean().getDocParamValues().isEmpty() && content != null){//#33346 - Fix NullPointer issue
 					for (Map.Entry<String, String> entry : this.getManagedBean().getDocParamValues().entrySet()) {
 						log.info("entry.getKey()"+entry.getKey());
 						log.info("entry.getValue()"+entry.getValue());
@@ -308,7 +307,10 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			String sectionName = getManagedBean().getSelectedSectionName();
 			String sectionNumber = getManagedBean().getSelectedSection().getSectionNumber();
 			//START: #33346
-			isExistSymbol = isContentExistUnicodeSymbol(sectionText);
+			if(sectionText != null){//START: #33346#52 - Handle if content is null
+				isExistSymbol = isContentExistUnicodeSymbol(sectionText);
+			}//END: #33346#52
+			
 			if(isExistSymbol){
 				throw new EpException(MessageConst.ERROR_760543,new String[] {sectionTitle});
 			}
@@ -981,7 +983,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			File file = new File(filePath);
 			file.mkdirs();
 			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-			filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);;
+			filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);
 			String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), "", "P");
 			//html = html.replaceAll("&#160;","");
 			//html = html.replaceAll("&lt;","(");

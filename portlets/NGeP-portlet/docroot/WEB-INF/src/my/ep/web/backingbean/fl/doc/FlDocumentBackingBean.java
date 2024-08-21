@@ -536,6 +536,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
@@ -563,7 +566,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
+			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(coResDTO.getFlAttachment());
+			//#34686 end
+			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
 			}
@@ -1446,7 +1453,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    Boolean sqExpired = false;
 	    
 	    if(docId != null){
-	    	documentId = new Long(docId);
+	    	documentId = Long.parseLong(docId); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 	    }
 	    
 	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){

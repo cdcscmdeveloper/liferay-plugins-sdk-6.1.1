@@ -165,7 +165,7 @@ public class QTReverseBackingBean extends SourcingBaseBackingBean<QTDetailManage
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, reverseQtDetails(isReverseLOI=Boolean.FALSE,isReverseLOA=Boolean.TRUE));
 				}
 			}
-			else;
+
 		}
 		/*else if(ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType) 
 				|| ParameterConst.DOCTYPE_LETTER_OF_INTENT.equalsIgnoreCase(docType)){

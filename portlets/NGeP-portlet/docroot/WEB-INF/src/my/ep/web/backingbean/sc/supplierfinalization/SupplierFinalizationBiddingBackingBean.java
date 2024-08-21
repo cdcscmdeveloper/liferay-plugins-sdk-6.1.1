@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +34,7 @@ import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -62,6 +62,8 @@ import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -77,6 +79,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
@@ -93,6 +96,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
@@ -2725,6 +2729,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 					meetingList.add(scqtMeeting);
 				}
 			} else {
+				//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (meetingList == null)
+					meetingList = new ArrayList<ScQtMeeting>();
 				meetingList.add(scqtMeeting);
 			}
 
@@ -3032,19 +3039,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	//#25037-START
 	public void prepareUpdateCommitteeMember(){
-		String taskName = this.getManagedBean().getTaskName()==null ? "": this.getManagedBean().getTaskName();
-		if (Arrays.asList(new String[] {SCProcessNameConst.FINALISE_FC_SELECTION, SCProcessNameConst.COORDINATE_FC_MEETING }).contains(taskName)) {
-			SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
-			meetingBB.renewSesionObject();
-			this.getManagedBean().setMeetingBB(meetingBB);
-			Long qtId = this.getManagedBean().getScQt().getQtId();
-			meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
-			meetingBB.retriveQTDetails(qtId);
-			meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
-			meetingBB.prepareMemberUpdate();
-			meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
-			meetingBB.getManagedBean().setFinalBiddingBB(this);
-		}	
+		if (StringUtils.isBlank(this.getManagedBean().getCommitteeType()))
+			return;
+		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
+		meetingBB.renewSesionObject();
+		this.getManagedBean().setMeetingBB(meetingBB);
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		meetingBB.getManagedBean().setCommitteeType(this.getManagedBean().getCommitteeType());
+		meetingBB.retriveQTDetails(qtId);
+		meetingBB.retriveMeetingDetails(this.getManagedBean().getScQt().getQtId());
+		meetingBB.prepareMemberUpdate();
+		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+		meetingBB.getManagedBean().setFinalBiddingBB(this);
 	}
 	public void submitAction(String action) {
 		this.checkIfLoggedinUserIsSecretary();
@@ -3055,7 +3061,74 @@ public class SupplierFinalizationBiddingBackingBean extends
 			this.submitBiddingEndorsement(action);
 		}
 	}
-	//#25037-END
+	//#25037-END	
+	//#28777 & #29729 - Start
+	/**
+	* Method to display list of supplier branch had deleted or not with related current QT
+	**/
+	public void showSupplierBranchList(Long supplierId) {
+		
+		List<SmSupplierBranch> supplierBranchListDeleted = new ArrayList<>();
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+	
+	    SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
+	    suppSearchDeletedReqDTO.setSupplierId(supplierId);
+    	SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
+		supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
+
+		for(SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+			int statusFlag = supplierBranch.getRecordStatusFlg();
+			if(statusFlag == DbValueConst.RECORD_STATUS_DELETED){
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+			}else{
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+			}
+		}
+		
+		if(CollectionUtils.isEmpty(supplierBranchListDeleted)){
+    		getManagedBean().setSupplierBranchList(listSupplierBranchList(supplierId));
+    	}else{
+    		supplierBranchListDeleted.addAll(listSupplierBranchList(supplierId));
+    		getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+    	}
+		
+	}
+	
+	private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
+		
+		List<SmSupplierBranch> supplierBranchList = new ArrayList<>();
+
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		
+		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+		suppSearchReqDTO.setSupplierId(supplierId);
+    	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
+    	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
+    	  
+    	return supplierBranchList;
+	}
+	
+	/**
+	* Method to return true, if branch in supplier has been deleted
+	* @param supplier id 
+	* @return true or false
+	**/
+	public boolean disableRadioButtonIfSupplierBranchDeleted(SmSupplier smSupplier){
+	
+		Long supplierId = smSupplier.getSupplierId();
+		ScQt scQt = this.getManagedBean().getScQt();
+	
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
+		
+		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
+			return Boolean.TRUE;
+	    }
+		return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
 	
 }
 

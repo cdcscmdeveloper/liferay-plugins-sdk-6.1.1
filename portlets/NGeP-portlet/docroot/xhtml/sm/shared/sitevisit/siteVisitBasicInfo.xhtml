@@ -50,31 +50,31 @@
 				<td class="header-info-text"><h:outputText value="#{applInfo.smCompanyBasic.phoneFull}" /></td>
 			</tr>
 			
+			<!-- #24819 - start -->
 			<tr>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 				<td class="header-info-text">
-					<h:outputText value="#{applInfo.smSupplier.ssmNewRegNo}" rendered="#{!empty applInfo.smSupplier.ssmNewRegNo}"/>
-					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty applInfo.smSupplier.ssmNewRegNo}"/>
-					&#160;
-						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"/>
-						<p:tooltip id="newRegNott" for="newRegNoti">
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
-						</p:tooltip>&#160;
-				</td>
-				
+					<h:outputText value="#{applInfo.smSupplier.ssmNewRegNo}"
+						rendered="#{!empty applInfo.smSupplier.ssmNewRegNo}" />
+					<h:outputText value="#{lbl['lbl.sm.no.available']}"
+						rendered="#{empty applInfo.smSupplier.ssmNewRegNo}" /> &#160;
+					<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="newRegNott" for="newRegNoti">
+					<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}" />
+					</p:tooltip>&#160;</td>
+
 				<td></td>
 				<td></td>
 			</tr>
-			
+
 			<tr>
 				<td></td>
-				<td  class="header-info-text">
-				<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
-				</td>
+				<td class="header-info-text">
+					<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" /></td>
 				<td></td>
 				<td></td>
 			</tr>
-			
+			<!-- #24819 - end -->
 			<tr>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.mofno']}" /></td>
 				<td class="header-info-text">
