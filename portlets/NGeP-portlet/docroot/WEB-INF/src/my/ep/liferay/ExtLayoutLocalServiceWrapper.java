@@ -32,6 +32,10 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 	
 	public final String RENEW_MOF_URL = "/renew-mof-account";
 	public final String REGISTER_MOF_URL = "/upgrade-basic-to-mof";
+	//35580 - Start
+	public final String BASIC_ACCOUNT_STATUS_URL = "/basic-account-deactivation";
+	public final String CANCEL_MOF_URL = "/cancel-mof-registered";
+	//35580 - End
 	
 	public final String BASIC_SUPPLIER_ADMIN = "BASIC_SUPPLIER_ADMIN";
 	public final String BASIC_SUPPLIER_USER = "BASIC_SUPPLIER_USER";
@@ -63,7 +67,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			while (iter.hasNext()) {
 				Layout layout = iter.next();
 				
-				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL) || layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) || layout.getFriendlyURL().equals(CANCEL_MOF_URL)) {
 	
 					if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
 						log.info("11 removing register MOF");
@@ -74,6 +78,18 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 						log.info("11 removing renew MOF");
 						iter.remove();
 					}
+					
+					//35580 - Start
+					if(layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
+						log.info("11 removing basic account status");
+						iter.remove();
+					}
+					
+					if(layout.getFriendlyURL().equals(CANCEL_MOF_URL) && ( validBasicToRenewMOF == SupplierManagementConst.BASIC_ONLY || validBasicToRenewMOF == SupplierManagementConst.MOF_EXPIRED_CANNOT_RENEW )) {
+						log.info("11 removing cancel mof");
+						iter.remove();
+					}
+					//35580 - End
 				}
 			}
 		}
@@ -95,7 +111,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			while (iter.hasNext()) {
 				Layout layout = iter.next();
 				
-				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL)) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL) || layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) || layout.getFriendlyURL().equals(CANCEL_MOF_URL)) {
 					
 					if(layout.getFriendlyURL().equals(REGISTER_MOF_URL)  && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
 						log.info("22 removing register MOF");
@@ -106,6 +122,18 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 						log.info("22 removing renew MOF");
 						iter.remove();
 					}
+					
+					//35580 - Start
+					if(layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
+						log.info("22 removing basic account status");
+						iter.remove();
+					}
+					
+					if(layout.getFriendlyURL().equals(CANCEL_MOF_URL) && ( validBasicToRenewMOF == SupplierManagementConst.BASIC_ONLY || validBasicToRenewMOF == SupplierManagementConst.MOF_EXPIRED_CANNOT_RENEW )) {
+						log.info("22 removing cancel mof");
+						iter.remove();
+					}
+					//35580 - End
 				}
 			}
 		}

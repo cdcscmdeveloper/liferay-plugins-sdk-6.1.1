@@ -40,24 +40,6 @@
 				value="#{lbl['lbl.sm.sme.note.applicable']}" />
 			<br />
 			<table style="width: 100%; table-layout: fixed">
-				<!-- #29617 ReOpen note #82 - Start -->
-				<style>
-					.pdfTooltip {
-						display: inline-block;
-					}
-					
-					.pdfTooltip .pdfTooltipContent {
-						display: inline-block;
-						visibility: hidden;
-						position: absolute;
-						z-index: 10;
-					}
-					
-					.pdfTooltip:hover .pdfTooltipContent {
-						visibility: visible;
-					}
-				</style>
-				<!-- #29617 ReOpen note #82 - End -->
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.sme.company.name']}" /></td>
@@ -97,11 +79,10 @@
 								value="#{smUpdateSmeInfoBackingBean.managedBean.statusTypeList}" />
 						<!-- #29617 ReOpen note #82 - Start -->
 						</p:selectOneMenu>
-						<p:graphicImage id="smeDefinitionNoti" value="/css/images/design/tooltips.png" /> 
-						<p:tooltip id="smeDefinition" for="smeDefinitionNoti" style="transform: translateY(40%) !important;">								
-								<img src="/NGeP-portlet/images/smeDefinition.png"
-									style="height: 450px; left: 0px !important;" />
-						</p:tooltip>&#160;</td>
+						<p:commandLink update="smeDefinitionDlg" oncomplete="smeDefinitionDlg.show();">
+							<p:graphicImage id="smeDefinitionNoti" value="/css/images/design/tooltips.png" />
+							<p:tooltip for="smeDefinitionNoti" value="#{lbl['lbl.txt.clickhere']}"/>
+						</p:commandLink>&#160;</td>
 					<!-- #29617 ReOpen note #82 - End -->
 				</tr>
 				<tr>
@@ -309,5 +290,12 @@
 				value="#{lbl['lbl.sm.sme.upload.suppDoc.note.3']}" />
 		</p:dialog>
 		<!-- #29617 ReOpen note #82 - Remove -->
+		<!-- #29617 -->
+		<p:dialog id="smeDefinitionDlg" widgetVar="smeDefinitionDlg" 
+			modal="true" height="550" style="position: fixed !important;">
+			<p:scrollPanel>
+				<img src="/NGeP-portlet/images/smeDefinition.png" style="width: 100%"/>
+			</p:scrollPanel>
+		</p:dialog>
 	</ui:define>
 </ui:composition>

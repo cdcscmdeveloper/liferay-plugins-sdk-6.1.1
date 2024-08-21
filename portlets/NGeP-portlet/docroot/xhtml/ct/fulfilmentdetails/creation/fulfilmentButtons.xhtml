@@ -35,8 +35,8 @@
 			<c:if test='#{ctBackingBean.managedBean.viewContract}'>
 				<td style="text-align: right">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
-						ctBackingBean.managedBean.contractVer.ctContract.contractId)}"  />
+						action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ctBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode,
+						ctBackingBean.managedBean.contractVer.ctContract.contractId, ctBackingBean.isSupplier())}"  /> <!-- #35202 -->
 				</td>
 			</c:if>				
 		</tr>

@@ -7,15 +7,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
     <ui:param name="isOtherApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" /> 
-    <!-- #25077 Start -->
+    <ui:remove> #25077 Start </ui:remove>
     <ui:param name="isMandatoryStatusAndDocument" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT}" />  
-	<!-- #25077 End -->
+	<ui:remove> #25077 End </ui:remove>
 	
 	<p:panel>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.instruction']}" escape="false" />
-		<!-- #25077 Start -->
+		<ui:remove> #25077 Start </ui:remove>
 	    <br /><h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.approval.oth.supporting.document.instruction']}" escape="false" />
-	    <!-- #25077 End -->
+	    <ui:remove> #25077 End </ui:remove>
 		<p:dataTable id="otherreqdtlsid"
 			value="#{othersApprovalDtlsList.scQtApprovalDtls}"
 			var="otherrequestdetails" rowIndexVar="index" editable="true"
@@ -28,30 +28,30 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-				    <!-- #25077 Start -->
+				    <ui:remove> #25077 Start </ui:remove>
 				    <c:if test="#{isMandatoryStatusAndDocument}"> 
-				    <!-- #25077 End -->
+				    <ui:remove> #25077 End </ui:remove>
 				        <h:outputText value="* " styleClass="mandatory" />
-				    <!-- #25077 Start -->
+				    <ui:remove> #25077 Start </ui:remove>
 				    </c:if>  
-				    <!-- #25077 End -->
+				    <ui:remove> #25077 End </ui:remove>
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 				<p:selectOneMenu id="decisiontypeid"
 					value="#{otherrequestdetails.approverAction.parameterId}"
 					style="width: 178px;margin-bottom: 5px;" disabled="#{createQtBB.managedBean.readOnly}">
-					<!-- #25077 Start -->
+					<ui:remove> #25077 Start </ui:remove>
 				    <c:choose>
 					    <c:when test="#{qTDetailBB.isQTStatusLessThan(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}">	
-					<!-- #25077 End -->
+					<ui:remove> #25077 End </ui:remove>
 					         <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-					<!-- #25077 Start -->
+					<ui:remove> #25077 Start </ui:remove>
 					    </c:when>
 					    <c:otherwise>
 					         <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" noSelectionOption="true" itemDisabled="true"/>
 					    </c:otherwise>
 			        </c:choose>
-			        <!-- #25077 End -->
+			        <ui:remove> #25077 End </ui:remove>
 					<f:selectItems var="app"
 						value="#{approvalBackingBean.getStatusDropdownValues()}"
 						itemLabel="#{app.codeName}"
@@ -62,10 +62,10 @@
 				<p:message id="decisiontypeidMsg" for="decisiontypeid"
 					display="icon" />
 			</p:column>
-			<!-- #25077 Start -->
+			<ui:remove> #25077 Start  </ui:remove>
 				<c:choose>
 				    <c:when test="#{createQtBB.managedBean.maintanceFlow}">	
-				        <p:column headerText="#{lbl['lbl.sc.document']}" style="text-align: center;white-space: normal;width: 50%;"><!-- #34014 -->
+				        <p:column headerText="#{lbl['lbl.sc.document']}" style="text-align: center;white-space: normal;width: 50%;"><ui:remove> #34014 </ui:remove>
 					         <c:if test="#{qTDetailBB.isApprovalScreen() and qTDetailBB.userTaskIsCommitteeAppointmentApproval}">
 								   <ui:include src="downloadDetailsOthersFile.xhtml" /> 
 		                     </c:if>
@@ -75,7 +75,7 @@
 						</p:column>	
 				    </c:when>
 				    <c:otherwise> 
-		                <p:column style="text-align: center;white-space: normal;width: 50%;"><!-- #34014 -->
+		                <p:column style="text-align: center;white-space: normal;width: 50%;"><ui:remove> #34014 </ui:remove>
 					        <f:facet name="header">
 						        <c:if test="#{isMandatoryStatusAndDocument}">
 						              <h:outputText value="* " styleClass="mandatory" />
@@ -111,16 +111,24 @@
 					    </p:column>	
 				    </c:otherwise>
 				</c:choose>
-				<!-- #25077 End -->
+			<ui:remove> #25077 End  </ui:remove>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.remark']}" />
 				</f:facet>
-				<p:inputTextarea id="remarkid" maxlength="1000" disabled="#{createQtBB.managedBean.readOnly}"
-				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChanged}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
+				<ui:remove> #25077 Start </ui:remove>
+				<p:inputTextarea id="remarkIctId" maxlength="1000" disabled="#{createQtBB.managedBean.readOnly}"
+				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChangedICT}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
-					rows="3" ><f:ajax></f:ajax></p:inputTextarea><!-- bug #30435 -->
-				<p:message id="remarkidMsg" for="remarkid" display="icon" />
+					rows="3" rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestIctProjects}"><f:ajax></f:ajax></p:inputTextarea><ui:remove> #30435 </ui:remove>
+				<p:message id="remarkIctIdMsg" for="remarkIctId" display="icon" />
+				
+				<p:inputTextarea id="remarkMitiId" maxlength="1000" disabled="#{createQtBB.managedBean.readOnly}"
+				onkeyup="limitTextArea(this,1000);" valueChangeListener="#{createQtBB.otherAppValueChangedMITI}" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,100);"
+					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
+					rows="3" rendered="#{otherrequestdetails.approvalType.parameterCode eq ParameterConst.approvalRequestImportedGoods}"><f:ajax></f:ajax></p:inputTextarea><ui:remove> #30435 </ui:remove>
+				<p:message id="remarkMitiIdMsg" for="remarkMitiId" display="icon" />
+				<ui:remove> #25077 End </ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

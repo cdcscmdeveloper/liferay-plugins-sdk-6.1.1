@@ -87,6 +87,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -125,6 +126,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
+
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -403,6 +405,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); // Fix - #30866
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 /#33752 start		
 			getManagedBean().setAction(null);
@@ -435,7 +438,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				sqbb.getManagedBean().setActiveIndex(0);
 				// #29800 - start
 				if (getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession() == null) {
-					sqbb.simpleQuoteAction(getManagedBean().getSupplierItemDocId(), true, null);
+					sqbb.simpleQuoteAction(null, getManagedBean().getSupplierItemDocId(), true, null);//#34579 - add new parameter on simpleQuoteAction
 				} else {
 					sqbb.getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(
 							getManagedBean().getPreRenderViewDirectPurchaseDataTypeSession());
@@ -448,9 +451,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			// #3761 - end
 			return getManagedBean().getGotoPreviewPage();
-		} else {
+		}
+		// Start -#30866
+		else if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			if (circularBB.getManagedBean().getProcurementModeCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+					|| circularBB.getManagedBean().getProcurementModeCode()
+							.equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				return "/xhtml/ct/viewcontract/resultViewCircularContractQt.xhtml?faces-redirect=true";
+			} else if (circularBB.getManagedBean().getProcurementModeCode()
+					.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				return "/xhtml/ct/viewcontract/resultViewCircularContractDp.xhtml?faces-redirect=true";
+			}
+		}
+		// End -#30866
+		else {
 			return "search.xhtml?faces-redirect=true";
 		}
+		
+		return null;
 	}
 
 	/**
@@ -1019,7 +1037,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 			if(remarks.isEmpty() || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
-				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setChangedDate(remark.getCreatedDate());
@@ -1851,7 +1869,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getItemAttachments().add(attachment);
@@ -1859,7 +1877,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				attachment.setFileName(item.getFileName());
 				attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-				attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				attachment.setCreatedUser(facesScopes.getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				getManagedBean().getCircularVer().getCircularAttachments().add(attachment);

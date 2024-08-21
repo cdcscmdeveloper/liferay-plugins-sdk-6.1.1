@@ -24,6 +24,9 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusSuspended}">#{lbl['lbl.txt.inactive']}</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusInProgress}">#{lbl['lbl.sm.account.status.inprogress']}</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusDeleted}">#{lbl['lbl.sm.account.status.deleted']}</c:if>
+					<!-- #34319 - Start -->
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.smSupplier.recordStatusFlg.intValue() == DbValueConst.recordStatusCancelled and viewSmApplBackingBean.managedBean.smAppl.pmStatus.statusId == SupplierMgmtConst.pmStatusCancelledPreregistrationAccount}"> #{lbl['lbl.txt.na']}</c:if>
+					<!-- #34319 - End  -->
 				</td>
 			</tr>
 			<tr>

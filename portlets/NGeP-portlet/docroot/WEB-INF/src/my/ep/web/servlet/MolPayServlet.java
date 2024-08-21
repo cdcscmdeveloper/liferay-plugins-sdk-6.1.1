@@ -27,6 +27,7 @@ import my.ep.persistence.entity.py.PyPayment;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -360,6 +361,9 @@ public class MolPayServlet extends HttpServlet {
 						log.info(">>>>paymentType<<<"+paymentType);
 					}else if(smPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
 						paymentType = SupplierManagementConst.SOFTCERT_PAYMENT;
+						//START 35182
+						smPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
+						//END 35182
 						log.info(">>>>paymentType<<<"+paymentType);
 					}
 					pymtReqDTO.setPaymentType(paymentType);

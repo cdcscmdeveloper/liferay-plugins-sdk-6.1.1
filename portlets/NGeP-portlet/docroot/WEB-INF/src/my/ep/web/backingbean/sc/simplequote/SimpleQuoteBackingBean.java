@@ -43,6 +43,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -156,6 +157,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -336,7 +338,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setByLocality(Boolean.FALSE);
 				}
 
-				if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){
+				if(scQuote.getRequestNotes() != null && !scQuote.getRequestNotes().isEmpty() && scRequestNote != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					getManagedBean().getRequestNote().setPmOrgProfile(scRequestNote.getPmOrgProfile());
 				}
 				
@@ -427,8 +429,15 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
-			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
+			getManagedBean().setCreatedBy(getUserById(scQuote != null ? scQuote.getCreatedBy():null).getUserName());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
+			//#25886 - start
+			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
+				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+				ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+				getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+			}
+			//#25886 - end
 			// page navigation to simple quote
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 
@@ -477,6 +486,8 @@ public class SimpleQuoteBackingBean extends
 	 * add panel or contract and non contract to simple quote from search
 	 * catalogue.
 	 * 
+	 * @param supplierId
+	 *            the supplier id
 	 * @param docId
 	 *            the doc id
 	 * @param panelItemFlag
@@ -485,7 +496,9 @@ public class SimpleQuoteBackingBean extends
 	 *            the compare supplier items
 	 * @return the string page navigate to simple quote page.
 	 */
-	public String simpleQuoteAction(Long docId, boolean panelItemFlag, List<CmSupplierItem> compareSupplierItems) {
+	//#34579 - add new parameter on simpleQuoteAction method
+	public String simpleQuoteAction(Long supplierId, Long docId, boolean panelItemFlag, List<CmSupplierItem> compareSupplierItems) {
+
 		debugLogger("simpleQuoteAction");
 		boolean isGovtSeller = Boolean.FALSE;
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -763,7 +776,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 		
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		
 		// zone location level by default - district
@@ -859,6 +872,15 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// #29800 - end
+		// #34579 - start
+		if (supplierId != null && supplierId != 0) {
+			if (scQuote.getSupplierId() == 0)
+				scQuote.setSupplierId(supplierId);
+		} else if (supplierId != null && supplierId == 0){ //#34994
+			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
+				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
+		}
+		// #34579 - end
 
 		return SIMPLE_QUOTE_PAGE_NAV;
 	}
@@ -1194,6 +1216,7 @@ public class SimpleQuoteBackingBean extends
 		}
 
 		// set user info
+	  if (quoteDocs != null && CollectionUtils.isNotEmpty(quoteDocs)){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 		for (ScQuoteDoc quoteDoc : quoteDocs) {
 			if (ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc
 					.getSpecMaster().getItemTypeCode().getParameterCode())) {
@@ -1281,6 +1304,7 @@ public class SimpleQuoteBackingBean extends
 						productTemplateSpecBean);
 			}
 		}
+	  }
 	}
 
 	/**
@@ -2340,6 +2364,34 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35514 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if (tplSpecQuestion.getCmItem() != null
+									&& tplSpecQuestion.getCmItem().getExtensionCode() != null) {
+								ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+								String serviceOrProduct = catalogueSO.checkProductOrService(tplSpecQuestion.getCmItem()
+										.getExtensionCode());
+								if (serviceOrProduct.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
+									if ((tplSpecQuestion.getAnswerTypeCode() != null)
+											&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+										if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+												.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+											if (tplSpecQuestion.getClUomFrequency() != null) {
+												tplSpecQuestion.setClUomFrequency(null);
+											}
+											if (tplSpecQuestion.getClDurationMonth() != null) {
+												tplSpecQuestion.setClDurationMonth(null);
+											}
+
+										}
+									}
+								}
+							}
+						}
+						// Bug #35514 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2360,6 +2412,29 @@ public class SimpleQuoteBackingBean extends
 						if (quote.getQuoteZone() != null) {
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
+						
+						// Bug #35514 - start
+						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
+								.getSpecMaster().getTplSpecQuestions()) {
+							if ((tplSpecQuestion.getAnswerTypeCode() != null)
+									&& (tplSpecQuestion.getAnswerTypeCode().getParameterCode() != null)) {
+								if (tplSpecQuestion.getAnswerTypeCode().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+									if (tplSpecQuestion.getClFulfilmentTypeCode() != null
+											&& tplSpecQuestion.getClFulfilmentTypeCode().getParameterCode()
+													.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+										if (tplSpecQuestion.getClUomFrequency() != null) {
+											tplSpecQuestion.setClUomFrequency(null);
+										}
+										if (tplSpecQuestion.getClDurationMonth() != null) {
+											tplSpecQuestion.setClDurationMonth(null);
+										}
+									}
+								}
+							}
+						}
+						// Bug #35514 - end
+						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -4289,7 +4364,12 @@ public class SimpleQuoteBackingBean extends
 				Long itemSpecQuestionId = null;
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
-
+				
+				//Bug #35514 - get value for fulfilment type one-off
+				PmParameter FTypeOneOff = getParameterByTypeAndCode(
+						ParameterTypeConst.FULFILMENT_TYPE,
+						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+								
 				if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
 					for(TplSpecQuestion question: cloneSpecMaster.getTplSpecQuestions()) {
 						//if item already codified, check by extension code. 
@@ -4303,6 +4383,15 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
+											//#35514 @zaim start
+											question.setClFulfilmentTypeCode(FTypeOneOff);
+											if (question.getClDurationMonth() != null){
+												question.setClDurationMonth(null);
+											}
+											if (question.getClUomFrequency() != null){
+												question.setClUomFrequency(null);
+											}
+											//#35514 @zaim end
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;
@@ -4312,7 +4401,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							} else if(question != null && question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)){
 								if(question.getParentSpecQuestion().getSpecQuestionId().equals(itemSpecQuestionId)) {
-									if(isProduct) {
+									if(isProduct != null && isProduct.equals(true)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 										prodItemQuestions.add(question);
 									} else {
 										serviceItemQuestions.add(question);
@@ -4336,13 +4425,13 @@ public class SimpleQuoteBackingBean extends
 						.equals(productOrService) || (prodItemQuestions.size() > 0)) {
 					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
 					List<TplSpecQuestion> cloneQuestions = new ArrayList<TplSpecQuestion>();
-
+					
 					// non clone spec master
 					if (productTplSpecBean.getSpecMaster() != null
 							&& productTplSpecBean.getSpecMaster()
 									.getTplSpecQuestions() != null) {
 						getManagedBean().setProdQuestions(
-								prodSpecMaster.getTplSpecQuestions());
+								productTplSpecBean.getSpecMaster().getTplSpecQuestions());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					}
 
 					if (getManagedBean().getProdQuestions() != null
@@ -4369,8 +4458,8 @@ public class SimpleQuoteBackingBean extends
 							questions.add(cloneQuestion);
 						}
 					}
-
-					prodSpecMaster.setTplSpecQuestions(questions);
+				   if (prodSpecMaster != null ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+					  prodSpecMaster.setTplSpecQuestions(questions);
 
 					if (getManagedBean().getScQuote().getMultipleQuote()) { // for
 																			// multiple
@@ -4379,7 +4468,7 @@ public class SimpleQuoteBackingBean extends
 					} else {
 						prodSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-
+				  }
 					productTplSpecBean.setSpecMaster(prodSpecMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
@@ -4394,7 +4483,8 @@ public class SimpleQuoteBackingBean extends
 					// non clone spec master - already selected list
 					if (serviceTplSpecBean.getSpecMaster() != null
 							&& serviceTplSpecBean.getSpecMaster()
-									.getTplSpecQuestions() != null) {
+							.getTplSpecQuestions() != null 
+							&& serviceSpecMaster != null ) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 						getManagedBean().setServiceQuestions(
 								serviceSpecMaster.getTplSpecQuestions());
 					}
@@ -4424,6 +4514,7 @@ public class SimpleQuoteBackingBean extends
 							questions.add(cloneQuestion);
 						}
 					}
+				  if (serviceSpecMaster != null){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					serviceSpecMaster.setTplSpecQuestions(questions);
 
 					if (getManagedBean().getScQuote().getMultipleQuote()) { // for
@@ -4433,7 +4524,7 @@ public class SimpleQuoteBackingBean extends
 					} else {
 						serviceSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-
+				  }
 					serviceTplSpecBean.setSpecMaster(serviceSpecMaster);
 					getManagedBean().setServiceTemplateSpecBean(
 							serviceTplSpecBean);
@@ -5036,6 +5127,13 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		// #25886 - start
+		if (getManagedBean().getScQuote().getPurchaseInDefault() != null) {
+			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+			ScQuote scQt = getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+			getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+		}
+		// #25886 - end
 		
 		// Populate General Information tab details saved in session
 		// after returning from Treasury Circular Page
@@ -5796,6 +5894,7 @@ public class SimpleQuoteBackingBean extends
 				
 				byte[] signedData = getManagedBean().getSpkiBackingBean()
 						.spkiSignTransaction(originalText);
+			 if (pmDigiSign != null)//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 				pmDigiSign.setSpkiSignedData(signedData);
 			}
 
@@ -6182,7 +6281,7 @@ public class SimpleQuoteBackingBean extends
 		// WorkFlow Status should be set In the save
 		updateWorkFlowAndRemarks(scQuote);
 
-		scQuote.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+		scQuote.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// zone location level by default - district
 		if (getManagedBean().getLocationLevel() == null) {
@@ -7034,6 +7133,11 @@ public class SimpleQuoteBackingBean extends
 				getManagedBean().setNewableFlag(Boolean.FALSE);
 				getManagedBean().setAddNewSpecFlag(Boolean.TRUE);
 			}
+			//32169 - start
+			if (scQuote.getQuoteZone() != null && (scQuote.getQuoteZone().getTplSpecZoneDtls() == null || scQuote.getQuoteZone().getTplSpecZoneDtls().isEmpty())){
+				preparePanelZones(quotePanelItem,scQuote);
+			}
+			//32169 - end
 		}
 		// duration calc
 		calculateDuration(scQuote);
@@ -7305,6 +7409,17 @@ public class SimpleQuoteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	
+	//#25886 - start
+	/**
+	 * Gets the purchaseindefault so.
+	 *
+	 * @return the purchaseindefault so
+	 */
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+	}
+	//#25886 - end
 	
 	/**
 	 * based on treenode selection button enable/disable.
@@ -7990,8 +8105,8 @@ public class SimpleQuoteBackingBean extends
 			}
 			
 			if(scPID != null){			
-			    if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
-			       || currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
+				 if(currentStatusId != null && (currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
+					|| currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION))){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 		
 					Date today  = DateUtils.getCurrentDate();
 					Date ExpDate = DateUtils.addDays(scPID.getChangedDate(), scPID.getPidValidDays());
@@ -8152,7 +8267,9 @@ public class SimpleQuoteBackingBean extends
 					minMinutes = ruleValue.getFromValue();
 					maxMinutes = ruleValue.getToValue();
 					minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-					maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+					//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+					maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
+					//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 				}
 				if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
 					maxiDays = maxiDays + maxDays.intValue();
@@ -8165,7 +8282,9 @@ public class SimpleQuoteBackingBean extends
 					}
 
 					BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
-					diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+					//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+					diff = diff.divide(BigDecimal.valueOf(60L*1000), 2, RoundingMode.HALF_UP);
+					//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 					/*
 					
 					BigDecimal twentyFour = BigDecimal.valueOf(24);
@@ -8206,7 +8325,9 @@ public class SimpleQuoteBackingBean extends
 				Date startDate = quote.getStartDate();
 				
 				maxMinutes = new BigDecimal(4320); // equals to 3 days
-				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
+				//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 				quote.setEndDate(DateUtils.addDays(startDate, maxDays.intValue()));
 			}			
 		}
@@ -8267,4 +8388,18 @@ public class SimpleQuoteBackingBean extends
 			return sb.toString();
 		}
 	    //29832 - end
+		
+	// start - #25790
+	/**
+	 * Redirect to purchase in default view.
+	 * 
+	 * @param purchaseInDefaultId
+	 *            the purchase in default id
+	 */
+	public void viewPurchaseInDefault(long purchaseInDefaultId) {
+		PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+		pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
+	}
+	// end - #25790
 }

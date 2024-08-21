@@ -55,8 +55,9 @@
 		</f:facet>
 		</p:column>
 		<!-- #29187 Start Vinod -->
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;" rendered="#{isScoringReq and isManSpecAndCompliance}">
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:10%; white-space:normal;" rendered="#{isScoringReq and isManSpecAndCompliance}">
 			<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.tec.compliance']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tpl.spec.content.scoring.compliance.tooltip']}" />
 			</f:facet>
@@ -178,6 +179,7 @@
 	<!-- Bug #32378 Farid End related to #21695 -->
 	<p:column style="width:100px;white-space:pre-line;"> <!-- 20220920@syazani - Bug #33859 -->
 		<ui:param name="answerRemark" value="#{fn:replace(tplSpecAnswer.answerRemark,',',',  ')}"></ui:param>
-		#{answerRemark}
+		<!-- #{answerRemark} -->
+		<h:outputText style="word-wrap: break-word; " value="#{answerRemark}" /><!-- Bug #34976 Added Vinod -->
 	</p:column>
 </ui:composition>

@@ -22,6 +22,7 @@
 					  rendered="#{suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
 					  styleClass="leftMargin"/>
 		<br/>	
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pmlb']} " escape="false" /> <ui:remove> #28777#29729 </ui:remove>
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
 			escape="false" />
@@ -50,6 +51,14 @@
 							target="#{supplierDetailBackingBean.scQtProposal}" />
 					<h:outputText value="#{price.scQtProposal.supplierNo}" />
 				</p:commandLink>
+				
+				<ui:remove> #28777#29729 - Start </ui:remove>
+				 <p:spacer width="15" height="15"/>
+                     <p:commandLink  process="@this"  action="#{suppFinalBiddingBackingBean.showSupplierBranchList(price.scBidSupplier.smSupplier.supplierId)}" 
+		         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+						<h:graphicImage value="/css/images/exclam-info.png" />
+	         		</p:commandLink> 
+				<ui:remove> #28777#29729 - End </ui:remove>	
 			</p:column>			
 			
 			<!-- #29466 - START Commented out by Nasim - Note-150-->
@@ -151,7 +160,8 @@
 					  disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions)}" />		
+					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions) or 
+					  									suppFinalBiddingBackingBean.disableRadioButtonIfSupplierBranchDeleted(price.scBidSupplier.smSupplier)}" /> <ui:remove> #28777#29729 </ui:remove>		
 		</p:dataTable>
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"

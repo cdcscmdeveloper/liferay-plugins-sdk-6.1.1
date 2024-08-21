@@ -793,7 +793,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public String preSubmitChangeBankRequest(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
-			pmDigiSign.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			pmDigiSign.setOriginalData(prepareSupplierOriginalText());
 			pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareSupplierOriginalText()));
@@ -864,7 +864,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	 */
 	public String preSubmitFactoringRequest(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null && isSupplierRole() && !hasGovtSellerRole()) {
-			pmDigiSign.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
+			pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			pmDigiSign.setOriginalData(prepareSupplierOriginalText());
 			pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareSupplierOriginalText()));
@@ -1260,7 +1260,7 @@ public void selectFinancialAcc(){
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		
@@ -1577,7 +1577,7 @@ public void selectFinancialAcc(){
 										reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 										userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
 										// Start Fix - #31962
-										List<PmUser> userList_1 = userSO.retrieveUserListByRole(reqDTO).getUserList();
+										List<PmUser> userList_1 = userSO.retrieveUserListByRoleWithLoginHistory(reqDTO).getUserList(); //Fix #36101
 										// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
 										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_1); // Fix - #34213										
 										getManagedBean().setContractAdminlist(userList_1);
@@ -1593,7 +1593,7 @@ public void selectFinancialAcc(){
 									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
 									//Start Fix - #31962
-									List<PmUser> userList_2 = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+									List<PmUser> userList_2 = userSO.retrieveUserListByRoleWithLoginHistory(userReqDTO).getUserList(); //Fix #36101
 									// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
 									userList_2 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_2); // Fix - #34213
 									getManagedBean().setContractAdminlist(userList_2);

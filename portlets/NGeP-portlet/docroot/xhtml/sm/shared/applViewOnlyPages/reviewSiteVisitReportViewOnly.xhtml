@@ -23,9 +23,8 @@
 
 			<!-- #28175 start -->
 			<c:choose>
-				<c:when
-					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{!viewSmApplBackingBean.isLatestCatCodeDesc(false)}">
 					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
 						style="white-space: normal; width:30%;">
 						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"

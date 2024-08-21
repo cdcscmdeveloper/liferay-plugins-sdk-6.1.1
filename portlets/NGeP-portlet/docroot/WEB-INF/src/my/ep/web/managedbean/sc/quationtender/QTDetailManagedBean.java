@@ -117,12 +117,14 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -1572,10 +1574,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal technicalItemScore;
 /** #21695 FARID END*/	
 	private BigDecimal totalScore = new BigDecimal(0);
-	//#29425 - start
-	private boolean newValueValidity;
-	private int newValidityDays;
-	//#29425 - end
 
 	private String locationLevel;
 
@@ -1639,7 +1637,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmParameter pmParam;//bug #30435
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;//#25077
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;//#25077
-	private String scQtAppRequestRemark;//bug #30435
+	private String scQtAppRequestRemarkICT;//#25077
+	private String scQtAppRequestRemarkMITI;//#25077
 	private boolean approverTabLoaded = false;//bug #30435
 	
 	private boolean isApprovalScreen = false;
@@ -1734,6 +1733,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean flagFileAttahmentDeletedICT=false;
 	private boolean flagFileAttahmentDeletedMITI=false;
 	private boolean firstPagePA=false;
+	private List<TabBean> tabOtherApproval;
 	//#25077 - End
 
 	//#25426 - Start
@@ -1749,7 +1749,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo;
+	private boolean isGenInfo = Boolean.FALSE; //Reopen #25726 note 187 - issue 2,4,5
 
 	// #15391 - end
 
@@ -1808,10 +1808,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
 	private String catCodeList;
+	private boolean currentInSpecMaint;//#29732 first time spec maint
+	private boolean categoryDescriptionChange;//#29732 flag to check category has change
+
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
-	private BigDecimal totalmaxscore;
+	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 	
 	private List<BriefingZoneBean> sampleAddressBean;//11104-start
@@ -1855,11 +1858,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;//11104-Reendorse
 	
-	//#34451,#34458,#34450 related to #25138 -start
-	private int wipStatusMax;
-	//#34451,#34458,#34450 related to #25138 -end
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
+	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
+	// Bug #35219@Syazani 07/11/2023 -- End
 	
+	//#29732
+	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -7609,6 +7620,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtCheckSt2techProposal(
 			List<ScQtCheckList> scQtCheckSt2techProposal) {
+		this.scQtCheckSt2techProposalLstClone = CustomUtils.getInstance().deepCopyArrayList(scQtCheckSt2techProposal);	// Bug #35219@Syazani 07/11/2023
 		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
 	}
 
@@ -7639,6 +7651,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtCheckSt2financeProposalList(
 			List<ScQtCheckList> scQtCheckSt2financeProposalList) {
+		this.scQtCheckSt2financeProposalLstClone = CustomUtils.getInstance().deepCopyArrayList(scQtCheckSt2financeProposalList); // Bug #35219@Syazani 07/11/2023
 		this.scQtCheckSt2financeProposalList = scQtCheckSt2financeProposalList;
 	}
 
@@ -10772,6 +10785,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setFirstPagePA(boolean firstPagePA) {
 			this.firstPagePA = firstPagePA;
 		}
+		
+		public List<TabBean> getTabOtherApproval() {
+			return tabOtherApproval;
+		}
+
+		public void setTabOtherApproval(List<TabBean> tabOtherApproval) {
+			this.tabOtherApproval = tabOtherApproval;
+		}
 		//#25077 - End
 		
 		//#25692 End
@@ -10864,35 +10885,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
 			this.committeeUpdateFlow = committeeUpdateFlow;
 		}
-		//#29425 - start
-		/**
-		 * @return the newValueValidity
-		 */
-		public boolean isNewValueValidity() {
-			return newValueValidity;
-		}
-
-		/**
-		 * @param newValueValidity the newValueValidity to set
-		 */
-		public void setNewValueValidity(boolean newValueValidity) {
-			this.newValueValidity = newValueValidity;
-		}
-		
-		/**
-		 * @return the newValidityDays
-		 */
-		public int getNewValidityDays() {
-			return newValidityDays;
-		}
-
-		/**
-		 * @param newValidityDays the newValidityDays to set
-		 */
-		public void setNewValidityDays(int newValidityDays) {
-			this.newValidityDays = newValidityDays;
-		}
-		//#29425 - end
 
 		public boolean isTechnicalOtherCheckList() {
 			return technicalOtherCheckList;
@@ -11062,21 +11054,35 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI) {
 			this.scQtApprovalReqAttachementMITI = scQtApprovalReqAttachementMITI;
 		}
-		// #25077 - End
 		
 		/**
-		 * @return the scQtAppRequestRemark
+		 * @return the scQtAppRequestRemarkICT
 		 */
-		public String getScQtAppRequestRemark() {
-			return scQtAppRequestRemark;
+		public String getScQtAppRequestRemarkICT() {
+			return scQtAppRequestRemarkICT;
 		}
 
 		/**
-		 * @param scQtAppRequestRemark the scQtAppRequestRemark to set
+		 * @param scQtAppRequestRemarkICT the scQtAppRequestRemarkICT to set
 		 */
-		public void setScQtAppRequestRemark(String scQtAppRequestRemark) {
-			this.scQtAppRequestRemark = scQtAppRequestRemark;
+		public void setScQtAppRequestRemarkICT(String scQtAppRequestRemarkICT) {
+			this.scQtAppRequestRemarkICT = scQtAppRequestRemarkICT;
 		}
+
+		/**
+		 * @return the scQtAppRequestRemarkMITI
+		 */
+		public String getScQtAppRequestRemarkMITI() {
+			return scQtAppRequestRemarkMITI;
+		}
+
+		/**
+		 * @param scQtAppRequestRemarkMITI the scQtAppRequestRemarkMITI to set
+		 */
+		public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
+			this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
+		}
+		// #25077 - End
 
 		/**
 		 * @return the approverTabLoaded
@@ -11734,23 +11740,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
 	
-	//#34451,#34458,#34450 related to #25138 -start
-	/**
-	 * @return the max wip 3serangkai
-	 */
-	public int getWipStatusMax() {
-		return wipStatusMax;
-	}
-
-	/**
-	 * @param  max wip check 3serangkai
-	 *            the wipRequired to set
-	 */
-	public void setWipStatusMax(int wipStatusMax) {
-		this.wipStatusMax = wipStatusMax;
-	}
-	//#34451,#34458,#34450 related to #25138 -end
-	
 	// #21692 - start
 	/**
 	 * @return the proposalValidityChangeValue
@@ -11783,7 +11772,93 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
+
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+	/**
+	 * 11104-StartReendose
+	 * @return the existingSampleSpecQuestions
+	 */
+	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
+		return existingSampleSpecQuestions;
+	}
+
+	/**
+	 * @param existingSampleSpecQuestions the existingSampleSpecQuestions to set
+	 */
+	public void setExistingSampleSpecQuestions(
+			Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
+	}//11104-End
 	
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	public List<ScQtCheckList> getScQtCheckSt2techProposalLstClone() {
+		return scQtCheckSt2techProposalLstClone;
+	}
+
+	public void setScQtCheckSt2techProposalLstClone(List<ScQtCheckList> scQtCheckSt2techProposalLstClone) {
+		this.scQtCheckSt2techProposalLstClone = scQtCheckSt2techProposalLstClone;
+	}
+
+	public List<ScQtCheckList> getScQtCheckSt2financeProposalLstClone() {
+		return scQtCheckSt2financeProposalLstClone;
+	}
+
+	public void setScQtCheckSt2financeProposalLstClone(List<ScQtCheckList> scQtCheckSt2financeProposalLstClone) {
+		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
+	}
+	// Bug #35219@Syazani 07/11/2023 -- End
+
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean currentInSpecMaint) {
+		this.currentInSpecMaint = currentInSpecMaint;
+	}
+	
+	public boolean isCategoryDescriptionChange() {
+		return categoryDescriptionChange;
+	}
+
+	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
+		this.categoryDescriptionChange = categoryDescriptionChange;
+	}
+	
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean isFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+	
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
 }
 
 // ***25201

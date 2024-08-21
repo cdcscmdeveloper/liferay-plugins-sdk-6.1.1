@@ -165,8 +165,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					
 		IRPTRequestDtlSO rptRequestDtlSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,IRPTRequestDtlSO.class);
 		if(restDtlDTO.getRptRequestDtl().getCreatedBy() == null){
-			restDtlDTO.getRptRequestDtl().setCreatedBy(getFacesScopes()
-				.getUserSessionBean().getUserId());
+			restDtlDTO.getRptRequestDtl().setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 		}
 		rptRequestDtlSO.saveRPTRequestDtlDTO(restDtlDTO);
 	}

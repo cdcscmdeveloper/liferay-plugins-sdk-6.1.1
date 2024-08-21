@@ -39,9 +39,9 @@
 					<p:selectBooleanCheckbox rendered="#{cc.attrs.showTick}"
 						value="#{cc.attrs.addrObj.sameAsPerm}"
 						disabled="#{cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.addressSsmNull)}"
-						>
+						><!-- #34799 -->
 						<p:ajax event="change" partialSubmit="true" process="@this"
-							listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj)}"
+							listener="#{cc.attrs.bBean.onTickSameAsAddress(cc.attrs.addrSameAsObj,cc.attrs.addrObj,cc.id,cc.attrs.addrObj.sameAsPerm)}"
 							update=":#{p:component(cc.attrs.addrPanelId)}" onstart="blockWidget.show()" 
 							oncomplete="blockWidget.hide()"/>
 					</p:selectBooleanCheckbox>
@@ -195,6 +195,17 @@
 							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 						</p:selectOneMenu> 
+						<!-- #35086 -->
+						<ac:smFieldChangeAlert 
+							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
+								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
+							oriValue="#{cc.attrs.latestAddrObj.smAddress.pmDivision.divisionId}" 
+							currValue="#{cc.attrs.addrObj.smAddress.pmDivision.divisionId}" 
+							alertValue="#{cc.attrs.bBean.getDivisionLabelById(cc.attrs.latestAddrObj.smAddress.pmDivision.divisionId)}"/>
+						<!-- #34159 - START -->
+						<p:message id="#{cc.attrs.divisionId}Msg" for="#{cc.attrs.divisionId}"
+							showSummary="true" showDetail="false" display="icon" />
+						<!-- #34159 - END -->
 					</ui:fragment>
 					</p:outputPanel></td>
 					

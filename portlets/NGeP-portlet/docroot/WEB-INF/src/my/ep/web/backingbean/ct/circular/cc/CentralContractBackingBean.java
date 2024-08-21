@@ -127,6 +127,8 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
+
 
 /**
  * Central Contract Circular Backingbean
@@ -789,7 +791,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			getManagedBean().getCircularVer().getContractAttachments().add(attachment);
@@ -797,7 +799,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			attachment.setFileName(item.getFileName());
 			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-			attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			attachment.setCreatedUser(facesScopes.getUserSessionBean());
 			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			getManagedBean().getCircularVer().getCircularAttachments().add(attachment);
@@ -928,7 +930,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 			if(remarks.size()==0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
-				remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				remark.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setChangedDate(remark.getCreatedDate());
@@ -1100,6 +1102,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); //#30866
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 /#33752 start
 			PanelBackingBean panelBB = new PanelBackingBean();
@@ -1129,6 +1132,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
 			return getManagedBean().getGotoPreviewPage();
+		} else if(circularBB.getManagedBean().isContinuityCircularAuditSearch()){ //Fix -#30866
+			return "/xhtml/ct/viewcontract/resultViewCircularContract.xhtml?faces-redirect=true"; //Fix -#30866
 		} else {
 			return "search.xhtml?faces-redirect=true";
 		}

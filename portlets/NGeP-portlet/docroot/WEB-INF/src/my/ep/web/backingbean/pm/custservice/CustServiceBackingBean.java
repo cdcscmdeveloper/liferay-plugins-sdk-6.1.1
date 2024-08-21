@@ -541,14 +541,13 @@ public class CustServiceBackingBean extends
 
 			loadUserOrgType(user, userOrg);
 			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();
-			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-			userOrg.setChangedBy(loginSessionUserId);
+			userOrg.setChangedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			userOrgList.add(userOrg);
 			user.setPmUserOrgs(userOrgList);
 			reqDTO.setNewRoleList(new ArrayList<PmUserRole>());
 			reqDTO.setRemoveRoleList(new ArrayList<PmUserRole>());
 			loadUserRoles(user, reqDTO);
-			user.setChangedBy(loginSessionUserId);
+			user.setChangedBy(getUserIdSessionFromLoginId()); //#31849 add log key
 			checkChangesAndFillTrackingDiary(user, userOrg, reqDTO);	
 			
 			//Having other active user org?

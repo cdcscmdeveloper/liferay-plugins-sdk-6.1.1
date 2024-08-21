@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -91,6 +92,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -159,6 +161,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class, null);
 			Long qtId = Long.valueOf(dataType.getQtId());
+			getCommitteeSO().initializedFCLegacyCommitteeHistory(qtId);//25037
 			String committeeType = String.valueOf(dataType.getCommitteeType());
 			if (StringUtils.isBlank(committeeType) && 
 					StringUtils.isNotBlank(dataType.getHigherCommitteeType())) {
@@ -331,8 +334,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 					}
 				}
 			} else {
-				List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
-				if (CollectionUtils.isNotEmpty(commMembers)) {
+				List<ScCommitteeMember> commMembers = scCommittee != null ? scCommittee.getScCommitteeMembers():null;//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+				if (commMembers != null && CollectionUtils.isNotEmpty(commMembers)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (ScCommitteeMember member : commMembers) {
 						PmParameter memberRole = member.getMemberRole();
 						if (member.getRepresentativeType() == null && 
@@ -369,7 +372,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
 			if (null == meetingList) {
 				getManagedBean().setScQtMeetings(new ArrayList<ScQtMeeting>());
-			}
+			}else{//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			ScQtMeeting meeting = new ScQtMeeting();
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
@@ -379,6 +382,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			meetingList.add(meeting);
 			this.getManagedBean().setScQtMeetings(meetingList);
+			}//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			
 		} finally{
 			
 		}
@@ -1442,6 +1447,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 	private void renewSessionAndRetrieve() {
 		ScQt scQt = getManagedBean().getScQt();
 		String taskId = this.getManagedBean().getTaskId();
+		String taskName = this.getManagedBean().getTaskName();//25037
+		Calendar currentTaskCreatedDate = this.getManagedBean().getCurrentTaskCreatedDate();//25037
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
 		String committeeType = this.getManagedBean().getCommitteeType();
@@ -1457,6 +1464,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 		//25037 note 284 - end
 		this.prepareMemberUpdate();//#25027
 		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setTaskName(taskName);//25037
+		this.getManagedBean().setCurrentTaskCreatedDate(currentTaskCreatedDate);//25037
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
 		this.getManagedBean().setCurrentStatusId(currentStatusId);
@@ -1496,7 +1505,18 @@ public class SupplierFinalizationMeetingBackingBean extends
 				sfReqDTO.setSkipMeetingValidation(true);
 				qtSuppFinalizationSO.validateCoordinateMeeting(sfReqDTO);
 			}
-			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());//#25037
+			//25037 - start
+			String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();
+			Paginator historyPaginator = this.getManagedBean().getHistoryPaginator();
+			if (null != historyPaginator && null != historyPaginator.getModel() && historyPaginator.getModel().size() > 1) {
+				ScCommitteeMemberHistory latestHistory = (ScCommitteeMemberHistory) historyPaginator.getModel().get(0);
+				Calendar historyCreatedDate = Calendar.getInstance();
+				historyCreatedDate.setTimeInMillis(latestHistory.getCreatedDate().getTime());
+				boolean isPrepareMeeting = taskName.equals(SCProcessNameConst.COORDINATE_FC_MEETING);
+				reqDTO.setSendDONotification(isPrepareMeeting && historyCreatedDate.compareTo(this.getManagedBean().getCurrentTaskCreatedDate()) > 0);
+			}
+			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());
+			//25037 - end
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -1513,7 +1533,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			//String statusParam = getStatusDescById(getManagedBean().getCurrentStatusId());
 			updateFinalizationBriefingReportStatus(getManagedBean().getScQt().getQtId());
-			String taskName = this.getManagedBean().getTaskName()==null ? "" : this.getManagedBean().getTaskName();
 			if (SCProcessNameConst.FINALISE_FC_SELECTION.equals(taskName) 
 					&& reqDTO.isCommitteeModified() 
 					&& StringUtils.isNotEmpty(navigateTo)) {
@@ -1834,6 +1853,10 @@ if (CollectionUtils.isNotEmpty(
 				meetingList.add(scqtMeeting);
 			}
 		} else {
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (meetingList == null)
+				meetingList = new ArrayList<ScQtMeeting>();
+
 			meetingList.add(scqtMeeting);
 		}
 
@@ -1955,13 +1978,6 @@ if (CollectionUtils.isNotEmpty(
 			}
 			if(CollectionUtils.isNotEmpty(histories)){
 				ScCommitteeMemberHistory history = histories.get(0);
-				if(histories.size()==1){
-					//33908 for 25037- start
-					Long qtId = this.getManagedBean().getScQt().getQtId();
-					this.retriveQTDetails(qtId);
-					this.retriveMeetingDetails(qtId);
-					//33908for 25037- end
-				}
 				@SuppressWarnings("unchecked")
 				List<QtCommitteeMemberBean> prevCommitteeList = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
 				this.getManagedBean().setPrevCommitteeMembers(prevCommitteeList);
@@ -1992,7 +2008,10 @@ if (CollectionUtils.isNotEmpty(
 			}
 			//25037 note 284 - end
 		}catch(IOException e){
-			e.printStackTrace();
+			ScQt scQt = this.getManagedBean().getScQt();
+			String qtNo = scQt == null ? "" : scQt.getQtNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					qtNo, "supplierFinalizationBackingBean.prepareMemberUpdate", getUserIdSessionFromLoginId(), e);
 		}
 		this.getManagedBean().setCurrentCommitteeType(this.getParameterDesc(qtCommittee.getScCommittee().getCommitteeType()));
 		this.getManagedBean().setHistoryPaginator(new Paginator(histories));

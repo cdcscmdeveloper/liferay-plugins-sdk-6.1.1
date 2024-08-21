@@ -40,8 +40,6 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -64,7 +62,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -72,7 +69,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 // #31443 Start
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -989,6 +985,7 @@ public class ConsolidationReportBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
+			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP	
 
 			boolean isMedicalProcCategory = isMultipleProposalCategory(scQt,
 					null);
@@ -1373,6 +1370,10 @@ public class ConsolidationReportBackingBean extends
 
 			resDTO = qtSuppFinalizationSO
 					.retrieveQtEvaluationResultDtls(reqDTO);
+			
+			// #28777 & #29729 - Start
+			this.getManagedBean().setCountSupplierBranchDeleted(resDTO.getTotalQualifiedSuppliersBranchDeleted());
+			// #28777 & #29729 - End
 
 			if (resDTO.isSuccessful()) {
 				return resDTO;
@@ -1615,6 +1616,12 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
+		
+		//#28777 & #29729 - Start
+		if(this.getManagedBean().getCountSupplierBranchDeleted() > 0){
+			minRankCount -= this.getManagedBean().getCountSupplierBranchDeleted(); 
+		}
+		//#28777 & #29729 - End
 
 		if (totalRanksCount < minRankCount) {
 			setZoneAndTabIndexOnException(isItemized, specZoneDtl);
@@ -1721,8 +1728,21 @@ public class ConsolidationReportBackingBean extends
 		populateAttachmentDetails(attachment);
 
 		FacesScopes facesScopes = new FacesScopes();
-		long qtId = qt.getQtId();
-		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+		// #35015 4ser -Start
+				IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+
+				long qtId = qt.getQtId();
+				EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+				req4SerDTO.setQtId(qtId);
+				int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+				String reportName = "";
+				if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
+				} else {
+					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+				}
+				// #35015 4ser -End
 
 		String estimatedAmountStr = null;
 
@@ -1997,6 +2017,10 @@ public class ConsolidationReportBackingBean extends
 				/*
 				 * BUG 32373 #83
 				 */
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
@@ -2330,26 +2354,6 @@ public class ConsolidationReportBackingBean extends
     	  
     	return supplierBranchList;
 	}
-	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplierId 
-	* @param scQt 
-	* @return true or false
-	**/
-	public boolean disableRankIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
-		
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-		
-		boolean isSupplierBranchDeleted = false;
-		if(supplierId != null && scQt != null){
-			if(qtSuppFinalizationSO.isCheckCRandSFCurrentSupplierBranchDeleted(supplierId, scQt)){
-				isSupplierBranchDeleted = false;
-		    }
-		}
-	    return isSupplierBranchDeleted;
-	}
 	//#28777 & #29729 - End
 	
 	//#32398 - Start
@@ -2460,9 +2464,10 @@ public class ConsolidationReportBackingBean extends
 //-------------> HERE #31556 & #31555 related to #21695 Farid START
 					else {
 						for(TplSpecAnswer finditemOfferNonZonal : item.getRequestItem().getTplSpecQuestion().getTplSpecAnswers()){
-							if(finditemOfferNonZonal != null && finditemOfferNonZonal.getRatePerUom().compareTo(BigDecimal.ZERO) > 0
-									&& item.getRequestItem().getQuantity() != null
-										&& item.getRequestItem().getQuantity().compareTo(BigDecimal.ZERO) > 0){
+							BigDecimal rpUOM=finditemOfferNonZonal!=null && finditemOfferNonZonal.getRatePerUom()!=null ? finditemOfferNonZonal.getRatePerUom() : BigDecimal.ZERO;//35329-start
+							BigDecimal quantity=item.getRequestItem()!=null && item.getRequestItem().getQuantity()!=null ? item.getRequestItem().getQuantity() : BigDecimal.ZERO;
+							if (rpUOM.compareTo(BigDecimal.ZERO) > 0
+									&& quantity.compareTo(BigDecimal.ZERO) > 0) {//35329-End
 								log.info("validate nonzonal offer");
 								validateRankingPO(qualifiedSupplierBeans, true, item,
 										specZoneDtl, totalQualifiedSuppliers);

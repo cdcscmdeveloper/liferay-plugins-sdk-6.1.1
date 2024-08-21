@@ -135,6 +135,7 @@ public class QtSpecCloneBackingBean extends
 	private static final String FULFILMENT_SCHEDULE = "lbl.sc.spec.ful.schedule";
 	private static final String SPECIFICATION = "lbl.sc.committee.endorsement.specification";
 	private String scoreTypeN = "";//ahmaa-#25138
+	private static final BigDecimal TECHNICAL_ITEM_SCORE = new BigDecimal(50);//35113
 
 	public QtSpecCloneBackingBean() {
 		this.root = new DefaultTreeNode("Root Node", null);
@@ -415,8 +416,11 @@ public class QtSpecCloneBackingBean extends
 				&& this.getManagedBean().getScQtCheckSt2financeProposalList().size()!=0){
 					
 					for(ScQtCheckList toDelete:this.getManagedBean().getScQtCheckSt2financeProposalList()){
-						//if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
-						//		.equalsIgnoreCase(toDelete.getDefinationType().getParameterCode())) {
+						if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+								.equalsIgnoreCase(toDelete.getDefinationType().getParameterCode()) && this.getManagedBean().getQt().isZonal()) {//34701_start
+							toDelete.setCloned(Boolean.TRUE);	
+							
+						}//34701_start
 							toDelete.setSelected(true);
 							toDelete.setDeleted(true);
 							//toRemove.add(toDelete);
@@ -1927,7 +1931,7 @@ public class QtSpecCloneBackingBean extends
 		SpecificationResDTO resDTO = null;
 		IQTSpecSO specSo = null;
 		try {
-			List<Integer> settinglist = new ArrayList<Integer>();
+			List<Integer> settinglist = new ArrayList<>();//35378
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL);
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_DEMO);
 			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
@@ -1935,11 +1939,10 @@ public class QtSpecCloneBackingBean extends
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
-			deleteTechnicalScoreSetting(reqDTO,"T");
-			
-			if (null != resDTO.getScoreSettingResultBean().getResultList()
-					&& !resDTO.getScoreSettingResultBean().getResultList()
-							.isEmpty()) {
+			deleteTechnicalScoreSetting(reqDTO,ParameterConst.SPECIFICATION_TYPE_TECHNICAL);//35378-start
+			boolean isCloneTechnicalItemExist=Boolean.FALSE;
+			boolean isCurrentTechnicalItemExist=Boolean.FALSE;
+			if (CollectionUtils.isNotEmpty(resDTO.getScoreSettingResultBean().getResultList()) ) {//35378-End
 				
 				for (ScQtScoreSetting recommnendationSetting : resDTO
 						.getScoreSettingResultBean().getResultList()) {
@@ -1958,7 +1961,7 @@ public class QtSpecCloneBackingBean extends
 						
 					}
 					if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-		
+						isCloneTechnicalItemExist=Boolean.TRUE;//35378
 							ScQtScoreSetting settings=copyScoreSettings(recommnendationSetting);
 							this.getManagedBean().setTechnicalItemScoreSetting(
 									settings);
@@ -1967,6 +1970,30 @@ public class QtSpecCloneBackingBean extends
 					
 				}
 			}
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical())){//35378-start
+				for(ScQtScoreSetting technicalCuurentSetting:this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical()){
+					if(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM == technicalCuurentSetting.getSettingType()){
+						isCurrentTechnicalItemExist=Boolean.TRUE;
+						break;
+					}
+				}
+			}
+			boolean isTechnicalSettingItemCreate=(isCloneTechnicalItemExist && isCurrentTechnicalItemExist) || (!isCloneTechnicalItemExist && isCurrentTechnicalItemExist);
+			boolean isTechnicalSettingItem=(isCloneTechnicalItemExist && !isCurrentTechnicalItemExist) || (!isCloneTechnicalItemExist && !isCurrentTechnicalItemExist);
+			if(isTechnicalSettingItem){
+				this.getManagedBean().setTechnicalItemScoreSetting(null);	
+			}//35378-End
+			boolean isTechnicalItemExist=Boolean.FALSE;//35113-start
+			if (isTechnicalSettingItemCreate && null == this.getManagedBean().getTechnicalItemScoreSetting()) {//35378
+				isTechnicalItemExist=Boolean.TRUE;
+				ScQtScoreSetting technicalItemScoresetting = new ScQtScoreSetting();
+				technicalItemScoresetting.setSettingType(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+				technicalItemScoresetting.setScQt(this.getManagedBean().getQt());
+				technicalItemScoresetting.setOverallTechnical(TECHNICAL_ITEM_SCORE);
+				technicalItemScoresetting.setPassingScore(TECHNICAL_ITEM_SCORE);
+				setUserDetails(technicalItemScoresetting);
+				this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+			}//35113-End
 			
 			settinglist = null;
 			this.getManagedBean().setTechnicalScoring(null);
@@ -2011,7 +2038,9 @@ public class QtSpecCloneBackingBean extends
 				this.getManagedBean().setTechPoints(score);
 				techWeightageSum();
 				techScoreSum();
+				if(!isTechnicalItemExist){//35113-start
 				technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
+				}//35113-End
 				
 			}
 		

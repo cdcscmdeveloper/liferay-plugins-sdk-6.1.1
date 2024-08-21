@@ -23,9 +23,10 @@
 					and backingBean.managedBean.smSupplier.businessType ne 'M' and backingBean.managedBean.smSupplier.businessType ne 'O'
 					and backingBean.managedBean.smSupplier.businessType ne 'P' and backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}" />
 			<!-- 28466 - end -->
-
+			
+			<!-- Disable for UPS 32008 - START -->
 			<table style="width: 100%">
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{backingBean.managedBean.poSecReview.shareholderVerifed}"
@@ -40,7 +41,7 @@
 
 					</tr>
 				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{backingBean.managedBean.apprvrSecReview.shareholderVerifed}"
@@ -56,7 +57,7 @@
 				</p:outputPanel>
 			</table>
 			<p:outputPanel id="shrInfPan" layout="block">
-				<p:blockUI block=":form:tt:shrInfPan" widgetVar="buiPoShr"
+				<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:shrInfPan" widgetVar="buiPoShr"
 					id="poShrBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.shareholderVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.shareholderVerifed : false)}" />
 				<p:dataTable var="shareBean" widgetVar="suppCapShrHldrDtWidVar"
@@ -77,27 +78,27 @@
 					<p:ajax event="rowDblselect"
 						listener="#{backingBean.unSelectAdmin}"
 						update=":form:tt:shrInfPan"></p:ajax>
-					<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.smapplShareHolders}"
+					<p:column selectionMode="multiple" width="1%" rendered="#{(not empty backingBean.managedBean.smapplShareHolders) and (!backingBean.managedBean.upsCannotEdit)}"
 						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner or shareBean.ssmData}" />
 
 
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}"
-						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner} or backingBean.managedBean.upsCannotEdit">
 						<h:outputText value="#{shareBean.name}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
-						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner} or backingBean.managedBean.upsCannotEdit">
 						<h:outputText value="#{shareBean.identificationNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}"
-						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner} or backingBean.managedBean.upsCannotEdit">
 						<h:outputText value="#{shareBean.sharePercentage}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE_EQUITY)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}"
-						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner}">
+						disabledSelection="#{shareBean.prevApprovedDirector or shareBean.prevApprovedEquityOwner} or backingBean.managedBean.upsCannotEdit">
 						<!-- 28466 - start - add mandatory sign (*) and allow supplier to key-in the Value (RM)-->
 						<c:choose>
 							<c:when
@@ -108,7 +109,7 @@
 									<h:outputText value="#{lbl['lbl.sm.shrHldrInfo.shrVal']}" />
 								</f:facet>
 								<!-- #30660 - disable edit -->
-								<p:inputText value="#{shareBean.shareAmt}" disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+								<p:inputText value="#{shareBean.shareAmt}" disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 									<p:ajax event="blur" update="shrPerDt"
@@ -156,7 +157,8 @@
 								<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 							</p:outputPanel>
 							<p:outputPanel rendered="#{!shareBean.prevApprovedEquityOwner and !backingBean.managedBean.disAllowOwnerEdit}">
-								<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+								<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+								<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 							</p:outputPanel>
 							<!-- #END 27165 -->
 						</p:commandLink>
@@ -167,14 +169,17 @@
 				<p:spacer height="2px;" />
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+						rendered="#{!backingBean.managedBean.upsCannotEdit}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
 						update=":form" disabled="#{backingBean.managedBean.disAllowOwnerEdit}"/>
 					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+						rendered="#{!backingBean.managedBean.upsCannotEdit}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_EQUITY,false)}"
 						update=":form:tt:shrPerDt" disabled="#{backingBean.managedBean.disAllowOwnerEdit or empty backingBean.managedBean.selectedShareHolders}"/>
 				</div>
+				<!-- Disable for UPS 32008 - END -->
 				<br />
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 					<table style="width: 50%">

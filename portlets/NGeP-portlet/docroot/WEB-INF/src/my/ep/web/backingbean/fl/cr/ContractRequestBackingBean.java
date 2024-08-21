@@ -1486,9 +1486,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//13984-end
 			
-			//#14650 - Logan - Beginning
-			checkAP59();
-			//#14650 Ending		
+			//35024-start
+			validateBondComplete(getManagedBean().getFlRequest());
+			if(!getManagedBean().isBondIncomplete()){
+				//#14650 - Logan - Beginning
+				checkAP59();
+				//#14650 Ending
+			}
+			//35024-end
 			//29728 - start
 			if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
 					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
@@ -1706,9 +1711,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getVotFundList(jabatanOrgProfileId);
 			//End #29981
 			
-			//#14650 - Alert message if contract incomplete - Start
-			checkAP59();
-			//#14650 - End
+			//35024-start
+			validateBondComplete(getManagedBean().getFlRequest());
+			if(!getManagedBean().isBondIncomplete()){
+				//#14650 - Alert message if contract incomplete - Start
+				checkAP59();
+				//#14650 - End
+			}
+			//35024-end
 		}
 		//26279 - start
 		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
@@ -4270,8 +4280,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	/**
 	 * Page navigation to FLDoc search page in CR
+	 *  
 	 */
-	public String backToPervious() {
+	public String backToPervious(){
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -4279,6 +4290,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
+		//35357-Start
+		else if(getManagedBean().getBackToNtf() != null){
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect(
+						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			} catch (IOException e) {
+				log.error("File:ContractRequestBackingBean Method:backToPervious", e);
+			}
+			return null;
+		}
+		//35357-End
 		else{
 			return "flDocSearch";
 		}
@@ -6337,7 +6359,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setButtonVal(null);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35357
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
@@ -6356,6 +6378,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			getManagedBean().setBackToDocument(null);
+			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			getEspkbCommitmentNo();
@@ -7176,6 +7199,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			reqDTO.setAmount(sumOrderedAmt);
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
 			
+			//35024-Start - for performance bond checking
+			if(!resDTO.isBondComplete() && !resDTO.isCrComplete()) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+				
+			}
+			else //35024-End
 			//28719-start
 			if(!resDTO.isSupplementContractComplete() && !resDTO.isCrComplete()) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -7234,6 +7264,40 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		convertCtAddressToFlAddress(ctSupplierDtl,supplierDtl);
 	}
 	//29728 - End
+	
+	//35024-Start
+	/**
+	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not
+	 * @param flRequest
+	 */
+	private void validateBondComplete(FlFulfilmentRequest flRequest){
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractReqDTO contractReqDTO = new ContractReqDTO();
+		contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
+		contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
+		contractReqDTO.setAsAtDate(new Date());
+		CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
+		
+		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+				&& ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
+				if(!ctContractAmount.isBondWaived()){
+					ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
+					if(!contractResp.isBondComplete()){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_740051, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+						getManagedBean().setBondIncomplete(true);
+					}
+				}else{
+					ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);
+					if(!contractBondWaiver.isBondWaiverPeriod() && contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_740066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+						getManagedBean().setBondIncomplete(true);
+					}														
+				}
+		}			
+	}
+	//35024-Start
 
 
 }
