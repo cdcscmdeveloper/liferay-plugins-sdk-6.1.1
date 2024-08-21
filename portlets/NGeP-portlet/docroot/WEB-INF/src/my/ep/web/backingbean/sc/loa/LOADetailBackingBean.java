@@ -4061,7 +4061,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
 				if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
 					lampiranA3Exists = true;
-					lampiranA3Time = report.getChangedDate(); // #29006 - reendorsed (comment 528)
+					//lampiranA3Time = report.getChangedDate(); // #29006 - reendorsed (comment 528)
 					break;
 				}
 			}			
