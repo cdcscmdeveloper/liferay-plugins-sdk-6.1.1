@@ -9038,7 +9038,10 @@ public class SmApplicationBackingBean extends
 		// try {
 		
 		//#32286 - START
-		assignApplicationSupportingDocs();
+		if (!getManagedBean().getSmAppl().getPmStatus().getStatusId()
+				.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
+			assignApplicationSupportingDocs();
+		}
 		//#32286 - END
 		
 		//#28776 - start
