@@ -1623,8 +1623,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
 						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
 						if(wfStatus.getPmStatus()!=null
-								&& QTStatusConst.QT_RE_FINALIZATION.equals(wfStatus.getPmStatus().getStatusId())
-								&& QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.equals(wfStatus.getPmStatus().getStatusId())) {
+								&& (QTStatusConst.QT_RE_FINALIZATION.equals(wfStatus.getPmStatus().getStatusId())
+								|| QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.equals(wfStatus.getPmStatus().getStatusId()))) {
 							QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
 							qtReqDTO1.setQtdetail(qt);
 							QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
@@ -3680,6 +3680,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM() == null
 					&& this.getManagedBean().getQt().getProposalValidityEndDate().before(new Date())) {
 				this.getManagedBean().getScQtApprovalRequestList().get(0).setDecisionCertPBM(new PmParameter());
+			}
+			
+			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode() != null
+					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
+				this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.TRUE);
+				this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 			}
 		}
 		//#21692 - End
