@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,9 +40,9 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886 
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886 
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -139,7 +138,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBusiness;
+//import my.ep.persistence.entity.sm.SmSupplierBusiness; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -168,7 +167,6 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -4184,19 +4182,14 @@ public class SimpleQuoteBackingBean extends
 	}
 	
 	 //#32855 - start
-	private Boolean isQuaterHourFormat(Date chosenDate){
-		long timeDiff = Math.abs(chosenDate.getTime());
-		String mins = String
-				.format("%d", (TimeUnit.MILLISECONDS
-						.toMinutes(timeDiff) - TimeUnit.HOURS
-						.toMinutes(TimeUnit.MILLISECONDS
-								.toHours(timeDiff))));
-		if (mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30")
-				|| mins.equalsIgnoreCase("45"))
-			return true;
-		
-		return false;
+	//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+	private Boolean isQuaterHourFormat(Date chosenDate) {
+	    long timeDiff = Math.abs(chosenDate.getTime());
+	    String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
+	    return mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30") || mins.equalsIgnoreCase("45");
 	}
+	//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+
 	//#32855 - end
 
 	/**
@@ -5756,13 +5749,12 @@ public class SimpleQuoteBackingBean extends
 		boolean isServiceContainPrice = Boolean.FALSE;
 		boolean isZonalChecking = Boolean.FALSE;
 		// validate tpl spec - product before spki authenticate
-		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean()
-				.getSpecAnswerList();
+		List<TplSpecAnswer> specAnswerList = getManagedBean().getProductTemplateSpecBean().getSpecAnswerList();
 		
 		Locale locale = new FacesScopes().getUserLocale();
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
 			//30552 - start
-			getManagedBean().getProductTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			getManagedBean().getProductTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			// 30552 - end
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
@@ -5776,7 +5768,7 @@ public class SimpleQuoteBackingBean extends
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
 			// 30552 - start
-			getManagedBean().getServiceTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			getManagedBean().getServiceTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			// 30552 - end
 			//#Newly add
 			///#21695 farid start
@@ -5871,13 +5863,11 @@ public class SimpleQuoteBackingBean extends
 			if (getManagedBean().getProductTemplateSpecBean()
 					.getSpecAnswerList() != null) {
 				// #30552 - start
-				if (isProdContainPrice){
-					specAnswers.addAll(getManagedBean()
-							.getProductTemplateSpecBean().getSpecAnswerList());
+				if (isProdContainPrice) {
+					specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList());
 				}else {
-					if (getManagedBean().getProductTemplateSpecBean().getBackupspecAnswerList() != null){
-						specAnswers.addAll(getManagedBean()
-								.getProductTemplateSpecBean().getBackupspecAnswerList());
+					if (getManagedBean().getProductTemplateSpecBean().getBackupSpecAnswerList() != null) {
+						specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getBackupSpecAnswerList());
 					}
 				}
 			
@@ -5919,8 +5909,8 @@ public class SimpleQuoteBackingBean extends
 							.getServiceTemplateSpecBean().getSpecAnswerList());
 				}else {
 					if (!isProduct){
-						if (getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList() != null){
-							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList());
+						if (getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList() != null){
+							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList());
 						}
 					}
 				}
@@ -7933,11 +7923,11 @@ public class SimpleQuoteBackingBean extends
 						}
 						
 						//#32643,32642 - Start (follow from SM bug 28198))
-						List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
+						List<DisciplinaryActionVO> remList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 						
 						List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disciplinaryAction);
 						
-						if(remarksList != null && remarksList.size() > 0){
+						if(remarksList != null && !remarksList.isEmpty()){ //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 							for (SmDisciplinaryActionRemarks remarks : remarksList) {
 								DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
 								rem1.setRemarks(remarks.getRemark());
@@ -7981,8 +7971,8 @@ public class SimpleQuoteBackingBean extends
 							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
 								
 							if(!EntityHelper.isCollectionEmpty(catList)
-									&& catList.size() > 0){
-								List<String> catCodeList = new ArrayList<String>();
+									&& !catList.isEmpty()){ //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
+								List<String> catCodeList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 								for(Object[] arr : catList){
 									if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
 										DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
@@ -8268,8 +8258,12 @@ public class SimpleQuoteBackingBean extends
 			Date endDate = quote.getEndDate();
 			
 			if(startDate != null) {
-				BigDecimal maxDays = BigDecimal.ZERO, minHours = BigDecimal.ZERO;
-				BigDecimal minMinutes = BigDecimal.ZERO, maxMinutes = BigDecimal.ZERO;
+				//[Start] - Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
+				BigDecimal maxDays = BigDecimal.ZERO; 
+				BigDecimal minHours = BigDecimal.ZERO;
+				BigDecimal minMinutes = BigDecimal.ZERO;
+				BigDecimal maxMinutes = BigDecimal.ZERO;
+				//[End] - Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 				//29209 - start
 				PmConfigRuleValue ruleValue = null;
 				String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
@@ -8393,8 +8387,8 @@ public class SimpleQuoteBackingBean extends
 
 		public String addingZeroInfront(Long number){
 			String newnumber ="";
-			if (number < 10 && number >=0){
-				newnumber = "0"+String.valueOf(number);
+			if (number < 10 && number >=0){ //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+				newnumber = "0" + number;
 			}else if (number >= 10 ) {
 				return String.valueOf(number);
 			}
