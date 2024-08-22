@@ -22,11 +22,12 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Prepares audit data
+	 * 
 	 * @param managedBean
-	 * @param org
-	 * @param user
 	 * @param roleCode
-	 *            prepare audit trail data
+	 * @param org
+	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
@@ -78,8 +79,8 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 	private void checkOtherDesc(List<AuditSupplierManagementDetailDTO> auDetails,
 			SmSupplierCategory oldApprovedCategory, SmSupplierCategory newApprovedCategory) {
 		if (oldApprovedCategory.getOtherDesc() == null
-				&& (newApprovedCategory.getOtherDesc() != null && !newApprovedCategory.getOtherDesc().equalsIgnoreCase(
-						""))) {
+				&& (newApprovedCategory.getOtherDesc() != null && !"".equalsIgnoreCase(newApprovedCategory
+						.getOtherDesc()))) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_OTHER_DESCRIPTION, null,
 					newApprovedCategory.getOtherDesc(), null, null,

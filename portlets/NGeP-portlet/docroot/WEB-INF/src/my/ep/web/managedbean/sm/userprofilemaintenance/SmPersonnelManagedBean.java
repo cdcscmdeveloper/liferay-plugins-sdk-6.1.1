@@ -165,12 +165,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	//#34810 - Start
 	private boolean checkingAfterSave;
 	//#34810 - End
-	//#28895_35501 Start - AUDIT TRAIL SM
+	// #28895_35501 Start - AUDIT TRAIL SM
 	private SmSupplier oldSmSupplier;
 	private String oldRole;
 	private String newRole;
 	private PmOrgProfile oldOrg;
-	//#28895_35501 End
+	// #28895_35501 End
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -1143,7 +1143,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.checkingAfterSave = checkingAfterSave;
 	}
 	//#34810 - End
-	//#28895_35501 Start - AUDIT TRAIL SM
+	// #28895_35501 Start - AUDIT TRAIL SM
 	public SmSupplier getOldSmSupplier() {
 		return oldSmSupplier;
 	}
@@ -1175,5 +1175,5 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setOldOrg(PmOrgProfile oldOrg) {
 		this.oldOrg = oldOrg;
 	}
-	//#28895_35501 End
+	// #28895_35501 End
 }

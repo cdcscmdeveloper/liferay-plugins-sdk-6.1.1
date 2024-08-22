@@ -20,11 +20,12 @@ public class AuditSupplierManagementApproverRemarksBackingBean extends AuditSupp
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Prepares audit data
+	 * 
 	 * @param managedBean
-	 * @param org
-	 * @param user
 	 * @param roleCode
-	 *            prepare audit trail data
+	 * @param org
+	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {

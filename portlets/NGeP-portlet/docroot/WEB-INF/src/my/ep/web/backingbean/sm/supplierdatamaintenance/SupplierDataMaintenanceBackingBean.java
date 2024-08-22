@@ -2227,9 +2227,6 @@ public class SupplierDataMaintenanceBackingBean extends
 							disc.getEndDate());
 					discipline.setSuspend(true);
 					getManagedBean().setHasActiveDA(true); //#34626
-					// #28895_35501 Start - AUDIT TRAIL SM
-
-					// #28895_35501 End
 					break;
 				}
 			}

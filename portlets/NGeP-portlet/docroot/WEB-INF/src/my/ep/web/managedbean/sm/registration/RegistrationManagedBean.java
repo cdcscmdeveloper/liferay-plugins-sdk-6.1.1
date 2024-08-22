@@ -1153,6 +1153,4 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	}
 	// #28895_35501 End
 	
-	
-	
 }

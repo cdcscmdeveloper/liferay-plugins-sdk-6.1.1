@@ -7,8 +7,8 @@ import java.util.List;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -36,10 +36,10 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	}
 
 	/**
+	 * Saves audit data
+	 * 
 	 * @param manageBean
 	 * @param userId
-	 * 
-	 *            Save audit data
 	 */
 	public final void saveAuditData(BaseManagedBean manageBean, Long userId) {
 		try {
@@ -92,11 +92,12 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	}
 
 	/**
+	 * Prepares audit data
+	 * 
 	 * @param managedBean
-	 * @param org
-	 * @param user
 	 * @param roleCode
-	 * @return AuSupplierManagementDTO prepare audit trail data
+	 * @param org
+	 * @return AuditSupplierManagementDTO
 	 */
 	public abstract AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode,
 			PmOrgProfile org);
@@ -128,7 +129,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 		}
 		auObj.setRoleCode(roleCode);
-		if(org == null){
+		if (org == null) {
 			auObj.setOrgProfileId(null);
 			auObj.setOrgName(null);
 		} else {

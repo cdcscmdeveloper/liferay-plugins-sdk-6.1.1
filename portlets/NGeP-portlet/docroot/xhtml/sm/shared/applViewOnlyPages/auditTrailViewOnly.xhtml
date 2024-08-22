@@ -1,3 +1,4 @@
+<ui:remove>#28895_35501 - AUDIT TRAIL SM</ui:remove>
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -94,9 +95,9 @@
 				<tr>
 					<td><p:dataTable id="searchAuSmId" var="obj" rows="10"
 							width="100%"
-							value="#{AuditSupplierManagementViewBackingBean.searchAuSm}"
+							value="#{AuditSupplierManagementViewBackingBean.managedBean.searchAuSm}"
 							rowIndexVar="index" lazy="true"
-							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" >
 							<ac:paginator for="searchAuSmId"></ac:paginator>
 							<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
 								style="white-space: normal!important;" width="5%">

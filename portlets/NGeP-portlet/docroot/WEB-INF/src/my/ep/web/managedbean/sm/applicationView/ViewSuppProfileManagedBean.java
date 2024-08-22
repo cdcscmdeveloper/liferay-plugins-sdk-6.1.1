@@ -37,7 +37,6 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
-//#28895_35501 - AUDIT TRAIL SM
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -1035,36 +1034,36 @@ public class ViewSuppProfileManagedBean extends
 	}
 	
 	// #28895_35501 Start - AUDIT TRAIL SM
-		public SmAppl getOldSmAppl() {
-			return oldSmAppl;
-		}
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
 
-		public void setOldSmAppl(SmAppl oldSmAppl) {
-			this.oldSmAppl = oldSmAppl;
-		}
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
 
-		public List<SmSupplierCategory> getOldApprovedCategoryList() {
-			return oldApprovedCategoryList;
-		}
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
 
-		public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
-			this.oldApprovedCategoryList = oldApprovedCategoryList;
-		}
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
 
-		public String getOldPoApprOverlappedRemark() {
-			return oldPoApprOverlappedRemark;
-		}
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
 
-		public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
-			this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
-		}
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
 
-		public String getOldApproverRemark() {
-			return oldApproverRemark;
-		}
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
 
-		public void setOldApproverRemark(String oldApproverRemark) {
-			this.oldApproverRemark = oldApproverRemark;
-		}
-		// #28895_35501 End
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
+	}
+	// #28895_35501 End
 }

@@ -19,9 +19,6 @@ public class AuSmSearchBean implements Serializable {
 	private BigDecimal auGroupSection;
 	private boolean isSearching = true;
 
-	public AuSmSearchBean() {
-	}
-
 	public String getLanguage() {
 		return language;
 	}

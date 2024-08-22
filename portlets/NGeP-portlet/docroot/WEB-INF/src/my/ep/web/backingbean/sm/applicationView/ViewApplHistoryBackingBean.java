@@ -197,19 +197,13 @@ public class ViewApplHistoryBackingBean extends
 				// #28895_35501 Start - AUDIT TRAIL SM
 				} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getManagedBean()
 						.getAccountType())) {
-					SmAppl suppAppl = getManagedBean().getSmAppl();
-					AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-					auSmView.initAuditTab(suppAppl);
+					initAuditTab();
 				}
 			} else if (outputTab == 5) {
-				SmAppl suppAppl = getManagedBean().getSmAppl();
-				AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-				auSmView.initAuditTab(suppAppl);
+				initAuditTab();
 			}
 		} else if (outputTab == 8) {
-			SmAppl suppAppl = getManagedBean().getSmAppl();
-			AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-			auSmView.initAuditTab(suppAppl);
+			initAuditTab();
 		}
 		// #28895_35501 End
 		// 25792 - end
@@ -2091,4 +2085,11 @@ public class ViewApplHistoryBackingBean extends
 						new FacesScopes().getUserLocale())));
 	}
 	// #35336 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private void initAuditTab() {
+		SmAppl suppAppl = getManagedBean().getSmAppl();
+		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+		auSmView.initAuditTab(suppAppl);
+	}
+	// #28895_35501 End
 }

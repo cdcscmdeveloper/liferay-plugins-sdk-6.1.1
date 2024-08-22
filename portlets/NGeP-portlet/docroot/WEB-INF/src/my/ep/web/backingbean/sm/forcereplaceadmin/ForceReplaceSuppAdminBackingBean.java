@@ -79,7 +79,6 @@ import org.primefaces.event.SelectEvent;
 //#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 // #28895_35501 End

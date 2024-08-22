@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -21,11 +21,12 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Prepares audit data
+	 * 
 	 * @param managedBean
-	 * @param org
-	 * @param user
 	 * @param roleCode
-	 *            prepare audit trail data
+	 * @param org
+	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
