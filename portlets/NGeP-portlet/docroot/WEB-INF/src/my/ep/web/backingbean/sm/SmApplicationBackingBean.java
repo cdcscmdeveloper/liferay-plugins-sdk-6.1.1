@@ -16574,27 +16574,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#33569, #28767 - end
 	
 		if(!this.getManagedBean().isCompanyValidWithSSM()){
-//					throw new EpException(MessageConst.ERROR_721070,new String[]{SmCommonUtil.getMessage("lbl.sm.contractor",null), getManagedBean().getSmSupp().getRegNo()});
 			throw new EpException(MessageConst.ERROR_721078);
 		}else{
 			IMofRegistrationSO mofRegistrationSO = null;
-			//save smappl
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
+			// save smappl
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",
+					IMofRegistrationSO.class);
 			MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
 			mofReqDto.setSmAppl(this.getManagedBean().getSmAppl());
-			//#24819
+			
+			// #24819
 			mofReqDto.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
 			mofRegistrationSO.updateSupplierProfile(mofReqDto);
 			MofRegistrationResDTO mofRespDto = mofRegistrationSO.updateSmAppl(mofReqDto);
-			this.getManagedBean().setSmAppl(mofRespDto.getSmAppl());
-			
+			this.getManagedBean().setSmAppl(mofRespDto.getSmAppl());			
 		}
 	
-	}
-	//#27232 - END SSM CHANGES FOR RESUBMIT
-	
+	}	
 	//START : #27239 
 	public void setDeletePersonnel(SmPersonnel personnel){
 		if(personnel.getEpRole() == null && (personnel.isEquityOwner() ||personnel.isDirector())){
