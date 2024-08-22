@@ -2048,7 +2048,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
 							}
 							//delete all old company share #27145
 							Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
@@ -2120,7 +2120,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						//SET EQUITY BRANCH
 						if(ssmResDTO.getSmSupplierBranches() != null){
 							if(this.getManagedBean().getSmAppl().getSmSupplierBranches()==null){
-								this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
+								this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
 							}
 							//#28900
 							for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
@@ -2269,6 +2269,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	//END 28767
 		
+		// 35311 - Start
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+			for (SmFacility facility : getManagedBean().getSmAppl().getSmFacilities()) {
+				if (facility.getFacilityId() != null) {
+					assignApplicationSupportingDocs();
+					break;
+				}
+			}
+		}
+		// 35311 - end
 		subStartTime = System.currentTimeMillis();
 		// set Personnel List Count
 		calcPersonnelListCount();
