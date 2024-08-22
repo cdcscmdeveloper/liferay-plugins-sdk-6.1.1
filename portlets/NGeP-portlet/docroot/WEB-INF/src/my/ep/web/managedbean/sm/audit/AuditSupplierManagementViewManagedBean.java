@@ -3,6 +3,8 @@ package my.ep.web.managedbean.sm.audit;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.context.RequestContext;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
@@ -69,10 +71,10 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 
 		/**
 		 * Handles page changes for the search results in the audit supplier
-		 * management interface.
+		 * management
 		 * 
 		 * @param searchBean
-		 * @return AuditSupplierManagementResDTO
+		 * @return ISearchResultBean<AuditSupplierManagementResDTO>
 		 */
 		@Override
 		public ISearchResultBean<AuditSupplierManagementResDTO> pageChangeListener(
