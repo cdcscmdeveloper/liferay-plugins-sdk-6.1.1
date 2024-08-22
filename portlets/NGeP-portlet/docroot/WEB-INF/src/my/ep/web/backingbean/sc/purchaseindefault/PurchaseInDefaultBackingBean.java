@@ -2221,14 +2221,14 @@ public class PurchaseInDefaultBackingBean extends
 		List <ScPIDRemark> deleteRemarks = new ArrayList<> (); //#28865 - minor fixing 22/09/2022 //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		try {
 			//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-			boolean shouldBreak = false;
+			//boolean shouldBreak = false; //#36311 - Sqube DP Code Smell Major G97
 			for (ScPIDRemark remark : getManagedBean().getSuppRemarks()) {
 				if (remark.getRemark() != null && !remark.getRemark().equalsIgnoreCase("")) {
 					if (remark.getRemarkId() == null && getManagedBean().getSuppRemarkId() == null) {
 						reqDTO.setScPIDRemark(remark);
 						PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.updateRemark(reqDTO);
 						getManagedBean().setSuppRemarkId(resDTO.getScPIDRemark().getRemarkId());
-						shouldBreak = true;
+						break;//#36311 - Sqube DP Code Smell Major G97
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2237,7 +2237,7 @@ public class PurchaseInDefaultBackingBean extends
 					fetchRemark.setCreatedBy(remark.getCreatedBy());
 					reqDTO.setScPIDRemark(fetchRemark);
 					purchaseInDefaultSO.updateRemark(reqDTO);
-					shouldBreak = true;
+					break;//#36311 - Sqube DP Code Smell Major G97
 				}
 				//#28865 - minor fixing 22/09/2022-start
 				else{
@@ -2246,9 +2246,9 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}//#28865 - minor fixing 22/09/2022-end
 				
-				if (shouldBreak) {
+				/*if (shouldBreak) {
 			        break;
-			    }
+			    }*/  //#36311 - Sqube DP Code Smell Major G97
 			}
 			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			//#28865 - minor fixing 22/09/2022 -start
