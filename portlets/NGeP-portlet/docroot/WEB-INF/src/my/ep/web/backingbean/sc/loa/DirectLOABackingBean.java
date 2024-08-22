@@ -12469,7 +12469,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put(SSTConstant.specType, specType);
 					map.put(SSTConstant.itemType, itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					//log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024] //#36309 - Sqube DP Code Smell Critical G100
 					map.put(SSTConstant.rowSpan, rowspan);
 					listZonalDLSpec.add(map);
 				}
@@ -12574,7 +12574,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put(SSTConstant.specType, specType);
 					map.put(SSTConstant.itemType, itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					//log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024] //#36309 - Sqube DP Code Smell Critical G100
 					map.put(SSTConstant.rowSpan, rowspan);
 					listZonalDLSpec.add(map);
 				}
@@ -12596,7 +12596,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				map.put(SSTConstant.specType, specType);
 				map.put(SSTConstant.itemType, itemType);
 				int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-				log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+				//log.info("Calculate "+ rowspan); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024] //#36309 - Sqube DP Code Smell Critical G100
 				map.put(SSTConstant.rowSpan, rowspan);
 				listZonalDLSpec.add(map);
 			}
