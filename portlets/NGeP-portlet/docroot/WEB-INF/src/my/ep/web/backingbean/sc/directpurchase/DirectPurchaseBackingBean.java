@@ -656,8 +656,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				rnBackingBean.getManagedBean().setPurchaseRequestId(purchaseRequestId);
 				//28878 - End
 				//#36119 - start
-				//rnBackingBean.getManagedBean().setSourcingDpNewBpmVer(validateSupportedTask(requestNote.getRequestNoteNo(), SourcingConstants.DP_MAINTENANCE_CANCEL_CODIFY_PR));
-				rnBackingBean.getManagedBean().setSourcingDpNewBpmVer(true);
+				rnBackingBean.getManagedBean().setSourcingDpNewBpmVer(validateSupportedTask(requestNote.getRequestNoteNo(), SourcingConstants.DP_MAINTENANCE_CANCEL_CODIFY_PR));
 				rnBackingBean.getManagedBean().setSupplierId(supplierId);
 				//#36119 - end
 				if (null != requestNote.getCreatedBy()) {
