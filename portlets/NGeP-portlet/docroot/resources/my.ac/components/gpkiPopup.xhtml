@@ -19,6 +19,15 @@
 
 	<cc:implementation>
 	<script>
+		var runGPKIEnableAutoUpdate = true;
+		function setRunGPKIEnableAutoUpdate(runGPKIEnableAutoUpdate) {
+		  this.runGPKIEnableAutoUpdate = runGPKIEnableAutoUpdate;
+		}
+
+		function isRunGPKIEnableAutoUpdate() {
+		  return this.runGPKIEnableAutoUpdate;
+		}
+		
 		function signSkipToken(){
 			var textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
 			postSignAction([ {name : 'textBeforeSign', value : textBeforeSign} ]);
@@ -27,6 +36,9 @@
 		<!-- #35488 -->
 		<p:remoteCommand name="errorAction"
 			action="#{gpkiBackingBean.showError}" />
+		<p:remoteCommand name="postSignAction"
+			onstart="setRunGPKIEnableAutoUpdate(false);"
+			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" />
 		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
 			value="#{cc.attrs.textBeforeSign}" />
 			

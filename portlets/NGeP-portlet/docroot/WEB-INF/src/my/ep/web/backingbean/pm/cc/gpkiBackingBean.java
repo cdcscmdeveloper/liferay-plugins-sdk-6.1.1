@@ -18,6 +18,8 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -190,8 +192,12 @@ public class gpkiBackingBean implements Serializable {
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
+		String field = map.get("field");
 		if (extMsg != null && extMsg.trim().length() > 0) {
 			statusMsg = extMsg;
+		}
+		if(field != null){
+			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
