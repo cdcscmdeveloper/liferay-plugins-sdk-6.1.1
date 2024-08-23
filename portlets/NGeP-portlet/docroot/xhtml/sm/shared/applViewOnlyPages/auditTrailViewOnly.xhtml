@@ -17,7 +17,7 @@
 						<div align="right" style="vertical-align: top; width: 100%">
 							<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
 								ajax="false">
-								<!-- 								<p:fileDownload value="" /> -->
+							<p:fileDownload value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetailsAll(21311)}" />
 							</p:commandLink>
 							&#160;
 							<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
@@ -44,6 +44,8 @@
 										title="#{lbl['lbl.audit.tab.user.profile']}" />
 									<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
 										title="#{lbl['lbl.audit.tab.deactive.replace.sup.admin']}" />
+									<p:tab id="#{SupplierManagementConst.auTabIdDisciplinaryActionInfo}"
+										title="#{lbl['lbl.audit.tab.disciplinary.action']}" />	
 								</c:when>
 								<c:when
 									test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
@@ -61,14 +63,13 @@
 										title="#{lbl['lbl.audit.tab.cancel.registered.category']}" />
 									<p:tab id="#{SupplierManagementConst.auTabIdSupplierInfo}"
 										title="#{lbl['lbl.audit.tab.supplier.information']}" />
-									<p:tab
-										id="#{SupplierManagementConst.auTabIdApprovedCategoryCodeInfo}"
+									<p:tab id="#{SupplierManagementConst.auTabIdDisciplinaryActionInfo}"
+										title="#{lbl['lbl.audit.tab.disciplinary.action']}" />
+									<p:tab id="#{SupplierManagementConst.auTabIdApprovedCategoryCodeInfo}"
 										title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
-									<p:tab
-										id="#{SupplierManagementConst.auTabIdOverlappingRemarkInfo}"
+									<p:tab id="#{SupplierManagementConst.auTabIdOverlappingRemarkInfo}"
 										title="#{lbl['lbl.audit.tab.overlapping.category']}" />
-									<p:tab
-										id="#{SupplierManagementConst.auTabIdApproverRemarkInfo}"
+									<p:tab id="#{SupplierManagementConst.auTabIdApproverRemarkInfo}"
 										title="#{lbl['lbl.audit.tab.approver.remark']}" />
 									<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 										title="#{lbl['lbl.audit.tab.user.profile']}" />
@@ -86,7 +87,7 @@
 							</p:commandLink>
 							&#160;
 							<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
-								<!-- 								<p:fileDownload value="" /> -->
+							<p:fileDownload value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails(21311)}" />
 							</p:commandLink>
 							&#160;
 						</div>
