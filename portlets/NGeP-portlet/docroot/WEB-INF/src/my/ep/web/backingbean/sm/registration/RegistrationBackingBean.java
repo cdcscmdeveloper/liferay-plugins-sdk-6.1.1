@@ -2600,13 +2600,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								//27691 END
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
-							// 27691 - Start 
+							// 27691 - Start #29582 add isForeigner
 							if (smSupp.getBusinessType().equals("J")
 									|| smSupp.getBusinessType().equals("I")){
 								if (personnel.isDirector() && personnel.getIdentificationType() != null			
 										&& personnel.getIdentificationType().getParameterCode()		
 										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)
-										&& !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+										&& !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+										&& personnel.isForeigner()){
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
 								}
 							}
@@ -2707,6 +2708,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupp().getBusinessType());
+					ssmReqDTO.setRegAccountMaintainance(this.getManagedBean().isRegAccountMaintainance());//29582
 					//#29114, CR 27382: Static Code Analysis Start
 					/*
 					if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
