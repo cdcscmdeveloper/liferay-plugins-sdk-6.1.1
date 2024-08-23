@@ -32,12 +32,13 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sc.actor.IScActorSO;
+import my.ep.biz.service.sc.quationtender.IQTAuditTrailsSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -55,6 +56,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
+import my.ep.dto.sc.quationtender.AuditTrailsReqDTO;
+import my.ep.dto.sc.quationtender.AuditTrailsResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
@@ -98,7 +101,9 @@ import my.ep.web.bean.sc.quatationtender.DeskOfficerMaintenanceSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.constant.sc.QTAuditConstant;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.deskofficermaintenance.DeskOfficerMaintenanceManagedBean;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
@@ -124,7 +129,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	private static final Logger log = EpLogger.getLogger(DeskOfficerMaintenanceBackingBean.class);
 	
 	private PagingDataModel<PmUser> userListDataModel = new UserPagingDataModel();
-	
+
 	//25627 for 31303 code review start
 	private static final String PAGE_DESKOFFICER_MAINTENANCE = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
 	private static final String PAGE_DESKOFFICER_MAINTENANCE_APPROVAL = "/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApproval.xhtml";
@@ -1157,6 +1162,13 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		try{
 			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			//#28895-35500
+			IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+			IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+			List<AuditTrailsReqDTO> auditReqList = new ArrayList<>();
+			
 			int successCount = 0;
 			for (Map.Entry<Long, PmUser> entry : this.getManagedBean().getQtNoDeskOfficerMap().entrySet()){
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
@@ -1180,8 +1192,15 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setQtdetail(qt);
 				reqDTO.setDeskOfficer(entry.getValue());
 				resDTO = null;
+					
+				//#28895-35500
+				AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
+
 				if(!isCommitteeApprover() && isDeskOfficer()){
-					resDTO = detailSO.submitDOReassignment(reqDTO);	
+					resDTO = detailSO.submitDOReassignment(reqDTO);
+					
+					auditResDTO.setOldValue(this.getManagedBean().getOriginalDeskOfficer().getUserName());
+					auditResDTO.setOldValueId(this.getManagedBean().getOriginalDeskOfficer().getUserId());
 				}else if(isCommitteeApprover()){
 				
 					IScActorSO scActorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
@@ -1200,12 +1219,35 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 					reqDTO.setCAApprover(getFacesScopes().getUserSessionBean());//25627 - update 233
 					resDTO = detailSO.reassignDeskOfficer(reqDTO);
+					
+					auditResDTO.setOldValue(originalDO.getUserName());
+					auditResDTO.setOldValueId(originalDO.getUserId());
 				}
-
+				if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+					auditResDTO.setRoleCode(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())? RoleCode.COMMITTEE_APPROVER.value():RoleCode.DESK_OFFICER.value());
+					auditResDTO.setOrganizationProfileId(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId());
+					auditResDTO.setDocTypeId(qt.getProcurementMode().getParameterId());
+					auditResDTO.setDocNo(qt.getQtNo());
+					auditResDTO.setDocId(qt.getQtId());
+					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+					auditResDTO.setStatusId(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())? QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED:QTStatusConst.PENDING_DESK_OFFICER_MAINTENANCE_APPROVAL);
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DO_NEW_ASSIGNED_DESK_OFFICER);
+					auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());	
+					auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DO);
+					auditResDTO.setNewValue(entry.getValue().getUserName());
+					auditResDTO.setNewValueId(entry.getValue().getUserId());
+					
+					AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+					auditReqList.add(auditReqDTO);
+				}
+				
 				if(resDTO.isSuccessful()){
 					successCount ++;
 				}
 			}  
+			qtAuditTrailsSO.insertAuditTrails(auditReqList);
+			//#28895-35500 end
+			
 			String msgCode = this.isCommitteeApprover() ? "INFO-760490" : "INFO-760492";
 			if(successCount ==  this.getManagedBean().getQtNoDeskOfficerMap().size()){
 			
@@ -1280,12 +1322,15 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			this.getManagedBean().getCurrentApproval().setScQt(qt);
 			this.getManagedBean().setOriginalDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getOriginalValue())));
 			this.getManagedBean().setNewDeskOfficer(this.retrivePmUser(Long.parseLong(currentApprovalRequest.getChangedValue())));
+			this.getManagedBean().setNewTempDeskOfficer(
+					this.retrivePmUser(Long.parseLong(currentApprovalRequest.getChangedValue()))); //28895-35500
 			page = PAGE_DESKOFFICER_MAINTENANCE_APPROVAL;//25627 for 31303 code review
 			
 		}
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
+		
 	}
 	
 	public String requestTypeDescription(Long requestId){
@@ -1309,6 +1354,15 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				reqDTO.setDigiSignData(digisign);
 				QuationTenderResDTO resDTO = getQTDetailSO().updateDOReasignmentTask(reqDTO);
+				
+				//#28895-35500
+				IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+				IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+					prepareAuditTrailsDeskOfficer(qtAuditTrailsSO);
+				}
 				
 				if(resDTO.isSuccessful()){
 					String msgCode = outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) ? "INFO-760490" : "INFO-760491";
@@ -1461,4 +1515,45 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			getManagedBean().setDisableAssign(true);
 		}
 	}
+		
+		
+	/**
+	 * Prepare audit trails parameters for Desk Officer
+	 * @param qtAuditTrailsSO
+	 */
+	private void prepareAuditTrailsDeskOfficer(IQTAuditTrailsSO qtAuditTrailsSO) {
+		List<AuditTrailsReqDTO> auReqList = new ArrayList<>();
+		AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
+
+		auditResDTO.setRoleCode(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value()) ? RoleCode.COMMITTEE_APPROVER.value() : RoleCode.DESK_OFFICER.value());
+		auditResDTO.setOrganizationProfileId(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId());
+		auditResDTO.setDocTypeId(this.getManagedBean().getCurrentApproval().getScQt().getProcurementMode().getParameterId());
+		auditResDTO.setDocNo(this.getManagedBean().getCurrentApproval().getScQt().getQtNo());
+		auditResDTO.setDocId(this.getManagedBean().getCurrentApproval().getScQt().getQtId());
+		auditResDTO.setStatusId(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED);
+		auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
+		auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DO_NEW_ASSIGNED_DESK_OFFICER);
+		auditResDTO.setOldValue(this.getManagedBean().getOriginalDeskOfficer().getUserName());
+		auditResDTO.setOldValueId(this.getManagedBean().getOriginalDeskOfficer().getUserId());
+		auditResDTO.setNewValue(this.getManagedBean().getNewDeskOfficer().getUserName());
+		auditResDTO.setNewValueId(this.getManagedBean().getNewDeskOfficer().getUserId());
+		Long newTempDoId = this.getManagedBean().getNewTempDeskOfficer().getUserId();
+		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DO);
+
+		if (auditResDTO.getNewValueId().compareTo(newTempDoId) == 0
+				&& (auditResDTO.getStatusId().compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_APPROVED) == 0 
+					|| auditResDTO.getStatusId().compareTo(QTStatusConst.DESK_OFFICER_MAINTENANCE_REJECTED) == 0)) {
+			auditResDTO.setOldValue(null);
+			auditResDTO.setOldValueId(null);
+			auditResDTO.setNewValue(null);
+			auditResDTO.setNewValueId(null);
+			auditResDTO.setActionType(null);
+		}
+
+		AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+
+		auReqList.add(auditReqDTO);
+		qtAuditTrailsSO.insertAuditTrails(auReqList);
+	}		
 }

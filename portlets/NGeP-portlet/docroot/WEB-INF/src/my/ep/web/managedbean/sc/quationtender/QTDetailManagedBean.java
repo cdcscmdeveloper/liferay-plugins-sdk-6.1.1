@@ -1871,6 +1871,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
 	
+	//28895 - 35500
+	/** The newly added sc qt committee */
+	private List<ScCommitteeMember> newScCommitteeMemberList;
+	//28895-35500
+	/** The pmuser contactperson list that had been deleted */
+	private List<ScQtContactPerson> pmuserDeletedContactpersonList;
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -3446,6 +3453,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
+	
 
 	/**
 	 * Gets the tab list.
@@ -11870,6 +11878,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
 	}
 	
+	public List<ScQtContactPerson> getPmuserDeletedContactpersonList() {
+		return pmuserDeletedContactpersonList;
+	}
+
+	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmuserDeletedContactpersonList) {
+		this.pmuserDeletedContactpersonList = pmuserDeletedContactpersonList;
+	}
+
+	public List<ScCommitteeMember> getNewScCommitteeMemberList() {
+		return newScCommitteeMemberList;
+	}
+
+	public void setNewScCommitteeMemberList(List<ScCommitteeMember> newScCommitteeMemberList) {
+		this.newScCommitteeMemberList = newScCommitteeMemberList;
+	}
+
 	/**
 	 * @return the isFromSubmitCatChange
 	 */
