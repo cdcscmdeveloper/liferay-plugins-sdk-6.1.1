@@ -4163,7 +4163,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-
+		IRequestNoteSO requestNoteSO = null; //#36119
+		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
 			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: "
@@ -4184,19 +4185,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
-
-			cancelRN(prObj, prSize);
-
+			
 			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
 			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
 			IPurchaseRequestSO purchaseRequestSO = null;
-			IRequestNoteSO requestNoteSO = null;
+			
 			try {
 				purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IPurchaseRequestSO.class);
 
 				requestNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IRequestNoteSO.class);
+				
+				//#36119 - start
+				if(getManagedBean().isSourcingDpNewBpmVer()){
+					RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+					if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
+						rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
+						rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
+						requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+					}				
+				} else{
+					cancelRN(prObj, prSize);
+				}
+				//#36119 - end
 
 				if (null != purchaseRequest && null != purchaseRequestSO) {
 
@@ -6639,4 +6651,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// end - #25790
+	
+	//#36119 - start
+	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO){
+		reloadRequestNoteForCodification(requestNoteResDTO);
+	}
+	//#36119 - end
 }

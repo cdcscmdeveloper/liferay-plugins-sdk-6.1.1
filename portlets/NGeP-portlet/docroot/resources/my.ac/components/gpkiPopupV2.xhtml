@@ -63,6 +63,10 @@
 					gpkiBlockWidget.show();
 					const pin = $("[id='#{pin.clientId}']").val();
 					const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
+					if(pin === ""){
+						this.mandatoryError($("label[id$='pinLbl']").text());
+						return;
+					}
 					sign("token", nric, pin, textBeforeSign, "false", "data");
 				};
 				
@@ -70,12 +74,25 @@
 					gpkiBlockWidget.show();
 					const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
 					const pin = $("[id='#{pin2.clientId}']").val();
+					if(pin === ""){
+						this.mandatoryError($("label[id$='pin2Lbl']").text());
+						return;
+					}
 					const otpCode = $("[id='#{otpPin.clientId}']").val();
+					if(otpCode === ""){
+						this.mandatoryError($("label[id$='otpLbl']").text());
+						return;
+					}
 					const data = encodeURIComponent(Gpki.hash(textBeforeSign));
 					sign_roaming(nric, nonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
 				};
 				
 				this.otpExp = function(){	return otpExp;	};
+				
+				this.mandatoryError = function(f){
+					errorAction([{name: 'field', value: f}]);
+					gpkiBlockWidget.hide();
+				};
 			}).apply(gpki);
 			
 			function parseResultMedium(msg) {
@@ -204,21 +221,18 @@
 				<ac:instructionText value="#{lbl['lbl.gpki.otp.notes']}" rendered="#{gpkiBackingBean.isMediumTypeOTP()}"/>
 			</div>
 			
-			<h:panelGrid columns="4" cellpadding="4" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}">
-				<h:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
+			<h:panelGrid columns="3" cellpadding="5" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}">
+				<p:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" id="pinLbl" styleClass="required" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="gpki.signToken();" />
 			</h:panelGrid>
 			
-			<h:panelGrid columns="5" cellpadding="5" id="otpPnl" rendered="#{gpkiBackingBean.isMediumTypeOTP()}">
-				<h:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel for="password2" value="#{lbl['lbl.gpki.otp.pin']}" />
+			<h:panelGrid columns="4" cellpadding="5" id="otpPnl" rendered="#{gpkiBackingBean.isMediumTypeOTP()}">
+				<p:outputLabel for="password2" value="#{lbl['lbl.gpki.otp.pin']}" id="pin2Lbl" styleClass="required" />
 				<p:password binding="#{pin2}" id="password2" />
 				<h:outputLabel/><h:outputLabel/>
 				
-				<h:outputLabel value="*" styleClass="mandatory" />
-				<h:outputLabel for="otpcode" value="#{lbl['lbl.gpki.otp.code']}" />
+				<p:outputLabel for="otpcode" value="#{lbl['lbl.gpki.otp.code']}" id="otpLbl" styleClass="required" />
 				<p:inputText binding="#{otpPin}" id="otpcode" />
 				<p:commandButton id="signOtpBtn" value="#{lbl['lbl.btn.sign']}" onstart="gpki.signRoam();"/>
 				<p:commandButton value="#{lbl['lbl.gpki.otp.resend']}" id="resendOtpBtn" onclick="gpki.requestOtp();" 
