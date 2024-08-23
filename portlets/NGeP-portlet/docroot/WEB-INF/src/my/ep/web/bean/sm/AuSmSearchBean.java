@@ -13,11 +13,19 @@ public class AuSmSearchBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private String reqType;
 	private String language;
 	private BigInteger docId;
 	private String docType;
 	private BigDecimal auGroupSection;
-	private boolean isSearching = true;
+
+	public String getReqType() {
+		return reqType;
+	}
+
+	public void setReqType(String reqType) {
+		this.reqType = reqType;
+	}
 
 	public String getLanguage() {
 		return language;
@@ -49,13 +57,5 @@ public class AuSmSearchBean implements Serializable {
 
 	public void setAuGroupSection(BigDecimal auGroupSection) {
 		this.auGroupSection = auGroupSection;
-	}
-
-	public boolean isSearching() {
-		return isSearching;
-	}
-
-	public void setSearching(boolean isSearching) {
-		this.isSearching = isSearching;
 	}
 }
