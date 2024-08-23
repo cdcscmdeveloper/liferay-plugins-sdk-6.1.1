@@ -12887,6 +12887,7 @@ public class SmApplicationUtil {
 			}
 		} else {
 			// initialize po inquiry
+			bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 	}
