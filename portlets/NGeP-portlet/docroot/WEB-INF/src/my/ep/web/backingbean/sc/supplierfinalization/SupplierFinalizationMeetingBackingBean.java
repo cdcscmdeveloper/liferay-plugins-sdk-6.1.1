@@ -29,11 +29,13 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.IAuditTrailsSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.quationtender.IQTAuditTrailsSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -42,6 +44,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTAuditConstant;
 import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -57,6 +60,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.AuditTrailsReqDTO;
+import my.ep.dto.sc.quationtender.AuditTrailsResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -854,6 +859,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		List<ScCommitteeMember> memberList = addExistingUser();
 		if (memberList != null){
 			committeeMemberList.addAll(memberList);
+			this.getManagedBean().setNewCommitteeList(memberList);//28895-35500
 		}
 		Collections.sort(committeeMemberList);
 		
@@ -880,18 +886,23 @@ public class SupplierFinalizationMeetingBackingBean extends
 							= getManagedBean().getCommitteeMembersList();
 		
 			List<ScCommitteeMember> localList=new ArrayList<ScCommitteeMember>();
+			List<ScCommitteeMember> newCommitteeMember = this.getManagedBean().getNewCommitteeList() != null
+					? this.getManagedBean().getNewCommitteeList() : new ArrayList<ScCommitteeMember>() ;//28895-35500
 			
 			if (CollectionUtils.isNotEmpty(currentCommitteeMemList)) {
-				
 				for(ScCommitteeMember committeemember:currentCommitteeMemList){
 					if(committeemember.isSelected()){
 						localList.add(committeemember);
-					}
+						newCommitteeMember.remove(committeemember);//28895-35500
+					}				
 				}
 				if(CollectionUtils.isNotEmpty(localList)){
 				
 				currentCommitteeMemList.removeAll(localList);
-				
+				//28895-35500 Start
+				this.getManagedBean().setRemoveCommitteeList(localList);
+				this.getManagedBean().setNewCommitteeList(newCommitteeMember);
+				//28895-35500 End
 				}
 			}
 				prepareToDeleteCommitteeMembers(localList);
@@ -2009,6 +2020,10 @@ if (CollectionUtils.isNotEmpty(
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){
 			validateCommitteeChanges();
+			List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeList() != null
+					? this.getManagedBean().getNewCommitteeList() : new ArrayList<ScCommitteeMember>();
+			List<ScCommitteeMember> deletedCommitteeMembers = this.getManagedBean().getRemoveCommitteeList() != null
+					? this.getManagedBean().getRemoveCommitteeList() : new ArrayList<ScCommitteeMember>();
 			if(finalBB!=null){
 				finalBB.getManagedBean().setCommitteModified(this.getManagedBean().isCommitteeModified());
 				this.getManagedBean().setTaskName(finalBB.getManagedBean().getTaskName());
@@ -2043,6 +2058,8 @@ if (CollectionUtils.isNotEmpty(
 				saveAction();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
 			}
+		
+			prepareCommitteeAuditTrails(newCommitteeMembers,deletedCommitteeMembers);//28895-35500
 		}
 	}
     private void restoreUnconfirmChanges(){
@@ -2279,4 +2296,75 @@ if (CollectionUtils.isNotEmpty(
 		return secretaryMember;
 	}
 	//#31870 - END
+	
+	/**
+	 * 28895-35500 inserting audit trails for Committee Formation
+	 * @param reqDTO
+	 */
+	private void prepareCommitteeAuditTrails(List<ScCommitteeMember> newCommitteeMembers,List<ScCommitteeMember> deletedCommitteeMembers) {
+		IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+		IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+		
+		if ((CollectionUtils.isNotEmpty(newCommitteeMembers) || CollectionUtils.isNotEmpty(deletedCommitteeMembers)) &&
+				auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+			
+			AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
+
+			auditResDTO.setOrganizationProfileId(this.getManagedBean().getScQt().getOrgProfileId());
+			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
+			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
+			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
+			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+
+			ArrayList<AuditTrailsReqDTO> auditReqList = new ArrayList<>();
+			List<AuditTrailsReqDTO> newCommitteeList = insertCommitteeAuditTrails(auditResDTO,newCommitteeMembers
+					,QTAuditConstant.AU_TYPE_CREATE,qtAuditTrailsSO);
+			List<AuditTrailsReqDTO> deleteCommitteeList = insertCommitteeAuditTrails(auditResDTO,deletedCommitteeMembers
+					,QTAuditConstant.AU_TYPE_DELETE,qtAuditTrailsSO);								
+			
+			auditReqList.addAll(newCommitteeList);
+			auditReqList.addAll(deleteCommitteeList);
+
+			qtAuditTrailsSO.insertAuditTrails(auditReqList);
+		}
+	}
+	
+	/**
+	 * Method to insert  audit trails list for New/Delete Committee Members
+	 * @param auditResDTO
+	 * @param reqDTO
+	 * @param committeeMembers
+	 * @param type
+	 * @param qtAuditTrailsSO
+	 * @return
+	 */
+	public List<AuditTrailsReqDTO> insertCommitteeAuditTrails(AuditTrailsResDTO auditResDTO,
+			List<ScCommitteeMember> committeeMembers,String type,IQTAuditTrailsSO qtAuditTrailsSO) {
+		List<AuditTrailsReqDTO> auditReqList = new ArrayList<>();
+		
+		for (ScCommitteeMember committeeMember : committeeMembers) {
+			auditResDTO.setActionType(type);
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			auditResDTO.setRoleCode(RoleCode.QCA_SECRETARY.value());
+			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_NAME);
+			auditResDTO.setNewValue(committeeMember.getMemberName());
+			AuditTrailsReqDTO auditReqDTOName = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+			auditReqList.add(auditReqDTOName);
+
+			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_IDENTIFICATION);
+			auditResDTO.setNewValue(committeeMember.getPmUser().getIdentificationNo());
+			AuditTrailsReqDTO auditReqDTOIdentification = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+			auditReqList.add(auditReqDTOIdentification);
+
+			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_ROLE);
+			auditResDTO.setNewValue(committeeMember.getMemberRole().getParameterCode());
+			AuditTrailsReqDTO auditReqDTORole = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+			auditReqList.add(auditReqDTORole);
+
+		}
+		return auditReqList;
+	}
 }

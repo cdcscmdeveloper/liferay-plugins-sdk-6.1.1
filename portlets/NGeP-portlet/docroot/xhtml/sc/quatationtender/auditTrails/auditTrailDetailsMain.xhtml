@@ -1,0 +1,175 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<div class="BtnSpacing" style="display: inline-block; width: 100%">
+						<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+							action="#{auditTrailsBackingBean.backAction}" />
+					</div>
+				</td>
+				<td>
+					<div align="right" style="width: 100%">
+						<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
+							ajax="false">
+							<p:fileDownload
+								value="#{auditTrailsBackingBean.generateAllReport(auditTrailsBackingBean.managedBean.qtId)}" />
+						</p:commandLink>
+						&#160;
+						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
+							ajax="false">
+							<p:fileDownload
+								value="#{auditTrailsBackingBean.getAllAuditTrailDetailsForExlRpt(auditTrailsBackingBean.managedBean.qtId)}" />
+						</p:commandLink>
+						&#160;
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true"
+			closable="true">
+			<div align="left" class="header-info header-spacing">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 10%;"></td>
+					</tr>
+
+				</table>
+			</div>
+			<td>
+				<div align="right" style="width: 100%">
+					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+						<p:fileDownload
+							value="#{auditTrailsBackingBean.generateReport(auditTrailsBackingBean.managedBean.qtId)}" />
+					</p:commandLink>
+					&#160;
+					<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
+						<p:fileDownload
+							value="#{auditTrailsBackingBean.generateRptExcelForAuditTrailDetails(auditTrailsBackingBean.managedBean.qtId)}" />
+					</p:commandLink>
+					&#160;
+				</div>
+			</td>
+
+			<p:tabMenu id="tab"
+				activeIndex="#{auditTrailsBackingBean.managedBean.activeIndex}"
+				style="width: 100%;">
+				<p:menuitem value="#{lbl['lbl.audit.tab.general.information']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(0)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.brief.site.visit']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(1)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.tab.supplier.list']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(2)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.desk.officer.assistant']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(3)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.tab.desk.officer']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(4)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.spec.committee.appoint']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(5)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.eval.committee.appoint']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(6)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.tech.committee.appoint']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(7)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.opening.committee.appoint']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(8)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.quot.committee.appoint']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(9)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+				<p:menuitem value="#{lbl['lbl.audit.procurement.board.appoint']}"
+					actionListener="#{auditTrailsBackingBean.onTabMenuChangeAction(10)}"
+					process="@form" update="@form" partialSubmit="true"
+					style="width:80%;">
+				</p:menuitem>
+			</p:tabMenu>
+
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '0'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/generalInformationTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '1'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/briefingOrSiteVisitTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '2'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/supplierListTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '3'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/deskOfficerAssistant.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '4'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/deskOfficerTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '5'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/specComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '6'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/evalComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '7'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/techComAppointTab.xtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '8'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/openingComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '9'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/quotationComAppointTab.xhtml" />
+			</c:if>
+			<c:if
+				test="#{auditTrailsBackingBean.managedBean.activeIndex eq '10'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/procureBoardAppointTab.xhtml" />
+			</c:if>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

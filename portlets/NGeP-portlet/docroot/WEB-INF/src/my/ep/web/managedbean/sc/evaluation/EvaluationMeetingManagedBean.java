@@ -130,6 +130,9 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
 	/** The remove committee list. */
 	private List<ScCommitteeMember> removeCommitteeList;
+	
+	/** #28895 - 35500 The new committee list. */
+	private List<ScCommitteeMember> newCommitteeList;
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -971,4 +974,12 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.userCommitteeSearchBean = userCommitteeSearchBean;
 	}
 	//12471 - end
+
+	public List<ScCommitteeMember> getNewCommitteeList() {
+		return newCommitteeList;
+	}
+
+	public void setNewCommitteeList(List<ScCommitteeMember> newCommitteeList) {
+		this.newCommitteeList = newCommitteeList;
+	}
 }

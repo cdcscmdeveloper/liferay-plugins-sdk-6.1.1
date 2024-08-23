@@ -1610,6 +1610,13 @@ public class QTCommitteBackingBean extends
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		Collections.sort(scCommittee.getScCommitteeMembers(),new MemberRoleComparator());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
+		
+		//28895-35500
+		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList())
+				? this.getManagedBean().getNewScCommitteeMemberList() : new ArrayList<ScCommitteeMember>();
+		newScCommitteeMemberList.addAll(toBeAddedList);
+		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);
+
 		}
 		setQtMaintencesChanges();
 		getManagedBean().setNameRequired(false);
@@ -1623,6 +1630,7 @@ public class QTCommitteBackingBean extends
 	 * Reset.
 	 */
 	public void reset() {
+		debugLogger("reset");
 		//12471 - start
 		resetCommitteeSearchBean(this.getManagedBean().getQt());
 		getManagedBean().getUserSearchCommitteeDataModel().resetData();
@@ -1864,6 +1872,9 @@ public class QTCommitteBackingBean extends
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.add(this.getManagedBean().getSelectedTabIndex(), bean);
+		//28895 - 35500
+		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList())
+				? this.getManagedBean().getNewScCommitteeMemberList() : new ArrayList<ScCommitteeMember>();	
 		for (int i = 0; i < selectedList.size(); i++) {
 			log.debug("====delete committee member name==="+selectedList.get(i).getMemberName());
 			scCommitte.getScCommitteeMembers().remove(selectedList.get(i));
@@ -1873,9 +1884,15 @@ public class QTCommitteBackingBean extends
 				selectedList.get(i).setRepresentativeType(null);
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
+				//28895 - 35500
+				if (!(newScCommitteeMemberList == null || newScCommitteeMemberList.isEmpty())) {
+					newScCommitteeMemberList.remove(selectedList.get(i));
+				}				
 			}
 			
-		}
+		}		
+		//28895-35500
+		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);//28895
 
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);
