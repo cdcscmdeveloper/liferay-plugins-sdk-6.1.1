@@ -66,7 +66,7 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = 1L;
 
 		public SearchAuSmPagingDataModel() {
-			super("searchAuSmId", true);
+			super("searchAuSmId", isLazy);
 		}
 
 		/**
@@ -82,7 +82,7 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 			try {
 				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				return auditSmSo.searchAuditSupplierManagement(auSmSearchBean.getLanguage(), auSmSearchBean.getDocId(),
+				return auditSmSo.searchAuditSupplierManagement(auSmSearchBean.getReqType(),auSmSearchBean.getLanguage(), auSmSearchBean.getDocId(),
 						auSmSearchBean.getDocType(), auSmSearchBean.getAuGroupSection(), searchBean);
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve",

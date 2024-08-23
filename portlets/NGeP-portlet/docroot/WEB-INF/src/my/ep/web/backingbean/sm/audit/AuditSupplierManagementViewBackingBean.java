@@ -35,6 +35,10 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 	 */
 	public void initAuditTab(SmAppl smAppl) {
 		AuSmSearchBean auSmSearchBean = new AuSmSearchBean();
+		auSmSearchBean.setReqType(AuditSupplierManagementConst.P_REQUEST_TYPE_APP);
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		auSmSearchBean.setLanguage(language);
+		auSmSearchBean.setDocId(BigInteger.valueOf(smAppl.getSmSupplier().getSupplierId()));
 		getManagedBean().setSmAppl(smAppl);
 		String tabName = "";
 		if (smAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
@@ -48,9 +52,6 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 			tabName = SupplierManagementConst.AU_TAB_ID_BANK_INFO;
 		}
-		auSmSearchBean.setDocId(BigInteger.valueOf(smAppl.getSmSupplier().getSupplierId()));
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		auSmSearchBean.setLanguage(language);
 		getManagedBean().setAuSmSearchBean(auSmSearchBean);
 		getManagedBean().setActiveIndex(0);
 		loadAuditInfo(tabName);
