@@ -9463,6 +9463,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		}
 		//#28776 - end
+		//#34392 - start
 		//#32286 - START
 		if (!getManagedBean().getSmAppl().getPmStatus().getStatusId()
 				.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
@@ -9476,6 +9477,7 @@ public class SmApplicationBackingBean extends
 					.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
 				validateSupportingDocs();
 			}
+		//#34392 - end
 		} else {
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
