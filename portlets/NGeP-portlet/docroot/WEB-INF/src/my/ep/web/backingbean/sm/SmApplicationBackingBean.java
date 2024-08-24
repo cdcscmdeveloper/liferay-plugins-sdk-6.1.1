@@ -15357,7 +15357,8 @@ public class SmApplicationBackingBean extends
 			//SET EQUITY COMPANY
 			//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
 			// #30660
-			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
+			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && (ssmResDTO.getSmEquityCompanys()!=null && !ssmResDTO.getSmEquityCompanys().isEmpty()) && !dontGetSsmData){
+			//if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 				this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 				if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
 					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
