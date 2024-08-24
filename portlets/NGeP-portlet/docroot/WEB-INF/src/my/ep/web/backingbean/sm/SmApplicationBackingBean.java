@@ -49,6 +49,7 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -81,6 +82,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -2451,6 +2453,34 @@ public class SmApplicationBackingBean extends
 			addNewBranch(branches, ssmBranch);
 		}
 	}//#28900- end
+
+	private SmSupplierBranch findBranchByName(List<SmSupplierBranch> branches,String branchName) {
+		for (SmSupplierBranch branch : branches) {
+			if (branch.getBranchName().trim().equalsIgnoreCase(branchName)
+					&& !branch.isCopy()) {
+				return branch;
+			}
+		}
+		return null;
+	}
+
+	private void updateExistingBranch(SmSupplierBranch existingBranch,SmSupplierBranch ssmBranch) {
+		existingBranch.setCopy(true);
+		existingBranch.setSmAddress(SmCommonUtil.cloneAddress(ssmBranch
+				.getSmAddress()));
+		// #32725 - start
+		existingBranch.setBranchName(ssmBranch.getBranchName().trim());
+		existingBranch.setSsmData(true);
+		// #32725 - end
+	}
+
+	private void addNewBranch(List<SmSupplierBranch> branches,SmSupplierBranch ssmBranch) {
+		ssmBranch.setCopy(true);
+		ssmBranch.setRevNo(SupplierManagementConst.DEFAULT_REV_NO); // #32725
+		branches.add(ssmBranch);
+	}
+
+	// #31549 end
 
 	private SmSupplierBranch findBranchByName(List<SmSupplierBranch> branches,String branchName) {
 		for (SmSupplierBranch branch : branches) {
@@ -8977,8 +9007,8 @@ public class SmApplicationBackingBean extends
 		// #34392 - start
 		for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			if(!smDocu.isVerified()){
-				replaceNewFile(smDocu);	
+			if (!smDocu.isVerified() && smDocu.getNewAddedFiles() != null) {
+				replaceNewFile(smDocu);
 			}
 		}
 		// #34392 - end
@@ -9036,7 +9066,10 @@ public class SmApplicationBackingBean extends
 		// try {
 		
 		//#32286 - START
-		assignApplicationSupportingDocs();
+		if (!getManagedBean().getSmAppl().getPmStatus().getStatusId()
+				.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
+			assignApplicationSupportingDocs();
+		}
 		//#32286 - END
 		
 		//#28776 - start
@@ -9048,7 +9081,10 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-			validateSupportingDocs();
+			if (!getManagedBean().getSmAppl().getPmStatus().getStatusId()
+					.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
+				validateSupportingDocs();
+			}
 		} else {
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
@@ -15710,6 +15746,7 @@ public class SmApplicationBackingBean extends
 	 * inquiry row select
 	 */
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
+		resetSmApplSupportDocInquiries(applInquiry);
 		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
 		// #34392 - START
 		getManagedBean().setMandatoryDocsInquiry(
@@ -15718,6 +15755,7 @@ public class SmApplicationBackingBean extends
 				new ArrayList<SmApplSupportDocInquiry>());
 		for (SmApplSupportDocInquiry doc : applInquiry
 				.getSmApplSupportDocInquiries()) {
+			doc.setSmApplInquiry(applInquiry);
 			doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
 			if (doc.getPmDocument().isMandatory()) {
 				getManagedBean().getMandatoryDocsInquiry().add(doc);
@@ -15779,6 +15817,24 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	// 14530 - END
+	
+	// #34392 - start
+	/**
+	 * re-select inquiry before opening popup
+	 * @param applInquiry 
+	 */
+	public void resetSmApplSupportDocInquiries(SmApplInquiry applInquiry) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+		SupportingDocInquiryResDTO resDTO = reqSO
+				.retrieveInquiryByApplInquiryId(applInquiry.getApplInquiryId());
+		applInquiry.setSmApplSupportDocInquiries(
+						resDTO.getSmApplInquiry()
+								.getSmApplSupportDocInquiries());
+	}
+
+	// #34392 - end
 	
 	//12492 - START
 	public void CheckBankAccountInfoForm(String fromPage) {
