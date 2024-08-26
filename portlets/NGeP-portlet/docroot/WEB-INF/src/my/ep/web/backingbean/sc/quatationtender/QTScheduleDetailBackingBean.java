@@ -430,7 +430,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
-		//28895 - 35500 start
+		// 28895 - 35500 start
 		List<ScQtContactPerson> deletedContactList = new ArrayList<>();
 		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
 
@@ -440,12 +440,12 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
 				deletedContactList.add(contactPerson);
-				if (newDoaList != null && newDoaList.contains(contactPerson)){
+				if (newDoaList != null && newDoaList.contains(contactPerson)) {
 					newDoaList.remove(contactPerson);
 				}
 			}
 			this.getManagedBean().setPmuserDeletedContactpersonList(deletedContactList);
-			//28895 - 35500 end
+			// 28895 - 35500 end
 		}
 		this.getManagedBean().setSelectedpmuserContactpersonList(null);
 	}

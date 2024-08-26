@@ -3714,21 +3714,21 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	     * @param scQt
 	     * @param groupTabSection
 	     */
-	public void prepareQtMaintenanceAuditTrails(ScQt scQt, Long groupTabSection,QuationTenderReqDTO reqDTO) {
+	public void prepareQtMaintenanceAuditTrails(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
-		IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+		IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+				IAuditTrailsSO.class);
 		if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 			AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
 			List<AuditTrailsReqDTO> auditReqList = new ArrayList<>();
-			
+
 			auditResDTO.setOrganizationProfileId(scQt.getOrgProfileId());
 			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 			auditResDTO.setDocId(scQt.getQtId());
 			auditResDTO.setDocNo(scQt.getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			if (groupTabSection != null) {//BSV Audit Trails Section
+			if (groupTabSection != null) {// BSV Audit Trails Section
 				auditResDTO.setAuGroupSectionId(groupTabSection);
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 				auditResDTO.setStatusId(QTStatusConst.BSV_COMPLETED);
@@ -3736,7 +3736,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				auditReqList.add(auditReqDTO);
 
 				qtAuditTrailsSO.insertAuditTrails(auditReqList);
-			}else if (reqDTO != null){//DOA Audit Trails Section
+			} else if (reqDTO != null) {// DOA Audit Trails Section
 				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 					auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				} else {
@@ -3744,19 +3744,20 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
 				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
-			
-				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)){
+
+				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
-					List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList()== null ? new ArrayList<ScQtContactPerson>():reqDTO.getDeletedDoaaList();	
-					List<ScQtContactPerson> newDoaList =  reqDTO.getDoaaList()== null? new ArrayList<ScQtContactPerson>():reqDTO.getDoaaList();
-				
+					List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
+							: reqDTO.getDeletedDoaaList();
+					List<ScQtContactPerson> newDoaList = reqDTO.getDoaaList() == null ? new ArrayList<ScQtContactPerson>()
+							: reqDTO.getDoaaList();
+
 					for (ScQtContactPerson add : newDoaList) {
 						auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);
 						auditResDTO.setNewValue(add.getUser().getUserName());
 						auditResDTO.setNewValueId(add.getUser().getUserId());
 
 						AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
-
 						auditReqList.add(auditReqDTO);
 					}
 					for (ScQtContactPerson remove : removedList) {
@@ -3766,13 +3767,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						auditResDTO.setOldValueId(remove.getUser().getUserId());
 
 						AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
-
 						auditReqList.add(auditReqDTO);
 					}
 				} else {
-					if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)){
+					if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
 						auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
-					}else{
+					} else {
 						auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
 					}
 					AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);

@@ -1876,7 +1876,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> newScCommitteeMemberList;
 	//28895-35500
 	/** The pmuser contactperson list that had been deleted */
-	private List<ScQtContactPerson> pmuserDeletedContactpersonList;
+	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11879,11 +11879,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	
 	public List<ScQtContactPerson> getPmuserDeletedContactpersonList() {
-		return pmuserDeletedContactpersonList;
+		return pmUserDeletedContactPersonList;
 	}
 
-	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmuserDeletedContactpersonList) {
-		this.pmuserDeletedContactpersonList = pmuserDeletedContactpersonList;
+	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
 	}
 
 	public List<ScCommitteeMember> getNewScCommitteeMemberList() {

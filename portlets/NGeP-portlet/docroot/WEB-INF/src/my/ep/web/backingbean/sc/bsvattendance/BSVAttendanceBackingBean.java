@@ -755,8 +755,8 @@ public class BSVAttendanceBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			//28895-35500
-			List<ScQtBsvRegistration> newBriefingRegistrationList = getManagedBean().getNewBriefingRegistrationList() != null 
-					? getManagedBean().getNewBriefingRegistrationList(): new ArrayList<ScQtBsvRegistration>() ;
+			List<ScQtBsvRegistration> newBriefingRegistrationList = getManagedBean().getNewBriefingRegistrationList() != null ? getManagedBean()
+					.getNewBriefingRegistrationList() : new ArrayList<ScQtBsvRegistration>();
 
 			try {
 				for (int i = 0; i < mofAccounts.size(); i++) {
@@ -779,14 +779,15 @@ public class BSVAttendanceBackingBean extends
 					}
 					setSlectedHeaderName(bsvRegistration.getSupplier()
 							.getCompanyName().concat("  ").concat(">"));
-					//28895-35500 Start
+					// 28895-35500 Start
 					newBriefingRegistrationList.add(bsvRegistration);
 				}
 				this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
 			} catch (Exception ex) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-						this.getManagedBean().getScQt().getQtNo(), "BSVAttendanceBackingBean.bsvRegistationListner", getUserIdSessionFromLoginId(), ex);
-			}//28895-35500 End
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION,
+						ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getScQt().getQtNo(),
+						"BSVAttendanceBackingBean.bsvRegistationListner", getUserIdSessionFromLoginId(), ex);
+			}// 28895-35500 End
 			//#29770 - #26247 - End.
 		}
 	}
