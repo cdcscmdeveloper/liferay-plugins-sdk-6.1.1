@@ -9878,11 +9878,12 @@ public class SupplierFinalizationBackingBean extends
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(parameterId);
 		ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-
 		String parameterCode = resDTO.getPmParameter().getParameterCode();
+		boolean isInactiveCommiteeRole = isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode);
+		
 		if (ParameterConst.WITH_OUT_SPEC_CHANGES.equalsIgnoreCase(parameterCode)
 				|| ParameterConst.WITH__SPEC_CHANGES.equalsIgnoreCase(parameterCode)
-				&& isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {// #25426#264
+				&& isInactiveCommiteeRole) {// #25426#264
 			throw new EpException(MessageConst.ERROR_760486);
 		}
 	}
@@ -9900,9 +9901,9 @@ public class SupplierFinalizationBackingBean extends
 		boolean isTwoTierEvaluation = ParameterConst.EVALUATION_TYPES_TWO_TIER.equals(scQt.getEvaluationType());
 		boolean isExistingCommittee = ParameterConst.REEVALUATION_COMMITTEE_MEMBERS_EXISTING.equals(scQtFinalization
 				.getReEvaluateCommitte());
+		boolean isInactiveCommiteeRole = isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode);
 
-		if (((isOneTierEvaluation || isTwoTierEvaluation) && isExistingCommittee)
-				&& isInactiveCommiteeRole(scQtFinalization, stageType, decisionTypeCode)) {
+		if (((isOneTierEvaluation || isTwoTierEvaluation) && isExistingCommittee) && isInactiveCommiteeRole) {
 			String errorMessage = isOneTierEvaluation ? MessageConst.ERROR_760487 : MessageConst.ERROR_760488;
 			throw new EpException(errorMessage);
 		}
@@ -9917,8 +9918,7 @@ public class SupplierFinalizationBackingBean extends
 	 * @return
 	 */
 	public boolean isInactiveCommiteeRole(ScQtFinalization scQtFinalization, String stageType, String decisionTypeCode) { // #25426#264
-		Long qtId = Long.valueOf(scQtFinalization.getScQt().getQtId());
-		log.info("--isInactiveRole QTID " + qtId);
+		Long qtId = scQtFinalization.getScQt().getQtId();
 		ICommitteSO committeeSO = null;
 		try {
 			committeeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
