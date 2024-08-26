@@ -192,6 +192,8 @@ public class ViewSuppProfileManagedBean extends
 	
 	private boolean hasActiveDA; //#34626
 	
+	private Map<Long, String> tempCategoryLs; //#34209
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -1011,4 +1013,12 @@ public class ViewSuppProfileManagedBean extends
 		this.hasActiveDA = hasActiveDA;
 	}
 	//#34626 - end
+
+	public Map<Long, String> getTempCategoryLs() {
+		return tempCategoryLs;
+	}
+
+	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
+		this.tempCategoryLs = tempCategoryLs;
+	}
 }

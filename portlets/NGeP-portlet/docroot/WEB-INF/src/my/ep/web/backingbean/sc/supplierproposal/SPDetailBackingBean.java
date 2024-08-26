@@ -1283,6 +1283,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
+				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
 				if (templateSpecBeans.size() > 0) {
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
@@ -1351,8 +1352,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							}
 							toDeleteZoneAnswers = null;
 						}
+						activeTemplateSpecBeans.add(templateSpecBean);//#34363 - note 50 - Added - Vinod
 					}
 				}
+				//#34363 - note 50 - Start - Vinod
+				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
+						&& null != getManagedBean().getQt()
+						&& getManagedBean().getQt().isPartial()) {
+					checkAllUnitPriceForPartialOffer(activeTemplateSpecBeans);
+				}
+				//#34363 - note 50 - End - Vinod
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
 			} else {
@@ -6637,4 +6646,26 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 	}
 	//#21695 - End
+	
+	// #34363 - note 50 - Start - Vinod
+	/**
+	 * 
+	 * @param activeTemplateSpecBeans
+	 *            This method is added to validate unit price for all zones if
+	 *            the qt is partial offer
+	 */
+	private void checkAllUnitPriceForPartialOffer(
+			List<TemplateSpecBean> activeTemplateSpecBeans) {
+		List<TemplateSpecBean> templateSpecBeans = activeTemplateSpecBeans;
+		for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
+			for (TplSpecAnswer specAnswer : templateSpecBean
+					.getSpecAnswerList()) {
+				BigDecimal ratePerUom = specAnswer.getRatePerUom();
+				if (ratePerUom == null) {
+					throw new EpException(MessageConst.ERROR_760464);
+				}
+			}
+		}
+	}
+	// #34363 - note 50 - End - Vinod
 }
