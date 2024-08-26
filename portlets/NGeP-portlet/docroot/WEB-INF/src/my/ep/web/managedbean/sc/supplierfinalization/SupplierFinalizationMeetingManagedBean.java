@@ -55,6 +55,12 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingMember> previousCommitteeMembers;
 	/* Enhancement #21694 END*/
 	
+	//28895-35500 Start
+	private List<ScCommitteeMember> removeCommitteeList;
+	private List<ScCommitteeMember> newCommitteeList;
+	
+	//28895-35500 END
+	
 	private List<SelectItem> selections;
 	private String tabTitle;
 	private String name = null;
@@ -687,4 +693,21 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.cmtAppointmentApprovalRemarks = cmtAppointmentApprovalRemarks;
 	}
 	//25037 note 284 - end
+
+	public List<ScCommitteeMember> getRemoveCommitteeList() {
+		return removeCommitteeList;
+	}
+
+	public void setRemoveCommitteeList(List<ScCommitteeMember> removeCommitteeList) {
+		this.removeCommitteeList = removeCommitteeList;
+	}
+
+	public List<ScCommitteeMember> getNewCommitteeList() {
+		return newCommitteeList;
+	}
+
+	public void setNewCommitteeList(List<ScCommitteeMember> newCommitteeList) {
+		this.newCommitteeList = newCommitteeList;
+	}
+
 }
