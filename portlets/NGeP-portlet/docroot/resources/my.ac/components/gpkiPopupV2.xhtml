@@ -12,8 +12,6 @@
 			update="gpki_dlg2" oncomplete="gpki_dlg.hide(); gpki_dlg2.show();"/>
 		<p:remoteCommand name="getUser" action="#{gpkiBackingBean.getUserDetails()}" 
 			oncomplete="gpki.setUser(xhr,status,args); "/>
-		<p:remoteCommand name="postSignOTP" 
-			action="#{gpkiBackingBean.postSignActionOTP(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" />
 		<p:remoteCommand name="toggleBtn" action="#{gpkiBackingBean.toggleBtn()}" update="resendOtpBtn"/>
 		<h:outputScript library="ep/gpki_js" name="gpki-api-v2.js" />
 
@@ -221,30 +219,31 @@
 				<ac:instructionText value="#{lbl['lbl.gpki.otp.notes']}" rendered="#{gpkiBackingBean.isMediumTypeOTP()}"/>
 			</div>
 			
-			<h:panelGrid columns="3" cellpadding="5" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}">
+			<h:panelGrid columns="4" cellpadding="5" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}">
 				<p:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" id="pinLbl" styleClass="required" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="gpki.signToken();" />
+				
+				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
+				<p:commandButton id="skipBtn1" value="Sign W/O Token"  
+					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 			
-			<h:panelGrid columns="4" cellpadding="5" id="otpPnl" rendered="#{gpkiBackingBean.isMediumTypeOTP()}">
+			<h:panelGrid columns="5" cellpadding="5" id="otpPnl" rendered="#{gpkiBackingBean.isMediumTypeOTP()}">
 				<p:outputLabel for="password2" value="#{lbl['lbl.gpki.otp.pin']}" id="pin2Lbl" styleClass="required" />
 				<p:password binding="#{pin2}" id="password2" />
-				<h:outputLabel/><h:outputLabel/>
+				<h:outputLabel/><h:outputLabel/><h:outputLabel/>
 				
 				<p:outputLabel for="otpcode" value="#{lbl['lbl.gpki.otp.code']}" id="otpLbl" styleClass="required" />
 				<p:inputText binding="#{otpPin}" id="otpcode" />
 				<p:commandButton id="signOtpBtn" value="#{lbl['lbl.btn.sign']}" onstart="gpki.signRoam();"/>
 				<p:commandButton value="#{lbl['lbl.gpki.otp.resend']}" id="resendOtpBtn" onclick="gpki.requestOtp();" 
 					disabled="#{gpkiBackingBean.getBtn()}"/>
+				
+				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
+				<p:commandButton id="skipBtn2" value="Sign W/O Token"  
+					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
-			
-			<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
-			<p:commandButton id="signButtonId1" value="Sign W/O Token"  
-					onstart="gpkiBlockWidget.show(); signSkipToken();" oncomplete="gpkiBlockWidget.hide();" 
-					rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" >
-				<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
-			</p:commandButton>
 		</p:panel>
 	</p:dialog>
 </ui:composition>

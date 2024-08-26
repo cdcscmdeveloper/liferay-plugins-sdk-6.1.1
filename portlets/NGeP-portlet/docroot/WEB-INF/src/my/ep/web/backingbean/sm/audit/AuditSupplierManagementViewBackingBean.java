@@ -100,7 +100,7 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(9));
 			break;
 		default:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(0));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(null);
 		}
 		getManagedBean().getSearchAuSm().reloadData();
 	}
