@@ -18,6 +18,8 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmCommonUtil;
+
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -190,8 +192,12 @@ public class gpkiBackingBean implements Serializable {
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
+		String field = map.get("field");
 		if (extMsg != null && extMsg.trim().length() > 0) {
 			statusMsg = extMsg;
+		}
+		if(field != null){
+			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
@@ -256,11 +262,7 @@ public class gpkiBackingBean implements Serializable {
 			ContextualCompositeMethodExpression enableAutoUpdateMtd){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
-		Map<String, String> dnMap = splitSubjectDN(map.get("subjectDN"));
-		
-		boolean isEqualNric = dnMap.get(serialNumber).equals(nric) || dnMap.get(sn).equals(nric)
-				|| dnMap.get(surname).equals(nric);
-		if(isGpkiNewRoaming() && !isEqualNric){
+		if(!isValidNric(map)){
 			fc.addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
 					"Token's certificate not match with signer identity."));
 			return null;
@@ -275,12 +277,28 @@ public class gpkiBackingBean implements Serializable {
 			returnObj = postSignMtd.invoke(fc.getELContext(), new Object[] { pmDigiSign });
 		} catch (Exception e){
 			nonSigningException = e;
+			log.error(e);
 		}
 		if (enableAutoUpdateMtd != null) {
 			enableAutoUpdateMtd.invoke(fc.getELContext(), new Object[] {});
 		}
-		RequestContext.getCurrentInstance().execute("gpki_dlg2.hide()");
+		String dialog = map.get("dialog") == null ? "gpki_dlg2" : map.get("dialog");
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		return returnObj != null ? returnObj.toString() : null;
+	}
+	
+	/**
+	 * Validate IC when GPKI is on & click from the Sign button
+	 * @param map
+	 * @return
+	 */
+	private boolean isValidNric(Map<String, String> requestMap){
+		if(!isGpkiNewRoaming() || requestMap.get("skipBtn") != null){
+			return true;
+		}
+		Map<String, String> dnMap = splitSubjectDN(requestMap.get("subjectDN"));
+		return dnMap.get(serialNumber).equals(nric) || dnMap.get(sn).equals(nric)
+				|| dnMap.get(surname).equals(nric);
 	}
 	
 	/**
