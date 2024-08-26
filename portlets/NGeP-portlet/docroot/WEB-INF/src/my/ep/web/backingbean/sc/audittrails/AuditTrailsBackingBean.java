@@ -348,7 +348,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	// SECTION: Generate Report (PDF & EXCEL)
 
 	/**
-	 * Generate Report: Selected tab in PDF Format
+	 * #35500, Generate Report: Selected tab in PDF Format
 	 * 
 	 * @param docId
 	 *            ,referring to selected REQUEST_NOTE_ID
@@ -365,7 +365,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	}
 
 	/**
-	 * Generate Report: All Tab in PDF Format
+	 * #35500, Generate Report: All Tab in PDF Format
 	 * 
 	 * @param docId
 	 *            ,referring to selected REQUEST_NOTE_ID
@@ -381,28 +381,38 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	}
 
 	/**
-	 * Retrieve audit trail detail transaction records.
+	 * #35500, Retrieve audit trail detail transaction records.
 	 * 
 	 * @param docId
-	 *            , referring to REQUEST_NOTE_ID
-	 * @return
+	 * @return list
 	 */
 	public List<AuditQTDTO> getAuditTrailDetailsForExlRpt(BigInteger docId) {
 
 		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 
-		// return qtAuditSO.getQTAuditTrailsRptViewResultList(docId,
-		// getManagedBean().getGroupSectionId());
+		 return qtAuditSO.getQTAuditTrailsRptViewResultList(docId,
+		 getManagedBean().getGroupSectionId());		
+	}
+	
+	/**
+	 * #35500, Retrieve All audit trail detail transaction records.
+	 * 
+	 * @param docId
+	 * @return list
+	 */
+	public List<AuditQTDTO> getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
+
+		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 
 		return qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
 	}
 
 	/**
-	 * Generate excel format.
+	 * #35500, Generate excel format.
 	 * 
 	 * @param docId
-	 *            ,referring to REQUEST_NOTE_ID
 	 */
 	public void generateRptExcelForAuditTrailDetails(BigInteger docId) {
 		List<AuditQTDTO> rsltReportList = new ArrayList<>();
@@ -414,121 +424,87 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 					getUserIdSessionFromLoginId(), e);
 		}
 
-		// Workbook wb = new XSSFWorkbook();
-		// Sheet sheetRptAudit =
-		// wb.createSheet(getCurrentReportTab(getManagedBean().getGroupSectionId()));
-		//
-		// // Setting Report - Populate Table Header Cell Value
-		// String[] colHeaderDataTableRpt =
-		// ReportExcelAuditConstant.ColHeaderListType4;
-		//
-		// CellStyle cellStyleTitleRpt = new
-		// ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
-		//
-		// // Section - Setting Table Header Cell Style for each cell
-		// CellStyle colHeaderDataTableRptStyle = new
-		// ExcelCellStyleBuilder(wb).setHAlignment(HorizontalAlignment.CENTER)
-		// .setVAlignment(VerticalAlignment.CENTER).buildHeaderCellStyle();
-		//
-		// // Section - Setting Cell Style for No Records Found message.
-		// CellStyle noRecordsStyle = new
-		// ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
-		//
-		// // Cell Format: String
-		// CellStyle cellStyleString = new
-		// ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
-		//
-		// // Cell Format: DateTime
-		// CellStyle cellStyleDateTime = new
-		// ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
-		//
-		// // End Section - Setting Cell Style for each cell
-		//
-		// // Create Row/Cell - Report Title
-		// Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
-		// Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
-		// cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-		// Cell Value
-		// cellTitleRow.setCellStyle(cellStyleTitleRpt);
-		// sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); //
-		// Merge Cell
-		//
-		// // Create Row/Cell - Report Header Datatable
-		// Row titleHeaderRow = sheetRptAudit.createRow(3);
-		// for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
-		// Cell cell = titleHeaderRow.createCell(i + 1);
-		// cell.setCellValue(colHeaderDataTableRpt[i]);
-		// cell.setCellStyle(colHeaderDataTableRptStyle);
-		// }
-		//
-		// // Section: Populate Audit Trail Details Record for Request Note.
-		// // Create Row/Cell - Audit Trail Details
-		// int rowIndex = sheetRptAudit.getLastRowNum() + 1;
-
 		Sheet sheetRptAudit = null;
 		int rowIndex = 0;
 		String[] colHeaderDataTableRpt = null;
 		Workbook wb = new XSSFWorkbook();
 		BigDecimal currentGroupSecId = null;
-		BigDecimal existGroupSecId = null;
 		CellStyle noRecordsStyle = null;
+		CellStyle cellStyleString = null;
+		CellStyle cellStyleDateTime = null;
+		Row titleRptRow = null;
+		Cell cellTitleRow = null;
+		Row titleHeaderRow = null;
 
 		if (!rsltReportList.isEmpty()) {
-			// for (int a = 0; a < rsltReportList.size(); a++) {
+			// Setting Report - Populate Table Header Cell Value
+			colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
 
-			for (AuditQTDTO rpt : rsltReportList) {// !!!!! ko kene buat cmne nk beza group sec id ni,kalu sama kene add, kalulain kene buat page baru !!!!!!!
-				currentGroupSecId = rpt.getGroupSectionId();
+			CellStyle cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
 
-				if (rpt.getGroupSectionId() != existGroupSecId) {
+			// Section - Setting Table Header Cell Style for each cell
+			CellStyle colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb)
+					.setHAlignment(HorizontalAlignment.CENTER).setVAlignment(VerticalAlignment.CENTER)
+					.buildHeaderCellStyle();
+
+			// Section - Setting Cell Style for No Records Found message.
+			noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
+
+			// Cell Format: String
+			cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
+
+			// Cell Format: DateTime
+			cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
+
+			// End Section - Setting Cell Style for each cell
+
+			for (AuditQTDTO rpt : rsltReportList) {
+				if (rpt.getGroupSectionId() != null && !rpt.getGroupSectionId().equals(currentGroupSecId)) {
 					sheetRptAudit = wb.createSheet(getCurrentReportTab(rpt.getGroupSectionId().longValue()));
-
-					// Setting Report - Populate Table Header Cell Value
 					colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
 
-					CellStyle cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
+					cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
 
 					// Section - Setting Table Header Cell Style for each cell
-					CellStyle colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb)
+					colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb)
 							.setHAlignment(HorizontalAlignment.CENTER).setVAlignment(VerticalAlignment.CENTER)
 							.buildHeaderCellStyle();
 
-					// Section - Setting Cell Style for No Records Found
-					// message.
+					// Section - Setting Cell Style for No Records Found message.
 					noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
 
 					// Cell Format: String
-					CellStyle cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE)
+					cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE)
 							.buildDataCellStyleString();
 
 					// Cell Format: DateTime
-					CellStyle cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
+					cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
 
 					// End Section - Setting Cell Style for each cell
 
 					// Create Row/Cell - Report Title
-					Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
-					Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell
-																	// (Column)
-					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-																					// Cell
-																					// Value
+					titleRptRow = sheetRptAudit.createRow(1); // Create Row
+					cellTitleRow = titleRptRow.createCell(1);// Create Cell(Column)
+					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value
 					cellTitleRow.setCellStyle(cellStyleTitleRpt);
-					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
-																						// Cell
+					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Cell
 
 					// Create Row/Cell - Report Header Datatable
-					Row titleHeaderRow = sheetRptAudit.createRow(3);
+					titleHeaderRow = sheetRptAudit.createRow(3);
 					for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
 						Cell cell = titleHeaderRow.createCell(i + 1);
 						cell.setCellValue(colHeaderDataTableRpt[i]);
 						cell.setCellStyle(colHeaderDataTableRptStyle);
 					}
 
-					// Section: Populate Audit Trail Details Record for Request
-					// Note.
-					// Create Row/Cell - Audit Trail Details
+					// Section: Populate Audit Trail Details Record for Request Note.Create Row/Cell - Audit Trail Details
 					rowIndex = sheetRptAudit.getLastRowNum() + 1;
+					currentGroupSecId = rpt.getGroupSectionId();
+				}
 
+				if (rpt.getDocNo() == null && rpt.getActionBy() == null) {
+					createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
+				} else {
 					Row currRow = sheetRptAudit.createRow(rowIndex++);
 
 					Cell cellActionDate = currRow.createCell(1);
@@ -580,15 +556,15 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 					Cell cellNewValue = currRow.createCell(11);
 					cellNewValue.setCellValue(rpt.getNewValue());
 					cellNewValue.setCellStyle(cellStyleString);
-				} else {
-					createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
+
+					// Set column width
+					setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 				}
 
 			}
+
 		}
 
-		// Set column width
-		setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 		// Export to Excel
 		exportExcelReportAudit(wb);
 	}
@@ -630,7 +606,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	}
 
 	/**
-	 * Set column width
+	 * #35500, Set column width
 	 * 
 	 * @param totalNoOfCell
 	 * @param sheetName
@@ -660,7 +636,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	}
 
 	/**
-	 * To create new row with cell style if record not found.
+	 * #35500, To create new row with cell style if record not found.
 	 * 
 	 * @param sheet
 	 * @param rowIndex
@@ -676,12 +652,13 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	}
 
 	/**
-	 * Export/Download Document in Excel Format
+	 * #35500, Export/Download Document in Excel Format
 	 * 
 	 * @param wb
 	 */
 	private void exportExcelReportAudit(Workbook wb) {
 		try {
+
 			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -701,6 +678,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 			outStream.flush();
 			outStream.close();
 			wb.close();// Close Workbook
+
 		} catch (Exception e) {
 			log.error(e);
 		}

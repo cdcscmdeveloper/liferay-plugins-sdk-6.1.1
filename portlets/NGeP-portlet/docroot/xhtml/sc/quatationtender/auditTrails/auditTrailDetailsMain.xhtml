@@ -31,7 +31,7 @@
 						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
 							ajax="false">
 							<p:fileDownload
-								value="#{auditTrailsBackingBean.generateAllRptExcel(auditTrailsBackingBean.managedBean.qtId)}" />
+								value="#{auditTrailsBackingBean.getAllAuditTrailDetailsForExlRpt(auditTrailsBackingBean.managedBean.qtId)}" />
 						</p:commandLink>
 						&#160;
 					</div>
@@ -154,7 +154,7 @@
 			</c:if>
 			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '7'}">
 				<ui:include
-					src="/xhtml/sc/quatationtender/auditTrails/techComAppointTab.xhtml" />
+					src="/xhtml/sc/quatationtender/auditTrails/techComAppointTab.xtml" />
 			</c:if>
 			<c:if test="#{auditTrailsBackingBean.managedBean.activeIndex eq '8'}">
 				<ui:include
