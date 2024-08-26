@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -43,8 +44,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		if (null != managedBeans.getPmCriteriaOld()) {
-			if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria()
-					.getRecordStatusFlg()) {
+			if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria().getRecordStatusFlg()) {
 				updateSatus(managedBeans, roleCode, auditPMReqDTO, objList);
 			}
 			if (managedBeans.getPmCriteriaOld().getPmCriteriaDescs() != null) {
@@ -61,9 +61,8 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
 			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId()));
 			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_STATUS_FIELDLABELID);
-			detailObjStatus
-					.setNewValue(managedBeans.getSelectedCriteria().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
+			detailObjStatus.setNewValue(managedBeans.getSelectedCriteria().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 			detailObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(detailObjStatus);
 			auditPMReqDTO.setObjList(objList);
@@ -78,8 +77,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 
 	private AuditPMReqDTO updateSatus(CriteriaManagedBean managedBeans, String roleCode, AuditPMReqDTO auditPMReqDTO,
 			ArrayList<AuditPMSPDTO> objList) {
-		if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria()
-				.getRecordStatusFlg()) {
+		if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria().getRecordStatusFlg()) {
 			detailObjStatus.setRoleCode(roleCode);
 			detailObjStatus.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
 			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
@@ -90,12 +88,10 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getPmCriteriaOld().getCriteriaId()));
 			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getPmCriteriaOld().getCriteriaId()));
 			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SUPPPERFCRITERIA_STATUS_FIELDLABELID);
-			detailObjStatus
-					.setOldValue(managedBeans.getPmCriteriaOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
-			detailObjStatus
-					.setNewValue(managedBeans.getSelectedCriteria().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
+			detailObjStatus.setOldValue(managedBeans.getPmCriteriaOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
+			detailObjStatus.setNewValue(managedBeans.getSelectedCriteria().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 			detailObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(detailObjStatus);
 			auditPMReqDTO.setObjList(objList);
@@ -104,8 +100,8 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 		return null;
 	}
 
-	private AuditPMReqDTO updateCriteriaDesc(CriteriaManagedBean managedBeans, String roleCode,
-			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList) {
+	private AuditPMReqDTO updateCriteriaDesc(CriteriaManagedBean managedBeans, String roleCode, AuditPMReqDTO auditPMReqDTO,
+			ArrayList<AuditPMSPDTO> objList) {
 		for (PmCriteriaDesc descOld : managedBeans.getPmCriteriaOld().getPmCriteriaDescs()) {
 			for (PmCriteriaDesc desc : managedBeans.getSelectedCriteria().getPmCriteriaDescs()) {
 				if (descOld.getCriteriaDescId() == desc.getCriteriaDescId()
@@ -153,8 +149,8 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO createNewLanguageCode(CriteriaManagedBean managedBeans, String roleCode,
-			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList) {
+	private AuditPMReqDTO createNewLanguageCode(CriteriaManagedBean managedBeans, String roleCode, AuditPMReqDTO auditPMReqDTO,
+			ArrayList<AuditPMSPDTO> objList) {
 		for (PmCriteriaDesc desc : managedBeans.getSelectedCriteria().getPmCriteriaDescs()) {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
 				AuditPMSPDTO langCodeEn = new AuditPMSPDTO();

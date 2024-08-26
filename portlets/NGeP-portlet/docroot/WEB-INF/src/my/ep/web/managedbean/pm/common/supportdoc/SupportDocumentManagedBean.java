@@ -66,8 +66,12 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List<PmDocumentRestr> pmDocumentRestrList;
 	private List<PmDocumentRestr> deletedPmDocumentRestrList;
 	private List<PmDocumentRestr> updatedPmDocumentRestrList;
-	private List<PmDocumentRestr> mandatoryUpdatedPmDocumentRestrList;
-	
+	private List<PmDocumentRestr> mandatoryUpdatedPmDocumentRestrList;	
+	private PmDocumentRestr deleteAppTypeRestrictionsAudit;
+	private PmDocumentRestr deleteComTypeRestrictionsAudit;
+	private PmDocumentRestr deleteSuppTypeRestrictionsAudit;
+	private PmDocumentRestr deleteCategoryRestrictionsAudit;
+	private PmDocumentRestr deleteCertBodyRestrictionsAudit;
 	boolean updated;
 
 	public SupportDocumentManagedBean() {
@@ -544,5 +548,45 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 
 	public void setMandatoryUpdatedPmDocumentRestrList(List<PmDocumentRestr> mandatoryUpdatedPmDocumentRestrList) {
 		this.mandatoryUpdatedPmDocumentRestrList = mandatoryUpdatedPmDocumentRestrList;
+	}
+
+	public PmDocumentRestr getDeleteAppTypeRestrictionsAudit() {
+		return deleteAppTypeRestrictionsAudit;
+	}
+
+	public void setDeleteAppTypeRestrictionsAudit(PmDocumentRestr deleteAppTypeRestrictionsAudit) {
+		this.deleteAppTypeRestrictionsAudit = deleteAppTypeRestrictionsAudit;
+	}
+
+	public PmDocumentRestr getDeleteComTypeRestrictionsAudit() {
+		return deleteComTypeRestrictionsAudit;
+	}
+
+	public void setDeleteComTypeRestrictionsAudit(PmDocumentRestr deleteComTypeRestrictionsAudit) {
+		this.deleteComTypeRestrictionsAudit = deleteComTypeRestrictionsAudit;
+	}
+
+	public PmDocumentRestr getDeleteSuppTypeRestrictionsAudit() {
+		return deleteSuppTypeRestrictionsAudit;
+	}
+
+	public void setDeleteSuppTypeRestrictionsAudit(PmDocumentRestr deleteSuppTypeRestrictionsAudit) {
+		this.deleteSuppTypeRestrictionsAudit = deleteSuppTypeRestrictionsAudit;
+	}
+
+	public PmDocumentRestr getDeleteCategoryRestrictionsAudit() {
+		return deleteCategoryRestrictionsAudit;
+	}
+
+	public void setDeleteCategoryRestrictionsAudit(PmDocumentRestr deleteCategoryRestrictionsAudit) {
+		this.deleteCategoryRestrictionsAudit = deleteCategoryRestrictionsAudit;
+	}
+
+	public PmDocumentRestr getDeleteCertBodyRestrictionsAudit() {
+		return deleteCertBodyRestrictionsAudit;
+	}
+
+	public void setDeleteCertBodyRestrictionsAudit(PmDocumentRestr deleteCertBodyRestrictionsAudit) {
+		this.deleteCertBodyRestrictionsAudit = deleteCertBodyRestrictionsAudit;
 	}
 }

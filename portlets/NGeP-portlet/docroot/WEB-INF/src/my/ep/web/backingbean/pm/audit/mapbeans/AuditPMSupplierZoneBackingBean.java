@@ -2,9 +2,10 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+
 import my.ep.constant.pm.AuditConst;
-import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
+import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmZoneState;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
@@ -119,9 +120,8 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
 			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID);
-			detailObjStatus
-					.setOldValue(managedBeans.getPmZoneOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
+			detailObjStatus.setOldValue(managedBeans.getPmZoneOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 			detailObjStatus.setNewValue(managedBeans.getResZone().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
 			detailObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);

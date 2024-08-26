@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -61,8 +62,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 
 		if (managedBeans.getOldPmRace() != null && managedBeans.getOldPmRace().getRaceId() != null) {
 			if (managedBeans.getPmRace().getRaceName() != null
-					&& !managedBeans.getOldPmRace().getRaceName()
-							.equalsIgnoreCase(managedBeans.getPmRace().getRaceName())) {
+					&& !managedBeans.getOldPmRace().getRaceName().equalsIgnoreCase(managedBeans.getPmRace().getRaceName())) {
 				dtlObjName.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
 				dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_RACE_NAME_FIELDLABELID);
 				dtlObjName.setOldValue(managedBeans.getOldPmRace().getRaceName());
