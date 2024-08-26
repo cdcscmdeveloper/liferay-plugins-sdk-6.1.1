@@ -11,7 +11,6 @@
 		<p:remoteCommand name="postSignAction"
 			onstart="setRunGPKIEnableAutoUpdate(false);"
 			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" />
-		
 		<h:outputScript library="ep/gpki_js" name="gpki-api.js" />
 		
 		<script>
@@ -152,15 +151,6 @@
 									}
 								});
 			}
-			
-			var runGPKIEnableAutoUpdate = true;
-			function setRunGPKIEnableAutoUpdate(runGPKIEnableAutoUpdate) {
-			  this.runGPKIEnableAutoUpdate = runGPKIEnableAutoUpdate;
-			}
-
-			function isRunGPKIEnableAutoUpdate() {
-			  return this.runGPKIEnableAutoUpdate;
-			}
 		</script>
 
 	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
@@ -187,10 +177,7 @@
 				
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
 				<p:commandButton id="signButtonId1" value="Sign W/O Token"  
-					onstart="gpkiBlockWidget.show(); signSkipToken();" oncomplete="gpkiBlockWidget.hide();" 
-					rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" >
-					<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
-				</p:commandButton>	
+					onstart="signSkipToken('gpki_dlg');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 		</p:panel>
 	</p:dialog>
