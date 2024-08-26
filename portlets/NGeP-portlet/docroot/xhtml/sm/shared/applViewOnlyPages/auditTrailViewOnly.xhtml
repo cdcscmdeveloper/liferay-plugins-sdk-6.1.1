@@ -1,5 +1,5 @@
 <!-- #28895_35501 - AUDIT TRAIL SM -->
-<ui:composition
+<ui:component
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -9,7 +9,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:tp="http://java.sun.com/jsf/composite/ep"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:define name="contentSection">
 		<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
 			<table style="width: 100%">
 				<tr>
@@ -17,12 +16,12 @@
 						<div align="right" style="vertical-align: top; width: 100%">
 							<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
 								ajax="false">
-							<p:fileDownload value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetailsAll(21311)}" />
+								<!-- 								<p:fileDownload value="" /> -->
 							</p:commandLink>
 							&#160;
 							<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
 								ajax="false">
-								<!-- 								<p:fileDownload value="" /> -->
+								<p:fileDownload value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetailsAll(21311)}" />
 							</p:commandLink>
 							&#160;
 						</div>
@@ -87,7 +86,7 @@
 							</p:commandLink>
 							&#160;
 							<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
-							<p:fileDownload value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails(21311)}" />
+									<p:fileDownload value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails(21311)}" />
 							</p:commandLink>
 							&#160;
 						</div>
@@ -147,5 +146,4 @@
 				</tr>
 			</table>
 		</p:panel>
-	</ui:define>
-</ui:composition>
+</ui:component>
