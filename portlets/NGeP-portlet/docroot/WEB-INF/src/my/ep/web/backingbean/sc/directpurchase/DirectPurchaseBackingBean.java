@@ -615,34 +615,23 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
 		if (null != purchaseRequest) {
 			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
-			//#36119 - start
-			Long supplierId = null;
-			//#36119 - end
+			Long supplierId = null; //#36119
 			System.out.println("Bug 28878 : purchaseRequestId : " + purchaseRequestId);
 			List<ScRequestNoteDtl> requestNoteDtls = null;
 			ScRequestNote requestNote = null;
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
 				requestNote = (ScRequestNote) prObj[7];
-//				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
-//				requestNoteDtls = loadScPurchaseRequest(purchaseRequestId, objList);//#36018
-				requestNoteReqDTO.setPurchaseRequestId(purchaseRequestId);
-				requestNoteDtls = getRequestNoteSO().getRNDtlsByPrId(requestNoteReqDTO);		
-				
 				//#36119 - start
-				for(ScRequestNoteDtl rnDtl : requestNoteDtls){
-					if(rnDtl.getScRequestSupplierItem() != null){
-						if(rnDtl.getScRequestSupplierItem().getSmSupplier() != null){
-							supplierId = rnDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId();
-							break;
-						}
-					}
-				}			
-				
+				supplierId = (Long) prObj[9]; 
+//				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
+//				requestNoteDtls = loadScPurchaseRequest(purchaseRequestId, objList);//#36018				
+			
 				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
 				requestNoteReqDTO.setSupplierId(supplierId);
 				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
 						requestNoteReqDTO);
 				rnBackingBean.reloadRequestNoteForCodificationWrapper(requestNoteResDTO);
+				requestNoteDtls = rnBackingBean.getManagedBean().getRequestNoteDtls();
 				//#36119 - end
 			}
 			
@@ -1627,6 +1616,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			// end 25396
 			
 	// #36119 - start
+	/**
+	 * To validate supported task
+	 * 
+	 * @param String docNo
+	 * @param Long validityId
+	 * 
+	 * @return boolean
+	 */
 	public boolean validateSupportedTask(String docNo, Long validityId) {
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		ICompositeValiditySO compositeSO = (ICompositeValiditySO) BusinessDelegate.getInstance().getServiceObject(
