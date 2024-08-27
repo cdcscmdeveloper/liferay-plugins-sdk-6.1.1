@@ -53,6 +53,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -114,13 +115,14 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	public void redirectToQtAuditTrailsViews(String docType, Long docId) throws IOException, PortalException,
 			SystemException {
-
+		
+		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setQtId(docId);
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setBackURL(fc.getViewRoot().getViewId());
 		navigateToGeneralInfoTab();
-
+		
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/sc/quatationtender/auditTrails/auditTrailDetailsMain.xhtml");
 	}
@@ -140,6 +142,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 */
 	public void onTabMenuChangeAction(Integer activeIndex) {
 		log.info("onTabMenuChangeAction");
+		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		int previousIndex = this.getManagedBean().getActiveIndex();
 
 		if (previousIndex != activeIndex) {
@@ -199,6 +202,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -208,6 +212,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -217,6 +222,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -226,6 +232,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -235,6 +242,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -244,6 +252,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -253,6 +262,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -262,6 +272,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 	}
 
@@ -270,6 +281,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -279,6 +291,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -288,6 +301,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
@@ -297,6 +311,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 	}
 
@@ -384,16 +399,28 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * Retrieve audit trail detail transaction records.
 	 * 
 	 * @param docId
-	 *            , referring to REQUEST_NOTE_ID
-	 * @return
+	 * @return List<AuditQTDTO>
 	 */
 	public List<AuditQTDTO> getAuditTrailDetailsForExlRpt(BigInteger docId) {
 
 		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 
-		// return qtAuditSO.getQTAuditTrailsRptViewResultList(docId,
-		// getManagedBean().getGroupSectionId());
+		 return qtAuditSO.getQTAuditTrailsRptViewResultList(docId, getManagedBean().getGroupSectionId());
+
+		
+	}
+	
+	/**
+	 * Retrieve audit trail detail transaction records.
+	 * 
+	 * @param docId
+	 * @return List<AuditQTDTO>
+	 */
+	public List<AuditQTDTO> getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
+
+		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 
 		return qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
 	}
@@ -402,7 +429,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * Generate excel format.
 	 * 
 	 * @param docId
-	 *            ,referring to REQUEST_NOTE_ID
+	 * @return void
 	 */
 	public void generateRptExcelForAuditTrailDetails(BigInteger docId) {
 		List<AuditQTDTO> rsltReportList = new ArrayList<>();
@@ -410,60 +437,9 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 			rsltReportList = getAuditTrailDetailsForExlRpt(docId);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, "AU", docId.toString(),
-					"AuditSearchDPRequestNoteBackingBean.generateRptExcelForAuditTrailDetails",
+					"AuditTrailsBackingBean.generateRptExcelForAuditTrailDetails",
 					getUserIdSessionFromLoginId(), e);
-		}
-
-		// Workbook wb = new XSSFWorkbook();
-		// Sheet sheetRptAudit =
-		// wb.createSheet(getCurrentReportTab(getManagedBean().getGroupSectionId()));
-		//
-		// // Setting Report - Populate Table Header Cell Value
-		// String[] colHeaderDataTableRpt =
-		// ReportExcelAuditConstant.ColHeaderListType4;
-		//
-		// CellStyle cellStyleTitleRpt = new
-		// ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
-		//
-		// // Section - Setting Table Header Cell Style for each cell
-		// CellStyle colHeaderDataTableRptStyle = new
-		// ExcelCellStyleBuilder(wb).setHAlignment(HorizontalAlignment.CENTER)
-		// .setVAlignment(VerticalAlignment.CENTER).buildHeaderCellStyle();
-		//
-		// // Section - Setting Cell Style for No Records Found message.
-		// CellStyle noRecordsStyle = new
-		// ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
-		//
-		// // Cell Format: String
-		// CellStyle cellStyleString = new
-		// ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
-		//
-		// // Cell Format: DateTime
-		// CellStyle cellStyleDateTime = new
-		// ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
-		//
-		// // End Section - Setting Cell Style for each cell
-		//
-		// // Create Row/Cell - Report Title
-		// Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
-		// Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
-		// cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-		// Cell Value
-		// cellTitleRow.setCellStyle(cellStyleTitleRpt);
-		// sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); //
-		// Merge Cell
-		//
-		// // Create Row/Cell - Report Header Datatable
-		// Row titleHeaderRow = sheetRptAudit.createRow(3);
-		// for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
-		// Cell cell = titleHeaderRow.createCell(i + 1);
-		// cell.setCellValue(colHeaderDataTableRpt[i]);
-		// cell.setCellStyle(colHeaderDataTableRptStyle);
-		// }
-		//
-		// // Section: Populate Audit Trail Details Record for Request Note.
-		// // Create Row/Cell - Audit Trail Details
-		// int rowIndex = sheetRptAudit.getLastRowNum() + 1;
+		}		
 
 		Sheet sheetRptAudit = null;
 		int rowIndex = 0;
@@ -474,9 +450,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		CellStyle noRecordsStyle = null;
 
 		if (!rsltReportList.isEmpty()) {
-			// for (int a = 0; a < rsltReportList.size(); a++) {
-
-			for (AuditQTDTO rpt : rsltReportList) {// !!!!! ko kene buat cmne nk beza group sec id ni,kalu sama kene add, kalulain kene buat page baru !!!!!!!
+			for (AuditQTDTO rpt : rsltReportList) {
 				currentGroupSecId = rpt.getGroupSectionId();
 
 				if (rpt.getGroupSectionId() != existGroupSecId) {
@@ -492,8 +466,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 							.setHAlignment(HorizontalAlignment.CENTER).setVAlignment(VerticalAlignment.CENTER)
 							.buildHeaderCellStyle();
 
-					// Section - Setting Cell Style for No Records Found
-					// message.
+					// Section - Setting Cell Style for No Records Found message.
 					noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
 
 					// Cell Format: String
@@ -507,14 +480,10 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 					// Create Row/Cell - Report Title
 					Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
-					Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell
-																	// (Column)
-					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-																					// Cell
-																					// Value
+					Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
+					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value
 					cellTitleRow.setCellStyle(cellStyleTitleRpt);
-					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
-																						// Cell
+					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Cell
 
 					// Create Row/Cell - Report Header Datatable
 					Row titleHeaderRow = sheetRptAudit.createRow(3);
@@ -524,8 +493,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 						cell.setCellStyle(colHeaderDataTableRptStyle);
 					}
 
-					// Section: Populate Audit Trail Details Record for Request
-					// Note.
+					// Section: Populate Audit Trail Details Record for Request Note.
 					// Create Row/Cell - Audit Trail Details
 					rowIndex = sheetRptAudit.getLastRowNum() + 1;
 
