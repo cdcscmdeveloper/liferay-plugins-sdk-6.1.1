@@ -6653,6 +6653,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	// end - #25790
 	
 	//#36119 - start
+	/**
+	 * Act as reload RN for codification wrapper
+	 * 
+	 * @param RequestNoteResDTO rnResDTO         
+	 * 
+	 * @return void
+	 */
 	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO){
 		reloadRequestNoteForCodification(requestNoteResDTO);
 	}
