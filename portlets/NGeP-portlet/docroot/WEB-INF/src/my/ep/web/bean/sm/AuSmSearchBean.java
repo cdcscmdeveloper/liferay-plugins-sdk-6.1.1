@@ -13,19 +13,10 @@ public class AuSmSearchBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String reqType;
 	private String language;
 	private BigInteger docId;
 	private String docType;
 	private BigDecimal auGroupSection;
-
-	public String getReqType() {
-		return reqType;
-	}
-
-	public void setReqType(String reqType) {
-		this.reqType = reqType;
-	}
 
 	public String getLanguage() {
 		return language;

@@ -82,7 +82,7 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 			try {
 				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				return auditSmSo.searchAuditSupplierManagement(auSmSearchBean.getReqType(),auSmSearchBean.getLanguage(), auSmSearchBean.getDocId(),
+				return auditSmSo.searchAuditSupplierManagementView(auSmSearchBean.getLanguage(), auSmSearchBean.getDocId(),
 						auSmSearchBean.getDocType(), auSmSearchBean.getAuGroupSection(), searchBean);
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve",

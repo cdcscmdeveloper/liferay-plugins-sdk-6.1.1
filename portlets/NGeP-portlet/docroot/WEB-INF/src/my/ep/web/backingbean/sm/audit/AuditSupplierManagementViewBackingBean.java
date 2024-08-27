@@ -35,7 +35,6 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 	 */
 	public void initAuditTab(SmAppl smAppl) {
 		AuSmSearchBean auSmSearchBean = new AuSmSearchBean();
-		auSmSearchBean.setReqType(AuditSupplierManagementConst.P_REQUEST_TYPE_APP);
 		String language = new FacesScopes().getUserLocale().getLanguage();
 		auSmSearchBean.setLanguage(language);
 		auSmSearchBean.setDocId(BigInteger.valueOf(smAppl.getSmSupplier().getSupplierId()));
