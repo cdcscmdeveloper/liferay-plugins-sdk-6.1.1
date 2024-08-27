@@ -19,6 +19,8 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	
 	private String agreemetSelectedVal;
 	
+	private String selectOneParameterId;//#25726#323
+	
 	private String yesParameterId;
 	
 	private String noParameterId;
@@ -86,6 +88,16 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	public void setAgreemetSelectedVal(String agreemetSelectedVal) {
 		this.agreemetSelectedVal = agreemetSelectedVal;
 	}
+	
+	//#25726#323 - Start
+	public String getSelectOneParameterId() {
+		return selectOneParameterId;
+	}
+
+	public void setSelectOneParameterId(String selectOneParameterId) {
+		this.selectOneParameterId = selectOneParameterId;
+	}
+	//#25726#323 - End
 
 	public String getYesParameterId() {
 		return yesParameterId;
