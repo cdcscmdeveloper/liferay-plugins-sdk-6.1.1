@@ -1751,8 +1751,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}			
 					}	
 					//28895-35500 Start
-					if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)){
-						prepareQtMaintenanceAuditTrails(qt,tenderResDTO.getGroupTabSection(),null);
+					if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
+						prepareQtMaintenanceAuditTrails(qt, tenderResDTO.getGroupTabSection(), null);
 					}
 					//28895-35500 End
 				}				
