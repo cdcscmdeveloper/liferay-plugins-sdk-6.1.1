@@ -622,10 +622,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
 				requestNote = (ScRequestNote) prObj[7];
 				//#36119 - start
-				supplierId = (Long) prObj[9]; 
-//				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
-//				requestNoteDtls = loadScPurchaseRequest(purchaseRequestId, objList);//#36018				
-			
+				supplierId = (Long) prObj[9]; 					
 				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
 				requestNoteReqDTO.setSupplierId(supplierId);
 				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
