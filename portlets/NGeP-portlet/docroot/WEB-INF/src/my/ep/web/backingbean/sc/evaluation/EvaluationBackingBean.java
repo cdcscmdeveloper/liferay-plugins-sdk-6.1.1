@@ -8177,6 +8177,7 @@ public class EvaluationBackingBean extends
 								if(this.getManagedBean().getNoSupplierPackageExist()){
 									retriveSummaryEvaluationStage();
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
+									this.getManagedBean().setTabTechnicalIndex(3);//#28784 fixed for Technical (Item), no Package
 								}
 								//#33187 End - fix next skip if disable Technical
 							}else if( this.getManagedBean()
@@ -8188,7 +8189,8 @@ public class EvaluationBackingBean extends
 								this.getManagedBean().setTabTechnicalIndex(3); // #25138, #21695
 
 
-								if (ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
+								if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+										&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this
 										.getManagedBean().getScQt().getEvaluationType())) { //36228 issue have to double click next button to enter report
 									retrieveReportTabDtl();									
 									outputTab = 4;

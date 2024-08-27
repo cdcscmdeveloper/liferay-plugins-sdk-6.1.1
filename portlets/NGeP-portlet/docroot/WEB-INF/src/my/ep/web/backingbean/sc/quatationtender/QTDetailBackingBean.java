@@ -1297,7 +1297,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					this.getManagedBean().getQt().getQtStatus().getStatusId()
 							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
 							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
+							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) && !this.getManagedBean().isReadOnly()) {
 				if(isQTRoleMaintenanceValidation()){
 					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 				}
@@ -12072,20 +12072,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			    }
 				
              // #25426 - Start
-			}else{
-				
-                pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
-				
-                if(null != pmUserOrgs && null != pmUserOrgs.getRecordStatusFlg()){
-                	int statusFlag = pmUserOrgs.getRecordStatusFlg();
-                    if(approverRole.equals(RoleCode.COMMITTEE_APPROVER.value()) && (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)){
-                    	inactive = DbValueConst.FLAG_YES; 
-    			    }
-                    if(approverRole.equals(RoleCode.PUBLICATION_APPROVER.value()) && (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)){
-                    	inactive = DbValueConst.FLAG_YES;
-    			    }
-                }
-          
+			} else {
+
+				pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+				if (pmUserOrgs != null
+						&& pmUserOrgs.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED
+						&& (approverRole.equals(RoleCode.COMMITTEE_APPROVER.value()) || approverRole
+								.equals(RoleCode.PUBLICATION_APPROVER.value()))) {
+
+					inactive = DbValueConst.FLAG_YES;
+				}
+
 			}
 			// #25426 - End
 			
