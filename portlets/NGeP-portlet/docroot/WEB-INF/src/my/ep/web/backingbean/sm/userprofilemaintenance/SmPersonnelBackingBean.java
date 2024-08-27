@@ -2,16 +2,14 @@ package my.ep.web.backingbean.sm.userprofilemaintenance;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+//start #12981 - no 2, comment #189
+import java.util.Arrays;
+//start #12981 - no 2, comment #189
+import java.util.Calendar;
 // 9569 start
 import java.util.Collections;
 import java.util.Comparator;
 //9569 end
-
-//start #12981 - no 2, comment #189
-import java.util.Arrays;
-//start #12981 - no 2, comment #189
-
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -2052,13 +2050,20 @@ public class SmPersonnelBackingBean extends
 		}
 		//32515 END
 		//Start 13320
-		for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
-			//#33592-start
-			if (!per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-				per.getSmAddress().setPmDivision(null);
-			}//#33592-end
+		// Start - 35178
+		if (!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().isEmpty()) {
+			// Start 13320
+			for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
+				// #33592-start
+				if ((per.getSmAddress() != null)
+						&& (per.getSmAddress().getPmState().getStateCode() != null && !per.getSmAddress().getPmState()
+								.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE))) {
+					per.getSmAddress().setPmDivision(null);
+				}// #33592-end
+			}
+			// End 13320
 		}
-		//End 13320
+		// End - 35178
 		if (getManagedBean().getBasicSmPersonnel().getPersonnelId() == null) {
 			//#9569 - Start
 			getManagedBean().getBasicSmPersonnel().setFromBasicUserMaintenane(true);
