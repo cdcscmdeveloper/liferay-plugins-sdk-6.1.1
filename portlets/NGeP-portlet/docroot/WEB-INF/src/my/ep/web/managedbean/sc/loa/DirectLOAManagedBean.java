@@ -366,6 +366,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private BigDecimal limit = new BigDecimal(500000);
 	private boolean AgreementReqChange = false;
 	private boolean above500K = true;
+	private boolean fullfilmentTypeChange = false; //#25726#323 
 	// #25726 END #Sqube Vulnerability Minor G47 end
 	
 	// Bug #33674@Syazani - Start
@@ -2065,6 +2066,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		above500K = above500k;
 	}
 	
+	//#25726#323 - Start
+	public boolean isFullfilmentTypeChange() {
+		return fullfilmentTypeChange;
+	}
+
+	public void setFullfilmentTypeChange(boolean fullfilmentTypeChange) {
+		this.fullfilmentTypeChange = fullfilmentTypeChange;
+	}
+	//#25726#323 - End
 	// #25726 END
 	
 	//#29468

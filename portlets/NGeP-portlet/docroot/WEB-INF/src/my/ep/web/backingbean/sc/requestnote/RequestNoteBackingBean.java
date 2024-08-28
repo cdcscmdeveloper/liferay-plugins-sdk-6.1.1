@@ -498,15 +498,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					reloadRequestNote(scRequestNote);
 
 					// #29557 - start
-					Boolean PIcontinuity = false;
+					Boolean piContinuity = false; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					for (ScRequestNoteDtl scRequestNoteDtl : scRequestNote.getRequestNoteDtls()) {
 						if (scRequestNoteDtl.isShowPurchaseInquiry()) {
-							PIcontinuity = true;
+							piContinuity = true; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 							break;
 						}
 					}
 
-					if (PIcontinuity) {
+					if (piContinuity) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES,
 								ParameterConst.DOCTYPE_REQUEST_NOTE, scRequestNote.getRequestNoteNo(), Boolean.FALSE);
 					} else {
@@ -1603,7 +1603,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
-					String pType = requestNoteDtl.getProcurementType().getParameterCode();
+//					String pType = requestNoteDtl.getProcurementType().getParameterCode(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					// #32362 - comment out this condition - start
 					/*
 					 * if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) &&
@@ -4163,7 +4163,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-
+		IRequestNoteSO requestNoteSO = null; //#36119
+		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
 			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: "
@@ -4184,19 +4185,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
-
-			cancelRN(prObj, prSize);
-
+			
 			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
 			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
 			IPurchaseRequestSO purchaseRequestSO = null;
-			IRequestNoteSO requestNoteSO = null;
+			
 			try {
 				purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IPurchaseRequestSO.class);
 
 				requestNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IRequestNoteSO.class);
+				
+				//#36119 - start
+				if(getManagedBean().isSourcingDpNewBpmVer()){
+					RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+					if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
+						rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
+						rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
+						requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+					}				
+				} else{
+					cancelRN(prObj, prSize);
+				}
+				//#36119 - end
 
 				if (null != purchaseRequest && null != purchaseRequestSO) {
 
@@ -5860,12 +5872,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					getManagedBean().setDisciplinaryActionEndDate(str2.toString());
 
 					// #32643,32642 - Start (follow from SM bug 28198))
-					List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
+					List<DisciplinaryActionVO> remList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 
 					List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
 							.retrieveActiveSmDisciplinaryActionRemarksByDA(disciplinaryAction);
 
-					if (remarksList != null && remarksList.size() > 0) {
+					if (remarksList != null && !remarksList.isEmpty()) { //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 						for (SmDisciplinaryActionRemarks remarks : remarksList) {
 							DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
 							rem1.setRemarks(remarks.getRemark());
@@ -5905,7 +5917,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 										.getDisciplinaryActionId());
 
 						if (!EntityHelper.isCollectionEmpty(catList) && catList.size() > 0) {
-							List<String> catCodeList = new ArrayList<String>();
+							List<String> catCodeList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 							for (Object[] arr : catList) {
 								if (disciplinaryAction.getDisciplinaryActionId().toString()
 										.equalsIgnoreCase(arr[7].toString())) {
@@ -6639,4 +6651,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// end - #25790
+	
+	//#36119 - start
+	/**
+	 * Act as reload RN for codification wrapper
+	 * 
+	 * @param RequestNoteResDTO rnResDTO         
+	 * 
+	 * @return void
+	 */
+	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO){
+		reloadRequestNoteForCodification(requestNoteResDTO);
+	}
+	//#36119 - end
 }

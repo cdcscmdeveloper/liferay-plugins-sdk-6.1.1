@@ -509,6 +509,9 @@
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@this, menuItems,agreementReqPG, expDateLabel, effDateLabel, contractDurationLabel, @([id$=uploadApprovalLetterPg])"
 												listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
+												
+											<p:ajax event="change" 
+												listener="#{directLOABackingBean.changeResetValuePK7FullfilmentType()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
 																							
 											<p:ajax event="change"
 												listener="#{directLOABackingBean.isPbDropDown()}"
