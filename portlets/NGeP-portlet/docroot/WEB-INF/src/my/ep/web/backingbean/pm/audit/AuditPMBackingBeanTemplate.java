@@ -1,18 +1,23 @@
 package my.ep.web.backingbean.pm.audit;
 
 import java.io.Serializable;
+
+import org.apache.log4j.Logger;
+
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * @author normuliana
+ * @author normuliana - 28895-35509
  * 
  */
 public abstract class AuditPMBackingBeanTemplate implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(AuditPMBackingBeanTemplate.class);
 
 	public AuditPMBackingBeanTemplate() {
 	}
@@ -27,7 +32,7 @@ public abstract class AuditPMBackingBeanTemplate implements Serializable {
 
 		AuditPMReqDTO auObjLocation = insert(manageBean, roleCode);
 
-		pmAuditSO(auObjLocation,modName);
+		pmAuditSO(auObjLocation, modName);
 	}
 
 	/**
@@ -47,10 +52,13 @@ public abstract class AuditPMBackingBeanTemplate implements Serializable {
 	/**
 	 * @param auditPMReqDTO
 	 */
-	private void pmAuditSO(AuditPMReqDTO auditPMReqDTO,String modName) {
+	private void pmAuditSO(AuditPMReqDTO auditPMReqDTO, String modName) {
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
-
-		auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(),modName);
+		if (auditPMReqDTO.getObjList() != null) {
+			auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
+		} else {
+			log.error("PM Audit Template ERROR >>> ::: " + MessageConst.ERROR_810000);
+		}
 	}
 }

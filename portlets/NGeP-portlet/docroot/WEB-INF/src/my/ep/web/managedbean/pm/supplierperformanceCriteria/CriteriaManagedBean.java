@@ -20,52 +20,55 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class CriteriaManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private CriteriaSearchBean criteriaSearchBean;
 	private PmCriteria pmCriteria;
 	private PmCriteria selectedCriteria;
 	private boolean isLazy = false;
-	
-	
+	private PmCriteria pmCriteriaOld;
 
 	public CriteriaSearchBean getCriteriaSearchBean() {
-		if(criteriaSearchBean==null)
+		if (criteriaSearchBean == null)
 			criteriaSearchBean = new CriteriaSearchBean();
 		return criteriaSearchBean;
 	}
 
-	
 	public void setCriteriaSearchBean(CriteriaSearchBean criteriaSearchBean) {
 		this.criteriaSearchBean = criteriaSearchBean;
 	}
 
-	
 	public PmCriteria getSelectedCriteria() {
-		if(selectedCriteria==null)
+		if (selectedCriteria == null)
 			selectedCriteria = new PmCriteria();
 		return selectedCriteria;
 	}
 
 	/**
-	 * @param selectedCriteria the selectedCriteria to set
+	 * @param selectedCriteria
+	 *            the selectedCriteria to set
 	 */
 	public void setSelectedCriteria(PmCriteria selectedCriteria) {
 		this.selectedCriteria = selectedCriteria;
 	}
 
-
 	public PmCriteria getPmCriteria() {
 		return pmCriteria;
 	}
-
 
 	public boolean isLazy() {
 		return isLazy;
 	}
 
-
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+
+	public PmCriteria getPmCriteriaOld() {
+		return pmCriteriaOld;
+	}
+
+	public void setPmCriteriaOld(PmCriteria pmCriteriaOld) {
+		this.pmCriteriaOld = pmCriteriaOld;
 	}
 
 }

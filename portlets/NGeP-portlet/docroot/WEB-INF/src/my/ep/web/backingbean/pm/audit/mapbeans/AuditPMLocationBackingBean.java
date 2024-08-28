@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
@@ -18,9 +19,6 @@ import my.ep.web.managedbean.pm.location.LocationManagedBean;
  * 
  */
 public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	AuditPMSPDTO objName = new AuditPMSPDTO();
 	AuditPMSPDTO objDV = new AuditPMSPDTO();
@@ -72,11 +70,9 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 	private AuditPMReqDTO insertStateVal(LocationManagedBean managedBean, String roleCode) {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-		
-		if (null != managedBean.getState().getStateId()
-				&& managedBean.getStateOldVal().getPmState().getStateId() != null) {
-			if (!managedBean.getState().getStateName()
-					.equalsIgnoreCase(managedBean.getStateOldVal().getPmState().getStateName())) {				
+
+		if (null != managedBean.getState().getStateId() && managedBean.getStateOldVal().getPmState().getStateId() != null) {
+			if (!managedBean.getState().getStateName().equalsIgnoreCase(managedBean.getStateOldVal().getPmState().getStateName())) {
 				objName.setRoleCode(roleCode);
 				objName.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
 				objName.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
@@ -92,8 +88,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 				objList.add(objName);
 				auditPMReqDTO.setObjList(objList);
 			}
-			if (managedBean.getResState().getAdoptDivision() != managedBean.getStateOldVal().getPmState()
-					.getAdoptDivision()) {
+			if (managedBean.getResState().getAdoptDivision() != managedBean.getStateOldVal().getPmState().getAdoptDivision()) {
 				objDV.setRoleCode(roleCode);
 				objDV.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
 				objDV.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
@@ -109,8 +104,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 				objList.add(objDV);
 				auditPMReqDTO.setObjList(objList);
 			}
-			if (managedBean.getResState().getRecordStatusFlg() != managedBean.getStateOldVal().getPmState()
-					.getRecordStatusFlg()) {
+			if (managedBean.getResState().getRecordStatusFlg() != managedBean.getStateOldVal().getPmState().getRecordStatusFlg()) {
 				objStatus.setRoleCode(roleCode);
 				objStatus.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
 				objStatus.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
@@ -123,9 +117,8 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 				objStatus
 						.setOldValue(managedBean.getStateOldVal().getPmState().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 								: AuditConst.PM_AUD_INACTIVE);
-				objStatus
-						.setNewValue(managedBean.getResState().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
+				objStatus.setNewValue(managedBean.getResState().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				objStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(objStatus);
 				auditPMReqDTO.setObjList(objList);
@@ -205,7 +198,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 	private AuditPMReqDTO insertDivisionVal(LocationManagedBean managedBean, String roleCode) {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-		
+
 		if (null != managedBean.getDivision().getDivisionId()
 				&& managedBean.getDivisionOldVal().getPmDivision().getDivisionId() != null) {
 			if (!managedBean.getResDivision().getDivisionName()
@@ -239,9 +232,8 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 				objStatus
 						.setOldValue(managedBean.getDivisionOldVal().getPmDivision().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 								: AuditConst.PM_AUD_INACTIVE);
-				objStatus
-						.setNewValue(managedBean.getResDivision().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
+				objStatus.setNewValue(managedBean.getResDivision().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				objStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(objStatus);
 				auditPMReqDTO.setObjList(objList);
@@ -257,8 +249,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objCountry.setLvlCode3(AuditConst.PM_LVL_CODE_3_DIV);
 			objCountry.setDocId(BigInteger.valueOf(managedBean.getResDivision().getDivisionId()));
 			objCountry.setFieldLabelCode(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID);
-			objCountry.setNewValueId(BigInteger.valueOf(managedBean.getDivision().getPmState().getPmCountry()
-					.getCountryId()));
+			objCountry.setNewValueId(BigInteger.valueOf(managedBean.getDivision().getPmState().getPmCountry().getCountryId()));
 			objCountry.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(objCountry);
 
@@ -309,9 +300,8 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_DIV);
 			objStatus.setDocId(BigInteger.valueOf(managedBean.getResDivision().getDivisionId()));
 			objStatus.setFieldLabelCode(AuditConst.PM_AUD_DIV_DVSTATUS_FIELDLABELID);
-			objStatus
-					.setNewValue(managedBean.getResDivision().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
+			objStatus.setNewValue(managedBean.getResDivision().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 			objStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(objName);
 			objList.add(objStatus);
@@ -358,9 +348,8 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 				objStatus
 						.setOldValue(managedBean.getDistrictOldVal().getPmDistrict().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 								: AuditConst.PM_AUD_INACTIVE);
-				objStatus
-						.setNewValue(managedBean.getResDistrict().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
+				objStatus.setNewValue(managedBean.getResDistrict().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				objStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(objStatus);
 				auditPMReqDTO.setObjList(objList);
@@ -376,8 +365,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objCountry.setLvlCode3(AuditConst.PM_LVL_CODE_3_DST);
 			objCountry.setDocId(BigInteger.valueOf(managedBean.getResDistrict().getDistrictId().intValue()));
 			objCountry.setFieldLabelCode(AuditConst.PM_AUD_DS_DSCOUNTRY_FIELDLABELID);
-			objCountry.setNewValueId(BigInteger.valueOf(managedBean.getDistrict().getPmState().getPmCountry()
-					.getCountryId()));
+			objCountry.setNewValueId(BigInteger.valueOf(managedBean.getDistrict().getPmState().getPmCountry().getCountryId()));
 			objCountry.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(objCountry);
 
@@ -404,8 +392,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 				objDivisionId.setLvlCode3(AuditConst.PM_LVL_CODE_3_DST);
 				objDivisionId.setDocId(BigInteger.valueOf(managedBean.getResDistrict().getDistrictId()));
 				objDivisionId.setFieldLabelCode(AuditConst.PM_AUD_DS_DSDIVISIONID_FIELDLABELID);
-				objDivisionId.setNewValueId(BigInteger.valueOf(managedBean.getDistrict().getPmDivision()
-						.getDivisionId()));
+				objDivisionId.setNewValueId(BigInteger.valueOf(managedBean.getDistrict().getPmDivision().getDivisionId()));
 				objDivisionId.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(objDivisionId);
 			}
@@ -444,9 +431,8 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_DST);
 			objStatus.setDocId(BigInteger.valueOf(managedBean.getResDistrict().getDistrictId()));
 			objStatus.setFieldLabelCode(AuditConst.PM_AUD_ST_DSSTATUS_FIELDLABELID);
-			objStatus
-					.setNewValue(managedBean.getResDistrict().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
+			objStatus.setNewValue(managedBean.getResDistrict().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 			objStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(objStatus);
 
@@ -459,7 +445,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 	private AuditPMReqDTO insertCityVal(LocationManagedBean managedBean, String roleCode) {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-		
+
 		objName.setRoleCode(roleCode);
 		objName.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
 		objName.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
@@ -469,7 +455,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		objName.setLvlCode3(AuditConst.PM_LVL_CODE_3_CT);
 		objName.setDocId(BigInteger.valueOf(managedBean.getResCity().getCityId()));
 		objName.setFieldLabelCode(AuditConst.PM_AUD_CT_CTNAME_FIELDLABELID);
-		
+
 		objStatus.setRoleCode(roleCode);
 		objStatus.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
 		objStatus.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
@@ -481,22 +467,19 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		objStatus.setDocId(BigInteger.valueOf(managedBean.getResCity().getCityId()));
 		if (null != managedBean.getCity().getCityId() && managedBean.getCityOldVal().getPmCity().getCityId() != null) {
 			/** UPDATE transaction ***/
-			if (!managedBean.getResCity().getCityName()
-					.equalsIgnoreCase(managedBean.getCityOldVal().getPmCity().getCityName())) {
+			if (!managedBean.getResCity().getCityName().equalsIgnoreCase(managedBean.getCityOldVal().getPmCity().getCityName())) {
 				objName.setOldValue(managedBean.getCityOldVal().getPmCity().getCityName());
 				objName.setNewValue(managedBean.getResCity().getCityName());
 				objName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(objName);
 				auditPMReqDTO.setObjList(objList);
 			}
-			if (managedBean.getResCity().getRecordStatusFlg() != managedBean.getCityOldVal().getPmCity()
-					.getRecordStatusFlg()) {
+			if (managedBean.getResCity().getRecordStatusFlg() != managedBean.getCityOldVal().getPmCity().getRecordStatusFlg()) {
 				objStatus
 						.setOldValue(managedBean.getCityOldVal().getPmCity().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 								: AuditConst.PM_AUD_INACTIVE);
-				objStatus
-						.setNewValue(managedBean.getResCity().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
+				objStatus.setNewValue(managedBean.getResCity().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				objStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(objStatus);
 				auditPMReqDTO.setObjList(objList);
@@ -538,8 +521,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objDistrictId.setLvlCode3(AuditConst.PM_LVL_CODE_3_CT);
 			objDistrictId.setDocId(BigInteger.valueOf(managedBean.getResCity().getCityId()));
 			objDistrictId.setFieldLabelCode(AuditConst.PM_AUD_CT_CTDISTRICTID_FIELDLABELID);
-			objDistrictId
-					.setNewValueId(BigInteger.valueOf(managedBean.getCity().getPmDistrict().getDistrictId()));
+			objDistrictId.setNewValueId(BigInteger.valueOf(managedBean.getCity().getPmDistrict().getDistrictId()));
 			objDistrictId.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(objDistrictId);
 

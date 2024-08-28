@@ -9,27 +9,28 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-				
+
 		<style type="text/css">
-			.value {
-				width: 1000px;
-			}
-			
-			.calendarClass td.ui-widget-content{
-				border : 1px solid #dddddd !important;
-			}
-			
-			.ui-blockui{
-				z-index:1100;
-			}
-			.ui-blockui-content{
-				z-index:1200;
-			}
-			
-			.allstates .fc-event-skin{
-				background: red;
-			}
-		</style>
+.value {
+	width: 1000px;
+}
+
+.calendarClass td.ui-widget-content {
+	border: 1px solid #dddddd !important;
+}
+
+.ui-blockui {
+	z-index: 1100;
+}
+
+.ui-blockui-content {
+	z-index: 1200;
+}
+
+.allstates .fc-event-skin {
+	background: red;
+}
+</style>
 
 		<script type="text/javascript">	
 	
@@ -115,7 +116,7 @@
 			td[6].style.background=color;
 		}
 	</script>
-	<script type="text/javascript">
+		<script type="text/javascript">
     PrimeFaces.locales['ms'] = {
         closeText: 'Tutup',
         prevText: 'Sebelum',
@@ -137,25 +138,24 @@
         allDayText : 'ffff'
     };
 </script>
-		 <p:growl id="calendarMsg" showDetail="true" />
-		 <p:blockUI block=":form" widgetVar="blockWidget" >
+		<p:growl id="calendarMsg" showDetail="true" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:panel id="ruleConfigId">			
+		<p:panel id="ruleConfigId">
 			<h:panelGroup id="calendarId">
-				<table width="100%" style="margin-bottom:10px;">
+				<table width="100%" style="margin-bottom: 10px;">
 					<tr>
-						<td colspan="3">
-							<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.cal.notice']}" />
-						</td>
+						<td colspan="3"><h:outputText styleClass="instruction"
+								value="#{lbl['lbl.pm.cal.notice']}" /></td>
 					</tr>
 					<tr>
-						<td colspan="3" style="margin-bottom:5px;">
-							<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.cal.instruction']}" />
-						</td>
+						<td colspan="3" style="margin-bottom: 5px;"><h:outputText
+								styleClass="instruction"
+								value="#{lbl['lbl.pm.cal.instruction']}" /></td>
 					</tr>
-					</table>
-					<table width="100%">
+				</table>
+				<table width="100%">
 					<tr>
 						<td width="10%"><p:outputLabel
 								value="#{lbl['lbl.pm.cal.state']}" /></td>
@@ -175,7 +175,7 @@
 								<p:ajax event="change"
 									listener="#{calendarBackingBean.updateState}"
 									partialSubmit="true" process="@this"
-									update="schedule, weekend1 , weekend2" 
+									update="schedule, weekend1 , weekend2"
 									oncomplete="changeWeekEndColor()" />
 							</p:selectOneMenu> <h:inputHidden id="weekend1"
 								value="#{calendarBackingBean.managedBean.selectedState != null ? calendarBackingBean.managedBean.selectedState.weekend1 : ''}" />
@@ -186,25 +186,29 @@
 					</tr>
 					<tr />
 					<tr>
-					<td>
-					<h:panelGrid columns="3">
-				      <p:commandLink update=":form:schedule" actionListener="#{calendarBackingBean.nextPrevious}" process="@this">
-				         <f:attribute name="increment" value="previous"/>
-				          <h:graphicImage value="/css/images/design/ico-previous.png" />
-				      </p:commandLink>
-				      <p:commandLink update=":form:schedule" actionListener="#{calendarBackingBean.nextPrevious}" process="@this">
-				         <f:attribute name="increment" value="next"/>
-				          <h:graphicImage value="/css/images/design/ico-next.png" />
-				      </p:commandLink>
-				      <p:commandButton value="#{lbl['lbl.pm.cal.today']}" update=":form:schedule" actionListener="#{calendarBackingBean.today}" process="@this"/>
-				   </h:panelGrid>
-					
-					</td>
+						<td><h:panelGrid columns="3">
+								<p:commandLink update=":form:schedule"
+									actionListener="#{calendarBackingBean.nextPrevious}"
+									process="@this">
+									<f:attribute name="increment" value="previous" />
+									<h:graphicImage value="/css/images/design/ico-previous.png" />
+								</p:commandLink>
+								<p:commandLink update=":form:schedule"
+									actionListener="#{calendarBackingBean.nextPrevious}"
+									process="@this">
+									<f:attribute name="increment" value="next" />
+									<h:graphicImage value="/css/images/design/ico-next.png" />
+								</p:commandLink>
+								<p:commandButton value="#{lbl['lbl.pm.cal.today']}"
+									update=":form:schedule"
+									actionListener="#{calendarBackingBean.today}" process="@this" />
+							</h:panelGrid></td>
 					</tr>
 					<tr>
-						<td colspan="3"><p:schedule id="schedule" styleClass="calendarClass" draggable="false" resizable="false"
-								pattern="dd-MM-yyyy" locale="#{calendarBackingBean.getLocale()}" timeZone="GMT+8"
-								leftHeaderTemplate="" rightHeaderTemplate=""
+						<td colspan="3"><p:schedule id="schedule"
+								styleClass="calendarClass" draggable="false" resizable="false"
+								pattern="dd-MM-yyyy" locale="#{calendarBackingBean.getLocale()}"
+								timeZone="GMT+8" leftHeaderTemplate="" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
 								value="#{calendarBackingBean.managedBean.eventModel}"
 								initialDate="#{calendarBackingBean.managedBean.initialDate}"
@@ -212,123 +216,123 @@
 
 								<p:ajax event="dateSelect"
 									listener="#{calendarBackingBean.onDateSelect}"
-									update="eventDetails, calendarMsg"									
-									/>
+									update="eventDetails, calendarMsg" />
 
 								<p:ajax event="eventSelect"
 									listener="#{calendarBackingBean.onEventSelect}"
 									update="eventDetails, calendarMsg"
-									oncomplete="eventDialog.show();"								
-									/>
-									
-							<ui:remove>
+									oncomplete="eventDialog.show();" />
+
+								<ui:remove>
 									<p:ajax event="eventMove"
 										listener="#{calendarBackingBean.onEventMove}"
 										update="eventDetails, calendarMsg" />
 									<p:ajax event="eventResize"
 										listener="#{calendarBackingBean.onEventResize}"
 										update="eventDetails, calendarMsg" />
-										</ui:remove>
-								
+								</ui:remove>
+
 							</p:schedule></td>
 					</tr>
 				</table>
-			</h:panelGroup>		
+			</h:panelGroup>
 
 		</p:panel>
 		<p:dialog widgetVar="eventDialog" id="calEventDlg" modal="true"
-				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="500"
-				height="250" showEffect="clip" hideEffect="clip">
-				<p:ajax event="close" update="schedule" listener="#{calendarBackingBean.changeWeekEndColor}" />
-				<p:outputPanel>					
+			header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="500"
+			height="250" showEffect="clip" hideEffect="clip">
+			<p:ajax event="close" update="schedule"
+				listener="#{calendarBackingBean.changeWeekEndColor}" />
+			<p:outputPanel>
 				<h:panelGroup id="eventDetails">
-					<p:messages id="calendarMessages" showDetail="true" showSummary="false" autoUpdate="false"
-					closable="true" severity="error"></p:messages>	
+					<p:messages id="calendarMessages" showDetail="true"
+						showSummary="false" autoUpdate="false" closable="true"
+						severity="error"></p:messages>
 					<table width="100%">
 						<c:if test="#{calendarBackingBean.managedBean.disabledUpdate}">
 							<tr>
-								<td colspan="2" style="padding-bottom:5px;">
-									<h:outputText styleClass="instruction" value="#{lbl['lbl.pm.cal.isNational']}" />
-								</td>
+								<td colspan="2" style="padding-bottom: 5px;"><h:outputText
+										styleClass="instruction"
+										value="#{lbl['lbl.pm.cal.isNational']}" /></td>
 							</tr>
 						</c:if>
 						<tr>
-							<td><h:outputLabel
-								value="#{lbl['lbl.pm.cal.title']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-							<td><p:inputText id="title" size="45" maxlength="30" 
+							<td><h:outputLabel value="#{lbl['lbl.pm.cal.title']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="title" size="45" maxlength="30"
 									label="#{lbl['lbl.pm.cal.title']}"
 									disabled="#{calendarBackingBean.managedBean.disabledUpdate}"
 									valueChangeListener="#{calendarBackingBean.holidayTitleValChange}"
 									value="#{calendarBackingBean.managedBean.event.title}"
-									required="true" >		
-									</p:inputText>
-									</td>
-									<td>
-									<p:message id="titleMsg" for="title" display="icon" />
+									required="true">
+								</p:inputText></td>
+							<td><p:message id="titleMsg" for="title" display="icon" />
 							</td>
 						</tr>
 						<tr>
 
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" /></td>
-							<td><p:calendar showOn="button" id="fromDateId" required="true"
+							<td><p:calendar showOn="button" id="fromDateId"
+									required="true"
 									disabled="#{calendarBackingBean.managedBean.disabledUpdate}"
 									label="#{lbl['lbl.pm.cal.frmdate']}" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									valueChangeListener="#{calendarBackingBean.holidayStartDateValChange}"
 									value="#{calendarBackingBean.managedBean.event.startDate}">
 								</p:calendar></td>
-								<td>
-								<p:message id="fromDateMsg" for="fromDateId" display="icon" /></td>
+							<td><p:message id="fromDateMsg" for="fromDateId"
+									display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
-							<td><p:calendar showOn="button" id="toDateId" required="true"
+							<td><p:calendar showOn="button" id="toDateId"
+									required="true"
 									disabled="#{calendarBackingBean.managedBean.disabledUpdate}"
 									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
 									validatorMessage="To Date should be greater than from Date"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+									valueChangeListener="#{calendarBackingBean.holidayEndDateValChange}"
 									value="#{calendarBackingBean.managedBean.event.endDate}">
 									<f:attribute name="startDate"
 										value="#{calendarBackingBean.managedBean.event.startDate}" />
 									<f:validator validatorId="primeDateRangeValidator" />
-								</p:calendar>
-								</td>
-								<td>
-									<p:message id="toDateMsg" for="toDateId" display="icon" />
-								
-								</td>
+								</p:calendar></td>
+							<td><p:message id="toDateMsg" for="toDateId" display="icon" />
+
+							</td>
 						</tr>
 					</table>
 					<div style="float: right;">
-							<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
-										rendered="#{not calendarBackingBean.managedBean.disabledUpdate}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
-										update="eventDetails,calendarMessages" process="eventDetails"/>
-							<p:commandButton id="deleteButton" value="#{lbl['lbl.btn.delete']}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{calendarBackingBean.deleteEvent}"
-										update="schedule,eventDetails" process="@this"
-										rendered="#{not calendarBackingBean.managedBean.newEvent and not calendarBackingBean.managedBean.disabledUpdate}" />
+						<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
+							rendered="#{not calendarBackingBean.managedBean.disabledUpdate}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							actionListener="#{calendarBackingBean.addOrUpdateEvent}"
+							update="eventDetails,calendarMessages" process="eventDetails" />
+						<p:commandButton id="deleteButton"
+							value="#{lbl['lbl.btn.delete']}" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							actionListener="#{calendarBackingBean.deleteEvent}"
+							update="schedule,eventDetails" process="@this"
+							rendered="#{not calendarBackingBean.managedBean.newEvent and not calendarBackingBean.managedBean.disabledUpdate}" />
 					</div>
 				</h:panelGroup>
-				</p:outputPanel>
-			</p:dialog>
-			<p:dialog widgetVar="errDialog" id="calErrDlg" modal="true"
-				header="#{lbl['lbl.pm.cal.warning']}" width="260" 
-				height="100" showEffect="clip" hideEffect="clip">
-				<h:panelGroup id="errDetails">
+			</p:outputPanel>
+		</p:dialog>
+		<p:dialog widgetVar="errDialog" id="calErrDlg" modal="true"
+			header="#{lbl['lbl.pm.cal.warning']}" width="260" height="100"
+			showEffect="clip" hideEffect="clip">
+			<h:panelGroup id="errDetails">
 
-					<h:outputText value="#{lbl['lbl.pm.cal.err.popup.msg1']}" />
-					<br />
-					<br />
-					<div style="float: right;">
-						<p:commandButton value="#{lbl['lbl.btn.ok']}"
-							oncomplete="errDialog.hide()"  process="@this" update="@this" />
-					</div>
+				<h:outputText value="#{lbl['lbl.pm.cal.err.popup.msg1']}" />
+				<br />
+				<br />
+				<div style="float: right;">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						oncomplete="errDialog.hide()" process="@this" update="@this" />
+				</div>
 
-				</h:panelGroup>
-			</p:dialog>
-		
+			</h:panelGroup>
+		</p:dialog>
+
 	</ui:define>
 </ui:composition>

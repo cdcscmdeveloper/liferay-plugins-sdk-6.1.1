@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -17,10 +18,6 @@ import my.ep.web.managedbean.pm.unitofmeasurement.UnitOfMeasurementManagedBean;
  * 
  */
 public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	AuditPMSPDTO detailObjStatus = new AuditPMSPDTO();
 
@@ -47,15 +44,14 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 		detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_UOM);
 		detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_UOM);
-		
+
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		if (null != managedBeans.getAuditUomOldVal() && managedBeans.getAuditUomOldVal().getUomId() > 0) {
 			if (managedBeans.getAuditUomOldVal().getRecordStatusFlg() != managedBeans.getPmUom().getRecordStatusFlg()) {
 				detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getAuditUomOldVal().getUomId()));
 				detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_UOM_STATUS_FIELDLABELID);
-				detailObjStatus
-						.setOldValue(managedBeans.getAuditUomOldVal().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
+				detailObjStatus.setOldValue(managedBeans.getAuditUomOldVal().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				detailObjStatus
 						.setNewValue(managedBeans.getUomResDTO().getPmUom().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 								: AuditConst.PM_AUD_INACTIVE);

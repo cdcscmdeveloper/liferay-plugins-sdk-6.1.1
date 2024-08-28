@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -50,7 +51,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 		detailObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 		detailObjName.setLvlCode2(AuditConst.PM_LVL_CODE_2_SAL);
 		detailObjName.setLvlCode3(AuditConst.PM_LVL_CODE_3_SAL);
-		
+
 		detailSatus.setRoleCode(roleCode);
 		detailSatus.setDoctype(AuditConst.PM_AUD_SALUTATION);
 		detailSatus.setPmParameterLvlId(AuditConst.PM_AUD_SALUTATION_PMPARAMETERLVLID);
@@ -71,16 +72,13 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 				objList.add(detailObjName);
 				auditPMReqDTO.setObjList(objList);
 			}
-			if (managedBeans.getOldPmSalutation().getRecordStatusFlg() != managedBeans.getPmSalutation()
-					.getRecordStatusFlg()) {
+			if (managedBeans.getOldPmSalutation().getRecordStatusFlg() != managedBeans.getPmSalutation().getRecordStatusFlg()) {
 				detailSatus.setDocId(BigInteger.valueOf(managedBeans.getPmSalutation().getSalutationId()));
 				detailSatus.setFieldLabelCode(AuditConst.PM_AUD_SALUTATION_STATUS_FIELDLABELID);
-				detailSatus
-						.setOldValue(managedBeans.getOldPmSalutation().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
-				detailSatus
-						.setNewValue(managedBeans.getPmSalutation().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-								: AuditConst.PM_AUD_INACTIVE);
+				detailSatus.setOldValue(managedBeans.getOldPmSalutation().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
+				detailSatus.setNewValue(managedBeans.getPmSalutation().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				detailSatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(detailSatus);
 				auditPMReqDTO.setObjList(objList);
@@ -118,7 +116,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 
 		managedBeans.setPmSalutation(null);
 		managedBeans.setOldPmSalutation(null);
-		
+
 		return auditPMReqDTO;
 	}
 }

@@ -842,6 +842,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				int responsePeriod = this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod() == null ? 
 						this.getManagedBean().getQt().getResponsePeriod() : this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod();
 				this.getManagedBean().getScQtApprovalRequestList().get(0).setResponsePeriod(responsePeriod);			
+				initializeDecisionCertPBM();
 				page = QTConstants.EXTEND_PROPOSAL_VALIDITY_PENDING_APPROVAL;
 			}
 			//#21692 WIP - End
@@ -1622,7 +1623,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
 						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
 						if(wfStatus.getPmStatus()!=null
-								&& QTStatusConst.QT_RE_FINALIZATION.equals(wfStatus.getPmStatus().getStatusId())) {
+								&& (QTStatusConst.QT_RE_FINALIZATION.equals(wfStatus.getPmStatus().getStatusId())
+								|| QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.equals(wfStatus.getPmStatus().getStatusId()))) {
 							QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
 							qtReqDTO1.setQtdetail(qt);
 							QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
@@ -2064,15 +2066,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			for (ScQtApprovalRequest req : requestList) {
 				if (QTConstants.PORTLET_NAME_QT_MAINTENANCE
 						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
-					if ((null != req.getDecessionType() && req
-							.getDecessionType()
+					if ((null != req.getApproverAction() && req
+							.getApproverAction()
 							.getParameterCode()
 							.equals(ParameterConst.APPROVAL_DECISION_TYPE_REJECTED))) {
 						epv = true;
 					}
 				} else {
-					if ((null != req.getDecessionType() && req
-							.getDecessionType()
+					if ((null != req.getApproverAction() && req
+							.getApproverAction()
 							.getParameterCode()
 							.equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED))) {
 						epv = true;
@@ -2284,13 +2286,19 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				requestdetails
 						.setDecisionCertPBM(new PmParameter());
+				this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.FALSE);//#21692 show MOF Date if Chairman hasnt decide EPV (after Proposal Validity Ended)
 			}
 			//#21692 - start
-			if (requestdetails.getDecisionCertPBM().getParameterCode() != null
-					&& requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
-				parameterReqDTO.setParameterId(ParameterConst.TR3_REJECT);
-				requestdetails
-						.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+			if (requestdetails.getDecisionCertPBM().getParameterCode() != null) {
+				if (requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
+					parameterReqDTO.setParameterId(ParameterConst.TR3_REJECT);
+					requestdetails
+							.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+					this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
+					this.getManagedBean().getQt().setMofDate(null);//Null date after hide
+				} else {
+					this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.FALSE);//#21692 show MOF Date if Chairman Accept EPV (after Proposal Validity Ended)
+				}
 			}
 			//#21692 - end
 		}
@@ -3665,6 +3673,20 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecessionType().getParameterId()
 							|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == request.getDecessionType().getParameterId())) {
 				throw new EpException(MessageConst.ERROR_770405);
+			}
+		}
+		
+		private void initializeDecisionCertPBM() {
+			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM() == null
+					&& this.getManagedBean().getQt().getProposalValidityEndDate().before(new Date())) {
+				this.getManagedBean().getScQtApprovalRequestList().get(0).setDecisionCertPBM(new PmParameter());
+			}
+			
+			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM() != null
+					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode() != null
+					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
+				this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.TRUE);
+				this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 			}
 		}
 		//#21692 - End

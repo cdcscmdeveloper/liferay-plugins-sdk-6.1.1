@@ -1297,7 +1297,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					this.getManagedBean().getQt().getQtStatus().getStatusId()
 							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
 							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
+							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL) && !this.getManagedBean().isReadOnly()) {
 				if (isQTRoleMaintenanceValidation()) {
 					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 				}
@@ -12958,6 +12958,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	//#11299 End Vinod
 	
 	//#21692 - start
+	/**
+	 * retrieve Response Period from Pm Rule Config Table
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public int retrieveResponsePeriod(String value) {
 		
 		IRuleSO ruleSO = null;
@@ -12970,7 +12976,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
 			if (roleResDTO.isSuccessful()
 					&& roleResDTO.getRuleValueList() != null
-					&& roleResDTO.getRuleValueList().size() > 0) {
+					&& CollectionUtils.isNotEmpty(roleResDTO.getRuleValueList())) {
 				if (value.equals(ParameterConst.RULE_VALUE)) {
 					result = Integer.parseInt(roleResDTO.getRuleValueList()
 							.get(0).getRuleValue());
@@ -12987,13 +12993,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 				throw new EpException(MessageConst.ERROR_770222,
 						new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
 			}
-		} finally {
-			ruleSO = null;
+		} catch(Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "Retrieve Response Period from Pm Rule Config Table", getManagedBean().getQt().getQtNo(),
+					"retrieveResponsePeriod", getUserIdSessionFromLoginId(), e);
 		}
 		
 		return result;
 	}
 	
+	/**
+	 * retrieve new proposal validity
+	 * 
+	 * @param scQt
+	 * @param newValidityPeriod
+	 * @return
+	 */
 	public Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -13005,9 +13019,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		if (status != null) {
 
-			Date date = null;
-
-			date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
+			Date date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
 
 			Timestamp ts = null;
 			if (date != null) {
@@ -13018,12 +13030,19 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return null;
 	}
 	
+	/**
+	 * make sure qt after publish
+	 * 
+	 * @param currentStatusId
+	 * @return
+	 */
 	public boolean isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
 				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
 				QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA, QTStatusConst.QT_AWARDED,
-				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT, QTStatusConst.QT_RE_FINALIZATION);
+				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT,
+				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER, QTStatusConst.QT_RE_FINALIZATION);
 
 		for (int i = 0; i < validPeriodExts.size(); i++) {
 			if (validPeriodExts.get(i).longValue() == currentStatusId)
@@ -13206,7 +13225,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				List<String> listCatCodeHistory = new ArrayList<>();
 				List<String> listCatCode = new ArrayList<>();
 				
-				if (null != listScQTCategoriesHistory && listScQTCategoriesHistory.size() > 0){
+				if (null != listScQTCategoriesHistory && !listScQTCategoriesHistory.isEmpty()){ //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					for(ScQtCategoryHistory catHis : listScQTCategoriesHistory){
 						scqtcathistid.add(catHis.getPmCategoryL3().getCategoryL3Id());
 						String catcode = catHis.getPmCategoryL1().getCategoryL1Code()+catHis.getPmCategoryL2().getCategoryL2Code()+catHis.getPmCategoryL3().getCategoryL3Code();
@@ -13214,7 +13233,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 					}
 				}
 				
-				if (null !=listScQtCategories && listScQtCategories.size() > 0 ){
+				if (null !=listScQtCategories && !listScQtCategories.isEmpty()){ //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					for (ScQtCategory cat:listScQtCategories){
 						String catcode = cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code();
 						listCatCode.add(catcode);
@@ -13226,11 +13245,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				
 				if (null != listScQtCategories && null != listScQTCategoriesHistory){
 					if (listScQtCategories.size() == listScQTCategoriesHistory.size()) {
-						if (listCatCodeHistory.containsAll(listCatCode)){
-							getManagedBean().setIsScEditSupplierQualificationCriteria(false);
-						}else {
-							getManagedBean().setIsScEditSupplierQualificationCriteria(true);
-						}
+						getManagedBean().setIsScEditSupplierQualificationCriteria(!listCatCodeHistory.containsAll(listCatCode)); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					} else {
 						getManagedBean().setIsScEditSupplierQualificationCriteria(true);
 					}

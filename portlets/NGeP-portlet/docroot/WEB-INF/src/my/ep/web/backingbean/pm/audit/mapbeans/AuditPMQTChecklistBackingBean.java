@@ -3,6 +3,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -49,8 +50,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		SupportDocumentManagedBean managedBeans = (SupportDocumentManagedBean) managedBean;
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-		if (null != managedBeans.getResDTO().getDocument().getDocumentId()
-				&& null != managedBeans.getSelectedDocumentOld() && managedBeans.isUpdated()) {
+		if (null != managedBeans.getResDTO().getDocument().getDocumentId() && null != managedBeans.getSelectedDocumentOld()
+				&& managedBeans.isUpdated()) {
 			updated = true;
 			auditPMReqDTO = updateDetail(managedBeans, auditPMReqDTO, objList, roleCode);
 		} else {
@@ -64,10 +65,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjDisplayPriority.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjDisplayPriority.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjDisplayPriority.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-			detailObjDisplayPriority.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-					.getParameterCode());
-			detailObjDisplayPriority.setDocId(BigInteger
-					.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+			detailObjDisplayPriority.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
+			detailObjDisplayPriority.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjDisplayPriority.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_DISPLAY_PRIORITY_FIELDLABELID);
 			detailObjDisplayPriority.setNewValue(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjDisplayPriority.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -80,8 +79,7 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjDocumentName.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjDocumentName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjDocumentName.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-			detailObjDocumentName.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-					.getParameterCode());
+			detailObjDocumentName.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
 			detailObjDocumentName.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjDocumentName.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_NAME_FIELDLABELID);
 			detailObjDocumentName.setNewValue(managedBeans.getResDTO().getDocument().getDocName());
@@ -95,12 +93,9 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjDocumentDefinition.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjDocumentDefinition.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjDocumentDefinition.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-			detailObjDocumentDefinition.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-					.getParameterCode());
-			detailObjDocumentDefinition.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-					.getDocumentId()));
-			detailObjDocumentDefinition
-					.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_DEFINITION_FIELDLABELID);
+			detailObjDocumentDefinition.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
+			detailObjDocumentDefinition.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+			detailObjDocumentDefinition.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_DEFINITION_FIELDLABELID);
 			detailObjDocumentDefinition.setNewValueId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 					.getDocDefinitionTypeCode().getParameterId()));
 			detailObjDocumentDefinition.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -113,13 +108,11 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjSupplierAction.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjSupplierAction.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjSupplierAction.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-			detailObjSupplierAction.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-					.getParameterCode());
-			detailObjSupplierAction
-					.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+			detailObjSupplierAction.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
+			detailObjSupplierAction.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjSupplierAction.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_SUPPLIER_ACTION_FIELDLABELID);
-			detailObjSupplierAction.setNewValueId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-					.getChecklistActionCode().getParameterId()));
+			detailObjSupplierAction.setNewValueId(BigInteger.valueOf(managedBeans.getSelectedDocument().getChecklistActionCode()
+					.getParameterId()));
 			detailObjSupplierAction.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(detailObjSupplierAction);
 			auditPMReqDTO.setObjList(objList);
@@ -146,14 +139,11 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjScoringRequired.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjScoringRequired.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjScoringRequired.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-			detailObjScoringRequired.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-					.getParameterCode());
-			detailObjScoringRequired.setDocId(BigInteger
-					.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+			detailObjScoringRequired.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
+			detailObjScoringRequired.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjScoringRequired.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID);
-			detailObjScoringRequired
-					.setNewValue(managedBeans.getResDTO().getDocument().isScoringReq() ? AuditConst.PM_AUD_YES
-							: AuditConst.PM_AUD_NO);
+			detailObjScoringRequired.setNewValue(managedBeans.getResDTO().getDocument().isScoringReq() ? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
 			detailObjScoringRequired.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(detailObjScoringRequired);
 			auditPMReqDTO.setObjList(objList);
@@ -171,18 +161,15 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 	private AuditPMReqDTO updateDetail(SupportDocumentManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
 			ArrayList<AuditPMSPDTO> objList, String roleCode) {
 		/* Display priority */
-		if (managedBeans.getSelectedDocumentOld().getDisplaySeq() != managedBeans.getResDTO().getDocument()
-				.getDisplaySeq()) {
+		if (managedBeans.getSelectedDocumentOld().getDisplaySeq() != managedBeans.getResDTO().getDocument().getDisplaySeq()) {
 			detailObjDisplayPriority.setRoleCode(roleCode);
 			detailObjDisplayPriority.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
 			detailObjDisplayPriority.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
 			detailObjDisplayPriority.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjDisplayPriority.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjDisplayPriority.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-			detailObjDisplayPriority.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-					.getParameterCode());
-			detailObjDisplayPriority.setDocId(BigInteger
-					.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+			detailObjDisplayPriority.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
+			detailObjDisplayPriority.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjDisplayPriority.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_DISPLAY_PRIORITY_FIELDLABELID);
 			detailObjDisplayPriority.setOldValue(managedBeans.getSelectedDocumentOld().getDisplaySeq());
 			detailObjDisplayPriority.setNewValue(managedBeans.getResDTO().getDocument().getDisplaySeq());
@@ -213,25 +200,20 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			auditPMReqDTO.setObjList(objList);
 		}
 		/* detailObjScoringRequired */
-		if (managedBeans.getSelectedDocumentOld().isScoringReq() != managedBeans.getResDTO().getDocument()
-				.isScoringReq()) {
+		if (managedBeans.getSelectedDocumentOld().isScoringReq() != managedBeans.getResDTO().getDocument().isScoringReq()) {
 			detailObjScoringRequired.setRoleCode(roleCode);
 			detailObjScoringRequired.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
 			detailObjScoringRequired.setPmParameterLvlId(AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID);
 			detailObjScoringRequired.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 			detailObjScoringRequired.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjScoringRequired.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-			detailObjScoringRequired.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-					.getParameterCode());
-			detailObjScoringRequired.setDocId(BigInteger
-					.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+			detailObjScoringRequired.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
+			detailObjScoringRequired.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjScoringRequired.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID);
-			detailObjScoringRequired
-					.setOldValue(managedBeans.getSelectedDocumentOld().isScoringReq() ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
-			detailObjScoringRequired
-					.setNewValue(managedBeans.getResDTO().getDocument().isScoringReq() ? AuditConst.PM_AUD_YES
-							: AuditConst.PM_AUD_NO);
+			detailObjScoringRequired.setOldValue(managedBeans.getSelectedDocumentOld().isScoringReq() ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
+			detailObjScoringRequired.setNewValue(managedBeans.getResDTO().getDocument().isScoringReq() ? AuditConst.PM_AUD_YES
+					: AuditConst.PM_AUD_NO);
 			detailObjScoringRequired.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(detailObjScoringRequired);
 			auditPMReqDTO.setObjList(objList);
@@ -273,8 +255,7 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			List<PmDocumentRestr> checklistRestrictionMandatoryOld) {
 		for (PmDocumentRestr res : checklistRestrictionMandatoryNew) {
 			for (PmDocumentRestr oldValue : checklistRestrictionMandatoryOld) {
-				if (res.getDocumentRestrId() == oldValue.getDocumentRestrId()
-						&& res.isMandatory() != oldValue.isMandatory()) {
+				if (res.getDocumentRestrId() == oldValue.getDocumentRestrId() && res.isMandatory() != oldValue.isMandatory()) {
 					AuditPMSPDTO detailObjMandatory = new AuditPMSPDTO();
 					detailObjMandatory.setRoleCode(roleCode);
 					detailObjMandatory.setDoctype(managedBeans.getResDTO().getDocument().getDocName());
@@ -282,15 +263,12 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 					detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 					detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 					detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-					detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-							.getParameterCode());
+					detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
 					detailObjMandatory.setDocId(BigInteger.valueOf(res.getDocumentRestrId()));
-					detailObjMandatory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-							.getDocumentId()));
+					detailObjMandatory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 					detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
 					detailObjMandatory.setNewValue(res.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-					detailObjMandatory.setOldValue(oldValue.isMandatory() ? AuditConst.PM_AUD_YES
-							: AuditConst.PM_AUD_NO);
+					detailObjMandatory.setOldValue(oldValue.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 					detailObjMandatory.setActionType(isUpdated(managedBeans.isUpdated()));
 					objList.add(detailObjMandatory);
 					auditPMReqDTO.setObjList(objList);
@@ -300,8 +278,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO updatedPmDocumentRestrList(SupportDocumentManagedBean managedBeans,
-			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList, String roleCode) {
+	private AuditPMReqDTO updatedPmDocumentRestrList(SupportDocumentManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
+			ArrayList<AuditPMSPDTO> objList, String roleCode) {
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getResDTO().getUpdatedPmDocumentRestrList()) {
 			if (pmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
 				AuditPMSPDTO detailObjProcurementCategory = new AuditPMSPDTO();
@@ -313,12 +291,10 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 				detailObjProcurementCategory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
 				detailObjProcurementCategory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
 						.getParameterCode());
-				detailObjProcurementCategory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-						.getDocumentId()));
+				detailObjProcurementCategory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 				detailObjProcurementCategory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
 						.getDocumentId()));
-				detailObjProcurementCategory
-						.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
+				detailObjProcurementCategory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
 				detailObjProcurementCategory.setNewValueId(BigInteger.valueOf(pmDocumentRestr.getProcurementCatCode()
 						.getParameterId()));
 				detailObjProcurementCategory.setActionType(isUpdated(managedBeans.isUpdated()));
@@ -333,14 +309,11 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 				detailObjMandatory.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 				detailObjMandatory.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				detailObjMandatory.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-				detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-						.getParameterCode());
+				detailObjMandatory.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
 				detailObjMandatory.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
-				detailObjMandatory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-						.getDocumentId()));
+				detailObjMandatory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 				detailObjMandatory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
-				detailObjMandatory.setNewValue(pmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES
-						: AuditConst.PM_AUD_NO);
+				detailObjMandatory.setNewValue(pmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 				detailObjMandatory.setActionType(isUpdated(managedBeans.isUpdated()));
 				objList.add(detailObjMandatory);
 				auditPMReqDTO.setObjList(objList);
@@ -349,8 +322,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO deletedProcurementCatCodeList(SupportDocumentManagedBean managedBeans,
-			AuditPMReqDTO auditPMReqDTO, ArrayList<AuditPMSPDTO> objList, String roleCode) {
+	private AuditPMReqDTO deletedProcurementCatCodeList(SupportDocumentManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
+			ArrayList<AuditPMSPDTO> objList, String roleCode) {
 		for (PmDocumentRestr deletepmDocumentRestr : managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
 			if (deletepmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
 				AuditPMSPDTO detailObjProcCatDelete = new AuditPMSPDTO();
@@ -360,13 +333,10 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 				detailObjProcCatDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 				detailObjProcCatDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				detailObjProcCatDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-				detailObjProcCatDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-						.getParameterCode());
+				detailObjProcCatDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
 				detailObjProcCatDelete.setDocId(BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId()));
-				detailObjProcCatDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-						.getDocumentId()));
-				detailObjProcCatDelete
-						.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
+				detailObjProcCatDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
+				detailObjProcCatDelete.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
 				detailObjProcCatDelete.setOldValueId(BigInteger.valueOf(deletepmDocumentRestr.getProcurementCatCode()
 						.getParameterId()));
 				detailObjProcCatDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
@@ -382,11 +352,10 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 				detailObjMandatoryDelete.setDocNo(managedBeans.getResDTO().getDocument().getDisplaySeq());
 				detailObjMandatoryDelete.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 				detailObjMandatoryDelete.setLvlCode2(AuditConst.PM_LVL_CODE_2_DC);
-				detailObjMandatoryDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode()
-						.getParameterCode());
+				detailObjMandatoryDelete.setLvlCode3(managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode());
 				detailObjMandatoryDelete.setDocId(BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId()));
-				detailObjMandatoryDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
-						.getDocumentId()));
+				detailObjMandatoryDelete
+						.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 				detailObjMandatoryDelete.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID);
 				detailObjMandatoryDelete.setOldValue(deletepmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES
 						: AuditConst.PM_AUD_NO);
