@@ -4008,13 +4008,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	
 	//#25726#323 - Start
-	private Boolean isPK7FulfilmentTypeDetailSave(Long loaId){
+	private Boolean isPK7FulfilmentTypeDetailSave(Long loaId) {
 		AwardSupplierReqDTO requestDTO = new AwardSupplierReqDTO();
 		requestDTO.setLoaId(loaId);
 		AwardSupplierResDTO responseDTO = getQtAwardSO().retrieveScLoaDtlByLoaId(requestDTO);
-		if(responseDTO.getScLoa() != null && responseDTO.getScLoa().getScLoiLoa() != null && 
-				responseDTO.getScLoa().getScLoiLoa().getFulfilmentTypeCode() != null && 
-				responseDTO.getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterId() != null){
+		if (responseDTO.getScLoa() != null && responseDTO.getScLoa().getScLoiLoa() != null
+				&& responseDTO.getScLoa().getScLoiLoa().getFulfilmentTypeCode() != null
+				&& responseDTO.getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterId() != null) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
