@@ -56,6 +56,8 @@ public class EducationManagedBean extends BaseManagedBean {
 	/** The is lazy. */
 	private boolean isLazy = false;
 	
+	private PmEduField oldAuditPmEduField;
+	
 	public EducationManagedBean(){}
 
 	/**
@@ -206,4 +208,12 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.oldPmEduField = oldPmEduField;
 	}
 
+	public PmEduField getOldAuditPmEduField() {
+		return oldAuditPmEduField;
+	}
+
+	public void setOldAuditPmEduField(PmEduField oldAuditPmEduField) {
+		this.oldAuditPmEduField = oldAuditPmEduField;
+	}
+	
 }

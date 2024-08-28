@@ -36,6 +36,8 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	private boolean islazy = false;
 	
 	private PmCertBody oldPmCertBody;
+	
+	private PmCertBody oldAuditPmCertBody;
 
 	public ProfCertifiedBodyManagedBean(){}
 	
@@ -110,6 +112,14 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	public void setProfCertifiedBodySearchBean(
 			ProfCertifiedBodySearchBean profCertifiedBodySearchBean) {
 		this.profCertifiedBodySearchBean = profCertifiedBodySearchBean;
+	}
+
+	public PmCertBody getOldAuditPmCertBody() {
+		return oldAuditPmCertBody;
+	}
+
+	public void setOldAuditPmCertBody(PmCertBody oldAuditPmCertBody) {
+		this.oldAuditPmCertBody = oldAuditPmCertBody;
 	}
 
 }
