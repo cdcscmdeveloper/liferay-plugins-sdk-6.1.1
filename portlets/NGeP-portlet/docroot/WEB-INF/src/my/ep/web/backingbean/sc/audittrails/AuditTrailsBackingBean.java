@@ -434,6 +434,9 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * @return void
 	 */
 	public void generateRptExcelForAuditTrailDetails(List<AuditQTDTO> auditQTList) {
+		
+		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 
 		Sheet sheetRptAudit = null;
 		int rowIndex = 0;
@@ -554,7 +557,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 					if (rpt.getDocStatus() != null) {
 						Cell cellDocStatus = currRow.createCell(8);
-						cellDocStatus.setCellValue(getStatusDescById(rpt.getDocStatus().longValue()));
+						cellDocStatus.setCellValue(getStatusDescById(rpt.getDocStatus().longValue(), CommonConstants.LANGUAGE_CODE_MALAY));				
 						cellDocStatus.setCellStyle(cellStyleString);
 					} else {
 						Cell cellDocStatus = currRow.createCell(8);
@@ -584,6 +587,13 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 		// Export to Excel
 		exportExcelReportAudit(wb);
+	}
+
+	private String getStatusDescById(Long longValue, String languageCodeMalay) {
+		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+
+		return qtAuditSO.getStatusDescById(longValue, languageCodeMalay);
 	}
 
 	/**
