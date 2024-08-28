@@ -588,7 +588,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * field
 	 */
 	public boolean isPqCircularCheck() {
-		return  getManagedBean().isPqCircularType() ? isAuditCheck() : false;
+		return  getManagedBean().isPqCircularType() && isAuditCheck();
 	}
 
 	/**
