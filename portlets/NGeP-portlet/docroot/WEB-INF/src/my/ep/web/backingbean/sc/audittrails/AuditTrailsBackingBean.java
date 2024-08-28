@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +114,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	public void redirectToQtAuditTrailsViews(String docType, Long docId) throws IOException, PortalException,
 			SystemException {
-		
+
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setQtId(docId);
@@ -401,27 +400,31 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * @param docId
 	 * @return List<AuditQTDTO>
 	 */
-	public List<AuditQTDTO> getAuditTrailDetailsForExlRpt(BigInteger docId) {
+	public void getAuditTrailDetailsForExlRpt(BigInteger docId) {
 
 		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 
-		 return qtAuditSO.getQTAuditTrailsRptViewResultList(docId,
-		 getManagedBean().getGroupSectionId());		
+		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, this.getManagedBean()
+				.getGroupSectionId());
+
+		generateRptExcelForAuditTrailDetails(auditQTList);
 	}
-	
+
 	/**
 	 * #35500, Retrieve All audit trail detail transaction records.
 	 * 
 	 * @param docId
 	 * @return List<AuditQTDTO>
 	 */
-	public List<AuditQTDTO> getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
+	public void getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
 
 		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
 
-		return qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
+		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
+
+		generateRptExcelForAuditTrailDetails(auditQTList);
 	}
 
 	/**
@@ -430,15 +433,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * @param docId
 	 * @return void
 	 */
-	public void generateRptExcelForAuditTrailDetails(BigInteger docId) {
-		List<AuditQTDTO> rsltReportList = new ArrayList<>();
-		try {
-			rsltReportList = getAuditTrailDetailsForExlRpt(docId);
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, "AU", docId.toString(),
-					"AuditTrailsBackingBean.generateRptExcelForAuditTrailDetails",
-					getUserIdSessionFromLoginId(), e);
-		}
+	public void generateRptExcelForAuditTrailDetails(List<AuditQTDTO> auditQTList) {
 
 		Sheet sheetRptAudit = null;
 		int rowIndex = 0;
@@ -452,7 +447,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		Cell cellTitleRow = null;
 		Row titleHeaderRow = null;
 
-		if (!rsltReportList.isEmpty()) {
+		if (!auditQTList.isEmpty()) {
 			// Setting Report - Populate Table Header Cell Value
 			colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
 
@@ -474,7 +469,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 			// End Section - Setting Cell Style for each cell
 
-			for (AuditQTDTO rpt : rsltReportList) {
+			for (AuditQTDTO rpt : auditQTList) {
 				if (rpt.getGroupSectionId() != null && !rpt.getGroupSectionId().equals(currentGroupSecId)) {
 					sheetRptAudit = wb.createSheet(getCurrentReportTab(rpt.getGroupSectionId().longValue()));
 					colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
@@ -486,7 +481,8 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 							.setHAlignment(HorizontalAlignment.CENTER).setVAlignment(VerticalAlignment.CENTER)
 							.buildHeaderCellStyle();
 
-					// Section - Setting Cell Style for No Records Found message.
+					// Section - Setting Cell Style for No Records Found
+					// message.
 					noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
 
 					// Cell Format: String
@@ -500,10 +496,14 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 					// Create Row/Cell - Report Title
 					titleRptRow = sheetRptAudit.createRow(1); // Create Row
-					cellTitleRow = titleRptRow.createCell(1);// Create Cell(Column)
-					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value
+					cellTitleRow = titleRptRow.createCell(1);// Create
+																// Cell(Column)
+					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
+																					// Cell
+																					// Value
 					cellTitleRow.setCellStyle(cellStyleTitleRpt);
-					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Cell
+					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
+																						// Cell
 
 					// Create Row/Cell - Report Header Datatable
 					titleHeaderRow = sheetRptAudit.createRow(3);
@@ -513,7 +513,8 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 						cell.setCellStyle(colHeaderDataTableRptStyle);
 					}
 
-					// Section: Populate Audit Trail Details Record for Request Note.Create Row/Cell - Audit Trail Details
+					// Section: Populate Audit Trail Details Record for Request
+					// Note.Create Row/Cell - Audit Trail Details
 					rowIndex = sheetRptAudit.getLastRowNum() + 1;
 					currentGroupSecId = rpt.getGroupSectionId();
 				}
