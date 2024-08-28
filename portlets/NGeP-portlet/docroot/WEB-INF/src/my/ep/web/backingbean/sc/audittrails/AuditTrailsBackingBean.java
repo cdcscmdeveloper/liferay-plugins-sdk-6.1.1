@@ -198,7 +198,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToGeneralInfoTab() {
 		log.info("navigateToGeneralInfoTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -208,7 +207,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToBriefingSiteVisitTab() {
 		log.info("navigateToBriefingSiteVisitTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -218,7 +216,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToSupplierListTab() {
 		log.info("navigateToSupplierListTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -228,7 +225,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToDeskOfficerAssistantTab() {
 		log.info("navigateToDeskOfficerAssistantTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -238,7 +234,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToDeskOfficerTab() {
 		log.info("navigateToDeskOfficerTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -248,7 +243,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToSpecCommitteeAppointTab() {
 		log.info("navigateToSpecCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -258,7 +252,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToEvalCommitteeAppointTab() {
 		log.info("navigateToEvalCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -268,7 +261,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToTechCommitteeAppointTab() {
 		log.info("navigateToTechCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -277,7 +269,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToOpenCommitteeAppointTab() {
 		log.info("navigateToOpenCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -287,7 +278,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToFinanceCommitteeAppointTab() {
 		log.info("navigateToFinanceCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -297,7 +287,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToQuotCommitteeAppointTab() {
 		log.info("navigateToQuotCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
@@ -307,7 +296,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToProcBoardAppointTab() {
 		log.info("navigateToProcBoardAppointTab");
-		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
 		RequestContext.getCurrentInstance().execute("blockWidget.hide()");

@@ -22,7 +22,6 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	private int activeIndex;
 	private List searchGeneralInfo;
 	private AuditTrailsSearchBean auditTrailsSearchBean;
-	private boolean isLazy = false;
 	private Long groupSectionId;
 
 	public String getModuleSelected() {
@@ -69,13 +68,7 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	}
 	public void setAuditQTSearchBean(AuditTrailsSearchBean auditTrailsSearchBean) {
 		this.auditTrailsSearchBean = auditTrailsSearchBean;
-	}
-	public boolean isLazy() {
-		return false;
-	}
-	public void setLazy(boolean isLazy) {
-		this.isLazy = isLazy;
-	}
+	}	
 	public List getSearchGeneralInfo() {
 		return searchGeneralInfo;
 	}
