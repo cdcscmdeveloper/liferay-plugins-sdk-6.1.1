@@ -64,7 +64,7 @@
 						<p:inputTextarea id="otherDesc" maxlength="100"
 							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
-							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" disabled="#{backingBean.managedBean.upsCannotEdit}"><!-- #32008 -->
+							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" ><!-- #36289 -->
 						</p:inputTextarea>
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc 
