@@ -1,9 +1,10 @@
 package my.ep.web.managedbean.sm.audit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
-import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -36,6 +37,14 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 	private boolean isLazy = true;
 	private int activeIndex;
 	private transient IPagingDataModel<AuditSupplierManagementResDTO> searchAuSm = new SearchAuSmPagingDataModel();
+	List<AuditSupplierManagementResDTO> bankInfoList = new ArrayList<>();
+	List<AuditSupplierManagementResDTO> userInfoList = new ArrayList<>();
+	List<AuditSupplierManagementResDTO> adminInfoList = new ArrayList<>();
+	List<AuditSupplierManagementResDTO> supplierInfoList = new ArrayList<>();
+	List<AuditSupplierManagementResDTO> approverRemarkInfoList = new ArrayList<>();
+	List<AuditSupplierManagementResDTO> overlappingRemarkInfoList = new ArrayList<>();
+	List<AuditSupplierManagementResDTO> catCodeInfoList = new ArrayList<>();
+	List<AuditSupplierManagementResDTO> approvedCatCodeInfoList = new ArrayList<>();
 
 	public AuSmSearchBean getAuSmSearchBean() {
 		return auSmSearchBean;
@@ -82,8 +91,9 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 			try {
 				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				return auditSmSo.searchAuditSupplierManagementView(auSmSearchBean.getLanguage(), auSmSearchBean.getDocId(),
-						auSmSearchBean.getDocType(), auSmSearchBean.getAuGroupSection(), searchBean);
+				return auditSmSo.searchAuditSupplierManagementView(auSmSearchBean.getLanguage(),
+						auSmSearchBean.getDocId(), auSmSearchBean.getDocType(), auSmSearchBean.getAuGroupSection(),
+						searchBean);
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve",
 						auSmSearchBean.getDocId().toString(), "IAuditSupplierManagementSO", logKey.getUserId(), e);
@@ -100,4 +110,67 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 		this.searchAuSm = searchAuSm;
 	}
 
+	public List<AuditSupplierManagementResDTO> getBankInfoList() {
+		return bankInfoList;
+	}
+
+	public void setBankInfoList(List<AuditSupplierManagementResDTO> bankInfoList) {
+		this.bankInfoList = bankInfoList;
+	}
+
+	public List<AuditSupplierManagementResDTO> getUserInfoList() {
+		return userInfoList;
+	}
+
+	public void setUserInfoList(List<AuditSupplierManagementResDTO> userInfoList) {
+		this.userInfoList = userInfoList;
+	}
+
+	public List<AuditSupplierManagementResDTO> getAdminInfoList() {
+		return adminInfoList;
+	}
+
+	public void setAdminInfoList(List<AuditSupplierManagementResDTO> adminInfoList) {
+		this.adminInfoList = adminInfoList;
+	}
+
+	public List<AuditSupplierManagementResDTO> getSupplierInfoList() {
+		return supplierInfoList;
+	}
+
+	public void setSupplierInfoList(List<AuditSupplierManagementResDTO> supplierInfoList) {
+		this.supplierInfoList = supplierInfoList;
+	}
+
+	public List<AuditSupplierManagementResDTO> getApproverRemarkInfoList() {
+		return approverRemarkInfoList;
+	}
+
+	public void setApproverRemarkInfoList(List<AuditSupplierManagementResDTO> approverRemarkInfoList) {
+		this.approverRemarkInfoList = approverRemarkInfoList;
+	}
+
+	public List<AuditSupplierManagementResDTO> getOverlappingRemarkInfoList() {
+		return overlappingRemarkInfoList;
+	}
+
+	public void setOverlappingRemarkInfoList(List<AuditSupplierManagementResDTO> overlappingRemarkInfoList) {
+		this.overlappingRemarkInfoList = overlappingRemarkInfoList;
+	}
+
+	public List<AuditSupplierManagementResDTO> getCatCodeInfoList() {
+		return catCodeInfoList;
+	}
+
+	public void setCatCodeInfoList(List<AuditSupplierManagementResDTO> catCodeInfoList) {
+		this.catCodeInfoList = catCodeInfoList;
+	}
+
+	public List<AuditSupplierManagementResDTO> getApprovedCatCodeInfoList() {
+		return approvedCatCodeInfoList;
+	}
+
+	public void setApprovedCatCodeInfoList(List<AuditSupplierManagementResDTO> approvedCatCodeInfoList) {
+		this.approvedCatCodeInfoList = approvedCatCodeInfoList;
+	}
 }
