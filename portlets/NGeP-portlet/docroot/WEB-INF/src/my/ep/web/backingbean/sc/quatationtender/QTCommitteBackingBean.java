@@ -1611,11 +1611,12 @@ public class QTCommitteBackingBean extends
 		Collections.sort(scCommittee.getScCommitteeMembers(),new MemberRoleComparator());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 		
-		//28895-35500
-		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList())
-				? this.getManagedBean().getNewScCommitteeMemberList() : new ArrayList<ScCommitteeMember>();
+		// 28895-35500 start
+		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList()) 
+				? this.getManagedBean().getNewScCommitteeMemberList(): new ArrayList<ScCommitteeMember>();
 		newScCommitteeMemberList.addAll(toBeAddedList);
 		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);
+		// 28885-35500 end
 
 		}
 		setQtMaintencesChanges();
@@ -1630,7 +1631,6 @@ public class QTCommitteBackingBean extends
 	 * Reset.
 	 */
 	public void reset() {
-		debugLogger("reset");
 		//12471 - start
 		resetCommitteeSearchBean(this.getManagedBean().getQt());
 		getManagedBean().getUserSearchCommitteeDataModel().resetData();
@@ -1891,9 +1891,7 @@ public class QTCommitteBackingBean extends
 			}
 			
 		}		
-		//28895-35500
-		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);//28895
-
+		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);//28895 - 35500
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);
 		this.getManagedBean().setExtraDeleteComitteeSelection(null);

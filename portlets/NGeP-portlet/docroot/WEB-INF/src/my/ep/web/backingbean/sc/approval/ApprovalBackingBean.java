@@ -3039,9 +3039,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			reqDTO.setDocType(this.getManagedBean().getCurrentTaskDocType());
 			reqDTO.setQtdetail(scQt);
 			reqDTO.setTaskName(this.getManagedBean().getTaskName());
-			reqDTO.setRequestRemark(this.getManagedBean().getDoaaRequest().getAppRequestRemarks().get(0));
-			//28895 - 35500
-			reqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
+			reqDTO.setRequestRemark(this.getManagedBean().getDoaaRequest().getAppRequestRemarks().get(0));		
+			reqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList()); //28895 - 35500
 			reqDTO.setDoaaList(this.getManagedBean().getNewDoaList()) ;
 			ScQtAppRequestRemark remark =  reqDTO.getRequestRemark();
 			String remarkStr = remark==null ? "": remark.getRemark();

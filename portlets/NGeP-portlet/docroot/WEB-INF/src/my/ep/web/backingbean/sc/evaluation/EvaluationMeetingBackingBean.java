@@ -954,9 +954,8 @@ public class EvaluationMeetingBackingBean extends
 					metReqDtO.setScQtApprovalRemark(remark);
 				}
 			}
-			//#25037
-			//28895 - 35500
-			prepareCommitteeAuditTrails();
+			//#25037		
+			prepareCommitteeAuditTrails();// 28895 - 35500
 		} finally {
 
 		}
