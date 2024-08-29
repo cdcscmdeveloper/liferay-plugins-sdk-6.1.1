@@ -12640,9 +12640,6 @@ public class SmApplicationUtil {
 			}
 		} else {
 			// initialize po inquiry
-			//#34392 - start
-			bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
-			//#34392 - end
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 	}
@@ -13899,7 +13896,7 @@ public class SmApplicationUtil {
 			if (item == null) {
 				item = new SelectItem();
 				item.setLabel(eduLevel.getCodeName());
-				item.setValue(eduLevel.getParameterDescId());
+				item.setValue(eduLevel.getPmParameter().getParameterId()); //36360
 				eduLevelItems.add(item);
 			}
 		}
