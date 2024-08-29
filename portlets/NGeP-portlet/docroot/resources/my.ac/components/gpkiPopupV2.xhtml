@@ -8,194 +8,41 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-		<p:remoteCommand name="setMediumType" action="#{gpkiBackingBean.setMediumType()}" 
-			update="gpki_dlg2" oncomplete="gpki_dlg.hide(); gpki_dlg2.show();"/>
-		<p:remoteCommand name="getUser" action="#{gpkiBackingBean.getUserDetails()}" 
-			oncomplete="gpki.setUser(xhr,status,args); "/>
-		<p:remoteCommand name="toggleBtn" action="#{gpkiBackingBean.toggleBtn()}" update="resendOtpBtn"/>
-		<h:outputScript library="ep/gpki_js" name="gpki-api-v2.js" />
+	<p:remoteCommand name="setMediumType" action="#{gpkiBackingBean.setMediumType()}" 
+		update="gpki_dlg2" oncomplete="gpki_dlg.hide(); gpki_dlg2.show();"/>
+	<p:remoteCommand name="getUser" action="#{gpkiBackingBean.getUserDetails()}" 
+		oncomplete="gpki.setUser(xhr,status,args); "/>
+	<p:remoteCommand name="toggleBtn" action="#{gpkiBackingBean.toggleBtn()}" update="resendOtpBtn"/>
+	<h:outputScript library="ep/gpki_js" name="obfuscate_gpki-api-v2.js" />
+	<h:outputScript library="ep/gpki_js" name="obfuscate_gpkiPopup2.js" />
 
-		<script>
-			var hostOTP = "";
-			var hostBroker = "";
-			var gpki = {};
-			(function() {
-				var nric = "";
-				var email = "";
-				var modeUsed = "";
-				var appCode = "";
-				var agencyId = "";
-				var nonce = "";
-				var signType = "";
-				var saluran = "";
-				var otpExp = 120;
-				
-				this.setUser = function(xhr, status, args){
-					nric = args.nric;
-					email = args.email;
-					modeUsed = args.modeUsed;
-					appCode = args.appCode;
-					agencyId = args.agencyId;
-					signType = args.signType;
-					saluran = args.saluran;
-					otpExp = Number(args.otpExp);
-					if(typeof otpExp !== "number"){
-						otpExp = 120;
-					}
-					hostOTP = args.hostOTP;
-					hostBroker = args.hostBroker;
-					this.requestMedium();
-				}
-				
-				this.requestMedium = function(){
-					request_mediumList(nric, appCode, modeUsed);
-				};
-				
-				this.requestOtp = function(){
-					request_otp(nric, agencyId, nric, modeUsed, otpExp, saluran, email);
-				};
-				
-				this.setNonce = function(n){	nonce = n;	};
-				
-				this.signToken = function(){
-					gpkiBlockWidget.show();
-					const pin = $("[id='#{pin.clientId}']").val();
-					const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
-					if(pin === ""){
-						this.mandatoryError($("label[id$='pinLbl']").text());
-						return;
-					}
-					sign("token", nric, pin, textBeforeSign, "false", "data");
-				};
-				
-				this.signRoam = function(){
-					gpkiBlockWidget.show();
-					const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
-					const pin = $("[id='#{pin2.clientId}']").val();
-					if(pin === ""){
-						this.mandatoryError($("label[id$='pin2Lbl']").text());
-						return;
-					}
-					const otpCode = $("[id='#{otpPin.clientId}']").val();
-					if(otpCode === ""){
-						this.mandatoryError($("label[id$='otpLbl']").text());
-						return;
-					}
-					const data = encodeURIComponent(Gpki.hash(textBeforeSign));
-					sign_roaming(nric, nonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
-				};
-				
-				this.otpExp = function(){	return otpExp;	};
-				
-				this.mandatoryError = function(f){
-					errorAction([{name: 'field', value: f}]);
-					gpkiBlockWidget.hide();
-				};
-			}).apply(gpki);
-			
-			function parseResultMedium(msg) {
-				$(document).ready(
-					function() {
-						const obj = jQuery.parseJSON(msg);
-						const response = obj.response;
-						var mediumTypeId = 0;
-						if (obj.status){
-							var mediumArr = jQuery.parseJSON(response);
-							var mediumTypeId = mediumArr[0].id;
-							//pick roaming otp over token
-							for(var i=0; i &lt;  mediumArr.length; i++){
-								var id = parseInt(mediumArr[i].id,10);
-								if(id === 5){
-									mediumTypeId = 5;
-									break;
-								} else if(id === 4 &amp;&amp; mediumTypeId != 4){
-									id = 4;
-								}
-							}
-							setMediumType([	{name: 'message', value: obj.message},
-							                {name: 'mediumTypeId', value: mediumTypeId},
-							                {name: 'response', value: response}	]);
-							if (mediumTypeId === 5){
-								gpki.requestOtp();
-							} else if (mediumTypeId != 4){
-								gpki_dlg.hide();
-								gpki_dlg2.show();
-								showError(obj.status, "Medium Token atau Roaming OTP sahaja");
-							}
-						} else {
-							gpki_dlg.hide();
-							gpki_dlg2.show();
-							showError(obj.status, obj.message);
-						}
-					});
-			}
-			
-			function parseTxResultRequestOTP(msg){
-				$(document).ready(
-					function() {
-						const obj = jQuery.parseJSON(msg);
-						if(obj.status){
-							disableOtpTimeout();
-							const response = jQuery.parseJSON(obj.response);
-							gpki.setNonce(response.nonce);
-							alert("OTP code: "+response.otp);	//alert - DO NOT MERGE TO PROD!
-						} else {
-							showError(obj.status, obj.message)
-						}
-					});
-			}
-			
-			function parseSignResult(msg){
-				$(document).ready(
-					function() {
-						const obj = jQuery.parseJSON(msg);
-						if(obj.status_code === 0){
-							const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();;
-							const response = jQuery.parseJSON(obj.response);
-							postSignOTP([{name: 'message', value: obj.message},
-										{name: 'subjectDN', value: obj.subject_dn},
-							          	{name: 'textBeforeSign', value: textBeforeSign},
-							          	{name: 'signedText', value: obj.signed_data}]);
-						} else {
-							showError(obj.status_code, obj.status_message);
-						}
-						gpkiBlockWidget.hide();
-					});
-			}
-			
-			function parseTxResultSigningRoaming(msg){
-				$(document).ready(
-					function() {
-						const obj = jQuery.parseJSON(msg);
-						if(obj.status){
-							const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
-							const response = jQuery.parseJSON(obj.response);
-							postSignOTP([{name: 'message', value: obj.message},
-							          {name: 'subjectDN', value: response.subject_dn},
-							          {name: 'textBeforeSign', value: textBeforeSign},
-							          {name: 'signedText', value: response.signed_data}]);
-						} else {
-							showError(obj.status, obj.message);
-						}
-						gpkiBlockWidget.hide();
-					});
-			}
-			
-			function disableOtpTimeout(){
-				toggleBtn();				
-				$("[id$='gpkiOtpNotes']").show();
-				setTimeout(
-					function() {
-						$("[id$='gpkiOtpNotes']").hide();
-						toggleBtn();
-					}, gpki.otpExp() * 1000);
-			}
-			
-			function showError(code, msg){
-				errorAction([{name : 'statusCode', value : code},
-				             {name : 'statusMsg', value : msg}]);
-			}
-		</script>
+	<script>
+		function token(){
+			const text = $("[id='#{textBeforeSign.clientId}']").val();
+			const pin = $("[id='#{pin.clientId}']").val();
+			const pinLbl = $("label[id$='pinLbl']").text();
+		    gpki.signToken([text, pin, pinLbl]);
+		}
+		
+		function otp(){
+			const text = $("[id='#{textBeforeSign.clientId}']").val();
+		    const pin = $("[id='#{pin2.clientId}']").val();
+		    const otp = $("[id='#{otpPin.clientId}']").val();
+		    const pinLbl = $("label[id$='pin2Lbl']").text();
+		    const otpLbl = $("label[id$='otpLbl']").text();
+		    gpki.signRoam([text, pin, otp, pinLbl, otpLbl]);
+		}
+		
+		function disableOtpTimeout(){
+			toggleBtn();				
+			$("[id$='gpkiOtpNotes']").show();
+			setTimeout(
+				function() {
+					$("[id$='gpkiOtpNotes']").hide();
+					toggleBtn();
+				}, gpki.otpExp() * 1000);
+		}
+	</script>
 
 	<p:dialog id="gpki_dlg" widgetVar="gpki_dlg" onShow="getUser();"
 		resizable="false" modal="true" showHeader="false" closable="false">
@@ -222,7 +69,7 @@
 			<h:panelGrid columns="4" cellpadding="5" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}">
 				<p:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" id="pinLbl" styleClass="required" />
 				<p:password binding="#{pin}" id="password" />
-				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="gpki.signToken();" />
+				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="token()" />
 				
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
 				<p:commandButton id="skipBtn1" value="Sign W/O Token"  
@@ -236,7 +83,7 @@
 				
 				<p:outputLabel for="otpcode" value="#{lbl['lbl.gpki.otp.code']}" id="otpLbl" styleClass="required" />
 				<p:inputText binding="#{otpPin}" id="otpcode" />
-				<p:commandButton id="signOtpBtn" value="#{lbl['lbl.btn.sign']}" onstart="gpki.signRoam();"/>
+				<p:commandButton id="signOtpBtn" value="#{lbl['lbl.btn.sign']}" onstart="otp()"/>
 				<p:commandButton value="#{lbl['lbl.gpki.otp.resend']}" id="resendOtpBtn" onclick="gpki.requestOtp();" 
 					disabled="#{gpkiBackingBean.getBtn()}"/>
 				
