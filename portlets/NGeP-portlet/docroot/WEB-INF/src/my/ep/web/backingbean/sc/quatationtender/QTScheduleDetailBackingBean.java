@@ -430,8 +430,8 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
-		// 28895 - 35500 start
-		List<ScQtContactPerson> deletedContactList = new ArrayList<>();
+		//28859 - 35500
+		List<ScQtContactPerson> deletedContactList = new ArrayList<ScQtContactPerson>();
 		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
 
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
@@ -440,12 +440,12 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
 				deletedContactList.add(contactPerson);
-				if (newDoaList != null && newDoaList.contains(contactPerson)) {
+				if (newDoaList != null && newDoaList.contains(contactPerson)){
 					newDoaList.remove(contactPerson);
 				}
 			}
 			this.getManagedBean().setPmuserDeletedContactpersonList(deletedContactList);
-			// 28895 - 35500 end
+			//28859 - 35500 end
 		}
 		this.getManagedBean().setSelectedpmuserContactpersonList(null);
 	}
@@ -498,12 +498,11 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			contactPerson.setUser(newUser);
 		}
 		
-		//28895 - 35500 start
+		//28895 - 35500
 		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
 		newDoaList = newDoaList == null ? new ArrayList<ScQtContactPerson>() : newDoaList;
 		newDoaList.add(contactPerson);
 		this.getManagedBean().setNewDoaList(newDoaList);
-		//28895 - 35500 end
 
 //		if (list != null) {
 //			for (PmUser user : list) {

@@ -1874,6 +1874,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//28895 - 35500
 	/** The newly added sc qt committee */
 	private List<ScCommitteeMember> newScCommitteeMemberList;
+	
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
 	

@@ -696,13 +696,12 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(null);
 		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
-		//#28895-35500 start
+		//28895-35500
 		List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
 		if (newBriefingRegistrationList.contains(selectedReqistration)){
 			newBriefingRegistrationList.remove(selectedReqistration);
 			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
 		}
-		//#28895-35500 end
 	}
 
 	/**
@@ -748,7 +747,7 @@ public class BSVAttendanceBackingBean extends
 			getManagedBean().setBriefingRegistrationList(
 					new ArrayList<ScQtBsvRegistration>());
 		}
-
+		
 		if (mofAccounts != null) {
 			//#29770 - #26247 - Start.
 			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
@@ -779,7 +778,6 @@ public class BSVAttendanceBackingBean extends
 					}
 					setSlectedHeaderName(bsvRegistration.getSupplier()
 							.getCompanyName().concat("  ").concat(">"));
-					// 28895-35500 Start
 					newBriefingRegistrationList.add(bsvRegistration);
 				}
 				this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);

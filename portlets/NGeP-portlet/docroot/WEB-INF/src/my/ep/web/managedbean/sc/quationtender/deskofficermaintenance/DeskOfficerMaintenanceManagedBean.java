@@ -77,7 +77,7 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 	
 	private boolean disableAssign = true;
 	
-	//#28895 - 35500
+	//#28859 - 35500
 	private PmUser newTempDeskOfficer;
 	
 	
