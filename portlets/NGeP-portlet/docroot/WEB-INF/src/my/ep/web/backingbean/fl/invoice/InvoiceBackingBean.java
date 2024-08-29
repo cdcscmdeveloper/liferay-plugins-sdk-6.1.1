@@ -119,6 +119,7 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -127,6 +128,7 @@ import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
@@ -788,35 +790,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				getSupplierGst(getManagedBean().getInvoice());
 			}
 			validateAdvancedPayment();
-			//26279 - start
-			if(getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL.longValue() 
-					|| getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL.longValue()) {
-				SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-				SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-				if(smDisciplinaryAction != null) {
-					getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-					boolean isWarningOnly = false;
-					String warningOrDisciplinaryActionMsg;
-					String language =  new FacesScopes().getUserLocale().getLanguage();
-					if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
-							&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
-							&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
-							&& !smDisciplinaryAction.isManufacturerCancel()) {
-						isWarningOnly = true;
-						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-					} else if(smDisciplinaryAction.isCancelCategory() 
-							|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
-							|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
-							|| smDisciplinaryAction.isManufacturerCancel()){
-						warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-						getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-					}
-				} else {
-					getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-				}
-			}
-			//26279 - end
+			
+			checkDisciplinaryAction();//26279
+
 			//28221 - start
 			if(getManagedBean().getInvoice().getSupplierSubmittedId() == null && 
 					FLProcessNameConst.CREATE_INVOICE.equals(this.getManagedBean().getTaskName())){
@@ -858,6 +834,52 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "invBasePage.xhtml");
 	}
+	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL
+				.longValue()
+				|| getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL
+						.longValue()) {
+			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				setDisciplinaryActionMsg(smDisciplinaryAction);
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+
+	/**
+	 * Sets the disciplinary action message
+	 * 
+	 * @param smDisciplinaryAction
+	 */
+	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		boolean isWarningOnly = false;
+		String warningOrDisciplinaryActionMsg;
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		if (isWarningOnly(smDisciplinaryAction)) {
+			isWarningOnly = true;
+			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
+					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+		} else if (!isWarningOnly(smDisciplinaryAction)) {
+			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
+					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+		}
+	}
+
+	// 26279 - End
 	
 	
 	/**
@@ -2649,8 +2671,19 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
-		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
+		SmSupplier currSupp;
+
+		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
+			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
+		} else {
+			currSupp = SmApplicationUtil.getCurrentSupplier();
+		}
+
+		currSupp.setFlagSupplier(true);
+		currSupp.setFlagDASuppProfile(true);
+
+		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
+		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
 		RequestContext.getCurrentInstance().execute(
 				"disciplinaryActionHistoryDlg.show();");
 	}
