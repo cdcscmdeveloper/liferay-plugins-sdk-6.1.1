@@ -29,11 +29,13 @@
 				<ac:smReviseReason bBean="#{backingBean}"/>
 				<div style="width: 100%" align="right">
 				<!-- #12483 - END -->
+				<!--#34392 Start -->
 					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-						update=":#{p:component('sendInqDialog')}" />
+						update=":#{p:component('sendInqDialog')}" rendered="#{(backingBean.managedBean.currentStatus ne 'Pending Review Site Visit Report - After Approval' 
+						or backingBean.managedBean.currentStatus ne 'Menunggu Laporan Lawatan Tapak - Selepas Diluluskan')}"/>
 				</div>
 				<ui:include src="poInquiryDetails.xhtml" />
 			</td>
@@ -50,7 +52,6 @@
 				
 			<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 				id="inquiryMainSuppDocPanel">
-				<!--#34392 Start -->
 				<!-- <p:dataTable var="onTable" id="inquiryMainSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{backingBean.managedBean.missinDocs}">
 					<ac:paginator for="inquiryMainSdList" />
