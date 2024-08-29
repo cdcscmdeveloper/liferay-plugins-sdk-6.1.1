@@ -1024,6 +1024,9 @@
 														<!-- #25726 START -->
 														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
 														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														 
+														 <p:ajax event="change" 
+														 listener="#{directLOABackingBean.changeResetRequiredAgreement()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
 														<!-- #25726 END -->
 													</p:selectOneMenu>
 												</c:when>
