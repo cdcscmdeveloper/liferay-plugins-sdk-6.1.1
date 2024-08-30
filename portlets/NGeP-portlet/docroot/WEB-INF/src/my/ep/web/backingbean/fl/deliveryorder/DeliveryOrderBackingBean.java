@@ -1641,6 +1641,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	//26279 - end
 	
 	// 28855 - start
+	/**
+	 * Populates item information and specifications based on the provided
+	 * fulfilment item address.
+	 * 
+	 * @param flItemAddr
+	 *            The fulfilment item address containing the item details.
+	 */
 	public void doItemInfoList(FlFulfilmentItemAddr flItemAddr) {
 		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);

@@ -1790,6 +1790,14 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	//26279 - end	
 	
 	// 28855 - start
+	/**
+	 * Populates item information and specifications for a fulfilment item based
+	 * on the provided address.
+	 * 
+	 * @param flItemAddr
+	 *            The fulfilment item address containing the details of the
+	 *            item.
+	 */
 	public void frnItemInfoList(FlFulfilmentItemAddr flItemAddr) {
 		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
