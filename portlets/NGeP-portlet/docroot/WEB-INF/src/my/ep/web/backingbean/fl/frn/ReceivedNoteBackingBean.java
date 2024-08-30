@@ -604,8 +604,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 		
 		// 28855 - Start
-		String DocType = getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType();
-		if (DocType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+		String docType = getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType();
+		if (docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 			getManagedBean().setContractFlag(true);
 		} else {
 			getManagedBean().setContractFlag(false);
