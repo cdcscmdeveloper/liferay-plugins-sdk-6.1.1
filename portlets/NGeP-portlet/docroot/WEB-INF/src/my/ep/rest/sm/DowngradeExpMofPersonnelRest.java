@@ -34,7 +34,7 @@ public class DowngradeExpMofPersonnelRest {
 			return Response.status(406).entity(ex.getMessage()).build();
 		}
 	}
-	
+	//#33628 START
 	private void downgradeMOFToBasic(){
 		ISmSchedulerSO reqSO = SmServiceLookup.getSmSchedulerSO();
 		SmSchedulerResDTO resDTO = reqSO.retrieveExpiredMof();
