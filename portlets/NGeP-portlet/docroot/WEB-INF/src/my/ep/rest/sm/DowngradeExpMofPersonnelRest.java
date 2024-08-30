@@ -26,6 +26,7 @@ public class DowngradeExpMofPersonnelRest {
 	public Response downgradeExpMofPersonnel() {
 		log.info("Before success calling downgradeExpMofPersonnel rest api....");
 		try {
+			//#33628 START
 			downgradeMOFToBasic();
 			changeExpiredMofPersonnelToDeleted();
 
