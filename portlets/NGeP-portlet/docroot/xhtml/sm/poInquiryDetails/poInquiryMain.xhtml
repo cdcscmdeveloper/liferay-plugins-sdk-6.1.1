@@ -27,14 +27,18 @@
 			<td>
 				<!-- #12483 - START, #34892 -->
 				<ac:smReviseReason bBean="#{backingBean}"/>
+				<!--#34392 Start -->
+				<c:if test="#{backingBean.managedBean.currentStatus ne SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL 
+						or backingBean.managedBean.currentStatus ne SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM}">
 				<div style="width: 100%" align="right">
 				<!-- #12483 - END -->
-					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-						update=":#{p:component('sendInqDialog')}" />
+						update=":#{p:component('sendInqDialog')}"/>
 				</div>
+				</c:if>
 				<ui:include src="poInquiryDetails.xhtml" />
 			</td>
 		</tr>
@@ -50,7 +54,6 @@
 				
 			<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 				id="inquiryMainSuppDocPanel">
-				<!--#34392 Start -->
 				<!-- <p:dataTable var="onTable" id="inquiryMainSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{backingBean.managedBean.missinDocs}">
 					<ac:paginator for="inquiryMainSdList" />
