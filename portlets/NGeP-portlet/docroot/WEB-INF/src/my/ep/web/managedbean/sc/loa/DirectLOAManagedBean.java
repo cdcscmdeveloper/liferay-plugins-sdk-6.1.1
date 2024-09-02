@@ -366,7 +366,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private BigDecimal limit = new BigDecimal(500000);
 	private boolean AgreementReqChange = false;
 	private boolean above500K = true;
-	private boolean fullfilmentTypeChange = false; //#25726#323 
+	private boolean fullfilmentTypeChange = false; 
+	private boolean requiredAgreementChange = false; 
 	// #25726 END #Sqube Vulnerability Minor G47 end
 	
 	// Bug #33674@Syazani - Start
@@ -2066,7 +2067,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		above500K = above500k;
 	}
 	
-	//#25726#323 - Start
 	public boolean isFullfilmentTypeChange() {
 		return fullfilmentTypeChange;
 	}
@@ -2074,7 +2074,14 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setFullfilmentTypeChange(boolean fullfilmentTypeChange) {
 		this.fullfilmentTypeChange = fullfilmentTypeChange;
 	}
-	//#25726#323 - End
+	
+	public boolean isRequiredAgreementChange() {
+		return requiredAgreementChange;
+	}
+
+	public void setRequiredAgreementChange(boolean requiredAgreementChange) {
+		this.requiredAgreementChange = requiredAgreementChange;
+	}
 	// #25726 END
 	
 	//#29468
