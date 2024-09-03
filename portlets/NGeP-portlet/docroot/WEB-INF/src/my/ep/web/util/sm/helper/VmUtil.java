@@ -156,20 +156,113 @@ public class VmUtil {
 		if (key == null || maxLength <= 0) {
 			return key;
 		}
+		int newMaxLength;
 		String[] stringArray = key.split("\\s+");
 		StringBuilder updatedKey = new StringBuilder();
 		for (String s : stringArray) {
 			if (s.length() > maxLength) {
-				updatedKey.append(s.replaceAll("(.{" + maxLength + "})(?!$)",
-						"$1" + TemplateSpecConst.HTML_NEW_LINE_CHARACTER).concat(SSTConstant.ADD_WHITESPACE));
+				newMaxLength = isStringContainHTMLEntity(maxLength, s);
+				String chopString = s.replaceAll("(.{" + newMaxLength + "})(?!$)",
+						"$1" + TemplateSpecConst.HTML_NEW_LINE_CHARACTER).concat(SSTConstant.ADD_WHITESPACE);
+				chopString = validateHtmlEntitySyntax(chopString);
+				updatedKey.append(chopString);
+				
 			} else {
 				updatedKey.append(s.concat(SSTConstant.ADD_WHITESPACE));
 			}
-			log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
 		}
+		log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
 		return updatedKey.toString();
 	}
 	
+	/**
+	 * @param chopString
+	 * @param isHtmlSyntaxIncomplete
+	 * @return
+	 */
+	public String validateHtmlEntitySyntax(String chopString) {
+		String newChopString = chopString;
+		newChopString = validateBreakLine(newChopString);
+		
+		newChopString = validateLessThanBracket(newChopString);
+		
+		newChopString = validateGreaterThanBracket(newChopString);
+		
+		return newChopString;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateGreaterThanBracket(String newChopString) {
+		String checkBracket = newChopString;
+		if (checkBracket.contains("&#<br />62;")) {
+			checkBracket = checkBracket.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#62<br />;")){
+			checkBracket = checkBracket.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#6<br />2;")){
+			checkBracket = checkBracket.replaceAll("&#6<br />2;", SSTConstant.GREATER_THAN_SYMBOL);
+		}else if (checkBracket.contains("&<br />#62;")){
+			checkBracket = checkBracket.replaceAll("&<br />#62;", SSTConstant.GREATER_THAN_SYMBOL);
+		}
+		return checkBracket;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateLessThanBracket(String newChopString) {
+		String checkBracket = newChopString;
+		if (checkBracket.contains("&#<br />60;")) {
+			checkBracket = checkBracket.replaceAll("&#<br />60;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#60<br />;")){
+			checkBracket = checkBracket.replaceAll("&#60<br />;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (checkBracket.contains("&#6<br />0;")){
+			checkBracket = checkBracket.replaceAll("&#6<br />0;", SSTConstant.LESS_THAN_SYMBOL);
+		}else if (checkBracket.contains("&<br />#60;")){
+			checkBracket = checkBracket.replaceAll("&<br />#60;", SSTConstant.LESS_THAN_SYMBOL);
+		}
+		return checkBracket;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateBreakLine(String newChopString) {
+		String checkBreakLine = newChopString;
+		if (checkBreakLine.contains("<br<br /> />")){
+			checkBreakLine = checkBreakLine.replaceAll("<br<br />/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}else if (checkBreakLine.contains("<b<br />r />")){
+			checkBreakLine = checkBreakLine.replaceAll("<b<br />r/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}else if (checkBreakLine.contains("<b<br />r")){
+			checkBreakLine = checkBreakLine.replaceAll("<b<br />r", "<br");
+		}else if (checkBreakLine.contains("<<br />br")){
+			checkBreakLine = checkBreakLine.replaceAll("<<br />br", "<br");
+		}
+		return checkBreakLine;
+	}
+
+	/**
+	 * @param maxLength
+	 * @param s
+	 * @return
+	 */
+	private int isStringContainHTMLEntity(int maxLength, String s) {
+		int newMaxlength = maxLength;
+		if (s.contains(TemplateSpecConst.HTML_NEW_LINE_CHARACTER) || s.contains("<b")){
+			newMaxlength = newMaxlength+TemplateSpecConst.HTML_NEW_LINE_CHARACTER.length();
+		}
+		if (s.contains(SSTConstant.LESS_THAN_SYMBOL)){
+			newMaxlength = newMaxlength+SSTConstant.LESS_THAN_SYMBOL.length();
+		}
+		if (s.contains(SSTConstant.GREATER_THAN_SYMBOL)){
+			newMaxlength = newMaxlength+SSTConstant.GREATER_THAN_SYMBOL.length();
+		}
+		return newMaxlength;
+	}
 	//36122 - end
 	
 }

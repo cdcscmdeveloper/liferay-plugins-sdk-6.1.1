@@ -274,7 +274,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 						//#25396 - start
 						else{
 							if(isViewAsSupplier()){
-								List<Long> supplierIds = new ArrayList<Long>();
+								List<Long> supplierIds = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 								supplierIds.add(supplierSearchReqDTO.getUserId());
 								reqDTO.setSupplierIds(supplierIds);
 							}
