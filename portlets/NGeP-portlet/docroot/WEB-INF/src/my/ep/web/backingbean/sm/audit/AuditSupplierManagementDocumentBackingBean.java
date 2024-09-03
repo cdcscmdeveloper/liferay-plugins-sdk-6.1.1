@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -35,6 +36,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.util.Constants;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -363,6 +365,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 	 */
 	private void exportExcelReportAudit(Workbook wb) {
 		try {
+			FacesContext.getCurrentInstance().getExternalContext().addResponseCookie(Constants.DOWNLOAD_COOKIE, "true", Collections.<String, Object>emptyMap());
 			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
