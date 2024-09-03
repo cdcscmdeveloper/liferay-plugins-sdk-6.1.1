@@ -12068,62 +12068,62 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	public boolean isInactiveCommiteeApproverRole(Long userId, String approverRole) {
 		IQTDetailSO detailSO = null;
 		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
+			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
 			boolean inactive = DbValueConst.FLAG_NO;
-			
+
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			PmUserOrg pmUserOrgs = new PmUserOrg();
-			
+
 			quationTenderReqDTO.setUserId(userId);
 			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
-			
+
 			// #25426 - Start
-			if(pmUserOrgs != null && pmUserOrgs.getUserOrgId() != null){
+			if (pmUserOrgs != null && pmUserOrgs.getUserOrgId() != null) {
 			// #25426 - End
-				
-			    PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
-			    
-			    if(approverRole.equals(RoleCode.COMMITTEE_APPROVER.value())){
-			    	 for (PmUserRole rolesCA : pmUserOrg.getPmUserRoles()){
-			    		 String roleCodeCA = rolesCA.getPmRole().getRoleCode();
-						 int statusFlagCA = rolesCA.getRecordStatusFlg();
-			    		 if(roleCodeCA.equals(RoleCode.COMMITTEE_APPROVER.value()) && (statusFlagCA == DbValueConst.RECORD_STATUS_SUSPENDED)){
+
+				PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
+
+				if (approverRole.equals(RoleCode.COMMITTEE_APPROVER.value())) {
+					for (PmUserRole rolesCA : pmUserOrg.getPmUserRoles()) {
+						String roleCodeCA = rolesCA.getPmRole().getRoleCode();
+						int statusFlagCA = rolesCA.getRecordStatusFlg();
+						if (roleCodeCA.equals(RoleCode.COMMITTEE_APPROVER.value())
+								&& (statusFlagCA == DbValueConst.RECORD_STATUS_SUSPENDED)) {
 							inactive = DbValueConst.FLAG_YES;
-						 } 
-			    	 }
-			    }
-                if(approverRole.equals(RoleCode.PUBLICATION_APPROVER.value())){
-                	for (PmUserRole rolesPA : pmUserOrg.getPmUserRoles()){
-			    		 String roleCodePA = rolesPA.getPmRole().getRoleCode();
-						 int statusFlagPA = rolesPA.getRecordStatusFlg();
-			    		 if(roleCodePA.equals(RoleCode.PUBLICATION_APPROVER.value()) && (statusFlagPA == DbValueConst.RECORD_STATUS_SUSPENDED)){
+						}
+					}
+				}
+				if (approverRole.equals(RoleCode.PUBLICATION_APPROVER.value())) {
+					for (PmUserRole rolesPA : pmUserOrg.getPmUserRoles()) {
+						String roleCodePA = rolesPA.getPmRole().getRoleCode();
+						int statusFlagPA = rolesPA.getRecordStatusFlg();
+						if (roleCodePA.equals(RoleCode.PUBLICATION_APPROVER.value())
+								&& (statusFlagPA == DbValueConst.RECORD_STATUS_SUSPENDED)) {
 							inactive = DbValueConst.FLAG_YES;
-						 } 
-			    	}
-			    }
-				
-             // #25426 - Start
-			}else{
-				
-                pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
-                
-                if(null != pmUserOrgs && null != pmUserOrgs.getRecordStatusFlg()){
-                	int statusFlag = pmUserOrgs.getRecordStatusFlg();
-                    if(approverRole.equals(RoleCode.COMMITTEE_APPROVER.value()) && (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)){
-                    	inactive = DbValueConst.FLAG_YES; 
-    			    }
-                    if(approverRole.equals(RoleCode.PUBLICATION_APPROVER.value()) && (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)){
-                    	inactive = DbValueConst.FLAG_YES;
-    			    }
-                }
-          
+						}
+					}
+				}
+
+			// #25426 - Start
+			} else {
+
+				pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+				if (pmUserOrgs != null
+						&& pmUserOrgs.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED
+						&& (approverRole.equals(RoleCode.COMMITTEE_APPROVER.value()) || approverRole
+								.equals(RoleCode.PUBLICATION_APPROVER.value()))) {
+
+					inactive = DbValueConst.FLAG_YES;
+				}
+
 			}
+
 			// #25426 - End
-			
+
 			return inactive;
-			
+
 		} finally {
 			detailSO = null;
 		}
