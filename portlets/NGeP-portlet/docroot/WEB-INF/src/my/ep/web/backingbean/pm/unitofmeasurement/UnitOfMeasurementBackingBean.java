@@ -20,6 +20,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -48,10 +52,6 @@ import my.ep.web.managedbean.pm.unitofmeasurement.UnitOfMeasurementManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * @author DK
@@ -163,8 +163,7 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean) {
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
-		if (getManagedBean().getMeasurementCodes() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementCodes())) {
+		if (getManagedBean().getMeasurementCodes() != null && !"".equalsIgnoreCase(getManagedBean().getMeasurementCodes())) {
 			SearchFilterBean uomSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 			uomSearchBean.setSearchField("uomCode");
 			uomSearchBean.setCaseInsensitive(true);
@@ -173,8 +172,7 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 			isEmpty = false;
 		}
 
-		if (getManagedBean().getMeasurementNames() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementNames())) {
+		if (getManagedBean().getMeasurementNames() != null && !"".equalsIgnoreCase(getManagedBean().getMeasurementNames())) {
 			SearchFilterBean uomSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 			uomSearchBean.setSearchField("uomName");
 			uomSearchBean.setCaseInsensitive(true);
@@ -231,8 +229,8 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 
 				reqDTO.setMeasurementSearchBean(searchBeanData);
 
-				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+				IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUomSO.class);
 				UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getMeasurementSearchResultBean();
@@ -310,18 +308,15 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 		Long uomId = uom.getUomId();
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("uomCode", SearchOperator.OPERATOR_EQUALS.value(), uomCode, true));
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), 1));
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), 1));
 		if (uomId != null) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("uomId", SearchOperator.OPERATOR_NOT_EQUALS.value(), uomId));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("uomId", SearchOperator.OPERATOR_NOT_EQUALS.value(), uomId));
 		}
 
 		UomReqDTO reqDTO = new UomReqDTO();
 		reqDTO.setMeasurementSearchBean(searchBean);
 
-		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUomSO.class);
+		IUomSO reqSO = (IUomSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
 		UomResDTO resDTO = reqSO.retrieveMeasurementBySearch(reqDTO);
 		if (resDTO.isSuccessful()) {
 			if (resDTO.getMeasurementSearchResultBean() != null
@@ -357,8 +352,7 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 
 		String[] msgParam = new String[] { pmUom.getUomCode() };
 
-		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUomSO.class);
+		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
 
 		try {
 			if (pmUom.isBrandNew()) {
@@ -384,20 +378,21 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 			reqDTO.setTrackingStatus(true);
 
 			reqDTO.getTrackDairyVOs().add(
-					PmCommonUtil.assignTrackingDairyForUOM(pmUom.getUomId(), pmUom.getUomCode(), pmUom
-							.getRecordStatusFlg().longValue(), getPmActionDesc(messageId, msgParam)));
+					PmCommonUtil.assignTrackingDairyForUOM(pmUom.getUomId(), pmUom.getUomCode(), pmUom.getRecordStatusFlg()
+							.longValue(), getPmActionDesc(messageId, msgParam)));
 
 			/************ AUDIT *************/
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMUOMBackingBean();
 			UomReqDTO uomReqDTO = new UomReqDTO();
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_UOM) && reqDTO.getPmUom() != null && reqDTO.getPmUom().getUomId() != null) {
-					uomReqDTO.setUomId(reqDTO.getPmUom().getUomId());
-					UomResDTO resDTO = iUomSO.retrieveUomByUomId(uomReqDTO);
-					getManagedBean().setAuditUomOldVal(resDTO.getPmUom());
-				}
-			/************ AUDIT *************/
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_UOM) && reqDTO.getPmUom() != null
+					&& reqDTO.getPmUom().getUomId() != null) {
+				uomReqDTO.setUomId(reqDTO.getPmUom().getUomId());
+				UomResDTO resDTO = iUomSO.retrieveUomByUomId(uomReqDTO);
+				getManagedBean().setAuditUomOldVal(resDTO.getPmUom());
+			}
+			/************ AUDIT **************/
 
 			UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
 			reloadUOMData(resDTO.getPmUom());
@@ -408,16 +403,16 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 				if (pmUom.isBrandNew()) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-									MessageConst.INFO_780091, new String[] { resDTO.getPmUom().getUomCode() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_780091,
+									new String[] { resDTO.getPmUom().getUomCode() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 
 				} else {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-									MessageConst.INFO_780092, new String[] { resDTO.getPmUom().getUomCode() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_780092,
+									new String[] { resDTO.getPmUom().getUomCode() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 				}
 
 				/************ AUDIT *************/

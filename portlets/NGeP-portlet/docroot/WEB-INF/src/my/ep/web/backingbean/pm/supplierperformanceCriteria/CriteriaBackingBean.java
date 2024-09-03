@@ -12,6 +12,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -27,7 +30,6 @@ import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -50,9 +52,6 @@ import my.ep.web.managedbean.pm.supplierperformanceCriteria.CriteriaManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 @ManagedBean(name = "criteriaBackingBean")
 @ViewScoped
@@ -144,8 +143,8 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 
 			if (lSearchBean.getCriteriaCode() != null && lSearchBean.getCriteriaCode().trim().length() > 0) {
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmCriteria.criteriaCode", SearchOperator.OPERATOR_LIKE.value(),
-								lSearchBean.getCriteriaCode(), true));
+						new SearchFilterBean("pmCriteria.criteriaCode", SearchOperator.OPERATOR_LIKE.value(), lSearchBean
+								.getCriteriaCode(), true));
 			}
 			if (lSearchBean.getCriteriaName() != null && lSearchBean.getCriteriaName().trim().length() > 0) {
 
@@ -156,13 +155,13 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 
 			if (lSearchBean.getStatus() != null && lSearchBean.getStatus().trim().length() > 0) {
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmCriteria.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
-								lSearchBean.getStatus()));
+						new SearchFilterBean("pmCriteria.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
+								.getStatus()));
 			} else {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 				codesSearchBean.setSearchField("pmCriteria.recordStatusFlg");
-				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(
-						ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE,
+						ParameterConst.RECORD_STATUS_ACTIVE)));
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 
 			}
@@ -274,8 +273,8 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 		try {
 			CriteriaReqDTO reqDTO = new CriteriaReqDTO();
 			reqDTO.setPmCriteria(newCriteria);
-			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					ICriteriaSO.class);
 
 			/************ AUDIT *************/
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -285,20 +284,17 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA) && newCriteria.getCriteriaId() != null) {
 				getManagedBean().setPmCriteriaOld(reqSO.retrieveCriteriaById(reqDTO).getPmCriteria());
 			}
-			/************ AUDIT *************/
-
+			/************ END AUDIT *************/
 			CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
 			if (resDTO.isSuccessful()) {
 				loadCriteria(resDTO.getPmCriteria().getCriteriaId());
 				log.info("updateCriteria - successful");
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_779006, new String[] { newCriteria.getCriteriaCode() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_779006,
+								new String[] { newCriteria.getCriteriaCode() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 				/************ AUDIT *************/
-
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
 					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
@@ -320,8 +316,8 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 		try {
 			CriteriaReqDTO reqDTO = new CriteriaReqDTO();
 			reqDTO.setCriteriaId(criteriaId);
-			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					ICriteriaSO.class);
 			CriteriaResDTO resDTO = reqSO.retrieveCriteriaById(reqDTO);
 			if (resDTO.isSuccessful()) {
 				pmCriteria = resDTO.getPmCriteria();
@@ -399,19 +395,19 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 		// Create search bean
 		SearchBean<PmCriteriaDesc> searchBean = new SearchBean<PmCriteriaDesc>();
 		searchBean.getDataFilterBeans().add(
-				new SearchMultiFilterBean(new SearchFilterBean("criteria", SearchOperator.OPERATOR_EQUALS.value(),
-						enDesc.toLowerCase().trim(), true), new SearchFilterBean("pmLanguage.languageCode",
+				new SearchMultiFilterBean(new SearchFilterBean("criteria", SearchOperator.OPERATOR_EQUALS.value(), enDesc
+						.toLowerCase().trim(), true), new SearchFilterBean("pmLanguage.languageCode",
 						SearchOperator.OPERATOR_EQUALS.value(), CommonConstants.DEFAULT_LANGUAGE_CODE,
 						SearchCondition.CONDITION_AND.value())));
 
 		searchBean.getDataFilterBeans().add(
-				new SearchMultiFilterBean(new SearchFilterBean("criteria", SearchOperator.OPERATOR_EQUALS.value(),
-						msDesc.toLowerCase().trim(), true), SearchCondition.CONDITION_OR.value(), new SearchFilterBean(
-						"pmLanguage.languageCode", SearchOperator.OPERATOR_EQUALS.value(),
-						CommonConstants.LANGUAGE_CODE_MALAY, SearchCondition.CONDITION_AND.value())));
+				new SearchMultiFilterBean(new SearchFilterBean("criteria", SearchOperator.OPERATOR_EQUALS.value(), msDesc
+						.toLowerCase().trim(), true), SearchCondition.CONDITION_OR.value(), new SearchFilterBean(
+						"pmLanguage.languageCode", SearchOperator.OPERATOR_EQUALS.value(), CommonConstants.LANGUAGE_CODE_MALAY,
+						SearchCondition.CONDITION_AND.value())));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
+		searchBean.getDataFilterBeans()
+				.add(new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
 						DbValueConst.RECORD_STATUS_ACTIVE));
 
 		searchBean.getDataFilterBeans().add(
@@ -420,16 +416,16 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 
 		if (!getManagedBean().getSelectedCriteria().isBrandNew()) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmCriteria.criteriaId", SearchOperator.OPERATOR_NOT_EQUALS.value(),
-							getManagedBean().getSelectedCriteria().getCriteriaId()));
+					new SearchFilterBean("pmCriteria.criteriaId", SearchOperator.OPERATOR_NOT_EQUALS.value(), getManagedBean()
+							.getSelectedCriteria().getCriteriaId()));
 		}
 
 		// Filter by search bean
 		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
 		reqDTO.setCriteriaDescSearchBean(searchBean);
 		reqDTO.setValidation(true);
-		ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+		ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICriteriaSO.class);
 		CriteriaResDTO resDTO = reqSO.retrieveCriteriaDescBySearchBean(reqDTO);
 		if (resDTO.isSuccessful() && resDTO.getCriteriaDescList() != null && !resDTO.getCriteriaDescList().isEmpty()) {
 			{
@@ -445,8 +441,7 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 			CriteriaReqDTO reqDTO = new CriteriaReqDTO();
 			reqDTO.setPmCriteria(newCriteria);
 			reqDTO.setPmUser(user);
-			log.info("******createCriteria=" + newCriteria.getCriteriaCode() + "| UserId="
-					+ reqDTO.getPmUser().getUserId());
+			log.info("******createCriteria=" + newCriteria.getCriteriaCode() + "| UserId=" + reqDTO.getPmUser().getUserId());
 			ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
 			CriteriaResDTO resDTO = criteriaSO.createCriteria(reqDTO);
@@ -455,13 +450,13 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 				log.info("createCriteria - successful"); // TODO 770015
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_779005, new String[] { newCriteria.getCriteriaCode() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_779005,
+								new String[] { newCriteria.getCriteriaCode() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 				/************ AUDIT *************/
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
 				AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
 					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());

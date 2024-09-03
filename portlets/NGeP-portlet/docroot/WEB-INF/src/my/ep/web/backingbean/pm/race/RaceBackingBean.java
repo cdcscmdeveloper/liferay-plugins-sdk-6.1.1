@@ -13,6 +13,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -44,9 +47,6 @@ import my.ep.web.managedbean.pm.race.RaceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * Backing Bean Class for Race.
@@ -138,15 +138,15 @@ public class RaceBackingBean extends BaseBackingBean<RaceManagedBean> implements
 	 */
 	private ISearchBean<PmRace> getSearchBeanData(ISearchBean<PmRace> searchBean) {
 		if (StringUtils.isNotBlank(getManagedBean().getRaceCode())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("raceCode", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean()
-							.getRaceCode(), true));
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("raceCode", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getRaceCode(),
+							true));
 		}
 
 		if (StringUtils.isNotBlank(getManagedBean().getRaceNames())) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("raceName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean()
-							.getRaceNames(), true));
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("raceName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getRaceNames(),
+							true));
 		}
 
 		if (getManagedBean().getRecordStatus() != null) {
@@ -157,9 +157,8 @@ public class RaceBackingBean extends BaseBackingBean<RaceManagedBean> implements
 			List<String> activeAndInActiveStatus = new ArrayList<String>();
 			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
 			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans()
-					.add(new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_IN.value(),
-							activeAndInActiveStatus));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_IN.value(), activeAndInActiveStatus));
 		}
 
 		searchBean.getSortColumns().add(new SearchOrderBean("raceName", true));
@@ -229,8 +228,7 @@ public class RaceBackingBean extends BaseBackingBean<RaceManagedBean> implements
 			String raceNameErrors = isExistRaceCode(race);
 			if (StringUtils.isNotBlank(raceNameErrors)) {
 				if (race.isBrandNew()) {
-					throw new EpException(MessageConst.ERROR_779100,
-							new String[] { race.getRaceCode(), raceNameErrors });
+					throw new EpException(MessageConst.ERROR_779100, new String[] { race.getRaceCode(), raceNameErrors });
 				} else {
 					throw new EpException(MessageConst.ERROR_770220,
 							new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.race.code") });
@@ -253,72 +251,62 @@ public class RaceBackingBean extends BaseBackingBean<RaceManagedBean> implements
 	 * save and update race details
 	 * 
 	 */
-	public String saveRaceDtls(){
-		 debugLogger("saveRaceDtls");
-		 IRaceSO raceSO = null;
-		 String returnUrl = null;
-		 
-		 try{
-			 PmRace race= this.getManagedBean().getPmRace();
-			 validationMessage(race);
-			 RaceReqDTO reqDTO = new RaceReqDTO();
-			 reqDTO.setRace(race);
-			 
-			 raceSO = EpEjbBusinessDelegate.getInstance().
-					 getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRaceSO.class);
-			 
-			 /************ AUDIT *************/
-			 
-			 AuditPMBackingBeanTemplate auTemplate = new AuditPMRaceBackingBean(); 
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IAuditPMSO.class);
-			 
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE) && race.getRaceId() != null) {
-						RaceResDTO oldResDTO = raceSO.retriveRaceById(reqDTO);
-						getManagedBean().setOldPmRace(oldResDTO.getRace());
-					}
-				/************ AUDIT *************/
-			 
-			 RaceResDTO resDTO= raceSO.saveOrUpdateRaceDtls(reqDTO);			 
-			 if(resDTO.isSuccessful()){
-				 this.getManagedBean().setPmRace(resDTO.getRace());
-				 if (race.isBrandNew()) {
-					 returnUrl = NAV_TO_MAIN;
-					 PmCommonUtil.showFacesMsg(
-							 FacesContext.getCurrentInstance(), 
-							 FacesMessage.SEVERITY_INFO, 
-							 MessageConst.INFO_779102, 
-							 new String[] {
-										resDTO.getRace().getRaceCode(),
-										resDTO.getRace().getRaceCode()});
-					}else{
-						returnUrl = NAV_TO_MAINTAIN;
-						PmCommonUtil.showFacesMsg(
-								 FacesContext.getCurrentInstance(), 
-								 FacesMessage.SEVERITY_INFO, 
-								 MessageConst.INFO_779103,new String[]{});				
-					}
-				 /************ AUDIT *************/
-					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE)) {
-						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_RACE);
-					}
-//				/************ END AUDIT *************/
+	public String saveRaceDtls() {
+		debugLogger("saveRaceDtls");
+		IRaceSO raceSO = null;
+		String returnUrl = null;
+
+		try {
+			PmRace race = this.getManagedBean().getPmRace();
+			validationMessage(race);
+			RaceReqDTO reqDTO = new RaceReqDTO();
+			reqDTO.setRace(race);
+
+			raceSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRaceSO.class);
+
+			/************ AUDIT *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMRaceBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE) && race.getRaceId() != null) {
+				RaceResDTO oldResDTO = raceSO.retriveRaceById(reqDTO);
+				getManagedBean().setOldPmRace(oldResDTO.getRace());
+			}
+			/************ AUDIT *************/
+			RaceResDTO resDTO = raceSO.saveOrUpdateRaceDtls(reqDTO);
+			if (resDTO.isSuccessful()) {
+				this.getManagedBean().setPmRace(resDTO.getRace());
+				if (race.isBrandNew()) {
+					returnUrl = NAV_TO_MAIN;
+					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
+							MessageConst.INFO_779102, new String[] { resDTO.getRace().getRaceCode(),
+									resDTO.getRace().getRaceCode() });
+				} else {
+					returnUrl = NAV_TO_MAINTAIN;
+					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
+							MessageConst.INFO_779103, new String[] {});
 				}
-		 }catch(Exception e){
-			 throw e;
-		 }finally{
-			 raceSO = null;
-		 }
-		 return returnUrl;
-	 }
+				/************ AUDIT *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_RACE);
+				}
+				// /************ END AUDIT *************/
+			}
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			raceSO = null;
+		}
+		return returnUrl;
+	}
 
 	public String isExistRaceCode(PmRace race) {
 		IRaceSO raceSO = null;
 		String raceName = null;
 		try {
 			RaceReqDTO reqDTO = new RaceReqDTO();
-			raceSO = (IRaceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IRaceSO.class);
+			raceSO = (IRaceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRaceSO.class);
 			ISearchBean<PmRace> searchBean = new SearchBean<PmRace>();
 
 			searchBean.getDataFilterBeans().add(
@@ -326,8 +314,8 @@ public class RaceBackingBean extends BaseBackingBean<RaceManagedBean> implements
 							DbValueConst.RECORD_STATUS_ACTIVE));
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("raceCode", SearchOperator.OPERATOR_EQUALS.value(), race.getRaceCode()
-							.toLowerCase().trim(), true));
+					new SearchFilterBean("raceCode", SearchOperator.OPERATOR_EQUALS.value(), race.getRaceCode().toLowerCase()
+							.trim(), true));
 
 			if (!race.isBrandNew()) {
 				searchBean.getDataFilterBeans().add(
@@ -363,8 +351,7 @@ public class RaceBackingBean extends BaseBackingBean<RaceManagedBean> implements
 		boolean isExist = false;
 		try {
 			RaceReqDTO reqDTO = new RaceReqDTO();
-			raceSO = (IRaceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IRaceSO.class);
+			raceSO = (IRaceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRaceSO.class);
 			ISearchBean<PmRace> searchBean = new SearchBean<PmRace>();
 
 			searchBean.getDataFilterBeans().add(
@@ -372,8 +359,8 @@ public class RaceBackingBean extends BaseBackingBean<RaceManagedBean> implements
 							DbValueConst.RECORD_STATUS_ACTIVE));
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("raceName", SearchOperator.OPERATOR_EQUALS.value(), race.getRaceName()
-							.toLowerCase().trim(), true));
+					new SearchFilterBean("raceName", SearchOperator.OPERATOR_EQUALS.value(), race.getRaceName().toLowerCase()
+							.trim(), true));
 
 			if (!race.isBrandNew()) {
 				searchBean.getDataFilterBeans().add(

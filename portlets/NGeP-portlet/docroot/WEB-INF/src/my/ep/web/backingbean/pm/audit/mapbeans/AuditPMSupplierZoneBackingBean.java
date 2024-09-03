@@ -13,7 +13,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 
 /**
- * AuditPMSPZBackingBean
+ * AuditPMSPZBackingBean #28895-35509
  * 
  * @author normuliana
  * 
@@ -99,7 +99,6 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				auditPMReqDTO = zoneStateCodeSateName(managedBeans, auditPMReqDTO, objList, roleCode);
 			}
 		}
-
 		managedBeans.setZoneResDTO(null);
 		managedBeans.setPmZoneOld(null);
 		managedBeans.setZoneStateListNewAdded(null);

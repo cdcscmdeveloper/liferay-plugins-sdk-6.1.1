@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -14,6 +15,17 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.ScheduleEntryMoveEvent;
+import org.primefaces.event.ScheduleEntryResizeEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleEvent;
+
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.constant.MessageConst;
@@ -34,15 +46,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.ScheduleEntryMoveEvent;
-import org.primefaces.event.ScheduleEntryResizeEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultScheduleEvent;
-import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.ScheduleEvent;
 
 @ManagedBean(name = "calendarBackingBean")
 @ViewScoped
@@ -111,12 +114,11 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 						// enable when selectedStateId == null (All States)
 						holidayDisableMap.put(holiday.getHolidayId(), false);
 					}
-					event = new DefaultScheduleEvent(holiday.getHolidayName(), holiday.getStartDate(),
-							endDate.getTime(), "allstates");
+					event = new DefaultScheduleEvent(holiday.getHolidayName(), holiday.getStartDate(), endDate.getTime(),
+							"allstates");
 				} else {
 					holidayDisableMap.put(holiday.getHolidayId(), false);
-					event = new DefaultScheduleEvent(holiday.getHolidayName(), holiday.getStartDate(),
-							endDate.getTime());
+					event = new DefaultScheduleEvent(holiday.getHolidayName(), holiday.getStartDate(), endDate.getTime());
 				}
 				event.setId(String.valueOf(holiday.getHolidayId()));
 				event.setData(holiday.getHolidayId());
@@ -159,12 +161,8 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 
 		Long stateId = getManagedBean().getSelectedStateId() == 0 ? null : getManagedBean().getSelectedStateId();
 		try {
-			AuditPMBackingBeanTemplate auTemplate = new AuditPMCalendarBackingBean();
-			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IAuditPMSO.class);
-
-			calendarSO = (ICalendarSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICalendarSO.class);
+			calendarSO = (ICalendarSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					ICalendarSO.class);
 			CalendarReqDTO reqDTO = new CalendarReqDTO();
 			PmHoliday holiday = new PmHoliday();
 			fillHolidayModelByEvent(holiday);
@@ -196,9 +194,11 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 				// this.getManagedBean().setEvent(new DefaultScheduleEvent());
 
 				// /************ AUDIT *************/
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMCalendarBackingBean();
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CALENDAR)) {
-					// resDTO.setHoliday(holiday);
-					// getManagedBean().getResCalendarDTO().setHoliday(holiday);
+
 					getManagedBean().setResCalendarDTO(resDTO);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CALENDAR);
 				}
@@ -213,10 +213,10 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 
 	}
 
+	/**
+	 * @param event
+	 */
 	public void holidayTitleValChange(ValueChangeEvent event) {
-		log.info("holidayTitleValChange");
-		log.info("event.getOldValue()=" + event.getOldValue());
-		log.info("event.getNewValue()=" + event.getNewValue());
 		this.getManagedBean().setOldTitleValue((String) event.getOldValue());
 		this.getManagedBean().setNewTitleValue((String) event.getNewValue());
 		String eventId = this.getManagedBean().getEvent().getId();
@@ -233,6 +233,9 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 		}
 	}
 
+	/**
+	 * @param event
+	 */
 	public void holidayStartDateValChange(ValueChangeEvent event) {
 		log.info("holidayTitleValChange");
 		log.info("event.getOldValue()=" + event.getOldValue());
@@ -241,6 +244,9 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 		this.getManagedBean().setNewStartDate((Date) event.getNewValue());
 	}
 
+	/**
+	 * @param event
+	 */
 	public void holidayEndDateValChange(ValueChangeEvent event) {
 		log.info("holidayTitleValChange");
 		log.info("event.getOldValue()=" + event.getOldValue());
@@ -283,8 +289,8 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 			this.getManagedBean().setNewEndDate(null);
 
 			try {
-				calendarSO = (ICalendarSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, ICalendarSO.class);
+				calendarSO = (ICalendarSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICalendarSO.class);
 				CalendarReqDTO reqDTO = new CalendarReqDTO();
 
 				PmHoliday holiday = new PmHoliday();
@@ -414,14 +420,12 @@ public class CalendarBackingBean extends BaseBackingBean<CalendarManageBean> {
 	}
 
 	public void onEventMove(ScheduleEntryMoveEvent event) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved", "Day delta:"
-				+ event.getDayDelta());
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved", "Day delta:" + event.getDayDelta());
 		addMessage(message);
 	}
 
 	public void onEventResize(ScheduleEntryResizeEvent event) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event resized", "Day delta:"
-				+ event.getDayDelta());
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event resized", "Day delta:" + event.getDayDelta());
 		addMessage(message);
 	}
 
