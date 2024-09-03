@@ -8,7 +8,6 @@ import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
@@ -34,22 +33,19 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
-		String oldAdminIC = "";
-		String newAdminIC = "";
-		SmSupplier supplier = new SmSupplier();
+		String oldAdminIC;
+		String newAdminIC;
+		SmSupplier supplier;
 		if (managedBean.isForceReplace()) {
 			ForceReplaceSuppAdminManagedBean mBean = (ForceReplaceSuppAdminManagedBean) managedBean;
+			supplier = mBean.getSmSupplier();
 			oldAdminIC = mBean.getOldIdentification();
 			newAdminIC = mBean.getNewIdentifiction();
-			supplier = mBean.getSmSupplier();
-			org = null;
 			auObj.setCreatedBy(null);
 			auObj.setChangedBy(null);
 		} else {
 			SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
 			supplier = mBean.getOldSmSupplier();
-			org = mBean.getOldOrg();
-			roleCode = mBean.getOldRole();
 			oldAdminIC = mBean.getUpdateSmPersonnel().getIdentificationNo();
 			newAdminIC = mBean.getSelectedPersonnelToReassign().getIdentificationNo();
 		}

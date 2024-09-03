@@ -37,14 +37,14 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 	private boolean isLazy = true;
 	private int activeIndex;
 	private transient IPagingDataModel<AuditSupplierManagementResDTO> searchAuSm = new SearchAuSmPagingDataModel();
-	List<AuditSupplierManagementResDTO> bankInfoList = new ArrayList<>();
-	List<AuditSupplierManagementResDTO> userInfoList = new ArrayList<>();
-	List<AuditSupplierManagementResDTO> adminInfoList = new ArrayList<>();
-	List<AuditSupplierManagementResDTO> supplierInfoList = new ArrayList<>();
-	List<AuditSupplierManagementResDTO> approverRemarkInfoList = new ArrayList<>();
-	List<AuditSupplierManagementResDTO> overlappingRemarkInfoList = new ArrayList<>();
-	List<AuditSupplierManagementResDTO> catCodeInfoList = new ArrayList<>();
-	List<AuditSupplierManagementResDTO> approvedCatCodeInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> bankInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> userInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> adminInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> supplierInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> approverRemarkInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> overlappingRemarkInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> catCodeInfoList = new ArrayList<>();
+	private List<AuditSupplierManagementResDTO> approvedCatCodeInfoList = new ArrayList<>();
 
 	public AuSmSearchBean getAuSmSearchBean() {
 		return auSmSearchBean;
