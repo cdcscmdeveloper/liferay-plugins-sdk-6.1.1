@@ -2482,34 +2482,6 @@ public class SmApplicationBackingBean extends
 
 	// #31549 end
 
-	private SmSupplierBranch findBranchByName(List<SmSupplierBranch> branches,String branchName) {
-		for (SmSupplierBranch branch : branches) {
-			if (branch.getBranchName().trim().equalsIgnoreCase(branchName)
-					&& !branch.isCopy()) {
-				return branch;
-			}
-		}
-		return null;
-	}
-
-	private void updateExistingBranch(SmSupplierBranch existingBranch,SmSupplierBranch ssmBranch) {
-		existingBranch.setCopy(true);
-		existingBranch.setSmAddress(SmCommonUtil.cloneAddress(ssmBranch
-				.getSmAddress()));
-		// #32725 - start
-		existingBranch.setBranchName(ssmBranch.getBranchName().trim());
-		existingBranch.setSsmData(true);
-		// #32725 - end
-	}
-
-	private void addNewBranch(List<SmSupplierBranch> branches,SmSupplierBranch ssmBranch) {
-		ssmBranch.setCopy(true);
-		ssmBranch.setRevNo(SupplierManagementConst.DEFAULT_REV_NO); // #32725
-		branches.add(ssmBranch);
-	}
-
-	// #31549 end
-
 	/**
 	 * Delete pending mof application.
 	 * 
@@ -15357,8 +15329,7 @@ public class SmApplicationBackingBean extends
 			//SET EQUITY COMPANY
 			//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
 			// #30660
-			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && (ssmResDTO.getSmEquityCompanys()!=null && !ssmResDTO.getSmEquityCompanys().isEmpty()) && !dontGetSsmData){
-			//if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
+			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 				this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 				if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
 					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
