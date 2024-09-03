@@ -2,6 +2,10 @@
  * Agent 3.0 
  * 
  * Ultimate API
+ * 
+ * Obfuscated with default preset at:
+ * https://obfuscator.io
+ * File: obfuscate_gpki-api-v2.js
  */
 
 /**
