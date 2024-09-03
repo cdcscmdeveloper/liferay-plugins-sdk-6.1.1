@@ -5005,6 +5005,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isTierPriceMatched = false;
 		boolean isTierPrice = false;
 		ScSupplierItemPrice topPricedItem = null;
+		log.info("--- Bug 36362 - Method: getTopZonalTierPrice Start ---");
 		for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
 			if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
 				BigDecimal toQty = itemPrice.getToQty();
@@ -5012,9 +5013,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (fromQty != null
 						&& orderQuantity != null) {
 					isTierPrice = true;
+					log.info("--- Bug 36362 - isTierPrice Value = "+isTierPrice+" ---");
+					log.info("--- Bug 36362 - fromQty = "+fromQty+" orderQuantity = "+orderQuantity+" toQty = "+toQty == null? "toQty null" : toQty+" --- Bug 36362 toQty ---");
+					log.info("--- Bug 36362 - fromQty.compareTo(orderQuantity) Value = "+fromQty.compareTo(orderQuantity)+" ---");
+					log.info("--- Bug 36362 - orderQuantity.compareTo(toQty) Value = "+ toQty == null? "toQty null ":orderQuantity.compareTo(toQty)+" --- Bug 36362 - orderQuantity.compareTo(toQty) ---");
 					if (fromQty.compareTo(orderQuantity) <= 0
 							&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
 						isTierPriceMatched = true;
+						log.info("--- Bug 36362 - isTierPriceMatched Value = "+isTierPriceMatched+" ---");
 						groupedItemPrice.add(itemPrice);
 					} 
 				} else {
@@ -5022,6 +5028,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		log.info("--- Bug 36362 - isTierPrice Value Outside loop = "+isTierPrice+" isTierPriceMatched = "+isTierPriceMatched+" ---");
 		if(isTierPrice && !isTierPriceMatched) {
 			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
 		} else {
@@ -5029,6 +5036,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				topPricedItem = findMaxPriceItem(groupedItemPrice);
 			}
 		}
+		log.info("--- Bug 36362 - Method: getTopZonalTierPrice end ---");
 		
 		return topPricedItem;
 	}
