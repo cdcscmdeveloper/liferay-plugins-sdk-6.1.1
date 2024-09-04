@@ -1222,7 +1222,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void validateRequestNote(ScRequestNote requestNote){
 		debugLogger("validateRequestNote");
+		//Temp(#34274 - Start)
 		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
+		//Temp(#34274 - End)
 		// show message for first submission, skip the message for second time submission
 		if(requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()){
 
@@ -1316,7 +1318,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO).getRuleValueList();
 
 							if (ruleValueList != null && ruleValueList.size() > 0) {
-								PmConfigRuleValue configRuleValue = ruleValueList.get(0);								
+								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+								//Temp(#34274 - Start)
 								//Rule : ITEM_THRESHOLD For 20k
 								if(totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
 									if(!isShowMessage){
@@ -1331,7 +1334,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 //										throw new EpException(MessageConst.ERROR_760036,
 //												new String[] {requestNoteDtl.getRequestItem().getItemName(), requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
 									}
-								}														
+								}
+								//Temp(#34274 - End)
 							} else {
 								throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
 							}
@@ -1835,6 +1839,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+					
+					//#33388 - Start										
+					if(scRequestNote != null){
+						requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
+						getRequestNoteSO().checkingRequestSupplierItemId(requestNoteReqDTO);
+					}
+					//#33388 - End
+					
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo(), Boolean.TRUE);
 
@@ -2749,20 +2761,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// when procurement type as pk7 selected 
 		if (procType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			//Temp(#34274 - Start)
 			// MaxProcurementAmt
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+//			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+//
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
 									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
+									null,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-
+			//Temp(#34274 - End)
 		}
 	}
 	
@@ -4992,6 +5005,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isTierPriceMatched = false;
 		boolean isTierPrice = false;
 		ScSupplierItemPrice topPricedItem = null;
+		log.info("--- Bug 36362 - Method: getTopZonalTierPrice Start ---");
 		for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
 			if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
 				BigDecimal toQty = itemPrice.getToQty();
@@ -4999,9 +5013,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (fromQty != null
 						&& orderQuantity != null) {
 					isTierPrice = true;
+					log.info("--- Bug 36362 - isTierPrice Value = "+isTierPrice+" ---");
+					log.info("--- Bug 36362 - fromQty = "+fromQty+" orderQuantity = "+orderQuantity+" toQty = "+toQty == null? "toQty null" : toQty+" --- Bug 36362 toQty ---");
+					log.info("--- Bug 36362 - fromQty.compareTo(orderQuantity) Value = "+fromQty.compareTo(orderQuantity)+" ---");
+					log.info("--- Bug 36362 - orderQuantity.compareTo(toQty) Value = "+ toQty == null? "toQty null ":orderQuantity.compareTo(toQty)+" --- Bug 36362 - orderQuantity.compareTo(toQty) ---");
 					if (fromQty.compareTo(orderQuantity) <= 0
 							&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
 						isTierPriceMatched = true;
+						log.info("--- Bug 36362 - isTierPriceMatched Value = "+isTierPriceMatched+" ---");
 						groupedItemPrice.add(itemPrice);
 					} 
 				} else {
@@ -5009,6 +5028,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
+		log.info("--- Bug 36362 - isTierPrice Value Outside loop = "+isTierPrice+" isTierPriceMatched = "+isTierPriceMatched+" ---");
 		if(isTierPrice && !isTierPriceMatched) {
 			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
 		} else {
@@ -5016,6 +5036,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				topPricedItem = findMaxPriceItem(groupedItemPrice);
 			}
 		}
+		log.info("--- Bug 36362 - Method: getTopZonalTierPrice end ---");
 		
 		return topPricedItem;
 	}

@@ -102,8 +102,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private PmUser loginUser;
 	private String certIssuer;
 	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
-	//test #30425
+	//#30425 - Start
 	public static Logger log = Logger.getLogger(SpkiBackingBean.class);
+	//#30425 - End
 
 	public SpkiBackingBean() {
 	}
@@ -124,21 +125,24 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		// #30425 - Start
-		
-			//start checking for validation
-			validateInternalSPKI(getSupplier().getEpNo());
-			//end checking for validation
-		
+		// start checking for validation
+		validateInternalSPKI(getSupplier().getEpNo());
+		// end checking for validation
 		// #30425 - End
-		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> into trustgate <<<<<<<<<<<<<");
+				// #30425 - End
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo(),
 						getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> Into Digicert <<<<<<<<<");
+				// #30425 - End
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						getLoginUser().getIdentificationNo());
 			}
@@ -146,30 +150,37 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
 	}
-	
+
 	public void getChallengeQuestions(String identificationNo) {
-		//#30425 - Start
+		// #30425 - Start
+		// start checking for validation (for checking cert expiration)
+		validateInternalSPKI(getSupplier().getEpNo());
+		// end checking for validation
+		// #30425 - End
 		
-			//start checking for validation (for checking cert expiration)
-			validateInternalSPKI(getSupplier().getEpNo());
-			//end checking for validation
-		
-		//#30425 - End
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+			// #30425 - Start
 			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+			// #30425 - End
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> into trustgate param <<<<<<<<<<<<<");
+				// #30425 - End
 				challs = TrustGateHelper.getInstance().getChallengeQuestion(
 						identificationNo, getSupplier().getEpNo(),
 						challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
-				log.info(">>>>>>>>>>>>>>> masuk dalam certIssuer gate <<<<<<<<<");
+				// #30425 - Start
+				log.info(">>>>>>>>>>>>>>> Into Digicert param <<<<<<<<<");
+				// #30425 - End
 				challs = DigiCertHelper.getInstance().getChallengeQuestion(
 						identificationNo);
 			}
+			// #30425 - Start
 			log.info("The properties of challs >>>>>>>>>>" + challs);
 			log.info("challs size >>>>>>>>>>>>>>>>>>>>>>>" + challs.size());
+			// #30425 - End
 			setChallengeQues1(challs.get(0));
 			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 		}
@@ -458,7 +469,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		return PmCommonUtil.getCertIssuerByIdentificationNoAndEpNo(
 				identificationNo, getSupplier().getEpNo());
 	}
-	
+
 	//#30425 - Start
 	private String getTypeOfCert(String identificationNo){
 		return PmCommonUtil.getTypeOfCertIssuer(

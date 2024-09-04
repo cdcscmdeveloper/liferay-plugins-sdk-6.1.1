@@ -31,8 +31,13 @@
 		<ui:param name="isSecretaryUser" 
 				  value="#{suppFinalizationBackingBean.managedBean.secretaryUser}" />	
 				  
-	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />	
-		     				
+	 <ui:param name="itemOnly" value="#{suppFinalizationBackingBean.managedBean.scQt.evaluateBy == suppFinalizationBackingBean.evalTypeItem() }" />
+
+		<!-- #28834 Starts new -->
+		<ui:param name="checkDisableBfButtonAfterValidation"
+			value="#{suppFinalizationBackingBean.checkDisableBfButtonAfterValidation()}" />
+		<!-- #28834 end  new-->
+
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
 					autoUpdate="#{suppFinalizationBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info" />
 		<ui:remove> #18685 - start </ui:remove>
@@ -69,15 +74,32 @@
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-						<!-- 19336,25201,17376,19287 -start- -->
-						<p:commandButton value="#{lbl[buttonLabel]}"
-							styleClass="ui-button"
-							action="#{suppFinalizationBackingBean.submitAction}"
-							actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
-							partialSubmit="true" process="@form" update="@form"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
-						<!-- 19336,25201,17376,19287 -end- -->
+						<!-- ***28834 starts -->
+						<h:panelGroup rendered="#{bpmAction ne 'REVISEBP'}">
+							<!-- ***28834 ends -->
+							<!-- 19336,25201,17376,19287 -start- -->
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								partialSubmit="true" process="@form" update="@form"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+							<!-- 19336,25201,17376,19287 -end- -->
+							<!-- ***28834 starts -->
+						</h:panelGroup>
+						<h:panelGroup rendered="#{bpmAction == 'REVISEBP'}">
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button"
+								action="#{suppFinalizationBackingBean.submitAction}"
+								actionListener="#{suppFinalizationBackingBean.managedBean.setOutcome(bpmAction)}"
+								disabled="#{suppFinalizationBackingBean.managedBean.disableBfButton}"
+								widgetVar="disableBfButtonAfterValidation" partialSubmit="true"
+								process="@form" update="@form" onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								rendered="#{validityDaysExpiredQt and !suppFinalizationBackingBean.isQTMaintenanceScreen()}" />
+						</h:panelGroup>
+						<!-- ***28834 ends -->
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
@@ -133,7 +155,7 @@
 
 		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
-		
+
 		<!-- 25638 start -->
 		<p:dialog id="reviseSuppFinalizationDlgs" widgetVar="reviseSuppFinalizationDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
@@ -155,8 +177,76 @@
 					onclick="reviseSuppFinalizationDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-		<!-- 25638 end -->		
-		
+		<!-- 25638 end -->
+
+		<!-- ***28834 starts -->
+		<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
+			height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.popup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="blockWidget.show();"
+					oncomplete="confirmBriefPopup.hide(); " partialSubmit="true"
+					process="@form" update="@form"
+					action="#{suppFinalizationBackingBean.submitBrief(bpmAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmBriefPopup.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+		<!-- ***28834 ends -->
+
+		<!-- ***28834 starts -->
+		<p:dialog id="submitRemarks" widgetVar="ReamrksBriefPopup"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
+			height="100" closable="true">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.rempopup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
+					onclick="ReamrksBriefPopup.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+		<!-- ***28834 ends -->
+
+		<!-- ***28834 start  new ***-->
+		<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
+			height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="#{lbl['lbl.popup.revisebp']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="blockWidget.show();"
+					action="#{suppFinalizationBackingBean.navigateToSubmissionPopup()}"
+					oncomplete="confirmBriefPopup1.hide();" partialSubmit="true"
+					process="@form" update="@form" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmBriefPopup1.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+		<!-- ***28834 end new ***-->
+
 		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
 			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
 			resizable="false" width="325" height="100" closable="false"
@@ -174,10 +264,14 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<!-- 25638 start -->
+				<!-- ***28834 start  new -->
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					onclick="blockWidget.show();"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization('')}"
-					oncomplete="submissionPopup.hide();" update="@form">
-				<!-- 25638 end -->			
+					oncomplete="submissionPopup.hide();if(#{checkDisableBfButtonAfterValidation}) { disableBfButtonAfterValidation.disable(); } "
+					update="@form">
+					<!-- ***28834 end new -->
+					<!-- 25638 end -->
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"

@@ -7251,6 +7251,26 @@ private void retriveEndorsmentList(){
 					new ArrayList<ScQtCommitteeActivity>());
 			for(ScQtCommitteeActivity committeeActivity:resDTO.getCommitteActivities()){
 				if(committeeActivity.isAttended()){
+						// #29668, #26474-start
+						if ((SCProcessNameConst.ENDORSE_EC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.ENDORSE_FEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.ENDORSE_TEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.ENDORSE_OC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName())) && ParameterConst.COMMITTEE_ROLE_SECRETARY 
+							.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode()) ){ 
+
+							committeeActivity.setSignedOff(Boolean.TRUE);
+						} else if ((SCProcessNameConst.SIGNOFF_EC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_FEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_TEC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName()) || SCProcessNameConst.SIGNOFF_OC_EVALUATION
+							.equalsIgnoreCase(this.getManagedBean().getTaskName())) && !ParameterConst.COMMITTEE_ROLE_CHAIRPERSON 
+							.equalsIgnoreCase(committeeActivity.getScCommitteeMember().getMemberRole().getParameterCode()) ){
+
+							committeeActivity.setSignedOff(Boolean.TRUE);
+						}
+						// #29668, #26474-End
+
 					this.getManagedBean().getEndorscommitteeMemberList().add(committeeActivity);	
 				}
 			}
@@ -8813,6 +8833,39 @@ private void retriveCommitteeRemarksList(){
 		} else {
 			this.getManagedBean().setStatusOnly(true);
 		}
+		
+		// 28834 starts
+		if (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId())
+				|| isStatusLessThanOrEquals(this.getManagedBean().getCurrentStatusId(),
+						QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION, QTStatusConst.OC_ORDERED_STATUSES)
+				&& ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
+				&& this.getManagedBean().getOutComes().length > 0) {
+			boolean reviseExists = false;
+			
+			for (String outcome : this.getManagedBean().getOutComes()) {
+				if (outcome.equals(BpmOutcomeConst.BPM_REVISEBP)) {
+					reviseExists = true;
+				}
+			}
+
+			if (reviseExists) {
+				String tempOutComes[] = new String[this.getManagedBean().getOutComes().length - 1];
+				
+				for (int i = 0, k = 0; i < this.getManagedBean().getOutComes().length; i++) {					
+					if (this.getManagedBean().getOutComes()[i].equals(BpmOutcomeConst.BPM_REVISEBP)) {
+						continue;
+					}
+					
+					tempOutComes[k++] = this.getManagedBean().getOutComes()[i];
+				}
+				
+				this.getManagedBean().setOutComes(tempOutComes);
+			}
+		}
+		// 28834 ends
 
 		this.getManagedBean().setPrepareActiveIndex(0);
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION

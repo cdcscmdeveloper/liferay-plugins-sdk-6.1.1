@@ -395,8 +395,7 @@ public class FacesScopes implements Serializable {
 			System.out.println("loginId: " + loginId);
 			
 			if (loginId != null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IBpmSO.class);
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 				ctxToken = bpmSO.authenticate(loginId);
 				setApplicationScope(BPM_AUTH_CONTEXT_TOKEN, ctxToken);
 			}
