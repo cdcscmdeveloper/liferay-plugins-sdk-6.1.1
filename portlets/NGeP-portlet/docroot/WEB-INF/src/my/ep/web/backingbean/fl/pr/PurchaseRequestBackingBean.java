@@ -3383,7 +3383,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//29728 - end
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
-			validateFulfilmentRequest(outcome);
+			//#34443 remove validate
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFulfilmentRequest().getDocNo()+"|");
 			sb.append(getOrderAmount()+"|");
@@ -5231,5 +5231,30 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				getManagedBean().setMaxDate(DateUtils.getEndDate(startDate, deliveryTerm,ParameterConst.DELIVERY_TERM_MONTHS));
 			}
 		}
-		//34555-End		
+		//34555-End
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param outcome
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String outcome) throws Exception {
+		String action = outcome;
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			validateFulfilmentRequest(action);
+			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
+			return null;
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			validateFulfilmentRequest(action);
+			RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");
+			return null;
+		} else {
+			return gpkiSignAction(action);
+		}
+	}
+	// #34443 end
 }

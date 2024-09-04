@@ -2632,4 +2632,28 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return NAV_CO;
 	}
 	// End - #30866
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param outcome
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String outcome) throws Exception {
+		String action = outcome;
+		Long status = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
+				&& ("true").equalsIgnoreCase(getManagedBean().getFactoringCheck())
+				&& status.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+			validateFulfillmentOrder(outcome);
+			RequestContext.getCurrentInstance().execute("ackConfirmDlg.show()");
+			return null;
+		} else {
+			return signingAction(action);
+		}
+	}
+	// #34443 end
 }
