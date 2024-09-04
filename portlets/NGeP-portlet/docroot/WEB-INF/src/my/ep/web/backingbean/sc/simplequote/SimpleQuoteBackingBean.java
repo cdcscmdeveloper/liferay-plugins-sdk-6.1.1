@@ -4448,10 +4448,9 @@ public class SimpleQuoteBackingBean extends
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
 				
-				//Bug #35514 - get value for fulfilment type one-off
-				PmParameter FTypeOneOff = getParameterByTypeAndCode(
-						ParameterTypeConst.FULFILMENT_TYPE,
-						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				//Bug #35514 start - get value for fulfilment type one-off
+				PmParameter FTypeOneOff = getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				//Bug #35514 end
 				
 				if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
 					for(TplSpecQuestion question: cloneSpecMaster.getTplSpecQuestions()) {
@@ -4466,15 +4465,17 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
-											//#35514 @zaim start
+											
+											// #35514 @zaim start
 											question.setClFulfilmentTypeCode(FTypeOneOff);
-											if (question.getClDurationMonth() != null){
+											if (question.getClDurationMonth() != null) {
 												question.setClDurationMonth(null);
 											}
-											if (question.getClUomFrequency() != null){
+											if (question.getClUomFrequency() != null) {
 												question.setClUomFrequency(null);
 											}
-											//#35514 @zaim end
+											// #35514 @zaim end
+											
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;

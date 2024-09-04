@@ -47,6 +47,9 @@ public class ProcAndRegPaymentRptBackingBean extends SmReportBackingBean<ProcAnd
 			params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 		}
 		
+		//#7754 - Start
+		params.put(SmReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
+		//#7754 - End
 
 		generateSmReport(params);
 	}

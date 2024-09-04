@@ -20,6 +20,10 @@ public class ItemBean {
 	private boolean tier;
 	private boolean zonal;
 	private List<String> specs;
+	// 26226 - Start
+	private String clDurationMonth;
+	private String clDeliveryTerm;
+	// 26226 - end
 	/**
 	 * @return the item
 	 */
@@ -117,4 +121,35 @@ public class ItemBean {
 	public void setSpecs(List<String> specs) {
 		this.specs = specs;
 	}
+	// 26226 Start
+	/**
+	 * @return the value of clDurationMonth in String.
+	 * */
+	public String getClDurationMonth() {
+		return clDurationMonth;
+	}
+
+	/**
+	 * @param clDurationMonth
+	 *            set the clDurationMonth in String data type.
+	 * */
+	public void setClDurationMonth(String clDurationMonth) {
+		this.clDurationMonth = clDurationMonth;
+	}
+
+	/**
+	 * @return the value of clDeliveryTerm in String.
+	 * */
+	public String getClDeliveryTerm() {
+		return clDeliveryTerm;
+	}
+
+	/**
+	 * @param clDeliveryTerm
+	 *            set the clDeliveryTerm in String data type.
+	 * */
+	public void setClDeliveryTerm(String clDeliveryTerm) {
+		this.clDeliveryTerm = clDeliveryTerm;
+	}
+	// 26226 - end
 }

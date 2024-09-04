@@ -18,6 +18,8 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /></td>
 			<td class="ppRightBtn"><c:if
 					test="#{!ctBackingBean.managedBean.viewContract}">
+					<ui:decorate template="/xhtml/ct/shared/claim_template.xhtml"><!-- #31422-basri 190821 -->
+					<ui:define name="outComeSection"><!-- #31422-basri 190821 -->
 					<ui:repeat var="action"
 						value="#{contractDetailsBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
@@ -27,6 +29,8 @@
 							action="#{contractDetailsBackingBean.gpkiSignAction(action)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</ui:repeat>
+					</ui:define><!-- #31422-basri 190821 -->
+					 </ui:decorate><!-- #31422-basri 190821 -->
 				</c:if></td>
 			<c:if test='#{ctBackingBean.managedBean.viewContract}'>
 				<td style="text-align: right">

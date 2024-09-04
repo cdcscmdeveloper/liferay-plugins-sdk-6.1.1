@@ -117,6 +117,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	private String className="@(.myDoClassName)";
+	private static final int SUPPLIER_DO_REF_LENGTH  = 30; //36247
 	
 	/**
 	 * @return the className
@@ -329,7 +330,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				} else {
 					approver = getFacesScopes().getUserSessionBean();
 				}
-				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+				List<PmUser> approverUserList = sortApproverUserListDO(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());//35429
 				reqDTO.setApproverUserList(approverUserList);
 				
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
@@ -748,6 +749,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+				
+				//35429-Start
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
+					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
+						String[] outcome = new String[1];
+						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
+						this.getManagedBean().setOutComes(outcome);
+					}
+				}
+				//35429-End
+				
 			}
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -1007,6 +1020,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				//29234 end
+				
+				validateSupplierDoRefLength(getManagedBean().getFlDeliveryOrder().getSupplierDoRef()); //36247
+				
 				IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				supplierDoNoList = new ArrayList<String>();
 				supplierDoNoList.add(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());
@@ -1079,6 +1095,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				// 36247-Start
+				if (flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef() != null) {
+					validateSupplierDoRefLength(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
+				}
+				// 36247-End
+
 				if(supplierDoNoList.contains(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef())){
 					throw new EpException(MessageConst.ERROR_740042, new String[]{flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef(),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 				}else{
@@ -1561,4 +1583,22 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		List<FlDeliveryOrder> submittedDoList=delOrderSO.retrieveSubmittedDoList(addressId);
 		getManagedBean().setSubmittedDoList(submittedDoList);
 	}
+	
+	
+	// 36247-Start
+	/**
+	 * 
+	 * Validation for Supplier Do Reference length Maximum length is 30
+	 * 
+	 * @param supplierDoRef
+	 */
+	private void validateSupplierDoRefLength(String supplierDoRef) {
+		if (supplierDoRef.length() > SUPPLIER_DO_REF_LENGTH ) {
+			String label = ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new EpException(MessageConst.ERROR_721114,
+					new String[] { label, String.valueOf(SUPPLIER_DO_REF_LENGTH ) });
+		}
+	}
+	// 36247-End
 }

@@ -96,9 +96,12 @@
 					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.justification']}" />
 				</f:facet>
+				<!-- Disable for UPS 32008 - START -->
 				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="3" cols="80"
-					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId">
+					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
+				<!-- Disable for UPS 32008 - END -->
 					<p:ajax process="@this" update="overlapCatSuppDocDtId,@this" event="blur"/>
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
@@ -112,7 +115,7 @@
 
 			<p:column style="width : 10%;" rendered="#{backingBean.managedBean.supplierUser}">
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" />
+					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.btn.upload.doc']}" />
 				</f:facet>
 				<p:commandLink oncomplete="overlapCatUploadDialog.show();return false;"

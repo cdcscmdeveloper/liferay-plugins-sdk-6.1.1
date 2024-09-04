@@ -522,9 +522,9 @@
 			<h:outputText styleClass="instruction" value="#{lbl[lblPersonnelInstruction]}" escape="false" /><br />
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.authorized.personnel.reach.limit.msg']}" id="reachAuthLimitMsgId"
 				escape="false" rendered="#{backingBean.managedBean.validSmUserLimit}"/>
-			
+			<!-- Disable for UPS 32008 - START -->
 			<table style="width: 100%">
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{backingBean.managedBean.poSecReview.personnelVerified}"
@@ -539,7 +539,8 @@
 
 					</tr>
 				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<!-- #32008 -->
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 					<tr>
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{backingBean.managedBean.apprvrSecReview.personnelVerified}"
@@ -556,9 +557,10 @@
 			</table>
 
 			<p:outputPanel id="persInfPan" layout="block">
-				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
+				<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:persInfPan" widgetVar="buiPoPers"
 					id="poPersBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
+				<!-- Disable for UPS 32008 - END -->
 				<ui:include src="personnelTableList.xhtml" />
 				<br />
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}">

@@ -140,6 +140,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayReviseInstrn;
 	// #25638 - End
 	
+	//#25037-start
+	private String currentTaskDocType;
+	
+	//27346-start
 	// start #29956
 	private String termAndConditionCheckOwner;
 	private String termAndConditionCheckOwnerA;
@@ -147,8 +151,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private String termAndConditionCheckOwnerChangeRole;
 	private Boolean isDowngradeRole;
 	// end #29956
-	
-	//27346-start 
 	// 27346
 	private StreamedContent downloadfile;
 	
@@ -886,6 +888,41 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25638 - End
 	
+	// #25037 - start
+	public String getCurrentTaskDocType() {
+		return currentTaskDocType;
+	}
+
+	public void setCurrentTaskDocType(String currentTaskDocType) {
+		this.currentTaskDocType = currentTaskDocType;
+	}
+	// #25037 - end
+	
+	// 28767
+	public List<SmPersonnel> getPersonnelDirectorManager() {
+		return personnelDirectorManager;
+	}
+
+	public void setPersonnelDirectorManager(List<SmPersonnel> personnelDirectorManager) {
+		this.personnelDirectorManager = personnelDirectorManager;
+	}
+
+	public List<SmPersonnel> getPersonnelMembers() {
+		return personnelMembers;
+	}
+
+	public void setPersonnelMembers(List<SmPersonnel> personnelMembers) {
+		this.personnelMembers = personnelMembers;
+	}
+
+	public BigDecimal getTotalShare() {
+		return totalShare;
+	}
+
+	public void setTotalShare(BigDecimal totalShare) {
+		this.totalShare = totalShare;
+	}
+	
 	// start #29956
 	public String getTermAndConditionCheckOwner() {
 		return termAndConditionCheckOwner;
@@ -919,10 +956,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
 	}
 
-	// end #29956
-
-	
-	//start #29956
 	public Boolean isDowngradeRole() {
 		return isDowngradeRole;
 	}
@@ -930,7 +963,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDowngradeRole(Boolean isDowngradeRole) {
 		this.isDowngradeRole = isDowngradeRole;
 	}
-	//end #29956
+	// end #29956
 
 	public String getOutputPage() {
 		return outputPage;
@@ -938,30 +971,5 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setOutputPage(String outputPage) {
 		this.outputPage = outputPage;
-	}
-
-	// 28767
-	public List<SmPersonnel> getPersonnelDirectorManager() {
-		return personnelDirectorManager;
-	}
-
-	public void setPersonnelDirectorManager(List<SmPersonnel> personnelDirectorManager) {
-		this.personnelDirectorManager = personnelDirectorManager;
-	}
-
-	public List<SmPersonnel> getPersonnelMembers() {
-		return personnelMembers;
-	}
-
-	public void setPersonnelMembers(List<SmPersonnel> personnelMembers) {
-		this.personnelMembers = personnelMembers;
-	}
-
-	public BigDecimal getTotalShare() {
-		return totalShare;
-	}
-
-	public void setTotalShare(BigDecimal totalShare) {
-		this.totalShare = totalShare;
 	}
 }

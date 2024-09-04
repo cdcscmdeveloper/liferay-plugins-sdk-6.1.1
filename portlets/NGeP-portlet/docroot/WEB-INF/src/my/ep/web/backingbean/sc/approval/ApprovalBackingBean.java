@@ -1111,6 +1111,34 @@ public class ApprovalBackingBean extends
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setScQtStatus(null);
 			qt.setScQtBriefings(null);
+			
+			// Start 9019 #PREPROD Remark null error
+			boolean emptyRemarksExist = false;
+
+			if (null != this.getManagedBean().getQt().getScQtRemarks()
+					&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+				for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
+					String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
+				
+					if (null == userRemark || "".equals(userRemark)) {
+						emptyRemarksExist = true;
+					} else {
+						emptyRemarksExist = false;
+					}
+				}
+				if (emptyRemarksExist) {
+					this.getManagedBean().getQt().setScQtRemarks(null);
+				} else {
+					this.getManagedBean().getQt().setScQtRemarks(qt.getScQtRemarks());
+				}
+			} else {
+				if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+					this.getManagedBean().getQt().setScQtRemarks(null);
+				}else{
+					this.getManagedBean().getQt().setScQtRemarks(qt.getScQtRemarks());
+				}
+			}
+			// End Reopen 9019
 
 			CommitteResDTO committeResDto = null;
 

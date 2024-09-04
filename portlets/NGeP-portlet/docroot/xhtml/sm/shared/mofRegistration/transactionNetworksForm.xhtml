@@ -22,7 +22,8 @@
 			</p:tooltip>
 		</f:facet>
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<!-- Disable for UPS 32008 - START -->
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.trnsNetworkVerified}"
@@ -37,7 +38,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.trnsNetworkVerified}"
@@ -54,7 +55,7 @@
 		</table>
 
 		<p:outputPanel id="trxInfPan" layout="block">
-			<p:blockUI block=":form:tt:trxInfPan" widgetVar="buiPoTrx"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:trxInfPan" widgetVar="buiPoTrx"
 				id="poTrxBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.trnsNetworkVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.trnsNetworkVerified : false)}" />
 
@@ -65,7 +66,7 @@
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withFederal}"
 							disabled="#{(backingBean.managedBean.smAppl.supplierType
 						ne SupplierManagementConst.STYPE_CONTRACTOR) or (backingBean.managedBean.smAppl.supplierType
-						eq SupplierManagementConst.STYPE_CONTRACTOR and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof and backingBean.managedBean.disableWithFedralTransaction)}" /></td>
+						eq SupplierManagementConst.STYPE_CONTRACTOR and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof and backingBean.managedBean.disableWithFedralTransaction) or backingBean.managedBean.upsCannotEdit}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.fdrGov']}" />
 						<ac:smCheckBoxChangeAlert 
@@ -75,7 +76,7 @@
 					</td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withState}" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withState}" disabled="#{backingBean.managedBean.upsCannotEdit}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.stateGov']}" />
 						<ac:smCheckBoxChangeAlert 
@@ -85,7 +86,7 @@
 					</td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" disabled="#{backingBean.managedBean.upsCannotEdit}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.statBody']}" />
 						<ac:smCheckBoxChangeAlert 
@@ -95,7 +96,7 @@
 					</td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withGlc}" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withGlc}" disabled="#{backingBean.managedBean.upsCannotEdit}"/></td>
 					<td valign="middle" width="160px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.glc']}" />
 						<ac:smCheckBoxChangeAlert 
@@ -105,7 +106,8 @@
 					</td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withOthers}" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withOthers}" disabled="#{backingBean.managedBean.upsCannotEdit}" /></td>
+					<!-- Disable for UPS 32008 - END -->
 					<td valign="middle" width="160px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.others']}" />
 						<ac:smCheckBoxChangeAlert 
