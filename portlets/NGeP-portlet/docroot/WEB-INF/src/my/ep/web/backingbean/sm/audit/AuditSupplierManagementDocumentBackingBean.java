@@ -77,13 +77,9 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 		Workbook wb = new XSSFWorkbook();
 
-		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)) {
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_BANK_INFO, getManagedBean().getBankInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, getManagedBean().getUserInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean()
-					.getAdminInfoList());
-		} else if (getManagedBean().getSmAppl().getSupplierType()
-				.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)
+				|| getManagedBean().getSmAppl().getSupplierType()
+						.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_BANK_INFO, getManagedBean().getBankInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, getManagedBean().getUserInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean()
@@ -365,7 +361,8 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 	 */
 	private void exportExcelReportAudit(Workbook wb) {
 		try {
-			FacesContext.getCurrentInstance().getExternalContext().addResponseCookie(Constants.DOWNLOAD_COOKIE, "true", Collections.<String, Object>emptyMap());
+			FacesContext.getCurrentInstance().getExternalContext()
+					.addResponseCookie(Constants.DOWNLOAD_COOKIE, "true", Collections.<String, Object> emptyMap());
 			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
