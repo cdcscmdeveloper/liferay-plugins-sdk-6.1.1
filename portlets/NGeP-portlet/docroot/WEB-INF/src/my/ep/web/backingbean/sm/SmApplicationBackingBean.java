@@ -10281,6 +10281,12 @@ public class SmApplicationBackingBean extends
 								}
 							}
 						}
+						//#31386 - START
+						List<SmAppl> allAppl = reqSO.getActiveApplForSVAP(getManagedBean().getSmAppl());
+						if(!EntityHelper.isCollectionEmpty(allAppl)){
+							reqDTO.setPendingAppls(allAppl);
+						}
+						//#31386 - END
 					}
 
 					if (getManagedBean().getSmAppl().isBumi()
@@ -15453,4 +15459,11 @@ public class SmApplicationBackingBean extends
 				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm"};
 	}
 	//#35145 - end
+	//#31386 - START
+	public String finalCancelDecisionApproveOrRejectAppln(String dialog,
+			String decision) {
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		return submitPOorApproverReviewToBPM(decision);
+	}
+	//31386 - END
 }
