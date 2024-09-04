@@ -1,22 +1,17 @@
 package my.ep.web.managedbean.cm.catalogue;
 
+//#10747,#35739 & sonarlint fixing remove this unused import - Start
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -25,21 +20,16 @@ import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.cm.catalogue.PublicCatalogueBackingBean;
-import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
+//#10747,#35739 & sonarlint fixing remove this unused import - End
 
 
 /**
@@ -123,314 +113,122 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private CmUnspsc selectedUnspscObj;
 
 	private boolean cloneNameFlag = false;
-
-
-
-	private IPagingDataModel<VCmPubSuppItem> searchDataModel = new SearchPagingDataModel();
+	
+    //#10747,#35739 and SonarLint fixing - Start
+	private PagingDataModel<Object[]> searchDataModel = new SearchPagingDataModel();
+	
+	private boolean singleCommoditySelected = false;
+	//#10747,#35739 and SonarLint fixing - End
 
 	private String itemTypeParameter;
 	
 	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 
-
-	private class SearchPagingDataModel extends PagingDataModel<VCmPubSuppItem> {
+	//#10747,#35739 and SonarLint fixing - Start
+	private class SearchPagingDataModel extends PagingDataModel<Object[]> {
 
 		private static final long serialVersionUID = 1L;
 
 		public SearchPagingDataModel() {
 			super("catalogueGridViewID");
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		protected ISearchResultBean<VCmPubSuppItem> pageChangeListener(	ISearchBean<VCmPubSuppItem> searchBean) {
-
-
-
-
+		protected ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			
 			PublicCatalogueBackingBean bb = new PublicCatalogueBackingBean();
 
+			bb.getManagedBean().setFamilyList(null);
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-					.getInstance().getServiceObject("cm", ICatalogueSO.class);
-			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-					.getInstance().getServiceObject("cm", ICodificationSO.class);
-			
+			ICatalogueSO catalogueSO = BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
+					ICodificationSO.class);
+
 			try {
-
-
-				if (bb.getManagedBean().getItemName() != null && bb.getManagedBean().getItemName().trim().length()>0) {
-					System.out.println("bb.getManagedBean().getItemName()"+bb.getManagedBean().getItemName());
-					SearchFilterBean itemNameFilterBean = new SearchFilterBean(
-							SearchOperator.OPERATOR_LIKE.value());
-
-					itemNameFilterBean.setSearchValue(bb.getManagedBean().getItemName());
-					itemNameFilterBean.setSearchField("itemName");
-					itemNameFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
-					itemNameFilterBean.setCaseInsensitive(true);
-					//searchBean.getDataFilterBeans().add(itemNameFilterBean);
-					
-					
-					keyWordFilterBean.setSearchField("keyword");
-					keyWordFilterBean.setSearchValue(bb.getManagedBean().getItemName());
-					keyWordFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
-					keyWordFilterBean.setCaseInsensitive(true);
-					
-					SearchMultiFilterBean multi = new SearchMultiFilterBean(itemNameFilterBean
-							, keyWordFilterBean);
-					searchBean.getDataFilterBeans().add(multi);
-
-				}
-
+				//filter catalog list
+				searchFilterBean(bb,reqDTO);				
+				searchFamilyUnspscandBrandFilterBean(bb,reqDTO);
 				
-				if (bb.getManagedBean().getPriceForm() != null
-						&& bb.getManagedBean().getPriceForm()
-								.compareTo(new BigDecimal("0.00")) > 0) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("price",
-									SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-									bb.getManagedBean().getPriceForm()));
-				}
-
-				if (bb.getManagedBean().getPriceTo() != null
-						&& bb.getManagedBean().getPriceTo()
-								.compareTo(new BigDecimal("0.00")) > 0) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("price",
-									SearchOperator.OPERATOR_LESS_EQUAL.value(), bb.getManagedBean().getPriceTo()));
-				}
-				
-				//#10747 - Shafie, Soo - Start
-				if (bb.getManagedBean().getDeliveryFrom() != null
-						&& bb.getManagedBean().getDeliveryFrom() > 0) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("deliveryterm",
-									SearchOperator.OPERATOR_GREATER_EQUAL.value(), bb.getManagedBean().getDeliveryFrom()));
-				}
-
-				if (bb.getManagedBean().getDeliveryTo() != null
-						&& bb.getManagedBean().getDeliveryTo() > 0) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("deliveryterm",
-									SearchOperator.OPERATOR_LESS_EQUAL.value(), bb.getManagedBean().getDeliveryTo()));
-				}
-				//#10747 - Shafie, Soo - End
-				
-				if (bb.getManagedBean().getFamilyList().size() > 1) {
-					for (CmUnspsc commodity : bb.getManagedBean().getFamilyList()) {
-						reqDTO.getSubStringFamilyCode().add(commodity.getUnspscCode());
-	
-					}
-					
-					if (reqDTO.getSubStringFamilyCode() != null && reqDTO.getSubStringFamilyCode().size() > 0) {
-
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("commodityCode",
-										SearchOperator.OPERATOR_IN.value(), reqDTO
-										.getSubStringFamilyCode()));
-					}
-
-				
-
-				} else {
-					if (bb.getManagedBean().getBrandId() != null) {
-						if (!bb.getManagedBean().getBrandId().equals(new Long(0))) {
-							
-							searchBean.getDataFilterBeans().add(
-									new SearchFilterBean("brandId",
-											SearchOperator.OPERATOR_EQUALS.value(), bb.getManagedBean().getBrandId()));
-						}
-					}
-
-					
-
-				}
+				log.info("itemName:" + reqDTO.getItemName());
 				
 				
-
-				boolean singleCommoditySelected = false;
-				if(bb.getManagedBean().getSelectedUnspscObj()!=null && bb.getManagedBean().getSelectedUnspscObj().getUnspscCode() !=null && bb.getManagedBean().getSelectedUnspscObj().getUnspscCode().trim().length()>0){
-					System.out.println("********commodityCode*******"+bb.getManagedBean().getSelectedUnspscObj().getUnspscCode());
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("commodityCode",
-									SearchOperator.OPERATOR_EQUALS.value(), bb.getManagedBean().getSelectedUnspscObj().getUnspscCode()));
-
-					singleCommoditySelected = true;
-				}
-
-
 				reqDTO.setPublicCatalogSearchBean(searchBean);
 				// #10747 - Soo - Start
-				if (bb.getManagedBean().getSortBy() != 0) {
-					reqDTO.setSortBy(bb.getManagedBean().getSortBy());
-				}else{
-					reqDTO.setItemName(bb.getManagedBean().getItemName());
-				}
+			    reqDTO.setSortBy(bb.getManagedBean().getSortBy());
 				// #10747 - Soo - End
-				CatalogueResDTO resDTO = catalogueSO
-						.searchCatalogueBy(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO.searchCatalogueBy(reqDTO);
 
-				int totalRecord = resDTO.getViewPublicSuppItemResultBean().getTotalRecord();
-				System.out.println("*******size*******"+totalRecord);
-				System.out.println("isCloneNameFlag:"+bb.getManagedBean().isCloneNameFlag());
-				CatalogueReqDTO reqDTO1 = new CatalogueReqDTO();
-				if (bb.getManagedBean().getItemName() != null && bb.getManagedBean().getItemName().trim().length()>0) {
-					reqDTO1.setItemName(bb.getManagedBean().getItemName());
-				}
-				
-				if (bb.getManagedBean().getPriceForm() != null
-						&& bb.getManagedBean().getPriceForm()
-								.compareTo(new BigDecimal("0.00")) > 0) {
-					reqDTO1.setPriceFrom(bb.getManagedBean().getPriceForm());
-				}
-				if (bb.getManagedBean().getPriceTo() != null
-						&& bb.getManagedBean().getPriceTo()
-								.compareTo(new BigDecimal("0.00")) > 0) {
-					reqDTO1.setPriceTo(bb.getManagedBean().getPriceTo());
-				}
-				
-				//#10747 - Shafie, Soo - Start
-				if (bb.getManagedBean().getDeliveryFrom() != null
-						&& bb.getManagedBean().getDeliveryFrom() > 0) {
-					reqDTO1.setDeliveryFrom(bb.getManagedBean().getDeliveryFrom());
-				}
-				if (bb.getManagedBean().getDeliveryTo() != null
-						&& bb.getManagedBean().getDeliveryTo() > 0) {
-					reqDTO1.setDeliveryTo(bb.getManagedBean().getDeliveryTo());
-				}
-				//#10747 - Shafie, Soo - End
-				
+				int totalRecords = resDTO.getViewPublicSuppItemResultBean().getTotalRecord();
+				log.info("*******size*******" + totalRecords);
+				log.info("isCloneNameFlag:" + bb.getManagedBean().isCloneNameFlag());
+
 				CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-				if(singleCommoditySelected){
+				if (bb.getManagedBean().isSingleCommoditySelected()) {
 					bb.getManagedBean().setFamilyList(null);
 					codeReqDTO.setUnspscCode(bb.getManagedBean().getSelectedUnspscObj().getUnspscCode());
-					CodificationResDTO codeResDTO = codificationSO
-							.searchUnspscObj(codeReqDTO);
+					CodificationResDTO codeResDTO = codificationSO.searchUnspscObj(codeReqDTO);
 					bb.getManagedBean().getFamilyList().add(codeResDTO.getUnspscObj());
-				
-						CmUnspsc commodity = codeResDTO.getUnspscObj();
-						bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
-						System.out.println("commodity.getCmBrand():"+commodity.getCmBrand().size());
-						for (CmBrand brand : commodity.getCmBrand()) {
 
-							bb.getManagedBean()
-							.getBrandCriteria()
-							.add(new SelectItem(brand.getBrandId(), brand
-									.getBrandName()));
-						}
-						
+					CmUnspsc commodity = codeResDTO.getUnspscObj();
+					bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
+					for (CmBrand brand : commodity.getCmBrand()) {
+
+						bb.getManagedBean().getBrandCriteria()
+								.add(new SelectItem(brand.getBrandId(), brand.getBrandName()));
+					}
+
+				} else {
+					CatalogueResDTO resDTO1 = catalogueSO.searchPublicCatalogueByNamePriceDeliveryTerm(reqDTO); // #10747- Shafie
 					
-				}else{
-				
-					CatalogueResDTO resDTO1 = catalogueSO.searchPublicCatalogueByNamePriceDeliveryTerm(reqDTO1); //#10747 - Shafie
-					if(bb.getManagedBean().isCloneNameFlag()){
-						List<String> itemNames = new ArrayList<String>();
-	
+					if (bb.getManagedBean().isCloneNameFlag()) {
 						bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
-						for (CmUnspsc cat : resDTO1.getCommodityList()) {
-							System.out.println("cat.getCommodityCode():"+cat.getUnspscCode());
+						List<String> itemNames = new ArrayList<>();
 						
-							itemNames.add(cat.getUnspscCode());
-							
-							
-							bb.getManagedBean().getFamilyList().add(cat);
-						}
-	
-	
-						bb.getManagedBean().setCloneItemNames(itemNames);
-	
+						getFamilyCodeList(bb,resDTO1,itemNames);
+
+					} else {
 						
-						
-						for (String code : itemNames) {
-	
-							if (code != null && code.trim().length() > 0) {
-								bb.getManagedBean().getFamilyCodeList().add(code);
-							}
-	
-						}
-	
-						if(bb.getManagedBean().getFamilyCodeList().size() == 1){
-							CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
-							bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
-							System.out.println("commodity.getCmBrand():"+commodity.getCmBrand().size());
-							for (CmBrand brand : commodity.getCmBrand()) {
-	
-								bb.getManagedBean()
-								.getBrandCriteria()
-								.add(new SelectItem(brand.getBrandId(), brand
-										.getBrandName()));
-							}
-						}
-					}else{
 						bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
-						List<String> itemNames = new ArrayList<String>();
-							
-						for (CmUnspsc cat : resDTO1.getCommodityList()) {
-							
-							itemNames.add(cat.getUnspscCode());
-							bb.getManagedBean().getFamilyList().add(cat);
-						}
+						List<String> itemNames = new ArrayList<>();
 						
-	
-						for (String code : itemNames) {
-	
-							if (code != null && code.trim().length() > 0) {
-								bb.getManagedBean().getFamilyCodeList().add(code);
-							}
-	
-						}
-	
-						if(bb.getManagedBean().getFamilyCodeList().size() == 1|| bb.getManagedBean().getFamilyList().size()==1){
-							CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
-							bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
-							System.out.println("commodity.getCmBrand():"+commodity.getCmBrand().size());
-							for (CmBrand brand : commodity.getCmBrand()) {
-	
-								bb.getManagedBean()
-								.getBrandCriteria()
-								.add(new SelectItem(brand.getBrandId(), brand
-										.getBrandName()));
-							}
-						}		
+						getFamilyCodeFamilyList(bb,resDTO1,itemNames);
 						
 					}
 				}
 
-
-				System.out.println("***************getFamilyList().size()*************"+bb.getManagedBean().getFamilyList().size());
-				System.out.println("getCloneItemNames:"+bb.getManagedBean().getCloneItemNames().size());
-				bb.getManagedBean().setTotalRecord(totalRecord);
+				log.info("***************getFamilyList().size()*************"
+						+ bb.getManagedBean().getFamilyList().size());
+				log.info("getCloneItemNames:" + bb.getManagedBean().getCloneItemNames().size());
+				bb.getManagedBean().setTotalRecord(totalRecords);
 
 				RequestContext.getCurrentInstance().execute("refreshCatalogue();");
 
 				return resDTO.getViewPublicSuppItemResultBean();
 
-
 			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				catalogueSO = null;
-				
+				log.error("Catch Exception : ", e);
 			}
 			return new SearchResultBean();
 		}
 
 	}
-
-
-
-
-
-
-	public IPagingDataModel<VCmPubSuppItem> getSearchDataModel() {
+	//#10747,#35739 and SonarLint fixing - End
+	
+	
+	//#10747,#35739 and SonarLint fixing - Start
+	public PagingDataModel<Object[]> getSearchDataModel() {
 		return searchDataModel;
 	}
 
-	public void setSearchDataModel(IPagingDataModel<VCmPubSuppItem> searchDataModel) {
+	public void setSearchDataModel(PagingDataModel<Object[]> searchDataModel) {
 		this.searchDataModel = searchDataModel;
 	}
+	//#10747,#35739 and SonarLint fixing - End
 
 	/**
 	 * Gets the last search item name.
@@ -927,11 +725,177 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 		this.keyWordFilterBean = keyWordFilterBean;
 	}
 	
+	//#10747,#35739 and SonarLint fixing - Start
+	public boolean isSingleCommoditySelected() {
+		return singleCommoditySelected;
+	}
+
+	public void setSingleCommoditySelected(boolean singleCommoditySelected) {
+		this.singleCommoditySelected = singleCommoditySelected;
+	}
+
+	/**
+	 * @param bb
+	 * @param reqDTO
+	 */
+	public void searchFilterBean(PublicCatalogueBackingBean bb, CatalogueReqDTO reqDTO) {
+
+		if (isItemKeywordNotNull(bb) && bb.getManagedBean().isKeyWord()) {
+			reqDTO.setItemName(bb.getManagedBean().getItemName());
+		}
+		if (isUnspscNotNull(bb) && !bb.getManagedBean().isKeyWord()) {
+			reqDTO.setItemName(bb.getManagedBean().getUnspscTitle());
+		}
+
+		if (isPriceFromNotNull(bb)) {
+			reqDTO.setPriceFrom(bb.getManagedBean().getPriceForm());
+		}
+		if (isPriceToNotNull(bb)) {
+			reqDTO.setPriceTo(bb.getManagedBean().getPriceTo());
+		}
+
+		// #10747 - Shafie, Soo - Start
+		if (isDeliveryFromNotNull(bb)) {
+			reqDTO.setDeliveryFrom(bb.getManagedBean().getDeliveryFrom());
+		}
+		if (isDeliveryToNotNull(bb)) {
+			reqDTO.setDeliveryTo(bb.getManagedBean().getDeliveryTo());
+		}
+		// #10747 - Shafie, Soo - End
+	}
+    
+	/**
+	 * @param bb
+	 * @param reqDTO
+	 */
+	public void searchFamilyUnspscandBrandFilterBean(PublicCatalogueBackingBean bb, CatalogueReqDTO reqDTO) {
+
+		if (bb.getManagedBean().getFamilyList().size() > 1) {
+			for (CmUnspsc commodity : bb.getManagedBean().getFamilyList()) {
+				reqDTO.getSubStringFamilyCode().add(commodity.getUnspscCode());
+
+			}
+
+			if (isSubStringFamilyCodeNotNull(reqDTO)) {
+				reqDTO.getSubStringFamilyCode();
+			}
+		} else {
+			if (isBrandIdNotNull(bb)) {
+				reqDTO.setBrandId(bb.getManagedBean().getBrandId());
+			}
+		}
+		
+		bb.getManagedBean().setSingleCommoditySelected(false);
+		if (isUnspscObjectdNotNull(bb)){	
+		reqDTO.setUnspscCode(bb.getManagedBean().getSelectedUnspscObj().getUnspscCode());
+		bb.getManagedBean().setSingleCommoditySelected(true);
+		}
+	}
+
+	/**
+	 * @param bb
+	 * @param resDTO1
+	 * @param itemNames
+	 */
+	public void getFamilyCodeList(PublicCatalogueBackingBean bb, CatalogueResDTO resDTO1, List<String> itemNames) {
+		for (CmUnspsc cat : resDTO1.getCommodityList()) {
+
+			itemNames.add(cat.getUnspscCode());
+
+			bb.getManagedBean().getFamilyList().add(cat);
+		}
+
+		bb.getManagedBean().setCloneItemNames(itemNames);
+
+		for (String code : itemNames) {
+
+			if (code != null && code.trim().length() > 0) {
+				bb.getManagedBean().getFamilyCodeList().add(code);
+			}
+
+		}
+
+		if (bb.getManagedBean().getFamilyCodeList().size() == 1) {
+			CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
+			bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
+			for (CmBrand brand : commodity.getCmBrand()) {
+
+				bb.getManagedBean().getBrandCriteria().add(new SelectItem(brand.getBrandId(), brand.getBrandName()));
+			}
+		}
+
+	}
+
+	/**
+	 * @param bb
+	 * @param resDTO1
+	 * @param itemNames
+	 */
+	public void getFamilyCodeFamilyList(PublicCatalogueBackingBean bb, CatalogueResDTO resDTO1, List<String> itemNames) {
+		for (CmUnspsc cat : resDTO1.getCommodityList()) {
+
+			itemNames.add(cat.getUnspscCode());
+			bb.getManagedBean().getFamilyList().add(cat);
+		}
+
+		for (String code : itemNames) {
+
+			if (code != null && code.trim().length() > 0) {
+				bb.getManagedBean().getFamilyCodeList().add(code);
+			}
+
+		}
+
+		if (bb.getManagedBean().getFamilyCodeList().size() == 1 || bb.getManagedBean().getFamilyList().size() == 1) {
+			CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
+			bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
+			for (CmBrand brand : commodity.getCmBrand()) {
+
+				bb.getManagedBean().getBrandCriteria().add(new SelectItem(brand.getBrandId(), brand.getBrandName()));
+			}
+		}
+
+	}
 	
 
+	private boolean isItemKeywordNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getItemName() != null && bb.getManagedBean().getItemName().trim().length() > 0;
+	}
+	
+	private boolean isUnspscNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getUnspscTitle() != null && bb.getManagedBean().getUnspscTitle().trim().length() > 0;
+	}
 
+	private boolean isPriceFromNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getPriceForm() != null
+				&& bb.getManagedBean().getPriceForm().compareTo(new BigDecimal("0.00")) > 0;
+	}
 
+	private boolean isPriceToNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getPriceTo() != null
+				&& bb.getManagedBean().getPriceTo().compareTo(new BigDecimal("0.00")) > 0;
+	}
 
+	private boolean isDeliveryFromNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getDeliveryFrom() != null && bb.getManagedBean().getDeliveryFrom() > 0;
+	}
 
+	private boolean isDeliveryToNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getDeliveryTo() != null && bb.getManagedBean().getDeliveryTo() > 0;
+	}
 
+	private boolean isSubStringFamilyCodeNotNull(CatalogueReqDTO reqDTO) {
+		return reqDTO.getSubStringFamilyCode() != null && !reqDTO.getSubStringFamilyCode().isEmpty();
+	}
+
+	private boolean isUnspscObjectdNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getSelectedUnspscObj() != null
+				&& bb.getManagedBean().getSelectedUnspscObj().getUnspscCode() != null
+				&& bb.getManagedBean().getSelectedUnspscObj().getUnspscCode().trim().length() > 0;
+	}
+
+	private boolean isBrandIdNotNull(PublicCatalogueBackingBean bb) {
+		return bb.getManagedBean().getBrandId() != null && !bb.getManagedBean().getBrandId().equals(new Long(0));
+	}
+	//#10747,#35739 and SonarLint fixing - End
 }
