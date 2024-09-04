@@ -27,10 +27,12 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -54,6 +56,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -64,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -76,6 +80,7 @@ import my.ep.web.managedbean.pm.category.CategoryManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -84,16 +89,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-
 //start #29665
-import my.ep.persistence.entity.pm.common.PmRemarkCategory;
-import my.ep.persistence.logging.LogKey;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.web.util.pm.helper.ParameterHelper;
-import javax.faces.component.UIComponent;
-import javax.faces.validator.ValidatorException;
 //end #29665
 
 /**
@@ -1241,21 +1237,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		ICategoryCodeSO categoryCodeSO;
 		String returnUrl = null;
 		
-		//start #29665 add log key
-		Long loginSessionUserId;
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		if (pmUser == null) {
-			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-		} else {
-			loginSessionUserId = pmUser.getUserId();
-		}
-		new LogKey(loginSessionUserId);
-		//end #29665 add log key
-		
 		/*//29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
@@ -1296,7 +1277,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				prc.setCategoryId(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
 				prc.setCategoryLevel(1);
 				prc.setCreatedDate(new Timestamp(new Date().getTime()));
-				prc.setCreatedBy(loginSessionUserId);
+				prc.setCreatedBy(getUserIdSessionFromLoginId());
 				if (!this.descriptionEditDisable
 						&& this.getManagedBean().getUpdatedCategoryDesc()
 								.compareTo(this.getManagedBean().getOldCategoryL1().getCategoryName()) != 0) {
@@ -1485,22 +1466,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		ICategoryCodeSO categoryCodeSO;
 		String returnUrl = null;
-		
-		//start #29665 add log key
-		Long loginSessionUserId;
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		if (pmUser == null) {
-			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-		} else {
-			loginSessionUserId = pmUser.getUserId();
-		}
-		new LogKey(loginSessionUserId);
-		//end #29665 add log key
-		
+
 		/*//29665 - Start - remove this code
 		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
 			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
@@ -1543,7 +1509,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				prc.setCategoryId(this.getManagedBean().getPmCategoryL2().getCategoryL2Id());
 				prc.setCategoryLevel(2);
 				prc.setCreatedDate(new Timestamp(new Date().getTime()));
-				prc.setCreatedBy(loginSessionUserId);
+				prc.setCreatedBy(getUserIdSessionFromLoginId());
 				if (!this.descriptionEditDisable
 						&& this.getManagedBean().getUpdatedCategoryDesc()
 								.compareTo(this.getManagedBean().getOldCategoryL2().getCategoryName()) != 0) {
@@ -1721,19 +1687,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		String returnUrl = null;
 		
 		//start #29665 add log key
-		Long loginSessionUserId;
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
-		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		if (pmUser == null) {
-			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-		} else {
-			loginSessionUserId = pmUser.getUserId();
-		}
-		new LogKey(loginSessionUserId);
-
 		if (!this.getManagedBean().isNewCategory()) {
 			this.getManagedBean().setPmCategoryL2(this.getManagedBean().getPmCategoryL3().getPmCategoryL2());
 		}
@@ -1814,7 +1767,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				prc.setCategoryId(this.getManagedBean().getPmCategoryL3().getCategoryL3Id());
 				prc.setCategoryLevel(3);
 				prc.setCreatedDate(new Timestamp(new Date().getTime()));
-				prc.setCreatedBy(loginSessionUserId);
+				prc.setCreatedBy(getUserIdSessionFromLoginId());
 				if (!this.descriptionEditDisable
 						&& this.getManagedBean().getUpdatedCategoryDesc()
 								.compareTo(this.getManagedBean().getOldCategoryL3().getCategoryName()) != 0) {
