@@ -677,6 +677,12 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 	}
 
 	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
 	@Override
 	public void goToLoaView(ScLoa scLoa) {
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();

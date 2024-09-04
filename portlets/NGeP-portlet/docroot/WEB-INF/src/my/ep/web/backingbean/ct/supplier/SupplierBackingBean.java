@@ -1792,6 +1792,12 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	//End Fix - #33399, #33856
 	
 	//#15851 start
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
 	@Override
 	public void goToLoaView(ScLoa scLoa) {
 		String slLoaNo = this.getManagedBean().getContractVer()==null?
