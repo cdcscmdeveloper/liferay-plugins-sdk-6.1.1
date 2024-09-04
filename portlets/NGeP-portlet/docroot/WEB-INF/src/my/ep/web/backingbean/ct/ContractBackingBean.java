@@ -3972,7 +3972,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 
 			//Bug 34142, 15851 - shaqimi start 04122022
-			if(getManagedBean().getTaskIdFromTaskList() != null){
+			if(getManagedBean().getTaskIdFromTaskList() != null || getManagedBean().getTaskIdFromAgreementTaskList() != null){
 				getManagedBean().setAmendFromTaskList(true);
 			}
 			//Bug 34142, 15851 - shaqimi end 04122022
