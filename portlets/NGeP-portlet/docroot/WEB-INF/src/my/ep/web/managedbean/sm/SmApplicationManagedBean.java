@@ -664,6 +664,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
 	private List<SmApplSupportDoc> missinDocsMandatory;
 	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
 	//#34393 - end
 	//#31043 START
 	private boolean allowedToSiteVisit;
@@ -4622,7 +4623,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
 	//#30762 -End 
-
+	//#34392 - start
 	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
 		return mandatoryDocsInquiry;
 	}
@@ -4654,6 +4655,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
 		this.missinDocsMandatory = missinDocsMandatory;
 	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
+	//#34392 - end
 	//#31043 START
 	public boolean isAllowedToSiteVisit() {
 		return allowedToSiteVisit;
