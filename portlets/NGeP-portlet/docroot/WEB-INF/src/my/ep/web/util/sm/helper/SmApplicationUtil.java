@@ -5015,7 +5015,7 @@ public class SmApplicationUtil {
 						}
 						if (applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							if (diffDays > 180) {
+							if (diffDays > 180) { //#36391
 								result = true;
 								throw new EpException(MessageConst.ERROR_722501);
 							} else if (diffDays < -365) {
