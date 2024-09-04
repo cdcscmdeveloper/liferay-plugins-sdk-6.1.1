@@ -1888,7 +1888,8 @@ public class ViewApplHistoryBackingBean extends
 				.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
 
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
-			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())) {
+			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())
+					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
 		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
@@ -2060,20 +2061,21 @@ public class ViewApplHistoryBackingBean extends
 	// #35336 - START
 	private boolean isValidDateComparison(SmAppl latestRegisteredAppl, SmAppl latestRejectedAppl) {
 		return latestRegisteredAppl != null && latestRegisteredAppl.getChangedDate() != null
-				&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
+			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
 	}
 
 	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
-		return latestRejectedAppl != null && latestRejectedAppl.getApplId() == smAppl.getApplId()
-				&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED);
+		return latestRejectedAppl != null && latestRejectedAppl.getApplId() != null
+				&& latestRejectedAppl.getApplId().equals(smAppl.getApplId())
+				&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
 	}
 
 	private void showErrorAdminHasBeenReplace() {
 		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
-						MessageConst.ERROR_721099, MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale())));
+			null,
+			new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
+				MessageConst.ERROR_721099, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale())));
 	}
 	// #35336 - END
 }
