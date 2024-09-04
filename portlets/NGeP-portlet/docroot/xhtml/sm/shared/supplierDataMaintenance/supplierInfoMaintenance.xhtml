@@ -48,22 +48,21 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 					<!-- START 27465 : Disciplinary Action 26238 -->
-					<p:calendar showOn="button" navigator="true"
+			<!-- 		<p:calendar showOn="button" navigator="true"
 							display="inline" required="true" readonlyInput="true"
 							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							mindate="#{supplierDataMaintenanceBackingBean.getMinDate(supplierDataMaintenanceBackingBean.managedBean.smMofAccount)}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
 							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate ge CommonConstants.CURRENT_DATE}" >
-							<p:ajax event="change" process="@this" partialSubmit="true"/>
-					</p:calendar>
+							<p:ajax event="change" process="@this" partialSubmit="true"/> 
+					</p:calendar>		 -->
 					<p:calendar navigator="true"
 							display="inline" required="true" readonlyInput="true" disabled="true"
-							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDateexp"
+							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							mindate="#{CommonConstants.CURRENT_DATE}"
-							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
-							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate lt CommonConstants.CURRENT_DATE}" >
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}" >
 							<p:ajax event="change" process="@this" partialSubmit="true"/>
 					</p:calendar>
 						<!-- END START 27465 : Disciplinary Action 26238 -->

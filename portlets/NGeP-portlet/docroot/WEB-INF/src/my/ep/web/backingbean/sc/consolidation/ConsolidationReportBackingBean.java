@@ -2017,6 +2017,10 @@ public class ConsolidationReportBackingBean extends
 				/*
 				 * BUG 32373 #83
 				 */
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
@@ -2349,23 +2353,6 @@ public class ConsolidationReportBackingBean extends
     	supplierBranchList = suppSearchResDTO.getSmSupplierBranchList();
     	  
     	return supplierBranchList;
-	}
-	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplier id 
-	* @return true or false
-	**/
-	public boolean disableRankIfSupplierBranchDeleted(Long supplierId, ScQt scQt){
-		
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
-		
-		boolean isSupplierBranchDeleted = false;
-		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isScQtCheckCurrentSupplierBranchDeleted(supplierId, scQt)){
-			isSupplierBranchDeleted = true;
-		}
-	    return isSupplierBranchDeleted;
 	}
 	//#28777 & #29729 - End
 	

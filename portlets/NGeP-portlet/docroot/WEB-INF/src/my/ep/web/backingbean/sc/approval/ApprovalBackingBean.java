@@ -1340,9 +1340,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					committeReqDTO.setSpecApprovalReq(true);
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
-				
-				approveCancelQTwithDOASenariosExists(this.getManagedBean().getQt(), taskName, action); //#25426 
-				
+				if (SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)
+						&& BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+					approveCancelQTwithDOASenariosExists(this.getManagedBean().getQt()); // #25426
+				}
 				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
 					gpkiSignAction(null);
@@ -3235,45 +3236,44 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		//#30477 - Start
 		
-		//#25426 - Start
-		private void approveCancelQTwithDOASenariosExists(ScQt scQt, String taskName, String action){
-			if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) && BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)){
-				String docNo = null;
-				docNo = scQt.getQtNo();
-				if (docNo != null) {
-				
-					BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-					IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+	// #25426 - Start
+	/**
+	 * 202407252@haziq #25426 To remove EXIST DOA when approve cancel QT
+	 * 
+	 * @param scQt
+	 */
+	private void approveCancelQTwithDOASenariosExists(ScQt scQt) {
+		String docNo = scQt.getQtNo();
+
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+		bpmReqDTO.setDocNumber(docNo);
+		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+
+		if (bpmResDTO.getWorklistVO() != null
+				&& CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())) {
+			for (WorklistItemVO currentVO : bpmResDTO.getWorklistVO().getWorklistItem()) {
+				String docType = currentVO.getDocType();
+				if (StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)
+						&& StringUtils.isNotBlank(currentVO.getTaskId())) {
+
+					Object token = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.BPM_PRINCIPAL));
+
+					bpmReqDTO = new BpmRequestDTO();
+					bpmReqDTO.setTaskId(currentVO.getTaskId());
+					bpmReqDTO.setCtxToken(token);
+					bpmSO.withdrawTask(bpmReqDTO);
 					
-					bpmReqDTO.setDocNumber(docNo);
-					bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-					BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-					
-					if(bpmResDTO.getWorklistVO()!=null && CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())){
-						for(WorklistItemVO currentVO: bpmResDTO.getWorklistVO().getWorklistItem()){
-							  String docType = currentVO.getDocType();
-							  if(StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){ 
-							
-									String taskId = currentVO.getTaskId();
-									if (StringUtils.isNotBlank(taskId)) {
-										
-										Object token = bpmSO.authenticate(EpPropertiesUtils
-												.getInstance().getProperty(
-														EpPropertiesConst.BPM_PRINCIPAL));
-										
-										bpmReqDTO = new BpmRequestDTO();
-										bpmReqDTO.setTaskId(taskId);
-										bpmReqDTO.setCtxToken(token);
-										bpmSO.withdrawTask(bpmReqDTO);
-									}	
-							  }
-						}
-					}	
-					
+					// update work flow status 63562 include 
 				}
 			}
 		}
-		//#25426 - End
+	}
+
+	// #25426 - End
 		
 		//#28784
 		private FacesScopes getFacesScopes() {

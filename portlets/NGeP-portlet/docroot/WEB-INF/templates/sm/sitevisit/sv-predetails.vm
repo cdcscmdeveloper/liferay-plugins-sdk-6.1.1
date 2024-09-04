@@ -28,6 +28,17 @@
 	        <td>$businessRegistrationNo</td>
     	</tr>
     	
+    	<!-- 24819 start -->
+    	<tr>
+	        <td width="35%"><b>Business Registration No. (New)</b></td>
+	        #if($newBusinessRegistrationNo != $null)
+	      	<td>$newBusinessRegistrationNo</td>
+	      	#else
+	      	<td>N/A</td>
+	      	#end
+    	</tr>
+    	<!-- 24819 end
+    	 -->	
     	<tr>
     		 <td width="35%"><b>GST Registration No.</b></td>
 	        <td>$!gstRegNo</td>
