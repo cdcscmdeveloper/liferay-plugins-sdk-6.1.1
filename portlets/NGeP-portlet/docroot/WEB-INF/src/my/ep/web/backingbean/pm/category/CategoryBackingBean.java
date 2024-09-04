@@ -154,10 +154,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * Instantiates a new category backing bean.
 	 */
 	public CategoryBackingBean() {
-		//start #29665 load tab index for level 3 category
-		if("3".equals(this.getManagedBean().getCatLevel()))
-	        updateTabIndex();
-		//end #29665 load tab index for level 3 category
+		// start #29665 load tab index for level 3 category
+		if (this.getManagedBean().getCatLevel() != null && "3".equals(this.getManagedBean().getCatLevel())) {
+			updateTabIndex();
+		}
+		// end #29665 load tab index for level 3 category
 	}
 	
 	/**
