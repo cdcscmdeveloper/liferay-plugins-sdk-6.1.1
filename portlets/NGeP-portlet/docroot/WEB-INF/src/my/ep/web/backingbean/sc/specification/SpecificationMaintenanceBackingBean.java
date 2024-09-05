@@ -555,6 +555,18 @@ public void specCommitteeMaintenancereset() {
 		}
 		
 		specBB.retriveTechnicalCheckList(); // #11104, #1873
+		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();//#11104-start
+		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
+		for(ScQtCheckList checkList: technicalChekclist){
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				.equalsIgnoreCase(checkList.getDefinationType()
+						.getParameterCode())) {
+			scQt_.setSampleReq(Boolean.TRUE);//#11104
+			break;
+
+		}
+		}
+		}//#11104-End
 
 		this.getManagedBean().setCurrentStatusId(scQt.getQtStatus().getStatusId());
 		this.getManagedBean().setSpecMaintenanceScreen(QTConstants.SPEC_MAINTENANCE);

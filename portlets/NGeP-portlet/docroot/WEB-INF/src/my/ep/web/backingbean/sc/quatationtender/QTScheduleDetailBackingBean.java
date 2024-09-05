@@ -55,12 +55,17 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
+<<<<<<< HEAD
 import my.ep.util.CustomUtils;
+=======
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
+>>>>>>> refs/remotes/origin/release-prd-island
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -75,6 +80,10 @@ import org.primefaces.context.RequestContext;
 public class QTScheduleDetailBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
@@ -530,6 +539,11 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void okSubmission() {
 		debugLogger("okSubmission");
+		List<BriefingZoneBean> zoneBean=this.getManagedBean().getSampleAddressBean();//11104-start
+		if(null==zoneBean){
+			zoneBean=new ArrayList<BriefingZoneBean>();
+			this.getManagedBean().setSampleAddressBean(zoneBean);
+		}//11104-End
 		List<ScQtSampleSubmission> submissionList = null;
 		if (SourcingConstants.ACTION_EDIT.equalsIgnoreCase(this
 				.getManagedBean().getActionType())) {
@@ -540,6 +554,32 @@ public class QTScheduleDetailBackingBean extends
 			submissionList.add(this.getManagedBean().getSampleAddressIndex(),
 					this.getManagedBean().getScQtSampleSubmission());
 			this.getManagedBean().setScQtSampleSubmissionList(submissionList);
+			ScAddress address=	this.getManagedBean().getScQtSampleSubmission().getScAddress();//11104-start
+			if(CollectionUtils.isEmpty(zoneBean)){
+				BriefingZoneBean briefBean=new BriefingZoneBean(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl(),address.getPmState().getStateId(),address.getPmDivision().getDivisionId(),address.getPmDistrict().getDistrictId(),address.getPmCity().getCityId());
+				zoneBean.add(briefBean);
+				}else{
+					int index=0;
+					int equalindex=0;
+					BriefingZoneBean bean=null;
+					for(BriefingZoneBean mainBean: zoneBean){
+						if(mainBean.getTplSpecZoneDtl().getSpecZoneId().equals(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl().getSpecZoneId())|| mainBean.getTplSpecZoneDtl().getSpecZoneId()==this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl().getSpecZoneId()){
+							equalindex=index;
+							bean=new BriefingZoneBean(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl(),address.getPmState().getStateId(),address.getPmDivision().getDivisionId(),address.getPmDistrict().getDistrictId(),address.getPmCity().getCityId());
+						}
+						index++;
+					}
+					if(null!=bean){
+						zoneBean.remove(equalindex);
+						zoneBean.add(equalindex,bean);
+						
+					}else{
+						bean=new BriefingZoneBean(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl(),address.getPmState().getStateId(),address.getPmDivision().getDivisionId(),address.getPmDistrict().getDistrictId(),address.getPmCity().getCityId());
+						zoneBean.add(bean);
+					}
+				}
+			 this.getManagedBean().setSampleAddressBean(zoneBean);//11104-End
+
 		} else {
 			submissionList = this.getManagedBean().getSelectedSubmissionList();
 			if (null == submissionList || submissionList.isEmpty()) {
@@ -548,7 +588,33 @@ public class QTScheduleDetailBackingBean extends
 			for (ScQtSampleSubmission sampleSubmission : submissionList) {
 				sampleSubmission.setScAddress(this.getManagedBean()
 						.getScQtSampleSubmission().getScAddress());
-			}
+				ScAddress address=	this.getManagedBean()
+						.getScQtSampleSubmission().getScAddress();//11104-start
+					if(CollectionUtils.isEmpty(zoneBean)){
+					BriefingZoneBean briefBean=new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(),address.getPmState().getStateId(),address.getPmDivision().getDivisionId(),address.getPmDistrict().getDistrictId(),address.getPmCity().getCityId());
+					zoneBean.add(briefBean);
+					}else{
+						int index=0;
+						int equalindex=0;
+						BriefingZoneBean bean=null;
+						for(BriefingZoneBean mainBean: zoneBean){
+							if(mainBean.getTplSpecZoneDtl().getSpecZoneId().equals(sampleSubmission.getTplSpecZoneDtl().getSpecZoneId())|| mainBean.getTplSpecZoneDtl().getSpecZoneId()==sampleSubmission.getTplSpecZoneDtl().getSpecZoneId()){
+								equalindex=index;
+								bean=new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(),address.getPmState().getStateId(),address.getPmDivision().getDivisionId(),address.getPmDistrict().getDistrictId(),address.getPmCity().getCityId());
+							}
+							index++;
+						}
+						if(null!=bean){
+							zoneBean.remove(equalindex);
+							zoneBean.add(equalindex,bean);
+							
+						}else{
+							bean=new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(),address.getPmState().getStateId(),address.getPmDivision().getDivisionId(),address.getPmDistrict().getDistrictId(),address.getPmCity().getCityId());
+							zoneBean.add(bean);
+							}
+						}// 11104-End
+					}
+			this.getManagedBean().setSampleAddressBean(zoneBean);//11104
 			this.getManagedBean().setSelectedSubmissionList(null);
 		}
 

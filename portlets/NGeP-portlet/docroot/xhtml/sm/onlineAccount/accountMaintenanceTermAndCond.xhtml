@@ -46,8 +46,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="addCmdBtn"
 					action="#{registrationBackingBean.goToViewOnlineAccount}"
-					
-					update="addnlCatCodesMsgs"
+					update="addnlCatCodesMsgs, @form"
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>

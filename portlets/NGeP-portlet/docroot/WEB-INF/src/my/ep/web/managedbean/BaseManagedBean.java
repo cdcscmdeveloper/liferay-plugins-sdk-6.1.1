@@ -144,6 +144,7 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	// 25037 - start
 	private String currentTaskDocType;
+<<<<<<< HEAD
 	private Calendar currentTaskCreatedDate;
 	private boolean validFor25037;
 	private boolean committeModified;
@@ -151,6 +152,17 @@ public abstract class BaseManagedBean implements Serializable {
 	// 25037 - end
 
 	//27346-start 
+=======
+	
+	//27346-start
+	// start #29956
+	private String termAndConditionCheckOwner;
+	private String termAndConditionCheckOwnerA;
+	private String termAndConditionCheckOwnerC;
+	private String termAndConditionCheckOwnerChangeRole;
+	private Boolean isDowngradeRole;
+	// end #29956
+>>>>>>> refs/remotes/origin/release-prd-island
 	// 27346
 	private StreamedContent downloadfile;
 
@@ -951,4 +963,46 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setTotalShare(BigDecimal totalShare) {
 		this.totalShare = totalShare;
 	}
+	
+	// start #29956
+	public String getTermAndConditionCheckOwner() {
+		return termAndConditionCheckOwner;
+	}
+
+	public void setTermAndConditionCheckOwner(String termAndConditionCheckOwner) {
+		this.termAndConditionCheckOwner = termAndConditionCheckOwner;
+	}
+
+	public String getTermAndConditionCheckOwnerA() {
+		return termAndConditionCheckOwnerA;
+	}
+
+	public void setTermAndConditionCheckOwnerA(String termAndConditionCheckOwnerA) {
+		this.termAndConditionCheckOwnerA = termAndConditionCheckOwnerA;
+	}
+
+	public String getTermAndConditionCheckOwnerC() {
+		return termAndConditionCheckOwnerC;
+	}
+
+	public void setTermAndConditionCheckOwnerC(String termAndConditionCheckOwnerC) {
+		this.termAndConditionCheckOwnerC = termAndConditionCheckOwnerC;
+	}
+
+	public String getTermAndConditionCheckOwnerChangeRole() {
+		return termAndConditionCheckOwnerChangeRole;
+	}
+
+	public void setTermAndConditionCheckOwnerChangeRole(String termAndConditionCheckOwnerChangeRole) {
+		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
+	}
+
+	public Boolean isDowngradeRole() {
+		return isDowngradeRole;
+	}
+
+	public void setDowngradeRole(Boolean isDowngradeRole) {
+		this.isDowngradeRole = isDowngradeRole;
+	}
+	// end #29956
 }
