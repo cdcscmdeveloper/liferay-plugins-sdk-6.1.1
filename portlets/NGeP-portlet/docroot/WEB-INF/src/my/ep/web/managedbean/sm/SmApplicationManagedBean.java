@@ -653,6 +653,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
 	private List<SmApplSupportDoc> missinDocsMandatory;
 	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
 	//#34393 - end
 	//#31043 START
 	private boolean allowedToSiteVisit;
@@ -4605,6 +4606,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setMissinDocsNonMandatory(
 			List<SmApplSupportDoc> missinDocsNonMandatory) {
 		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
 	}
 	//#34392 - end
 	//#31043 START
