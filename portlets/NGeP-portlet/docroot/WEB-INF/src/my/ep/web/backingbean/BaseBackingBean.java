@@ -157,6 +157,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -1381,29 +1382,31 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}	
 	/** #25638 - end **/
 	
+	// 25037 - start
 	/**
-	 * Success message.
+	 * Return success message by message code.
 	 * 
 	 * @param messageCode
-	 *            the message code
-	 * @param String
-	 *            [] params
+	 * @param params
 	 */
-	// 25037 - start
 	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
 
+	/**
+	 * Return success message by message code. Navigate to acknowledgment page
+	 * if required.
+	 * 
+	 * @param messageCode
+	 * @param params
+	 * @param isAcknowledgeRequired
+	 */
 	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
 	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								params,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageCode, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -2265,10 +2268,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param outComes the out comes
 	 * @return the string[]
 	 */
-	private String[] sortOutcomes(String[] outComes) {
+	private String[] sortOutcomes(String[] outcomes) {
 		// 25037(29253) - start
-		outComes = outComes == null ? new String[] {} : outComes;
-		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY;
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
 		Collections.sort(bpmActions, new Comparator<String>() {
 			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
 			// last index will appear on the far right,
@@ -2276,13 +2281,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			// existed ordered outcome will take precedent
 			List<String> sortOrder = Arrays.asList(orderedAction);
 
+			@Override
 			public int compare(String s1, String s2) {
 				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
 			}
 		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
 		// 25037(29253) - end
-		outComes = new String[bpmActions.size()];
-		return bpmActions.toArray(outComes);
 	}
 
 	/**

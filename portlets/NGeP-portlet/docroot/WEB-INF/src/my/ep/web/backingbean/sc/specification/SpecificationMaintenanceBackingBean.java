@@ -429,15 +429,23 @@ public void specCommitteeMaintenancereset() {
 	/* ***25692#95 - end */
 
 	/**
-	 * The method  used to get the specificationMaintenance edit details.
-	 * @param ScQt scQt.
-	 * @param Boolean true/false.
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
 	 */
 	// 25037 - start - note 510
 	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable) {
 		editSpecificationMaintenance(scQt, isEditable, false);
 	}
 
+	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 * @param popup
+	 */
 	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
 		editSpecificationMaintenance(scQt, isEditable, true, false, null);
 		if (popup) {

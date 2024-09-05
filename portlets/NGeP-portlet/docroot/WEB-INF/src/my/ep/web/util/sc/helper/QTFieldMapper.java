@@ -264,7 +264,7 @@ public class QTFieldMapper {
 		}
 		// 25037 - start
 		private static String[] merge(String[] arr1, String[] arr2){
-			List<String> merged = new ArrayList<String>(Arrays.asList(arr1));
+			List<String> merged = new ArrayList<>(Arrays.asList(arr1));
 			merged.addAll(Arrays.asList(arr2));
 			String[] mergedArr = new String[merged.size()];
 			for(int i=0;i<mergedArr.length;i++){

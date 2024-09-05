@@ -766,7 +766,7 @@ public class EvaluationBackingBean extends
 							}
 							Map<Object, Object> map = CustomUtils.listToMap(resDTO.getQtCommittee()
 									.getCommitteeActivities(), "getScCommitteeMember.getCommitteeMemberId");
-							List<ScQtCommitteeActivity> addedActivities = new ArrayList<ScQtCommitteeActivity>();
+							List<ScQtCommitteeActivity> addedActivities = new ArrayList<>();
 							for (ScCommitteeMember member : sccommittee.getScCommitteeMembers()) {
 								if (map.get(member.getCommitteeMemberId()) == null) {
 									member.setScCommittee(sccommittee);
@@ -786,13 +786,13 @@ public class EvaluationBackingBean extends
 							Collections.sort(resDTO.getQtCommittee().getCommitteeActivities());
 							this.getManagedBean().setCommitteeMemberList(
 									resDTO.getQtCommittee().getCommitteeActivities());
-							this.getManagedBean().setCommitteeMemberActivity(sccommittee.getScCommitteeMembers());// 25037 - 568
+							this.getManagedBean().setCommitteeMemberActivity(sccommittee.getScCommitteeMembers());// 25037 - note 568
 						} else {
-							List<ScQtCommitteeActivity> localList = new ArrayList<ScQtCommitteeActivity>();
+							List<ScQtCommitteeActivity> localList = new ArrayList<>();
 							if (CollectionUtils.isNotEmpty(sccommittee.getScCommitteeMembers())) {
 								for (ScCommitteeMember scCommitteeMember : sccommittee.getScCommitteeMembers()) {
 									scCommitteeMember.setScCommittee(sccommittee);
-									// 25037 - end
+						// 25037 - end
 									setUserDetails(scCommitteeMember);
 
 									ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
@@ -811,7 +811,7 @@ public class EvaluationBackingBean extends
 
 							Collections.sort(localList);
 							this.getManagedBean().setCommitteeMemberList(localList);
-							this.getManagedBean().setCommitteeMemberActivity(sccommittee.getScCommitteeMembers());// 25037 - 568
+							this.getManagedBean().setCommitteeMemberActivity(sccommittee.getScCommitteeMembers());// 25037 - note 568
 						}
 
 					}
@@ -12794,17 +12794,20 @@ private void retriveCommitteeRemarksList(){
 	}
 	// #25638 - End
 	// 25037 - start
+	/**
+	 * Populate the data for the screen update committee member.
+	 */
 	public void prepareUpdateCommitteeMember() {
 		ScQt scQt = this.getManagedBean().getScQt();
 		ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
-		//25037 - start - note 568
+		// 25037 - start - note 568
 		EvaluationMeetingBackingBean meetingBB = this.getManagedBean().getMeetingBB();
 		if (meetingBB == null) {
 			meetingBB = new EvaluationMeetingBackingBean();
 			meetingBB.renewSesionObject();
 		}
 		this.getManagedBean().setMeetingBB(meetingBB);
-		//25037 - end - note 568
+		// 25037 - end - note 568
 		meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType()
 				.getParameterCode());
 		meetingBB.getManagedBean().setEvalBB(this);
@@ -12813,7 +12816,10 @@ private void retriveCommitteeRemarksList(){
 		meetingBB.getManagedBean().setPayLoad(this.getManagedBean().getPayLoad());
 		meetingBB.getManagedBean().setTaskId(this.getManagedBean().getTaskId());
 	}
-	
+	// 25037 - start - note 568
+	/**
+	 * Submit committee member changes and send for approval.
+	 */
 	public void submitCommitteeUpdate() {
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -12843,5 +12849,6 @@ private void retriveCommitteeRemarksList(){
 		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
+	// 25037 - end - note 568
 	// 25037 - end
 }

@@ -2417,7 +2417,6 @@ public class CommitteBackingBean extends
 	private ICommitteSO getCommitteeSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 	}
-
 	// 25037 - end
 	/**
 	 * Gets the parameter so.
@@ -2488,6 +2487,12 @@ public class CommitteBackingBean extends
 	}
 
 	// 25037 - start
+	/**
+	 * Populate selected history and display the currently selected member
+	 * history.
+	 * 
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	public void onSelectHistory() throws IOException {
 		ScCommitteeMemberHistory history = this.getManagedBean().getSelectedCommitteeHistory();
@@ -2503,6 +2508,8 @@ public class CommitteBackingBean extends
 	
 	/**
 	 * Evaluate active flag for scCommittee
+	 * 
+	 * @param committee
 	 * @return boolean isCommitteeRecordStatusActive
 	 */
 	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {

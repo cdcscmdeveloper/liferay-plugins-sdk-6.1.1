@@ -1568,6 +1568,32 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
+	// 25037 - start
+	private boolean showHistory;
+	private Paginator committeeHistories;
+	private String currentCommitteeDesc;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private Paginator selectedHistoryMember;
+	private boolean committeeReviseFlow;
+	private List<QtCommitteeMemberBean> memberHistoryList;
+	private ScQtApprovalRequest scQtApprovalRequest;
+	private ScQtApprovalRequest doaaRequest;
+	private boolean doaRequestEditable;
+	private List<ScQtContactPerson> newDoaList;
+	private List<ScQtContactPerson> prevDoaList;
+	private List<PmUser> deskOfficerAssistantList;
+	private ScQtRequestContent requestContent;
+	private boolean reapproval;
+	private String prevDOAs;
+	private String[] roleFilterList;
+	private Long currentQTStatus;
+	private Long currentCMTStatus;
+	private boolean committeeUpdateFlow;
+	private List<String> mainTaskNames;
+
+	// 25037 - end
+	
+	
 	/**
 	 * Sets the panel suppliers.
 	 * 
@@ -1653,31 +1679,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
-	// 25037 - start
-	private boolean showHistory;
-	private Paginator committeeHistories;
-	private String currentCommitteeDesc;
-	private ScCommitteeMemberHistory selectedCommitteeHistory;
-	private Paginator selectedHistoryMember;
-	private boolean committeeReviseFlow;
-	private List<QtCommitteeMemberBean>memberHistoryList;
-	private ScQtApprovalRequest scQtApprovalRequest;
-	private ScQtApprovalRequest doaaRequest;
-	private boolean doaRequestEditable;
-	private List<ScQtContactPerson> newDoaList;
-	private List<ScQtContactPerson> prevDoaList;
-	private List<PmUser> deskOfficerAssistantList; 
-	private ScQtRequestContent requestContent;
-	private boolean reapproval;
-	private String prevDOAs;
-	private String[] roleFilterList;
-	private Long currentQTStatus;
-	private Long currentCMTStatus;
-	private boolean committeeUpdateFlow;
-	private List<String> mainTaskNames;
-	// 25037 - end
-	
+
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -1707,6 +1709,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		 */
 	}
 
+	
 	/**
 	 * @return the qt
 	 */

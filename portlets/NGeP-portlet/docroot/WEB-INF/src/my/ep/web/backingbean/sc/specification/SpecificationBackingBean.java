@@ -3246,7 +3246,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				qtCommittee = committeeActivities.get(0).getScQtCommittee();
 				Map<Object, Object> map = CustomUtils.listToMap(committeeActivities,
 						"getScCommitteeMember.getCommitteeMemberId");
-				List<ScQtCommitteeActivity> missingActivities = new ArrayList<ScQtCommitteeActivity>();
+				List<ScQtCommitteeActivity> missingActivities = new ArrayList<>();
 				for (ScCommitteeMember member : memberList) {
 					if (map.get(member.getCommitteeMemberId()) == null) {
 						ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
@@ -3258,8 +3258,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				}
 				committeeActivities.addAll(missingActivities);
 				Collections.sort(committeeActivities, new Comparator<ScQtCommitteeActivity>() {
-					List<String> sortOrder = Arrays.asList("C", "S", "M");
+					List<String> sortOrder = Arrays.asList(SourcingConstants.COMMITTEE_ROLE_SORT_ORDER);
 
+					@Override
 					public int compare(ScQtCommitteeActivity o1, ScQtCommitteeActivity o2) {
 						return Integer.valueOf(
 								sortOrder.indexOf(o1.getScCommitteeMember().getMemberRole().getParameterCode()))
@@ -15076,7 +15077,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		this.getManagedBean().setLocalOutCome(action);
 		
 		// 25037 - start
-		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt());//#25037
+		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt(), true);// 25037
 		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
 			// temporary while awaiting #29474 close in SIT -start-
 			// remove when #29474 ready for UAT
@@ -16733,6 +16734,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
 	// 25037 - start
+	/**
+	 * Submit action based on outcome. 
+	 * @param outcome
+	 */
 	public void submitAction(String outcome) {
 		assertConcurrentComittteeChangesApproval();
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
@@ -16780,10 +16785,9 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
 			for (WorklistItemVO currentVO : resDTO.getWorklistVO().getWorklistItem()) {
-				if (StringUtils.isNotBlank(currentVO.getTaskName())) {
-					if (Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())) {
-						throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
-					}
+				if (StringUtils.isNotBlank(currentVO.getTaskName())
+						&& Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())) {
+					throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
 				}
 			}
 		}

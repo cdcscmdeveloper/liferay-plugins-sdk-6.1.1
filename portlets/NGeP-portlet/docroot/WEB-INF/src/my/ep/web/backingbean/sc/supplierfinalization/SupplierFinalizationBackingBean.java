@@ -507,8 +507,12 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(
 				PREPARE_ACTIVE_INDEX_MEETING);
 	}
-
-	public void loadPreparationTabDetails() { // 25037
+	// 25037 - start
+	/**
+	 * Populate informations for preparation tab.
+	 */
+	public void loadPreparationTabDetails() {
+	// 25037 - end
 		log.info("loadPreparationTabDetails");
 		Long qtId = getManagedBean().getScQt().getQtId();
 		String committeeType = getManagedBean().getCommitteeType();
@@ -682,6 +686,9 @@ public class SupplierFinalizationBackingBean extends
 		
 	}
 	
+	/**
+	 * Initialize remarks.
+	 */
 	public void initializeCommitteeRemarks() { // 25037
 		log.info("initializeCommitteeRemarks");
 		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
@@ -699,6 +706,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 				remarks.get(0).setEditable(true);
 				Collections.sort(remarks, new Comparator<ScQtCommitteRemarks>() {
+					@Override
 					public int compare(ScQtCommitteRemarks o1, ScQtCommitteRemarks o2) {
 						if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
 							return 0;
@@ -869,7 +877,7 @@ public class SupplierFinalizationBackingBean extends
 
 						Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeList(),
 								"getScCommitteeMember.getCommitteeMemberId");
-						List<ScQtCommitteeActivity> missingActivities = new ArrayList<ScQtCommitteeActivity>();
+						List<ScQtCommitteeActivity> missingActivities = new ArrayList<>();
 						for (ScCommitteeMember member : scQtCommittee.getScCommittee().getScCommitteeMembers()) {
 							if (map.get(member.getCommitteeMemberId()) == null) {
 								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
@@ -880,7 +888,7 @@ public class SupplierFinalizationBackingBean extends
 							}
 						}
 						this.getManagedBean().getCommitteeList().addAll(missingActivities);
-					// 25037 - end	
+					// 25037 - end
 						
 						List<ScQtCommitteeActivity> committeeEndorsementList 
 								= this.getManagedBean().getCommitteeEndorsementList();
@@ -1253,9 +1261,13 @@ public class SupplierFinalizationBackingBean extends
 	public void saveSupplierFinalization() {
 		saveSupplierFinalization(false);
 	}
-
+	/**
+	 * Validate, save supplier finalization details and sets the updated data in
+	 * managed bean associated with the current user session, skip validation if needed
+	 * @param skipValidation
+	 */
 	public void saveSupplierFinalization(boolean skipValidation) {
-		// 25037 - end
+	// 25037 - end
 		log.info("..In saveSupplierFinalization()..");
 		this.getManagedBean().setSubmit(false);
 
@@ -1356,7 +1368,7 @@ public class SupplierFinalizationBackingBean extends
 			
 			// 25037 - start
 			if (!skipValidation) {
-				String qtNo = getManagedBean().getScQt().getQtNo().toString();
+				String qtNo = getManagedBean().getScQt().getQtNo();
 				String desc = ResourceBundleUtils.getMessage("lbl.sc.sf.supplier.finalization",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 				FacesContext.getCurrentInstance().addMessage(
@@ -1383,9 +1395,9 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// #35205 & #28834 - End
-	// 25037 - note 31
+	// 25037 - start - note 31
 	private void validateFinalizationReports(SuppFinalizationReqDTO reqDTO, boolean skipValidation) { 
-	// 25037 - note 31
+	// 25037 - end -  note 31
 		log.info("validateFinalizationReports");
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		boolean isSubmit = this.getManagedBean().isSubmit(); // #35205, #28834
@@ -1409,10 +1421,11 @@ public class SupplierFinalizationBackingBean extends
 						toBeRemovedReports.add(report);
 					} else {
 						finalizationReports.removeAll(this.getManagedBean().getEndorsementReports());
-						 // 25037 - start - note 31
-						if (skipValidation)
+						// 25037 - start - note 31
+						if (skipValidation) {
 							return;
-						 // 25037 - end - note 31
+						}
+						// 25037 - end - note 31
 						navigateToEndorsementReportTab();
 						// 31934 - start
 						throw new EpException(MessageConst.ERROR_770271);
@@ -1515,16 +1528,17 @@ public class SupplierFinalizationBackingBean extends
 							.getReason() == null || scQtFinalization.getReason().getReasonId() == null))
 							&& !skipValidation) {
 					// 25037 - end
-							navigateToSupplierFinalizationTab();
-							throw new EpException(MessageConst.ERROR_760385);
-						}
+						navigateToSupplierFinalizationTab();
+						throw new EpException(MessageConst.ERROR_760385);
+					}
 						// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
 					if (!this.getManagedBean().isInitialDecisionFwdToBPK()
 							&& this.getManagedBean().getScQt().isBpkFinalizationReq()) {
 						
 					if (!ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 							.equals(decisionTypeCode)
-							|| scQtFinalization.getHigherCommitte() != null) {						navigateToSupplierFinalizationTab();
+								|| scQtFinalization.getHigherCommitte() != null) {
+							navigateToSupplierFinalizationTab();
 							throw new EpException(MessageConst.ERROR_760459);
 						}
 
@@ -1539,8 +1553,8 @@ public class SupplierFinalizationBackingBean extends
 							validateByItem();
 						}
 					}
-					// 25037 - end	
-					
+					// 25037 - end
+
 						List<QtEvaluationResultDtlBean> cachedSupplierBeans = null;
 						Map<MapKey,List<QtEvaluationResultDtlBean>> cachedSuppliersMap = 
 												getManagedBean().getQualifiedSuppliersCache();
@@ -9990,6 +10004,9 @@ public class SupplierFinalizationBackingBean extends
 	// Bug #35485@Syazani 08/02/2024 -- End
 	
 	// 25037 - start
+	/**
+	 * Populate and initialize data for update committee screen.
+	 */
 	public void prepareUpdateCommitteeMember() {
 		if (StringUtils.isEmpty(this.getManagedBean().getCommitteeType()))
 			return;
