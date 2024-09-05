@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -110,7 +111,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Backing Bean for Create Delivery Order.
@@ -134,6 +134,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	private String className="@(.myDoClassName)";
+	private static final int SUPPLIER_DO_REF_LENGTH  = 30; //36247
 	
 	/**
 	 * @return the className
@@ -246,6 +247,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								flDelOrderItem.setFlFulfilmentItemAddr(itemAddress);
 								flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
 								flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
+								//26338-start
+								log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
+								//26338-end								
 								flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
 								
 								//34881-start
@@ -276,6 +280,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					for(FlFulfilmentItemAddr itemAddress : flDeliveryAddress.getFlFulfilmentItemAddr()){
 						itemAddress.getFlTempDoItem().setFlFulfilmentItemAddr(itemAddress);
 						itemAddress.getFlTempDoItem().setDeliveryQty(itemAddress.getDeliveredQty());
+						//26338-start
+						log.info("*****FulfilmentItemAddrId ["+ itemAddress.getFulfilmentItemAddrId()  +"] DeliveredQty ["+itemAddress.getDeliveredQty() + "] ");
+						//26338-end		
 						itemAddress.getFlTempDoItem().setDeliveryAmt(itemAddress.getDeliveredAmt());
 						
 						//34881-start
@@ -309,7 +316,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 			
 				if(null == getManagedBean().getSupplierDoRef()){
-
+					//TODO
+					// do valudation
 				}else{
 					getManagedBean().getFlDeliveryOrder().setSupplierDoRef(getManagedBean().getSupplierDoRef());
 				}
@@ -514,9 +522,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		
 		if(flOrder.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+			
 		} else {
-			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getCtContract().getContractNo());
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getCtContract().getContractNo());	
 		}
+		
 	}
 	
 	/**
@@ -731,9 +741,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			Object obj = super.getBpmTaskDetails(Object.class, null);
 			getManagedBean().setModificationCancel(false);
-			
-			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
-			if (FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", "")+"Submition")){
+			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
+			if(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", "")+"Submition")){
 				FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
 				if(doModDataType.getErrorId() != null && doModDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -748,7 +758,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
-			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))){
+			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) || getManagedBean().getProcessName()
+					.equalsIgnoreCase(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))){
 				FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
 				if(doCancelDataType.getErrorId() != null && doCancelDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -795,7 +806,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					if(smDisciplinaryAction != null) {
 						getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 						boolean isWarningOnly = false;
-						String warningOrDisciplinaryActionMsg = null;
+						String warningOrDisciplinaryActionMsg;
 						String language =  new FacesScopes().getUserLocale().getLanguage();
 						if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
 								&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
@@ -1073,11 +1084,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){ //DO maintenance by supplier
 			List <String> supplierDoNoList = null;
 			if(null != getManagedBean().getFlDeliveryOrder().getSupplierDoRef()){
-				//29234  start
-				if(getManagedBean().getFlDeliveryOrder().getSupplierDoRef() == null || getManagedBean().getFlDeliveryOrder().getSupplierDoRef().isEmpty()){
+				//29234 start
+				if(getManagedBean().getFlDeliveryOrder().getSupplierDoRef().isEmpty()){
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				//29234 end
+				
+				validateSupplierDoRefLength(getManagedBean().getFlDeliveryOrder().getSupplierDoRef()); //36247
+				
 				IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				supplierDoNoList = new ArrayList<String>();
 				supplierDoNoList.add(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());
@@ -1150,6 +1164,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				// 36247-Start
+				if (flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef() != null) {
+					validateSupplierDoRefLength(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
+				}
+				// 36247-End
+
 				if(supplierDoNoList.contains(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef())){
 					throw new EpException(MessageConst.ERROR_740042, new String[]{flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef(),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 				}else{
@@ -1167,7 +1187,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setAddressId(addressId);
 				reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 				AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
-				if(resDTO.getAddressTypeList().isEmpty()){
+				if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}
@@ -1632,6 +1652,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	}
 	
 	//26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
 		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
@@ -1733,7 +1756,36 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		// }
 
 	}
+
 	// 28855 - end
+	//#21416 start
+	public String filterItemName(String itemName) {
+		if(this.getManagedBean().getFulfilmentOrder() != null){
+			if(this.getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+				String filteredItemName = filterItemNameNA(itemName);
+				return filteredItemName;
+			}
+		}
+		return itemName;		
+	}
+	//#21416 end
+	// 36247-Start
+	/**
+	 * 
+	 * Validation for Supplier Do Reference length Maximum length is 30
+	 * 
+	 * @param supplierDoRef
+	 */
+	private void validateSupplierDoRefLength(String supplierDoRef) {
+		if (supplierDoRef.length() > SUPPLIER_DO_REF_LENGTH ) {
+			String label = ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new EpException(MessageConst.ERROR_721114,
+					new String[] { label, String.valueOf(SUPPLIER_DO_REF_LENGTH ) });
+		}
+	}
+	// 36247-End
+	
 	// #35508 fl audit trail
 	/**
 	 * insert audit for DO
