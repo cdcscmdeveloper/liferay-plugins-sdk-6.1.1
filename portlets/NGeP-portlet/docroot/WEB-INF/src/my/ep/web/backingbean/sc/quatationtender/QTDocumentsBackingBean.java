@@ -2949,8 +2949,8 @@ public class QTDocumentsBackingBean extends
 			detailBean.retrieveDeductionPaymentTabDtl();
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtDeductionList())){
 				StringBuilder paymentDeductions=new StringBuilder();
-				paymentDeductions.append(TemplateDocConst.PARAM_PAYMENT_DEDUCTION__APPLIABLE)
-				.append(TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER)
+				//paymentDeductions.append(TemplateDocConst.PARAM_PAYMENT_DEDUCTION__APPLIABLE) //#34873
+				paymentDeductions.append(TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER) //#34873
 				.append("<table>");
 				for(int i=0;i<this.getManagedBean().getScQtDeductionList().size();i++){
 				ScQtDeduction deduction=this.getManagedBean().getScQtDeductionList().get(i);
