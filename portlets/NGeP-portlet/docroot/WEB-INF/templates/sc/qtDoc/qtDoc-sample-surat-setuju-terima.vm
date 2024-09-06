@@ -206,6 +206,12 @@
 				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018</span>
 			</p>
 			
+			## #26770 #503 - start
+			<p style="margin-bottom:1px">
+				<span class="text_family">*3. <span class="text_indent">Harga</span> Kontrak adalah tidak termasuk cukai perkhidmatan selaras dengan Perintah Cukai Perkhidmatan 2018.</span>
+			</p>
+			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan Perkhidmatan yang tidak dikenakan cukai di bawah Perintah Cukai Perkhidmatan 2018</span>
+			## #26770 #503 - end
 			<p style="margin-bottom:1px">
 				<span class="text_family">*3. <span class="text_indent">Harga</span> kontrak adalah termasuk peruntukan Kerajaan sebanyak  ..............................% cukai perkhidmatan 
 				memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). 
@@ -213,7 +219,6 @@
 				
 			</p>
 			<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018</span>
-			
 			<p style="margin-bottom:1px">
 				<span class="text_family">*3. <span class="text_indent">Harga</span> kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak .......% cukai
 				perkhidmatan memandangkan syarikat tuan tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM).
@@ -353,10 +358,11 @@
 			</p>
 			<span class="text_family_small_black">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROTÉGÉ-RTW berdasarkan PP/PK1.2. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 		<p>
+					## #26770 #503 - start
 					## 9
-						<span class="text_family">*9.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan Program Kolaborasi Industri (Industrial Collaboration Program (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
+						<span class="text_family">*9.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
 					</p>
-					
+					## #26770 #503 - end
 					## 10
 					<p>
 						<span class="text_family">*10.<span class="text_indent"> Syarikat </span>Tuan hendaklah merujuk dan mengadakan perbincangan lebih lanjut dengan pihak Technology Depository Agency (TDA)** sebagai agensi pelaksana bagi menentu dan memuktamadkan butiran projek-projek ICP untuk dimasukkan di dalam Perjanjian Utama ICP yang akan ditandatangani antara pihak Kerajaan dengan Syarikat Tuan secara bersama dengan Kontrak Perolehan Utama.</span>
@@ -439,10 +445,12 @@
 						</table>
 			
 			</div>
-			
+			## #26770 #503 - start
 			<p>
-				14.	<span class="text_indent">Sekiranya</span> Surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 13, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.
+				14.	<span class="text_indent">Sekiranya</span> Surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 13, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan. 
+					<br/><span class="text_family_small_black">*perenggan 9 sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan 13 sekiranya perolehan melibatkan ICP</span>
 			</p>
+			## #26770 #503 - end
 			<p>
 				15.	<span class="text_indent">Bersama-bersama</span> Surat ini disertakan Surat Akuan Pembida Berjaya 
 				dan Surat Akuan Sumpah Syarikat seperti di <b><i>Lampiran B</i></b> dan <b><i>Lampiran C</i></b> untuk 

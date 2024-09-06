@@ -241,7 +241,7 @@
 		</p:outputPanel>
 
 		<!-- #11641 - START -->
-		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto">
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg" width="auto" style="max-height:80%; overflow-y: auto; top: 10%">
 			
 			<p:scrollPanel mode="native" style="max-height:auto;auto;border:none">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -410,50 +410,42 @@
 				</tr>
 
 				<ui:param name="gstSupplier" value="#{sdoReviewBackingBean.managedBean.smGstSupplier}" />
-			
-				<ui:remove>
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
-					<td class="tdContent">
-						<p:inputText value="#{gstSupplier.gstEndDate}" disabled="true" size="40">
-							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText>
-					</td>
-				</tr>
-				</ui:remove>
-				
-
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.address1}" disabled="true" size="40" /></td>
-							
+					<!-- #24819 - start -->
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 					<td class="tdContent">
-					<p:inputText
-							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" disabled="true" size="40" rendered ="#{!empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}">
-					</p:inputText>
-					<p:inputText
-							value="#{lbl['lbl.sm.no.available']}" disabled="true" size="40" rendered ="#{empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}">
-					</p:inputText>
-						&#160;
-						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType and sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}"/>
-						<ui:param name="lblnewRegNoTlTip" value="tt.sm.business.type.#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}" />
-						<p:tooltip id="newRegNott" for="newRegNoti" rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType and sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}" >
+						<p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
+							disabled="true" size="40"
+							rendered="#{!empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" />
+						<p:inputText value="#{lbl['lbl.sm.no.available']}"
+							disabled="true" size="40"
+							rendered="#{empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" /> &#160;
+						<p:graphicImage id="newRegNoti"
+							value="/css/images/design/tooltips.png"
+							rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType 
+							and sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}" />
+						<ui:param name="lblnewRegNoTlTip"
+							value="tt.sm.business.type.#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}" />
+						<p:tooltip id="newRegNott" for="newRegNoti"
+							rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType 
+							and sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
-						</p:tooltip>&#160;
-						</td>
-		
+						</p:tooltip>&#160;</td>
+					<!-- #24819 - end -->
 				</tr>
 				
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="&#160;" /></td>
 					<td class="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.companyAdd.address2}" disabled="true" size="40" /></td>
-							
+					<!-- #24819 - start -->		
 					<td class="tdTitle"></td>
 					<td class="tdContent">
 					<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" /></td>
+					<!-- #24819 - start -->
 				</tr>
 				
 				<tr>
