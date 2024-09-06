@@ -15,6 +15,8 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -23,6 +25,7 @@ import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.cm.catalogue.PublicCatalogueBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -125,7 +128,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 
-	//#10747,#35739 and SonarLint fixing - Start
+	// #10747,#35739 and SonarLint fixing- Start
 	private class SearchPagingDataModel extends PagingDataModel<Object[]> {
 
 		private static final long serialVersionUID = 1L;
@@ -139,7 +142,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			
+
 			PublicCatalogueBackingBean bb = new PublicCatalogueBackingBean();
 
 			bb.getManagedBean().setFamilyList(null);
@@ -150,16 +153,15 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 					ICodificationSO.class);
 
 			try {
-				//filter catalog list
-				searchFilterBean(bb,reqDTO);				
-				searchFamilyUnspscandBrandFilterBean(bb,reqDTO);
-				
+				// filter catalog list
+				searchFilterBean(bb, reqDTO);
+				searchFamilyUnspscandBrandFilterBean(bb, reqDTO);
+
 				log.info("itemName:" + reqDTO.getItemName());
-				
-				
+
 				reqDTO.setPublicCatalogSearchBean(searchBean);
 				// #10747 - Soo - Start
-			    reqDTO.setSortBy(bb.getManagedBean().getSortBy());
+				reqDTO.setSortBy(bb.getManagedBean().getSortBy());
 				// #10747 - Soo - End
 				CatalogueResDTO resDTO = catalogueSO.searchCatalogueBy(reqDTO);
 
@@ -184,20 +186,20 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 				} else {
 					CatalogueResDTO resDTO1 = catalogueSO.searchPublicCatalogueByNamePriceDeliveryTerm(reqDTO); // #10747- Shafie
-					
+
 					if (bb.getManagedBean().isCloneNameFlag()) {
 						bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
 						List<String> itemNames = new ArrayList<>();
-						
-						getFamilyCodeList(bb,resDTO1,itemNames);
+
+						getFamilyCodeList(bb, resDTO1, itemNames);
 
 					} else {
-						
+
 						bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
 						List<String> itemNames = new ArrayList<>();
-						
-						getFamilyCodeFamilyList(bb,resDTO1,itemNames);
-						
+
+						getFamilyCodeFamilyList(bb, resDTO1, itemNames);
+
 					}
 				}
 
@@ -211,16 +213,14 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 				return resDTO.getViewPublicSuppItemResultBean();
 
 			} catch (Exception e) {
-				log.error("Catch Exception : ", e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CATALOGUE_MANAGEMENT, null, null,
+						"PublicCatalogueManagedBean.SearchPagingDataModel", null, e);
 			}
 			return new SearchResultBean();
 		}
 
 	}
-	//#10747,#35739 and SonarLint fixing - End
-	
-	
-	//#10747,#35739 and SonarLint fixing - Start
+
 	public PagingDataModel<Object[]> getSearchDataModel() {
 		return searchDataModel;
 	}
@@ -228,7 +228,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	public void setSearchDataModel(PagingDataModel<Object[]> searchDataModel) {
 		this.searchDataModel = searchDataModel;
 	}
-	//#10747,#35739 and SonarLint fixing - End
+	//#10747,#35739 and SonarLint fixing- End
 
 	/**
 	 * Gets the last search item name.
@@ -725,7 +725,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 		this.keyWordFilterBean = keyWordFilterBean;
 	}
 	
-	//#10747,#35739 and SonarLint fixing - Start
+	//#10747 and SonarLint fixing- Start
 	public boolean isSingleCommoditySelected() {
 		return singleCommoditySelected;
 	}
@@ -897,5 +897,5 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private boolean isBrandIdNotNull(PublicCatalogueBackingBean bb) {
 		return bb.getManagedBean().getBrandId() != null && !bb.getManagedBean().getBrandId().equals(new Long(0));
 	}
-	//#10747,#35739 and SonarLint fixing - End
+	//#10747 and SonarLint fixing- End
 }

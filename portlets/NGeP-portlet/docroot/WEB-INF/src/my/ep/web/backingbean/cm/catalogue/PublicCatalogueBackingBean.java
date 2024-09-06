@@ -9,7 +9,7 @@
  ****************************************************
  */
 
-//#10747,#35739 & sonarlint fixing remove this unused import - Start
+//#10747 and sonarLint fixing remove this unused import- Start
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.io.Serializable;
@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -30,6 +31,7 @@ import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.PublicCatalogueManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -37,7 +39,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.primefaces.component.datagrid.DataGrid;
 import org.primefaces.component.datatable.DataTable;
-//#10747,#35739 & sonarlint fixing remove this unused import - End
+//#10747 and sonarLint fixing remove this unused import- End
 
 
 /**
@@ -128,7 +130,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 * @return string
 	 */
 	public void searchCatalogue() {
-        //#10747, #35739 and sonar Lint fixing issues - Start
+        //#10747 and sonarLint fixing issues- Start
 		log.info("*************start***************");
 		if(this.getManagedBean().getItemName() == null || this.getManagedBean().getItemName().isEmpty()){
 
@@ -149,10 +151,10 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().setBrandId(null);
 		this.getManagedBean().setPriceForm(null);
 		this.getManagedBean().setPriceTo(null);
-		//#10747, #35739 - Start
+		//#10747- Start
 		this.getManagedBean().setDeliveryFrom(null);
 		this.getManagedBean().setDeliveryTo(null);
-		//#10747, #35739 - End
+		//#10747- End
 		this.getManagedBean().getBrandCriteria().clear();
 		this.getManagedBean().setCommodityCode(null);
 		this.getManagedBean().setFamilyCode(null);
@@ -162,7 +164,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 		this.getManagedBean().getSearchDataModel().reloadData();
 		log.info("*************end***************");
-        //#10747, #35739 and sonar Lint fixing issues - End
+        //#10747 and sonarLint fixing issues- End
 	}
 
 	/**
@@ -278,7 +280,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 	}
     
-	//#10747,#35739 - Start
+	// #10747,#35739- Start
 	/**
 	 * Navigate to supplier item det.
 	 * 
@@ -288,14 +290,11 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 */
 	public String navigateToSupplierItemDet(long supplierItemId) {
 		log.info("...............navigateToSupplierItemDet................");
-		ICatalogueSO catalogueSO = BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ICatalogueSO catalogueSO = BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueResDTO resDTO;
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		reqDTO.setSupplierItemId(supplierItemId);
 		resDTO = catalogueSO.getSupplierItem(reqDTO);
-
-
 
 		CatalogueBackingBean bb = new CatalogueBackingBean();
 
@@ -303,11 +302,12 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 			bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 
 		} catch (Exception e) {
-			log.error(e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CATALOGUE_MANAGEMENT, null, null,
+					"PublicCatalogueBackingBean.navigateToSupplierItemDet", null, e);
 		}
 		return "publicCatalogueDetail.xhtml?faces-redirect=true";
 	}
-	//#10747,#35739 - End
+	// #10747,#35739- End
 
 	/**
 	 * Cancel to public search.
@@ -334,7 +334,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	}
 
 	// #10747 - Soo - Start
-	//#10747,#35739 and SonarLint fixing - Start
+	// #10747 and SonarLint fixing- Start
 	/**
 	 * @param itemPerPage
 	 */
@@ -364,14 +364,15 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	/**
 	 * @param sortBy
 	 */
-	public void sortOrderBy(int sortBy){
+	public void sortOrderBy(int sortBy) {
 		log.info("sortBy" + sortBy);
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
+
 	/**
 	 * @param thumbnailView
 	 */
-	public void thumbnailView(boolean thumbnailView){
+	public void thumbnailView(boolean thumbnailView) {
 		log.info("thumbnailView" + thumbnailView);
 		this.getManagedBean().setVisible(thumbnailView);
 		itemPerPage(this.getManagedBean().getItemPerPage());
@@ -383,17 +384,16 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 */
 	public void backToList() {
 
-		ICodificationSO codificationSO = BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
 
-		this.getManagedBean().setSelectedUnspscObj(null);	
+		this.getManagedBean().setSelectedUnspscObj(null);
 		this.getManagedBean().setBrandId(null);
 		this.getManagedBean().setPriceTo(null);
 		this.getManagedBean().setPriceForm(null);
-		//#10747,#35739 - Start
+		// #10747- Start
 		this.getManagedBean().setKeyWord(true);
-		//#10747,#35739 - End
-		
+		// #10747- End
+
 		if (!this.getManagedBean().getCloneItemNames().isEmpty()) {
 			this.getManagedBean().setFamilyList(null);
 			this.getManagedBean().setBrandId(null);
@@ -405,20 +405,14 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 			codeReqDTO.setUnspscCode(code);
-			CodificationResDTO codeResDTO = codificationSO
-					.searchUnspscObj(codeReqDTO);
+			CodificationResDTO codeResDTO = codificationSO.searchUnspscObj(codeReqDTO);
 
-			this.getManagedBean().getFamilyList()
-			.add(codeResDTO.getUnspscObj());
-
+			this.getManagedBean().getFamilyList().add(codeResDTO.getUnspscObj());
 		}
 		
 		this.getManagedBean().getSearchDataModel().reloadData();
-
-
-
 	}
-	//#10747,35739 and SonarLint fixing - End
+	// #10747 and SonarLint fixing- End
 
 	/**
 	 * Search catalogue by commodity code.
