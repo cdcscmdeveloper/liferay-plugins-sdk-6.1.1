@@ -197,7 +197,8 @@
 			severity="alert" widgetVar="rejectFRNConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
 					action="#{receivedNoteBackingBean.gpkiSignAction(BpmOutcomeConstant.bpmReject)}"
 					onstart="rejectFRNConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -207,8 +208,9 @@
 		</p:confirmDialog>
 		<p:confirmDialog
 			message="#{lbl['lbl.fl.confirmation.reject.dialogue.frn']}"
-			severity="alert" widgetVar="rejectFRNReviseConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			severity="alert" widgetVar="rejectFRNReviseConfirmDlg"
+			closable="true" appendToBody="true"
+			header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 					action="#{receivedNoteBackingBean.submitAction(BpmOutcomeConstant.bpmReject)}"
@@ -223,7 +225,8 @@
 			severity="alert" widgetVar="approveFRNConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
 					action="#{receivedNoteBackingBean.gpkiSignAction(BpmOutcomeConstant.bpmApprove)}"
 					onstart="approveFRNConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />

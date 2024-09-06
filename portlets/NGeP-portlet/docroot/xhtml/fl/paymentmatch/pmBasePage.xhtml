@@ -216,7 +216,8 @@
 			severity="alert" widgetVar="matchConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
 					action="#{paymentMatchBackingBean.gpkiSignAction(BpmOutcomeConstant.bpmMatch)}"
 					onstart="matchConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />

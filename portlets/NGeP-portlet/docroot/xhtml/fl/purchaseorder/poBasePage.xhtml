@@ -215,12 +215,14 @@
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();"/>
 			</div>
 		</p:dialog>
+		<ui:remove>#34443 start</ui:remove>
 		<p:confirmDialog
 			message="#{lbl['lbl.fl.confirmation.ack.dialogue.po']}"
 			severity="alert" widgetVar="ackConfirmDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
 					action="#{flOrderBB.signingAction(BpmOutcomeConstant.bpmAcknowledge)}"
 					onstart="ackConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
@@ -228,6 +230,7 @@
 					onclick="ackConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
+		<ui:remove>#34443 end</ui:remove>
 		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplineVOs}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
 	</ui:define>
