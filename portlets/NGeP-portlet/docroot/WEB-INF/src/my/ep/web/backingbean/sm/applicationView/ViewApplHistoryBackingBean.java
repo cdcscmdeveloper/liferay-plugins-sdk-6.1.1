@@ -513,99 +513,105 @@ public class ViewApplHistoryBackingBean extends
 	 *            applNo
 	 */
 	public void initSmApplByApplNo(Long applId, String status) {
-		getManagedBean().setResubmitUrl(StringUtils.EMPTY);
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setApplId(applId);
-		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
-				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
-		//26238 - start
-		SmSupplier supplier = smAppl.getSmSupplier();
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-		if(!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0){
-			getManagedBean().setDisciplinaryAction(true);
-		} else {
-			getManagedBean().setDisciplinaryAction(false);
-		}
-		//26238 - end
-		//28237
-		retrieveActiveDisciplinaryAction(supplier);
-		
-		// 25792 - start
-		log.info("Init Sm Appl");
-		log.info("Appl Id: " + smAppl.getApplId());		
-		log.info("Supplier type: " + smAppl.getSupplierType());
-		getManagedBean().setTabActiveIndex(0);
-		//#31248 - START
-		getManagedBean().setDisplayResubmitButton(setResubmitButton(smAppl)) ; //#31248  - END
-		viewApplication(smAppl);
-		initWorkflowStatus(getManagedBean().getSmAppl(), status);	
-		if (!SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(smAppl
-				.getSupplierType()) && !SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(smAppl
-						.getSupplierType())) {
-			initBumiRecommendNote();
-			initVirtualCert();
-			if (!getManagedBean().isSupplierUser()) {
-				initPOApproverDecisionInfo();
-				initSiteVisit();
+		log.info("#35336 - initSmApplByApplNo(long,String");
+		try {
+			getManagedBean().setResubmitUrl(StringUtils.EMPTY);
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setApplId(applId);
+			SmAppl smAppl = SmServiceLookup.getMofRegistrationSO().retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+			//26238 - start
+			SmSupplier supplier = smAppl.getSmSupplier();
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+			if(!EntityHelper.isCollectionEmpty(resultList) && resultList.size() > 0){
+				getManagedBean().setDisciplinaryAction(true);
+			} else {
+				getManagedBean().setDisciplinaryAction(false);
 			}
-		}
-		//START 14530
-		// sort created date descendent
-		Collections.sort(this.getManagedBean().getSmAppl().getSmApplInquiries(),
-				new Comparator<SmApplInquiry>() {
-						public int compare(SmApplInquiry o1, SmApplInquiry o2) {
-							if (o1.getCreatedDate() == null
-									|| o2.getCreatedDate() == null)
-								return 0;
-								return o2.getCreatedDate().compareTo(
-											o1.getCreatedDate());
-								}
-							});
-					
-		if(this.getManagedBean().getSmAppl().getSmApplInquiries() != null){
-			this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
-			for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
-					.getSmApplInquiries()) {
-				//#34392 - start
-//				if (!StringUtils.isBlank(inquiry.getInquirySubject())
-//						&& inquiry
-//								.getInquirySubject()
-//								.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
-					inquiry.getSmApplSupportDocInquiries().size();
-					this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
+			//26238 - end
+			//28237
+			retrieveActiveDisciplinaryAction(supplier);
+			
+			// 25792 - start
+			log.info("Init Sm Appl");
+			log.info("Appl Id: " + smAppl.getApplId());		
+			log.info("Supplier type: " + smAppl.getSupplierType());
+			getManagedBean().setTabActiveIndex(0);
+			//#31248 - START
+			log.info("#35336 -> setDisplayResubmitButton");
+			getManagedBean().setDisplayResubmitButton(setResubmitButton(smAppl)) ; //#31248  - END
+			viewApplication(smAppl);
+			initWorkflowStatus(getManagedBean().getSmAppl(), status);	
+			if (!SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(smAppl
+					.getSupplierType()) && !SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(smAppl
+							.getSupplierType())) {
+				initBumiRecommendNote();
+				initVirtualCert();
+				if (!getManagedBean().isSupplierUser()) {
+					initPOApproverDecisionInfo();
+					initSiteVisit();
+				}
+			}
+			//START 14530
+			// sort created date descendent
+			Collections.sort(this.getManagedBean().getSmAppl().getSmApplInquiries(),
+					new Comparator<SmApplInquiry>() {
+							public int compare(SmApplInquiry o1, SmApplInquiry o2) {
+								if (o1.getCreatedDate() == null
+										|| o2.getCreatedDate() == null)
+									return 0;
+									return o2.getCreatedDate().compareTo(
+												o1.getCreatedDate());
+									}
+								});
+						
+			if(this.getManagedBean().getSmAppl().getSmApplInquiries() != null){
+				this.getManagedBean().setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+				for (SmApplInquiry inquiry : this.getManagedBean().getSmAppl()
+						.getSmApplInquiries()) {
 					//#34392 - start
-					POinquiryRowSelect(inquiry);
-					
-//				}
-				//#34392 - end
+//					if (!StringUtils.isBlank(inquiry.getInquirySubject())
+//							&& inquiry
+//									.getInquirySubject()
+//									.equals(SupplierManagementConst.INQUIRY_PO_SUPPLIER)) {
+						inquiry.getSmApplSupportDocInquiries().size();
+						this.getManagedBean().getPoSupplierInquiryHistory().add(inquiry);
+						//#34392 - start
+						POinquiryRowSelect(inquiry);
+						
+//					}
+					//#34392 - end
+				}
+			}		
+			//END 14530
+			
+			/*
+			 * retrieve status from SM_APPL, not workflow status
+			 String statusDesc = null; 
+			 if(smAppl.getPmStatus() != null) {
+				statusDesc = getApplicationStatus(smAppl.getPmStatus(), smAppl);
+				getManagedBean().setApplicationStatusDesc(statusDesc);
+				List<String> rejectedStatus = Arrays
+						.asList(SupplierManagementConst.REJECTED_STATUSES);
+				if (rejectedStatus.contains(smAppl.getPmStatus().getStatusId()
+						.toString())) {
+					getManagedBean().setResubmitUrl(
+							SmCommonUtil.getEpBaseUrl()
+									+ "/resubmit-application?apId="
+									+ smAppl.getApplId());
+				}
 			}
+			else {
+				Locale locale = new FacesScopes().getUserLocale();
+				statusDesc = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+				getManagedBean().setApplicationStatusDesc(statusDesc);
+			}*/
+			// 25792 - end
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("35336 = error log" + e);
 		}		
-		//END 14530
-		
-		/*
-		 * retrieve status from SM_APPL, not workflow status
-		 String statusDesc = null; 
-		 if(smAppl.getPmStatus() != null) {
-			statusDesc = getApplicationStatus(smAppl.getPmStatus(), smAppl);
-			getManagedBean().setApplicationStatusDesc(statusDesc);
-			List<String> rejectedStatus = Arrays
-					.asList(SupplierManagementConst.REJECTED_STATUSES);
-			if (rejectedStatus.contains(smAppl.getPmStatus().getStatusId()
-					.toString())) {
-				getManagedBean().setResubmitUrl(
-						SmCommonUtil.getEpBaseUrl()
-								+ "/resubmit-application?apId="
-								+ smAppl.getApplId());
-			}
-		}
-		else {
-			Locale locale = new FacesScopes().getUserLocale();
-			statusDesc = ResourceBundleUtils.getMessage("lbl.sm.no.available",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-			getManagedBean().setApplicationStatusDesc(statusDesc);
-		}*/
-		// 25792 - end
 	}
 
 	/**
@@ -1854,6 +1860,7 @@ public class ViewApplHistoryBackingBean extends
 	
 	//#31248 - START
 	public Boolean setResubmitButton(SmAppl smAppl){
+		log.info("#35336 - START setResubmitButton(smAppl)");
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
 		SmWorkFlowStatusReqDTO smWorkFlowStatusReqDTO = new SmWorkFlowStatusReqDTO();
 		//32627 - START
@@ -1868,8 +1875,17 @@ public class ViewApplHistoryBackingBean extends
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
 			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl);
+		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl.getCreatedDate());
+		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl);
+		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl.getCreatedDate());
+		log.info("#35336 -> isValidDateComparison(latestRegisteredAppl, latestRejectedAppl) ->" + isValidDateComparison(latestRegisteredAppl, latestRejectedAppl));
+		log.info("#35336 -> isMatchingDeletedApplication(latestRejectedAppl, smAppl)" + isMatchingDeletedApplication(latestRejectedAppl, smAppl));
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
-			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())) {
+			log.info("#35336 -> latestRegisteredAppl.getCreatedDate() ->" + latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate()));
+			log.info("#35336 -> latestRejectedAppl.getCreatedDate() ->" + latestRejectedAppl.getCreatedDate());
+			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())
+					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
 		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
@@ -2021,11 +2037,16 @@ public class ViewApplHistoryBackingBean extends
 	}
 
 	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
-		return latestRejectedAppl != null && latestRejectedAppl.getApplId() == smAppl.getApplId()
-			&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED);
+		log.info("#35336 - latestRejectedAppl.applId ==>" +latestRejectedAppl.getApplId());
+		log.info("#35336 - smAppl.applId ==>" + smAppl.getApplId());
+		log.info("#35336 - smAppl.getRecordStatusFlg ==>" + smAppl.getRecordStatusFlg());
+		return latestRejectedAppl != null && latestRejectedAppl.getApplId() != null 
+			&& latestRejectedAppl.getApplId().equals(smAppl.getApplId()) 
+			&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
 	}
 
 	private void showErrorAdminHasBeenReplace() {
+		log.info("#35336 - START -> showErrorAdminHasBeenReplace");
 		FacesContext.getCurrentInstance().addMessage(
 			null,
 			new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
