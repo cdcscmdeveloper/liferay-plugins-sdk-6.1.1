@@ -1237,15 +1237,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		ICategoryCodeSO categoryCodeSO;
 		String returnUrl = null;
 		
-		/*//29665 - Start - remove this code
-		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
-			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
-					"lbl.pm.main.category", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale())});
-		   }
-		//29665 - End */
-		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 
@@ -1467,15 +1458,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		ICategoryCodeSO categoryCodeSO;
 		String returnUrl = null;
 
-		/*//29665 - Start - remove this code
-		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
-			throw new EpException(MessageConst.ERROR_775188, new String[]{ResourceBundleUtils.getMessage(
-					"lbl.pm.sub.category", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale())});
-		   }
-		//29665 - End*/
-		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance()
@@ -1686,24 +1668,16 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		IParameterSO parameterSO;
 		String returnUrl = null;
 		
-		//start #29665 add log key
+		//start #29665 check is it new category
 		if (!this.getManagedBean().isNewCategory()) {
 			this.getManagedBean().setPmCategoryL2(this.getManagedBean().getPmCategoryL3().getPmCategoryL2());
 		}
-		//end #29665 add log key
+		//end #29665 check is it new category
 
 		// check the duplicate restriction
 		if (!checkCategoryRestrDuplicateCompanyType()) {
 			throw new EpException(MessageConst.ERROR_775006);
 		}
-
-		/*// 29665 - Start - remove this code
-		if (StringUtils.isBlank(this.getManagedBean().getRemarkCategory())) {
-			throw new EpException(MessageConst.ERROR_775188,
-					new String[] { ResourceBundleUtils.getMessage("lbl.pm.sub.div",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
-		}
-		// 29665 - End */
 
 		// validation for fields
 		validatePmCategoryL3();
