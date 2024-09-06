@@ -4345,7 +4345,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
 															SSTConstant.GREATER_THAN_SYMBOL);
 													clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-															TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 @zaim
+															TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 													map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(clItem, 16));//35295 #93 @zaim
 													map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 															getParameterDesc(q.getClFulfilmentTypeCode(),
@@ -4389,7 +4389,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																	SSTConstant.GREATER_THAN_SYMBOL);
 															answerRemark = answerRemark.replaceAll(
 																	QTConstants.NEW_LINE_CHARACTER,
-																	SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																	TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 															//#35295 #61 - start
 															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
@@ -4436,7 +4436,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																		SSTConstant.GREATER_THAN_SYMBOL);
 																answerRemark = answerRemark.replaceAll(
 																		QTConstants.NEW_LINE_CHARACTER,
-																		SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																		TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 																
 																//#35295 #61 - start
 																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
@@ -4455,7 +4455,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
 															SSTConstant.GREATER_THAN_SYMBOL);
 													specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-															SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+															TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
 													//#35295 #61 - start
 													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
@@ -4492,7 +4492,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
 														SSTConstant.GREATER_THAN_SYMBOL);
 												clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-														SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+														TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
 												map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(clItem, 16)); //35295 #93 @zaim
 												map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 														getParameterDesc(q.getClFulfilmentTypeCode(),
@@ -4526,7 +4526,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																SSTConstant.GREATER_THAN_SYMBOL);
 														answerRemark = answerRemark.replaceAll(
 																QTConstants.NEW_LINE_CHARACTER,
-																SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 														//#35295 #61 - start
 														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
@@ -4552,7 +4552,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
 														SSTConstant.GREATER_THAN_SYMBOL);
 												specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-														SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+														TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 												
 												//#35295 #61 - start
 												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
