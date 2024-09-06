@@ -2159,6 +2159,9 @@ public class SmApplicationBackingBean extends
 						//SET EQUITY COMPANY
 						//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
 						// #30660
+						
+						//#31549 - comment this if block to duplicate all(ssm & non-ssm data) equity company during resubmit
+						/*
 						if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 							this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 							if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
@@ -2176,10 +2179,9 @@ public class SmApplicationBackingBean extends
 									equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
 									this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
 							}
-							
-							
-							
 						}
+						*/
+						
 						//SET SMPERSONNEL
 						if(ssmResDTO.getSmPersonnelAll()!=null){
 							if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
@@ -6541,6 +6543,7 @@ public class SmApplicationBackingBean extends
 
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
+	// #34303 - end
 	/**
 	 * Add or update selected store info to SmFacility list of the application.
 	 */
@@ -9651,6 +9654,9 @@ public class SmApplicationBackingBean extends
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
+			// #34303 - start
+			SmApplicationUtil.setFacilityTypeNotInTheSameCategoryFacType(getManagedBean());
+			// #34303 - end
 			SmApplicationUtil.getInstance()
 					.removeNotApplicableInformationBeforeSave(getManagedBean());
 
@@ -14979,7 +14985,7 @@ public class SmApplicationBackingBean extends
 		BigDecimal foreignCapital = new BigDecimal(0);// f
 		BigDecimal localCapital = new BigDecimal(0);// C
 */		for(SmPersonnel personnel: personnels){
-			if(personnel.isEquityOwner() && personnel.getShareAmt() !=null){
+			if(personnel.isEquityOwner() && personnel.getShareAmt() !=null && personnel.getPmCountry() !=null){//#29582 #35300
 				if (ParameterConst.IDENTIFICATION_TYPES_PASSPORT
 						.equalsIgnoreCase(personnel.getIdentificationType()
 								.getParameterCode())
