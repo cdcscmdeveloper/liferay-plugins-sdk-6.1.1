@@ -284,6 +284,10 @@ public class VmUtil {
 		return newMaxlength;
 	}
 	//35295 - start
+	/**
+	 * @param newChopString
+	 * @return
+	 */
 	private String validateProtegeCharacterUpperCase(String newChopString){
 		String checkProtege = newChopString;
 		if (checkProtege.contains("&<br />#201;")){
@@ -306,6 +310,10 @@ public class VmUtil {
 		
 	}
 	
+	/**
+	 * @param newChopString
+	 * @return
+	 */
 	private String validateProtegeCharacterLowerCase(String newChopString){
 		String checkProtege = newChopString;
 		if (checkProtege.contains("&<br />#233;")){
