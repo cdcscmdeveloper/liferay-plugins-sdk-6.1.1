@@ -37,11 +37,11 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.IAuditTrailsSO;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
-import my.ep.biz.service.sc.quationtender.IQTAuditTrailsSO;
+import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -71,8 +71,8 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
-import my.ep.dto.sc.quationtender.AuditTrailsReqDTO;
-import my.ep.dto.sc.quationtender.AuditTrailsResDTO;
+import my.ep.dto.sc.quationtender.AuditTrailReqDTO;
+import my.ep.dto.sc.quationtender.AuditTrailResDTO;
 import my.ep.dto.sc.quationtender.DemoResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
@@ -1556,8 +1556,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				//#28895 - 35500 start
 				committeReqDTO.setNewScCommitteeMemberList(this.getManagedBean()
-						.getNewScCommitteeMemberList());//#28895 - 35500
+						.getNewScCommitteeMemberList());
+				committeReqDTO.setToBeRemovedCommitteeMemberList(this.getManagedBean()
+						.getDeletedScCommitteeMemberList());
+				//#28895 - 35500 end
 				committeReqDTO.setCommitteeTypes(committeeTypes);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
@@ -1752,7 +1756,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}	
 					//28895-35500 Start
 					if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
-						prepareQtMaintenanceAuditTrails(qt, tenderResDTO.getGroupTabSection(), null);
+						prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
 					}
 					//28895-35500 End
 				}				
@@ -3067,7 +3071,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			
-			prepareQtMaintenanceAuditTrails(scQt,null,reqDTO);//28895-35500
+			prepareQtMaintenanceAuditTrail(scQt,null,reqDTO);//28895-35500
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}catch(IOException e){
 		    ScQt scQt = this.getManagedBean().getQt();
@@ -3714,14 +3718,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	     * @param scQt
 	     * @param groupTabSection
 	     */
-	public void prepareQtMaintenanceAuditTrails(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
-		IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
-		IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-				IAuditTrailsSO.class);
-		if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-			AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
-			List<AuditTrailsReqDTO> auditReqList = new ArrayList<>();
+	public void prepareQtMaintenanceAuditTrail(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
+		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+		IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+				IAuditTrailSO.class);
+		if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+			List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 
 			auditResDTO.setOrganizationProfileId(scQt.getOrgProfileId());
 			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
@@ -3732,10 +3736,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				auditResDTO.setAuGroupSectionId(groupTabSection);
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 				auditResDTO.setStatusId(QTStatusConst.BSV_COMPLETED);
-				AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 				auditReqList.add(auditReqDTO);
 
-				qtAuditTrailsSO.insertAuditTrails(auditReqList);
+				qtAuditTrailSO.insertAuditTrail(auditReqList);
 			} else if (reqDTO != null) {// DOA Audit Trails Section
 				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 					auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
@@ -3757,7 +3761,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						auditResDTO.setNewValue(add.getUser().getUserName());
 						auditResDTO.setNewValueId(add.getUser().getUserId());
 
-						AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+						AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 						auditReqList.add(auditReqDTO);
 					}
 					for (ScQtContactPerson remove : removedList) {
@@ -3766,7 +3770,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						auditResDTO.setOldValue(remove.getUser().getUserName());
 						auditResDTO.setOldValueId(remove.getUser().getUserId());
 
-						AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+						AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 						auditReqList.add(auditReqDTO);
 					}
 				} else {
@@ -3775,10 +3779,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					} else {
 						auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
 					}
-					AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
-				qtAuditTrailsSO.insertAuditTrails(auditReqList);
+				qtAuditTrailSO.insertAuditTrail(auditReqList);
 			}
 		}
 	}

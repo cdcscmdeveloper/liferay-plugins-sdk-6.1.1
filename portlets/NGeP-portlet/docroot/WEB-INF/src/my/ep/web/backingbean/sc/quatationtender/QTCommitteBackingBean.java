@@ -1852,6 +1852,7 @@ public class QTCommitteBackingBean extends
 		}
 
 		List<ScCommitteeMember> committeeMembers = getManagedBean().getToBeDelCommitteMemebers();
+		List<ScCommitteeMember> deletedCommitteeMembers = new ArrayList<>();//28895 - 35500
 		
 		if (committeeMembers == null) {
 			committeeMembers = new ArrayList<ScCommitteeMember>();	
@@ -1884,6 +1885,7 @@ public class QTCommitteBackingBean extends
 				selectedList.get(i).setRepresentativeType(null);
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
+				deletedCommitteeMembers.add(selectedList.get(i));//#28895 - 35500
 				//28895 - 35500
 				if (!(newScCommitteeMemberList == null || newScCommitteeMemberList.isEmpty())) {
 					newScCommitteeMemberList.remove(selectedList.get(i));
@@ -1891,7 +1893,10 @@ public class QTCommitteBackingBean extends
 			}
 			
 		}		
-		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);//28895 - 35500
+		//#28895 - 35500 start
+		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);
+		this.getManagedBean().setDeletedScCommitteeMemberList(deletedCommitteeMembers);
+		//#28895 - 35500 end
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);
 		this.getManagedBean().setExtraDeleteComitteeSelection(null);

@@ -16,8 +16,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import my.ep.biz.service.IAuditTrailsSO;
-import my.ep.biz.service.sc.quationtender.IQTAuditTrailsSO;
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -30,8 +30,8 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.sc.quationtender.AuditTrailsReqDTO;
-import my.ep.dto.sc.quationtender.AuditTrailsResDTO;
+import my.ep.dto.sc.quationtender.AuditTrailReqDTO;
+import my.ep.dto.sc.quationtender.AuditTrailResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -1781,13 +1781,13 @@ public class BSVAttendanceBackingBean extends
 	 * @param newBriefingRegistrationList
 	 */
 	public void prepareBSVAttendanceAudit(ScQt scQt, List<ScQtBsvRegistration> newBriefingRegistrationList){
-		IQTAuditTrailsSO qtAuditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
-		IAuditTrailsSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
-		if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)){
-			List<AuditTrailsReqDTO> auditReqList = new ArrayList<>();
-			AuditTrailsResDTO auditResDTO = new AuditTrailsResDTO();
+		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+		IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)){
+			List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 			
 			auditResDTO.setDocId(scQt.getQtId());
 			auditResDTO.setDocNo(scQt.getQtNo());			
@@ -1803,18 +1803,18 @@ public class BSVAttendanceBackingBean extends
 				auditResDTO.setStatusId(scQt.getQtStatus().getStatusId());
 				for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
 					auditResDTO.setNewValue(newBriefingRegistration.getSupplier().getCompanyName());
-					AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
 			}else{
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 				auditResDTO.setStatusId(QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_APPROVED);
 				
-				AuditTrailsReqDTO auditReqDTO = qtAuditTrailsSO.populateAuditReqDTO(auditResDTO);
+				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 				auditReqList.add(auditReqDTO);
 			}			
 										
-			qtAuditTrailsSO.insertAuditTrails(auditReqList);			
+			qtAuditTrailSO.insertAuditTrail(auditReqList);			
 		}
 	}
 	

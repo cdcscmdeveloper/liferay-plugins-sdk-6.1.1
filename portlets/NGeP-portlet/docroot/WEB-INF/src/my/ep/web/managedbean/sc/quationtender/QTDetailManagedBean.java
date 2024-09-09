@@ -1871,12 +1871,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
 	
-	//28895 - 35500
+	//28895 - 35500 start
 	/** The newly added sc qt committee */
 	private List<ScCommitteeMember> newScCommitteeMemberList;
-	
+	/** The deleted sc qt committee */
+	private List<ScCommitteeMember> deletedScCommitteeMemberList;
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	//#28895 - 35500 end
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11932,6 +11934,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.chmnFinalizationRejectEpv = chmnFinalizationRejectEpv;
 	}
 	//#21692 - End
+
+	public List<ScCommitteeMember> getDeletedScCommitteeMemberList() {
+		return deletedScCommitteeMemberList;
+	}
+
+	public void setDeletedScCommitteeMemberList(List<ScCommitteeMember> deletedScCommitteeMemberList) {
+		this.deletedScCommitteeMemberList = deletedScCommitteeMemberList;
+	}
 }
 
 // ***25201
