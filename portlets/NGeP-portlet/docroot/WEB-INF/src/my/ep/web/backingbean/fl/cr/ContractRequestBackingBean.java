@@ -4291,9 +4291,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 		// 28855 - Start
-		IRequestItemSO requestItemSO = null;
-		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		IRequestItemSO requestItemSO;
+		requestItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IRequestItemSO.class);
 		// 28855 - End
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
@@ -4427,8 +4427,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}	
 		
 		// 28855 - Start
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
 		reqFDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		String loaDocType = fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
