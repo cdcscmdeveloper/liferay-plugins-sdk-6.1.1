@@ -21,6 +21,10 @@ public class ScheduleInfo {
 		this.coNo = coNo;
 		this.coNoStatus=coNoStatus;
 	}
+	
+	ScheduleInfo(){
+		
+	}
 
 	public String getSchNo() {
 		return schNo;
