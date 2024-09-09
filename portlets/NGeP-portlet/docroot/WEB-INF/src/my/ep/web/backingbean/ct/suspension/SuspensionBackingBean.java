@@ -192,8 +192,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 		ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 		
-		ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(dataType.getDocId()));//#15851
-		
 		setSuspensionContractVer(ctReqDTO);
 		/*End*/
 	}
@@ -217,6 +215,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
+			
+			//#15851 start
+			if(getManagedBean().getTaskId()!= null){
+				ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());//#15851
+			}
+			//#15851 end
 
 			//CT_CHANGE_LOG
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
