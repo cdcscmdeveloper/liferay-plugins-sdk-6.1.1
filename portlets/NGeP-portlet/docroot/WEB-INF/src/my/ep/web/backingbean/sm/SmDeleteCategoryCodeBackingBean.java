@@ -591,7 +591,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 						rejectedApplCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						rejectedApplCat.setCancelledDate(new Date());
 						rejectedApplCat.setChangedBy(loginSessionUserId);
-						//rejectedApplCat.setChangedDate(null);
+						rejectedApplCat.setRemarks(selCat.getRemarks());
 					}
 				}
 			}

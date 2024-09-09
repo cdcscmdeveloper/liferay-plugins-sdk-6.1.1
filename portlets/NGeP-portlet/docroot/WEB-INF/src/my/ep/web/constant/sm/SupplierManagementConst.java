@@ -1470,11 +1470,10 @@ public class SupplierManagementConst {
 	}
 	
 	// #34392 - Start
-	public String getPENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL() {
+	public String getPendingReviewSiteVisitReportAfterApproval() {
 		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL;
 	}
-	
-	public String getPENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM() {
+	public String getPendingReviewSiteVisitReportAfterApprovalBM() {
 		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM;
 	}
 	// #34392 - End
