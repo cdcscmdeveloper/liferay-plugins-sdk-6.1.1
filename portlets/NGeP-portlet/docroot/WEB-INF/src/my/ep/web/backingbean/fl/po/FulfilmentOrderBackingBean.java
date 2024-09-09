@@ -2636,19 +2636,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	/**
 	 * to trigger confirm dialogue
 	 * 
-	 * @param outcome
+	 * @param action
 	 *            the action button
 	 * @return the string
 	 * @throws Exception
 	 *             the exception
 	 */
-	public String confirmDialogueTrigger(String outcome) throws Exception {
-		String action = outcome;
+	public String confirmDialogueTrigger(String action) throws Exception {
 		Long status = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
 				&& ("true").equalsIgnoreCase(getManagedBean().getFactoringCheck())
 				&& status.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-			validateFulfillmentOrder(outcome);
+			validateFulfillmentOrder(action);
 			RequestContext.getCurrentInstance().execute("ackConfirmDlg.show()");
 			return null;
 		} else {

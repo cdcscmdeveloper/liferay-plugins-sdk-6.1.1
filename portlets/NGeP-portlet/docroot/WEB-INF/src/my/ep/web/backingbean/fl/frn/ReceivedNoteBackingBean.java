@@ -892,7 +892,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	public String gpkiSignAction(String outcome){
 		
 		//#34443 remove checking DO to confirmDialogueTrigger
-		
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {		
 			validateFulfilmentNote(outcome);
 			setTextBeforeSign(outcome);
@@ -1949,12 +1948,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	/**
 	 * to trigger confirm dialogue
 	 * 
-	 * @param outcome
+	 * @param action
 	 *            the action button
 	 * @return the string
 	 */
-	public String confirmDialogueTrigger(String outcome) {
-		String action = outcome;
+	public String confirmDialogueTrigger(String action) {
 		Long status = getManagedBean().getFulfilmentNote().getStatus().getStatusId();
 
 		validateDeliveryOrderForFulfilmentNote();
@@ -2018,6 +2016,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	/**
 	 * check DO status to disable FRN action
 	 * 
+	 * @param doStatus
+	 *            status id DO
 	 * @return boolean based on DO status blocking
 	 * 
 	 */

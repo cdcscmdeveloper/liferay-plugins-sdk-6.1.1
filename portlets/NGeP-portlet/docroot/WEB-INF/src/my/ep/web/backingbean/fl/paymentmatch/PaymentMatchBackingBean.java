@@ -2776,14 +2776,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	/**
 	 * to trigger confirm dialogue
 	 * 
-	 * @param outcome
+	 * @param action
 	 *            the action button
 	 */
-	public void confirmDialogueTrigger(String outcome) {
-		String action = outcome;
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+	public void confirmDialogueTrigger(String action) {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			validatePaymentMatch(action);
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)) {
 				RequestContext.getCurrentInstance().execute("matchConfirmDlg.show()");
 			} else {
 				gpkiSignAction(action);

@@ -7408,14 +7408,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	/**
 	 * to trigger confirm dialogue
 	 * 
-	 * @param outcome
+	 * @param action
 	 *            the action button
 	 * @return the string
 	 * @throws Exception
 	 *             the exception
 	 */
-	public String confirmDialogueTrigger(String outcome) throws Exception {
-		String action = outcome;
+	public String confirmDialogueTrigger(String action) throws Exception {
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			validateContractRequest(action);
 			RequestContext.getCurrentInstance().execute("approveConfirmDlg.show()");
