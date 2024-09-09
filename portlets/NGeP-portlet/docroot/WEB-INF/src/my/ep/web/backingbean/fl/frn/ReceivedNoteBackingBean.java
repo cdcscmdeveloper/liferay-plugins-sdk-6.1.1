@@ -185,7 +185,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				
 				// 36247-Start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					validatePOCOCurrentStatus();
+					validatePOCOCurrentStatus(action);// 36361
 				}
 				// 36247-End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
@@ -736,6 +736,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		
+		// 36361 - start
+		if (outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
+				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
+			validatePOCOCurrentStatus(outcome);
+		}
+		// 36361 - end
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
@@ -1799,7 +1805,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 *            item.
 	 */
 	public void frnItemInfoList(FlFulfilmentItemAddr flItemAddr) {
-		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
+		IRequestItemSO requestItemSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
@@ -1840,32 +1846,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
 				.getFulfilmentRequest().getCtContract().getContractId() : null;
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
 		reqFDTO.setContractId(contractId);
 		String loaDocType = fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
-
-		/*
-		 * IContractSO contractSO = (IContractSO)
-		 * BusinessDelegate.getInstance().
-		 * getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-		 * IContractSO.class); ContractReqDTO cireqDTO = new ContractReqDTO();
-		 * cireqDTO
-		 * .setContractId(getManagedBean().getFulfilmentRequest().getCtContract
-		 * ().getContractId()); ContractResDTO ciResDTO =
-		 * contractSO.retrieveContract(cireqDTO);
-		 * 
-		 * IQTAwardSO qtAwardSO =
-		 * BusinessDelegate.getInstance().getServiceObject(
-		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		 * 
-		 * AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO(); if
-		 * (ciResDTO.getContract().getLoa() != null) {
-		 * reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		 * AwardSupplierResDTO resLoaDTO =
-		 * qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
-		 */
 
 		if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 			getManagedBean().setDpFlag(true);
@@ -1880,8 +1865,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
 			}
 		}
-		// }
-
 	}
 
 	// 28855 - end
@@ -1923,9 +1906,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	// 36247-start
 	/**
 	 * validate current POCO work flow status
+	 * @param action
+	 * @throws EpException if not allow to proceed
 	 * 
 	 */
-	private void validatePOCOCurrentStatus() {
+	private void validatePOCOCurrentStatus(String action) {// 36361
 		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1934,7 +1919,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				.getFulfilmentOrderId());
 		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-		reqDTO.setActionCode(BpmOutcomeConst.BPM_CANCEL);
+		reqDTO.setActionCode(action);// 36361
 		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
 
 		Boolean allowToProceed = resDTO.isFlag();

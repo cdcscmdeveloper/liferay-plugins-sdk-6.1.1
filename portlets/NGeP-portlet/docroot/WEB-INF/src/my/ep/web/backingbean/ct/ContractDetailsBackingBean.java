@@ -2838,9 +2838,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
+		ctBB.renewSesionObject(); //#15851
 		trBB.setCtBB(new ContractBackingBean());	
 		trBB.getCtBB().getManagedBean().setViewContract(true);
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
+		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer()); //#15851
+		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract()); //#15851
 		trBB.getManagedBean().setExternalPageUrl(null);
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 
@@ -3891,6 +3894,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 		
 			reqDTO.setUpdateAction(true);
+			ctBB.renewSesionObject(); //#15851
 			ctBB.getManagedBean().setNotificationSetting(false);
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);

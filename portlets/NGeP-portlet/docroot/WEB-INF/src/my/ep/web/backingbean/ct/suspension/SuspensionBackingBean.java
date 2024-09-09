@@ -55,8 +55,6 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
-import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -193,6 +191,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 		ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+		
 		setSuspensionContractVer(ctReqDTO);
 		/*End*/
 	}
@@ -216,6 +215,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
+			
+			//#15851 start
+			if(getManagedBean().getTaskId()!= null){
+				ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());//#15851
+			}
+			//#15851 end
 
 			//CT_CHANGE_LOG
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
@@ -1003,14 +1008,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(this.getManagedBean().getContractVer().getDocType());
+			ctBB.getManagedBean().setStatusIdFromTaskList(getManagedBean().getContractVer().getStatus().getStatusId());
 			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
 			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){
