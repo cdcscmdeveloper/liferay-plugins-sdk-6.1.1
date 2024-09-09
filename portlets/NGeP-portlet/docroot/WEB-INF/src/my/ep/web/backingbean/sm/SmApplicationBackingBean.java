@@ -2386,8 +2386,9 @@ public class SmApplicationBackingBean extends
 	//END 28767
 		
 		// 35311 - Start
-		if (getManagedBean().getSmAppl().getPmStatus() != null
-				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+		//#36340 - Start
+		if ((EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplSupportDocs())) && (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION)) {
 			for (SmFacility facility : getManagedBean().getSmAppl().getSmFacilities()) {
 				if (facility.getFacilityId() != null) {
 					assignApplicationSupportingDocs();
@@ -2395,6 +2396,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
+		//#36340 - End
 		// 35311 - end
 		subStartTime = System.currentTimeMillis();
 		// set Personnel List Count
