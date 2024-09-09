@@ -325,27 +325,13 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		// Set column width
 		setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 	}
-
-	/**
-	 * Set column width
-	 * 
-	 * @param totalNoOfCell
-	 * @param sheetName
-	 */
+	
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
 		for (int i = 0; i < totalNoOfCell; i++) {
 			sheetName.autoSizeColumn(i + 1);
 		}
 	}
 
-	/**
-	 * To create new row with cell style if record not found.
-	 * 
-	 * @param sheet
-	 * @param rowIndex
-	 * @param totalCell
-	 * @param noRecordsStyle
-	 */
 	private void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
 		Row noRecordRow = sheet.createRow(rowIndex);
 		Cell cellNoRecord = noRecordRow.createCell(1);
@@ -354,11 +340,6 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		sheet.addMergedRegion(new CellRangeAddress(sheet.getLastRowNum(), sheet.getLastRowNum(), 1, totalCell));
 	}
 
-	/**
-	 * Export/Download Document in Excel Format
-	 * 
-	 * @param wb
-	 */
 	private void exportExcelReportAudit(Workbook wb) {
 		try {
 			FacesContext.getCurrentInstance().getExternalContext()
@@ -369,7 +350,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 			response.setContentType("application/ms-excel");
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition", "attachment; filename=\"Butiran Jejak Audit.xlsx\"");
+			response.setHeader("Content-Disposition", ReportExcelAuditConstant.RPT_FILE_NAME);
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.flushBuffer();
 
