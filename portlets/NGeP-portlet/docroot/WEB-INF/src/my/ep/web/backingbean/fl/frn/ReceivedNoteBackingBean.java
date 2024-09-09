@@ -1794,7 +1794,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 *            item.
 	 */
 	public void frnItemInfoList(FlFulfilmentItemAddr flItemAddr) {
-		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
+		IRequestItemSO requestItemSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
 
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
@@ -1835,32 +1835,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
 				.getFulfilmentRequest().getCtContract().getContractId() : null;
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
 		reqFDTO.setContractId(contractId);
 		String loaDocType = fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
-
-		/*
-		 * IContractSO contractSO = (IContractSO)
-		 * BusinessDelegate.getInstance().
-		 * getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-		 * IContractSO.class); ContractReqDTO cireqDTO = new ContractReqDTO();
-		 * cireqDTO
-		 * .setContractId(getManagedBean().getFulfilmentRequest().getCtContract
-		 * ().getContractId()); ContractResDTO ciResDTO =
-		 * contractSO.retrieveContract(cireqDTO);
-		 * 
-		 * IQTAwardSO qtAwardSO =
-		 * BusinessDelegate.getInstance().getServiceObject(
-		 * ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		 * 
-		 * AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO(); if
-		 * (ciResDTO.getContract().getLoa() != null) {
-		 * reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		 * AwardSupplierResDTO resLoaDTO =
-		 * qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);
-		 */
 
 		if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 			getManagedBean().setDpFlag(true);
@@ -1875,8 +1854,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
 			}
 		}
-		// }
-
 	}
 
 	// 28855 - end
