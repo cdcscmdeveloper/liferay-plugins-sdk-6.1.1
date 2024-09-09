@@ -2244,20 +2244,16 @@ public class QTCommitteBackingBean extends
 		}
 		// end
 		
-		if (this.getManagedBean().isMaintanceFlow()) {
-			if (isQTStatusInBetween(currentQtStatus,
-					QTStatusConst.QT_PENDING_PB_APPROVAL,
-					QTStatusConst.QT_CONSOLIDATION_REPORT)) {
-				return !this.getManagedBean().isReadOnly();
-			} 	
-		}else {
-			if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT)) {
-				return true;
-			} else if (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(currentQtStatus)) {
-				if (SCProcessNameConst.ASSIGN_FC_SECRETARY.equals(getManagedBean().getTaskName())) {
-					return true;	
-				}
-			}
+		if (this.getManagedBean().isMaintanceFlow() &&
+			isQTStatusInBetween(currentQtStatus,
+				QTStatusConst.QT_PENDING_PB_APPROVAL,
+				QTStatusConst.QT_CONSOLIDATION_REPORT)	) {
+			 return !this.getManagedBean().isReadOnly();
+				
+		}else if (super.isQTStatusLessThanOrEquals(currentQtStatus, QTStatusConst.QT_CONSOLIDATION_REPORT) ||
+				  (QTStatusConst.QT_SUPPLIER_FINALIZATION.equals(currentQtStatus) && 
+				   SCProcessNameConst.ASSIGN_FC_SECRETARY.equals(getManagedBean().getTaskName()))) {
+			 return true;
 		}
 		
 		return false;
