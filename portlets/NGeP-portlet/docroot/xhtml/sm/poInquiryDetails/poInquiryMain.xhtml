@@ -27,15 +27,14 @@
 			<td>
 				<!-- #12483 - START, #34892 -->
 				<ac:smReviseReason bBean="#{backingBean}"/>
+				<!--#34392 Start -->
 				<div style="width: 100%" align="right">
 				<!-- #12483 - END -->
-				<!--#34392 Start -->
-					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}" rendered="#{backingBean.managedBean.inquirySiteVisitAfter}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-						update=":#{p:component('sendInqDialog')}" rendered="#{(backingBean.managedBean.currentStatus ne 'Pending Review Site Visit Report - After Approval' 
-						or backingBean.managedBean.currentStatus ne 'Menunggu Laporan Lawatan Tapak - Selepas Diluluskan')}"/>
+						update=":#{p:component('sendInqDialog')}"/>
 				</div>
 				<ui:include src="poInquiryDetails.xhtml" />
 			</td>

@@ -107,6 +107,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -3251,7 +3252,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		bpmReqDTO.setDocNumber(docNo);
 		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-
+		boolean isWithdrawTask = false;
 		if (bpmResDTO.getWorklistVO() != null
 				&& CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())) {
 			for (WorklistItemVO currentVO : bpmResDTO.getWorklistVO().getWorklistItem()) {
@@ -3266,10 +3267,39 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					bpmReqDTO.setTaskId(currentVO.getTaskId());
 					bpmReqDTO.setCtxToken(token);
 					bpmSO.withdrawTask(bpmReqDTO);
-					
-					// update work flow status 63562 include 
+
+					isWithdrawTask = true;
 				}
 			}
+			if (isWithdrawTask) {
+				updateWorkFlowStatus(scQt);
+			}
+		}
+	}
+	
+	/**
+	 * update workflow Status
+	 * @param scQt
+	 */
+	private void updateWorkFlowStatus(ScQt scQt) {
+		IScWorkFlowStatusSO workFlowStatusSO = null;
+
+		try {
+			workFlowStatusSO = (IScWorkFlowStatusSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO workFlowReqDTO = new ScWorkFlowStatusReqDTO();
+			ScQtStatus workFlowStatus = new ScQtStatus();
+			workFlowStatus.setScQt(scQt);
+			workFlowStatus.setCurrent(true);
+			PmStatus newStatus = getPmStatusByStatusId(QTStatusConst.DAR_CANCELLED);
+			workFlowStatus.setPmStatus(newStatus);
+			workFlowReqDTO.setScWorkFlowStatus(workFlowStatus);
+			workFlowReqDTO.setDocType(ParameterConst.DOCTYPE_DOA_ASSIGNMENT);
+			workFlowReqDTO.setDocId(scQt.getQtId());
+			workFlowStatusSO.updateCurrentWorkflowStatus(workFlowReqDTO);
+
+		} finally {
+			// Close or release any resources if needed
 		}
 	}
 
