@@ -371,7 +371,7 @@
 							value="#{backingBean.managedBean.selectedBank.smAddress.countryId}"
 							style="width: 207px;margin-bottom: 5px;background-color:white;"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCountry"
 								value="#{backingBean.managedBean.countryItems}" />
 							<p:ajax event="change" process="@this"
@@ -398,7 +398,7 @@
 							value="#{backingBean.managedBean.selectedBank.smAddress.stateId}"
 							id="smBankState"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankState"
 								value="#{backingBean.managedBean.bankStates}" />
 							<p:ajax event="change" process="@this"
@@ -436,7 +436,7 @@
 							value="#{backingBean.managedBean.selectedBank.smAddress.divisionId}"
 							id="smBankDivision"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankDivision"
 								value="#{backingBean.managedBean.bankDivisions}" />
 							<p:ajax event="change" process="@this"
@@ -467,7 +467,7 @@
 							label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.districtId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankDist"
 								value="#{backingBean.managedBean.bankDistricts}" />
 							<p:ajax event="change" process="@this"
@@ -492,7 +492,7 @@
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.cityId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCity"
 								value="#{backingBean.managedBean.bankCities}" />
 							<p:ajax event="change" process="@this"

@@ -685,27 +685,7 @@ public class AccessApplBackingBean extends
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
 		}
-		
-		if(accessAppl.isBrandNew()){
-			IAccessApplSO accessApplSO = null;
-			try{
-				accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IAccessApplSO.class);
 				
-				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
-				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
-				AccessApplResDTO resDTO = accessApplSO.isAccessApplProccessingByIdNo(reqDTO);
-				if(resDTO.isSuccessful() && !resDTO.isValid()){
-					throw new EpException(MessageConst.ERROR_776033);
-				}
-			}catch(Exception e){
-				throw new EpException(e.getMessage());
-			}finally{
-				accessApplSO = null;
-			}
-		}
-		
 		// #35584 - Start
 		if (accessAppl.isBrandNew()) {
 			IAccessApplSO accessApplSO = null;
@@ -729,11 +709,31 @@ public class AccessApplBackingBean extends
 							.getCreatedDate()) });
 				}
 			} catch (Exception e) {
-				log.error("cannot retrieve created dated ",e);
+				log.error("cannot retrieve created dated ", e);
 				throw e;
 			}
 		}
 		// #35584 - End
+		
+		if(accessAppl.isBrandNew()){
+			IAccessApplSO accessApplSO = null;
+			try{
+				accessApplSO = (IAccessApplSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IAccessApplSO.class);
+				
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplProccessingByIdNo(reqDTO);
+				if(resDTO.isSuccessful() && !resDTO.isValid()){
+					throw new EpException(MessageConst.ERROR_776033);
+				}
+			}catch(Exception e){
+				throw new EpException(e.getMessage());
+			}finally{
+				accessApplSO = null;
+			}
+		}
 		
 		if(!BpmOutcomeConst.BPM_REJECT.equals(outcome)){
 			PmUser user = PmCommonUtil.retrieveUserByIdNo(accessAppl.getIdentificationNo());
