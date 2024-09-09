@@ -238,8 +238,8 @@
 										style="font-weight:bold;float:left;font-size:18px;"
 										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
 								     
-								     <!-- #10747, #35739 - Start -->
-								    <h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.unspscTitle.length() > 12  || pCatalogueBackingBean.managedBean.itemName.length() > 12}">
+								    <!-- #10747, #35739 - Start -->
+								    <h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.unspscTitle.length() > 12 || pCatalogueBackingBean.managedBean.itemName.length() > 12}">
 								    <br />
 									<hr class="horizontal_dotted_line" style="color:#ffffff;"/>
 								    </h:panelGroup>
@@ -305,7 +305,7 @@
 									<hr class="horizontal_dotted_line" /> <br />
 									<h:panelGroup rendered="#{pCatalogueBackingBean.managedBean.visible}">	<!-- #10747 - Soo -->
 									 <!-- #10747, #35739 - Start -->
-						               <p:dataGrid
+									<p:dataGrid
 										style="width:100%;" lazy="true" columns="5" rows="15"
 										emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 										value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
@@ -379,7 +379,7 @@
 									</h:panelGroup>
 									
 								   	<h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.visible}">	<!-- #10747 - Soo -->
-										<p:dataTable id="catalogueListingTable"
+									<p:dataTable id="catalogueListingTable"
 										rowIndexVar="index" value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
 										var="supplierItem" lazy="true" rows="15"
 										style="width:100%;">
@@ -398,6 +398,7 @@
 	        							</p:columnGroup>
 
  										<p:column style="width :10%;white-space:normal">
+ 										
  											<h:panelGroup
 												rendered="#{supplierItem[7] == null }">
 													<div align="center" style="width: 100%">

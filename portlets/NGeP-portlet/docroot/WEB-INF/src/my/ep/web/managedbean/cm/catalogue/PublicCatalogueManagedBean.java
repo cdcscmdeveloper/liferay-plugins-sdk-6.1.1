@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.cm.catalogue;
 
-//#10747,#35739 & sonarlint fixing remove this unused import - Start
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -32,7 +30,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.context.RequestContext;
-//#10747,#35739 & sonarlint fixing remove this unused import - End
 
 
 /**
