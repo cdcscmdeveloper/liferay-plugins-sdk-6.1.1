@@ -1,11 +1,10 @@
-package my.ep.web.backingbean.sc.audittrails;
+package my.ep.web.backingbean.sc.audit;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,29 +17,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.sc.quationtender.IQTAuditTrailsSO;
+import my.ep.biz.service.sc.quationtender.IQTAuditTrailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.constant.sc.QTAuditConstant;
-import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.audit.AuditQTDTO;
 import my.ep.exception.EpException;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.bean.au.AuditTrailsSearchBean;
+import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.AuditReportConst;
 import my.ep.web.constant.sc.SLALogConstant;
-import my.ep.web.managedbean.sc.audittrails.AuditTrailsManagedBean;
+import my.ep.web.managedbean.sc.audit.AuditQTManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 
 import org.apache.log4j.Logger;
@@ -53,60 +46,28 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
-@ManagedBean(name = "auditTrailsBackingBean")
+@ManagedBean(name = "AuditQTBackingBean")
 @RequestScoped
-public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBean> {
+public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5747106368235143463L;
-	private static Logger log = Logger.getLogger(AuditTrailsBackingBean.class);
-	public static final String SC_TRACKING_DIARY_MANAGED_BEAN = "scTrackingDiaryManagedBean";
+	private static Logger log = Logger.getLogger(AuditQTBackingBean.class);
 	private transient IPagingDataModel<AuditQTDTO> searchQT = new SearchQTPagingDataModel();
 
 	/**
 	 * The method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() {
-	}
-
-	public String getUserName(Long userId) {
-		if (userId.longValue() == CommonConstants.TRACKING_DIARY_SYSTEM_USER_ID) {
-			return ResourceBundleUtils.getMessage("lbl.pm.system", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale());
-		}
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(userId);
-		UserResDTO resDTO = new UserResDTO();
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
-		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		if (userSO != null && resDTO.getPmUser() != null) {
-			return resDTO.getPmUser().getUserName();
-		} else {
-			return "";
-		}
-	}
-
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-
-	public String getRoleDescByRoleCode(String roleCode) {
-		log.info("getRoleDescByRoleCode");
-		if (roleCode == null || roleCode.isEmpty()) {
-			return ResourceBundleUtils.getMessage("lbl.pm.system", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale());
-		}
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
-	}
-
+	}	
+	
 	public void redirectToAuditTrailsViews(String docType, Long docId) throws IOException, PortalException,
 			SystemException {
 		redirectToQtAuditTrailsViews(docType, docId);
@@ -115,6 +76,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	public void redirectToQtAuditTrailsViews(String docType, Long docId) throws IOException, PortalException,
 			SystemException {
 
+		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setQtId(docId);
 		this.getManagedBean().setActiveIndex(0);
@@ -140,6 +102,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 */
 	public void onTabMenuChangeAction(Integer activeIndex) {
 		log.info("onTabMenuChangeAction");
+		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		int previousIndex = this.getManagedBean().getActiveIndex();
 
 		if (previousIndex != activeIndex) {
@@ -196,107 +159,107 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 	private void navigateToGeneralInfoTab() {
 		log.info("navigateToGeneralInfoTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToBriefingSiteVisitTab() {
 		log.info("navigateToBriefingSiteVisitTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToSupplierListTab() {
 		log.info("navigateToSupplierListTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToDeskOfficerAssistantTab() {
 		log.info("navigateToDeskOfficerAssistantTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToDeskOfficerTab() {
 		log.info("navigateToDeskOfficerTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToSpecCommitteeAppointTab() {
 		log.info("navigateToSpecCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToEvalCommitteeAppointTab() {
 		log.info("navigateToEvalCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToTechCommitteeAppointTab() {
 		log.info("navigateToTechCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 	}
 
 	private void navigateToOpenCommitteeAppointTab() {
 		log.info("navigateToOpenCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToFinanceCommitteeAppointTab() {
 		log.info("navigateToFinanceCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToQuotCommitteeAppointTab() {
 		log.info("navigateToQuotCommitteeAppointTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 
 	}
 
 	private void navigateToProcBoardAppointTab() {
 		log.info("navigateToProcBoardAppointTab");
-		this.getManagedBean().setLazy(true);
-		this.getManagedBean().getAuditTrailsSearchBean().setSearching(true);
+		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
 		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
+		RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 		searchQT.reloadData();
 	}
 
@@ -316,14 +279,14 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		 */
 		@Override
 		public ISearchResultBean<AuditQTDTO> pageChangeListener(ISearchBean<AuditQTDTO> searchBean) {
-			AuditTrailsSearchBean qtSearchBean = getManagedBean().getAuditTrailsSearchBean();
+			AuditQTSearchBean qtSearchBean = getManagedBean().getAuditQTSearchBean();
 			qtSearchBean.setDocId(BigInteger.valueOf(getManagedBean().getQtId().intValue()));
 			Long groupSectionId = getManagedBean().getGroupSectionId();
 			try {
 				String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
-				IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+				IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 
 				ISearchResultBean<AuditQTDTO> resDTO = null;
 				resDTO = qtAuditSO.searchQTAuditTrailsViewResultList(languageCode, qtSearchBean.getDocId(), searchBean,
@@ -351,7 +314,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * #35500, Generate Report: Selected tab in PDF Format
 	 * 
 	 * @param docId
-	 *            ,referring to selected REQUEST_NOTE_ID
 	 * @throws IOException
 	 */
 	public void generateReport(BigInteger docId) throws IOException {
@@ -368,7 +330,6 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * #35500, Generate Report: All Tab in PDF Format
 	 * 
 	 * @param docId
-	 *            ,referring to selected REQUEST_NOTE_ID
 	 * @throws IOException
 	 */
 	public void generateAllReport(BigInteger docId) throws IOException {
@@ -384,46 +345,43 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 	 * #35500, Retrieve audit trail detail transaction records.
 	 * 
 	 * @param docId
-	 * @return list
+	 * @return List<AuditQTDTO>
 	 */
-	public List<AuditQTDTO> getAuditTrailDetailsForExlRpt(BigInteger docId) {
+	public void getAuditTrailDetailsForExlRpt(BigInteger docId) {
 
-		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 
-		 return qtAuditSO.getQTAuditTrailsRptViewResultList(docId,
-		 getManagedBean().getGroupSectionId());		
+		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, this.getManagedBean()
+				.getGroupSectionId());
+
+		generateRptExcelForAuditTrailDetails(auditQTList);
 	}
-	
+
 	/**
 	 * #35500, Retrieve All audit trail detail transaction records.
 	 * 
 	 * @param docId
-	 * @return list
+	 * @return List<AuditQTDTO>
 	 */
-	public List<AuditQTDTO> getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
+	public void getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
 
-		IQTAuditTrailsSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailsSO.class);
+		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 
-		return qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
+		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
+
+		generateRptExcelForAuditTrailDetails(auditQTList);
 	}
 
 	/**
 	 * #35500, Generate excel format.
 	 * 
-	 * @param docId
+	 * @param List<AuditQTDTO>
+	 * @return void
 	 */
-	public void generateRptExcelForAuditTrailDetails(BigInteger docId) {
-		List<AuditQTDTO> rsltReportList = new ArrayList<>();
-		try {
-			rsltReportList = getAuditTrailDetailsForExlRpt(docId);
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, "AU", docId.toString(),
-					"AuditSearchDPRequestNoteBackingBean.generateRptExcelForAuditTrailDetails",
-					getUserIdSessionFromLoginId(), e);
-		}
-
+	public void generateRptExcelForAuditTrailDetails(List<AuditQTDTO> auditQTList) {
+		
 		Sheet sheetRptAudit = null;
 		int rowIndex = 0;
 		String[] colHeaderDataTableRpt = null;
@@ -436,7 +394,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		Cell cellTitleRow = null;
 		Row titleHeaderRow = null;
 
-		if (!rsltReportList.isEmpty()) {
+		if (!auditQTList.isEmpty()) {
 			// Setting Report - Populate Table Header Cell Value
 			colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
 
@@ -458,7 +416,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 			// End Section - Setting Cell Style for each cell
 
-			for (AuditQTDTO rpt : rsltReportList) {
+			for (AuditQTDTO rpt : auditQTList) {
 				if (rpt.getGroupSectionId() != null && !rpt.getGroupSectionId().equals(currentGroupSecId)) {
 					sheetRptAudit = wb.createSheet(getCurrentReportTab(rpt.getGroupSectionId().longValue()));
 					colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
@@ -470,7 +428,8 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 							.setHAlignment(HorizontalAlignment.CENTER).setVAlignment(VerticalAlignment.CENTER)
 							.buildHeaderCellStyle();
 
-					// Section - Setting Cell Style for No Records Found message.
+					// Section - Setting Cell Style for No Records Found
+					// message.
 					noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
 
 					// Cell Format: String
@@ -484,10 +443,14 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 
 					// Create Row/Cell - Report Title
 					titleRptRow = sheetRptAudit.createRow(1); // Create Row
-					cellTitleRow = titleRptRow.createCell(1);// Create Cell(Column)
-					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value
+					cellTitleRow = titleRptRow.createCell(1);// Create
+																// Cell(Column)
+					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
+																					// Cell
+																					// Value
 					cellTitleRow.setCellStyle(cellStyleTitleRpt);
-					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Cell
+					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
+																						// Cell
 
 					// Create Row/Cell - Report Header Datatable
 					titleHeaderRow = sheetRptAudit.createRow(3);
@@ -497,7 +460,8 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 						cell.setCellStyle(colHeaderDataTableRptStyle);
 					}
 
-					// Section: Populate Audit Trail Details Record for Request Note.Create Row/Cell - Audit Trail Details
+					// Section: Populate Audit Trail Details Record for Request
+					// Note.Create Row/Cell - Audit Trail Details
 					rowIndex = sheetRptAudit.getLastRowNum() + 1;
 					currentGroupSecId = rpt.getGroupSectionId();
 				}
@@ -534,16 +498,10 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 					Cell cellDocNo = currRow.createCell(7);
 					cellDocNo.setCellValue(rpt.getDocNo());
 					cellDocNo.setCellStyle(cellStyleString);
-
-					if (rpt.getDocStatus() != null) {
-						Cell cellDocStatus = currRow.createCell(8);
-						cellDocStatus.setCellValue(getStatusDescById(rpt.getDocStatus().longValue()));
-						cellDocStatus.setCellStyle(cellStyleString);
-					} else {
-						Cell cellDocStatus = currRow.createCell(8);
-						cellDocStatus.setCellValue("");
-						cellDocStatus.setCellStyle(cellStyleString);
-					}
+					
+					Cell cellDocStatus = currRow.createCell(8);
+					cellDocStatus.setCellValue(rpt.getDocStatus());				
+					cellDocStatus.setCellStyle(cellStyleString);					
 
 					Cell cellFieldName = currRow.createCell(9);
 					cellFieldName.setCellValue(rpt.getFieldName());
@@ -568,6 +526,7 @@ public class AuditTrailsBackingBean extends BaseBackingBean<AuditTrailsManagedBe
 		// Export to Excel
 		exportExcelReportAudit(wb);
 	}
+
 
 	/**
 	 * #35500, get Report Excel tab Name

@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.audit.tab.desk.officer']}" toggleable="true">
 		<p:dataTable id="searchQtTblId" var="obj" rows="10" width="100%"
-			value="#{auditTrailsBackingBean.searchQT}"
+			value="#{AuditQTBackingBean.searchQT}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index" lazy="true">
 			
@@ -47,7 +47,7 @@
 			</p:column>		
 			
 			<p:column headerText="#{lbl['lbl.sc.document.status']}" style="width:40%;">
-				<h:outputText value="#{auditTrailsBackingBean.getStatusDescById(obj.docStatus)}" />
+				<h:outputText value="#{obj.docStatus}" />
 			</p:column>	
 			
 			<p:column headerText="#{lbl['lbl.audit.header.fieldName']}" style="width:5%;">
