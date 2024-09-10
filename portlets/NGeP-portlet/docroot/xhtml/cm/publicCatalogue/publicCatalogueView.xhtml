@@ -33,6 +33,11 @@
 				width: 20% !important;
 			}
 			/* #10747 - Shafie - End  */
+			<ui:remove> #10747- Start </ui:remove>
+			.horizontal_dotted_line_visible {
+            margin-bottom: 0px !important; border-top-color: rgb(255, 255, 255) !important; border-top-width: 2px !important; border-top-style: dotted !important;
+            }
+            <ui:remove> #10747- End </ui:remove>
 		</style>
 
 		<ui:remove>
@@ -241,7 +246,7 @@
 								    <!-- #10747, #35739 - Start -->
 								    <h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.unspscTitle.length() > 12 || pCatalogueBackingBean.managedBean.itemName.length() > 12}">
 								    <br />
-									<hr class="horizontal_dotted_line" style="color:#ffffff;"/>
+									<hr class="horizontal_dotted_line_visible"/>
 								    </h:panelGroup>
 								    <!-- #10747, #35739 - End -->
 									
