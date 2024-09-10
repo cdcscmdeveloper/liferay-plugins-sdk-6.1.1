@@ -36,23 +36,29 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 		String oldAdminIC;
 		String newAdminIC;
 		SmSupplier supplier;
+		String oldRoleCode;
+		PmOrgProfile oldOrg;
 		if (managedBean.isForceReplace()) {
 			ForceReplaceSuppAdminManagedBean mBean = (ForceReplaceSuppAdminManagedBean) managedBean;
-			supplier = mBean.getSmSupplier();
 			oldAdminIC = mBean.getOldIdentification();
 			newAdminIC = mBean.getNewIdentifiction();
+			supplier = mBean.getSmSupplier();
+			oldOrg = null;
+			oldRoleCode = null;
 			auObj.setCreatedBy(null);
 			auObj.setChangedBy(null);
 		} else {
 			SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
 			supplier = mBean.getOldSmSupplier();
+			oldOrg = org;
+			oldRoleCode = roleCode;
 			oldAdminIC = mBean.getUpdateSmPersonnel().getIdentificationNo();
 			newAdminIC = mBean.getSelectedPersonnelToReassign().getIdentificationNo();
 		}
 		auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 				AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ADMIN_IDENTIFICATION_NO, oldAdminIC, newAdminIC, null,
 				null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ADMIN_IDENTIFICATION_NO));
-		auditBaseData(auObj, supplier, roleCode, org, auDetails,
+		auditBaseData(auObj, supplier, oldRoleCode, oldOrg, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO);
 		return auObj;
 	}
