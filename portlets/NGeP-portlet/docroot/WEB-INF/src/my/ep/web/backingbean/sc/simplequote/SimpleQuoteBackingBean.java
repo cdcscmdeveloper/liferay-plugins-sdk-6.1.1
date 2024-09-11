@@ -157,6 +157,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -8266,7 +8267,9 @@ public class SimpleQuoteBackingBean extends
 					minMinutes = ruleValue.getFromValue();
 					maxMinutes = ruleValue.getToValue();
 					minHours = minMinutes.divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
-					maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+					//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+					maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
+					//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 				}
 				if(maxMinutes.compareTo(BigDecimal.valueOf(0.25)) >= 0) {
 					maxiDays = maxiDays + maxDays.intValue();
@@ -8279,7 +8282,9 @@ public class SimpleQuoteBackingBean extends
 					}
 
 					BigDecimal diff = BigDecimal.valueOf(endDate.getTime() - startDate.getTime());
-					diff = diff.divide(BigDecimal.valueOf(60*1000), 2, RoundingMode.HALF_UP);
+					//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+					diff = diff.divide(BigDecimal.valueOf(60L*1000), 2, RoundingMode.HALF_UP);
+					//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 					/*
 					
 					BigDecimal twentyFour = BigDecimal.valueOf(24);
@@ -8320,7 +8325,9 @@ public class SimpleQuoteBackingBean extends
 				Date startDate = quote.getStartDate();
 				
 				maxMinutes = new BigDecimal(4320); // equals to 3 days
-				maxDays = maxMinutes.divide(BigDecimal.valueOf(60*24), 2, RoundingMode.HALF_UP);
+				//start - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
+				maxDays = maxMinutes.divide(BigDecimal.valueOf(60L*24), 2, RoundingMode.HALF_UP);
+				//stop - Sonarqube DP Bug Minor Mohamad Fazly [12/7/2023]
 				quote.setEndDate(DateUtils.addDays(startDate, maxDays.intValue()));
 			}			
 		}
@@ -8381,4 +8388,18 @@ public class SimpleQuoteBackingBean extends
 			return sb.toString();
 		}
 	    //29832 - end
+		
+	// start - #25790
+	/**
+	 * Redirect to purchase in default view.
+	 * 
+	 * @param purchaseInDefaultId
+	 *            the purchase in default id
+	 */
+	public void viewPurchaseInDefault(long purchaseInDefaultId) {
+		PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+		pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
+	}
+	// end - #25790
 }

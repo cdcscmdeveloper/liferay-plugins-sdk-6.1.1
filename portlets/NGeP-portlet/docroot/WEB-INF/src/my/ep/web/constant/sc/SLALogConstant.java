@@ -50,6 +50,9 @@ public class SLALogConstant {
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";
 	public static final String QT_PROC_CATEGORY_CHANGED = "procCategoryChanged";
 	//#29468 End Vinod
+	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
+	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
+	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";
 
 	
 	private SLALogConstant(){
