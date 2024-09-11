@@ -3213,28 +3213,28 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#	29762-start
 		
 		//#30477 - Start
-		public boolean isInactivePublicationApproverRole() {
-			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			boolean inactive=false;
-			ScQt scQt = this.getManagedBean().getQt();
-			ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
+	/**
+	 * to get check is inactive publication approver
+	 * @return
+	 */
+	public boolean isInactivePublicationApproverRole() {
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt scQt = this.getManagedBean().getQt();
+		ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
+		
+		if (null == publicationApproval ) {
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
 			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
-			if (null == publicationApproval && null!=resDTO && null!=resDTO.getQtApproval()) {
-				publicationApproval = resDTO.getQtApproval();
-				List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
-		        for(ScQtApproverSettings approverSetting : approverSettings ){
-		        	QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-			  		if(qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(), RoleCode.PUBLICATION_APPROVER.value())){
-		  			   inactive=true;
-		  		    }
-		        }
-			}
-			return inactive;
+			publicationApproval = resDTO.getQtApproval();
 		}
+	
+		List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		return qtBackingBean.isInactiveCommiteeApproverRole(null,approverSettings, RoleCode.PUBLICATION_APPROVER.value());
+	}
 		//#30477 - Start
 		
 	// #25426 - Start
