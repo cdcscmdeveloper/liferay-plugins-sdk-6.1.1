@@ -2907,14 +2907,16 @@ public class SmApplicationBackingBean extends
 				setBusinessAndHadApprovedSpecialCatcode();
 			}
 			
+			//#34303 - Start
 			if (outputPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)
 					|| outputPageType
 							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
 				SmApplicationUtil.getInstance()
-						.removeNotApplicableInformationBeforeSave(
+						.removeFacilitiesHaveDifferentFacType(
 								getManagedBean());
 			}
+			//#34303 - End
 			
 			setSupplierChangeValues(currentPageType);
 			setBranchDisplayTable(); //29727 , #34135
