@@ -7945,6 +7945,41 @@ public class SmApplicationUtil {
 		}
 
 	}
+	
+	//#34303 - Start
+	/**
+	 * Remove facility that have different facility type in sm_facility and pm_category_l3
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public void removeFacilitiesHaveDifferentFacType(SmApplicationManagedBean bean) {
+		if (!SmCommonUtil.isCollectionEmpty(bean.getSmAppl().getSmFacilities())) {
+			for (Iterator<SmFacility> facIt = bean.getSmAppl().getSmFacilities().iterator(); facIt
+					.hasNext();) {
+				boolean deleteFacility = false;
+				SmFacility fac = facIt.next();
+				if (StringUtils.isNotBlank(fac.getFacilityType())
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+					for (SmSupplierCategoryFacility cat : fac.getSmSupplierCategoryFacilities()) {
+						if ((cat.getPmCategoryL3().getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+								&& (!cat.getPmCategoryL3().getFacilityType()
+										.equals(fac.getFacilityType()))) {
+							deleteFacility = true;
+						}
+					}
+					if(deleteFacility){
+						facIt.remove();	
+					}
+				}
+			}
+		}
+	}
+	//#34303 - End
 
 	private boolean isFacilityExistInLatest(SmFacility fac,
 			List<SmFacility> latestFacilities) {
