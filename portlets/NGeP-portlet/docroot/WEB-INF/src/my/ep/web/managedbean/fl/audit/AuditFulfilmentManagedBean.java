@@ -34,6 +34,9 @@ public class AuditFulfilmentManagedBean extends BaseManagedBean {
 	 * Instantiates a new request note managed bean.
 	 */
 	public AuditFulfilmentManagedBean() {
+		/*
+    	 * 
+    	 */
 	}
 
 	/**

@@ -180,7 +180,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 	}
 
 	/**
-	 * search FL list
+	 * datatable for FL audit
 	 * 
 	 */
 	private class SearchFLPagingDataModel extends PagingDataModel<AuFLReqDTO> {
@@ -278,7 +278,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 	public void generateRptExcelForAuditTrailDetails(Long docId, String docType) {
 		List<AuFLReqDTO> rsltReportList = new ArrayList<>();
 		try {
-			rsltReportList = getFLAuditTrailDetailsForExlRpt(docId, docType);
+			rsltReportList = auditFulfilmentSO.getAuditFLDetailsForRpt(docId, docType);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE, SLALogFulfilmentConst.FL_AUDIT_BB,
 					docId.toString(), SLALogFulfilmentConst.FL_AUDIT_GET_DETAIL_FOR_EXCEL,
@@ -413,6 +413,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 		columnWidths.put(9, 25 * 256); // Col: Data Asal
 		columnWidths.put(10, 25 * 256); // Col: Data Baru
 
+		//max size 11
 		for (int i = 0; i < totalNoOfCell; i++) {
 			sheetName.setColumnWidth(i + 1, columnWidths.get(i));
 		}
