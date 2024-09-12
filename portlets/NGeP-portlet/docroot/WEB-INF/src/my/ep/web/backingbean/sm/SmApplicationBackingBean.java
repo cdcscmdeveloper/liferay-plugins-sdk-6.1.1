@@ -2908,13 +2908,13 @@ public class SmApplicationBackingBean extends
 			}
 			
 			//#34303 - Start
-			if (outputPageType
+			if ((outputPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)
 					|| outputPageType
-							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) && (getManagedBean().isSupplierUser())) {
 				SmApplicationUtil.getInstance()
-						.removeFacilitiesHaveDifferentFacType(
-								getManagedBean());
+				.removeNotApplicableInformationBeforeSave(
+						getManagedBean());
 			}
 			//#34303 - End
 			
