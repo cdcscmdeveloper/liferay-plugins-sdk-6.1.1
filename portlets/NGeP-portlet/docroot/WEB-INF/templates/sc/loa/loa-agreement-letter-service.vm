@@ -1954,7 +1954,7 @@ u {
 								<td class="title border left" colspan="10" style="text-align: left; border-left:none;  border-bottom: none !important;">&nbsp;</td>
 							</tr>
 						</table>
-						<table width="103%" border="1" cellpadding="0" cellspacing="-1">
+						<table width="100%" border="1" cellpadding="0" cellspacing="-1">	##36097
 							<tr>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
