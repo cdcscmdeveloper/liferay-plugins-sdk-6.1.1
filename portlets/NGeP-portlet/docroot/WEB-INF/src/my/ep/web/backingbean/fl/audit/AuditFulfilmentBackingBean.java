@@ -375,7 +375,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 		// Set column width
 		setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 		// Export to Excel
-		exportExcelReportAudit(wb);
+		exportExcelReportAudit(wb,docId);
 	}
 
 	/**
@@ -429,7 +429,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 	 * 
 	 * @param wb
 	 */
-	private void exportExcelReportAudit(Workbook wb) {
+	private void exportExcelReportAudit(Workbook wb, Long docId) {
 		try {
 			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
@@ -451,7 +451,9 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 			outStream.close();
 			wb.close();// Close Workbook
 		} catch (Exception e) {
-			log.error(e);
+			SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE, SLALogFulfilmentConst.FL_AUDIT_BB,
+					docId.toString(), SLALogFulfilmentConst.FL_AUDIT_GENERATE_EXCEL,
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
 }
