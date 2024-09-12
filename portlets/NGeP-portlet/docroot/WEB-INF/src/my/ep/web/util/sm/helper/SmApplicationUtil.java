@@ -7966,6 +7966,7 @@ public class SmApplicationUtil {
 					for (SmSupplierCategoryFacility cat : fac.getSmSupplierCategoryFacilities()) {
 						if ((cat.getPmCategoryL3().getFacilityType()
 								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+								&& (isfacilityValidToCompare(bean, cat))
 								&& (!cat.getPmCategoryL3().getFacilityType()
 										.equals(fac.getFacilityType()))) {
 							deleteFacility = true;
@@ -7977,6 +7978,26 @@ public class SmApplicationUtil {
 				}
 			}
 		}
+	}
+	
+	public boolean isfacilityValidToCompare(SmApplicationManagedBean bean, SmSupplierCategoryFacility cat){
+		boolean retVal = false;
+		for (SmSupplierCategory supCat : bean.getSmAppl().getSmSupplierCategories()) {
+			if (StringUtils.isNotBlank(supCat.getPmCategoryL3()
+					.getFacilityType())) {
+				if ((supCat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || supCat
+						.getRecordStatusFlg()
+						.compareTo(
+								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+						&& !isCategoryRejected(supCat)) {
+					if(supCat.getPmCategoryL3().getCategoryL3Id().equals(cat.getPmCategoryL3().getCategoryL3Id())){
+						retVal = true;
+					}
+				}
+			}
+		}
+		return retVal;
 	}
 	//#34303 - End
 
