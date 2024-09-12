@@ -34,10 +34,11 @@
 		    gpki.signRoam([text, pin, otp, pinLbl, otpLbl]);
 		}
 		
+		var otpTimeoutId;
 		function disableOtpTimeout(){
 			disableBtn();				
 			$("[id$='gpkiOtpNotes']").show();
-			setTimeout(
+			otpTimeoutId = setTimeout(
 				function() {
 					$("[id$='gpkiOtpNotes']").hide();
 					enableBtn();
