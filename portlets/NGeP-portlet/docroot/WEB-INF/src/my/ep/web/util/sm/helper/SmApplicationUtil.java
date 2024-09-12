@@ -7717,11 +7717,10 @@ public class SmApplicationUtil {
 	public void removeNotApplicableInformationBeforeSave(
 			SmApplicationManagedBean bean) {
 		// only check for application not in site visit after approved
-		if (!bean.isSiteVisitAfterApproval()) {
+		if (!bean.isSiteVisitAfterApproval() && bean.isSupplierUser()) {
 			// removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
 			// .getBasicCompanyFacility().getFacilityType());
-			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl(),
-					bean.getLatestAppl());
+			removeFacilitiesHaveDifferentFacType(bean);
 			removeTravellingSoftwareIfNotApplicable(bean);
 			removeEquipmentIfNotApplicable(bean);
 			removeOverlapCategoryIfDocNotUploaded(bean);
