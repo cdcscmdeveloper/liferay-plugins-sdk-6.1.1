@@ -255,19 +255,6 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 	}
 
 	/**
-	 * Retrieve audit trail detail transaction records.
-	 * 
-	 * @param docId
-	 *            invoice id/delivery order id
-	 * @param docType
-	 *            invoice/deliver order doctype
-	 * @return resultlist List<AuFLReqDTO>
-	 */
-	public List<AuFLReqDTO> getFLAuditTrailDetailsForExlRpt(Long docId, String docType) {
-		return auditFulfilmentSO.getAuditFLDetailsForRpt(docId, docType);
-	}
-
-	/**
 	 * Generate excel format.
 	 * 
 	 * @param docId
