@@ -6,6 +6,8 @@ package my.ep.web.bean.fl;
 import java.io.Serializable;
 
 /**
+ * class for audit fl search bean
+ * 
  * @author razin
  *
  */
