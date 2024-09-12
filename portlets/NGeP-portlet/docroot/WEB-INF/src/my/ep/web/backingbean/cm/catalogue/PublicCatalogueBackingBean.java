@@ -8,48 +8,46 @@
  * 
  ****************************************************
  */
+
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
-import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
-import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.PublicCatalogueManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-
+import org.primefaces.component.datagrid.DataGrid;
+import org.primefaces.component.datatable.DataTable;
 
 /**
  * Class PublicCatalogueBackingBean.
+ * 
  * @author hketan
  */
 @ManagedBean(name = "pCatalogueBackingBean")
 @RequestScoped
 public class PublicCatalogueBackingBean extends
-BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
+		BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 	/**
 	 * 
@@ -63,7 +61,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 * Auto complete item name.
 	 * 
 	 * @param query
-	 *           (String query(mandatory))
+	 *            (String query(mandatory))
 	 * @return List<String>
 	 */
 	public List<String> autoCompleteItemName(String query) {
@@ -110,15 +108,14 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 				String commodityCode = (String) obj[0];
 
-				log.info("*********commodityCode**********"	+ commodityCode);
+				log.info("*********commodityCode**********" + commodityCode);
 				codeReqDTO.setUnspscCode(commodityCode);
 
 				CodificationResDTO codeResDTO = codeSO
 						.searchUnspscObj(codeReqDTO);
 
 				this.getManagedBean().getPopularCommodityList()
-				.add(codeResDTO.getUnspscObj());// .set Popular
-				// commodityCode
+						.add(codeResDTO.getUnspscObj());// .set Popular commodityCode
 			}
 		}
 
@@ -130,20 +127,20 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 * @return string
 	 */
 	public void searchCatalogue() {
-
-		System.out.println("*************start***************");
-		if(this.getManagedBean().getItemName() == null || this.getManagedBean().getItemName().isEmpty()){
+		// #10747 and sonarLint fixing issues- Start
+		log.info("*************start***************");
+		if (this.getManagedBean().getItemName() == null
+				|| this.getManagedBean().getItemName().isEmpty()) {
 
 			throw new EpException(MessageConst.ERROR_716008);
 		}
-		
-		if(this.getManagedBean().getItemName() != null && this.getManagedBean().getItemName().trim().length()>0){
 
-			if(this.getManagedBean().getItemName().trim().length()<3){
-				throw new EpException(MessageConst.ERROR_716019);
-			}
+		if (this.getManagedBean().getItemName() != null
+				&& this.getManagedBean().getItemName().trim().length() > 0
+				&& this.getManagedBean().getItemName().trim().length() < 3) {
+			throw new EpException(MessageConst.ERROR_716019);
 		}
-		
+
 		this.getManagedBean().setCatalogueList(null);
 		this.getManagedBean().setFamilyList(null);
 		this.getManagedBean().setFrontPage(false);
@@ -153,6 +150,10 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().setBrandId(null);
 		this.getManagedBean().setPriceForm(null);
 		this.getManagedBean().setPriceTo(null);
+		// #10747- Start
+		this.getManagedBean().setDeliveryFrom(null);
+		this.getManagedBean().setDeliveryTo(null);
+		// #10747- End
 		this.getManagedBean().getBrandCriteria().clear();
 		this.getManagedBean().setCommodityCode(null);
 		this.getManagedBean().setFamilyCode(null);
@@ -161,7 +162,8 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().reset();
 
 		this.getManagedBean().getSearchDataModel().reloadData();
-		System.out.println("*************end***************");
+		log.info("*************end***************");
+		// #10747 and sonarLint fixing issues- End
 	}
 
 	/**
@@ -177,9 +179,9 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 * Pre render public cat view.
 	 */
 	public void preRenderPublicCatView() {
-		//#10747 - Soo - Start
+		// #10747 - Soo - Start
 		log.info("prerender here");
-		
+
 		this.getManagedBean().setFrontPage(true);
 		this.getManagedBean().setItemName(null);
 		this.getManagedBean().setItemPerPage(15);
@@ -189,8 +191,8 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "publicCatalogueView");
-		
+				.handleNavigation(fc, null, "publicCatalogueView");
+
 		this.getManagedBean().getSearchDataModel().reloadData();
 		// #10747 - Soo - End
 	}
@@ -200,15 +202,12 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 	 */
 	public void searchCatalogueByPrice() {
 
-	
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setCatalogueList(null);
 		this.getManagedBean().setCloneNameFlag(false);
 		this.getManagedBean().setBrandCriteria(null);
-	
 
 		this.getManagedBean().getSearchDataModel().reloadData();
-
 
 	}
 
@@ -233,7 +232,6 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().setCloneNameFlag(false);
 		this.getManagedBean().setFamilyList(null);
 
-
 		this.getManagedBean().setKeyWord(false);
 		this.getManagedBean().setUnspscTitle(commodity.getUnspscTitle());
 
@@ -243,69 +241,42 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 			this.getManagedBean().setSelectedUnspscObj(commodity);
 		}
 
-
-/*		ICodificationSO codificationSO = null;
-		CodificationResDTO cdResDTO = new CodificationResDTO();
-		try {
-			codificationSO = (ICodificationSO) BusinessDelegate
-					.getInstance().getServiceObject("cm", ICodificationSO.class);
-
-			CodificationReqDTO cdReqDTO = new CodificationReqDTO();
-			cdReqDTO.setUnspscId(commodity.getUnspscId());
-			cdResDTO = codificationSO.retrieveBrandByCommodityId(cdReqDTO);
-		} finally {
-			codificationSO = null;
-		}
-		log.debug("getCmBrand:" + cdResDTO.getBrandList().size());
-
-		for (CmBrand brand : cdResDTO.getBrandList()) {
-			log.debug("getBrandName:" + brand.getBrandName());
-			this.getManagedBean()
-			.getBrandCriteria()
-			.add(new SelectItem(brand.getBrandId(), brand
-					.getBrandName()));
-		}*/
-
 		this.getManagedBean().getSearchDataModel().reloadData();
-
-
-
-
-
-
-
-
 	}
 
+	// #10747,#35739- Start
 	/**
 	 * Navigate to supplier item det.
 	 * 
-	 * @param vpsi
+	 * @param supplierItemId
 	 *            (VCmPubSuppItem vpsi(mandatory))
 	 * @return String(publicCatalogueDetail.xhtml)
 	 */
-	public String navigateToSupplierItemDet(VCmPubSuppItem vpsi) {
+	public String navigateToSupplierItemDet(long supplierItemId) {
 		log.info("...............navigateToSupplierItemDet................");
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		CatalogueResDTO resDTO = null;
+		ICatalogueSO catalogueSO = BusinessDelegate.getInstance()
+				.getServiceObject("cm", ICatalogueSO.class);
+		CatalogueResDTO resDTO;
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		reqDTO.setSupplierItemId(vpsi.getSupplierItemId());
+		reqDTO.setSupplierItemId(supplierItemId);
 		resDTO = catalogueSO.getSupplierItem(reqDTO);
-
-
 
 		CatalogueBackingBean bb = new CatalogueBackingBean();
 
 		try {
-			bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
+			bb.getManagedBean().setSelectedMaintainItem(
+					resDTO.getSupplierItem());
 
-		} finally {
-			catalogueSO = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, null, null,
+					"PublicCatalogueBackingBean.navigateToSupplierItemDet",
+					null, e);
 		}
-
 		return "publicCatalogueDetail.xhtml?faces-redirect=true";
 	}
+
+	// #10747,#35739- End
 
 	/**
 	 * Cancel to public search.
@@ -331,68 +302,59 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().setBrandId(0L);
 	}
 
-	// #10747 - Soo - Start	
-	public void itemPerPage(int itemPerPage){
-		log.info("itemPerPage" + this.getManagedBean().getItemPerPage());
+	// #10747 - Soo - Start
+	// #10747 and SonarLint fixing- Start
+	/**
+	 * @param itemPerPage
+	 */
+	public void itemPerPage(int itemPerPage) {
+		log.info("itemPerPage" + itemPerPage);
+
+		if (this.getManagedBean().isVisible()) {
+
+			DataGrid datagrid = (DataGrid) FacesContext.getCurrentInstance()
+					.getViewRoot()
+					.findComponent("form:catalogueTabId:catalogueGridViewID");
+
+			datagrid.setRows(itemPerPage);
+			datagrid.setFirst(datagrid.getPage() * itemPerPage);
+
+		} else {
+
+			DataTable datatable = (DataTable) FacesContext.getCurrentInstance()
+					.getViewRoot()
+					.findComponent("form:catalogueTabId:catalogueListingTable");
+
+			datatable.setRows(itemPerPage);
+			datatable.setFirst(datatable.getPage() * itemPerPage);
+		}
+
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
-	
-	public void sortOrderBy(int sortBy){
+
+	/**
+	 * @param sortBy
+	 */
+	public void sortOrderBy(int sortBy) {
 		log.info("sortBy" + sortBy);
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
-	
-	public void thumbnailView(boolean thumbnailView){
+
+	/**
+	 * @param thumbnailView
+	 */
+	public void thumbnailView(boolean thumbnailView) {
 		log.info("thumbnailView" + thumbnailView);
 		this.getManagedBean().setVisible(thumbnailView);
+		itemPerPage(this.getManagedBean().getItemPerPage());
 	}
 	// #10747 - Soo - End
-	
-	/**
-	 * Back to list.
-	 */
-	public void backToList() {
-
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-		this.getManagedBean().setSelectedUnspscObj(null);	
-		this.getManagedBean().setBrandId(null);
-		this.getManagedBean().setPriceTo(null);
-		this.getManagedBean().setPriceForm(null);
-		
-		if (this.getManagedBean().getCloneItemNames().size() > 0) {
-			this.getManagedBean().setFamilyList(null);
-			this.getManagedBean().setBrandId(null);
-			this.getManagedBean().getBrandCriteria().clear();
-		}
-		for (String code : this.getManagedBean().getCloneItemNames()) {
-
-			log.info("*******code***********" + code);
-
-			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-			codeReqDTO.setUnspscCode(code);
-			CodificationResDTO codeResDTO = codificationSO
-					.searchUnspscObj(codeReqDTO);
-
-			this.getManagedBean().getFamilyList()
-			.add(codeResDTO.getUnspscObj());
-
-		}
-		
-		this.getManagedBean().getSearchDataModel().reloadData();
-
-
-
-	}
 
 	/**
 	 * Search catalogue by commodity code.
 	 * 
 	 * @param commodityCode
-	 *           (CmUnspsc commodityCode(mandatory))
+	 *            (CmUnspsc commodityCode(mandatory))
 	 */
 	public void searchCatalogueByCommodityCode(CmUnspsc commodityCode) {
 		log.info("..............searchCatalogueByCommodityCode..................");
@@ -416,42 +378,12 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		if (commodityCode.getUnspscCode() != null
 				&& commodityCode.getUnspscCode().trim().length() > 0) {
 
-			this.getManagedBean().setCommodityCode(commodityCode.getUnspscCode());
+			this.getManagedBean().setCommodityCode(
+					commodityCode.getUnspscCode());
 			this.getManagedBean().setSelectedUnspscObj(commodityCode);
 		}
-		
-		
-/*		ICodificationSO codificationSO = null;
-		CodificationResDTO cdResDTO = new CodificationResDTO();
-		try {
-			codificationSO = (ICodificationSO) BusinessDelegate
-					.getInstance().getServiceObject("cm", ICodificationSO.class);
 
-			CodificationReqDTO cdReqDTO = new CodificationReqDTO();
-			cdReqDTO.setUnspscId(commodityCode.getUnspscId());
-			cdResDTO = codificationSO.retrieveBrandByCommodityId(cdReqDTO);
-		} finally {
-			codificationSO = null;
-		}
-		log.info("getCmBrand:" + cdResDTO.getBrandList().size());
-
-		for (CmBrand brand : cdResDTO.getBrandList()) {
-			log.info("getBrandName:" + brand.getBrandName());
-			this.getManagedBean()
-			.getBrandCriteria()
-			.add(new SelectItem(brand.getBrandId(), brand
-					.getBrandName()));
-		}*/
-		
-		
-		
 		this.getManagedBean().getSearchDataModel().reloadData();
-
-
 	}
-
-
-
-
 
 }
