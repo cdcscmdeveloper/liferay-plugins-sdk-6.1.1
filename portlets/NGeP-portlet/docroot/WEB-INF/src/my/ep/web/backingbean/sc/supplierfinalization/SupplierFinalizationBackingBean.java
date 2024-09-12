@@ -10008,12 +10008,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 					// (OC/TEC/FEC)
 					stageType = QTStatusConst.OPENING_COMMITTEE_CODE + CommonConstants.SPACE_SLASH
 							+ QTStatusConst.TECHICAL_EVALUATION_COMMITTEE_CODE + CommonConstants.SPACE_SLASH
-							+ QTStatusConst.TECHICAL_EVALUATION_COMMITTEE_CODE + CommonConstants.SPACE_SLASH;
+							+ QTStatusConst.FINANCIAL_EVALUATION_COMMITTEE_CODE + CommonConstants.SPACE_SLASH;
 					
 				} else if (scQtFinalization.isReEvaluateTechReq()) {
 					// Technical Stage, check inactive role Committee (TEC/FEC)
 					stageType = QTStatusConst.TECHICAL_EVALUATION_COMMITTEE_CODE + CommonConstants.SPACE_SLASH
-							+ QTStatusConst.TECHICAL_EVALUATION_COMMITTEE_CODE + CommonConstants.SPACE_SLASH;
+							+ QTStatusConst.FINANCIAL_EVALUATION_COMMITTEE_CODE + CommonConstants.SPACE_SLASH;
 
 				} else if (scQtFinalization.isReEvaluateFinReq()) {
 					// Financial Stage, check inactive role Committee (FEC)
