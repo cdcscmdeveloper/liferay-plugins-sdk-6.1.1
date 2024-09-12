@@ -93,7 +93,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
 //#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.biz.service.IAuditTrailsSO;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.persistence.logging.LogKey;
@@ -2229,8 +2229,8 @@ public class SmPersonnelBackingBean extends
 			log.info("Result:" + resDTO.isSuccessful());
 			if (resDTO.isSuccessful()) {
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailsSO.class);
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					LogKey logKey = new LogKey();
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
@@ -2700,8 +2700,8 @@ public class SmPersonnelBackingBean extends
 
 		if (resDTO.isSuccessful()) {
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-					IAuditTrailsSO.class);
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
@@ -3688,8 +3688,8 @@ public class SmPersonnelBackingBean extends
 				}
 			}
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-					IAuditTrailsSO.class);
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();

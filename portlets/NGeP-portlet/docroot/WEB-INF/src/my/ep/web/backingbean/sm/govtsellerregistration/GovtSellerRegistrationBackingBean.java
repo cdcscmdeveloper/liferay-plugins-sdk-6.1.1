@@ -69,7 +69,7 @@ import org.primefaces.event.FileUploadEvent;
 
 import org.apache.log4j.Logger;
 //#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.biz.service.IAuditTrailsSO;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.util.CustomUtils;
@@ -1104,8 +1104,8 @@ public class GovtSellerRegistrationBackingBean extends
 				//		"/xhtml/sm/onlinereg/outputMsg.xhtml",
 				//		MessageConst.INFO_721013, null, null);
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailsSO.class);
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());

@@ -50,8 +50,8 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 		} else {
 			SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
 			supplier = mBean.getOldSmSupplier();
-			oldOrg = org;
-			oldRoleCode = roleCode;
+			oldOrg = mBean.getOldOrg();;
+			oldRoleCode = mBean.getOldRole();;
 			oldAdminIC = mBean.getUpdateSmPersonnel().getIdentificationNo();
 			newAdminIC = mBean.getSelectedPersonnelToReassign().getIdentificationNo();
 		}

@@ -47,7 +47,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 //#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.biz.service.IAuditTrailsSO;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementCancelRegisteredCategoryBackingBean;
@@ -321,8 +321,8 @@ public class SmDeleteCategoryCodeBackingBean extends
 				//25963 - update deleted codes in rejected appl, if any
 				updateDeletedCodesInRejAppl();
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailsSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailsSO.class);
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					LogKey logKey = new LogKey();
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementCancelRegisteredCategoryBackingBean();
