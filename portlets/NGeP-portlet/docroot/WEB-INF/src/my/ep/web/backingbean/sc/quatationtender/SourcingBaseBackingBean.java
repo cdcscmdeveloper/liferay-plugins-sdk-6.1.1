@@ -226,6 +226,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -1590,7 +1591,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QUOTATION_THRESHOLD);
-			reqDTO.setCompareValue(estimatedAmount.toString());
+			reqDTO.setCompareValue(estimatedAmount != null ? estimatedAmount.toString() : "0");	// Bug #36072@Syazani 22/07/2024
 			List<String> ruleValueStrList = ruleSO
 					.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
 					.getRuleValueStrList();
@@ -3625,6 +3626,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//Bug #36104 start
+	private void getAnswerRemarkItem(ScLoa scLoa, List<String> answerRemarkList, TplSpecQuestion tplSpecQuestion) {
+
+		SmSupplier suppLoa = scLoa.getScLoiLoa().getSmSupplier();
+		if(CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecAnswers())){		
+			for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
+				
+				SmSupplier suppAns = new SmSupplier();
+			
+				if(null != tplSpecAnswer.getTplSpecSuppAnswer() 
+						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
+					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
+				}
+				
+				if (null != suppAns.getSupplierId()
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
+						&& null != tplSpecAnswer.getAnswerRemark()){					
+					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+					break;
+				}
+			}
+		}
+	}
+	//Bug #36104 end
+	
 	// #26130 - Start
 	/**
 	 * @param scLoa
@@ -3645,17 +3671,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					if (answerRemarkList == null) {
 						answerRemarkList = new ArrayList<>();
 					}
-					//32648 - start
-					if (null != tplSpecQuestion.getTplSpecAnswers() && tplSpecQuestion.getTplSpecAnswers().size() > 0){
-						//32648 & 34406 - start						
-						if (tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark() != null){
-							answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
-						}
-						//32648 & 34406 - end
-						
-					}
-					//32648 - end
-					// #26130 - End
+					
+					getAnswerRemarkItem(scLoa, answerRemarkList, tplSpecQuestion); //Bug #36104 
+					
 					addSpecList = true;
 					continue;
 				}
@@ -3957,6 +3975,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -3979,6 +3998,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4000,6 +4020,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														.getSpecQuestionId()))) {
 
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4017,6 +4038,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								 **/
 								if (answer.getTplSpecQuestion().getClDeliveryTerm() == null) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4130,6 +4152,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4152,6 +4175,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 											tplspecZoneDtls.getZoneName();
 										}
 									}
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4173,6 +4197,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														.getSpecQuestionId()))) {
 
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
+									master.setSpecCreatedBySQ(Boolean.TRUE); //36122 - @zaim - add flag to indicate data from DP
 									constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master,
 											answer.getTplSpecQuestion());
 									// #26226 - Start
@@ -4273,14 +4298,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
 															SSTConstant.GREATER_THAN_SYMBOL);
 													clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-															SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
-													map.put(SSTConstant.clItem, clItem);
+															TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
+													map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(clItem, 16));//35295 #93 @zaim
 													map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 															getParameterDesc(q.getClFulfilmentTypeCode(),
 																	SourcingConstants.MY_LOCALE));
 													map.put(SSTConstant.uomName, sstItem.getScRequestItem().getUom()
 															.getUomName());
-													map.put(SSTConstant.zoneName, zoneDtl.getZoneName());
+													//35295 - start #93
+													String zoneName = zoneDtl.getZoneName().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+													zoneName = zoneName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+													zoneName = zoneName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+													map.put(SSTConstant.zoneName, VmUtil.getInstance().addLineBreaks(zoneName, 11));
+													//35295 - end
 													map.put(SSTConstant.quantity, sstItem.getQty().toString());
 													map.put(SSTConstant.clUomFrequency,
 															q.getClUomFrequency() == null ? SSTConstant.TB : q
@@ -4312,12 +4342,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																	SSTConstant.GREATER_THAN_SYMBOL);
 															answerRemark = answerRemark.replaceAll(
 																	QTConstants.NEW_LINE_CHARACTER,
-																	SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																	TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 															//#35295 #61 - start
 															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
 															//#35295 #61 - end
-															map.put(SSTConstant.answerRemark, answerRemark);
+															map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 														}
 													}
 													isZonalAdded = Boolean.TRUE;
@@ -4328,7 +4358,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													// second row zone name
 													map.put(SSTConstant.clItem, SSTConstant.nbsp);
 													map.put(SSTConstant.uomName, SSTConstant.nbsp);
-													map.put(SSTConstant.zoneName, zoneDtl.getZoneName());
+													//35295 - start #93
+													String zoneName = zoneDtl.getZoneName().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+													zoneName = zoneName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+													zoneName = zoneName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+													map.put(SSTConstant.zoneName, VmUtil.getInstance().addLineBreaks(zoneName, 11));
+													//35295 - end
 													map.put(SSTConstant.quantity, SSTConstant.nbsp);
 													map.put(SSTConstant.clUomFrequency, SSTConstant.nbsp);
 													map.put(SSTConstant.clUomPerDay, SSTConstant.nbsp);
@@ -4354,12 +4389,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																		SSTConstant.GREATER_THAN_SYMBOL);
 																answerRemark = answerRemark.replaceAll(
 																		QTConstants.NEW_LINE_CHARACTER,
-																		SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																		TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 																//#35295 #61 - start
 																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
 																//#35295 #61 - end
-																map.put(SSTConstant.answerRemark, answerRemark);
+																map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 																break;
 															}
 														}
@@ -4372,12 +4407,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
 															SSTConstant.GREATER_THAN_SYMBOL);
 													specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-															SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+															TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
 													//#35295 #61 - start
 													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
 													//#35295 #61 - end
-													map.put(SSTConstant.specValue, specVal);
+													map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
 													map.put(SSTConstant.questionType, q.getQuestionType());
 													listPRQuestion.add(map);
 													break;
@@ -4409,8 +4444,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
 														SSTConstant.GREATER_THAN_SYMBOL);
 												clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-														SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
-												map.put(SSTConstant.clItem, clItem);
+														TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
+												map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(clItem, 16)); //35295 #93 @zaim
 												map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 														getParameterDesc(q.getClFulfilmentTypeCode(),
 																SourcingConstants.MY_LOCALE));
@@ -4443,12 +4478,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																SSTConstant.GREATER_THAN_SYMBOL);
 														answerRemark = answerRemark.replaceAll(
 																QTConstants.NEW_LINE_CHARACTER,
-																SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 														//#35295 #61 - start
 														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
 														//#35295 #61 - end
-														map.put(SSTConstant.answerRemark, answerRemark);
+														map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 													}
 												}
 												map.put(SSTConstant.ROWSPAN_ITEM_NAME,
@@ -4470,12 +4505,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
 														SSTConstant.GREATER_THAN_SYMBOL);
 												specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-														SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+														TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 												//#35295 #61 - start
 												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
 												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
 												//#35295 #61 - end
-												map.put(SSTConstant.specValue, specVal);
+												map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
 												map.put(SSTConstant.questionType, q.getQuestionType());
 												listPRQuestion.add(map);
 												listConstructQuestion.add(listPRQuestion);
@@ -4566,35 +4601,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		if (question.getClItem() == null) {
 			question.setClItem("");
-		}else{
-		    String clItem = question.getClItem();
-		//20190513@asyrafhaziq - 25812 - Start
-		// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
-		    String[] words = clItem.split(" "); //get array of words
-		    StringBuilder sb = new StringBuilder();
-		    StringBuilder subSb = new StringBuilder();//this is for perfomance
-		    for(String word : words) //affect each word in string
-		    {
-		      int length = word.length();
-		      if ( length >= 20)
-		    	{
-		    	  String subWord;
-		            for (int i = 0; i < length; i += 20) {
-		            	subWord = word.substring(i, Math.min(length, i + 20));
-		            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-		            }
-		    		word = subSb.toString();	
-		    	}
-		        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-		    }
-		    clItem =  sb.toString();
-		    //20190513@asyrafhaziq - 25812 - End
-			clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-			question.setClItem(clItem);
-			//log.info("CIItem  ----------->"+question.getClItem());
+		} else {
+			// 36122 - start @zaim - prevent data from dp execute due to
+			// performance in zonal.
+			if (!master.isSpecCreatedBySQ()) {
+				String clItem = question.getClItem();
+				// 20190513@asyrafhaziq - 25812 - Start
+				// add a condition to filter the character (character after
+				// space and before space) length for data 'ITEM'.
+				String[] words = clItem.split(" "); // get array of words
+				StringBuilder sb = new StringBuilder();
+				StringBuilder subSb = new StringBuilder();// this is for
+															// perfomance
+				for (String word : words) // affect each word in string
+				{
+					int length = word.length();
+					if (length >= 20) {
+						String subWord;
+						for (int i = 0; i < length; i += 20) {
+							subWord = word.substring(i, Math.min(length, i + 20));
+							subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+						}
+						word = subSb.toString();
+					}
+					sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+				}
+				clItem = sb.toString();
+				// 20190513@asyrafhaziq - 25812 - End
+				clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+				clItem = clItem.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+				clItem = clItem.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+				clItem = clItem.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+				question.setClItem(clItem);
+			}
+			// 36122 - end @zaim
 		}
 		if (question.getClSpecDetail() == null) {
 			question.setClSpecDetail(dafaltValue);

@@ -1237,9 +1237,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 //				if (cat.getRecordStatusFlg().compareTo(
 //						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				// #30021 - end
-				// #32809 - start
+				// #32809 - start - #30766
 				// filter category code that not imposed with DA
-				if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED){
+				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
 							.getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
@@ -1274,7 +1276,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 										&& macCatCode
 												.equalsIgnoreCase(suppCatCode)
 										&& machDtlTmp == null) {
-									// #32809 - start
+									// #32809 - start - #30766
 									List<SmMachineCategory> activeSmMachineCategory = new ArrayList<SmMachineCategory>();
 									
 									//filter DA category code for machine
@@ -1295,7 +1297,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									}
 									
 									machineDtl.setSmMachineCategories(activeSmMachineCategory);
-									// #32809 - end
+									// #32809 - end - #30766
 									activeMachineDtls.add(machineDtl);
 									break;
 								}
@@ -1303,7 +1305,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}
 					}
 				}
-				// #32809 - end
+				// #32809 - end - #30766
 
 				// #30021 - start
 //				}
@@ -1319,15 +1321,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		} else {
 			List<SmManufacturingDtl> activeManufacturingDtls = new ArrayList<SmManufacturingDtl>();
 			
-			// #32809 - start
+			// #32809 - start - #30766
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 				// filter category code that not imposed with DA
-				if ((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED)
+				if ((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED && cat
+						.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED)
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
-					//#33467 - start, #32809 - nested loop for checking each SmManufacturingDtl for every SmSupplierCategory
+					//#33467 - start, #32809 - nested loop for checking each SmManufacturingDtl for every SmSupplierCategory - #30766
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
 						if(manuFacDtl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED) continue;
 						if(activeManufacturingDtls.size() == 0) activeManufacturingDtls.add(manuFacDtl);
@@ -1337,9 +1341,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 										activeManufacturingDtls.add(manuFacDtl);
 									} 
 								}
-					//#33467, #32809 - end
+					//#33467, #32809 - end - #30766
 				}
 			}
+			// #32809 - end - #30766
 			getManagedBean().getSmAppl().setSmManufacturingDtls(
 					activeManufacturingDtls);
 		}
@@ -3758,17 +3763,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<PmCategoryL3> getCategoryFacilityVO(SmAppl smAppl,
 			String facType) {
-		//#32809 - start
+		//#32809 - start - #30766
 		return getCategoryFacilityVO(facType, smAppl,
 				smAppl.getSmFacilities());
-		//#32809 - end
+		//#32809 - end - #30766
 	}
 
 	public static List<PmCategoryL3> getCategoryFacilityVO(String facType,
 			SmAppl smAppl, List<SmFacility> facilities) {
 		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
 		
-		//#32809 - start
+		//#32809 - start - #30766
 		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 				// filter category code that not imposed with DA
@@ -3819,7 +3824,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 		}
-		//#32809 - end
+		//#32809 - end - #30766
 
 		return categoryFacilityVOList;
 	}
