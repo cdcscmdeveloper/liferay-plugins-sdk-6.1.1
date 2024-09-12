@@ -27,12 +27,14 @@
 						<div align="right" style="width: 100%">
 							<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 								<p:fileDownload
-									value="#{auditFulfilmentBackingBean.generateReport(auditFulfilmentBackingBean.managedBean.docId,auditFulfilmentBackingBean.managedBean.docType)}" />
+									value="#{auditFulfilmentBackingBean.generateReport(auditFulfilmentBackingBean.managedBean.docId,
+									auditFulfilmentBackingBean.managedBean.docType)}" />
 							</p:commandLink>
 							&#160;
 							<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
 								<p:fileDownload
-									value="#{auditFulfilmentBackingBean.generateRptExcelForAuditTrailDetails(auditFulfilmentBackingBean.managedBean.docId,auditFulfilmentBackingBean.managedBean.docType)}" />
+									value="#{auditFulfilmentBackingBean.generateRptExcelForAuditTrailDetails(auditFulfilmentBackingBean.managedBean.docId,
+									auditFulfilmentBackingBean.managedBean.docType)}" />
 							</p:commandLink>
 							&#160;
 						</div>
