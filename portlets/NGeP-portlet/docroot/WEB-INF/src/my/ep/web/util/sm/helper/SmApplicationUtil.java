@@ -15641,4 +15641,26 @@ public class SmApplicationUtil {
 		return true;
 	}
 	//#34483 END
+	
+	//#26238
+	 /**
+	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
+	 *  can edit Bank Information only
+	 * @param bean
+	 */
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean){
+		if(bean.getEditVO() != null){
+			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
+				bean.getEditVO().setDisciplinary(false);
+				return;
+			}
+			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			for(SmDisciplinaryAction da : activeDA){
+				if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+					bean.getEditVO().setDisciplinary(true);
+					return;
+				}
+			}
+		}
+	}	
 }
