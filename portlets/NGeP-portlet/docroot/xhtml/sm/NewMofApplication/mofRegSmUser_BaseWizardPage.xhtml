@@ -16,7 +16,7 @@
 				if (emptyText.parentNode != null) {
 					emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.mof.acc.appl']}";
 					/* #34831 - Start */
-					var checkBasicUser = "#{backingBean.managedBean.basicSupplier}";
+					var checkBasicUser = #{backingBean.managedBean.basicSupplier};
 					if (checkBasicUser) {
 						emptyText.parentNode.children[0].text = "#{lbl['lbl.sm.upgrade.acc.appl']}";
 					}
