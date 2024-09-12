@@ -704,8 +704,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			pyPayment.setPmStatus(pyStatus);
 			
 			//START 36227
-			if (pyPayment.getPyBill().getBillType().equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {					
-				pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);					
+			if (pyPayment.getPyBill() != null
+					&& pyPayment.getPyBill().getBillType()
+							.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)) {
+				pyPayment.setReceiptFileName(ReportConst.SM_TAX_INVOICE_SST);
 			}
 			//END 36227
 			
