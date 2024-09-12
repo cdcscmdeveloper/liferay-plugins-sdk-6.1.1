@@ -29,7 +29,7 @@ import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.IAuditTrailsSO;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.fl.audit.IAuditFulfilmentSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -68,8 +68,8 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 	private transient IAuditFulfilmentSO auditFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
 			ModuleCodeConst.ORDER_FULFILLMENT, IAuditFulfilmentSO.class);
 
-	private transient IAuditTrailsSO auditTrailAuSo = BusinessDelegate.getInstance().getServiceObject(
-			ModuleCodeConst.AUDIT, IAuditTrailsSO.class);
+	private transient IAuditTrailSO auditTrailAuSo = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 
 	/**
 	 * get config audit fl state

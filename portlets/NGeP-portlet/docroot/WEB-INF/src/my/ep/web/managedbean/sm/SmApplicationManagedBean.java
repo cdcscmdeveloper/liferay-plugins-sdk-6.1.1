@@ -669,6 +669,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	//#31043 START
 	private boolean allowedToSiteVisit;
 	//#31043 END
+	//#34831 - Start
+	private boolean basicSupplier;
+	//#34831 - End
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -749,6 +752,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			//#34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			//#34831 - End
 		}
 
 		defaultAddr = new SmAddress();
@@ -4673,4 +4682,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.allowedToSiteVisit = allowedToSiteVisit;
 	}
 	//#31043 END
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
 }
