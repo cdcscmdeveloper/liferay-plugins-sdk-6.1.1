@@ -1878,6 +1878,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> deletedScCommitteeMemberList;
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	
+	private boolean auditViewRole;
 	//#28895 - 35500 end
 	
 	public QTDetailManagedBean() {
@@ -11941,6 +11943,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setDeletedScCommitteeMemberList(List<ScCommitteeMember> deletedScCommitteeMemberList) {
 		this.deletedScCommitteeMemberList = deletedScCommitteeMemberList;
+	}
+
+	public boolean isAuditViewRole() {
+		return auditViewRole;
+	}
+
+	public void setAuditViewRole(boolean auditViewRole) {
+		this.auditViewRole = auditViewRole;
 	}
 }
 

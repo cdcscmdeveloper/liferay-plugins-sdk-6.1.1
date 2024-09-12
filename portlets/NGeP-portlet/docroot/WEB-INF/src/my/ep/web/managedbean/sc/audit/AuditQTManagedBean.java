@@ -6,8 +6,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
-//import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel;
-@ManagedBean(name = "auditTrailsManagedBean")
+
+
+@ManagedBean(name = "auditQTManagedBean")
 @SessionScoped
 public class AuditQTManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
@@ -22,8 +23,8 @@ public class AuditQTManagedBean extends BaseManagedBean {
 	private int activeIndex;
 	private List searchGeneralInfo;
 	private AuditQTSearchBean auditQTSearchBean;
-	private boolean isLazy = false;
 	private Long groupSectionId;
+	
 
 	public String getModuleSelected() {
 		return moduleSelected;
@@ -70,12 +71,6 @@ public class AuditQTManagedBean extends BaseManagedBean {
 	public void setAuditQTSearchBean(AuditQTSearchBean auditQTSearchBean) {
 		this.auditQTSearchBean = auditQTSearchBean;
 	}
-	public boolean isLazy() {
-		return false;
-	}
-	public void setLazy(boolean isLazy) {
-		this.isLazy = isLazy;
-	}
 	public List getSearchGeneralInfo() {
 		return searchGeneralInfo;
 	}
@@ -88,6 +83,5 @@ public class AuditQTManagedBean extends BaseManagedBean {
 	public void setGroupSectionId(Long groupSectionId) {
 		this.groupSectionId = groupSectionId;
 	}
-	
 	
 }

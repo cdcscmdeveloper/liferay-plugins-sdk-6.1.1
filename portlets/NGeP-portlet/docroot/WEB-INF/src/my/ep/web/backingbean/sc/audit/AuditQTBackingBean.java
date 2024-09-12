@@ -25,7 +25,7 @@ import my.ep.constant.sc.QTAuditConstant;
 import my.ep.dto.sc.audit.AuditQTDTO;
 import my.ep.exception.EpException;
 import my.ep.util.SLAUtils;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -52,9 +52,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
-@ManagedBean(name = "AuditQTBackingBean")
+@ManagedBean(name = "auditQTBackingBean")
 @RequestScoped
-public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
+public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBean> {
 	/**
 	 * 
 	 */
@@ -66,8 +66,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 * The method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() {
-	}	
-	
+	}
+
 	public void redirectToAuditTrailsViews(String docType, Long docId) throws IOException, PortalException,
 			SystemException {
 		redirectToQtAuditTrailsViews(docType, docId);
@@ -349,8 +349,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 */
 	public void getAuditTrailDetailsForExlRpt(BigInteger docId) {
 
-		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTAuditTrailSO.class);
 
 		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, this.getManagedBean()
 				.getGroupSectionId());
@@ -366,8 +366,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 */
 	public void getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
 
-		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
+		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTAuditTrailSO.class);
 
 		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
 
@@ -377,11 +377,12 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	/**
 	 * #35500, Generate excel format.
 	 * 
-	 * @param List<AuditQTDTO>
+	 * @param List
+	 *            <AuditQTDTO>
 	 * @return void
 	 */
 	public void generateRptExcelForAuditTrailDetails(List<AuditQTDTO> auditQTList) {
-		
+
 		Sheet sheetRptAudit = null;
 		int rowIndex = 0;
 		String[] colHeaderDataTableRpt = null;
@@ -393,6 +394,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		Row titleRptRow = null;
 		Cell cellTitleRow = null;
 		Row titleHeaderRow = null;
+		int sheetHeader = 1;
+		int titleHeader = 2;
 
 		if (!auditQTList.isEmpty()) {
 			// Setting Report - Populate Table Header Cell Value
@@ -418,7 +421,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 			for (AuditQTDTO rpt : auditQTList) {
 				if (rpt.getGroupSectionId() != null && !rpt.getGroupSectionId().equals(currentGroupSecId)) {
-					sheetRptAudit = wb.createSheet(getCurrentReportTab(rpt.getGroupSectionId().longValue()));
+					sheetRptAudit = wb
+							.createSheet(getCurrentReportTab(rpt.getGroupSectionId().longValue(), sheetHeader));
 					colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType4;
 
 					cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
@@ -445,15 +449,18 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 					titleRptRow = sheetRptAudit.createRow(1); // Create Row
 					cellTitleRow = titleRptRow.createCell(1);// Create
 																// Cell(Column)
-					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-																					// Cell
-																					// Value
+					cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE);
+
+					titleRptRow = sheetRptAudit.createRow(3); // Create Row
+					cellTitleRow = titleRptRow.createCell(1);
+					cellTitleRow.setCellValue(getCurrentReportTab(rpt.getGroupSectionId().longValue(), titleHeader));
+
 					cellTitleRow.setCellStyle(cellStyleTitleRpt);
 					sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
 																						// Cell
 
 					// Create Row/Cell - Report Header Datatable
-					titleHeaderRow = sheetRptAudit.createRow(3);
+					titleHeaderRow = sheetRptAudit.createRow(4);
 					for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
 						Cell cell = titleHeaderRow.createCell(i + 1);
 						cell.setCellValue(colHeaderDataTableRpt[i]);
@@ -498,10 +505,10 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 					Cell cellDocNo = currRow.createCell(7);
 					cellDocNo.setCellValue(rpt.getDocNo());
 					cellDocNo.setCellStyle(cellStyleString);
-					
+
 					Cell cellDocStatus = currRow.createCell(8);
-					cellDocStatus.setCellValue(rpt.getDocStatus());				
-					cellDocStatus.setCellStyle(cellStyleString);					
+					cellDocStatus.setCellValue(rpt.getDocStatus());
+					cellDocStatus.setCellStyle(cellStyleString);
 
 					Cell cellFieldName = currRow.createCell(9);
 					cellFieldName.setCellValue(rpt.getFieldName());
@@ -527,14 +534,13 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		exportExcelReportAudit(wb);
 	}
 
-
 	/**
 	 * #35500, get Report Excel tab Name
 	 * 
 	 * @param groupSectionId
 	 * @return String
 	 */
-	private String getCurrentReportTab(Long groupSectionId) {
+	private String getCurrentReportTab(Long groupSectionId, Integer headerType) {
 
 		if (groupSectionId.equals(QTAuditConstant.AU_SECTION_GI)) {
 			return ReportExcelAuditConstant.TAB_GENERAL_INFORMATION;
@@ -547,19 +553,53 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_DO)) {
 			return ReportExcelAuditConstant.TAB_DESK_OFFICER;
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_SC)) {
-			return ReportExcelAuditConstant.TAB_SPECIFICATION_COMMITEE_APPOINTMENT;
+			if (headerType == 1) {
+				return ReportExcelAuditConstant.TAB_SPECIFICATION_COMMITEE_APPOINTMENT;
+			} else {
+				return ReportExcelAuditConstant.HEADER_SPECIFICATION_COMMITEE_APPOINTMENT;
+			}
+
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_EC)) {
-			return ReportExcelAuditConstant.TAB_EVALUATION_COMMITTEE_APPOINMENT;
+			if (headerType == 1) {
+				return ReportExcelAuditConstant.TAB_EVALUATION_COMMITTEE_APPOINMENT;
+			} else {
+				return ReportExcelAuditConstant.HEADER_EVALUATION_COMMITTEE_APPOINMENT;
+			}
+
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_OC)) {
-			return ReportExcelAuditConstant.TAB_OPENING_COMMITTEE_APPOINTMENT;
+			if (headerType == 1) {
+				return ReportExcelAuditConstant.TAB_OPENING_COMMITTEE_APPOINTMENT;
+			} else {
+				return ReportExcelAuditConstant.HEADER_TECHNICAL_COMMITTEE_APPOINTMENT;
+			}
+
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_TEC)) {
-			return ReportExcelAuditConstant.TAB_TECHNICAL_COMMITTEE_APPOINTMENT;
+			if (headerType == 1) {
+				return ReportExcelAuditConstant.TAB_TECHNICAL_COMMITTEE_APPOINTMENT;
+			} else {
+				return ReportExcelAuditConstant.HEADER_TECHNICAL_COMMITTEE_APPOINTMENT;
+			}
+
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_FEC)) {
-			return ReportExcelAuditConstant.TAB_FINANCIAL_COMMITTEE_APPOINTMENT;
+			if (headerType == 1) {
+				return ReportExcelAuditConstant.TAB_FINANCIAL_COMMITTEE_APPOINTMENT;
+			} else {
+				return ReportExcelAuditConstant.HEADER_FINANCIAL_COMMITTEE_APPOINTMENT;
+			}
+
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_QC)) {
-			return ReportExcelAuditConstant.TAB_QUOTATION_COMMITTEE_APPOINTMENT;
+			if (headerType == 1) {
+				return ReportExcelAuditConstant.TAB_QUOTATION_COMMITTEE_APPOINTMENT;
+			} else {
+				return ReportExcelAuditConstant.HEADER_QUOTATION_COMMITTEE_APPOINTMENT;
+			}
+
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_PB)) {
-			return ReportExcelAuditConstant.TAB_PROCUMENT_BOARD_APPOINTMENT;
+			if (headerType == 1) {
+				return ReportExcelAuditConstant.TAB_PROCUMENT_BOARD_APPOINTMENT;
+			} else {
+				return ReportExcelAuditConstant.HEADER_PROCUMENT_BOARD_APPOINTMENT;
+			}
 		}
 		return null;
 	}

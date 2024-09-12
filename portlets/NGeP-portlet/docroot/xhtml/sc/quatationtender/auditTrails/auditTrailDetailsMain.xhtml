@@ -17,7 +17,7 @@
 				<td>
 					<div class="BtnSpacing" style="display: inline-block; width: 100%">
 						<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-							action="#{AuditQTBackingBean.backAction}" />
+							action="#{auditQTBackingBean.backAction}" />
 					</div>
 				</td>
 				<td>
@@ -25,13 +25,13 @@
 						<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
 							ajax="false">
 							<p:fileDownload
-								value="#{AuditQTBackingBean.generateAllReport(AuditQTBackingBean.managedBean.qtId)}" />
+								value="#{auditQTBackingBean.generateAllReport(auditQTBackingBean.managedBean.qtId)}" />
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
 							ajax="false">
 							<p:fileDownload
-								value="#{AuditQTBackingBean.getAllAuditTrailDetailsForExlRpt(AuditQTBackingBean.managedBean.qtId)}" />
+								value="#{auditQTBackingBean.getAllAuditTrailDetailsForExlRpt(auditQTBackingBean.managedBean.qtId)}" />
 						</p:commandLink>
 						&#160;
 					</div>
@@ -53,119 +53,119 @@
 				<div align="right" style="width: 100%">
 					<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 						<p:fileDownload
-							value="#{AuditQTBackingBean.generateReport(AuditQTBackingBean.managedBean.qtId)}" />
+							value="#{auditQTBackingBean.generateReport(auditQTBackingBean.managedBean.qtId)}" />
 					</p:commandLink>
 					&#160;
 					<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
 						<p:fileDownload
-							value="#{AuditQTBackingBean.generateRptExcelForAuditTrailDetails(AuditQTBackingBean.managedBean.qtId)}" />
+							value="#{auditQTBackingBean.getAuditTrailDetailsForExlRpt(auditQTBackingBean.managedBean.qtId)}" />
 					</p:commandLink>
 					&#160;
 				</div>
 			</td>
 
 			<p:tabMenu id="tab"
-				activeIndex="#{AuditQTBackingBean.managedBean.activeIndex}"
+				activeIndex="#{auditQTBackingBean.managedBean.activeIndex}"
 				style="width: 100%;">
 				<p:menuitem value="#{lbl['lbl.audit.tab.general.information']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(0)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(0)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.brief.site.visit']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(1)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(1)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.tab.supplier.list']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(2)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(2)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.desk.officer.assistant']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(3)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(3)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.tab.desk.officer']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(4)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(4)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.spec.committee.appoint']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(5)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(5)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.eval.committee.appoint']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(6)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(6)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.tech.committee.appoint']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(7)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(7)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.opening.committee.appoint']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(8)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(8)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.quot.committee.appoint']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(9)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(9)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 				<p:menuitem value="#{lbl['lbl.audit.procurement.board.appoint']}"
-					actionListener="#{AuditQTBackingBean.onTabMenuChangeAction(10)}"
+					actionListener="#{auditQTBackingBean.onTabMenuChangeAction(10)}"
 					process="@form" update="@form" partialSubmit="true"
 					style="width:80%;">
 				</p:menuitem>
 			</p:tabMenu>
 
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '0'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '0'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/generalInformationTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '1'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '1'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/briefingOrSiteVisitTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '2'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '2'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/supplierListTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '3'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '3'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/deskOfficerAssistant.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '4'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '4'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/deskOfficerTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '5'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '5'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/specComAppointTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '6'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '6'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/evalComAppointTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '7'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '7'}">
 				<ui:include
-					src="/xhtml/sc/quatationtender/auditTrails/techComAppointTab.xtml" />
+					src="/xhtml/sc/quatationtender/auditTrails/techComAppointTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '8'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '8'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/openingComAppointTab.xhtml" />
 			</c:if>
-			<c:if test="#{AuditQTBackingBean.managedBean.activeIndex eq '9'}">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '9'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/quotationComAppointTab.xhtml" />
 			</c:if>
 			<c:if
-				test="#{AuditQTBackingBean.managedBean.activeIndex eq '10'}">
+				test="#{auditQTBackingBean.managedBean.activeIndex eq '10'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/procureBoardAppointTab.xhtml" />
 			</c:if>
