@@ -102,28 +102,38 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 	}
 
 	/**
-	 * @return
+	 * check has role auditor internal
+	 * 
+	 * @return boolean
 	 */
 	private boolean isRoleCodeAuditorInternal() {
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
 	}
 
 	/**
-	 * @return
+	 * 
+	 * check has role auditor general
+	 * 
+	 * @return boolean
 	 */
 	private boolean isRoleCodeAuditorGeneral() {
 		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
 	}
 
 	/**
-	 * @return
+	 * 
+	 * check has role ep admin
+	 * 
+	 * @return boolean
 	 */
 	private boolean isRoleCodeEPAdmin() {
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 
 	/**
-	 * @return
+	 * check has role bpk auditor
+	 * 
+	 * @return boolean
 	 */
 	private boolean isRoleCodeBPKAuditor() {
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value());
@@ -375,7 +385,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 		// Set column width
 		setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 		// Export to Excel
-		exportExcelReportAudit(wb,docId);
+		exportExcelReportAudit(wb, docId);
 	}
 
 	/**
@@ -452,8 +462,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 			wb.close();// Close Workbook
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogFulfilmentConst.FL_MODULE, SLALogFulfilmentConst.FL_AUDIT_BB,
-					docId.toString(), SLALogFulfilmentConst.FL_AUDIT_GENERATE_EXCEL,
-					getUserIdSessionFromLoginId(), e);
+					docId.toString(), SLALogFulfilmentConst.FL_AUDIT_GENERATE_EXCEL, getUserIdSessionFromLoginId(), e);
 		}
 	}
 }
