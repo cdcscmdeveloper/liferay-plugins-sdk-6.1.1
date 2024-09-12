@@ -2907,14 +2907,16 @@ public class SmApplicationBackingBean extends
 				setBusinessAndHadApprovedSpecialCatcode();
 			}
 			
-			if (outputPageType
+			//#34303 - Start
+			if ((outputPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)
 					|| outputPageType
-							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) {
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) && (getManagedBean().isSupplierUser())) {
 				SmApplicationUtil.getInstance()
-						.removeNotApplicableInformationBeforeSave(
-								getManagedBean());
+				.removeNotApplicableInformationBeforeSave(
+						getManagedBean());
 			}
+			//#34303 - End
 			
 			setSupplierChangeValues(currentPageType);
 			setBranchDisplayTable(); //29727 , #34135
@@ -9666,9 +9668,6 @@ public class SmApplicationBackingBean extends
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
-			// #34303 - start
-			SmApplicationUtil.setFacilityTypeNotInTheSameCategoryFacType(getManagedBean());
-			// #34303 - end
 			SmApplicationUtil.getInstance()
 					.removeNotApplicableInformationBeforeSave(getManagedBean());
 
