@@ -50,12 +50,13 @@ public class TemplateSpecBean implements Serializable {
 	/** The evaluatio stage active index. */
 	private int evaluatioStageActiveIndex;
 	// #30552 - start
-	private List<TplSpecAnswer> BackupspecAnswerList;
+	private List<TplSpecAnswer> backupSpecAnswerList; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 	//#30552 - end
 	private String answerRemove;//32453-start
 	private ScQtProposalChecklist qtProposalChecklist;
 	private ScQt qt;
 	private List<TplSpecAnswer> hideanswerList;//32453-End
+	private boolean wordBreakForQT;//#29007 Added Vinod
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -287,19 +288,21 @@ public class TemplateSpecBean implements Serializable {
 	}
 
 	// #30552 - start
+	//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 	/**
-	 * @return the backupspecAnswerList
+	 * @return the backupSpecAnswerList
 	 */
-	public List<TplSpecAnswer> getBackupspecAnswerList() {
-		return BackupspecAnswerList;
+	public List<TplSpecAnswer> getBackupSpecAnswerList() {
+		return backupSpecAnswerList;
 	}
 
 	/**
-	 * @param backupspecAnswerList the backupspecAnswerList to set
+	 * @param backupSpecAnswerList the backupSpecAnswerList to set
 	 */
-	public void setBackupspecAnswerList(List<TplSpecAnswer> backupspecAnswerList) {
-		BackupspecAnswerList = backupspecAnswerList;
+	public void setBackupSpecAnswerList(List<TplSpecAnswer> backupSpecAnswerList) {
+		this.backupSpecAnswerList = backupSpecAnswerList;
 	}
+	//[End] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 	// #30552 - end
 
 	/**
@@ -360,5 +363,13 @@ public class TemplateSpecBean implements Serializable {
 	}
 	//32453-End
 	
+	// #29007 Start Vinod
+	public boolean isWordBreakForQT() {
+		return wordBreakForQT;
+	}
+	public void setWordBreakForQT(boolean wordBreakForQT) {
+		this.wordBreakForQT = wordBreakForQT;
+	}
+	// #29007 End Vinod
 	
 }

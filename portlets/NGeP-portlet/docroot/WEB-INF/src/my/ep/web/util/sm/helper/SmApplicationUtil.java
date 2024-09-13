@@ -5074,7 +5074,8 @@ public class SmApplicationUtil {
 					&& rejectedAppl.getCreatedDate()
 							.after(resDto.getSmSupplier().getSmAppl()
 									.getCreatedDate())
-					&& rejectedAppl.getApplType().equals(applicationType)) {
+					&& rejectedAppl.getApplType().equals(applicationType)
+					&& isApplPORejectedAfterApprovelSV(rejectedAppl)) { //#34483
 				if (isRejectedApplValidForResubmission(rejectedAppl)) {
 					result = true;
 					throw new EpException(MessageConst.ERROR_722643);
@@ -5187,9 +5188,14 @@ public class SmApplicationUtil {
 
 	private static void validateDontHaveSuppAdmin(SmAppl appl) {
 		boolean valid = false;
+		//#34483 START
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplNo(appl.getApplNo());
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
 
-		if (appl.getSmPersonnels() != null) {
-			for (SmPersonnel per : appl.getSmPersonnels()) {
+		if (personnels != null) {
+			for (SmPersonnel per : personnels) { //#34483 END
 				if (!StringUtils.isBlank(per.getEpRole())
 						&& per.getPmUser() != null
 						&& per.getPmUser().getUserId() != null
@@ -12820,6 +12826,9 @@ public class SmApplicationUtil {
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 		//END 14530
+		//#34392 - start
+		bean.setInquirySiteVisitAfter(true);
+		//#34392 - end
 
 		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 				.getSmApplInquiries())) {
@@ -12854,6 +12863,15 @@ public class SmApplicationUtil {
 						}
 					}
 				}
+				
+				//#34392 - start
+				if (bean.getCurrentStatus()
+						.equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)
+						|| bean.getCurrentStatus()
+								.equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)) {
+					bean.setInquirySiteVisitAfter(false);
+				}
+				//#34392 - end
 
 			}
 			// if Supplier (Respond to PO inquiry)
@@ -12887,6 +12905,9 @@ public class SmApplicationUtil {
 			}
 		} else {
 			// initialize po inquiry
+			//#34392 - start
+			bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+			//#34392 - end
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 	}
@@ -13063,7 +13084,10 @@ public class SmApplicationUtil {
 				countAuthorizedPersonnel++;
 			}
 			//#29616 -start
-			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					"sm", ISupplierSearchSO.class);
+			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					|| supplierSearchSO.isSoftCeritificateActive(shr.getPmUser())) {
 				throw new EpException(MessageConst.ERROR_722685,
 						new String[] { shr.getName() });
 			}//#29616 -end
@@ -13260,7 +13284,12 @@ public class SmApplicationUtil {
 							&& (smPersonnel.getPmCountry() != null && smPersonnel.getPmCountry().getCountryId() != 131)
 							&& !(smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 						retVal = false;
-					}
+					}//29582 strat
+					if (smPersonnel.getIdentificationType() != null
+							&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel
+									.getIdentificationType().getParameterCode())) {
+						retVal = false;
+					}//29582 end
 				}
 				// #28831 - start
 			}
@@ -14147,7 +14176,7 @@ public class SmApplicationUtil {
 			if (item == null) {
 				item = new SelectItem();
 				item.setLabel(eduLevel.getCodeName());
-				item.setValue(eduLevel.getParameterDescId());
+				item.setValue(eduLevel.getPmParameter().getParameterId()); //#36360
 				eduLevelItems.add(item);
 			}
 		}
@@ -15482,14 +15511,8 @@ public class SmApplicationUtil {
 
 		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
 			for (SmPersonnel per : latestActivePersonnels) {
-				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					sb.append(++i + ". ");
-					sb.append(per.getName());
-					sb.append(" ");
-					validPersonnels = true;
-				}
-				if (per.getSoftcertFlg() != DbValueConst.RECORD_STATUS_ACTIVE 
-						&& supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE 
+						 || supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
 					sb.append(++i + ". ");
 					sb.append(per.getName());
 					sb.append(" ");
@@ -15596,4 +15619,34 @@ public class SmApplicationUtil {
 		managedBean.setAllowedToSiteVisit(allowSiteVisit);
 	}
 	//#31043 END
+	//#34483 START
+	public static boolean isApplPORejectedAfterApprovelSV(SmAppl appl){
+		boolean isRejected = false;
+		boolean isHasBasic = false;
+		if(appl.getPmStatus().getStatusId() == 20112){
+			for(SmWorkflowStatus smWorkflowStatus : appl.getSmWorkflowStatuses()){
+				if(smWorkflowStatus.getPmStatus().getStatusId() == 20116 || smWorkflowStatus.getPmStatus().getStatusId() == 20117){
+					isRejected = true;
+					break;
+				}
+			}
+		}
+		
+		for(SmAppl previousSmAppl : appl.getSmSupplier().getSmAppls()){
+			if(previousSmAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)){
+				isHasBasic = true;
+				break;
+			}
+		}
+		
+		if(appl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && isRejected && !isHasBasic){
+			return false;
+		}else if((appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ 
+			return false;
+		}
+		
+		return true;
+	}
+	//#34483 END
 }

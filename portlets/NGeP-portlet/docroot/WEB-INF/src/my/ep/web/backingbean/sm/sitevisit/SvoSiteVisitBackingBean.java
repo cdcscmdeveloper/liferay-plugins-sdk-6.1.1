@@ -2945,7 +2945,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		return url;
 	}
 	// #28175 start
-	public String getSmCategoryL3(Long categoryL3Id, Long applId) { 
+	/**
+	 * Retrieves the name of a Level 3 category based on the provided category ID and application ID.
+	 * 
+	 * This method constructs a supplier search request DTO with the given application ID and category ID,
+	 * then uses the supplier search service to retrieve a list of supplier categories. It then iterates
+	 * over the list to find the category with the matching ID and returns its name.
+	 * 
+	 * @param categoryL3Id the ID of the Level 3 category
+	 * @param applId the ID of the application
+	 * @return the name of the Level 3 category
+	 */
+	public String getSmCategoryL3(Long categoryL3Id, Long applId) {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setApplId(applId);
 		reqDTO.setCategoryId(categoryL3Id);
@@ -2953,9 +2964,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				reqDTO);
 		List<SmSupplierCategory> catLs = resDTO.getSmSupplierCategoryList();
 		String categoryL3Name = "";
+		// Max Loop 30 records
 		for (SmSupplierCategory cat : catLs) {
 			if (cat.getPmCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
 				categoryL3Name = cat.getCategoryL3Name();
+				break;
 			}
 		}
 		return categoryL3Name;

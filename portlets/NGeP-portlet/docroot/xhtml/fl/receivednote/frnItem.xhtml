@@ -246,96 +246,106 @@
 			</p:commandButton>
 		</div>
 		 </p:dialog>
-		 
-		 <!-- 28855 Start -->
-		 <p:dialog id="frnItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
+
+	<!-- 28855 Start -->
+	<p:dialog id="frnItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
 		widgetVar="frnItemInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" height="400" resizable="false" style="overflow:scroll">
+		modal="true" width="900" height="400" resizable="false"
+		style="overflow:scroll">
 		<table style="width: 100%">
 			<tr>
-				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
-				<td><p:inputText disabled="true" size="35" style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
-						value="#{receivedNoteBackingBean.managedBean.itemName}"	/>
-					<h:outputText style="float:left;" rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
-						value="#{receivedNoteBackingBean.managedBean.itemName}"	/>
-				</td>
-						
-			</tr>		
-			<tr>
-				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true"  style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" escape="false" 
-						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"
-						size="35"/>
-						<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.tooltip']}" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/>
-				</td>
-			</tr>			
-			<tr>
-				<td valign="top" width="25%"><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']} :&#160;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true" style="float:left;" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
-						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"
-						size="35"/>
-						<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"/>
-				</td>
+				<td valign="top" width="25%"><p:outputLabel
+						value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
+				<td><p:inputText disabled="true" size="35" style="float:left;"
+						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.itemName}" /> <h:outputText
+						style="float:left;"
+						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.itemName}" /></td>
+
 			</tr>
-			</table> 
-			
-			<p:dataTable id="specificationDt" var="specificationList"
-			value="#{receivedNoteBackingBean.managedBean.itemSpecList}" width="100%" >
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.offer']} :&#160;"
+						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
+				<td><p:inputText disabled="true" style="float:left;"
+						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+						escape="false"
+						value="#{receivedNoteBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.supplierOffer}"
+						size="35" /> <ac:iconTooltip
+						value="#{lbl['lbl.fl.supp.offer.tooltip']}"
+						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
+			</tr>
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel
+						value="#{lbl['lbl.fl.new.supp.offer']} :&#160;"
+						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
+				<td><p:inputText disabled="true" style="float:left;"
+						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+						value="#{receivedNoteBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.newOfferedSpec}"
+						size="35" /> <ac:iconTooltip
+						value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
+						rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" /></td>
+			</tr>
+		</table>
+
+		<p:dataTable id="specificationDt" var="specificationList"
+			value="#{receivedNoteBackingBean.managedBean.itemSpecList}"
+			width="100%">
 			<ac:paginator for="specificationDt" />
-			
-			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
-			rendered="#{receivedNoteBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea disabled="true" rendered="#{receivedNoteBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="135" rows="2" autoResize="false" style="width: 100% !important;"/>
+
+			<p:column headerText="#{lbl['lbl.fl.spec']}"
+				style="text-align:center"
+				rendered="#{receivedNoteBackingBean.managedBean.dpFlag}">
+				<p:inputTextarea disabled="true"
+					rendered="#{receivedNoteBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" value="#{specificationList.itemSpec}"
+					cols="135" rows="2" autoResize="false"
+					style="width: 100% !important;" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
-			rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="41" rows="10" id="itemSpecification"
-						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
-						styleClass="colFloatLeft"
-						autoResize="false"
-						style="width: 96% !important; margin-left:0px;" 
-						disabled="true"
-						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
+
+			<p:column headerText="#{lbl['lbl.fl.spec']}"
+				style="text-align:center"
+				rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
+				<p:inputTextarea cols="41" rows="10" id="itemSpecification"
+					rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" autoResize="false"
+					style="width: 96% !important; margin-left:0px;" disabled="true"
+					value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" />
 			</p:column>
-			<p:column rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">	
+			<p:column rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
 				<f:facet name="header" style="text-align:center">
-					<h:outputText value="#{lbl['lbl.fl.supp.offer']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}"/>
+					<h:outputText value="#{lbl['lbl.fl.supp.offer']}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}" />
 				</f:facet>
-			<p:inputTextarea cols="41" rows="10" id="supplierOffer"
-						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
-						styleClass="colFloatLeft"
-						autoResize="false"
-						style="width: 96% !important; margin-left:0px;" 
-						disabled="true"
-						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
+				<p:inputTextarea cols="41" rows="10" id="supplierOffer"
+					rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" autoResize="false"
+					style="width: 96% !important; margin-left:0px;" disabled="true"
+					value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" />
 			</p:column>
-			<p:column rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">	
+			<p:column rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}">
 				<f:facet name="header" style="text-align:center">
-					<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"/>
+					<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" />
 				</f:facet>
-			<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
-						rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
-						styleClass="colFloatLeft"
-						autoResize="false"
-						style="width: 96% !important; margin-left:0px;" 
-						disabled="true"
-						value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" /> 
+				<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
+					rendered="#{!receivedNoteBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" autoResize="false"
+					style="width: 96% !important; margin-left:0px;" disabled="true"
+					value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" />
 			</p:column>
-				
-			</p:dataTable>
-			
-			<p:spacer height="2px"></p:spacer>
-			<div style="width: 100%; text-align: right">
-				<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
-					oncomplete="frnItemInfo.hide()" partialSubmit="true">
-				</p:commandButton>
-			</div> 		
-			
-		</p:dialog>
-		<!-- 28855 End -->
-		
+
+		</p:dataTable>
+
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+				oncomplete="frnItemInfo.hide()" partialSubmit="true">
+			</p:commandButton>
+		</div>
+
+	</p:dialog>
+	<!-- 28855 End -->
+
 </ui:composition>

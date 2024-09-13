@@ -1850,6 +1850,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
 	private ScQtEpvSupplierResponse suppResp;//#21692
+	private boolean chmnFinalizationRejectEpv;//#21692
 				
 	// #29521 - end
 	//Bug #35061 - asyrafhaziq 
@@ -1868,6 +1869,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	//#29732
 	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11882,6 +11884,30 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
 		this.isFromSubmitCatChange = isFromSubmitCatChange;
 	}
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
+
+	//#21692 - Start
+	public boolean isChmnFinalizationRejectEpv() {
+		return chmnFinalizationRejectEpv;
+	}
+
+	public void setChmnFinalizationRejectEpv(boolean chmnFinalizationRejectEpv) {
+		this.chmnFinalizationRejectEpv = chmnFinalizationRejectEpv;
+	}
+	//#21692 - End
 }
 
 // ***25201
