@@ -10268,15 +10268,7 @@ public class SmApplicationBackingBean extends
 		return submitPOorApproverReviewToBPM(decision);
 
 	}
-	
-	//#31386 - START
-	public String finalCancelDecisionApproveOrRejectAppln(String dialog,
-			String decision) {
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
-		return submitPOorApproverReviewToBPM(decision);
-	}
-	//31386 - END
-	
+
 	/**
 	 * Final decision of PO on delete pending appln
 	 * 
@@ -16236,6 +16228,14 @@ public class SmApplicationBackingBean extends
 	}
 	//#35145 - end
 	
+	//#31386 - START
+	public String finalCancelDecisionApproveOrRejectAppln(String dialog,
+			String decision) {
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		return submitPOorApproverReviewToBPM(decision);
+	}
+	//31386 - END
+	
 	//30713 - Start
 	private SmWorkflowStatus rejectedApplExist(Long supplierId){
 		SmWorkflowStatus wf = null;
@@ -16261,6 +16261,7 @@ public class SmApplicationBackingBean extends
 		return wf;
 	}
 	//30713 - End
+	
 	//#31043 START
 	private boolean shouldSetApproverVerifiedFlg(SmApplSupportDoc applSuppDoc) {
 	    return applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null;
@@ -16301,5 +16302,5 @@ public class SmApplicationBackingBean extends
 
 	    return allDocsMap;
 	}
-		//#31043 END
+	//#31043 END
 }

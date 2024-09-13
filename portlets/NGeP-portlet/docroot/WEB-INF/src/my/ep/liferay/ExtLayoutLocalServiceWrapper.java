@@ -110,7 +110,7 @@ public class ExtLayoutLocalServiceWrapper extends LayoutLocalServiceWrapper {
 			while (iter.hasNext()) {
 				Layout layout = iter.next();
 				
-				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL) | layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) || layout.getFriendlyURL().equals(CANCEL_MOF_URL)) {
+				if(layout.getFriendlyURL().equals(REGISTER_MOF_URL) || layout.getFriendlyURL().equals(RENEW_MOF_URL) || layout.getFriendlyURL().equals(BASIC_ACCOUNT_STATUS_URL) || layout.getFriendlyURL().equals(CANCEL_MOF_URL)) {
 					
 					if(layout.getFriendlyURL().equals(REGISTER_MOF_URL)  && validBasicToRenewMOF == SupplierManagementConst.MOF_CAN_RENEW) {
 						log.info("22 removing register MOF");
