@@ -33,7 +33,7 @@ var gpki = {};
     hostOTP = args.hostOTP;
     hostBroker = args.hostBroker;
     this.requestMedium();
-  }
+  };
 
   this.requestMedium = function () {
     request_mediumList(nric, appCode, modeUsed);
@@ -92,19 +92,19 @@ function parseResultMedium(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       const response = obj.response;
-      var mediumTypeId = 0;
+      var mediumTypeId;
       if (obj.status) {
         var mediumArr = jQuery.parseJSON(response);
-        var mediumTypeId = mediumArr[0].id;
-        var id = -1;
+        mediumTypeId = mediumArr[0].id;
+        var id;
         //pick roaming otp over token
         for (var i = 0; i < mediumArr.length; i++) {
           id = parseInt(mediumArr[i].id, 10);
           if (id === 5) {
             mediumTypeId = 5;
             break;
-          } else if (id === 4 && mediumTypeId != 4) {
-            id = 4;
+          } else if (id === 4 && mediumTypeId !== 4) {
+        	mediumTypeId = 4;
           }
         }
         setMediumType([{ name: 'message', value: obj.message },
@@ -112,7 +112,7 @@ function parseResultMedium(msg) {
                        { name: 'response', value: response }]);
         if (mediumTypeId === 5) {
           gpki.requestOtp();
-        } else if (mediumTypeId != 4) {
+        } else if (mediumTypeId !== 4) {
           gpki_dlg.hide();
           gpki_dlg2.show();
           showError(obj.status, "Medium Token atau Roaming OTP sahaja");
@@ -139,7 +139,7 @@ function parseTxResultRequestOTP(msg) {
         gpki.setNonce(response.nonce);
         alert("OTP code: " + response.otp);	//alert - DO NOT MERGE TO PROD!
       } else {
-        showError(obj.status, obj.message)
+        showError(obj.status, obj.message);
       }
     });
 }
@@ -173,6 +173,7 @@ function parseTxResultSigningRoaming(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       if (obj.status) {
+    	clearTimeout(otpTimeoutId);
         const response = jQuery.parseJSON(obj.response);
         postSignOTP([{ name: 'message', value: obj.message },
 			         { name: 'subjectDN', value: response.subject_dn },
