@@ -53,7 +53,6 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null,
 					"AuditSupplierManagementSO", userId, ex);
 		}
-
 	}
 
 	private String getRoleCode() {
