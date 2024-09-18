@@ -408,7 +408,7 @@ public class PpCommonUtil implements Serializable{
 		return pmUsers;
 	}
 	
-	// #36107 - Start
+	// #36107: fixing SonarLint issue - Start
 	/**
 	 * retrieve user role by user id and org id
 	 * 
@@ -823,8 +823,7 @@ public class PpCommonUtil implements Serializable{
 		return procurementCatTypeList;
 	}
 	
-	public static List<PmProcurementCatType> retrieveProcurementTypeListClone(
-			String langugageCode,Long procurementCatId) {
+	public static List<PmProcurementCatType> retrieveProcurementTypeListClone(String langugageCode, Long procurementCatId) {
 		log.info("retrieveProcurementTypeListClone");
 		List<PmProcurementCatType> procurementCatTypeList = new ArrayList<PmProcurementCatType>();
 		String locale = "";
@@ -833,23 +832,19 @@ public class PpCommonUtil implements Serializable{
 		} else {
 			locale = langugageCode;
 		}
-		
+
 		IProcurementCatTypeSO reqSO = null;
 		try {
 			ProcurementCatTypeReqDTO reqDTO = new ProcurementCatTypeReqDTO();
 			ProcurementCatTypeResDTO resDTO = new ProcurementCatTypeResDTO();
-			if(procurementCatId != null){
+			if (procurementCatId != null) {
 				reqDTO.setProcurementCatId(procurementCatId);
 			}
 			reqDTO.setLanguageCode(locale);
-			reqSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT,
-					IProcurementCatTypeSO.class);
-			resDTO = reqSO
-					.retrieveDistinctProcurementTypeListByProcurementCatClone(reqDTO);
+			reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProcurementCatTypeSO.class);
+			resDTO = reqSO.retrieveDistinctProcurementTypeListByProcurementCatClone(reqDTO);
 
-			if (resDTO.isSuccessful()
-					&& resDTO.getProcurementCatTypeList() != null) {
+			if (resDTO.isSuccessful() && resDTO.getProcurementCatTypeList() != null) {
 				procurementCatTypeList = resDTO.getProcurementCatTypeList();
 			}
 		} finally {
@@ -872,10 +867,8 @@ public class PpCommonUtil implements Serializable{
 			if (orgProfileId != null) {
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setOrgProfileId(orgProfileId);
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject("pm", IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileByProfileId(reqDTO);
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
 				// if(resDTO.isSuccessful()){
 				profile = resDTO.getPmOrgProfile();
 				// }
@@ -895,8 +888,7 @@ public class PpCommonUtil implements Serializable{
 	 * @param amountTwo
 	 * @return BigDecimal
 	 */
-	public static BigDecimal addBigDecimalNullable(BigDecimal amountOne,
-			BigDecimal amountTwo) {
+	public static BigDecimal addBigDecimalNullable(BigDecimal amountOne, BigDecimal amountTwo) {
 		BigDecimal amtOne = amountOne != null ? amountOne : new BigDecimal(0);
 		BigDecimal amtTwo = amountTwo != null ? amountTwo : new BigDecimal(0);
 		return amtOne.add(amtTwo);
@@ -909,8 +901,7 @@ public class PpCommonUtil implements Serializable{
 	 * @param amountTwo
 	 * @return BigDecimal
 	 */
-	public static BigDecimal substractBigDecimalNullable(BigDecimal amountOne,
-			BigDecimal amountTwo) {
+	public static BigDecimal substractBigDecimalNullable(BigDecimal amountOne, BigDecimal amountTwo) {
 		BigDecimal amtOne = amountOne != null ? amountOne : new BigDecimal(0);
 		BigDecimal amtTwo = amountTwo != null ? amountTwo : new BigDecimal(0);
 		return amtOne.subtract(amtTwo);
@@ -950,8 +941,7 @@ public class PpCommonUtil implements Serializable{
 	 */
 	public static List<SelectItem> calendarMonths() {
 		List<SelectItem> months = new ArrayList<SelectItem>();
-		String[] shortMonths = Arrays.copyOf(DateFormatSymbols.getInstance()
-				.getShortMonths(), 12);
+		String[] shortMonths = Arrays.copyOf(DateFormatSymbols.getInstance().getShortMonths(), 12);
 		Integer i = 0;
 		for (String month : shortMonths) {
 			months.add(new SelectItem(i, month));
@@ -1078,62 +1068,56 @@ public class PpCommonUtil implements Serializable{
 	 * @param groupOrgType
 	 * @return List<PmOrgProfile>
 	 */
-	public static List<PmOrgProfile> retrieveOrgProfileListFromGroupOrgType(
-			Long orgProfileId, String parentOrgType, String groupOrgType) {
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
-				.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
+	public static List<PmOrgProfile> retrieveOrgProfileListFromGroupOrgType(Long orgProfileId, String parentOrgType, String groupOrgType) {
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		reqDTO.setParentOrgType(parentOrgType);
 		reqDTO.setGroupOrgType(groupOrgType);
-		OrgProfileResDTO resDTO = profileSO
-				.retrieveOrgProfileListFromGroupOrgType(reqDTO);
+		OrgProfileResDTO resDTO = profileSO.retrieveOrgProfileListFromGroupOrgType(reqDTO);
 		return resDTO.getOrgProfileList();
 	}
 	
 	//#24975
-		/**
-		 * Retrieve update reason list by docId and docType
-		 * 
-		 * @param docId
-		 * @param docType
-		 * @return List<PpUpdateReason>
-		 */
-		public static List<PpUpdateReason> retrieveUpdateReason(Long docId,
-				String docType) {
-			log.info("retrieveUpdateReason - Start");
-			List<PpUpdateReason> updateReasons = null;
-			ProcurementPlanReqDTO reqDTO = null;
-			IProcurementPlanSO reqSO = null;
-			ProcurementPlanResDTO resDTO = null;
+	/**
+	 * Retrieve update reason list by docId and docType
+	 * 
+	 * @param docId
+	 * @param docType
+	 * @return List<PpUpdateReason>
+	 */
+	public static List<PpUpdateReason> retrieveUpdateReason(Long docId,
+			String docType) {
+		log.info("retrieveUpdateReason - Start");
+		List<PpUpdateReason> updateReasons = null;
+		ProcurementPlanReqDTO reqDTO = null;
+		IProcurementPlanSO reqSO = null;
+		ProcurementPlanResDTO resDTO = null;
 
-			try {
-				reqDTO = new ProcurementPlanReqDTO();
-				resDTO = new ProcurementPlanResDTO();
-				reqDTO.setDocId(docId);
-				reqDTO.setDocType(docType);
-				reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN,
-								IProcurementPlanSO.class);
-				resDTO = reqSO.retrieveUpdateReason(reqDTO);
-				if (resDTO.isSuccessful()) {
-					updateReasons = resDTO.getUpdateReasonList();
-				}
-			} finally {
-				reqSO = null;
+		try {
+			reqDTO = new ProcurementPlanReqDTO();
+			resDTO = new ProcurementPlanResDTO();
+			reqDTO.setDocId(docId);
+			reqDTO.setDocType(docType);
+			reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN,
+							IProcurementPlanSO.class);
+			resDTO = reqSO.retrieveUpdateReason(reqDTO);
+			if (resDTO.isSuccessful()) {
+				updateReasons = resDTO.getUpdateReasonList();
 			}
-			log.info("retrieveUpateReason - End");
-			return updateReasons;
+		} finally {
+			reqSO = null;
 		}
+		log.info("retrieveUpateReason - End");
+		return updateReasons;
+	}
 	
 	//200911@akmal - Enhancement27624 - Start
-		/**
-		 * Check if user role contains related role in passed list  
-		 * 
-		 */
-		
+	/**
+	 * Check if user role contains related role in passed list  
+	 * 
+	 */		
 	public static boolean isUserHasRole(List<RoleCode> roles){
 		FacesScopes facescope = new FacesScopes();
 			

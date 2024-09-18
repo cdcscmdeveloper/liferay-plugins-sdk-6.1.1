@@ -315,12 +315,8 @@ public class ViewApplHistoryBackingBean extends
 				//END 27951
 			}
 		} else {			
-			if (SmApplicationUtil
-					.isRejectedApplValidForResubmission(getManagedBean()
-							.getSmAppl())) {
-				log.info("redirectToReapplyNewAppl - START appl_no: "+ getManagedBean().getSmAppl().getApplNo());
+			if (SmApplicationUtil.isRejectedApplValidForResubmission(getManagedBean().getSmAppl())) {
 				redirectToReapplyNewAppl(true); //29956
-				log.info("redirectToReapplyNewAppl - END appl_no: "+ getManagedBean().getSmAppl().getApplNo());
 			} else {
 				//32627 START
 				SmAppl currAppl = this.getManagedBean().getSmAppl();
@@ -337,12 +333,10 @@ public class ViewApplHistoryBackingBean extends
 						}
 					}
 				}
-				if(!resubmit){
-					throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.approvedApplicationCantProceed", null));
-				}else{
-					throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.resubmitExpired", null));
+				if (!resubmit) {
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.approvedApplicationCantProceed", null));
+				} else {
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.resubmitExpired", null));
 				}
 				//32627 END
 			}
