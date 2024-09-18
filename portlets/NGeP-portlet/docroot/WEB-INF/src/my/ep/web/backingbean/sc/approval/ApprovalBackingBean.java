@@ -1139,7 +1139,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			dateMandatoryMessage("lbl.sc.qt.proposal.approval.date.chairperson.finalization");
 		}
 
-		if (enableDateMOF && !getManagedBean().isChmnFinalizationRejectEpv() && scQt.getMofDate() == null) {
+		if (enableDateMOF && !getManagedBean().isChmnFinalizationRejectEPV() && scQt.getMofDate() == null) {
 			dateMandatoryMessage("lbl.sc.qt.proposal.approval.date.mof");
 		}
 
@@ -2298,7 +2298,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				requestdetails
 						.setDecisionCertPBM(new PmParameter());
-				this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.FALSE);//#21692 show MOF Date if Chairman hasnt decide EPV (after Proposal Validity Ended)
+				this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//#21692 show MOF Date if Chairman hasnt decide EPV (after Proposal Validity Ended)
 			}
 			//#21692 - start
 			if (requestdetails.getDecisionCertPBM().getParameterCode() != null) {
@@ -2306,10 +2306,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					parameterReqDTO.setParameterId(ParameterConst.TR3_REJECT);
 					requestdetails
 							.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
-					this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
+					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
 					this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 				} else {
-					this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.FALSE);//#21692 show MOF Date if Chairman Accept EPV (after Proposal Validity Ended)
+					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//#21692 show MOF Date if Chairman Accept EPV (after Proposal Validity Ended)
 				}
 			}
 			//#21692 - end
@@ -3726,11 +3726,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM() != null
 					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode() != null
 					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
-				this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.TRUE);
+				this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);
 				this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 			}
 		}
+		//#21692 - End
 		
+		//#21692 - Start
 		/**
 		 * Send notification after Submission
 		 * Notification of Decision on the Extension of Validity Period for Tender
