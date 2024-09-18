@@ -2148,7 +2148,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
-					this.getManagedBean().setSmSuppOwners(resDTO.getSmSupp().getSmSupplierOwners());
+					// start #29956
+					if (businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(), this
+							.getManagedBean().getSmSupp().getBusinessType())) {
+						this.getManagedBean().getSmSuppOwners().clear(); // #29956
+					}
+					// end #29956
 					// for view owner
 					if(this.getManagedBean().getSmSupp().getSmAppl().isApplValidWithSsm()){
 						this.getManagedBean().setShowOwnerPersonnel(true);
@@ -2158,6 +2163,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 									personnel.setPmCountry(defaultCountry);
 								}
+								// start #29956
+								if (!resDTO.getSmSupp().getSmSupplierOwners().isEmpty()
+										&& businessTypeTovalidateWithSSM(this.getManagedBean().getSmSupp().getRegNo(),
+												this.getManagedBean().getSmSupp().getBusinessType())) {
+									for (SmSupplierOwner smSuppOwner : resDTO.getSmSupp().getSmSupplierOwners()) {
+										if (personnel.getName().equals(smSuppOwner.getOwnerName())) {
+											this.getManagedBean().getSmSuppOwners().add(smSuppOwner);
+										}
+									}
+								}
+								// end #29956
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
 						}
@@ -2252,26 +2268,35 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE		
 						//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+						//start #29956
+						boolean showPopupDowngradeSSM = displayPopupDowngradeSSMOwner(getManagedBean().getSmSupp().getSmAppl(),ssmResDTO);
+
+						if(showPopupDowngradeSSM) {
+							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
+							fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
+							return;								
+						}
+						//end #29956
 						if(personnelsRole != null && personnelsRole.isEmpty()){
 							for(SmPersonnel personnel :  this.getManagedBean().getSmAppl().getSmPersonnels()){
 								//#29114, CR 27382: Static Code Analysis Start
-								if ((personnel.isEquityOwner() || personnel.isDirector()) && personnel.getEpRole() != null) {
+								if (personnel.isEquityOwner() || personnel.isDirector()) { //29956
 									//if(personnel.getEpRole() != null){
 										SmPersonnel personnelSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelOwners(),"identificationNo");
 										SmPersonnel personnelDirectorSSM = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(),ssmResDTO.getSmPersonnelDirector(),"identificationNo");
 										if(personnelDirectorSSM == null && personnelSSM == null){
-											personnelsRole.add(personnel);
+											if(isMofAccEffDatePassedCurrDate(this.getManagedBean().getSmSupp())){
+												if(personnel.getEpRole() !=  null && my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES.contains(personnel.getEpRole())){
+													personnelsRole.add(personnel);
+												}
+											} else {
+												personnelsRole.add(personnel);
+											}
+											
 										}
 									//}
 								}
 								//#29114, CR 27382: Static Code Analysis End
-							}
-							
-							if(personnelsRole != null && !personnelsRole.isEmpty()) {
-								getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupp());	
-								RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-								fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceTermAndCond.xhtml");
-								return;								
 							}
 						}else{
 							//set latest role to personnel
@@ -2351,8 +2376,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 						//END 27488
 						this.getManagedBean().getSmSupp().getSmAppl().setApplValidWithSsm(true);
-						//set establish date
-						this.getManagedBean().getSmAppl().getSmCompanyBasic().setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						//start - #29956
+						if (ssmResDTO.getSmCompanyBasic() != null) {
+							// set establish date
+							this.getManagedBean().getSmAppl().getSmCompanyBasic()
+									.setEstablishDate(ssmResDTO.getSmCompanyBasic().getEstablishDate());
+						}
+						//end - #29956
 						
 						//CHECK EQUITY OWNER EXIT IN SSM TO DISABLE CHECKBOX
 						int i = 0;

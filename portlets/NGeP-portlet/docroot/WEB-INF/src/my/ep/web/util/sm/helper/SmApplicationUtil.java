@@ -4364,7 +4364,7 @@ public class SmApplicationUtil {
 						}
 						if (applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							if (diffDays > 90) {
+							if (diffDays > 180) { //#36391
 								result = true;
 								throw new EpException(MessageConst.ERROR_722501);
 							} else if (diffDays < -365) {
@@ -6735,7 +6735,7 @@ public class SmApplicationUtil {
 		managedBean.getAddrSameAsItems().add(item);
 		item = new SelectItem();
 		item.setValue("HQ");
-		item.setLabel(SmCommonUtil.getMessage("lbl.sm.facility.type._B", null));
+		item.setLabel(SmCommonUtil.getMessage("lbl.sm.facility.type.premise", null)); //#34711
 		managedBean.getAddrSameAsItems().add(item);
 		if (!EntityHelper.isCollectionEmpty(managedBean.getSmAppl()
 				.getSmSupplierBranches())) {
@@ -8616,9 +8616,14 @@ public class SmApplicationUtil {
 					// if dont have prev approved directly set softcert to
 					// pending request and contract to 0
 					if (prevPersonnel == null) {
-						currPersonnel
-								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-						currPersonnel.setContractSignerFlg(0);
+						//#33129 - START 
+						//maintain softcert 1 if the personnel was an admin previously
+						if(currPersonnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_ISSUED){
+							currPersonnel.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+							currPersonnel.setContractSignerFlg(0);
+						}
+						//#33129 - END
+					
 					}
 					// if have prev approved
 					else {

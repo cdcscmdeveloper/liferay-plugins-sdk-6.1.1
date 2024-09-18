@@ -1166,9 +1166,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							int count = SmServiceLookup.getPersonnelSO()
 									.countPersonnelSoftcertBill(reqDTO);
 
-							if (count > 0) {
+							//#34964 - start
+							int countBillDtl = SmServiceLookup.getPersonnelSO()
+									.countPersonnelSoftcertBillDtl(reqDTO);
+
+							if (count > 0 && countBillDtl == 0) {
 								smPersonnel.setDisableRowSelection(true);
 							}
+							//#34964 - end
 						}
 					}
 				}

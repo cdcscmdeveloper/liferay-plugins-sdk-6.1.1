@@ -1529,7 +1529,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QUOTATION_THRESHOLD);
-			reqDTO.setCompareValue(estimatedAmount.toString());
+			reqDTO.setCompareValue(estimatedAmount != null ? estimatedAmount.toString() : "0");	// Bug #36072@Syazani 22/07/2024
 			List<String> ruleValueStrList = ruleSO
 					.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
 					.getRuleValueStrList();
@@ -2588,8 +2588,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		if (null != clsDate) {
 			clsDate = DateUtils.setDefaultDateTime(clsDate);
-			proposalValidityEndDate = DateUtils.addDays(clsDate,
-					scQt.getQtValidityPeriod());
+			// 25635&33724-proposal validity days null -start-  Bug #36221
+			if (null != scQt.getQtValidityPeriod()) {
+				proposalValidityEndDate = DateUtils.addDays(clsDate,
+						scQt.getQtValidityPeriod());
+			} // 25635&33724-proposal validity days null Bug #36221
 		}
 		scQt.setProposalValidityEndDate(proposalValidityEndDate);
 	}
