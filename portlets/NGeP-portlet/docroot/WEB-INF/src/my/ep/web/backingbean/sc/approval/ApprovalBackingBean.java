@@ -1175,6 +1175,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				new FacesScopes().getUserLocale())});//#21692
 	}
 
+	//#21692 - Start
 	public void submitAction() {
 		log.info("Submit proposal validity Period (Days) extension");
 
@@ -1244,6 +1245,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 		}
 	}
+	//#21692 - End
 	
 	/**
 	 * Submit Approval Details. Event handle to submit data for bpm.
@@ -3731,6 +3733,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		/**
 		 * Send notification after Submission
+		 * Notification of Decision on the Extension of Validity Period for Tender
 		 * 
 		 * @param approvalRequest
 		 */
