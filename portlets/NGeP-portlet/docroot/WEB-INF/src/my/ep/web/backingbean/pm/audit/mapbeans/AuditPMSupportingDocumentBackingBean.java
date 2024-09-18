@@ -794,6 +794,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private AuditPMReqDTO deleted(SupportDocumentManagedBean managedBeans, String roleCode) {
 		AuditPMSupportingDocumentDeletedBackingBean deletedMapbean = new AuditPMSupportingDocumentDeletedBackingBean();
+		System.out.println("getDeleteRestrictions().size() ::::::: " + managedBeans.getDeleteRestrictions().size());
 		if (null != managedBeans.getDeleteAppTypeRestrictionsAuditList()
 				&& !managedBeans.getDeleteAppTypeRestrictionsAuditList().isEmpty()) {
 			objList.addAll(deletedMapbean.deleteAppType(managedBeans, roleCode));
