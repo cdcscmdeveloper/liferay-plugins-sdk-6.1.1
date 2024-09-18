@@ -126,7 +126,7 @@
 				</p:commandLink>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;word-break:break-all;"><!-- #29007 Added word-break Vinod -->
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.itemName}"
 				rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}"/> <ui:remove>Bug #34757</ui:remove>
 				<p:spacer width="10" />

@@ -1453,7 +1453,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 	    Boolean sqExpired = false;
 	    
 	    if(docId != null){
-	    	documentId = new Long(docId);
+	    	documentId = Long.parseLong(docId); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 	    }
 	    
 	    if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){

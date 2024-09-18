@@ -6191,6 +6191,10 @@ public class SpecificationBackingBean extends
 	 */
 	public String financialChecklistEditAction(int index,
 			ScQtCheckList checkList, String specType) {
+		//36211 start
+		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		//36211 end
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		this.getManagedBean().setScQtChecklist(checkList);
@@ -6201,6 +6205,11 @@ public class SpecificationBackingBean extends
 				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
+		//36211 Start
+		SpecificationReqDTO specReqDto=new SpecificationReqDTO(); 
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(specSO.checkWipScoreSettingMax(specReqDto));
+		//36211 End
 		try {
 			this.getManagedBean().setIndex(index);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -6233,6 +6242,7 @@ public class SpecificationBackingBean extends
 				.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 
 				if (this.getManagedBean().getQt().isZonal()
 						&& this.getManagedBean()
@@ -17405,7 +17415,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		IQTSpecSO specSo = getSpecSO();
 		SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
-		specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -22833,7 +22843,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		//start insert and update into tplSpecZoneDtlHistory
 		// check existing in TplSpecZoneDtlHistory
 		// listZone == null = non zonal
-		if (null != listZone && listZone.size() > 0) {
+		if (null != listZone && !listZone.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 			if (null != specificationReqDTO.getSpecZoneId()) {
 				SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
 				if (!resDTO.isSuccessful()) {
@@ -23588,4 +23598,44 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value()); 
 	}
     //29732 end
+    
+    
+	/**
+	 * #28784 - Move scoringOkActionDemo from templateSpecBb to specBB due
+	 * to demo scoring
+	 * 
+	 * @param templateSpecBean
+	 * @return void
+	 */
+	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
+		ITemplateSpecSO templateSpecSO = null;
+		BigDecimal demoNewScore = null;
+		try {
+			TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+			List<TplSpecScoring> specScorings = selectedSpecQuestion.getTplSpecScorings();
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+					ITemplateSpecSO.class);
+
+			BigDecimal demoScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings,
+					new FacesScopes().getUserLocale());
+			demoNewScore = this.getManagedBean().getTemplateSpecBean().getSelectedSpecQuestion().getDemoScore();
+
+			if (demoScore != null && demoScore.equals(new BigDecimal(0))) {
+				throw new EpException(MessageConst.ERROR_760476);
+			}
+			if (demoScore != null) {
+				selectedSpecQuestion.setDemoScore(demoScore);
+			}
+
+		} finally {
+			templateSpecSO = null;
+		}
+		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setTemplateSpecBean(templateSpecBean);
+
+		if (demoNewScore != null) {
+			RequestContext.getCurrentInstance().execute("scoringSetPopup.hide()");
+		}
+
+	}
 }

@@ -574,6 +574,7 @@ public class SupplierManagementConst {
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -659,6 +660,11 @@ public class SupplierManagementConst {
 	public static final String STATUS_REVISE_ENG = "Pending Revise Application";
 	public static final String STATUS_REVISE_BM = "Menunggu Kaji Semula Permohonan";
 	// #12483 - END
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -1452,5 +1458,14 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
 		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
 	}
+	
+	// #34392 - Start
+	public String getPendingReviewSiteVisitReportAfterApproval() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL;
+	}
+	public String getPendingReviewSiteVisitReportAfterApprovalBM() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM;
+	}
+	// #34392 - End
 
 }
