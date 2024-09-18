@@ -2648,11 +2648,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null != clsDate) {
 			clsDate = DateUtils.setDefaultDateTime(clsDate);
 
-			// 25635&33724-proposal validity days null -start-
+			// 25635&33724-proposal validity days null -start-  Bug #36221
 			if (null != scQt.getQtValidityPeriod()) {
-				// 25635&33724-proposal validity days null -end-
 				proposalValidityEndDate = DateUtils.addDays(clsDate, scQt.getQtValidityPeriod());
-			} // 25635&33724-proposal validity days null
+			} // 25635&33724-proposal validity days null Bug #36221
 		}
 		scQt.setProposalValidityEndDate(proposalValidityEndDate);
 	}
@@ -4596,8 +4595,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal indPriceThreshold = new BigDecimal(0);
 
 		try {
-			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IRuleSO.class);
+			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.QTOTAL_INDI_PRICE_THRESHOLD);
@@ -4848,6 +4846,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//#35473 11104_start
+	public String replaceWithBR(String specDetails) {
+		
+		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+	}//#35473 11104_end
+	
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	private ScAttachment regenerateDocumentEvaAttachmentByFileName(ScQt scqt, ScAttachment reportAttachment,
 			String fileName) throws Exception {
@@ -4925,7 +4930,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End	
     
-    	// #26226 - Start
+	// #26226 - Start
 	/**
 	 * @param context
 	 * @param scLoa
@@ -4940,10 +4945,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Long zoneId = new Long(0l);
 		boolean isSpecificationEnable = false;
 		boolean isWipData = false; // #29006
+		// 35295 @zaim start
+		List<List<Map<String, String>>> listConstructQuestion = new ArrayList<>();
+		boolean isZonalAdded = Boolean.FALSE;
+		String answerRemark = "";
+		String specVal = "";
+		String clItem = "";
+		List<ScLoiLoaItem> listSSTItem = new ArrayList<>();
+		Long tempRequestItemId = 0L;
+		// 35295 @zaim end
 		try {
 			quoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQuoteSO.class);
 			String supplierName = scLoa.getScLoiLoa().getSupplierName();
+			//35295 @zaim start
+			Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
+			//35295 @zaim end
 			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
 			quoteReqDTO.setQuoteId(scLoa.getScQuote().getQuoteId());
@@ -5305,7 +5322,273 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				
 				}
 				//end - #29006 note 794
+				//35295 @zaim start
+				if (tempRequestItemId.equals(0L) || !tempRequestItemId.equals(item.getScRequestItem().getRequestNoteItemId())) {
+			        tempRequestItemId = item.getScRequestItem().getRequestNoteItemId();
+			        listSSTItem.add(item);
+			    }
+				//35295 @zaim end
 			}
+			//35295 - start
+			if (listSSTItem != null && !listSSTItem.isEmpty()) {
+				for (ScLoiLoaItem sstItem : listSSTItem) {
+					if ((quoteResDTO.getSpecMaster() != null && !quoteResDTO.getSpecMaster().isEmpty())) {
+						for (TplSpecMaster specMaster : quoteResDTO.getSpecMaster()) {
+							if (specMaster.getTplSpecQuestions() != null && !specMaster.getTplSpecQuestions().isEmpty()) {
+								if ((specMaster.getTplSpecZone() != null && specMaster.getTplSpecZone()
+										.getTplSpecZoneDtls() != null)
+										&& !specMaster.getTplSpecZone().getTplSpecZoneDtls().isEmpty()) { // zonal
+									// sorting
+									Collections.sort(specMaster.getTplSpecZone().getTplSpecZoneDtls(),
+											new Comparator<TplSpecZoneDtl>() {
+												@Override
+												public int compare(TplSpecZoneDtl o1, TplSpecZoneDtl o2) {
+													return Long.compare(o1.getSpecZoneId(), o2.getSpecZoneId());
+												}
+											});
+									Map<String, String> map = null;
+									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
+										List<Map<String, String>> listPRQuestion = new ArrayList<>();
+										if (q.getSpecQuestionId().equals(
+												sstItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId())
+												|| (q.getParentSpecQuestion() != null && q
+														.getParentSpecQuestion()
+														.getSpecQuestionId()
+														.equals(sstItem.getScRequestItem().getTplSpecQuestion()
+																.getSpecQuestionId()))) {
+											int zoneCount = specMaster.getTplSpecZone().getTplSpecZoneDtls().size();
+											for (TplSpecZoneDtl zoneDtl : specMaster.getTplSpecZone()
+													.getTplSpecZoneDtls()) {
+												// retrieve item details for
+												// first loop only
+
+												map = new HashMap<>();
+												if (q.getQuestionType().equalsIgnoreCase(
+														ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)
+														&& !isZonalAdded) {
+													clItem = q.getClItem();
+													clItem = clItem.replaceAll(QTConstants.LESS_THEN,
+															SSTConstant.LESS_THAN_SYMBOL);
+													clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
+															SSTConstant.GREATER_THAN_SYMBOL);
+													clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+															SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+													map.put(SSTConstant.clItem, clItem);
+													map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
+															getParameterDesc(q.getClFulfilmentTypeCode(),
+																	SourcingConstants.MY_LOCALE));
+													map.put(SSTConstant.uomName, sstItem.getScRequestItem().getUom()
+															.getUomName());
+													map.put(SSTConstant.zoneName, zoneDtl.getZoneName());
+													map.put(SSTConstant.quantity, sstItem.getQty().toString());
+													map.put(SSTConstant.clUomFrequency,
+															q.getClUomFrequency() == null ? SSTConstant.TB : q
+																	.getClUomFrequency().toString());
+													map.put(SSTConstant.clUomPerDay,
+															q.getClUomPerDay() == null ? SSTConstant.TB : q
+																	.getClUomPerDay().toString());
+													map.put(SSTConstant.clUomPerMonth,
+															q.getClUomPerMonth() == null ? SSTConstant.TB : q
+																	.getClUomPerMonth().toString());
+													map.put(SSTConstant.CL_DURATION_MONTH,
+															q.getClDurationMonth() == null ? SSTConstant.TB : q
+																	.getClDurationMonth().toString());
+													for (TplSpecAnswer ans : q.getTplSpecAnswers()) {
+														if ((ans.getTplSpecQuestion().getSpecQuestionId()
+																.equals(q.getSpecQuestionId()) && ans
+																.getTplSpecSuppAnswer().getSmSupplier().getSupplierId()
+																.equals(supplierId))
+																&& ans.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+																		.getSpecZoneId()
+																		.equals(zoneDtl.getSpecZoneId())) {
+															answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
+																	: ans.getAnswerRemark();
+															answerRemark = answerRemark
+																	.replaceAll(QTConstants.LESS_THEN,
+																			SSTConstant.LESS_THAN_SYMBOL);
+															answerRemark = answerRemark.replaceAll(
+																	QTConstants.GREATER_THEN,
+																	SSTConstant.GREATER_THAN_SYMBOL);
+															answerRemark = answerRemark.replaceAll(
+																	QTConstants.NEW_LINE_CHARACTER,
+																	SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+															//#35295 #61 - start
+															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+															//#35295 #61 - end
+															map.put(SSTConstant.answerRemark, answerRemark);
+														}
+													}
+													isZonalAdded = Boolean.TRUE;
+
+												} else if (q.getQuestionType().equalsIgnoreCase(
+														ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)
+														&& isZonalAdded) {
+													// second row zone name
+													map.put(SSTConstant.clItem, SSTConstant.nbsp);
+													map.put(SSTConstant.uomName, SSTConstant.nbsp);
+													map.put(SSTConstant.zoneName, zoneDtl.getZoneName());
+													map.put(SSTConstant.quantity, SSTConstant.nbsp);
+													map.put(SSTConstant.clUomFrequency, SSTConstant.nbsp);
+													map.put(SSTConstant.clUomPerDay, SSTConstant.nbsp);
+													map.put(SSTConstant.clUomPerMonth, SSTConstant.nbsp);
+													map.put(SSTConstant.CL_DURATION_MONTH, SSTConstant.nbsp);
+													map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE, SSTConstant.nbsp);
+													if (isWipData) {
+														for (TplSpecAnswer ans : q.getTplSpecAnswers()) {
+															if ((ans.getTplSpecQuestion().getSpecQuestionId()
+																	.equals(q.getSpecQuestionId()) && ans
+																	.getTplSpecSuppAnswer().getSmSupplier()
+																	.getSupplierId().equals(supplierId))
+																	&& ans.getTplSpecSuppAnswer().getTplSpecZoneDtl()
+																			.getSpecZoneId()
+																			.equals(zoneDtl.getSpecZoneId())) {
+																answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
+																		: ans.getAnswerRemark();
+																answerRemark = answerRemark.replaceAll(
+																		QTConstants.LESS_THEN,
+																		SSTConstant.LESS_THAN_SYMBOL);
+																answerRemark = answerRemark.replaceAll(
+																		QTConstants.GREATER_THEN,
+																		SSTConstant.GREATER_THAN_SYMBOL);
+																answerRemark = answerRemark.replaceAll(
+																		QTConstants.NEW_LINE_CHARACTER,
+																		SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+																//#35295 #61 - start
+																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+																//#35295 #61 - end
+																map.put(SSTConstant.answerRemark, answerRemark);
+																break;
+															}
+														}
+													}
+
+												} else {
+													specVal = q.getClSpecDetail();
+													specVal = specVal.replaceAll(QTConstants.LESS_THEN,
+															SSTConstant.LESS_THAN_SYMBOL);
+													specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
+															SSTConstant.GREATER_THAN_SYMBOL);
+													specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+															SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+													//#35295 #61 - start
+													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+													//#35295 #61 - end
+													map.put(SSTConstant.specValue, specVal);
+													map.put(SSTConstant.questionType, q.getQuestionType());
+													listPRQuestion.add(map);
+													break;
+												}
+												map.put(SSTConstant.ROWSPAN_ITEM_NAME,
+														String.valueOf(q.getListSpecQuestion().size() + zoneCount));
+												map.put(SSTConstant.ROWSPAN_ZONE_QUANTITY, String.valueOf(zoneCount));
+												map.put(SSTConstant.questionType, q.getQuestionType());
+												listPRQuestion.add(map);
+											}
+											listConstructQuestion.add(listPRQuestion);
+											isZonalAdded = Boolean.FALSE;
+										}
+									}
+								} else { // non zonal
+									Map<String, String> map;
+									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
+										List<Map<String, String>> listPRQuestion = new ArrayList<>();
+										map = new HashMap<>();
+										if (q.getQuestionType().equalsIgnoreCase(
+												ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)) {
+											if (q.getSpecQuestionId()
+													.equals(sstItem.getScRequestItem().getTplSpecQuestion()
+															.getSpecQuestionId())) {
+
+												clItem = q.getClItem();
+												clItem = clItem.replaceAll(QTConstants.LESS_THEN,
+														SSTConstant.LESS_THAN_SYMBOL);
+												clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
+														SSTConstant.GREATER_THAN_SYMBOL);
+												clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+														SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+												map.put(SSTConstant.clItem, clItem);
+												map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
+														getParameterDesc(q.getClFulfilmentTypeCode(),
+																SourcingConstants.MY_LOCALE));
+												map.put(SSTConstant.uomName, sstItem.getScRequestItem().getUom()
+														.getUomName());
+												map.put(SSTConstant.quantity, sstItem.getQty().toString());
+												map.put(SSTConstant.clUomFrequency,
+														q.getClUomFrequency() == null ? SSTConstant.TB : q
+																.getClUomFrequency().toString());
+												map.put(SSTConstant.clUomPerDay,
+														q.getClUomPerDay() == null ? SSTConstant.TB : q
+																.getClUomPerDay().toString());
+												map.put(SSTConstant.clUomPerMonth,
+														q.getClUomPerMonth() == null ? SSTConstant.TB : q
+																.getClUomPerMonth().toString());
+												map.put(SSTConstant.CL_DURATION_MONTH,
+														q.getClDurationMonth() == null ? SSTConstant.TB : q
+																.getClDurationMonth().toString());
+												for (TplSpecAnswer ans : q.getTplSpecAnswers()) {
+													if (ans.getTplSpecQuestion().getSpecQuestionId()
+															.equals(q.getSpecQuestionId()) && ans
+															.getTplSpecSuppAnswer().getSmSupplier().getSupplierId()
+															.equals(supplierId)) {
+														answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
+																: ans.getAnswerRemark();
+														answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN,
+																SSTConstant.LESS_THAN_SYMBOL);
+														answerRemark = answerRemark.replaceAll(
+																QTConstants.GREATER_THEN,
+																SSTConstant.GREATER_THAN_SYMBOL);
+														answerRemark = answerRemark.replaceAll(
+																QTConstants.NEW_LINE_CHARACTER,
+																SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+														//#35295 #61 - start
+														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+														//#35295 #61 - end
+														map.put(SSTConstant.answerRemark, answerRemark);
+													}
+												}
+												map.put(SSTConstant.ROWSPAN_ITEM_NAME,
+														String.valueOf(q.getListSpecQuestion().size() + SSTConstant.NON_ZONAL_ROW));
+												map.put(SSTConstant.questionType, q.getQuestionType());
+												listPRQuestion.add(map);
+												listConstructQuestion.add(listPRQuestion);
+												//listPRQuestion = new ArrayList<>();
+											}
+										} else {
+											if (q.getParentSpecQuestion().getSpecQuestionId() != null
+													&& q.getParentSpecQuestion()
+															.getSpecQuestionId()
+															.equals(sstItem.getScRequestItem().getTplSpecQuestion()
+																	.getSpecQuestionId())) {
+												specVal = q.getClSpecDetail();
+												specVal = specVal.replaceAll(QTConstants.LESS_THEN,
+														SSTConstant.LESS_THAN_SYMBOL);
+												specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
+														SSTConstant.GREATER_THAN_SYMBOL);
+												specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
+														SSTConstant.HTML_ENTITY_LINE_SEPARATOR);
+												//#35295 #61 - start
+												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
+												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
+												//#35295 #61 - end
+												map.put(SSTConstant.specValue, specVal);
+												map.put(SSTConstant.questionType, q.getQuestionType());
+												listPRQuestion.add(map);
+												listConstructQuestion.add(listPRQuestion);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					// 35295 @zaim end
+				}
+			}
+			//35295 - end
 			context.put(SSTConstant.serviceScope, dafaltValue);
 			context.put(SSTConstant.SUPPLIER_NAME, supplierName);
 			context.put(SSTConstant.ZONE_ID, zoneId);
@@ -5314,6 +5597,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			context.put(SSTConstant.isZonal, scLoa.getScLoiLoa().isZonal());
 			context.put("isWipData", isWipData); // #29006
 			context.put("supplierId", scLoa.getScLoiLoa().getSmSupplier().getSupplierId()); // #29006
+			context.put(SSTConstant.LIST_PURCHASE_REQUEST_SST,listConstructQuestion); //35295
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "GenerateSST", scLoa.getLoaNo(),
 					"constructPRSupplierSpecificationAndRemarks", getUserIdSessionFromLoginId(), e);
@@ -5360,60 +5644,56 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param master
 	 * @param question
 	 */
-	private void constructTplSpecQuestion(String dafaltValue,
-			List<TplSpecQuestion> newTplSpecQuestionsList,
+	private void constructTplSpecQuestion(String dafaltValue, List<TplSpecQuestion> newTplSpecQuestionsList,
 			TplSpecMaster master, TplSpecQuestion question) {
-		TplSpecQuestion parentQuestion = question
-				.getParentSpecQuestion();
-		if(null!=master.getSpecName()){
-               String specTitle= master.getSpecName();
-               specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-               specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-               specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-               specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-               master.setSpecName(specTitle);
-			
+		TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
+		if (null != master.getSpecName()) {
+			String specTitle = master.getSpecName();
+			specTitle = specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+			specTitle = specTitle.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+			specTitle = specTitle.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+			specTitle = specTitle.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+			master.setSpecName(specTitle);
+
 		}
 		if (question.getClItem() == null) {
 			question.setClItem("");
-		}else{
-		    String clItem = question.getClItem();
-		//20190513@asyrafhaziq - 25812 - Start
-		// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
-		    String[] words = clItem.split(" "); //get array of words
-		    StringBuilder sb = new StringBuilder();
-		    StringBuilder subSb = new StringBuilder();//this is for perfomance
-		    for(String word : words) //affect each word in string
-		    {
-		      int length = word.length();
-		      if ( length >= 20)
-		    	{
-		    	  String subWord;
-		            for (int i = 0; i < length; i += 20) {
-		            	subWord = word.substring(i, Math.min(length, i + 20));
-		            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-		            }
-		    		word = subSb.toString();	
-		    	}
-		        sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-		    }
-		    clItem =  sb.toString();
-		    //20190513@asyrafhaziq - 25812 - End
-			clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-			clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+		} else {
+			String clItem = question.getClItem();
+			// 20190513@asyrafhaziq - 25812 - Start
+			// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
+			String[] words = clItem.split(" "); // get array of words
+			StringBuilder sb = new StringBuilder();
+			StringBuilder subSb = new StringBuilder();// this is for perfomance
+			for (String word : words) // affect each word in string
+			{
+				int length = word.length();
+				if (length >= 20) {
+					String subWord;
+					for (int i = 0; i < length; i += 20) {
+						subWord = word.substring(i, Math.min(length, i + 20));
+						subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+					}
+					word = subSb.toString();
+				}
+				sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+			}
+			clItem = sb.toString();
+			// 20190513@asyrafhaziq - 25812 - End
+			clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+			clItem = clItem.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+			clItem = clItem.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+			clItem = clItem.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 			question.setClItem(clItem);
-			//log.info("CIItem  ----------->"+question.getClItem());
+			// log.info("CIItem  ----------->"+question.getClItem());
 		}
 		if (question.getClSpecDetail() == null) {
 			question.setClSpecDetail(dafaltValue);
-		} else{
-			 String clSpecDetail = question.getClSpecDetail()
-					.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-			 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-			 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-			 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+		} else {
+			String clSpecDetail = question.getClSpecDetail().replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+			clSpecDetail = clSpecDetail.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+			clSpecDetail = clSpecDetail.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+			clSpecDetail = clSpecDetail.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 			question.setClSpecDetail(clSpecDetail);
 		}
 		if (question.getClUom() != null) {
@@ -5424,19 +5704,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			question.setClUom(new PmUom());
 			question.getClUom().setUomName(dafaltValue);
 		}
-		
+
 		if (question.getClUomFrequency() == null) {
 			question.setClUomFrequency(new BigDecimal(0));
 		}
-		
+
 		if (question.getClUomPerDay() == null) {
 			question.setClUomPerDay(new BigDecimal(0));
 		}
-		
+
 		if (question.getClUomPerMonth() == null) {
 			question.setClUomPerMonth(new BigDecimal(0));
 		}
-		
+
 		if (question.getClPriceTypeCode() == null) {
 			question.setClPriceTypeCode(new PmParameter());
 			question.getClPriceTypeCode().setParameterCode(dafaltValue);
@@ -5464,8 +5744,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		question.setTplSpecMaster(master);
 		// #26226 - Start
-		if(newTplSpecQuestionsList !=null)
-		{
+		if (newTplSpecQuestionsList != null) {
 			if (newTplSpecQuestionsList.size() == 0) {
 				newTplSpecQuestionsList.add(question);
 			} else {
@@ -5502,7 +5781,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
-	
 	/**
 	 * Get Parameter description by parameter for report.
 	 * 
@@ -5531,8 +5809,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		IQTSpecSO specSO;
 		
 		try {
-			specSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
@@ -5590,7 +5867,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * @param context
 	 * @param scLoa
-	 * @param specMasters 
+	 * @param specMasters
 	 */
 	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa, List<TplSpecMaster> specMasters) {
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
@@ -5610,8 +5887,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 						constructSpecData(scLoa, master, question);
 
-						constructTplSpecQuestion(dafaltValue,
-								newTplSpecQuestionsList, master, question);
+						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
 					}
 					
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
@@ -5627,6 +5903,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		context.put("bean", this);
 	}
 	//Enhancement #26130 -end-
+
+	//Bug #36104 start
+	private void getAnswerRemarkItem(ScLoa scLoa, List<String> answerRemarkList, TplSpecQuestion tplSpecQuestion) {
+
+		SmSupplier suppLoa = scLoa.getScLoiLoa().getSmSupplier();
+		if(CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecAnswers())){		
+			for (TplSpecAnswer tplSpecAnswer : tplSpecQuestion.getTplSpecAnswers()) {
+				
+				SmSupplier suppAns = new SmSupplier();
+			
+				if(null != tplSpecAnswer.getTplSpecSuppAnswer() 
+						&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()){
+					suppAns = tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier();
+				}
+				
+				if (null != suppAns.getSupplierId()
+						&& suppAns.getSupplierId().longValue() == suppLoa.getSupplierId().longValue()   
+						&& null != tplSpecAnswer.getAnswerRemark()){					
+					answerRemarkList.add(tplSpecAnswer.getAnswerRemark());
+					break;
+				}
+			}
+		}
+	}
+	//Bug #36104 end
 	
 	// #26130 - Start
 	/**
@@ -5647,15 +5948,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						answerRemarkList = new ArrayList<>();
 					}
 
-					// 32648 - start
-					if (null != tplSpecQuestion.getTplSpecAnswers() && tplSpecQuestion.getTplSpecAnswers().size() > 0) {
-						// 32648 & 34406 - start
-						if (tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark() != null) {
-							answerRemarkList.add(tplSpecQuestion.getTplSpecAnswers().get(0).getAnswerRemark());
-						}
-						// 32648 & 34406 - end
-					}
-					// 32648 - end
+					getAnswerRemarkItem(scLoa, answerRemarkList, tplSpecQuestion); //Bug #36104
 
 					addSpecList = true;
 					continue;
@@ -5770,7 +6063,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							
 							tempFeedbackIndex++;
 						} else {
-							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
+							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore) {
 								map.put("feedback", tempFeedback);
 								indexFeedbackStore = tempFeedbackIndex;
 								break;
@@ -5802,7 +6095,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								
 								tempRemarkIndex++;
 							} else {
-								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
+								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
 									map.put("remark", tempRemark);
 									indexRemarkStore = tempRemarkIndex;
 									break;
@@ -5816,7 +6109,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					
 					tempFeedbackIndex = 0;
 					tempRemarkIndex = 0;
-					listCombine.add(map);				
+					listCombine.add(map);
 				}
 				
 				question.setListCombineSpec(listCombine);
@@ -5911,8 +6204,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 
 						for (int i = indi; i < question.getTplSpecZoneQties().size(); i++) {
-							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;")
-									&& !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
+							if (!question.getAnswerRemarkList().get(i).equalsIgnoreCase("&nbsp;") && !question.getAnswerRemarkList().get(i).equalsIgnoreCase(getDefaultValue())) {
 								map.put("answerRemark", question.getAnswerRemarkList().get(i));
 								break;
 							} else {
@@ -5944,7 +6236,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							map.put("clUomPerMonth", question.getClUomPerMonth().toString());
 						} else {
 							// product
-							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
 
 							String tierValue = retrieveTierQuantity(question.getTplSpecTierQties());
 
@@ -6369,7 +6661,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						userReqDTO.setRoleCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.concat(roleMap
 								.get(memberRoleCode)));
 						userReqDTO.setIdentificationNo(member.getIdentificationNo());
-				//25037 note 629 end
+						//25037 note 629 end
 
 						UserResDTO resDTO = userSO.retrieveUserListByRole(userReqDTO);
 
@@ -6403,14 +6695,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return CheckStatus.contains(currentStatusId);
 	}
 	//11104-End
-
-	// 11104_start
-	public String replaceWithBR(String specDetails) {
-		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-	}
-	// 11104_end
-
-
   	
 	// 25635-start
 	public boolean isQTCloneStatus(Long currentStatusId) {
@@ -6489,5 +6773,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return taskNames.contains(taskName);
 	}
 	// 25037 -end-
-	
 }

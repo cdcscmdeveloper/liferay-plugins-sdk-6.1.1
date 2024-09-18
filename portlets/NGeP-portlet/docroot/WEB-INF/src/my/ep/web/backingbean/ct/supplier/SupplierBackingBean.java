@@ -1532,7 +1532,6 @@ public void selectFinancialAcc(){
 	 * contract owner organization profile when the loa's administrator 
 	 * is invalid.
 	 */
-	@SuppressWarnings("unchecked")
 	private void getContractAdminlist() {
 		IUserSO userSO = null;
 		UserReqDTO userReqDTO = null;
@@ -1572,7 +1571,7 @@ public void selectFinancialAcc(){
 										reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 										userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
 										// Start Fix - #31962
-										List<PmUser> userList_1 = userSO.retrieveUserListByRole(reqDTO).getUserList();
+										List<PmUser> userList_1 = userSO.retrieveUserListByRoleWithLoginHistory(reqDTO).getUserList(); //Fix #36101
 										// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
 										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_1); // Fix - #34213										
 										getManagedBean().setContractAdminlist(userList_1);
@@ -1587,7 +1586,7 @@ public void selectFinancialAcc(){
 									userReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
 									//Start Fix - #31962
-									List<PmUser> userList_2 = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+									List<PmUser> userList_2 = userSO.retrieveUserListByRoleWithLoginHistory(userReqDTO).getUserList(); //Fix #36101
 									// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
 									userList_2 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_2); // Fix - #34213
 									getManagedBean().setContractAdminlist(userList_2);

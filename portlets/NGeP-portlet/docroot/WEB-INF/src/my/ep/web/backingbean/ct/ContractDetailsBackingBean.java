@@ -1721,12 +1721,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setSettingIndex(11);		
 		getManagedBean().setPaymentTracking(11);
 		getManagedBean().setBondIndex(11);
+		getManagedBean().setNotificationIndex(111); //#35187
 		ctBB.getManagedBean().setSelectAll(false);
 
 		boolean typeZonalPrice = false;
 		boolean typeFactoring = false;
 		boolean typeLoaAmt = false;
 		boolean bondRequired = false;
+		boolean approverSetting = false; //#35187
 
 		/*Set value true if contract is zonal*/
 		if(ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
@@ -1747,6 +1749,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			typeLoaAmt = true;
 		}
 
+		//#35187 start
+		/*Set value true if contract is on approver*/
+		if(isApproverSetting()){
+			approverSetting = true;
+		}
+		//#35187 end
+		
 		if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(0);
 		} 
@@ -1832,6 +1841,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}else {
 					getManagedBean().setSelectedTabIndex(5);
 				}
+				
+				//#35187 start
+				if(!approverSetting){
+					getManagedBean().setSelectedTabIndex(getManagedBean().getSelectedTabIndex()-1);
+				}
+				//#35187 end
+				
 				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
 			}	  /*#26083 /bug 28314 end - basri*/
 
@@ -1909,6 +1925,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}else {
 					getManagedBean().setSelectedTabIndex(4);
 				}
+				
+				//#35187 start
+				if(!approverSetting){
+					getManagedBean().setSelectedTabIndex(getManagedBean().getSelectedTabIndex()-1);
+				}
+				//#35187 end
+				
 				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
 			}
 		}
@@ -1929,12 +1952,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setSettingIndex(11);
 		getManagedBean().setAgencyIndex(111);
 		getManagedBean().setBondIndex(113);
+		getManagedBean().setNotificationIndex(111); //#35187
 		ctBB.getManagedBean().setSelectAll(false);
 
 		boolean typeZonalPrice = false;
 		boolean typeSchedule = false;
 		boolean typeFactoring = false;
 		boolean bondRequired = false;
+		boolean approverSetting = false; // #35187
 
 		/*Set value true if contract is zonal*/
 		if(ctBB.getManagedBean().getContractVer().getCtContract().isZonalPricing()){
@@ -1953,6 +1978,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if(allowShowFactoring()){/*#28868 - basri*/
 			typeFactoring = true;
 		}
+		
+		//#35187 start
+		/*Set value true if contract is on approver*/
+		if(isApproverSetting()){
+			approverSetting = true;
+		}
+		//#35187 end
+		
 		if (outputTab.equalsIgnoreCase(ContractConst.FULFILMENT_DETAIL)) {
 			getManagedBean().setSelectedTabIndex(0);
 		}
@@ -2048,16 +2081,23 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (typeFactoring && bondRequired) {
 						getManagedBean().setSelectedTabIndex(10);
 					}else if(bondRequired || typeFactoring){
-						getManagedBean().setSelectedTabIndex(7);
+						getManagedBean().setSelectedTabIndex(9); //#35187
 					}
 				}else if(typeFactoring){
-					getManagedBean().setSelectedTabIndex(6);
+					getManagedBean().setSelectedTabIndex(8); //#35187
 					if(bondRequired){
-						getManagedBean().setSelectedTabIndex(7);
+						getManagedBean().setSelectedTabIndex(9); //#35187
 					}
 				} else if(bondRequired){
-					getManagedBean().setSelectedTabIndex(6);
+					getManagedBean().setSelectedTabIndex(8); //#35187
 				}
+				
+				//#35187 start
+				if(!approverSetting){
+					getManagedBean().setSelectedTabIndex(getManagedBean().getSelectedTabIndex()-1);
+				}
+				//#35187 end
+				
 				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
 			}
 			/*Setting tab value if zonal is false*/
@@ -2158,6 +2198,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				} else if(bondRequired){
 					getManagedBean().setSelectedTabIndex(7);
 				}
+				
+				//#35187 start
+				if(!approverSetting){
+					getManagedBean().setSelectedTabIndex(getManagedBean().getSelectedTabIndex()-1);
+				}
+				//#35187 end
+				
 				getManagedBean().setNotificationIndex(getManagedBean().getSelectedTabIndex());
 			}
 		}
@@ -3212,6 +3259,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 			PmOrgProfile orgProfile = null;
+			
+			//Enhancement 29418 - shaqimi start 21/10/2022
+			Boolean hasPBQCRole = 
+					(getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value()));
+			//Enhancement 29418 - shaqimi end 21/10/2022
+			
 			if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
 				orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 			}
@@ -3223,7 +3280,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
 					|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())) {
+					|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+					|| hasPBQCRole) {//Enhancement 29418 - shaqimi 21/10/2022
 				this.getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
 				this.getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
 				if (this.getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == -1) {

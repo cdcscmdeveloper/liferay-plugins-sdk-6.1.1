@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,6 +66,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -302,7 +305,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setExistingRegStatus(getManagedBean().getSmAppl().getPmRegStatus());
 //		getManagedBean().setOldRegStatusId(getManagedBean().getSmAppl().getPmRegStatus().getPmStatus().getStatusId()); //27437 : Disciplinary Action
 		getManagedBean().setSmMofAccount(getSingleSmMofAccount());
-		//START 27465 : Disciplinary Action 26238
+		//START 27465 : Disciplinary Action 26238 - #32792 START
 		if (getManagedBean().getSmMofAccount() != null) {
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
@@ -311,7 +314,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setExistingMofExpiryDate(
 					getManagedBean().getSmMofAccount().getExpDate());
 		}
-		//END 27465 : Disciplinary Action 
+		//END 27465 : Disciplinary Action - #32792 END
 		
 		//START 26238
 		if (getManagedBean().getSmAppl().getPmRegStatus() == null) {
@@ -1345,14 +1348,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 
 		//32891 - Checking category code for activeappl - 26238 - start
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
-			
-			SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
-					.retrieveActiveSmApplBySupp(reqDTO).getSmAppl(); 
-			//retrieveActiveCategoryByApplId
-			//32891 - check if active appl is null - start - 26238
-			if(activeAppl != null){
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		
+		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveActiveSmApplBySupp(reqDTO).getSmAppl(); 
+		//retrieveActiveCategoryByApplId
+		//32891 - check if active appl is null - start - 26238
+		if(activeAppl != null){
 			List<SmSupplierCategory> activeApplCategory = retrieveCategoryCode(activeAppl.getApplId());
 
 			log.info("size activeApplCategory :" + activeApplCategory.size());
@@ -1379,8 +1382,8 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 			} 
-			}
-			//32891 - end
+		}
+		//32891 - end
 			
 		if (validCat && applValidCat) {
 			getManagedBean().getSmAppl().getSmSupplierCategories()
@@ -1391,7 +1394,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 
 		//32891 - Checking category code for activeappl - 26238 - end
-		}
+	}
 
 	/**
 	 * Assign tracking diary values to VO
@@ -1450,16 +1453,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		boolean editOtherDesc = false;
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory sc : appl.getSmSupplierCategories()) {
-				if (!StringUtils.isBlank(sc.getOtherDesc())
-						&& !sc.getOtherDesc().equals(sc.getEntryMode())) {
+				if (!StringUtils.isBlank(sc.getOtherDesc()) && !sc.getOtherDesc().equals(sc.getEntryMode())) {
 					editOtherDesc = true;
-					sb.append(sc.getPmCategoryL1().getCategoryL1Code()
-							+ sc.getPmCategoryL2().getCategoryL2Code()
-							+ sc.getPmCategoryL3().getCategoryL3Code());
-					sb.append(" telah dikemaskini dari ")
-							.append(sc.getEntryMode()).append(" kepada ")
-							.append(sc.getOtherDesc()).append(" oleh ")
-							.append(user.getUserName()).append("<br />");
+					sb.append(sc.getPmCategoryL1().getCategoryL1Code() + sc.getPmCategoryL2().getCategoryL2Code() + sc.getPmCategoryL3().getCategoryL3Code());
+					sb.append(" telah dikemaskini dari ").append(sc.getEntryMode()).append(" kepada ").append(sc.getOtherDesc()).append(" oleh ").append(user.getUserName())
+							.append("<br />");
 				}
 			}
 		}
@@ -2409,6 +2407,54 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	}
 	
+	//START 17906
+	public void checkingBeforeRemoveSupplierBank() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<font color='red'>");
+		boolean showErrorContract = false;//to avoid duplicate message
+		boolean showErrorFl = false;//to avoid duplicate message
+		boolean showErrorPopup = false;
+		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
+			this.getManagedBean().setDisplayMessageBank("");
+			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
+				if(suppBank.isHasActiveTransactionContractManagement() && !showErrorContract){
+					showErrorPopup = true;
+					showErrorContract = true;
+					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
+					sb.append("<br/>");
+				}
+				if(suppBank.isHasActiveTransactionFulfilment() && !showErrorFl){
+					showErrorPopup = true;
+					showErrorFl = true;
+					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",null));
+					sb.append("<br/>");
+				}				
+			}
+		}
+		sb.append("</font>");
+		this.getManagedBean().setDisplayMessageBank(sb.toString());
+		if(showErrorPopup){
+			RequestContext.getCurrentInstance().execute("bankAlertPopUp.show()");
+			return;
+		}
+		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
+	}
+	//End 17906
+	
+	//32792 START
+	public String getLatestMOFNo(List<SmMofAccount> mofList){
+		// sort by latest created date 
+		Collections.sort(mofList,new Comparator<SmMofAccount>() {
+			@Override
+			public int compare(SmMofAccount mof1, SmMofAccount mof2) {
+				return Integer.valueOf(mof2.getCreatedDate().compareTo(mof1.getCreatedDate()));
+				
+			}
+		});
+		return mofList.get(0).getMofNo();
+	}
+	//32792 - END
+	
 	//26238 - start
 	public void onViewDisciplinaryAction() {
 		SmSupplier currSupp = getManagedBean().getSmSupplier();
@@ -3119,39 +3165,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//26238 : Disciplinary Action - end 28111
 	
-	//START 17906
-	public void checkingBeforeRemoveSupplierBank() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<font color='red'>");
-		boolean showErrorContract = false;//to avoid duplicate message
-		boolean showErrorFl = false;//to avoid duplicate message
-		boolean showErrorPopup = false;
-		if(this.getManagedBean().getSelectedSuppBanks() != null && this.getManagedBean().getSelectedSuppBanks().length > 0){
-			this.getManagedBean().setDisplayMessageBank("");
-			for (SmSupplierBank suppBank : this.getManagedBean().getSelectedSuppBanks()) {
-				if(suppBank.isHasActiveTransactionContractManagement() && !showErrorContract){
-					showErrorPopup = true;
-					showErrorContract = true;
-					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.active.contract.tied",null));
-					sb.append("<br/>");
-				}
-				if(suppBank.isHasActiveTransactionFulfilment() && !showErrorFl){
-					showErrorPopup = true;
-					showErrorFl = true;
-					sb.append(SmCommonUtil.getMessage("lbl.sm.bankDtls.is.other.active.contract.tied",null));
-					sb.append("<br/>");
-				}				
-			}
-		}
-		sb.append("</font>");
-		this.getManagedBean().setDisplayMessageBank(sb.toString());
-		if(showErrorPopup){
-			RequestContext.getCurrentInstance().execute("bankAlertPopUp.show()");
-			return;
-		}
-		RequestContext.getCurrentInstance().execute("bankDeletePopUp.show()");
-	}
-	//End 17906
+
 	
 	//26238 -  Disciplonary action - 28146 - start
 	private SmDisciplinaryAction cloneSmDisciplinaryActionEditableValue(SmDisciplinaryAction newSmDisciplinaryAction, SmDisciplinaryAction smDisciplinaryAction){
