@@ -1794,7 +1794,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
 				sumDeliveredQty = resDTO.getTotalDelOrderQty();
 
-				remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty).add(itemAddr.getRejectedQty());
+				remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
 				if (itemAddr.getDeliveredQty() == null) {
 					itemAddr.setDeliveredQty(new BigDecimal(0));
 				}
