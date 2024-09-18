@@ -9262,7 +9262,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					try {
 						loadScLoaReport(scLoaReport);
 					} catch (Exception e) {
-						e.printStackTrace();
+						//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [23/4/2024]
+						log.error("Error : " + e.getMessage());
+						//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [23/4/2024]
 					}
 				}
 			}
