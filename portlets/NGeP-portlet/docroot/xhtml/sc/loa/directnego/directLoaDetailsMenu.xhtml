@@ -509,6 +509,9 @@
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@this, menuItems,agreementReqPG, expDateLabel, effDateLabel, contractDurationLabel, @([id$=uploadApprovalLetterPg])"
 												listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
+												
+											<p:ajax event="change" 
+												listener="#{directLOABackingBean.changeResetValuePK7FullfilmentType()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
 																							
 											<p:ajax event="change"
 												listener="#{directLOABackingBean.isPbDropDown()}"
@@ -675,7 +678,7 @@
 							<td>
 								<h:panelGroup id="bondReqPG">
 									<c:choose>
-										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and !directLOABackingBean.managedBean.readOnly}">
+										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 											<c:choose>
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 													<p:selectOneMenu id="bondReqPk7Per" required="true"
@@ -1021,6 +1024,9 @@
 														<!-- #25726 START -->
 														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
 														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														 
+														 <p:ajax event="change" 
+														 listener="#{directLOABackingBean.changeResetRequiredAgreement()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
 														<!-- #25726 END -->
 													</p:selectOneMenu>
 												</c:when>

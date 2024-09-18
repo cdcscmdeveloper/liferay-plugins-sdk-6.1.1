@@ -274,7 +274,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 						//#25396 - start
 						else{
 							if(isViewAsSupplier()){
-								List<Long> supplierIds = new ArrayList<Long>();
+								List<Long> supplierIds = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 								supplierIds.add(supplierSearchReqDTO.getUserId());
 								reqDTO.setSupplierIds(supplierIds);
 							}
@@ -290,18 +290,19 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 				SourcingIntegrationResDTO resDTO = null;
 				if (isSearchDPM()) {
 					// start - #36018
-					if (getSearchStatusId() != null) {
-						resDTO = assignSourcingDocument(sourcingIntegrationSO, reqDTO);
-					} else {
+					if (getSearchStatusId() == null && (getSearchDocumentNo() == null || getSearchDocumentNo() == "")) {
 						resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 
-						ISearchResultBean<Object[]> a = resDTO.getSourcingDocSearchResultBean();
-						ISearchResultBean<Object[]> b = reloadSourcingDocumentForDPM().getSourcingDocSearchResultBean();
-						
-						a.getResultList().addAll(b.getResultList());
-						a.setTotalRecord(a.getTotalRecord() + b.getTotalRecord());
-	
-						return a;
+						ISearchResultBean<Object[]> normalModeResult = resDTO.getSourcingDocSearchResultBean();
+						ISearchResultBean<Object[]> maintenanceModeResult = reloadSourcingDocumentForDPM().getSourcingDocSearchResultBean();
+
+						normalModeResult.getResultList().addAll(maintenanceModeResult.getResultList());
+						normalModeResult.setTotalRecord(normalModeResult.getTotalRecord() + maintenanceModeResult.getTotalRecord());
+
+						return normalModeResult;
+					} else {
+						resDTO = assignSourcingDocument(sourcingIntegrationSO, reqDTO);
+						resDTO = checkIfMaintenanceList(resDTO);
 					}
 					// end - #36018
 				} else {
@@ -317,10 +318,43 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			return null;
 		}
 		// start - 36018
+		/**
+		 * Checks if the maintenance list is empty in the given Sourcing
+		 * Integration response DTO. If the total record count is zero, reloads
+		 * the sourcing document for DPM.
+		 * 
+		 * @param resDTO
+		 *            The Sourcing Integration response DTO to be checked.
+		 * @return The updated Sourcing Integration response DTO, possibly
+		 *         reloaded with documents.
+		 */
+		private SourcingIntegrationResDTO checkIfMaintenanceList(SourcingIntegrationResDTO resDTO) {
+			if (resDTO.getSourcingDocSearchResultBean().getTotalRecord() == 0) {
+				return reloadSourcingDocumentForDPM();
+			}
+			return resDTO;
+		}
+
+		/**
+		 * Assigns sourcing documents based on the search status ID. Searches
+		 * for sourcing documents using the specified integration service object
+		 * and request DTO. Depending on the search status ID, either searches
+		 * sourcing documents for DPM (Document Pending Item Codification) or
+		 * standard sourcing documents.
+		 * 
+		 * @param sourcingIntegrationSO
+		 *            The integration service object for sourcing operations.
+		 * @param reqDTO
+		 *            The request DTO containing parameters for sourcing
+		 *            document search.
+		 * @return The Sourcing Integration response DTO containing search
+		 *         results.
+		 */
 		private SourcingIntegrationResDTO assignSourcingDocument(ISourcingIntegrationSO sourcingIntegrationSO,
 				SourcingIntegrationReqDTO reqDTO) {
 			SourcingIntegrationResDTO resDTO;
-			if (getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION))
+			if (getSearchStatusId() != null
+					&& getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION))
 				resDTO = sourcingIntegrationSO.searchSourcingDocumentForDPM(reqDTO);
 			else
 				resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
