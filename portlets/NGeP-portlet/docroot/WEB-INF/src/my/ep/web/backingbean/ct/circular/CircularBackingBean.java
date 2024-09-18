@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.persistence.NoResultException; //30866
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -32,6 +33,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils; //30866
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
@@ -338,22 +340,29 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	public void searchCircular() throws Exception {
 		try {
 			if (getManagedBean().getSearchCircularDocType() == null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_100022,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())},
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}else if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
-					&& getManagedBean().getProcurementMode() == null) {FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-									MessageConst.ERROR_750081, MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-			}else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+										"lbl.ct.circular.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			} else if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+					&& getManagedBean().getProcurementMode() == null && getManagedBean().isContinuityCircularAuditSearch()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.ERROR_750081, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			} else {
 				getManagedBean().getCircularListingPagingDataModel().reloadData();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "circular search failed."));
-		}			
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularBackingBean", null,
+					"CircularBackingBean.searchCircular", null, e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "circular search failed."));
+		}
 	}
 	//End - #30866
 
@@ -537,14 +546,17 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterCode(parameterCode);
 			reqDTO.setParameterType(paramenterType);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				pmParam = resDTO.getPmParameter();
-				getManagedBean().setPmParameterId(pmParam.getParameterId());
-				getManagedBean().setProcurementModeCode(pmParam.getParameterCode());
+			if (parameterCode != null) {
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				if (resDTO.isSuccessful()) {
+					pmParam = resDTO.getPmParameter();
+					getManagedBean().setPmParameterId(pmParam.getParameterId());
+					getManagedBean().setProcurementModeCode(pmParam.getParameterCode());
+				}
 			}
-
+		} catch (NoResultException e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularBackingBean", null,
+					"CircularBackingBean.procurementModeChanged", null, e);
 		} finally {
 			parameterSO = null;
 		}
@@ -557,9 +569,16 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * selected by the user
 	 */
 	public void getCircularTypeOnChange() {
-		if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-			getManagedBean().setPqCircularType(true);
+		if (getManagedBean().getSearchCircularDocType() != null) {
+			if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				getManagedBean().setPqCircularType(true);
+			} else {
+				getManagedBean().setPqCircularType(false);
+				getManagedBean().setProcurementMode(null);
+				getManagedBean().setProcurementModeCode(null);
+			}
 		} else {
+			// case when user choose (select one) in drop-down menu
 			getManagedBean().setPqCircularType(false);
 		}
 	}
@@ -569,11 +588,7 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * field
 	 */
 	public boolean isPqCircularCheck() {
-		boolean allowCircularForProcurementMethod = false;
-		if (getManagedBean().isPqCircularType()) {
-			allowCircularForProcurementMethod = isAuditCheck();
-		}
-		return allowCircularForProcurementMethod;
+		return  getManagedBean().isPqCircularType() ? isAuditCheck() : false;
 	}
 
 	/**
@@ -582,24 +597,27 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * @return complete or incomplete
 	 */
 	public String chkContractStatusType(int status) {
+		FacesScopes fc = new FacesScopes();
+		String contractStatusCheck = "";
 		if (status == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
-			return ResourceBundleUtils.getMessage("lbl.ct.effective", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
+			contractStatusCheck = ResourceBundleUtils.getMessage("lbl.ct.effective",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, fc.getUserLocale());
 		} else if (status == ContractConst.CONTRACT_STATUS_INACTIVE) {
-			return ResourceBundleUtils.getMessage("lbl.ct.inactive", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
+			contractStatusCheck = ResourceBundleUtils.getMessage("lbl.ct.inactive",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, fc.getUserLocale());
 		} else if (status == ContractConst.CONTRACT_STATUS_TERMINATED) {
-			return ResourceBundleUtils.getMessage("lbl.ct.terminated", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
+			contractStatusCheck = ResourceBundleUtils.getMessage("lbl.ct.terminated",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, fc.getUserLocale());
 
 		} else if (status == ContractConst.CONTRACT_STATUS_EXPIRED) {
-			return ResourceBundleUtils.getMessage("lbl.ct.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
+			contractStatusCheck = ResourceBundleUtils.getMessage("lbl.ct.expired",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, fc.getUserLocale());
 
 		} else {
-			return ResourceBundleUtils.getMessage("lbl.ct.not.applicable", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
+			contractStatusCheck = ResourceBundleUtils.getMessage("lbl.ct.not.applicable",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, fc.getUserLocale());
 		}
+		return contractStatusCheck;
 	}
 
 	/**
@@ -610,15 +628,16 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * @return appropriate language code
 	 */
 	public String checkProcModeValue(String code) {
+		FacesScopes fc = new FacesScopes();
+		String procModeValue = "";
 		if (code.equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
-			return ResourceBundleUtils.getMessage("lbl.qt.maintenance.quotation",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-
+			procModeValue = ResourceBundleUtils.getMessage("lbl.qt.maintenance.quotation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, fc.getUserLocale());
 		} else if (code.equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
-			return ResourceBundleUtils.getMessage("lbl.qt.maintenance.tender",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			procModeValue = ResourceBundleUtils.getMessage("lbl.qt.maintenance.tender",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, fc.getUserLocale());
 		}
-		return "";
+		return procModeValue;
 	}
 
 	/**
@@ -629,12 +648,12 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * @return appropriate language code
 	 */
 	public String checkDpCode(String code) {
+		String dpCode = "";
 		if (code.equals(ParameterConst.REQUEST_NOTE_RN)) {
-			return ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+			dpCode = ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
-
 		}
-		return "";
+		return dpCode;
 	}
 
 	/**
@@ -659,13 +678,14 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 	 * @throws Exception
 	 */
 	public String searchCircularContractAudit(String circularNo, CtCircularVer circularData) {
+		String searchDefault = "";
 		getManagedBean().setSearchCircularNo(circularNo);
 		if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
 			getManagedBean().setCircularCqCentralContractList(circularData);
 			getManagedBean().getCircularCtListingDataModel().reloadData();
 			getManagedBean().setCircularDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR); // use for back button
 			getManagedBean().setExternalPageUrlForAudit(CENTRAL_CONTRACT_VIEW_AUDIT); // use for back button
-			return CENTRAL_CONTRACT_VIEW_AUDIT;
+			searchDefault =  CENTRAL_CONTRACT_VIEW_AUDIT;
 		} else if (getManagedBean().getSearchCircularDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
 			getManagedBean().setCircularDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			if (getManagedBean().getProcurementModeCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)
@@ -674,17 +694,17 @@ public class CircularBackingBean extends BaseBackingBean<CircularManagedBean>{
 				// getManagedBean().getCircularQuotationListingDataModel().reloadData();
 				getManagedBean().getCircularQtListingDataModel().reloadData();
 				getManagedBean().setExternalPageUrlForAudit(PANEL_CIRCULAR_CC_QT_VIEW_AUDIT);
-				return PANEL_CIRCULAR_CC_QT_VIEW_AUDIT;
+				searchDefault = PANEL_CIRCULAR_CC_QT_VIEW_AUDIT;
 			} else if (getManagedBean().getProcurementModeCode()
 					.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 				getManagedBean().setCircularPqDirectPurchaseList(circularData);
 				getManagedBean().getCircularDpListingDataModel().reloadData();
 				getManagedBean().setExternalPageUrlForAudit(PANEL_CIRCULAR_DP_VIEW_AUDIT);
-				return PANEL_CIRCULAR_DP_VIEW_AUDIT;
+				searchDefault = PANEL_CIRCULAR_DP_VIEW_AUDIT;
 			}
 		}
 
-		return null;
+		return searchDefault;
 	}
 	// End - #30866
 }

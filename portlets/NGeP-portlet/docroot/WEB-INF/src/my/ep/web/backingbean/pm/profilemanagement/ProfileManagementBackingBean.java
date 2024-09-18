@@ -643,7 +643,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				// // for the initial load
 				
 				// #35562- Start
-				pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				if (!pmUser.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					pmUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				}
 				// #35562- End
 				
 				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
@@ -3704,19 +3706,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 			
 			// #35489 - Start
-			if (this.getManagedBean().isOrgUnitStatusChange()) {
+			// #35769 - Start // fixing null pointer after inactive user
+			if (this.getManagedBean().isOrgUnitStatusChange() && isCheckSelectedReceivingAddrTypes()) {
 				for (PmAddressType addressType : this.getManagedBean().getSelectedReceivingAddrTypes()) {
 					addressType.setChangedBy(getUserIdSessionFromLoginId());
 				}
 			}
 
-			if (this.getManagedBean().isUserStatusChange()) {
+			if (this.getManagedBean().isUserStatusChange() && isCheckSelectedReceivingAddrTypes()) {
 				for (PmAddressType addressType : this.getManagedBean().getSelectedReceivingAddrTypes()) {
 					addressType.setChangedBy(getUserIdSessionFromLoginId());
 				}
 			}
 			// #35489 - End
-			
+			// #35769 - End // fixing null pointer after inactive user
 			
 			//Redmine Bug #31541 - START
 			if (this.getManagedBean().getIsNewUser()) {
@@ -4202,18 +4205,23 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			//#35562 - End
 
 			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo()); //#35769 - set Identification No
 			userReqDTO.setUserSearchBean(searchBean);
 			IUserSO userSO;
 			try {
 				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
-				UserResDTO resDTO = userSO.searchUserProfile(userReqDTO);
+				UserResDTO resDTO = userSO.searchUserProfileUsingIdNo(userReqDTO);//#35769 - Call New Method
 
 				if (resDTO != null && resDTO.getUserResultBean().getResultList() != null
 						&& resDTO.getUserResultBean().getResultList().size() > 0) {
 					PmUser user = resDTO.getUserResultBean().getResultList().get(0);
 					// TODO set current user info
 					// check for any active org
+					
+					//#35562 - Start (Checking identification no same with login id)
+					if (getManagedBean().getSelectedUser().getIdentificationNo().compareTo(user.getLoginId()) == 0) {
+					
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
@@ -4261,7 +4269,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							// assign new pmUserOrg object to the current user
 						}
 					}
+				} else {// do validate by isSupplier
 
+					IPersonnelSO personnelSO;
+					personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IPersonnelSO.class);
+
+					PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+					reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
+					PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
+					if (resDTO1.isSupplierPersonnel()) {
+						throw new EpException(MessageConst.ERROR_770214,
+								new String[] { getManagedBean().getSelectedUser().getIdentificationNo() });
+					}
+
+					// new user org / user record
+					getManagedBean().setPmUserExist(false);
+					if (ParameterConst.IDENTIFICATION_TYPES_IC
+							.equals(getManagedBean().getSelectedUser().getIdentificationCode().getParameterCode())) {
+						getManagedBean().getSelectedUser()
+								.setLoginId(getManagedBean().getSelectedUser().getIdentificationNo());
+					} else {
+						PmCountry country = PmCommonUtil.retrievePmCountryById(
+								getManagedBean().getSelectedUser().getPmCountry().getCountryId());
+						StringBuilder sb = new StringBuilder();
+						sb.append(getManagedBean().getSelectedUser().getIdentificationNo().trim());
+						sb.append(country.getCountryCode());
+						getManagedBean().getSelectedUser().setLoginId(sb.toString());
+					}
+				}
+				//#35562 - End
 				} else {// do validate by isSupplier
 
 					IPersonnelSO personnelSO;
@@ -5237,4 +5274,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				.getOrgProfileId());
 	}
 	//#29594 - END
+	
+	/*** checks If Selected Receiving Address Type. */
+	// #35769 - Start // fixing null pointer after inactive user
+	private boolean isCheckSelectedReceivingAddrTypes() {
+		return  this.getManagedBean().getSelectedReceivingAddrTypes() != null
+				&& !this.getManagedBean().getSelectedReceivingAddrTypes().isEmpty();
+	}
+	// #35769 - End // fixing null pointer after inactive user
 }

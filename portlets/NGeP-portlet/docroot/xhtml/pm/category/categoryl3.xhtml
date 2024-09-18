@@ -678,33 +678,32 @@
 					<ac:iconTooltip value="#{lbl['lbl.pm.machine.sitevisitsection.tooltip']}"/>	
 				</f:facet>
 								<!-- start #29665 new checkbox change styleClass -->
-								<p:selectManyCheckbox layout="pageDirection" styleClass="float-left"
-									value="#{pmMachineCategory.pmMachineCategorySectionList}"
-									>
-									<f:selectItem 
-										itemDisabled="#{categoryBackingBean.managedBean.disableSection eq 0 or
+									<p:selectManyCheckbox layout="pageDirection"
+										styleClass="float-left"
+										value="#{pmMachineCategory.pmMachineCategorySectionList}">
+										<f:selectItem
+											itemDisabled="#{categoryBackingBean.managedBean.disableSection eq 0 or
 										categoryBackingBean.managedBean.disableSection eq 1}"
-										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Dockyard']}"
-										itemValue="818"/>
-									<f:selectItem 
-										itemDisabled="#{categoryBackingBean.managedBean.disableSection eq 0 or
+											itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Dockyard']}"
+											itemValue="818" />
+										<f:selectItem
+											itemDisabled="#{categoryBackingBean.managedBean.disableSection eq 0 or
 										categoryBackingBean.managedBean.disableSection eq 1}"
-										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.WorkShop']}"
-										itemValue="819"/>
-									<f:selectItem 
-										itemDisabled="#{categoryBackingBean.managedBean.disableSection eq 0 or
+											itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.WorkShop']}"
+											itemValue="819" />
+										<f:selectItem
+											itemDisabled="#{categoryBackingBean.managedBean.disableSection eq 0 or
 										categoryBackingBean.managedBean.disableSection eq 2}"
-										itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Printing']}"
-										itemValue="1001"/>
-									<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
-										<p:ajax event="change"
-										disabled="#{!categoryBackingBean.remarkDisable}"
-										update=":form:remarkFieldId"
-										listener="#{categoryBackingBean.onchangeDiscription}"/> 
-									</c:if>
-								</p:selectManyCheckbox>
-																
-								<!-- end #29665 new checkbox -->
+											itemLabel="#{lbl['lbl.pm.siteVisitSection.checkBox.Printing']}"
+											itemValue="1001" />
+										<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
+											<p:ajax event="change"
+												disabled="#{!categoryBackingBean.remarkDisable}"
+												update=":form:remarkFieldId"
+												listener="#{categoryBackingBean.onchangeDiscription}" />
+										</c:if>
+									</p:selectManyCheckbox>
+									<!-- end #29665 new checkbox -->
 							</p:column>
 						
 							<p:column>

@@ -115,12 +115,7 @@
 		</tr>
 	</table>
 	<!-- 32304 - start -->
-	<p:dialog id="chgBussTypeAlert" closable="true" widgetVar="chgBussTypeAlert"
-		header="#{lbl['lbl.sm.buss.type.changed.alert.header']}" 
-		visible="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType
-				!= backingBean.managedBean.latestAppl.smCompanyBasic.businessType
-				and backingBean.managedBean.pendingBumiAppl != null
-				and backingBean.managedBean.pendingBumiAppl.applNo != null}">
+	<p:dialog id="chgBussTypeAlert" closable="true" widgetVar="chgBussTypeAlert" header="#{lbl['lbl.sm.buss.type.changed.alert.header']}" >
 		
 		<h:outputText value="#{lbl['lbl.sm.buss.type.changed.alert.msg1']}"/><br/>
 		<h:outputText value="#{lbl['lbl.sm.buss.type.changed.alert.msg2']} 
