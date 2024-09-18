@@ -81,7 +81,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 	private void cancelCategory(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
-		if (oldDisciplinaryAction.isCancelCategory() != newDisciplinaryAction.isCancelCategory()) {
+		if (!oldDisciplinaryAction.isCancelCategory() && newDisciplinaryAction.isCancelCategory()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
 					getLabel("lbl.sm.disciplinary.jktt.cancel.cat.code"), null, null,
@@ -92,7 +92,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 	private void suspendRegistration(SmDisciplinaryAction oldDisciplinaryAction,
 			SmDisciplinaryAction newDisciplinaryAction, List<AuditSupplierManagementDetailDTO> auDetails) {
-		if (oldDisciplinaryAction.isSuspendRegistration() != newDisciplinaryAction.isSuspendRegistration()) {
+		if (!oldDisciplinaryAction.isSuspendRegistration() && newDisciplinaryAction.isSuspendRegistration()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
 					getLabel("lbl.sm.disciplinary.jktt.suspend.registration"), null, null,
@@ -102,7 +102,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 	private void cancelRegistration(SmDisciplinaryAction oldDisciplinaryAction,
 			SmDisciplinaryAction newDisciplinaryAction, List<AuditSupplierManagementDetailDTO> auDetails) {
-		if (oldDisciplinaryAction.isCancelRegistration() != newDisciplinaryAction.isCancelRegistration()) {
+		if (!oldDisciplinaryAction.isCancelRegistration() && newDisciplinaryAction.isCancelRegistration()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
 					getLabel("lbl.sm.disciplinary.jktt.cancel.registration"), null, null,
@@ -112,7 +112,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 	private void blackListOwner(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
-		if (oldDisciplinaryAction.isBlacklistOwner() != newDisciplinaryAction.isBlacklistOwner()) {
+		if (!oldDisciplinaryAction.isBlacklistOwner() && newDisciplinaryAction.isBlacklistOwner()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
 					getLabel("lbl.sm.disciplinary.jktt.blacklist.owner"), null, null,
@@ -122,7 +122,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 	private void bumiCancel(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
 			List<AuditSupplierManagementDetailDTO> auDetails) {
-		if (oldDisciplinaryAction.isBumiputeraCancel() != newDisciplinaryAction.isBumiputeraCancel()) {
+		if (!oldDisciplinaryAction.isBumiputeraCancel() && newDisciplinaryAction.isBumiputeraCancel()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
 					getLabel("lbl.sm.disciplinary.jktt.cancel.of.bumiputera"), null, null,
@@ -132,7 +132,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 	private void manufacturerCancel(SmDisciplinaryAction oldDisciplinaryAction,
 			SmDisciplinaryAction newDisciplinaryAction, List<AuditSupplierManagementDetailDTO> auDetails) {
-		if (oldDisciplinaryAction.isManufacturerCancel() != newDisciplinaryAction.isManufacturerCancel()) {
+		if (!oldDisciplinaryAction.isManufacturerCancel() && newDisciplinaryAction.isManufacturerCancel()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
 					getLabel("lbl.sm.disciplinary.jktt.cancel.of.manufacturer"), null, null,
