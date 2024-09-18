@@ -545,10 +545,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			//26238 - Disciplinary Action - 28798 - end
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditTrailSO auditSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+			IAuditTrailSO auditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
 			if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-				AuditSupplierManagementBackingBeanTemplate  auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+				auditSmBackingBean = new AuditSupplierManagementListOwnerDirectorBackingBean();
 				auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
 			}
 			// #28895_35501 End
@@ -2153,6 +2155,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		//getManagedBean().setEditDisciplinaryAction(false); //27857: Disciplinary Action - disabled hardcoded value - 26238
 		getManagedBean().setHasActiveDA(false); //#34626
 		DisciplinaryActionVO discipline = getInitDisciplinaryActionVO();
+		// #28895_35501 - AUDIT TRAIL SM
+		this.getManagedBean().setOldSmDisciplinaryAction(null);
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			for (SmDisciplinaryAction disc : supplier
