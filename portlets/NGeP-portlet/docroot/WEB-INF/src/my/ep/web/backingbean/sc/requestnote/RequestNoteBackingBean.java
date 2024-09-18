@@ -139,6 +139,7 @@ import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -1180,6 +1181,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(requestNoteDtl.getProcurementTypeCategory() != null && null == requestNoteDtl.getProcurementTypeCategory().getParameterId()){
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
+				
+				// 36362 - start
+				validateTierQuantityExceedMaxQuantity(requestNoteDtl);
+				// 36362 - end
 				
 				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
@@ -5005,7 +5010,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isTierPriceMatched = false;
 		boolean isTierPrice = false;
 		ScSupplierItemPrice topPricedItem = null;
-		log.info("--- Bug 36362 - Method: getTopZonalTierPrice Start ---");
 		for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
 			if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
 				BigDecimal toQty = itemPrice.getToQty();
@@ -5013,14 +5017,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (fromQty != null
 						&& orderQuantity != null) {
 					isTierPrice = true;
-					log.info("--- Bug 36362 - isTierPrice Value = "+isTierPrice+" ---");
-					log.info("--- Bug 36362 - fromQty = "+fromQty+" orderQuantity = "+orderQuantity+" toQty = "+toQty == null? "toQty null" : toQty+" --- Bug 36362 toQty ---");
-					log.info("--- Bug 36362 - fromQty.compareTo(orderQuantity) Value = "+fromQty.compareTo(orderQuantity)+" ---");
-					log.info("--- Bug 36362 - orderQuantity.compareTo(toQty) Value = "+ toQty == null? "toQty null ":orderQuantity.compareTo(toQty)+" --- Bug 36362 - orderQuantity.compareTo(toQty) ---");
 					if (fromQty.compareTo(orderQuantity) <= 0
 							&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
 						isTierPriceMatched = true;
-						log.info("--- Bug 36362 - isTierPriceMatched Value = "+isTierPriceMatched+" ---");
 						groupedItemPrice.add(itemPrice);
 					} 
 				} else {
@@ -5028,7 +5027,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
-		log.info("--- Bug 36362 - isTierPrice Value Outside loop = "+isTierPrice+" isTierPriceMatched = "+isTierPriceMatched+" ---");
 		if(isTierPrice && !isTierPriceMatched) {
 			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
 		} else {
@@ -5036,7 +5034,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				topPricedItem = findMaxPriceItem(groupedItemPrice);
 			}
 		}
-		log.info("--- Bug 36362 - Method: getTopZonalTierPrice end ---");
 		
 		return topPricedItem;
 	}
@@ -5404,4 +5401,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
+	
+	// 36362 - start
+	/**
+	 * To validate quantity not exceed tier max quantity
+	 * 
+	 * @param requestNoteDtl
+	 */
+	private void validateTierQuantityExceedMaxQuantity(ScRequestNoteDtl requestNoteDtl) {
+		if ((requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_TIER_STANDARD) || requestNoteDtl
+				.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_ZONAL_TIER_STANDARD))
+				&& requestNoteDtl.getRequestItem().getQuantity()
+						.compareTo(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClQuantity()) > 0) {
+			// Note for 29557, need to change this error message when merge.
+			// Dev -> MessageConst.ERROR_760527
+			// Prod -> MessageConst.ERROR_760399
+			throw new EpException(MessageConst.ERROR_760399, new String[] { requestNoteDtl.getRequestItem()
+					.getItemName() });
+
+		}
+	}
+	// 36362 - end
 }
