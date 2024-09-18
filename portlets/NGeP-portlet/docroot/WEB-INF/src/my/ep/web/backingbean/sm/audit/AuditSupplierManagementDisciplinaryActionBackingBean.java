@@ -99,7 +99,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 	private void suspendRegistration(SmDisciplinaryAction oldDisciplinaryAction,
 			SmDisciplinaryAction newDisciplinaryAction, List<AuditSupplierManagementDetailDTO> auDetails) {
-		if (oldDisciplinaryAction.isSuspendRegistration() != newDisciplinaryAction.isSuspendCategory()) {
+		if (oldDisciplinaryAction.isSuspendRegistration() != newDisciplinaryAction.isSuspendRegistration()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null,
 					getLabel("lbl.sm.disciplinary.jktt.suspend.registration"), null, null,
