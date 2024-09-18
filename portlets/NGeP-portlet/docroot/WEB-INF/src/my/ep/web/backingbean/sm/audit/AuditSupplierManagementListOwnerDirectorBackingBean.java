@@ -36,9 +36,33 @@ public class AuditSupplierManagementListOwnerDirectorBackingBean extends AuditSu
 
 		List<SmPersonnel> selectedOwnerAndDirectorList = mBean.getSelectedOwnerAndDirectorList();
 
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO);
+		for (SmPersonnel owner : selectedOwnerAndDirectorList) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME, null, owner.getName(), null, null, 0L));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_IDENTIFICATION_NO, null,
+					owner.getIdentificationNo(), null, null, 0L));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ROLE_IN_COMPANY, null, getRoleCompany(owner), null,
+					null, 0L));
+		}
+
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, 10L);
 
 		return auObj;
+	}
+
+	private String getRoleCompany(SmPersonnel owner) {
+		String role = "";
+		if (owner.isEquityOwner()) {
+			role = getLabel("lbl.sm.person.equiOwner");
+		}
+		if (owner.isEquityOwner() && owner.isDirector()) {
+			role = role + ", " + getLabel("lbl.sm.person.dir");
+		}
+		if ((owner.isEquityOwner() || owner.isDirector()) && owner.isContractSigner()) {
+			role = role + ", " + getLabel("lbl.sm.contract.signer");
+		}
+		return role;
 	}
 }

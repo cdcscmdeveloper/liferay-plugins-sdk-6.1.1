@@ -2,7 +2,6 @@ package my.ep.web.backingbean.sm.audit;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.constants.CommonConstants;
@@ -10,7 +9,6 @@ import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -69,11 +67,6 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 				AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION);
 
 		return auObj;
-	}
-
-	private String getLabel(String label) {
-		Locale locale = new Locale("ms", "MY");
-		return ResourceBundleUtils.getMessage(label, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 	}
 
 	private void warning(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,

@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sm.audit;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Locale;
 
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
@@ -14,6 +15,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -112,6 +114,12 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		auDetail.setNewValueId(newValueId != null ? BigInteger.valueOf(newValueId) : null);
 		auDetail.setFieldLabelCode(BigInteger.valueOf(fieldLabelCode));
 		return auDetail;
+	}
+
+	protected String getLabel(String label) {
+		Locale locale = new Locale(AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA,
+				SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		return ResourceBundleUtils.getMessage(label, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 	}
 
 	protected void auditBaseData(AuditSupplierManagementDTO auObj, SmSupplier supplier, String roleCode,
