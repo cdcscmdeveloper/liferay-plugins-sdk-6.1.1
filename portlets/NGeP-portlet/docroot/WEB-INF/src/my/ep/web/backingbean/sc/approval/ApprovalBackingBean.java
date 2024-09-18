@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -59,6 +60,7 @@ import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -82,6 +84,7 @@ import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -1134,7 +1137,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			dateMandatoryMessage("lbl.sc.qt.proposal.approval.date.chairperson.finalization");
 		}
 
-		if (enableDateMOF && scQt.getMofDate() == null) {
+		if (enableDateMOF && !getManagedBean().isChmnFinalizationRejectEpv() && scQt.getMofDate() == null) {
 			dateMandatoryMessage("lbl.sc.qt.proposal.approval.date.mof");
 		}
 
@@ -1227,12 +1230,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) { //1834L || 1854L
 				
 				approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
-				
+				notifyUsers(approvalRequest);
 			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
 					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) { //1835L || 1855L
 				
 				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
-
+				notifyUsers(approvalRequest);
 //				prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);//#21692 Re-open
 			}
 			
@@ -3687,6 +3690,38 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
 				this.getManagedBean().setChmnFinalizationRejectEpv(Boolean.TRUE);
 				this.getManagedBean().getQt().setMofDate(null);//Null date after hide
+			}
+		}
+		
+		/**
+		 * Send notification after Submission
+		 * 
+		 * @param approvalRequest
+		 */
+		public void notifyUsers(ScQtApprovalRequest approvalRequest) {
+			Map<String, Object> epvObj = new HashMap<>();
+			ScQt scQt = this.getManagedBean().getQt();
+			try {
+				PmOrgProfile ptjProfile = scQt.getPmOrgProfile();
+				epvObj.put(CommonConstants.OBJ_PTJ_NAME, ptjProfile.getPmOrgValidity().getOrgName());
+				epvObj.put(CommonConstants.OBJ_PTJ_CODE, ptjProfile.getPmOrgValidity().getOrgCode());
+				PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(scQt.getPmOrgProfile().getOrgProfileId());
+				if (null != pmOrgProfile && null != pmOrgProfile.getPmOrgValidity()) {
+					epvObj.put(CommonConstants.OBJ_MINISTRY_NAME, pmOrgProfile.getPmOrgValidity().getOrgName());
+				}
+				
+				String userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					userRemark = ResourceBundleUtils.getMessage(SourcingConstants.NOT_AVAILABLE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+				}
+				epvObj.put(CommonConstants.REMARK, userRemark);
+				
+				getQTDetailSO().sendEPVNotification(epvObj, scQt, approvalRequest);
+				
+			} catch(Exception e) {
+				SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "notifyUsers", scQt.getQtNo(), "notifyUsers",
+						getUserIdSessionFromLoginId(), e);
 			}
 		}
 		//#21692 - End
