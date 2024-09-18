@@ -110,6 +110,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -1358,7 +1359,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					committeSO.validateAppointCommitteDtls(committeReqDTO);
 				}
 				
-				approveCancelQTwithDOASenariosExists(this.getManagedBean().getQt(), taskName, action); //#25426 
+				if (SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName)
+						&& BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+					approveCancelQTwithDOASenariosExists(this.getManagedBean().getQt()); // #25426
+				}
+
 				
 				if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.FC_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
@@ -3229,73 +3234,102 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#	29762-start
 		
 		//#30477 - Start
+		/**
+		 * to get check is inactive publication approver
+		 * @return
+		 */
 		public boolean isInactivePublicationApproverRole() {
-			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			boolean inactive=false;
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
 			ScQt scQt = this.getManagedBean().getQt();
 			ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
-			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
-			if (null == publicationApproval && null!=resDTO && null!=resDTO.getQtApproval()) {
+			
+			if (null == publicationApproval ) {
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
+				QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
 				publicationApproval = resDTO.getQtApproval();
-				List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
-		        for(ScQtApproverSettings approverSetting : approverSettings ){
-		        	QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-			  		if(qtBackingBean.isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(), RoleCode.PUBLICATION_APPROVER.value())){
-		  			   inactive=true;
-		  		    }
-		        }
 			}
-			return inactive;
+		
+			List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			return qtBackingBean.isInactiveCommiteeApproverRole(null,approverSettings, RoleCode.PUBLICATION_APPROVER.value());
 		}
 		//#30477 - Start
 		
-		//#25426 - Start
-		/**
-		 * 202407252@haziq #25426
-		 * To remove EXIST DOA when approve cancel QT
-		 * @param scQt
-		 * @param taskName
-		 * @param action
-		 */
-		private void approveCancelQTwithDOASenariosExists(ScQt scQt, String taskName, String action){
-			if(SCProcessNameConst.APPROVE_CANCELATION.equalsIgnoreCase(taskName) && BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)){
-				String docNo = scQt.getQtNo();
-				
-					BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-					IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-					
-					bpmReqDTO.setDocNumber(docNo);
-					bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-					BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-					
-					if(bpmResDTO.getWorklistVO()!=null && CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())){
-						for(WorklistItemVO currentVO: bpmResDTO.getWorklistVO().getWorklistItem()){
-							  String docType = currentVO.getDocType();
-							  if(StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)){ 
-							
-									String taskId = currentVO.getTaskId();
-									if (StringUtils.isNotBlank(taskId)) {
-										
-										Object token = bpmSO.authenticate(EpPropertiesUtils
-												.getInstance().getProperty(
-														EpPropertiesConst.BPM_PRINCIPAL));
-										
-										bpmReqDTO = new BpmRequestDTO();
-										bpmReqDTO.setTaskId(taskId);
-										bpmReqDTO.setCtxToken(token);
-										bpmSO.withdrawTask(bpmReqDTO);
-									}	
-							  }
-						}
-					}	
-					
+	// #25426 - Start
+	/**
+	 * 202407252@haziq #25426 To remove EXIST DOA when approve cancel QT
+	 * 
+	 * @param scQt
+	 */
+	private void approveCancelQTwithDOASenariosExists(ScQt scQt) {
+		String docNo = scQt.getQtNo();
+
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+		bpmReqDTO.setDocNumber(docNo);
+		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+		boolean isWithdrawTask = false;
+		
+		if (bpmResDTO.getWorklistVO() != null
+				&& CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())) {
+			for (WorklistItemVO currentVO : bpmResDTO.getWorklistVO().getWorklistItem()) {
+				String docType = currentVO.getDocType();
+				if (StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)
+						&& StringUtils.isNotBlank(currentVO.getTaskId())) {
+
+					Object token = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.BPM_PRINCIPAL));
+
+					bpmReqDTO = new BpmRequestDTO();
+					bpmReqDTO.setTaskId(currentVO.getTaskId());
+					bpmReqDTO.setCtxToken(token);
+					bpmSO.withdrawTask(bpmReqDTO);
+
+					isWithdrawTask = true;
 				}
 			}
-		//#25426 - End
+			if (isWithdrawTask) {
+				updateWorkFlowStatus(scQt);
+			}
+
+		}
+		// #25426 - End
+	}
+	
+	/**
+	 * update workflow Status
+	 * @param scQt
+	 */
+	private void updateWorkFlowStatus(ScQt scQt) {
+		IScWorkFlowStatusSO workFlowStatusSO = null;
+
+		try {
+			workFlowStatusSO = (IScWorkFlowStatusSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO workFlowReqDTO = new ScWorkFlowStatusReqDTO();
+			ScQtStatus workFlowStatus = new ScQtStatus();
+			workFlowStatus.setScQt(scQt);
+			workFlowStatus.setCurrent(true);
+			PmStatus newStatus = getPmStatusByStatusId(QTStatusConst.DAR_CANCELLED);
+			workFlowStatus.setPmStatus(newStatus);
+			workFlowReqDTO.setScWorkFlowStatus(workFlowStatus);
+			workFlowReqDTO.setDocType(ParameterConst.DOCTYPE_DOA_ASSIGNMENT);
+			workFlowReqDTO.setDocId(scQt.getQtId());
+			workFlowStatusSO.updateCurrentWorkflowStatus(workFlowReqDTO);
+
+		} finally {
+			// Close or release any resources if needed
+		}
+	}
+
+	// #25426 - End
+			
+
 		
 		//#28784
 		private FacesScopes getFacesScopes() {
