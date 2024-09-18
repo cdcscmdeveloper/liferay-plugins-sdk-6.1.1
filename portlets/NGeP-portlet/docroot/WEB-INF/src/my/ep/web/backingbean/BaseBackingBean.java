@@ -3000,6 +3000,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
 						resDTO.getSmPersonnel().setSsmData(false); //#29956
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -3099,6 +3101,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+				//#29582
+				ssmReqDTO.setSmSupp(smSupplier);
 				//27329
 				ssmReqDTO.setPreRegistration(true);
 				//ssmReqDTO.setCheckOnly(true);
@@ -3317,6 +3321,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			this.getManagedBean().setSmSupplierSsm(new SmSupplier());
+			//#24819 - START
+			if(this.getManagedBean().getSmSupplier() == null){
+				this.getManagedBean().setSmSupplier(new SmSupplier());
+				this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
+			}
+			//#24819 - END
 			/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
 					.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
 					: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
@@ -4096,7 +4106,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				
 				if(isPersonnelAdminRole
-						&& isMofAccEffDatePassed6MonthCurrDate
+						&& !isMofAccEffDatePassed6MonthCurrDate
 						&& !isBasicAccount){
 					getManagedBean().setDisAllowOwnerEdit(true);
 					break;
@@ -4104,7 +4114,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		if(getManagedBean().getPersonnelsRole() != null 
-				|| !getManagedBean().getPersonnelsRole().isEmpty()){
+				&& !getManagedBean().getPersonnelsRole().isEmpty()) {
 			getManagedBean().setDowngradeRole(true);
 			
 			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
@@ -4132,4 +4142,46 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
+	
+	// #28854 - Start
+	/**
+	 * Processes the given String value by replacing newline characters with
+	 * HTML line break tags and encoding the < and > characters to their HTML
+	 * entity equivalents.
+	 * 
+	 * @param value
+	 *            the string to be processed
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively
+	 */
+	public String encodeHtmlString(String value) {
+		if (value == null) {
+			return "";
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace newline characters with <br/>
+		return formatted.replace("\n", "<br/>");
+	}
+
+	/**
+	 * Encodes the given string as HTML if it is not null or empty.
+	 * 
+	 * <p>
+	 * This method checks if the input string is neither null nor empty. If the
+	 * string is valid, it is passed to the {@link #encodeHtmlString(String)}
+	 * method for encoding. If the string is null or empty, the method returns
+	 * null.
+	 * </p>
+	 * 
+	 * @param value
+	 *            the string to encode; may be null
+	 * @return the HTML-encoded string if {@code value} is not null or empty;
+	 *         {@code null} otherwise
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+		return (value != null && !value.isEmpty()) ? encodeHtmlString(value) : null;
+	}
+	// #28854 - End
 }
