@@ -1211,6 +1211,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new ArrayList<SmMachineDtl>());
 		} else {
 			List<SmMachineDtl> activeMachineDtls = new ArrayList<SmMachineDtl>();
+			List<SmMachineDtl> allMachineDtls = new ArrayList<SmMachineDtl>(); //#34209
 			SmMachineDtl machDtlTmp = null;
 
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -1232,6 +1233,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								String suppCatCode = cat.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().concat(
 										cat.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()).concat(
 												cat.getPmCategoryL3().getCategoryL3Code());
+								
+								
+								//#34209 - START
+								if(macCatCode.equalsIgnoreCase(suppCatCode) && machDtlTmp == null){
+									allMachineDtls.add(machineDtl);
+								}
+								//#34209 - END
+								
 								if (machineDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 										&& macCatCode.equalsIgnoreCase(suppCatCode)
 											&& machDtlTmp == null) {
@@ -1245,7 +1254,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 //				}
 				// #30021 - end
 			}
-			
+			getManagedBean().setAllMachineDtls(allMachineDtls); //#34209
 			getManagedBean().getSmAppl().setSmMachineDtls(activeMachineDtls);
 		}
 		// manufacturingOrAssmblyInfoFormViewOnly
@@ -3443,8 +3452,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
 		if (!EntityHelper.isCollectionEmpty(categories)) {
 			for (SmSupplierCategory cat : categories) {
-				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-						&& cat.getPmCategoryL3() != null
+				//#34209 - START
+				if (/*cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+						&& */
+				//#34209 - END
+					cat.getPmCategoryL3() != null
 						&& !StringUtils.isBlank(cat.getPmCategoryL3()
 								.getFacilityType())
 						&& cat.getPmCategoryL3().getFacilityType()
@@ -3484,7 +3496,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					if (cat.getPmCategoryL3() != null
 							&& !EntityHelper.isCollectionEmpty(cat
 									.getPmCategoryL3().getFacilityList())) {
-						categoryFacilityVOList.add(cat.getPmCategoryL3());
+						//#34209 - START
+						if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+							categoryFacilityVOList.add(cat.getPmCategoryL3());
+						}
+						//#34209 - END
 					}
 				}
 			}
