@@ -8,11 +8,13 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true">
+	<!-- #28175 --><!-- #34209 - START -->
 		<ui:param name="isSuppProfile" 
 				  value="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}"/>
 		<c:if test="#{!isSuppProfile}" >
 			#{viewSmApplBackingBean.rePopulateMachine()}
 		</c:if>
+	<!-- #34209 - END -->
 		<p:outputPanel id="machInfPan" layout="block">
 			<p:dataTable var="macBean" widgetVar="smMachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smMachineDtls}"
