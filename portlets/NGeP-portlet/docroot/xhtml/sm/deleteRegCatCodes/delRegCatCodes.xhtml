@@ -109,6 +109,16 @@
 					value="#{lbl['lbl.sm.delete.sure']} #{deleteCategoryCodeBB.managedBean.selectedCategories.size()} #{lbl['lbl.sm.records.sure']} #{lbl['lbl.sm.records.reapplication']}"
 					style="white-space : normal !important" />
 			</f:facet>
+			<!-- 32236 - Start -->
+			<script>
+      
+				const collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+       			for (let i = 0; i &lt; collection.length; i++) {
+          			collection[i].remove();
+        		}
+			
+	      	</script>
+			<!-- 32236 - End -->
 
 			<div align="right">
 				<p:commandButton id="confCatDel" value="#{lbl['lbl.btn.yes']}"
