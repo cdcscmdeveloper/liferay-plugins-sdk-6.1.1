@@ -610,15 +610,17 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#33795 - end
 		//#15391 - end		
 		
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());//#29732 
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) ) {
-			if(isSpecRoleMaintenanceValidation()){
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& !isQtRevisePubNqtPendingScheDoc()) {
+			if (isSpecRoleMaintenanceValidation()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
-				this.getManagedBean().setCurrentInSpecMaint(true);//#29732 first time spec maint
+				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
 			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
-			
-			if (!changedCatCodeList.isEmpty()) {
+
+			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().isReadOnly()) {
 				redirect = false;
 				this.getManagedBean().setActiveIndex(1);
 				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
@@ -819,7 +821,18 @@ public boolean isSpecCommittee() {
     private boolean isSpecRoleMaintenanceValidation(){
     	FacesScopes facesScopes = new FacesScopes();
 		return  facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
+	}
+
+	private boolean isQtRevisePubNqtPendingScheDoc() {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (QTStatusConst.QT_REVISION_PUBLICATION.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+						.equals(this.getManagedBean().getCurrentStatusId()))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
     //29732 end
 

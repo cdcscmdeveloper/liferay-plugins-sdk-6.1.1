@@ -347,9 +347,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 						.inactiveSupplierRole(getOldAdminReqDTO());
-			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
-					(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
-					getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+			//33129
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && getManagedBean().getSmSupplier().getSmAppl() != null &&
+					getManagedBean().getSmSupplier().getSmAppl().getPmStatus() != null &&
+					(getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+					getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){ //#34483
 				getManagedBean().setBypassFlag1(1);
 			}
 			//#28765 - End
@@ -783,12 +785,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 						new String[] { getManagedBean().getOldAdmin()
 								.getIdentificationNo() });
 			}
-//			//#29616 -start
-//			//check old admin have active softcert
-//			if (getManagedBean().getOldAdmin().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-//				throw new EpException(MessageConst.ERROR_722685,
-//						new String[] { getManagedBean().getOldAdmin().getName() });
-//			}//#29616 -end
 		}
 		
 		listenerClickStaffRole(); // #33563
