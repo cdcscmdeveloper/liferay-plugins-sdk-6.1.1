@@ -1084,7 +1084,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 						// #25396 - Start
 						ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
-						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
+						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 						if (isUseViewAsOption()) {
 							if (isViewAsSupplier()) {
 								List<String> listOfSupplierRole = getAllSupplierRole();
@@ -1158,7 +1158,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	// to get list of all supplier role
 	// Start - #25396
 	private List<String> getAllSupplierRole() {
-		List<String> supplierRoles = new ArrayList<String>();
+		List<String> supplierRoles = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
 		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
