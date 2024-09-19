@@ -1236,7 +1236,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 								
 								
 								//#34209 - START
-								if(macCatCode.equalsIgnoreCase(suppCatCode) && machDtlTmp == null){
+								if(macCatCode.equalsIgnoreCase(suppCatCode) && 
+										(SmMachineDtl) EntityHelper.getEntityBySinglePropertyFromList(machineDtl.getMachineDtlId(), allMachineDtls, "machineDtlId") == null){
 									allMachineDtls.add(machineDtl);
 								}
 								//#34209 - END
