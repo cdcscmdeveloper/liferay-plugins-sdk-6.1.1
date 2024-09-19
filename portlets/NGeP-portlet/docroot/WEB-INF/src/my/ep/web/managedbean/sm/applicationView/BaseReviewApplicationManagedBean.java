@@ -375,6 +375,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean flagShowButtonSubmit;
 	//#34209
 	private boolean poApprUnClaimTask;
+	private List<SmMachineDtl> allMachineDtls;
+	
 	//#34099 - start
 	private SmApplInquiry selectedInquiryResponse;
 	private String tabActiveDlg = "0";
@@ -2584,4 +2586,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.latestChequeSignPersonnelName = latestChequeSignPersonnelName;
 	}
 	//#35086 - end
+	
+	//#34209 - START
+	public List<SmMachineDtl> getAllMachineDtls() {
+		return allMachineDtls;
+	}
+
+	public void setAllMachineDtls(List<SmMachineDtl> allMachineDtls) {
+		this.allMachineDtls = allMachineDtls;
+	}
+	//#34209 - END
 }
