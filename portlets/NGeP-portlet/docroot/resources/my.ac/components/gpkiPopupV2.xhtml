@@ -12,7 +12,8 @@
 		update="gpki_dlg2" oncomplete="gpki_dlg.hide(); gpki_dlg2.show();"/>
 	<p:remoteCommand name="getUser" action="#{gpkiBackingBean.getUserDetails()}" 
 		oncomplete="gpki.setUser(xhr,status,args); "/>
-	<p:remoteCommand name="toggleBtn" action="#{gpkiBackingBean.toggleBtn()}" update="resendOtpBtn"/>
+	<p:remoteCommand name="enableBtn" action="#{gpkiBackingBean.enableBtn()}" update="resendOtpBtn"/>
+	<p:remoteCommand name="disableBtn" action="#{gpkiBackingBean.disableBtn()}" update="resendOtpBtn"/>
 	<h:outputScript library="ep/gpki_js" name="obfuscate_gpki-api-v2.js" />
 	<h:outputScript library="ep/gpki_js" name="obfuscate_gpkiPopup2.js" />
 
@@ -33,18 +34,20 @@
 		    gpki.signRoam([text, pin, otp, pinLbl, otpLbl]);
 		}
 		
+		var otpTimeoutId;
 		function disableOtpTimeout(){
-			toggleBtn();				
+			disableBtn();				
 			$("[id$='gpkiOtpNotes']").show();
-			setTimeout(
+			otpTimeoutId = setTimeout(
 				function() {
 					$("[id$='gpkiOtpNotes']").hide();
-					toggleBtn();
+					enableBtn();
 				}, gpki.otpExp() * 1000);
 		}
 	</script>
 
-	<p:dialog id="gpki_dlg" widgetVar="gpki_dlg" onShow="getUser();"
+	<p:dialog id="gpki_dlg" widgetVar="gpki_dlg" 
+		onShow="#{gpkiBackingBean.getGpkiEnabledProperty() ? 'getUser();' : 'setMediumType();'}"
 		resizable="false" modal="true" showHeader="false" closable="false">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:dialog>
