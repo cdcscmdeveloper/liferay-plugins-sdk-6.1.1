@@ -176,6 +176,16 @@
 			function isRunGPKIEnableAutoUpdate() {
 			  return this.runGPKIEnableAutoUpdate;
 			}
+			
+			function checkText(){
+				const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
+				if (!(typeof textBeforeSign === 'string' || textBeforeSign instanceof String)
+						|| textBeforeSign.trim() === ""){
+					errorAction([ {name : 'statusMsg',	value : 'TextBeforeSign null'}, ]);
+					return false;
+				}
+				return true;
+			}
 		</script>
 
 	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
@@ -206,7 +216,11 @@
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="DigiSign();" />
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
-				<p:commandButton id="signButtonId1" value="Sign W/O Token"  onstart="setRunGPKIEnableAutoUpdate(false);gpkiBlockWidget.show();" oncomplete="gpkiBlockWidget.hide();"  rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" >
+				<p:commandButton id="signButtonId1" value="Sign W/O Token"  
+					onstart="if (!checkText()) return false; setRunGPKIEnableAutoUpdate(false);gpkiBlockWidget.show();" 
+					oncomplete="gpkiBlockWidget.hide();"  
+					rendered="#{gpkiBackingBean.getGpkiEnabledProperty() eq false}" 
+					action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" >
 					<f:param name="textBeforeSign" value="#{cc.attrs.textBeforeSign}" />
 				</p:commandButton>
 				
