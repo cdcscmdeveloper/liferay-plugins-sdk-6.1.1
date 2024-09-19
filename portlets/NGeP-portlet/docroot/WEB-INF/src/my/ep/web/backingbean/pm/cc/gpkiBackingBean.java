@@ -340,10 +340,17 @@ public class gpkiBackingBean implements Serializable {
 	}
 	
 	/**
-	 * Toggle re-send OTP button
+	 * Enable Re-send OTP button
 	 */
-	public static void toggleBtn(){
-		disableBtn = !disableBtn;
+	public static void enableBtn(){
+		disableBtn = false;
+	}
+	
+	/**
+	 * Disable Re-send OTP button
+	 */
+	public static void disableBtn(){
+		disableBtn = true;
 	}
 	//#35488 - end
 }

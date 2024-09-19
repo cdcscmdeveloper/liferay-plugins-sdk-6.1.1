@@ -109,7 +109,6 @@ import my.ep.web.util.pm.helper.StatusHelper; //Fix - #30866
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -307,6 +306,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		String taskId = originalServletRequest.getParameter("taskId");
 
 		//Bug 34142, 15851 - shaqimi start 04/12/2022
+		if(taskId!=null){
+			ctBB.getManagedBean().setInPage(false);
+		}
 		if(!ctBB.getManagedBean().isInPage()){
 			if(ctBB.getManagedBean().isBackFromSCL()){
 				getManagedBean().setSelectedTabIndex(0);
@@ -324,6 +326,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			if(!ctBB.getManagedBean().isViewContractFromAgreement()){
 				if(taskId != null && !taskId.isEmpty()){
+					ctBB.getManagedBean().setDocTypeFromTaskList(null);
 					ctBB.getManagedBean().setTaskIdFromTaskList(taskId);
 				} else {
 					if(ctBB.getManagedBean().getTaskIdFromTaskList() != null && !ctBB.getManagedBean().getTaskIdFromTaskList().isEmpty()){
@@ -2850,9 +2853,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
+		ctBB.renewSesionObject(); //#15851
 		trBB.setCtBB(new ContractBackingBean());	
 		trBB.getCtBB().getManagedBean().setViewContract(true);
 		trBB.getCtBB().getManagedBean().setContractVer(resDTO.getCtContractVer());
+		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer()); //#15851
+		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract()); //#15851
 		trBB.getManagedBean().setExternalPageUrl(null);
 		ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 
@@ -3889,6 +3895,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 		
 			reqDTO.setUpdateAction(true);
+			ctBB.renewSesionObject(); //#15851
 			ctBB.getManagedBean().setNotificationSetting(false);
 			ctBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setUpdateContract(true);

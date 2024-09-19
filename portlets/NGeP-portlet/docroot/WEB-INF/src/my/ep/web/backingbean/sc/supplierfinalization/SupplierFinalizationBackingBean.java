@@ -404,9 +404,13 @@ public class SupplierFinalizationBackingBean extends
 		isBpkCentralContract = isBpkCentralContract(scQt);
 		// #27502 -- END
 		
-		if (getManagedBean().isInitialDecisionFwdToBPK()) {
-			getManagedBean().getScQtFinalization()
-					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
+		if (getManagedBean().isInitialDecisionFwdToBPK()) {			
+			//Bug #36187 - start
+			if (null == getManagedBean().getScQtFinalization().getLoiLoaBy()){
+				getManagedBean().getScQtFinalization()
+				.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
+			}
+			//Bug #36187 - end
 			getManagedBean().setPreparationTabIndex(-1);
 			getManagedBean().setEvaluationReportIndex(tabIndex++);
 			getManagedBean().setReportTabIndex(tabIndex++);
