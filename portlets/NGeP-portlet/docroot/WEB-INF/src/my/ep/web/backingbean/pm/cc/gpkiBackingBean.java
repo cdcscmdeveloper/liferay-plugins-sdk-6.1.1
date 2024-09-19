@@ -104,7 +104,6 @@ public class gpkiBackingBean implements Serializable {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);	//#35488
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
-		userSO.retrieveUserByUserId(reqDTO);
 		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);	//#35488
 		Object returnObj = null;
 		
@@ -341,10 +340,17 @@ public class gpkiBackingBean implements Serializable {
 	}
 	
 	/**
-	 * Toggle re-send OTP button
+	 * Enable Re-send OTP button
 	 */
-	public static void toggleBtn(){
-		disableBtn = !disableBtn;
+	public static void enableBtn(){
+		disableBtn = false;
+	}
+	
+	/**
+	 * Disable Re-send OTP button
+	 */
+	public static void disableBtn(){
+		disableBtn = true;
 	}
 	//#35488 - end
 }
