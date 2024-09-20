@@ -21,9 +21,11 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -3798,5 +3800,17 @@ public class TemplateSpecBackingBean extends
 		RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
 	}
 	// #28784 -end-
+	
+	
+	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
+		BigDecimal weightage = (BigDecimal) value;
+
+		if (weightage.compareTo(BigDecimal.valueOf(100)) > 0) {
+			String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+
+	}
 	
 }
