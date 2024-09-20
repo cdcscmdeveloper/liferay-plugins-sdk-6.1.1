@@ -3444,6 +3444,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String showDialog = "supplierRejectConfirmation.show()";
 			RequestContext.getCurrentInstance().execute(showDialog);
 		}
+		//#21692 - Start
 		/**
 		 * Finalization committee message after use click on submit
 		 * whether reject or accept EPV
@@ -3461,6 +3462,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			return msgCode;
 		}
+		//#21692 - End
 		
 		private Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
 			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
