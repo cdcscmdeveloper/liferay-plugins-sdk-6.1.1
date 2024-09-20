@@ -3684,14 +3684,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		
+		//#21692 - End
+		//#21692 - Start
 		private List<ScQtApprovalRequest> proposalValidityWip(String outcome) {
 
 			List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 				if (approvalRequest.getApproverAction() == null) {
 					PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
-							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
+							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? 
+									this.getManagedBean().isProposalValidityRevised() ? ParameterConst.TR2_REVISE : ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
 					approvalRequest.setApproverAction(pmParameter);
 					approvalRequest.setDecessionType(null);
 					approvalRequest.setDecisionCertPBM(null);
@@ -3701,7 +3703,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			return scQtApprovalRequests;
 		}
-		
+		//#21692 - End
+		//#21692 - Start
 		private void checkResponsePeriod() {
 			if (this.getManagedBean().getQt().getResponsePeriod() != this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod()) {
 				List<ScQtApprovalRemark> remarks = getManagedBean().getScQtApproval().getScQtApprovalRemarks();
