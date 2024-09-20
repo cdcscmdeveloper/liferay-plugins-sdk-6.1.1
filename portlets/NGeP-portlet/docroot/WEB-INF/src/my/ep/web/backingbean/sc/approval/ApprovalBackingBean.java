@@ -3691,7 +3691,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 				if (approvalRequest.getApproverAction() == null) {
 					PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
-							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
+							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? 
+									this.getManagedBean().isProposalValidityRevised() ? ParameterConst.TR2_REVISE : ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
 					approvalRequest.setApproverAction(pmParameter);
 					approvalRequest.setDecessionType(null);
 					approvalRequest.setDecisionCertPBM(null);
