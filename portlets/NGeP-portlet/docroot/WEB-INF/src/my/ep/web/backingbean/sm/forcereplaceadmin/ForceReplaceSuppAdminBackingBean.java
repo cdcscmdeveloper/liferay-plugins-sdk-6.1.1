@@ -138,6 +138,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setCompanyName(getManagedBean().getReactivateBasic()
 				.getAgencyName());
 		reqDTO.setSuppType(getManagedBean().getReactivateBasic().getSuppType());
+		reqDTO.setAccType(getManagedBean().getAccType()); //#33129
 
 		//#28765 chained method retrieveSupplierAndPersonnelsByBusRegNoAndNameBypassActiveAcc
 		if (getManagedBean().getAccType().equals(
@@ -344,17 +345,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			redirectToSuccessPageForInProgress(resDto);
 		} else {
-			
-			//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
-			if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
-//					&& resDto.isTerminateSupplier() == false
-					) {
-				// End 28765 comment changes 12981
-				PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 						.inactiveSupplierRole(getOldAdminReqDTO());
-			} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
-					(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
-					getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+			//33129
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && getManagedBean().getSmSupplier().getSmAppl() != null &&
+					getManagedBean().getSmSupplier().getSmAppl().getPmStatus() != null &&
+					(getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+					getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){ //#34483
 				getManagedBean().setBypassFlag1(1);
 			}
 			//#28765 - End
@@ -788,12 +785,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 						new String[] { getManagedBean().getOldAdmin()
 								.getIdentificationNo() });
 			}
-//			//#29616 -start
-//			//check old admin have active softcert
-//			if (getManagedBean().getOldAdmin().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-//				throw new EpException(MessageConst.ERROR_722685,
-//						new String[] { getManagedBean().getOldAdmin().getName() });
-//			}//#29616 -end
 		}
 		
 		listenerClickStaffRole(); // #33563

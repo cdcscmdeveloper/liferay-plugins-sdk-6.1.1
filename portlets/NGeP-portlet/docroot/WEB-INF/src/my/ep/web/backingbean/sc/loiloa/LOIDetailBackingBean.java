@@ -85,6 +85,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -1707,6 +1708,7 @@ public class LOIDetailBackingBean extends
 		}
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setButtonFlag(false);
+		getManagedBean().setReadOnly(false);// 36293
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -2734,16 +2736,6 @@ public class LOIDetailBackingBean extends
 			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
 
 			if (awardSupplierResDTO.isSuccessful()) {
-				// #33380 - Start.
-				if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
-						&& getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION)) {
-					AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-					reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-					reqDTO.setStatusId(statusId);
-					getQtAwardSO().preapareTdForRecommendation(reqDTO);
-				}
-				// #33380 - End.
 				scLoi = awardSupplierResDTO.getScLoi();
 
 				renewSesionObject();
@@ -3243,7 +3235,7 @@ public class LOIDetailBackingBean extends
 				}
 			}
 
-			if (getManagedBean().getScQtCommittee() != null) {// #27502, Adding Condition only
+			if (getManagedBean().getScQtCommittee() != null) {// #27502, Adding Condition only  - Bug #36187
 				for (ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee()
 						.getMeetingAttendances()) {
 					if (meetingAttendance.isSelected() || meetingAttendance != null) {
@@ -4089,6 +4081,7 @@ public class LOIDetailBackingBean extends
 		Object payLoadData = getManagedBean().getPayLoad();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
+		String taskName = getManagedBean().getTaskName();//33380
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
@@ -4107,6 +4100,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setSourceId(sourceId);
 		getManagedBean().setPayLoad(payLoadData);
 		getManagedBean().setTaskId(taskId);
+		getManagedBean().setTaskName(taskName);//33380
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setBackToPreviousPage(backToPreviousPage);
@@ -6365,6 +6359,11 @@ public class LOIDetailBackingBean extends
 	 * @return true, if is loi required disabled
 	 */
 	public boolean isLoiRequiredDisabled(ScLoiLoa scLoiLoa){
+		// 36293 - start
+		if (scLoiLoa.isLoiRequiredDisabled()) {
+			return Boolean.TRUE;
+		}
+		// 36293 - end
 		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
 			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
 			if(scLoi.getScWorkFlowStatus() != null){
@@ -6411,28 +6410,43 @@ public class LOIDetailBackingBean extends
 		return scLoiAttachment;
 	}
 	
+	//6906 - start - fix for #346
 	private void checkIsLoiProcessRequired(List<ScLoiLoa> pendingLoiLoas) {
-		boolean isSubmitButton = true;
+		this.getManagedBean().setLoiRequired(false);
+		boolean isAllLoiRequired = true;
+
 		for (ScLoiLoa loiLoa : pendingLoiLoas) {
-
-			if (null != loiLoa.getLoiRequired()) {
-				if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
-					isSubmitButton = Boolean.FALSE;
-					break;
-				}
-
-			} else{
-				isSubmitButton = Boolean.FALSE;
-				break;
+			if (!loiLoa.isLoiLoaActive()) {
+				continue;
+			}
+			if (null == loiLoa.getLoiRequired()
+					|| (loiLoa.getLoiRequired() && (!checkIfAllLoiCompleted(loiLoa.getScLois()) || !isLoiRequiredDisabled(loiLoa)))) {
+				this.getManagedBean().setLoiRequired(false);
+				return;
+			}
+			if (!loiLoa.getLoiRequired()) {
+				isAllLoiRequired = false;
 			}
 		}
-
-		if (isSubmitButton) {
-			getManagedBean().setLoiRequired(Boolean.TRUE);
-		} else {
-			getManagedBean().setLoiRequired(Boolean.FALSE);
-		}
+		this.getManagedBean().setLoiRequired(!isAllLoiRequired);
 	}
+
+	private boolean checkIfAllLoiCompleted(List<ScLoi> lois) {
+		if (CollectionUtils.isEmpty(lois))
+			return false;
+		for (ScLoi loi : lois) {
+			PmStatus status = null != loi.getScWorkFlowStatus() && null != loi.getScWorkFlowStatus().getPmStatus() ? loi
+					.getScWorkFlowStatus().getPmStatus() : new PmStatus();
+			Long statusId = null != status.getStatusId() ? status.getStatusId() : 0L;
+
+			if (!QTStatusConst.LOI_COMPLETED.equals(statusId)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	//6906 - end - fix for #346
+
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
 	/**

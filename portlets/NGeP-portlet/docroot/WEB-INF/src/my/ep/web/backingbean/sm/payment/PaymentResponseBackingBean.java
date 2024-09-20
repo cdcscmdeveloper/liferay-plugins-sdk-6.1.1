@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -806,22 +808,18 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		switch (status) {
 		case SupplierManagementConst.MOL_SUCCESS:
 			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
-			String msgCode = null;
 
 			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
-				msgCode = MessageConst.INFO_721058;
+				getManagedBean().setMessageId(MessageConst.INFO_721058);
 			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
-				msgCode = MessageConst.INFO_721068;
-				
-				getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
+				setMessageSoftcert(paymentId, billDtl);
 			}else{
-				msgCode = MessageConst.INFO_721064;
+				getManagedBean().setMessageId(MessageConst.INFO_721064);
 			}
 			
 			PaymentAcknowledgeBackingBean pymtAckBB = new PaymentAcknowledgeBackingBean();
 			pymtAckBB.getManagedBean().setPaymentId(paymentId);
 			
-			getManagedBean().setMessageId(msgCode);
 			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
 			paymentStatus = true;
 			break;
@@ -858,7 +856,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}
 		
 		log.info("Severity >>>>>>>>" + getManagedBean().getMessageSeverity().toString());
-		log.info("Message Id >>>>>>>>" + getManagedBean().getMessageId().toString());
+		log.info("Message Id >>>>>>>>" + getManagedBean().getMessageId());
 		log.info("Payment Id >>>>>>>>" + getManagedBean().getPaymentId());
 		log.info("Payment Status >>>>>>>>" + getManagedBean().isPaymentStatus());
 
@@ -924,7 +922,8 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			String[] msgParam = null;
 			
 			//#29481 - Start - added INFO_721068
-			if(getManagedBean().getMessageId() != null && (getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721068) || getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721065))){
+			List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
+			if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
 			//#29481 - End
 				msgParam = getManagedBean().getMsgParam();
 			}else{
@@ -999,7 +998,7 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		StringBuilder sbName = new StringBuilder();
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		
-		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+		IPaymentSO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO2 = new PaymentReqDTO();
 		reqDTO2.setPaymentId(paymentId);
 		PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO2);
@@ -1017,6 +1016,27 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		}
 		String[] strArr = new String[]{sbName.toString()};
 		return strArr;
+	}
+
+	private void setMessageSoftcert(Long paymentId, List<PyBillDtl> bills){
+		FacesScopes fs = new FacesScopes();
+		boolean isAdmin = fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+				    || fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+					|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+					|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		if(bills != null && bills.size() == 1 && isAdmin){
+			Long currentUserId = fs.getUserSessionBean().getUserId();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
+			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
+			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+				getManagedBean().setMessageId(MessageConst.INFO_721067);
+				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
+			}
+		} else {
+			getManagedBean().setMessageId(MessageConst.INFO_721068);
+			getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
+		}
 	}
 	//#29481 - End
 /*	public static void main(String args[]){
