@@ -1668,7 +1668,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
 	private ScQtEpvSupplierResponse suppResp;//#21692
 	private boolean chmnFinalizationRejectEPV;//#21692
-	private boolean proposalValidityRevised;
+	private boolean proposalValidityRevised;//#21692
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
