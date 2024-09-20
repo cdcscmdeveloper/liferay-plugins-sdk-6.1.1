@@ -1666,6 +1666,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
+	private ScQtEpvSupplierResponse suppResp;//#21692
+	private boolean chmnFinalizationRejectEPV;//#21692
+	private boolean proposalValidityRevised;
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
@@ -1849,8 +1852,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> backupCategoryCode;
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
-	private ScQtEpvSupplierResponse suppResp;//#21692
-	private boolean chmnFinalizationRejectEPV;//#21692
 				
 	// #29521 - end
 	//Bug #35061 - asyrafhaziq 
@@ -11287,24 +11288,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.qtRemarksIdRemove = qtRemarksIdRemove;
 		}
 		//#9019 - End (Harun)
-		
-		// #21692 - start
-		/**
-		 * @return the proposalValidityChangeValue
-		 */
-		public boolean isProposalValidityChangeValue() {
-			return proposalValidityChangeValue;
-		}
-
-		/**
-		 * @param proposalValidityChangeValue
-		 *            the proposalValidityChangeValue to set
-		 */
-		public void setProposalValidityChangeValue(
-				boolean proposalValidityChangeValue) {
-			this.proposalValidityChangeValue = proposalValidityChangeValue;
-		}
-		// #21692 - end
 		//#29468 Vinod Start
 		public TreeNode getRootCategoryTree() {
 			return rootCategoryTree;
@@ -11763,16 +11746,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
 
-	//#21692 - Start
-	public ScQtEpvSupplierResponse getSuppResp() {
-		return suppResp;
-	}
-
-	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
-		this.suppResp = suppResp;
-	}
-	//#21692 - End
-
 	public String getEpvAttachmentValue() {
 		return epvAttachmentValue;
 	}
@@ -11906,6 +11879,38 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setChmnFinalizationRejectEPV(boolean chmnFinalizationRejectEPV) {
 		this.chmnFinalizationRejectEPV = chmnFinalizationRejectEPV;
+	}
+
+	public boolean isProposalValidityRevised() {
+		return proposalValidityRevised;
+	}
+
+	public void setProposalValidityRevised(boolean proposalValidityRevised) {
+		this.proposalValidityRevised = proposalValidityRevised;
+	}
+
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
+	}
+
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
+	}
+	
+	/**
+	 * @return the proposalValidityChangeValue
+	 */
+	public boolean isProposalValidityChangeValue() {
+		return proposalValidityChangeValue;
+	}
+
+	/**
+	 * @param proposalValidityChangeValue
+	 *            the proposalValidityChangeValue to set
+	 */
+	public void setProposalValidityChangeValue(
+			boolean proposalValidityChangeValue) {
+		this.proposalValidityChangeValue = proposalValidityChangeValue;
 	}
 	//#21692 - End
 }
