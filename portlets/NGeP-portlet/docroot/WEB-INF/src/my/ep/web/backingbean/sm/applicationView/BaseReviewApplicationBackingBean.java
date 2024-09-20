@@ -1239,6 +1239,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new ArrayList<SmMachineDtl>());
 		} else {
 			List<SmMachineDtl> activeMachineDtls = new ArrayList<SmMachineDtl>();
+			List<SmMachineDtl> allMachineDtls = new ArrayList<SmMachineDtl>(); //#34209
 			SmMachineDtl machDtlTmp = null;
 
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -1249,9 +1250,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// #30021 - end
 				// #32809 - start - #30766
 				// filter category code that not imposed with DA
-				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+				//#34209 - START
+				/*if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
 						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED
-						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {*/
+				//#34209 - END
 					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
 							.getSmMachineDtls()) {
 						machDtlTmp = (SmMachineDtl) EntityHelper
@@ -1282,46 +1285,57 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 												.getCategoryL2Code())
 										.concat(cat.getPmCategoryL3()
 												.getCategoryL3Code());
-								if (machineDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-										&& macCatCode
-												.equalsIgnoreCase(suppCatCode)
-										&& machDtlTmp == null) {
-									// #32809 - start - #30766
-									List<SmMachineCategory> activeSmMachineCategory = new ArrayList<SmMachineCategory>();
-									
-									//filter DA category code for machine
-									for (SmMachineCategory catCodeNoDA : machineDtl.getSmMachineCategories() ) {
-										String catCode = catCodeNoDA
-												.getPmCategoryL3()
-												.getPmCategoryL2()
-												.getPmCategoryL1()
-												.getCategoryL1Code()
-												.concat(cat.getPmCategoryL3()
-														.getPmCategoryL2()
-														.getCategoryL2Code())
-												.concat(cat.getPmCategoryL3()
-														.getCategoryL3Code());
-										if(suppCatCode.equals(catCode)){
-											activeSmMachineCategory.add(catCodeNoDA);
+								//#34209 - START
+								if(macCatCode.equalsIgnoreCase(suppCatCode) && 
+										(SmMachineDtl) EntityHelper.getEntityBySinglePropertyFromList(machineDtl.getMachineDtlId(), allMachineDtls, "machineDtlId") == null){
+									allMachineDtls.add(machineDtl);
+								}
+								
+								if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+										&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED
+										&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+								//#34209 - END
+									if (machineDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+											&& macCatCode
+													.equalsIgnoreCase(suppCatCode)
+											&& machDtlTmp == null) {
+										// #32809 - start - #30766
+										List<SmMachineCategory> activeSmMachineCategory = new ArrayList<SmMachineCategory>();
+										
+										//filter DA category code for machine
+										for (SmMachineCategory catCodeNoDA : machineDtl.getSmMachineCategories() ) {
+											String catCode = catCodeNoDA
+													.getPmCategoryL3()
+													.getPmCategoryL2()
+													.getPmCategoryL1()
+													.getCategoryL1Code()
+													.concat(cat.getPmCategoryL3()
+															.getPmCategoryL2()
+															.getCategoryL2Code())
+													.concat(cat.getPmCategoryL3()
+															.getCategoryL3Code());
+											if(suppCatCode.equals(catCode)){
+												activeSmMachineCategory.add(catCodeNoDA);
+											}
 										}
+										
+										machineDtl.setSmMachineCategories(activeSmMachineCategory);
+										// #32809 - end - #30766
+										activeMachineDtls.add(machineDtl);
+										break;
 									}
-									
-									machineDtl.setSmMachineCategories(activeSmMachineCategory);
-									// #32809 - end - #30766
-									activeMachineDtls.add(machineDtl);
-									break;
 								}
 							}
 						}
 					}
-				}
+				//} // #34209
 				// #32809 - end - #30766
 
 				// #30021 - start
 //				}
 				// #30021 - end
 			}
-
+			getManagedBean().setAllMachineDtls(allMachineDtls); //#34209
 			getManagedBean().getSmAppl().setSmMachineDtls(activeMachineDtls);
 		}
 		// manufacturingOrAssmblyInfoFormViewOnly
