@@ -88,8 +88,10 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 						QTFieldConst.FIELD_QT_ZONE_COVERAGE,
 						QTFieldConst.FIELD_QT_EVALUATION_TYPE,
-						QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
-						QTFieldConst.FIELD_QT_CONTRACT_DURATION,// Reopen 25726 note 271- Issue 6 
+						//Reopen #25726 note 286 - issue 1
+						//remove because it will impact calculation for estimation price
+						//QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+						//QTFieldConst.FIELD_QT_CONTRACT_DURATION,// Reopen 25726 note 271- Issue 6 
 						QTFieldConst.FIELD_QT_REQUIRED_MINIS_SPEC_APPROVAL,
 						QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FIELD_QT_DOCUMENTS}),
@@ -103,8 +105,10 @@ public class QTFieldMapper {
 				QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 				QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 				QTFieldConst.FIELD_QT_EVALUATION_TYPE,
-				QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
-				QTFieldConst.FIELD_QT_CONTRACT_DURATION,// Reopen 25726 note 271- Issue 6 
+				//Reopen #25726 note 286 - issue 1
+				//remove because it will impact calculation for estimation price
+				//QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+				//QTFieldConst.FIELD_QT_CONTRACT_DURATION,// Reopen 25726 note 271- Issue 6 
 				QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
 				QTFieldConst.FIELD_QT_DOCUMENTS}),
 							      
