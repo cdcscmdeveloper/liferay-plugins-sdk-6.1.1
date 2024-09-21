@@ -11439,6 +11439,7 @@ public class SmApplicationBackingBean extends
 		// #32236 - End
 	}
 
+
 	/**
 	 * Get HQ
 	 * 
