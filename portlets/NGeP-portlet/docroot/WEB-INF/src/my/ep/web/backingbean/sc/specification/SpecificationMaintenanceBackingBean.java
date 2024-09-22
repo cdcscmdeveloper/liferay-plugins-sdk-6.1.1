@@ -525,15 +525,16 @@ public void specCommitteeMaintenancereset() {
 			this.getManagedBean().setFulfilmentType(scQt_.getFulfilmentType()
 							.getParameterCode());
 		}
-		
-		specBB.retriveTechnicalCheckList(); // #11104, #1873
-		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();//#11104-start
+		specBB.retriveTechnicalCheckList();//#11104-start
+		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();
+		boolean isSampleWip=specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance();//11104Wip
 		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
 		for(ScQtCheckList checkList: technicalChekclist){
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 				.equalsIgnoreCase(checkList.getDefinationType()
 						.getParameterCode())) {
 			scQt_.setSampleReq(Boolean.TRUE);//#11104
+			checkList.setSampleWip(isSampleWip);//11104Wip
 			break;
 
 		}
@@ -602,6 +603,7 @@ public void specCommitteeMaintenancereset() {
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 
+	this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);
 		// 29464-end

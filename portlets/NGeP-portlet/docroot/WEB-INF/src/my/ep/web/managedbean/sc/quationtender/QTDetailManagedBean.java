@@ -1661,6 +1661,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<BriefingZoneBean> sampleAddressBean;
 	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;
 	//#11104-End
+	
+	private boolean isSampleShowHide;//11104wip
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10521,4 +10523,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
 		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
 	}//11104-End
+
+	/**
+	 * 11104-Start
+	 * @return the isSampleShowHide
+	 */
+	public boolean isSampleShowHide() {
+		return isSampleShowHide;
+	}
+
+	/**
+	 * @param isSampleShowHide the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}//11104-End
+	
+	
 }
