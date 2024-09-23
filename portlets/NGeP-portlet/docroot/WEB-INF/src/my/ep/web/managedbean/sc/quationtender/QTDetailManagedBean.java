@@ -1850,7 +1850,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
 	private ScQtEpvSupplierResponse suppResp;//#21692
-	private boolean chmnFinalizationRejectEpv;//#21692
+	private boolean chmnFinalizationRejectEPV;//#21692
 				
 	// #29521 - end
 	//Bug #35061 - asyrafhaziq 
@@ -11900,12 +11900,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	//#21692 - Start
-	public boolean isChmnFinalizationRejectEpv() {
-		return chmnFinalizationRejectEpv;
+	public boolean isChmnFinalizationRejectEPV() {
+		return chmnFinalizationRejectEPV;
 	}
 
-	public void setChmnFinalizationRejectEpv(boolean chmnFinalizationRejectEpv) {
-		this.chmnFinalizationRejectEpv = chmnFinalizationRejectEpv;
+	public void setChmnFinalizationRejectEPV(boolean chmnFinalizationRejectEPV) {
+		this.chmnFinalizationRejectEPV = chmnFinalizationRejectEPV;
 	}
 	//#21692 - End
 }
