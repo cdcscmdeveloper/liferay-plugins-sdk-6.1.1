@@ -16853,7 +16853,6 @@ public class SmApplicationBackingBean extends
 		String approveDialog = "approveDialog";
 		String approve = "APPROVE";
 		Boolean pendingQT;
-		Boolean closedQTSubmitProposal;
 
 		switch (managedBean.getSmAppl().getApplType()) {
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
@@ -16882,13 +16881,6 @@ public class SmApplicationBackingBean extends
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
 					/**
-					 * check if QT notice been closed and supplier submitted
-					 * proposal.
-					 */
-					closedQTSubmitProposal = mofRegistrationSO
-							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-
-					/**
 					 * #29727 FL Module had selected the branch information,
 					 * then supplier wanted to delete the selected branch
 					 * information at SM Module.
@@ -16898,12 +16890,8 @@ public class SmApplicationBackingBean extends
 
 					if (deletedBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deletedBranchName.toString() });
-					} else if (pendingQT && closedQTSubmitProposal) {
-						RequestContext.getCurrentInstance().execute("pendingQTPopUpAll.show()");
 					} else if (pendingQT) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
-					} else if (closedQTSubmitProposal) {
-						RequestContext.getCurrentInstance().execute("closeandsubmitQTPopUp.show()");
 					} else {
 						RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
 					}
@@ -16928,24 +16916,13 @@ public class SmApplicationBackingBean extends
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 					// #28777 - END
 
-					closedQTSubmitProposal = mofRegistrationSO
-							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-
 					StringBuilder deleteBranchName = checkingDeletedBranchPendingFL(managedBean.getSmSupplier()
 							.getSupplierId(), supplierBranch);
 
 					if (deleteBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721121, new String[] { deleteBranchName.toString() });
-					} else if (pendingQT || closedQTSubmitProposal) {
-						if (pendingQT && closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprovePo.show()");
-						} else if (pendingQT) {
+					} else if (pendingQT) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpRecommendApprovePo.show()");
-						} else if (closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpCloseApprovePo.show()");
-						} else {
-							throw new EpException(MessageConst.ERROR_721108);
-						}
 					} else {
 						if (process.equalsIgnoreCase(approveDialog)) {
 							assignFinalApproveOrReject(process);
@@ -16984,24 +16961,13 @@ public class SmApplicationBackingBean extends
 					pendingQT = mofRegistrationSO
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
-					closedQTSubmitProposal = mofRegistrationSO
-							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-
 					StringBuilder deleteBranchName = checkingDeletedBranchPendingFL(managedBean.getSmSupplier()
 							.getSupplierId(), supplierBranch);
 
 					if (deleteBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deleteBranchName.toString() });
-					} else if (pendingQT || closedQTSubmitProposal) {
-						if (pendingQT && closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverTwo.show()");
-						} else if (pendingQT) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
-						} else if (closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverClose.show()");
-						} else {
-							throw new EpException(MessageConst.ERROR_721108);
-						}
+					} else if (pendingQT) {
+						RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
 					} else {
 						if (process.equalsIgnoreCase(approverAppDialog)) {
 							assignFinalApproveOrReject(process);
@@ -17056,7 +17022,6 @@ public class SmApplicationBackingBean extends
 		// #34135 END
 		Boolean pendingQT;
 		// #28777 - START - Updated CR
-		Boolean closedQTSubmitProposal;
 		StringBuilder msg = new StringBuilder();
 
 		switch (getManagedBean().getSmAppl().getApplType()) {
@@ -17077,15 +17042,8 @@ public class SmApplicationBackingBean extends
 				pendingQT = mofRegistrationSO
 						.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
-				closedQTSubmitProposal = mofRegistrationSO.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
 				if (pendingQT) {
 					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
-					msg.append("<br />");
-				}
-				if (closedQTSubmitProposal) {
-					msg.append("<br />");
-					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal",
-							null));
 				}
 				// #28777 - END - Updated CR
 				getManagedBean().setDeleteBranchMsg(msg.toString());
