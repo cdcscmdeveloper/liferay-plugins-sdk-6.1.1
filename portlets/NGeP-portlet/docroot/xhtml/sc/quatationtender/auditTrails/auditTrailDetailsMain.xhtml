@@ -158,14 +158,18 @@
 			</c:if>
 			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '8'}">
 				<ui:include
-					src="/xhtml/sc/quatationtender/auditTrails/openingComAppointTab.xhtml" />
+					src="/xhtml/sc/quatationtender/auditTrails/financialComAppointTab.xhtml" />
 			</c:if>
 			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '9'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/auditTrails/openingComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '10'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/quotationComAppointTab.xhtml" />
 			</c:if>
 			<c:if
-				test="#{auditQTBackingBean.managedBean.activeIndex eq '10'}">
+				test="#{auditQTBackingBean.managedBean.activeIndex eq '11'}">
 				<ui:include
 					src="/xhtml/sc/quatationtender/auditTrails/procureBoardAppointTab.xhtml" />
 			</c:if>
