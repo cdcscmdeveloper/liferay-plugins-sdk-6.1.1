@@ -3717,6 +3717,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	     * #29995-35500
 	     * @param scQt
 	     * @param groupTabSection
+	     * @param reqDTO
 	     */
 	public void prepareQtMaintenanceAuditTrail(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
