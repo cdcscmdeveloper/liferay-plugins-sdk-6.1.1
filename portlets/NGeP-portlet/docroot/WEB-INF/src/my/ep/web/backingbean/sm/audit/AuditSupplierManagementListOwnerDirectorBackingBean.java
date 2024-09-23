@@ -38,16 +38,18 @@ public class AuditSupplierManagementListOwnerDirectorBackingBean extends AuditSu
 
 		for (SmPersonnel owner : selectedOwnerAndDirectorList) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME, null, owner.getName(), null, null, 0L));
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME, null, owner.getName(), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_NAME));
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_IDENTIFICATION_NO, null,
-					owner.getIdentificationNo(), null, null, 0L));
+					owner.getIdentificationNo(), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_IDENTIFICATION_NO));
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ROLE_IN_COMPANY, null, getRoleCompany(owner), null,
-					null, 0L));
+					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ROLE_IN_COMPANY));
 		}
 
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, 10L);
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION);
 
 		return auObj;
 	}
@@ -55,14 +57,14 @@ public class AuditSupplierManagementListOwnerDirectorBackingBean extends AuditSu
 	private String getRoleCompany(SmPersonnel owner) {
 		String role = "";
 		if (owner.isEquityOwner()) {
-	        role += getLabel("lbl.sm.person.equiOwner");
-	    }
-	    if (owner.isDirector()) {
-	        role += role.isEmpty() ? getLabel("lbl.sm.person.dir") : ", " + getLabel("lbl.sm.person.dir");
-	    }
-	    if (owner.isContractSigner()) {
-	        role += role.isEmpty() ? getLabel("lbl.sm.contract.signer") : ", " + getLabel("lbl.sm.contract.signer");
-	    }
+			role += getLabel("lbl.sm.person.equiOwner");
+		}
+		if (owner.isDirector()) {
+			role += role.isEmpty() ? getLabel("lbl.sm.person.dir") : ", " + getLabel("lbl.sm.person.dir");
+		}
+		if (owner.isContractSigner()) {
+			role += role.isEmpty() ? getLabel("lbl.sm.contract.signer") : ", " + getLabel("lbl.sm.contract.signer");
+		}
 		return role;
 	}
 }
