@@ -1282,9 +1282,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		boolean redirectToBankInfoTab = false;
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		
 		log.info("[proceedToApplication] #31754 fromBpm: " + fromBpm);
 		if (!fromBpm) {
@@ -1319,29 +1316,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			} 
 			//26238 - end 28144
-			
-			//27748 : Disciplinary Action - #26238 - start 
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-3", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-								redirectToBankInfoTab = true;
-								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
-							}
-						}
-					}
-				}	
-			}				
-			//27748 : Disciplinary Action - #26238 - end
 			
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -1789,12 +1763,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SmApplicationUtil.getStaffList(smAppl));
 		}
 
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		if(redirectToBankInfoTab){
-			getManagedBean().setTabActiveIndex(4);
-		} else {
-			getManagedBean().setTabActiveIndex(0);
+		//#26238 Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			SmApplicationUtil.enableBankSectionOnly(getManagedBean());
 		}
+		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 
 		if (!fromBpm) {
@@ -2216,34 +2189,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setAllSectionEditorVO-29", 
 				subStartTime); //20211005@fadhli - #31754
-		
-		//27805: Disciplinary Action - start
-		if(!fromBpm){
-			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-					"SmApplicationBackingBean.proceedToApplication", "subStartTime-30", 
-					subStartTime); //20211005@fadhli - #31754
-			
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-31", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-							}
-						}
-					}
-				}	
-			}
-		}
-		//27805: Disciplinary Action - end
 
 		subStartTime = System.currentTimeMillis();
 		// show or hide travel software panel
@@ -2859,30 +2804,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 		}
 	//END 28767
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		if (fromBpm) {
-		
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-35", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-								getManagedBean().setTabActiveIndex(4);
-							}
-						}
-					}
-				}	
-			}				
-		}
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		// 35311 - Start
 		if ((EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplSupportDocs())) && (getManagedBean().getSmAppl().getPmStatus() != null
 				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION)) {
@@ -4641,20 +4562,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	private void validateBeforeSubmit() {
 		//START 26238 -  Disciplonary action - 27748
-		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-			if(this.getManagedBean().getSmAppl().getSmSupplier() != null){
-				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(this.getManagedBean().getSmAppl().getSmSupplier());
-				
-				if(activeDisc != null && activeDisc.size() > 0){
-					for(SmDisciplinaryAction disc : activeDisc){
-						if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-							getManagedBean().getEditVO().setDisciplinary(true);
-						}
-					}
-				}
-			}	
-		}
-	
+		SmApplicationUtil.enableBankSectionOnly(getManagedBean());
 		if(getManagedBean().getEditVO()!=null && getManagedBean().getEditVO().isDisciplinary()){
 			return;
 		}
