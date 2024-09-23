@@ -6452,7 +6452,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())
-							&& !this.getManagedBean().isReadOnly()) {
+							&& !this.getManagedBean().isReadOnly() 
+//							|| this.getManagedBean().getScQt()
+//							.isTechEvaluationReq() && this.getManagedBean()
+//							.getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT)
+							) {
 						if (null == this.getManagedBean().getScQt()
 								.getTecEvaluationCheck()) {
 
