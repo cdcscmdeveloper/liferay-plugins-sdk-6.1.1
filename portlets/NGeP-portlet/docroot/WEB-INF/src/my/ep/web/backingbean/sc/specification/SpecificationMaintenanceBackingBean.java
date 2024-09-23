@@ -552,12 +552,14 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		}
 		specBB.retriveTechnicalCheckList();//#11104-start
 		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();
+		boolean isSampleWip=specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance();//11104Wip
 		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
 		for(ScQtCheckList checkList: technicalChekclist){
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 				.equalsIgnoreCase(checkList.getDefinationType()
 						.getParameterCode())) {
 			scQt_.setSampleReq(Boolean.TRUE);//#11104
+			checkList.setSampleWip(isSampleWip);//11104Wip
 			break;
 
 		}
@@ -657,7 +659,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
 		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
-
+		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		
