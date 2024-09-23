@@ -75,28 +75,36 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 	public void loadAuditInfo(String tabName) {
 		switch (tabName) {
 		case SupplierManagementConst.AU_TAB_ID_BANK_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(1));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_USER_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(2));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_ADMIN_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(4));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_SUPPLIER_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(5));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_SUPPLIER_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_APPROVER_REMARK_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(6));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVER_REMARKS));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_OVERLAPPING_REMARK_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(7));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_OVERLAPPING_REMARKS));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_CATEGORY_CODE_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(8));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_CATEGORY_CODE_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(9));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVE_CATEGORY_CODES));
 			break;
 		default:
 			getManagedBean().getAuSmSearchBean().setAuGroupSection(null);
