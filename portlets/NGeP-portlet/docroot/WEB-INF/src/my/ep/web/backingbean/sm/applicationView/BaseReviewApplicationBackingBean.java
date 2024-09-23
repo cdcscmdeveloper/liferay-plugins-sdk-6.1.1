@@ -3514,6 +3514,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
 				// filter category code that not imposed with DA
+				//#34209 - START
 				if (/*(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat
 						.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED)
