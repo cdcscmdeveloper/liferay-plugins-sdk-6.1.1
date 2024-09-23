@@ -4468,7 +4468,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		List<Long> userIds = new ArrayList<>();
 		for (ScQtContactPerson scQtContactPerson : scQtContactPersons) {
-			userIds.add(scQtContactPerson.getUser().getUserId());
+			if (scQtContactPerson.getOfficerType().equals(SourcingConstants.OFFICER_TYPE_DOAA)){
+				userIds.add(scQtContactPerson.getUser().getUserId());
+			}	
 		}
 
 		if (isInactiveCommiteeApproverRole(userIds, null, RoleCode.DESK_ASSISTANT.value())) {

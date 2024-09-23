@@ -3765,8 +3765,11 @@ public class SmApplicationBackingBean extends
 
 					// to init page whether normal or special category type is
 					// allowed
-					initApplCategoryType();
-
+					//#32236 - start
+					if(getManagedBean().isSupplierUser()){
+						initApplCategoryType();
+					}
+					//#32236 - end
 					// API FOR LIST OF OVERLAPPING CATEGORIES
 					SmApplicationUtil
 							.checkOverLappingCategories(getManagedBean());
@@ -10467,12 +10470,7 @@ public class SmApplicationBackingBean extends
 			List<SmSupplierBranch> supplierList = new ArrayList<>();
 			//#28777 - START
 			if(getManagedBean().getSelectedBranches() != null){
-				for (SmSupplierBranch suppBranch : getManagedBean().getSelectedBranches()) {
-					if (suppBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
-						continue;
-					}
-					supplierList.add(suppBranch);
-				}
+				supplierList = filterStatusActiveBranch(getManagedBean().getSelectedBranches());
 			}
 			//#28777 - END
 
@@ -16854,26 +16852,25 @@ public class SmApplicationBackingBean extends
 		String approverAppDialog = "approverAppDialog";
 		String approveDialog = "approveDialog";
 		String approve = "APPROVE";
-		Boolean pendingQT = false;
-		Boolean closedQTSubmitProposal = false;
-		
+		Boolean pendingQT;
+		Boolean closedQTSubmitProposal;
+
 		switch (managedBean.getSmAppl().getApplType()) {
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
 		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
 		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
 		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
-			StringBuilder msg = new StringBuilder();
 			if (managedBean.isSupplierUser() || process.isEmpty()) {
-				//#28777 - START - Updated CR
+				// #28777 - START - Updated CR
 				if (!managedBean.getSelectedBranches().isEmpty()) {
-					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
-							.getServiceObject("sm", IMofRegistrationSO.class);
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(managedBean.getSelectedBranches());
-					//#28777 - START
+					// #28777 - START
 					reqDTO.setSmAppl(managedBean.getSmAppl());
-					//#28777 - END
+					// #28777 - END
 					/**
 					 * check The supplier been invited for Briefing/Site Visit/
 					 * Proposal Preparation, supplier been participated in QT
@@ -16890,7 +16887,7 @@ public class SmApplicationBackingBean extends
 					 */
 					closedQTSubmitProposal = mofRegistrationSO
 							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-					
+
 					/**
 					 * #29727 FL Module had selected the branch information,
 					 * then supplier wanted to delete the selected branch
@@ -16901,47 +16898,42 @@ public class SmApplicationBackingBean extends
 
 					if (deletedBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deletedBranchName.toString() });
-					} else if(pendingQT && closedQTSubmitProposal) {
+					} else if (pendingQT && closedQTSubmitProposal) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUpAll.show()");
-					} else if(pendingQT) {
+					} else if (pendingQT) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
-					} else if(closedQTSubmitProposal) {
+					} else if (closedQTSubmitProposal) {
 						RequestContext.getCurrentInstance().execute("closeandsubmitQTPopUp.show()");
 					} else {
 						RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
 					}
-					//#28777 - END - Updated CR
+					// #28777 - END - Updated CR
 				}
 			} else if (managedBean.isPoUser()) {
 				List<SmSupplierBranch> supplierBranch = new ArrayList<>();
 				if (!managedBean.getSmAppl().getSmSupplierBranches().isEmpty()) {
-					for (SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
-						if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
-							continue;
-						}
-						supplierBranch.add(tempSupplierBranch);
-					}
+					supplierBranch = filterStatusDeletedBranch(managedBean.getSmAppl().getSmSupplierBranches());
 				}
 
 				if (!supplierBranch.isEmpty()) {
-					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
-							.getServiceObject("sm", IMofRegistrationSO.class);
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(supplierBranch);
-					
-					//#28777 - START
+					// #28777 - START
 					reqDTO.setSmAppl(managedBean.getSmAppl());
 					reqDTO.setPoSdoUser(true);
-					pendingQT = mofRegistrationSO.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
-					//#28777 - END 
-					
+					pendingQT = mofRegistrationSO
+							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
+					// #28777 - END
+
 					closedQTSubmitProposal = mofRegistrationSO
 							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
 
 					StringBuilder deleteBranchName = checkingDeletedBranchPendingFL(managedBean.getSmSupplier()
 							.getSupplierId(), supplierBranch);
-					
+
 					if (deleteBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721121, new String[] { deleteBranchName.toString() });
 					} else if (pendingQT || closedQTSubmitProposal) {
@@ -16949,7 +16941,7 @@ public class SmApplicationBackingBean extends
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprovePo.show()");
 						} else if (pendingQT) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpRecommendApprovePo.show()");
-						} else if(closedQTSubmitProposal) {
+						} else if (closedQTSubmitProposal) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpCloseApprovePo.show()");
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
@@ -16975,32 +16967,25 @@ public class SmApplicationBackingBean extends
 			} else if (managedBean.isApproverUser()) {
 				List<SmSupplierBranch> supplierBranch = new ArrayList<>();
 				if (!managedBean.getSmAppl().getSmSupplierBranches().isEmpty()) {
-					for (SmSupplierBranch tempSupplierBranch : managedBean.getSmAppl().getSmSupplierBranches()) {
-						if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
-							continue;
-						}
-						supplierBranch.add(tempSupplierBranch);
-					}
+					supplierBranch = filterStatusDeletedBranch(managedBean.getSmAppl().getSmSupplierBranches());
 				}
 
 				if (!supplierBranch.isEmpty()) {
-					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance()
-							.getServiceObject("sm", IMofRegistrationSO.class);
+					IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
 					MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 					reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
 					reqDTO.setSelectedBranch(supplierBranch);
-					//#28777 - START
+					// #28777 - START
 					reqDTO.setPoSdoUser(true);
 					reqDTO.setSmAppl(managedBean.getSmAppl());
-					//#28777 - END
-					
+					// #28777 - END
+
 					pendingQT = mofRegistrationSO
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
 					closedQTSubmitProposal = mofRegistrationSO
 							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-
-					getManagedBean().setDeleteBranchMsg(msg.toString());
 
 					StringBuilder deleteBranchName = checkingDeletedBranchPendingFL(managedBean.getSmSupplier()
 							.getSupplierId(), supplierBranch);
@@ -17010,9 +16995,9 @@ public class SmApplicationBackingBean extends
 					} else if (pendingQT || closedQTSubmitProposal) {
 						if (pendingQT && closedQTSubmitProposal) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverTwo.show()");
-						} else if(pendingQT) {
+						} else if (pendingQT) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
-						} else if(closedQTSubmitProposal) {
+						} else if (closedQTSubmitProposal) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverClose.show()");
 						} else {
 							throw new EpException(MessageConst.ERROR_721108);
@@ -17037,7 +17022,7 @@ public class SmApplicationBackingBean extends
 			break;
 		default:
 			if (managedBean.isPoUser()) {
-				if (process.equalsIgnoreCase(approverAppDialog)) {
+				if (process.equalsIgnoreCase(approveDialog)) {
 					assignFinalApproveOrReject(process);
 				} else if (process.equalsIgnoreCase(approve)) {
 					submitPOEscalationToApprover(process);
@@ -17058,8 +17043,8 @@ public class SmApplicationBackingBean extends
 	}
 	//#34135 START - Commit half part from redmine 29727 into pds
 	public void setBranchDisplayTable() {
-		List<SmSupplierBranch> displayBranches = new ArrayList<SmSupplierBranch>();
-		if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
+		List<SmSupplierBranch> displayBranches = new ArrayList<>();
+		if (!getManagedBean().getSmAppl().getSmSupplierBranches().isEmpty()) {
 			for (SmSupplierBranch smSupplierBranch : getManagedBean().getSmAppl().getSmSupplierBranches()) {
 				if (smSupplierBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
 					continue;
@@ -17068,10 +17053,10 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setDisplayBranches(displayBranches);
-		//#34135 END
-		Boolean pendingQT = false;
-		//#28777 - START - Updated CR
-		Boolean closedQTSubmitProposal = false;
+		// #34135 END
+		Boolean pendingQT;
+		// #28777 - START - Updated CR
+		Boolean closedQTSubmitProposal;
 		StringBuilder msg = new StringBuilder();
 
 		switch (getManagedBean().getSmAppl().getApplType()) {
@@ -17079,30 +17064,30 @@ public class SmApplicationBackingBean extends
 		case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
 		case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
 		case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
-			if (getManagedBean().getSmAppl().getSmSupplierBranches().size() > 0) {
-				IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
-						.getServiceObject("sm", IMofRegistrationSO.class);
+			if (!getManagedBean().getSmAppl().getSmSupplierBranches().isEmpty()) {
+				IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject("sm",
+						IMofRegistrationSO.class);
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 				reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 				reqDTO.setSelectedBranch(getManagedBean().getSmAppl().getSmSupplierBranches());
-				//#28777 - START
+				// #28777 - START
 				reqDTO.setSmAppl(getManagedBean().getSmAppl());
-				//#28777 - END
-				
+				// #28777 - END
+
 				pendingQT = mofRegistrationSO
 						.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
 				closedQTSubmitProposal = mofRegistrationSO.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-				if (pendingQT == true) {
+				if (pendingQT) {
 					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
 					msg.append("<br />");
 				}
-				if (closedQTSubmitProposal == true) {
+				if (closedQTSubmitProposal) {
 					msg.append("<br />");
 					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal",
 							null));
 				}
-				//#28777 - END - Updated CR
+				// #28777 - END - Updated CR
 				getManagedBean().setDeleteBranchMsg(msg.toString());
 			}
 			break;
@@ -17112,9 +17097,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	
-	@SuppressWarnings("unused")
 	private StringBuilder checkingDeletedBranchPendingFL(Long supplierId, List<SmSupplierBranch> supplierBranch) {
-		Boolean closedQTSubmitProposal = false;
 		IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject(
 				"sm", IMofRegistrationSO.class);
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -17740,4 +17723,28 @@ public class SmApplicationBackingBean extends
 	    return allDocsMap;
 	}
 	//#31043 END
+	
+	//#28777 - START
+	private List<SmSupplierBranch> filterStatusActiveBranch(List<SmSupplierBranch> listSelectBranch) {
+		List<SmSupplierBranch> supplierList = new ArrayList<>();
+		for (SmSupplierBranch suppBranch : listSelectBranch) {
+			if (suppBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_DELETED) {
+				continue;
+			}
+			supplierList.add(suppBranch);
+		}
+		return supplierList;
+	}
+	
+	private List<SmSupplierBranch> filterStatusDeletedBranch(List<SmSupplierBranch> listSelectBranch) {
+		List<SmSupplierBranch> supplierList = new ArrayList<>();
+		for (SmSupplierBranch tempSupplierBranch : listSelectBranch) {
+			if (tempSupplierBranch.getRecordStatusFlg() == SupplierManagementConst.RECORD_DELETED) {
+				continue;
+			}
+			supplierList.add(tempSupplierBranch);
+		}
+		return supplierList;
+	}
+	//#28777 - END
 }
