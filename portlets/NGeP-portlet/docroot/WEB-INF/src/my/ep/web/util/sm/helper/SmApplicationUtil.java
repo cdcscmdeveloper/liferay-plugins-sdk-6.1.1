@@ -3406,9 +3406,7 @@ public class SmApplicationUtil {
 			}
 			log.info("**** My identiy output is *****" + resDTO.getStatusCode());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.info("**********error calling myidentity api[" + e.getMessage()
-					+ "]");
+			log.info("**********error calling myidentity api[" + e.getMessage() + "]");
 		}
 
 		// sb.append("MessageConst.ERROR_MYIDENTITY_");
@@ -4945,7 +4943,7 @@ public class SmApplicationUtil {
 						}
 						if (applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							if (diffDays > 90) {
+							if (diffDays > 180) { //#36391
 								result = true;
 								throw new EpException(MessageConst.ERROR_722501);
 							} else if (diffDays < -365) {
@@ -13340,15 +13338,12 @@ public class SmApplicationUtil {
 	 * the selected SmPersonnel.
 	 */
 	public static void addOrUpdateRelatedCompanies(SmApplicationManagedBean bean) {
-		if (bean.getSelectedShareHolder().getSmRelatedCompanies()
-				.contains(bean.getSelectedRelatedCompany())) {
+		if (bean.getSelectedShareHolder().getSmRelatedCompanies().contains(bean.getSelectedRelatedCompany())) {
 
 			// TODO if any validation reqd for edit
 		} else {
-			bean.getSelectedShareHolder().getSmRelatedCompanies()
-					.add(bean.getSelectedRelatedCompany());
-			RequestContext.getCurrentInstance().execute(
-					"suppPrsnRelComDtWidVar.paginator.endLink.click()");
+			bean.getSelectedShareHolder().getSmRelatedCompanies().add(bean.getSelectedRelatedCompany());
+			RequestContext.getCurrentInstance().execute("suppPrsnRelComDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse(bean);
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");

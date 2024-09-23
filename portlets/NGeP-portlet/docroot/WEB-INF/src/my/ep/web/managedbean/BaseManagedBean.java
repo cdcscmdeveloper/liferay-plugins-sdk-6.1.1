@@ -964,7 +964,7 @@ public abstract class BaseManagedBean implements Serializable {
 		this.isDowngradeRole = isDowngradeRole;
 	}
 	// end #29956
-
+	//#32236 - start
 	public String getOutputPage() {
 		return outputPage;
 	}
@@ -972,4 +972,5 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setOutputPage(String outputPage) {
 		this.outputPage = outputPage;
 	}
+	//#32236 - end
 }

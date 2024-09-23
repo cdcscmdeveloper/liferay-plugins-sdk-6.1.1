@@ -2789,7 +2789,9 @@ public class SmApplicationBackingBean extends
 				//#32236 end
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				//#32236 start
 				getManagedBean().setOutputPage(outputPageType);
+				//#32236 end
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
 				SmApplicationUtil
@@ -2900,10 +2902,11 @@ public class SmApplicationBackingBean extends
 					// #34303 - end
 					//#27356
 					SmApplicationUtil.validateCoordinate(getManagedBean());
-					//#32236 - start
+			//#32236 - start
 			} else if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)){
 				setBusinessAndHadApprovedSpecialCatcode();
 			}
+			//#32236 - End
 			
 			//#34303 - Start
 			if ((outputPageType
@@ -3494,7 +3497,11 @@ public class SmApplicationBackingBean extends
 
 					// to init page whether normal or special category type is
 					// allowed
-					initApplCategoryType();
+					//#32236 - start
+					if(getManagedBean().isSupplierUser()){
+						initApplCategoryType();
+					}
+					//#32236 - end
 
 					// API FOR LIST OF OVERLAPPING CATEGORIES
 					SmApplicationUtil
@@ -11438,6 +11445,7 @@ public class SmApplicationBackingBean extends
 		}
 		// #32236 - End
 	}
+
 
 	/**
 	 * Get HQ
