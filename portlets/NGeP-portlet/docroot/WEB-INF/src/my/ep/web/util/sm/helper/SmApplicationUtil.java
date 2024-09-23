@@ -3838,7 +3838,7 @@ public class SmApplicationUtil {
 					.getOverlapCategoryVOList());
 			//13362
 			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
-			
+			managedBean.setOverLappedCategoryExists(true); //#31018
 		}else{
 			log.info("overlapCategoryVO == null");
 		}
@@ -10100,6 +10100,7 @@ public class SmApplicationUtil {
 			bean.getSmAppl().setSmCategoryOverlapDocs(
 					new ArrayList<SmCategoryOverlapDoc>());
 			bean.setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			bean.setOverLappedCategoryExists(false); //#31018
 		}
 	}
 
@@ -15065,15 +15066,6 @@ public class SmApplicationUtil {
 		return daHistoryList;
 	}
 	
-	//28281 - start
-	public static List<Long> retrieveBumiCodeList(){
-		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
-		return supplierCategorySO.retrieveBumiCodeList();
-	}
-	//28281 - end
-	
-	
 	//27796: Disciplinary Action - end - 26238
 	//28198: Disciplinary Action - start - 26238
 			public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction smDisciplinaryAction){
@@ -15654,4 +15646,29 @@ public class SmApplicationUtil {
 		return true;
 	}
 	//#34483 END
+	
+	//#26238
+	 /**
+	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
+	 *  can edit Bank Information only
+	 * @param bean
+	 */
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean){
+		if(bean.getEditVO() != null){
+			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
+				bean.getEditVO().setDisciplinary(false);
+				return;
+			}
+			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			if(EntityHelper.isCollectionEmpty(activeDA)){
+				return;
+			}
+			for(SmDisciplinaryAction da : activeDA){
+				if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+					bean.getEditVO().setDisciplinary(true);
+					return;
+				}
+			}
+		}
+	}	
 }
