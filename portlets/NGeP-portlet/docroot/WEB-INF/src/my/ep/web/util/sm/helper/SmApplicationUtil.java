@@ -15655,6 +15655,9 @@ public class SmApplicationUtil {
 				return;
 			}
 			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			if(EntityHelper.isCollectionEmpty(activeDA)){
+				return;
+			}
 			for(SmDisciplinaryAction da : activeDA){
 				if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
 					bean.getEditVO().setDisciplinary(true);
