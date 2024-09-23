@@ -506,6 +506,7 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 		this.displayRolePanel = displayRolePanel;
 	}
 	
+	//#34159 - START
 	public List<SelectItem> getPermDivisions() {
 		return permDivisions;
 	}
@@ -521,4 +522,5 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	public void setMailDivisions(List<SelectItem> mailDivisions) {
 		this.mailDivisions = mailDivisions;
 	}
+	//#34159 - END
 }
