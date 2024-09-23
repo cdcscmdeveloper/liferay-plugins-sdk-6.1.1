@@ -3319,8 +3319,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			workFlowReqDTO.setDocId(scQt.getQtId());
 			workFlowStatusSO.updateCurrentWorkflowStatus(workFlowReqDTO);
 
-		} finally {
-			// Close or release any resources if needed
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					scQt.getQtNo(), "approvalBackingBean.updateWorkFlowStatus", getUserIdSessionFromLoginId(), e);
 		}
 	}
 
