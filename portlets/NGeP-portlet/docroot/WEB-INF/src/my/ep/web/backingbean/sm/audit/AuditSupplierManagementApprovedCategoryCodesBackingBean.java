@@ -56,8 +56,8 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 			// Expected Max Size in loop (30) based on NGEP_PDS database
 			while (newApprovedCategories.hasNext()) {
 				SmSupplierCategory newApprovedCategory = newApprovedCategories.next();
-				checkOtherDesc(auDetails, oldApprovedCategory, newApprovedCategory);
 				if (oldApprovedCategory.getSupplierCategoryId().equals(newApprovedCategory.getSupplierCategoryId())) {
+					checkOtherDesc(auDetails, oldApprovedCategory, newApprovedCategory);
 					oldApprovedCategories.remove();
 					newApprovedCategories.remove();
 					break;

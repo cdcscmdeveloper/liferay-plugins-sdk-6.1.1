@@ -55,14 +55,14 @@ public class AuditSupplierManagementListOwnerDirectorBackingBean extends AuditSu
 	private String getRoleCompany(SmPersonnel owner) {
 		String role = "";
 		if (owner.isEquityOwner()) {
-			role = getLabel("lbl.sm.person.equiOwner");
-		}
-		if (owner.isEquityOwner() && owner.isDirector()) {
-			role = role + ", " + getLabel("lbl.sm.person.dir");
-		}
-		if ((owner.isEquityOwner() || owner.isDirector()) && owner.isContractSigner()) {
-			role = role + ", " + getLabel("lbl.sm.contract.signer");
-		}
+	        role += getLabel("lbl.sm.person.equiOwner");
+	    }
+	    if (owner.isDirector()) {
+	        role += role.isEmpty() ? getLabel("lbl.sm.person.dir") : ", " + getLabel("lbl.sm.person.dir");
+	    }
+	    if (owner.isContractSigner()) {
+	        role += role.isEmpty() ? getLabel("lbl.sm.contract.signer") : ", " + getLabel("lbl.sm.contract.signer");
+	    }
 		return role;
 	}
 }
