@@ -560,7 +560,6 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_PODEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC;
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC;
 	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY;
-	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL; //35501
 
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
@@ -749,6 +748,7 @@ public class SupplierManagementConst {
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
 	// #28895_35501 Start - AUDIT TRAIL SM
+	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
 	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
 	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
 	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
