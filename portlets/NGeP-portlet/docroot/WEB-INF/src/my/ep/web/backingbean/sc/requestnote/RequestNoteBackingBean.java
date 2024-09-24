@@ -380,11 +380,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
 		Boolean isAssignedState = getManagedBean().isAssignedState();
 		
-		//36119 - start
-		DPOsbReqDTO reqOsbDTO = new DPOsbReqDTO();
-		DPOsbResDTO resOsbDTO = getDPOsbSO().checkingActiveCodifyPR(reqOsbDTO);
-		//31119 - start
-		
 		try {
 
 			// 26284 - Start
