@@ -3818,6 +3818,7 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			managedBean.setOverLappedCategoryExists(true); //#31018
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
@@ -9881,6 +9882,7 @@ public class SmApplicationUtil {
 			bean.getSmAppl().setSmCategoryOverlapDocs(
 					new ArrayList<SmCategoryOverlapDoc>());
 			bean.setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			bean.setOverLappedCategoryExists(false); //#31018
 		}
 	}
 
