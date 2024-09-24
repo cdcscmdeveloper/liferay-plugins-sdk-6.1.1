@@ -169,13 +169,11 @@
 					</td>
 				</tr>
 				
-				<!-- #34159 - add disableValidation attribute-->
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedFactoryFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.factoryFacilityStates}"
 					divisionItems="#{backingBean.managedBean.factoryFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.factoryFacilityDistricts}" cityItems="#{backingBean.managedBean.factoryFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryBlockPanel"
-					disableValidation="#{param['disableValidation']}"/>
+					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryBlockPanel"/>
 				
 				
 				<tr>
@@ -303,16 +301,12 @@
 			</table>
 			<br />
 			<div align="right">
-				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateFactoryToSmAppl}"
 					partialSubmit="true" process="factoryDialog"
 					onclick="factoryBlockWidget.show();" oncomplete="factoryBlockWidget.hide();"
-					update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg])" >
-					<f:param name="disableValidation" value="true" />
-				</p:commandButton>
-				<!-- #34159 - END -->
+					update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg])" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"

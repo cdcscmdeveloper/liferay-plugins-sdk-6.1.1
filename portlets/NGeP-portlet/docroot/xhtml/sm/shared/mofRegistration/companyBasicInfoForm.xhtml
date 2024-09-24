@@ -169,7 +169,7 @@
 					</td>
 					<td>
 						<p:selectOneMenu label="#{lbl['lbl.sm.country']}"
-							style="width: 250px;margin-bottom: 5px;" required="#{!empty param['disableValidation']}"
+							style="width: 250px;margin-bottom: 5px;" required="true"
 							id="smSupCont" disabled="#{(backingBean.managedBean.smAppl.applValidWithSsm ? !backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull : true) or backingBean.managedBean.upsCannotEdit}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -215,7 +215,7 @@
 					<td>								
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicComState"
-							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
+							required="true" label="#{lbl['lbl.sm.state']}"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull) or backingBean.managedBean.upsCannotEdit}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -258,7 +258,7 @@
 						<h:panelGroup
 							id="divisionCompInfoDropdownPanelId"
 							rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
-							<p:selectOneMenu id="basicComDivision" required="#{!empty param['disableValidation']}"
+							<p:selectOneMenu id="basicComDivision" required="true"
 								label="#{lbl['lbl.sm.division']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
 								style="width: 250px;margin-bottom: 5px;"
@@ -302,7 +302,7 @@
 					<td>
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompDist"
-							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
+							required="true" label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.districtId }"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -331,7 +331,7 @@
 					<td>
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompCity"
-							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
+							required="true" label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.cityId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
