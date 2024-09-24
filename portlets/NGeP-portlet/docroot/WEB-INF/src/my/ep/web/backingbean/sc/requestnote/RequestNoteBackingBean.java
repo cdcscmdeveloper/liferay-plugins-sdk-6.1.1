@@ -379,6 +379,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Object payLoad = getManagedBean().getPayLoad();
 		RequestNoteResDTO requestNoteResDTO = null;
 		Boolean isAssignedState = getManagedBean().isAssignedState();
+		
+		//36119 - start
+		DPOsbReqDTO reqOsbDTO = new DPOsbReqDTO();
+		DPOsbResDTO resOsbDTO = getDPOsbSO().checkingActiveCodifyPR(reqOsbDTO);
+		//31119 - start
+		
 		try {
 
 			// 26284 - Start
@@ -4203,14 +4209,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						IRequestNoteSO.class);
 				
 				//#36119 - start
-				if(getManagedBean().isSourcingDpNewBpmVer()){
-					RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
-					if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
-						rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
-						rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
-						requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
-					}				
-				} else{
+				if(!getManagedBean().isSourcingDpNewBpmVer()){
 					cancelRN(prObj, prSize);
 				}
 				//#36119 - end
@@ -4221,6 +4220,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setPurchaseRequest(purchaseRequest);
 					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO);
+					
+					//#36119 - start
+					if(getManagedBean().isSourcingDpNewBpmVer()){
+						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+						if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
+							rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
+							rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
+							requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+						}				
+					}
+					//#36119 - end
+					
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1], (String) prObj[3], Boolean.TRUE);
 						/************ AUDIT #28895_35492 *************/
