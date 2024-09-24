@@ -55,7 +55,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -317,10 +316,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 //				&& resDto.isTerminateSupplier() == false
 				) {
 			// End 28765 comment changes 12981
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			//PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
-				(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
-				getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+				getManagedBean().getSmSupplier().getSmAppl() != null && getManagedBean().getSmSupplier().getSmAppl().getPmStatus() != null &&
+				(getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+				getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){ //#34483
 			getManagedBean().setBypassFlag1(1);
 		}
 		//#28765 - End
@@ -345,7 +346,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		//START 12981
 		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
 //		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			//PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
 //		}
 		//#28765 - End
 		redirectToSuccessPage(resDto);
@@ -1270,10 +1272,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 	}
+	
 	//#28765 - Start
 	public void confirmDeclare(){
 		RequestContext.getCurrentInstance().execute("groupDeleteConfirm.show()"); 
 	}
+	
+	/*
 	private boolean isExistInSelectedPersonnel(SmPersonnel personnel) {
 		boolean exist = false;
 		for (SmPersonnel selectedPersonnel : getManagedBean()
@@ -1286,6 +1291,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		return exist;
 	}
+	*/
+	
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
 		
@@ -1336,7 +1343,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmReplaceSupplierAdminDoc replaceSupplierAdminDoc = new SmReplaceSupplierAdminDoc();
 		replaceSupplierAdminDoc.setPmDocument(document);
 		SmReplaceSupplierAdminDocFile adminDocFile = new SmReplaceSupplierAdminDocFile();
-		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList());
+		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList<SmReplaceSupplierAdminDocFile>());
 		replaceSupplierAdminDoc.getSmReplacesupplieradminDocFiles().add(adminDocFile);
 		log.info("--------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>.."+replaceSupplierAdminDoc.getPmDocument().getDocName());
 		getManagedBean().getSmReplaceSupplierAdminDocs().add(replaceSupplierAdminDoc);
