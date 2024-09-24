@@ -11857,6 +11857,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
 	}
 	
+	public List<ScQtContactPerson> getPmuserDeletedContactpersonList() {
+		return pmUserDeletedContactPersonList;
+	}
+
+	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
+	}
+
+	public List<ScCommitteeMember> getNewScCommitteeMemberList() {
+		return newScCommitteeMemberList;
+	}
+
+	public void setNewScCommitteeMemberList(List<ScCommitteeMember> newScCommitteeMemberList) {
+		this.newScCommitteeMemberList = newScCommitteeMemberList;
+	}
+
 	/**
 	 * @return the isFromSubmitCatChange
 	 */

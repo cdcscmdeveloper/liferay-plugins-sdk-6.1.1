@@ -58,8 +58,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	//28895-35500 Start
 	private List<ScCommitteeMember> removeCommitteeList;
 	private List<ScCommitteeMember> newCommitteeList;
-	
-	//28895-35500 END
+	//28895 - 35500 END
 	
 	private List<SelectItem> selections;
 	private String tabTitle;
