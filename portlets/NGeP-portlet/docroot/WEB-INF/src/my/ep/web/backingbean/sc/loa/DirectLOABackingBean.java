@@ -12591,7 +12591,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("specType", specType);
 					map.put("itemType", itemType);
 					int rowspan = question.getSpecList().size() + 1 ;
-					log.info("Calculate "+ String.valueOf(rowspan));
 					map.put("rowSpan", rowspan);
 							
 					return map;
@@ -12676,7 +12675,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("specType", specType);
 					map.put("itemType", itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ String.valueOf(rowspan));
 					map.put("rowSpan", rowspan);
 						listZonalDLSpec.add(map);
 					}
@@ -12784,7 +12782,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("specType", specType);
 					map.put("itemType", itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ String.valueOf(rowspan));
 					map.put("rowSpan", rowspan);
 						listZonalDLSpec.add(map);
 					}
@@ -12806,7 +12803,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				map.put("specType", specType);
 				map.put("itemType", itemType);
 				int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-				log.info("Calculate "+ String.valueOf(rowspan));
 				map.put("rowSpan", rowspan);
 				listZonalDLSpec.add(map);
 			}

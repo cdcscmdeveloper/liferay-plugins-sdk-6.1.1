@@ -3765,68 +3765,61 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for(String tempSpecVal: specList){
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("specVal", tempSpecVal);
-				if (feedbackList != null &&  CollectionUtils.isNotEmpty(feedbackList) ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3	
-					for(String tempFeedback: feedbackList){
-						if (tempSpecZoneQty > 0){
-							if (tempFeedbackIndex >= tempSpecZoneQty){
-								if (indexFeedbackStore == 0){
-									map.put("feedback", tempFeedback);
-									indexFeedbackStore = tempFeedbackIndex;
-									break;
-								}else if (tempFeedbackIndex > indexFeedbackStore){
-									map.put("feedback", tempFeedback);
-									indexFeedbackStore = tempFeedbackIndex;
-									break;
-								}
-								
-							}
-							tempFeedbackIndex++;
-						}else {
-							if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore){
-								map.put("feedback", tempFeedback);
-								indexFeedbackStore = tempFeedbackIndex;
-								break;
-							}
-							tempFeedbackIndex++;
-							
-						}
-						
-						
-					}
+				//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+				if (feedbackList != null && CollectionUtils.isNotEmpty(feedbackList)) { // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+				    for (String tempFeedback : feedbackList) {
+				        boolean shouldBreak = false;
+
+				        if (tempSpecZoneQty > 0) {
+				        	if (tempFeedbackIndex >= tempSpecZoneQty && (indexFeedbackStore == 0 || tempFeedbackIndex > indexFeedbackStore)) {
+				        		map.put("feedback", tempFeedback);
+				        	    indexFeedbackStore = tempFeedbackIndex;
+				        	    shouldBreak = true;
+				        	}
+				        } else {
+				            if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore) {
+				            	map.put("feedback", tempFeedback);
+				                indexFeedbackStore = tempFeedbackIndex;
+				                shouldBreak = true;
+				            }
+				        }
+
+				        tempFeedbackIndex++;
+
+				        if (shouldBreak) {
+				            break;
+				        }
+				    }
 				}
 				if (answerRemarkList != null && CollectionUtils.isNotEmpty(answerRemarkList) ){//20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 					for (String tempRemark: answerRemarkList){
+						boolean shouldBreak = false;
+						if (tempRemark == null) {
+				            tempRemark = getDefaultValue();
+				        } else {
+				            if (tempSpecZoneQty > 0) {
+				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
+				            		map.put("remark", tempRemark);
+				                    indexRemarkStore = tempRemarkIndex;
+				                    shouldBreak = true;
+				                }
+				            } else {
+				                if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
+				                	map.put("remark", tempRemark);
+				                    indexRemarkStore = tempRemarkIndex;
+				                    shouldBreak = true;
+				                }
+				            }
+				            tempRemarkIndex++;
+				        }
 						
-						if (tempRemark == null){
-							tempRemark = getDefaultValue();
-						}else{
-							if (tempSpecZoneQty > 0){
-								if (tempRemarkIndex >= tempSpecZoneQty){
-									if (indexRemarkStore == 0){
-										map.put("remark", tempRemark);
-										indexRemarkStore = tempRemarkIndex;
-										break;
-									}else if (tempRemarkIndex > indexRemarkStore){
-										map.put("remark", tempRemark);
-										indexRemarkStore = tempRemarkIndex;
-										break;
-									}
-									
-								}
-								tempRemarkIndex++;
-							}else {
-								if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore){
-									map.put("remark", tempRemark);
-									indexRemarkStore = tempRemarkIndex;
-									break;
-								}
-								tempRemarkIndex++;
-							}
-						}
-						
+						if (shouldBreak) {
+				            break;
+				        }
 					}		
 						
 				 }
+				//[End] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					tempFeedbackIndex = 0;
 					tempRemarkIndex = 0;
 				listCombine.add(map);	
