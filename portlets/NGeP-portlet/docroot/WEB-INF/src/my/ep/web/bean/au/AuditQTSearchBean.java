@@ -3,7 +3,7 @@ package my.ep.web.bean.au;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-public class AuditTrailsSearchBean implements Serializable {
+public class AuditQTSearchBean implements Serializable {
 
 	
 	/**
@@ -14,11 +14,11 @@ public class AuditTrailsSearchBean implements Serializable {
 	private BigInteger docId;
 	private boolean isSearching = true;
 	
-	public AuditTrailsSearchBean(String language, BigInteger docId) {
+	public AuditQTSearchBean(String language, BigInteger docId) {
 		this.language = language;
 		this.docId = docId;
 	}
-	public AuditTrailsSearchBean() {
+	public AuditQTSearchBean() {
 		// TODO Auto-generated constructor stub
 	}
 	public String getLanguage() {

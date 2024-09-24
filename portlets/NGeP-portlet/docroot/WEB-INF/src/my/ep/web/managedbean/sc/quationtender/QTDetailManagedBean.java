@@ -1886,6 +1886,17 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	
 	private boolean isSampleShowHide;//11104wip
+	//28895 - 35500 start
+	/** The newly added sc qt committee */
+	private List<ScCommitteeMember> newScCommitteeMemberList;
+	/** The deleted sc qt committee */
+	private List<ScCommitteeMember> deletedScCommitteeMemberList;
+	/** The pmuser contactperson list that had been deleted */
+	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	
+	private boolean auditViewRole;
+	//#28895 - 35500 end
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -3461,6 +3472,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
+	
 
 	/**
 	 * Gets the tab list.
@@ -11974,6 +11986,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}//11104-end
 		
 	
+
+	public List<ScCommitteeMember> getDeletedScCommitteeMemberList() {
+		return deletedScCommitteeMemberList;
+	}
+
+	public void setDeletedScCommitteeMemberList(List<ScCommitteeMember> deletedScCommitteeMemberList) {
+		this.deletedScCommitteeMemberList = deletedScCommitteeMemberList;
+	}
+
+	public boolean isAuditViewRole() {
+		return auditViewRole;
+	}
+
+	public void setAuditViewRole(boolean auditViewRole) {
+		this.auditViewRole = auditViewRole;
+	}
 }
 
 // ***25201

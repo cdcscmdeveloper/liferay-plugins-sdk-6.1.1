@@ -1,15 +1,16 @@
-package my.ep.web.managedbean.sc.audittrails;
+package my.ep.web.managedbean.sc.audit;
 
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import my.ep.web.bean.au.AuditTrailsSearchBean;
+import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
-//import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel;
-@ManagedBean(name = "auditTrailsManagedBean")
+
+
+@ManagedBean(name = "auditQTManagedBean")
 @SessionScoped
-public class AuditTrailsManagedBean extends BaseManagedBean {
+public class AuditQTManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String moduleSelected="";
@@ -21,9 +22,9 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	private String previousPageUrl;
 	private int activeIndex;
 	private List searchGeneralInfo;
-	private AuditTrailsSearchBean auditTrailsSearchBean;
-	private boolean isLazy = false;
+	private AuditQTSearchBean auditQTSearchBean;
 	private Long groupSectionId;
+	
 
 	public String getModuleSelected() {
 		return moduleSelected;
@@ -62,19 +63,13 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	public void setQtId(Long qtId) {
 		this.qtId = qtId;
 	}
-	public AuditTrailsSearchBean getAuditTrailsSearchBean() {
-		if (auditTrailsSearchBean == null)
-			auditTrailsSearchBean = new AuditTrailsSearchBean();
-		return auditTrailsSearchBean;
+	public AuditQTSearchBean getAuditQTSearchBean() {
+		if (auditQTSearchBean == null)
+			auditQTSearchBean = new AuditQTSearchBean();
+		return auditQTSearchBean;
 	}
-	public void setAuditQTSearchBean(AuditTrailsSearchBean auditTrailsSearchBean) {
-		this.auditTrailsSearchBean = auditTrailsSearchBean;
-	}
-	public boolean isLazy() {
-		return false;
-	}
-	public void setLazy(boolean isLazy) {
-		this.isLazy = isLazy;
+	public void setAuditQTSearchBean(AuditQTSearchBean auditQTSearchBean) {
+		this.auditQTSearchBean = auditQTSearchBean;
 	}
 	public List getSearchGeneralInfo() {
 		return searchGeneralInfo;
@@ -88,6 +83,5 @@ public class AuditTrailsManagedBean extends BaseManagedBean {
 	public void setGroupSectionId(Long groupSectionId) {
 		this.groupSectionId = groupSectionId;
 	}
-	
 	
 }
