@@ -441,8 +441,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
 				@Override
 				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-					return Long.compare(s1.getLoiLoaItemId(),
-							s2.getLoiLoaItemId());
+					return Long.compare(s1.getScRequestItem().getRequestNoteItemId(),
+							s2.getScRequestItem().getRequestNoteItemId());//#36437
 				}
 			});
 		}
