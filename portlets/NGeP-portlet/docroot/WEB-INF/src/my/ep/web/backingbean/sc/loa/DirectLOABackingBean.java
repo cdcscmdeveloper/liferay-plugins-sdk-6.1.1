@@ -11303,8 +11303,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
 				char[] arr = text.toCharArray();
 				arr[index] = Character.toLowerCase(arr[index]);
-				String newPrefixName = new String(arr);
-				return newPrefixName;
+				return new String(arr); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 			}
 			return text;	
 		}

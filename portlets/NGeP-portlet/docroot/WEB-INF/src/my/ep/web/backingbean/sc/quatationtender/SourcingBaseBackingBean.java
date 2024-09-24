@@ -3763,7 +3763,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			
 			for(String tempSpecVal: specList){
-				HashMap<String, String> map = new HashMap<String, String>();
+				HashMap<String, String> map = new HashMap<>();
 				map.put("specVal", tempSpecVal);
 				//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				if (feedbackList != null && CollectionUtils.isNotEmpty(feedbackList)) { // 20230712@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -3772,13 +3772,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 				        if (tempSpecZoneQty > 0) {
 				        	if (tempFeedbackIndex >= tempSpecZoneQty && (indexFeedbackStore == 0 || tempFeedbackIndex > indexFeedbackStore)) {
-				        		map.put("feedback", tempFeedback);
+				        		map.put(SSTConstant.Feedback, tempFeedback);
 				        	    indexFeedbackStore = tempFeedbackIndex;
 				        	    shouldBreak = true;
 				        	}
 				        } else {
 				            if (tempFeedbackIndex > 0 && tempFeedbackIndex > indexFeedbackStore) {
-				            	map.put("feedback", tempFeedback);
+				            	map.put(SSTConstant.Feedback, tempFeedback);
 				                indexFeedbackStore = tempFeedbackIndex;
 				                shouldBreak = true;
 				            }
@@ -3795,17 +3795,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					for (String tempRemark: answerRemarkList){
 						boolean shouldBreak = false;
 						if (tempRemark == null) {
-				            tempRemark = getDefaultValue();
+							tempRemark = SSTConstant.TB;
 				        } else {
 				            if (tempSpecZoneQty > 0) {
 				            	if (tempRemarkIndex >= tempSpecZoneQty && (indexRemarkStore == 0 || tempRemarkIndex > indexRemarkStore)) {
-				            		map.put("remark", tempRemark);
+				            		 map.put(SSTConstant.Remark, tempRemark);
 				                    indexRemarkStore = tempRemarkIndex;
 				                    shouldBreak = true;
 				                }
 				            } else {
 				                if (indexRemarkStore >= 0 && tempRemarkIndex > indexRemarkStore) {
-				                	map.put("remark", tempRemark);
+				                	 map.put(SSTConstant.Remark, tempRemark);
 				                    indexRemarkStore = tempRemarkIndex;
 				                    shouldBreak = true;
 				                }
@@ -3882,7 +3882,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			List<ScLoiLoaItem> items = scLoa.getScLoiLoaItems();
 			String dafaltValue = SSTConstant.TB;
-			if (masters.size() > 0) {
+			if (!masters.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				masters.clear();
 			}
 			for (ScLoiLoaItem item : items) {
@@ -6534,7 +6534,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//#26130 start
 		public String retrieveTierQuantity(List<TplSpecTierQty> listTplSpecTierQties){
 			StringBuffer sb = new StringBuffer();
-			if (listTplSpecTierQties.size() > 0){
+			if (!listTplSpecTierQties.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				for (TplSpecTierQty qty: listTplSpecTierQties){
 					  sb.append(qty.getFromQty() +" - "+qty.getToQty() +"<br />");
 					  
