@@ -12532,7 +12532,6 @@ if (null != checklist && !checklist.isEmpty()) {
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
 			// #29732 check if submit with no category code before checking
 			// category
-			IQTSpecSO specSo = getSpecSO();
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			this.getManagedBean().setFromSubmitCatChange(true);
