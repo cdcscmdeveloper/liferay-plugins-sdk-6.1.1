@@ -1164,7 +1164,7 @@ public class SpecificationBackingBean extends
 		specReqDTO.setScQt(this.getManagedBean().getQt());
 		this.getManagedBean().setTechnicalOtherCheckList(true);	//1873 - note 52
 		boolean financialOtherCheckList = true;
-
+		boolean isFromTabSpecCommitteDtlsLoad = true; //29732 - use for load only & avoiding trigger at save/update function.
 		switch (previousIndex) {
 		case 0:
 			/*
@@ -1180,8 +1180,8 @@ public class SpecificationBackingBean extends
 			if (!this.getManagedBean().isReadOnly()) {
 				//Bug #35688@Syazani 10/07/2024 -- Start
 				specReqDTO
-						.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_GENERAL_INFORMATION).getScQt());
-				//Bug #35688@Syazani 10/07/2024 -- End
+						.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_GENERAL_INFORMATION,isFromTabSpecCommitteDtlsLoad).getScQt());
+				//Bug #35688@Syazani 10/07/2024 -- End #29732 adding param
 				specSo.validateSpecCommitteGeneralInfo(specReqDTO);
 			}
 			if (this.getManagedBean().isZoneSpecUpdate()) {
@@ -1192,9 +1192,9 @@ public class SpecificationBackingBean extends
 			break;
 		case 1:
 			//Bug #35688@Syazani 10/07/2024 -- Start
-			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA)
+			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA,isFromTabSpecCommitteDtlsLoad)
 					.getScQt());
-			//Bug #35688@Syazani 10/07/2024 -- End
+			//Bug #35688@Syazani 10/07/2024 -- End #29732 adding param
 			if (!this.getManagedBean().isMaintanceFlow()) {
 				specSo.validateSupplierQulificationInfo(specReqDTO);
 			}
@@ -1202,10 +1202,10 @@ public class SpecificationBackingBean extends
 
 		case 2:
 			// ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
-			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST));	//Bug #35688@Syazani 10/07/2024
+			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST,isFromTabSpecCommitteDtlsLoad));	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			// checktemplateSpecStatus(scQtTechChecklist);
 			//#34656 move to top
-			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST).getScQt());	//Bug #35688@Syazani 10/07/2024
+			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST,isFromTabSpecCommitteDtlsLoad).getScQt());	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			//1873 - start- note 52
 			String taskName = this.getManagedBean().getTaskName();
 			String[] allowedTaskName = new String[]{
@@ -1232,7 +1232,7 @@ public class SpecificationBackingBean extends
 			break;
 		case 3:
 			// ScQt scQtFinChecklist = constructSpecCommitteDtls().getScQt();
-			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FINANCIAL_CHECKLIST));	//Bug #35688@Syazani 10/07/2024
+			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FINANCIAL_CHECKLIST,isFromTabSpecCommitteDtlsLoad));	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			// checktemplateSpecStatus(scQtFinChecklist);
 			// checkFinancialSpecStatus(scQtFinChecklist);
 			if (!this.getManagedBean().isReadOnly()) {
@@ -1241,7 +1241,7 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 4:
-			ScQt scQtTechScore = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_SCORING).getScQt();	//Bug #35688@Syazani 10/07/2024
+			ScQt scQtTechScore = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_SCORING,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			if (!this.getManagedBean().isReadOnly()) {
 				checktemplateSpecStatus(scQtTechScore);
 				checkFinancialSpecStatus(scQtTechScore);
@@ -1267,7 +1267,7 @@ public class SpecificationBackingBean extends
 
 		case 5:
 
-			ScQt scQtFinScore = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FINANCIAL_SCORING).getScQt();	//Bug #35688@Syazani 10/07/2024
+			ScQt scQtFinScore = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FINANCIAL_SCORING,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			if (!this.getManagedBean().isReadOnly()) {
 				checktemplateSpecStatus(scQtFinScore);
 				checkFinancialSpecStatus(scQtFinScore);
@@ -1290,7 +1290,7 @@ public class SpecificationBackingBean extends
 			break;
 		case 6:
 
-			ScQt scQtRecommendation = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_OVERALL_SCORING).getScQt();	//Bug #35688@Syazani 10/07/2024
+			ScQt scQtRecommendation = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_OVERALL_SCORING,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			if (!this.getManagedBean().isReadOnly()) {
 				checktemplateSpecStatus(scQtRecommendation);
 				checkFinancialSpecStatus(scQtRecommendation);
@@ -1317,7 +1317,7 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 7:
-			ScQt deliveryAddress = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_DELIVERY_ADDRESS).getScQt();	//Bug #35688@Syazani 10/07/2024
+			ScQt deliveryAddress = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_DELIVERY_ADDRESS,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			// checktemplateSpecStatus(deliveryAddress);
 			// checkFinancialSpecStatus(deliveryAddress);
 
@@ -1344,13 +1344,13 @@ public class SpecificationBackingBean extends
 
 			//#29474 - start
 			case 8:
-				specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_PAYMENT_DEDUCTION).getScQt());	//Bug #35688@Syazani 10/07/2024
+				specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_PAYMENT_DEDUCTION,isFromTabSpecCommitteDtlsLoad).getScQt());	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				specSo.validateDeductionDtls(specReqDTO);
 				break;
 
 			case 9:
 
-				ScQt fulfilMentDtls = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FULFILMENT_SCHEDULE).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt fulfilMentDtls = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FULFILMENT_SCHEDULE,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				// checktemplateSpecStatus(fulfilMentDtls);
 				// checkFinancialSpecStatus(fulfilMentDtls);
 
@@ -1366,7 +1366,7 @@ public class SpecificationBackingBean extends
 				break;
 
 			case 10://#29474 - end
-				constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS).getScQt();	//Bug #35688@Syazani 10/07/2024
+				constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			// checktemplateSpecStatus(committeeEndorsment);
 			// checkFinancialSpecStatus(committeeEndorsment);
 			break;
@@ -11298,7 +11298,7 @@ public class SpecificationBackingBean extends
 	 * 
 	 * @return SpecificationReqDTO
 	 */
-	private SpecificationReqDTO constructSpecCommitteDtls(String tabNo) {	//Bug #35688@Syazani 10/07/2024
+	private SpecificationReqDTO constructSpecCommitteDtls(String tabNo, boolean isFromTabSpecCommitteDtls) {	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
 		boolean notThrowError = true;	//Bug #35688@Syazani 10/07/2024
@@ -11913,6 +11913,9 @@ public class SpecificationBackingBean extends
 				scQt.setScQtDeliveryLocs(null);
 			}
 		}
+		//#29732 suspected below code is use for save/update. When click Specification Endorsement Status 2 times, 
+		//it will remove the textarea field & it also allow user to sumbit revise without fill in. 
+		if(!isFromTabSpecCommitteDtls){
 		List<ScQtSpecificationRemark> remarks = super.finalizeRemarks(this
 				.getManagedBean().getSpecificationRemarks());
 		if (null != remarks) {
@@ -11923,6 +11926,7 @@ public class SpecificationBackingBean extends
 				}
 			}
 			scQt.setScQtSpecificationRemarks(remarks);
+		}
 		}
 		
 		// #29474 - start Setting the Deductions to specification.
@@ -12202,7 +12206,7 @@ public class SpecificationBackingBean extends
 			
 			switch (activeIndex) {
 			case 0:
-				ScQt scQt = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt scQt = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				if (this.getManagedBean().isReadOnly()) {
 					if ((null != scQt.getFulfilmentType() && null == scQt
 							.getFulfilmentType().getParameterId())
@@ -12223,7 +12227,7 @@ public class SpecificationBackingBean extends
 				retriveTechnicalCheckList();//28784 - related issue 35721
 				break;
 			case 1:
-				ScQt scQtSupplier = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt scQtSupplier = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 
 				specReqDTO.setScQt(scQtSupplier);
 				// specSO.validateSupplierQulificationInfo(specReqDTO);
@@ -12237,7 +12241,7 @@ public class SpecificationBackingBean extends
 				break;
 			case 2:
 
-				ScQt scQtTechChecklist = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt scQtTechChecklist = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				specReqDTO.setScQt(scQtTechChecklist);
 				specSO.validateCheckList(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
@@ -12249,7 +12253,7 @@ public class SpecificationBackingBean extends
 				retriveTechnicalCheckList();
 				break;
 			case 3:
-				ScQt finChecklist = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt finChecklist = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				specReqDTO.setScQt(finChecklist);
 				specSO.validateCheckList(specReqDTO);
 				// specReqDTO.setTobeRemoveList(getToBeRemoveList());
@@ -12262,7 +12266,7 @@ public class SpecificationBackingBean extends
 				retriveFinancialCheckList();
 				break;
 			case 4:
-				ScQt scoring = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt scoring = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 
 				List<ScQtCheckList> technicalScoring = this.getManagedBean()
 						.getTechnicalScoring();
@@ -12313,7 +12317,7 @@ public class SpecificationBackingBean extends
 				break;
 
 			case 5:
-				ScQt recommendation = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt recommendation = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 
 				List<ScQtCheckList> financialScoring1 = this.getManagedBean()
 						.getFinancialScoring();
@@ -12387,7 +12391,7 @@ public class SpecificationBackingBean extends
 				break;
 
 			case 6:
-				ScQt delivery = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt delivery = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 						.getRecommendationPackageScore();
@@ -12424,7 +12428,7 @@ public class SpecificationBackingBean extends
 				break;
 
 			case 7:
-				ScQt fulfilMent = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt fulfilMent = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				if (fulfilMent.isZonal()) {
 					if (null == fulfilMent.getScQtDeliveryLocs()) {
 						List<BriefingZoneBean> zoneBean = this.getManagedBean()
@@ -12451,7 +12455,7 @@ public class SpecificationBackingBean extends
 
 			//#29474 - start
 			case 8:
-				ScQt paymentDeductions = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt paymentDeductions = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				specReqDTO.setScQt(paymentDeductions);
 				specSO.validateDeductionDtls(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
@@ -12465,7 +12469,7 @@ public class SpecificationBackingBean extends
 				break;
 
 			case 9:
-				ScQt fulfilMentdtls = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt fulfilMentdtls = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
 						.equalsIgnoreCase(this.getManagedBean()
 								.getFulfilmentType())
@@ -12502,7 +12506,7 @@ public class SpecificationBackingBean extends
 
 			case 10://#29474 - end
 
-				ScQt endorsment = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
+				ScQt endorsment = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				specReqDTO.setScQt(endorsment);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
@@ -13034,7 +13038,7 @@ public class SpecificationBackingBean extends
 			}
 
 		}
-		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls(null);	//Bug #35688@Syazani 10/07/2024
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls(null,false);	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
 		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
 			for (int i = 0; i < checklistRemoveList.size(); i++) {
@@ -17509,7 +17513,7 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getQt();
 
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
-		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls(null);	//Bug #35688@Syazani 10/07/2024
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls(null,false);	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 		//#15391 - start
 		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
 		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
@@ -18061,7 +18065,7 @@ public class SpecificationBackingBean extends
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		ScQt scQt = this.getManagedBean().getQt();
 		loadPrepareSpecCommitteeMaintenanceDetails(scQt.getQtId());
-		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls(null);	//Bug #35688@Syazani 10/07/2024
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls(null,false);	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 		spReqDTO.setOutcome(action);
 		//#15391 - start
 		List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
