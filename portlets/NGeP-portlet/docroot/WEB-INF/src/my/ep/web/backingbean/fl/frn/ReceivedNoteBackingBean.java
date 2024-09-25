@@ -171,7 +171,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				
 				// 36247-Start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					validatePOCOCurrentStatus();
+					validatePOCOCurrentStatus(action);// 36361
 				}
 				// 36247-End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
@@ -734,6 +734,12 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		
+		// 36361 - start
+		if (outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
+				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
+			validatePOCOCurrentStatus(outcome);
+		}
+		// 36361 - end
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
 			List<PmUser> orderApproverList = new ArrayList<PmUser>();
 			List<PmUser> pendingApproverList = new ArrayList<PmUser>();
@@ -1885,7 +1891,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * validate current POCO work flow status
 	 * 
 	 */
-	private void validatePOCOCurrentStatus() {
+	private void validatePOCOCurrentStatus(String action) {// 36361
 		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1894,7 +1900,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				.getFulfilmentOrderId());
 		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-		reqDTO.setActionCode(BpmOutcomeConst.BPM_CANCEL);
+		reqDTO.setActionCode(action);// 36361
 		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
 
 		Boolean allowToProceed = resDTO.isFlag();
