@@ -1889,6 +1889,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	// 36247-start
 	/**
 	 * validate current POCO work flow status
+	 * @param action 
+	 * @throws EpException if not allow to proceed
 	 * 
 	 */
 	private void validatePOCOCurrentStatus(String action) {// 36361
