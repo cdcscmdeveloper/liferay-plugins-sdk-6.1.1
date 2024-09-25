@@ -722,6 +722,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.getSmAppl().getSmSupplier().getEpNo());
 
 		} catch (Exception ex) {
+			log.error(ex);
 			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
