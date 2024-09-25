@@ -1872,15 +1872,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
 	
-	//28895 - 35500 start
-	/** The newly added sc qt committee */
-	private List<ScCommitteeMember> newScCommitteeMemberList;
-	/** The deleted sc qt committee */
-	private List<ScCommitteeMember> deletedScCommitteeMemberList;
-	/** The pmuser contactperson list that had been deleted */
-	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
-	//#28895 - 35500 end
-	
 	
 	
 	
@@ -1888,9 +1879,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isSampleShowHide;//11104wip
 	//28895 - 35500 start
 	/** The newly added sc qt committee */
-	private List<ScCommitteeMember> newScCommitteeMemberList;
+	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
 	/** The deleted sc qt committee */
-	private List<ScCommitteeMember> deletedScCommitteeMemberList;
+	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
 	/** The pmuser contactperson list that had been deleted */
 	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
 	
@@ -3472,7 +3463,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
-	
 
 	/**
 	 * Gets the tab list.
@@ -11877,12 +11867,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
 	}
 
-	public List<ScCommitteeMember> getNewScCommitteeMemberList() {
-		return newScCommitteeMemberList;
+	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
+		return newScCommitteeMemberAuditTrailList;
 	}
 
-	public void setNewScCommitteeMemberList(List<ScCommitteeMember> newScCommitteeMemberList) {
-		this.newScCommitteeMemberList = newScCommitteeMemberList;
+	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
+		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
 	}
 
 	/**
@@ -11956,21 +11946,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
-	public List<ScCommitteeMember> getDeletedScCommitteeMemberList() {
-		return deletedScCommitteeMemberList;
-	}
-
-	public void setDeletedScCommitteeMemberList(List<ScCommitteeMember> deletedScCommitteeMemberList) {
-		this.deletedScCommitteeMemberList = deletedScCommitteeMemberList;
-	}
-	
-	
-	
-	
-	
-
-	
-	
 	/**11104-start
 	 * @return the isSampleShowHide
 	 */
@@ -11987,12 +11962,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		
 	
 
-	public List<ScCommitteeMember> getDeletedScCommitteeMemberList() {
-		return deletedScCommitteeMemberList;
+	public List<ScCommitteeMember> getDeletedScCommitteeMemberAuditTrailList() {
+		return deletedScCommitteeMemberAuditTrailList;
 	}
 
-	public void setDeletedScCommitteeMemberList(List<ScCommitteeMember> deletedScCommitteeMemberList) {
-		this.deletedScCommitteeMemberList = deletedScCommitteeMemberList;
+	public void setDeletedScCommitteeMemberAuditTrailList(List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList) {
+		this.deletedScCommitteeMemberAuditTrailList = deletedScCommitteeMemberAuditTrailList;
 	}
 
 	public boolean isAuditViewRole() {

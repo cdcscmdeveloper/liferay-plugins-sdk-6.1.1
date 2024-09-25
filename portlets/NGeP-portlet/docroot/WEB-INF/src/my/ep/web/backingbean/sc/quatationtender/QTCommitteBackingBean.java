@@ -1612,10 +1612,10 @@ public class QTCommitteBackingBean extends
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 		
 		// 28895-35500 start
-		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList()) 
-				? this.getManagedBean().getNewScCommitteeMemberList(): new ArrayList<ScCommitteeMember>();
-		newScCommitteeMemberList.addAll(toBeAddedList);
-		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);
+		List<ScCommitteeMember> newScCommitteeMemberAuditTrailList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()) 
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList(): new ArrayList<ScCommitteeMember>();
+		newScCommitteeMemberAuditTrailList.addAll(toBeAddedList);
+		this.getManagedBean().setNewScCommitteeMemberAuditTrailList(newScCommitteeMemberAuditTrailList);
 		// 28885-35500 end
 
 		}
@@ -1853,8 +1853,8 @@ public class QTCommitteBackingBean extends
 
 		List<ScCommitteeMember> committeeMembers = getManagedBean().getToBeDelCommitteMemebers();
 		//28895 - 35500 start
-		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList())
-				? this.getManagedBean().getNewScCommitteeMemberList() : new ArrayList<ScCommitteeMember>();	
+		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList())
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();	
 		List<ScCommitteeMember> deletedCommitteeMembers = new ArrayList<>();
 		//28895 - 35500 end
 		
@@ -1895,8 +1895,8 @@ public class QTCommitteBackingBean extends
 			
 		}		
 		
-		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);
-		this.getManagedBean().setDeletedScCommitteeMemberList(deletedCommitteeMembers);
+		this.getManagedBean().setNewScCommitteeMemberAuditTrailList(newScCommitteeMemberList);
+		this.getManagedBean().setDeletedScCommitteeMemberAuditTrailList(deletedCommitteeMembers);
 		//#28895 - 35500 end
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);

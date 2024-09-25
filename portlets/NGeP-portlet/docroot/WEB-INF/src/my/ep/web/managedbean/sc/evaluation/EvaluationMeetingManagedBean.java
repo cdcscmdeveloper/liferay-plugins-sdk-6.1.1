@@ -132,7 +132,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> removeCommitteeList;
 	
 	/** #28895 - 35500 The new committee list. */
-	private List<ScCommitteeMember> newCommitteeList;
+	private List<ScCommitteeMember> newCommitteeAuditTrailList;
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -975,11 +975,11 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 	//12471 - end
 
-	public List<ScCommitteeMember> getNewCommitteeList() {
-		return newCommitteeList;
+	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
+		return newCommitteeAuditTrailList;
 	}
 
-	public void setNewCommitteeList(List<ScCommitteeMember> newCommitteeList) {
-		this.newCommitteeList = newCommitteeList;
+	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
+		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
 	}
 }

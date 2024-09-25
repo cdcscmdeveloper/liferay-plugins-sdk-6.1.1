@@ -1576,10 +1576,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
 				//#28895 - 35500 start
-				committeReqDTO.setNewScCommitteeMemberList(this.getManagedBean()
-						.getNewScCommitteeMemberList());
-				committeReqDTO.setToBeRemovedCommitteeMemberList(this.getManagedBean()
-						.getDeletedScCommitteeMemberList());
+				committeReqDTO.setNewScCommitteeMemberAuditTrailList(this.getManagedBean()
+						.getNewScCommitteeMemberAuditTrailList());
+				committeReqDTO.setToBeRemovedCommitteeMemberAuditTrailList(this.getManagedBean()
+						.getDeletedScCommitteeMemberAuditTrailList());
 				//#28895 - 35500 end
 				committeReqDTO.setCommitteeTypes(committeeTypes);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);

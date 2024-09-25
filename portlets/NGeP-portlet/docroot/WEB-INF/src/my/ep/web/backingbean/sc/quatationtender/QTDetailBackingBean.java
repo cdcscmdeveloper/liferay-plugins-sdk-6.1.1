@@ -4313,9 +4313,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
 				//#28895 - 35500 start
-				committeReqDTO.setNewScCommitteeMemberList(this.getManagedBean().getNewScCommitteeMemberList()); 
-				committeReqDTO.setToBeRemovedCommitteeMemberList(this.getManagedBean()
-						.getDeletedScCommitteeMemberList());
+				committeReqDTO.setNewScCommitteeMemberAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()); 
+				committeReqDTO.setToBeRemovedCommitteeMemberAuditTrailList(this.getManagedBean()
+						.getDeletedScCommitteeMemberAuditTrailList());
 				//#28895 - 35500 end
 				committeReqDTO.setTaskName(taskName); // Bug #34972@Syazani 09/08/2023
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
@@ -8035,9 +8035,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setDoaList(this.getManagedBean().getPmuserContactpersonList());
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			//end #25037
-			//28895 - 35500 
+			//28895 - 35500 start
 			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
-			quationTenderReqDTO.setNewCommitteeMembers(this.getManagedBean().getNewScCommitteeMemberList());			
+			quationTenderReqDTO.setNewCommitteeMembers(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			
+			//28895 - 35500 end
 			
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);

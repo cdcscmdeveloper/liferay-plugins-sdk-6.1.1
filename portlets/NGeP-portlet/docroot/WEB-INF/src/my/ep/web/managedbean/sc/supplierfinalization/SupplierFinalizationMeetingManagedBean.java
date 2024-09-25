@@ -56,8 +56,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	/* Enhancement #21694 END*/
 	
 	//28895-35500 Start
-	private List<ScCommitteeMember> removeCommitteeList;
-	private List<ScCommitteeMember> newCommitteeList;
+	private List<ScCommitteeMember> removeCommitteeAuditTrailList;
+	private List<ScCommitteeMember> newCommitteeAuditTrailList;
 	//28895 - 35500 END
 	
 	private List<SelectItem> selections;
@@ -693,20 +693,20 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	}
 	//25037 note 284 - end
 
-	public List<ScCommitteeMember> getRemoveCommitteeList() {
-		return removeCommitteeList;
+	public List<ScCommitteeMember> getRemoveCommitteeAuditTrailList() {
+		return removeCommitteeAuditTrailList;
 	}
 
-	public void setRemoveCommitteeList(List<ScCommitteeMember> removeCommitteeList) {
-		this.removeCommitteeList = removeCommitteeList;
+	public void setRemoveCommitteeAuditTrailList(List<ScCommitteeMember> removeCommitteeAuditTrailList) {
+		this.removeCommitteeAuditTrailList = removeCommitteeAuditTrailList;
 	}
 
-	public List<ScCommitteeMember> getNewCommitteeList() {
-		return newCommitteeList;
+	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
+		return newCommitteeAuditTrailList;
 	}
 
-	public void setNewCommitteeList(List<ScCommitteeMember> newCommitteeList) {
-		this.newCommitteeList = newCommitteeList;
+	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
+		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
 	}
 
 }

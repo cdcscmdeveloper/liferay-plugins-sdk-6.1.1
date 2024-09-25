@@ -741,7 +741,7 @@ public class EvaluationMeetingBackingBean extends
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
-		this.getManagedBean().setNewCommitteeList(localList);//28895-35500
+		this.getManagedBean().setNewCommitteeAuditTrailList(localList);//28895-35500
 		//#25037 - start
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(), "getIcPassport");
 		List<ScCommitteeMember> listToSync = new ArrayList<ScCommitteeMember>();
@@ -1847,6 +1847,7 @@ public class EvaluationMeetingBackingBean extends
 		markDeleteSelectedRowsAction(this.getManagedBean()
 				.getCommitteeMemberActivity(), this.getManagedBean()
 				.getRemoveCommitteeList());
+
 	}
 
 	
@@ -2130,13 +2131,13 @@ public class EvaluationMeetingBackingBean extends
 
     			List<ScCommitteeMember> evalMembers = evalBB.getManagedBean().getCommitteeMemberActivity();
     			Map<Object, Object> evalMemberMap = CustomUtils.listToMap(evalMembers, "getIcPassport");
-    		    			
+    		
     			if(null == evalBB.getManagedBean().getRemoveCommitteeList()){
         			evalBB.getManagedBean().setRemoveCommitteeList(new ArrayList<ScCommitteeMember>());
     			}
     			List<ScCommitteeMember> removeCommitteeList = evalBB.getManagedBean().getRemoveCommitteeList();
     			Map<Object, Object> removeCommitteeMap = CustomUtils.listToMap(removeCommitteeList, "getIcPassport");
-    			
+
     			for(ScCommitteeMember m: this.getManagedBean().getRemoveCommitteeList()){
     				ScQtCommitteeActivity act = (ScQtCommitteeActivity)activityMap.get(m.getIcPassport());
     				if(act!=null){
@@ -2174,12 +2175,10 @@ public class EvaluationMeetingBackingBean extends
     				if(StringUtils.isNotEmpty(remark.getRemark())){
     					evalBB.getManagedBean().setScQtApprovalRemark(remark);
     				}
-    			}    
-    			
+    			}    			 
     		}
     	//25037 #568 - end
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
-
 		}
 	}
 	@SuppressWarnings("unchecked")
@@ -2379,8 +2378,8 @@ public class EvaluationMeetingBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 		IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.AUDIT, IAuditTrailSO.class);
-		List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeList() != null
-				? this.getManagedBean().getNewCommitteeList() : new ArrayList<ScCommitteeMember>();
+		List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeAuditTrailList() != null
+				? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
 		List<ScCommitteeMember> deletedCommitteeMembers = this.getManagedBean().getRemoveCommitteeList() != null
 				? this.getManagedBean().getRemoveCommitteeList() : new ArrayList<ScCommitteeMember>();
 		
