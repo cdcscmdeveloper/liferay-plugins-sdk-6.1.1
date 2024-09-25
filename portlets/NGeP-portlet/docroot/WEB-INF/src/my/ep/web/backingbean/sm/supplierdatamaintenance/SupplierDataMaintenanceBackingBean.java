@@ -855,52 +855,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
 			
-			//26238 - start
-			if(resDTO.isSuccessful()){
-				if(resDTO.getCategoryList() != null){
-					SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
-					SmAppl latestAppl = resDTO.getSmAppl();
-					SmSupplier supplier = latestAppl.getSmSupplier();
-
-					//26238 -  Disciplonary action - 29399 - start
-
-//					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForBackDate(supplier);
-					
-					//26238 -  Disciplonary action - 29399 - end
-					if(discList != null){
-						for(SmDisciplinaryAction disc : discList){
-							if(disc.getDisciplinaryActionId() != null 
-									&& disc.isRecordStatus()){
-								supplierDataMaintenanceReqDTO.setDisciplinaryActionId(disc.getDisciplinaryActionId());
-								break;
-							}
-						}
-					}
-					supplierDataMaintenanceReqDTO.setSelectedCategories(resDTO.getCategoryList());
-					SupplierDataMaintenanceResDTO resDTO2 = new SupplierDataMaintenanceResDTO();
-					resDTO2 = SmServiceLookup.getSupplierDataMaintenanceSO()
-							.updateSelectedCategory(supplierDataMaintenanceReqDTO);
-
-					//26238 -  Disciplonary action - 29399 - 30155 - start
-					// Check if got active application for this supplier
-					 activeAppl = SmCommonUtil
-							.getActiveApplBySupplier(getManagedBean().getSmSupplier());
-					
-					 if(activeAppl != null){
-						 supplierDataMaintenanceReqDTO.setSelectedCategories(resDTO.getCategoryList()); 
-							resDTO2 = SmServiceLookup.getSupplierDataMaintenanceSO()
-									.updateSelectedCategoryWIP(supplierDataMaintenanceReqDTO,activeAppl);
-						 
-					 }
-
-						//26238 -  Disciplonary action - 29399- 30155 - end
-					if(!resDTO2.isSuccessful()){
-						throw new EpException("Failed to update Supplier Category imposed Disciplinary Action");
-					}
-				}
-			} 
-			//26238 - end
 			
 			//26238 -  Disciplonary action - 28146 - start
 			if (getManagedBean().getOwnerAndDirectorList() != null && getManagedBean().getOwnerAndDirectorList().size() > 0 
