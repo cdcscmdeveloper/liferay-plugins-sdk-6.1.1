@@ -21,7 +21,7 @@ public class AuditQTManagedBean extends BaseManagedBean {
 	private Long qtId;
 	private String previousPageUrl;
 	private int activeIndex;
-	private List searchGeneralInfo;
+	private List<AuditQTSearchBean> searchGeneralInfo;
 	private AuditQTSearchBean auditQTSearchBean;
 	private Long groupSectionId;
 	
