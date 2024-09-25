@@ -2760,13 +2760,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 								//27691 END
 								this.getManagedBean().getSmPersonnelOwners().add(personnel);
 							}
-							// 27691 - Start 
+							// 27691 - Start #29582 add isForeigner
 							if (smSupp.getBusinessType().equals("J")
 									|| smSupp.getBusinessType().equals("I")){
 								if (personnel.isDirector() && personnel.getIdentificationType() != null			
 										&& personnel.getIdentificationType().getParameterCode()		
 										.equals(ParameterConst.IDENTIFICATION_TYPES_IC)
-										&& !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+										&& !personnel.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)
+										&& personnel.isForeigner()){
 									this.getManagedBean().getSmPersonnelDirector().add(personnel);
 								}
 							}
