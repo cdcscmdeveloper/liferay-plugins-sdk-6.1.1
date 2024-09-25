@@ -4704,7 +4704,12 @@ public class SpecificationBackingBean extends
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
 
-		// recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);//11104
+		// 11104-start
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(getSpecMaintenance())
+				&& !this.getManagedBean().isSampleShowHide()) {
+			recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE);
+		}
+		// 11104-End
 
 		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
 		if (null != this.getManagedBean().getQt()
@@ -6171,6 +6176,10 @@ public class SpecificationBackingBean extends
 	 */
 	public String financialChecklistEditAction(int index,
 			ScQtCheckList checkList, String specType) {
+		// 36211 start
+		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		// 36211 end
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		this.getManagedBean().setScQtChecklist(checkList);
@@ -6181,6 +6190,11 @@ public class SpecificationBackingBean extends
 				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
+		// 36211 Start
+		SpecificationReqDTO specReqDto = new SpecificationReqDTO();
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(specSO.checkWipScoreSettingMax(specReqDto));
+		// 36211 End
 		try {
 			this.getManagedBean().setIndex(index);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -6213,6 +6227,7 @@ public class SpecificationBackingBean extends
 				.getTplSpecMaster().setTechnicalSpecQuestionsToDelete(null);
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 
 				if (this.getManagedBean().getQt().isZonal()
 						&& this.getManagedBean()
@@ -11146,33 +11161,35 @@ public class SpecificationBackingBean extends
 		// 29521 - end
 		checkProcurementModeValue();
 		retriveTechnicalCheckList();//1873 - note 52
-	   if(scQt != null && !scQt.isSampleReq()){//11104-start //20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-		IQTSpecSO specSO = getSpecSO();
-		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
-		specificationReqDTO.setScQt(scQt);
-		specificationReqDTO
-				.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-		SpecificationResDTO specificationResDTO = specSO
-				.retrieveTechnicalService(specificationReqDTO);
 
-List<ScQtCheckList> checklist=specificationResDTO
-							.getTechnicalCheckList();
+		// 11104-start //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
+		if (scQt != null && !scQt.isSampleReq()) {
+			IQTSpecSO specSO = getSpecSO();
+			
+			SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+			specificationReqDTO.setScQt(scQt);
+			specificationReqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			
+			SpecificationResDTO specificationResDTO = specSO.retrieveTechnicalService(specificationReqDTO);
 
-if (null != checklist && !checklist.isEmpty()) {
-	boolean isSample=Boolean.FALSE;
-			for (ScQtCheckList specChecklist : checklist) {
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-						.equalsIgnoreCase(specChecklist.getDefinationType()
-								.getParameterCode())) {
-					isSample=Boolean.TRUE;
-					break;
+			List<ScQtCheckList> checklist = specificationResDTO.getTechnicalCheckList();
 
-				}	
+			if (null != checklist && !checklist.isEmpty()) {
+				boolean isSample = Boolean.FALSE;
+				
+				for (ScQtCheckList specChecklist : checklist) {
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(specChecklist
+							.getDefinationType().getParameterCode())) {
+						isSample = Boolean.TRUE;
+						break;
+					}
+				}
+				
+				this.getManagedBean().getQt().setSampleReq(isSample);
 			}
-			this.getManagedBean().getQt().setSampleReq(isSample);
-}
-	}//11104-End
-		
+		}
+		// 11104-End
+
 		// #29732 @idham 25/07/2023 - Start
 		if (isRoleValidationfromTaskList()) {
 			this.getManagedBean().setCategoryDescriptionChange(true); // 29732
@@ -11212,7 +11229,22 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		// #29732 @idham 25/07/2023 - End
-		
+
+		// 11104 -start-
+		// 11104-Wip -start-
+		boolean isSampleReq = this.getManagedBean().getQt().isSampleReq();
+		boolean isSampleWIPCheck = isSampleReq
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())
+				&& (isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision());
+
+		if (isSampleWIPCheck) {
+			setSampleWipCheckSpecPrepare(this.getManagedBean().getScQtCheckSt2techProposal());
+		}
+		// 11104-Wip -end-
+
+		this.getManagedBean().setSampleShowHide(checkSampleRadioShowHideInSpecPrepareAndMaintenance());
+		// 11104-End
+
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
 		fc.getApplication()
@@ -12165,7 +12197,9 @@ if (null != checklist && !checklist.isEmpty()) {
 			specReqDTO.setPmUser(fs.getUserSessionBean());
 			validateZonalChanges();
 			// 29521 - end
-
+			
+			boolean sampleWipShowHide = this.getManagedBean().isSampleShowHide(); // 11104Wip
+			
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = constructSpecCommitteDtls(null).getScQt();	//Bug #35688@Syazani 10/07/2024
@@ -12524,8 +12558,8 @@ if (null != checklist && !checklist.isEmpty()) {
 					getEvaluationType().equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER)) {
 				this.getManagedBean().setDemoType(true);
 			}
-			
 
+			this.getManagedBean().setSampleShowHide(sampleWipShowHide); // 11104Wip
 		} /*
 		 * catch (Exception e) { e.printStackTrace(); }
 		 */
@@ -13570,6 +13604,7 @@ if (null != checklist && !checklist.isEmpty()) {
 									, resDto.getSavedCheckLists().get(0));
 						}
 						resetDemoSpecStatus();// #28784
+						saveSpecMaintenanceWorkFlowStatus(); // to Set Spec Status to pending submittion if spec sec delete spec when doing spec maintanance, #28785
 					}
 					this.getManagedBean().setCheckListTitle("");
 					this.getManagedBean().setIndex(-1);
@@ -17423,12 +17458,17 @@ if (null != checklist && !checklist.isEmpty()) {
 		IQTSpecSO specSo = getSpecSO();
 		SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
-		specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
+		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setCatCodeList(changedCatCodeList);
-			RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
-			return;
+			//#29732 issue submit specification maintenance(allow submit without popup validation
+			if(!QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(this.getManagedBean().getCurrentStatusId()) 
+					&& !QTStatusConst.QT_REVISION_PUBLICATION.equals(this.getManagedBean().getCurrentStatusId())){
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
+				return;
+			}
+			
 		}
 // #29732 End - reOpen Fix
 		log.debug("start submitSpecMaintenanceDtls" + action);
@@ -17817,6 +17857,14 @@ if (null != checklist && !checklist.isEmpty()) {
 
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
+
+		// 11104WIP -start-
+		this.getManagedBean().setSampleShowHide(checkSampleRadioShowHideInSpecPrepareAndMaintenance());
+
+		retriveTechnicalCheckList();
+
+		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(), this.getManagedBean().getQt());
+		// 11104WIP -end-
 
 		fc.getApplication()
 				.getNavigationHandler()
@@ -19720,14 +19768,21 @@ if (null != checklist && !checklist.isEmpty()) {
 		checkList.setAction(checkListactionresDTO.getPmParameter());
 		checkList.setScQt(this.getManagedBean().getQt());
 		checkList.setDefinationType(specTyperesDTO.getPmParameter());
-		checkList
-				.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-		checkList
-				.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+
+		// 11104wip -start-
+		PmStatus status = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+
+		checkList.setPmStatus(status);
+		checkList.setPmEvalStatus(status);
+		// 11104wip -end-
+
 		Integer checkListSequence = checkTechnicalORFinancialAddChecklistSequence(st2technicalproposalList);
-		log.debug("========== technical return checklist sequence===="
-				+ checkListSequence);
+
 		checkList.setChecklistSeq(checkListSequence);
+		// 11104wip -start-
+		checkList.setSampleWip(Boolean.TRUE);
+		checkList.setSampleStatus(status);
+		// 11104wip -end-
 
 		setUserDetails(checkList);
 		st2technicalproposalList.add(checkList);
@@ -19963,6 +20018,9 @@ specReqDTO.getScQtCheckList().setSampleStatus(
 				specReqDTO.setSampleCheckList(specresDTO
 						.getSampleChecklist());
 				int index = technicalChecklist.indexOf(checklist);
+
+					specReqDTO.getSampleCheckList().setSampleWip(Boolean.TRUE); // 11104WIP
+
 				technicalChecklist.set(index,
 						specresDTO.getSampleChecklist());
 			} else if (specresDTO.getScQtCheckList().getQtChecklistId()
@@ -22561,6 +22619,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						.equalsIgnoreCase(checklist.getDefinationType()
 								.getParameterCode())) {
 					int index = technicalChecklist.indexOf(checklist);
+
+					resDTO.getSampleChecklist().setSampleWip(Boolean.TRUE); // 11104WIP
+
 					technicalChecklist.set(index, resDTO.getSampleChecklist());
 				}
 			}
@@ -22787,6 +22848,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						.equalsIgnoreCase(checklist.getDefinationType()
 								.getParameterCode())) {
 					int index = technicalChecklist.indexOf(checklist);
+
+					resDTO.getSampleChecklist().setSampleWip(this.getManagedBean().isSampleShowHide()); // 11104WIP
+
 					technicalChecklist.set(index, resDTO.getSampleChecklist());
 					break;
 				}
@@ -22827,5 +22891,144 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value()); 
 	}
     //29732 end
+
+	/**
+	 * 11104-start 
+	 * sample checklist status set to pending for working in
+	 * progress checklist during qtchecklist scoring and revision.
+	 * 
+	 * @param technicalCheckList
+	 */
+	private void setSampleWipCheckSpecPrepare(List<ScQtCheckList> technicalCheckList) {
+		boolean checkWip = Boolean.FALSE;
+
+		for (ScQtCheckList checkList : technicalCheckList) {
+			String paramCode = checkList.getDefinationType().getParameterCode();
+			PmStatus samplestatus = checkList.getSampleStatus();
+			PmStatus pmStatus = checkList.getPmStatus();
+			boolean templateParamAndStatus = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(paramCode)
+					&& null != samplestatus;
+			boolean sampleParamAndStatus = ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(paramCode)
+					&& null != pmStatus && QTStatusConst.TS_COMPLETED.equals(pmStatus.getStatusId());
+
+			if (templateParamAndStatus) {
+				checkWip = Boolean.TRUE;
+			} else if (sampleParamAndStatus && !checkWip) {
+				PmStatus pendingStatus = getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+				checkList.setPmStatus(pendingStatus);
+				break;
+			}
+		}
+	}
+	// 11104 -end-
+
+	// 11104 -start-
+	/**
+	 * show and hide sample radio Button during SpecPreparation and Maintenance
+	 * screens.
+	 * 
+	 * @return sample true or false.
+	 * 
+	 */
+	public boolean checkSampleRadioShowHideInSpecPrepareAndMaintenance() {
+
+		Long statusId = this.getManagedBean().getQt().getQtStatus().getStatusId();
+		Integer checkNewSampleExist = this.getManagedBean().getQt().getDemoNotificationCheck();
+		
+		if (isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision()) {
+			this.getManagedBean().getQt().setDemoNotificationCheck(SourcingConstants.SAMPLE_WIP_CHECK);
+			return Boolean.TRUE;
+		} else if (!isQTStatusPublished(statusId)) {
+			return checkSampleWipBeforePublish(checkNewSampleExist);
+
+		} else if (isQTStatusPublished(statusId)) {
+			return checkSampleWipCompleted(this.getManagedBean().getQt());
+		}
+
+		return Boolean.FALSE;
+	}
+	// 11104_End
+
+	// 11104 -start-
+	/**
+	 * check before Publish Sample
+	 * 
+	 * @param checkNewSampleExist
+	 * @return sample true or false.
+	 * 
+	 */
+	private boolean checkSampleWipBeforePublish(Integer checkNewSampleExist) {
+		if (SourcingConstants.SAMPLE_WIP_CHECK.equals(checkNewSampleExist)) {
+			return Boolean.TRUE;
+		} else if (null == checkNewSampleExist) {
+			return Boolean.FALSE;
+		}
+		
+		return Boolean.FALSE;
+	}
+	// 11104 -end-
+
+	// 11104 -start-
+	/**
+	 * check after Publish Sample
+	 * 
+	 * @param qt
+	 * @return sample true or false.
+	 * 
+	 */
+	private boolean checkSampleWipCompleted(ScQt qt) {
+		IQTSpecSO qtSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+		specificationReqDTO.setScQt(qt);
+		specificationReqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+		SpecificationResDTO specificationResDTO = qtSpecSO.retrieveTechnicalService(specificationReqDTO);
+	
+		if (CollectionUtils.isNotEmpty(specificationResDTO.getTechnicalCheckList())) {
+			for (ScQtCheckList sampleCheckList : specificationResDTO.getTechnicalCheckList()) {
+				String paramCode = sampleCheckList.getDefinationType().getParameterCode();
+				PmStatus samplestatus = sampleCheckList.getSampleStatus();
+				boolean templateParamAndStatus = QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(paramCode)
+						&& null != samplestatus;
+				
+				if (templateParamAndStatus) {
+					return Boolean.TRUE;
+				}
+			}
+
+			return Boolean.FALSE;
+		}
+
+		return Boolean.FALSE;
+	}
+	// 11104 -end-
+
+	// 11104 -start-
+	/**
+	 * check Sample wip
+	 * 
+	 * @param technicalSampleCheckList
+	 * @param qt
+	 * 
+	 */
+	private void checkSampleWipData(List<ScQtCheckList> technicalSampleCheckList, ScQt qt) {
+		if (CollectionUtils.isNotEmpty(technicalSampleCheckList)) {
+			boolean sample = Boolean.FALSE;
+			
+			for (ScQtCheckList checkList : technicalSampleCheckList) {
+				String paramCode = checkList.getDefinationType().getParameterCode();
+				
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(paramCode)) {
+					sample = Boolean.TRUE;
+					checkList.setSampleWip(this.getManagedBean().isSampleShowHide());
+					break;
+
+				}
+			}
+			
+			qt.setSampleReq(sample);
+		}
+	}
+	// 11104 -end-
 
 }

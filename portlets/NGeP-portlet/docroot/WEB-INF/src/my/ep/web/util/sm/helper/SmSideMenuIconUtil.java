@@ -46,6 +46,7 @@ public class SmSideMenuIconUtil {
 
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
+		SmApplicationUtil.checkOverLappingCategories(bean); //#31018
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
@@ -437,6 +438,8 @@ public class SmSideMenuIconUtil {
 			//#31230 START
 			if(step6OverlappedCategory(bean.isOverLappedCategoryExists())){
 				bean.getEditVO().setHasOverlapped(true);
+			} else {
+				bean.getEditVO().setHasOverlapped(false); //#31018
 			}
 			//#31230 END
 		} else if (sectionType
@@ -814,8 +817,8 @@ public class SmSideMenuIconUtil {
 						for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
 							if(doc.getSmApplDocFiles() != null){
 								for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
-									if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && doc.getVerifiedFlg() != null 
-											&& doc.getVerifiedFlg() == 0){
+									if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+											|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
 										nonMandatoryDocVerified = false;
 										break;
 									}
