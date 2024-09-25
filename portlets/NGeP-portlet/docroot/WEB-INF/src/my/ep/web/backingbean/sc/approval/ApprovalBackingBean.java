@@ -1774,7 +1774,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}			
 					}	
 					//28895-35500 Start
-					if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName)) {
+					IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+							IAuditTrailSO.class);
+					if (SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE.equalsIgnoreCase(taskName) && auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 						prepareQtMaintenanceAuditTrail(qt, tenderResDTO.getGroupTabSection(), null);
 					}
 					//28895-35500 End
@@ -3096,7 +3098,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			
-			prepareQtMaintenanceAuditTrail(scQt,null,reqDTO);//28895-35500
+			IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
+			if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
+				prepareQtMaintenanceAuditTrail(scQt,null,reqDTO);//28895-35500
+			}
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}catch(IOException e){
 		    ScQt scQt = this.getManagedBean().getQt();
@@ -3782,67 +3788,64 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void prepareQtMaintenanceAuditTrail(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
-		IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-				IAuditTrailSO.class);
-		if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
-			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
-			List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 
-			auditResDTO.setOrganizationProfileId(scQt.getOrgProfileId());
-			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
-			auditResDTO.setDocId(scQt.getQtId());
-			auditResDTO.setDocNo(scQt.getQtNo());
-			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			if (groupTabSection != null) {// BSV Audit Trails Section
-				auditResDTO.setAuGroupSectionId(groupTabSection);
+		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+
+		auditResDTO.setOrganizationProfileId(scQt.getOrgProfileId());
+		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
+		auditResDTO.setDocId(scQt.getQtId());
+		auditResDTO.setDocNo(scQt.getQtNo());
+		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+		if (groupTabSection != null) {// BSV Audit Trails Section
+			auditResDTO.setAuGroupSectionId(groupTabSection);
+			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+			auditResDTO.setStatusId(QTStatusConst.BSV_COMPLETED);
+			AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+			auditReqList.add(auditReqDTO);
+
+			qtAuditTrailSO.insertAuditTrail(auditReqList);
+		} else if (reqDTO != null) {// DOA Audit Trails Section
+			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
+				auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+			} else {
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-				auditResDTO.setStatusId(QTStatusConst.BSV_COMPLETED);
-				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
-				auditReqList.add(auditReqDTO);
+			}
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
+			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 
-				qtAuditTrailSO.insertAuditTrail(auditReqList);
-			} else if (reqDTO != null) {// DOA Audit Trails Section
-				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
-					auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-				} else {
-					auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-				}
-				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
+			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
+				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
+				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
+						: reqDTO.getDeletedDoaaList();
+				List<ScQtContactPerson> newDoaList = reqDTO.getDoaaList() == null ? new ArrayList<ScQtContactPerson>()
+						: reqDTO.getDoaaList();
 
-				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
-					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
-					List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
-							: reqDTO.getDeletedDoaaList();
-					List<ScQtContactPerson> newDoaList = reqDTO.getDoaaList() == null ? new ArrayList<ScQtContactPerson>()
-							: reqDTO.getDoaaList();
+				for (ScQtContactPerson add : newDoaList) {
+					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);
+					auditResDTO.setNewValue(add.getUser().getUserName());
+					auditResDTO.setNewValueId(add.getUser().getUserId());
 
-					for (ScQtContactPerson add : newDoaList) {
-						auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);
-						auditResDTO.setNewValue(add.getUser().getUserName());
-						auditResDTO.setNewValueId(add.getUser().getUserId());
-
-						AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
-						auditReqList.add(auditReqDTO);
-					}
-					for (ScQtContactPerson remove : removedList) {
-						auditResDTO.setNewValue(null);
-						auditResDTO.setActionType(QTAuditConstant.AU_TYPE_DELETE);
-						auditResDTO.setOldValue(remove.getUser().getUserName());
-						auditResDTO.setOldValueId(remove.getUser().getUserId());
-
-						AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
-						auditReqList.add(auditReqDTO);
-					}
-				} else {
-					if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
-						auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
-					} else {
-						auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
-					}
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
+				for (ScQtContactPerson remove : removedList) {
+					auditResDTO.setNewValue(null);
+					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_DELETE);
+					auditResDTO.setOldValue(remove.getUser().getUserName());
+					auditResDTO.setOldValueId(remove.getUser().getUserId());
+
+					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+					auditReqList.add(auditReqDTO);
+				}
+			} else {
+				if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_APPROVE)) {
+					auditResDTO.setStatusId(QTStatusConst.DAR_COMPLETED);
+				} else {
+					auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISION);
+				}
+				AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
+				auditReqList.add(auditReqDTO);
 				qtAuditTrailSO.insertAuditTrail(auditReqList);
 			}
 		}
