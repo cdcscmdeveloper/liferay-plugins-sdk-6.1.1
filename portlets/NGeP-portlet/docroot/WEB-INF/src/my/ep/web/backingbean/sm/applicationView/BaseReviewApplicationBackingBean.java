@@ -1347,9 +1347,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			// #32809 - start - #30766
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 				// filter category code that not imposed with DA
-				if ((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
-						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED)
-						&& cat.getPmCategoryL3() != null
+				if (//#34209 - START
+						/*(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED && cat
+						.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED)
+						&& */
+					//#34209 - END
+						cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
@@ -1365,9 +1369,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						SmManufacturingDtl manDtl = (SmManufacturingDtl) EntityHelper.getEntityBySinglePropertyFromList(
 								manuFacDtl.getManufacturingDtlId(), activeManufacturingDtls, "manufacturingDtlId");
 						if(manDtl == null){
-							activeManufacturingDtls.add(manuFacDtl);
-						}
+							//#34209 - START
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+						    HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+						    String URI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+							if(URI.toLowerCase().contains("application-history")){
+								activeManufacturingDtls.add(manuFacDtl);
+							} else {
+								if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+										&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED 
+										&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+									activeManufacturingDtls.add(manuFacDtl);
+								}
+							}
+						} 
 					}
+					//#34209 - END
 					//#33467, #32809 - end - #30766
 				}
 			}
