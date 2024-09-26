@@ -3651,6 +3651,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("showSimpleQuote");
 		SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 		if (getManagedBean().getRequestNote().getQuote() != null) {
+			//#25790 - start
+			if (!StringUtils.isBlank(getManagedBean().getContinuityPageSession())) {
+				simpleQuoteBackingBean.getManagedBean().setTrackingDairyView(true);
+			}
+			//#25790 - end
 			ScQuote scQuote = getManagedBean().getRequestNote().getQuote();
 			simpleQuoteBackingBean.viewQuote(scQuote.getQuoteId());
 		}
@@ -6652,6 +6657,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
+			fulfilmentOrderBackingBean.getManagedBean().setDpContinuityView(true);
 			fulfilmentOrderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigatePO);
 		} catch(Exception e) {

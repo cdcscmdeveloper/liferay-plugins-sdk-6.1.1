@@ -1771,16 +1771,18 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
-				.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+				.retrieveLatestRegisteredApplicationBySupplierId(mofReqDTO).getSmAppl();
 
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
 			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())
+					&& smAppl.getApplId().equals(latestRejectedAppl.getApplId())
+					&& !SmApplicationUtil.checkRejectedApplExpired(smAppl) 
 					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
-		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
+		}/* else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
 			showErrorAdminHasBeenReplace();
-		}
+		}*/
 		// #35336 END
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
