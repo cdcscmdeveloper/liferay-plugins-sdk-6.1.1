@@ -153,6 +153,10 @@ public abstract class BaseManagedBean implements Serializable {
 	// end #29956
 	// 27346
 	private StreamedContent downloadfile;
+	
+	// #32236 start
+	private String outputPage;
+	// #32236 end
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -961,4 +965,13 @@ public abstract class BaseManagedBean implements Serializable {
 		this.isDowngradeRole = isDowngradeRole;
 	}
 	// end #29956
+	//#32236 - start
+	public String getOutputPage() {
+		return outputPage;
+	}
+
+	public void setOutputPage(String outputPage) {
+		this.outputPage = outputPage;
+	}
+	//#32236 - end
 }
