@@ -87,10 +87,8 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td>
-			<!-- #34159 - START - edit required condition -->
-			    <p:selectOneMenu
-					required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
+			<td><p:selectOneMenu
+					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.countryId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit or backingBean.disableFieldSSm(backingBean.managedBean.selectedBranch.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedBranch.smAddress.stateSsmNull)}"
@@ -105,7 +103,6 @@
 						divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId" />
 					<!-- #34135 END -->
 				</p:selectOneMenu> 
-			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
@@ -126,10 +123,8 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td>
-			<!-- #34159 - START - edit required condition -->
-			    <p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.state']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.stateId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit or backingBean.disableFieldSSm(backingBean.managedBean.selectedBranch.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedBranch.smAddress.stateSsmNull)}"	
@@ -141,7 +136,6 @@
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity" />
 				</p:selectOneMenu> 
-			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
@@ -169,9 +163,8 @@
 				<p:outputPanel id="divisionBranchTbleDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmState.adoptDivision}">
 			<!-- #34135 START -->	
-				<!-- #34159 - START - edit required condition -->
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
+			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.division']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
@@ -183,7 +176,6 @@
 					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchDist,branchCity" />
 				</p:selectOneMenu>
-				<!-- #34159 - END -->
 				<!-- #35086 -->
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
@@ -206,10 +198,8 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td>
-			<!-- #34159 - START - edit required condition -->
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					id="branchDist" required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+					id="branchDist" required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.district']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.districtId}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -219,7 +209,6 @@
 						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchDist,branchCity" />
 				</p:selectOneMenu> 
-			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"
@@ -235,10 +224,8 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
-			<td>
-			<!-- #34159 - START - edit required condition -->
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					id="branchCity" required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+					id="branchCity" required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.towncity']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.cityId}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -248,7 +235,6 @@
 						listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchCity" />
 				</p:selectOneMenu> 
-			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"

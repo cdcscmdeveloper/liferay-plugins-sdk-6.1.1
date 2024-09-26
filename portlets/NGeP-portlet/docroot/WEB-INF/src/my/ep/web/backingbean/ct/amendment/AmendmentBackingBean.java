@@ -1165,6 +1165,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >START<");
 			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
+			itemPriceFlagVerification(resDTO);
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer resDTO.getCtContractVer()"+resDTO.getCtContractVer().getContractVerId());
 			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			//26753 - start  #29403 start (comment old code)
@@ -9082,5 +9083,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// #25956 - Start
+	
+	private void itemPriceFlagVerification(ContractResDTO resDTO) {
+		log.info(" #33287 amendmentbackingbean itemPriceFlagVerification() ");
+		IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		log.info(" #33287 amendmentbackingbean itemPriceFlagVerification() "
+				+ resDTO.getCtContractVer().getCtContractItems().size());
+
+		for (CtContractItem ctItemList : resDTO.getCtContractVer().getCtContractItems()) {
+
+			if (ctItemList.getCtItemPrices() != null && !ctItemList.getCtItemPrices().isEmpty()) {
+				for (CtItemPrice ctItemprice : ctItemList.getCtItemPrices()) {
+					ContractAmendmentResDTO amendResDTO = contractAmendmentSO.itemAmendmentReqFlag(ctItemprice);
+					if (amendResDTO != null) {
+						ctItemprice.setEditable(amendResDTO.isEditableItemPrice());
+						log.info("amendmentbackingbean ctItemprice.getUnitPrice() ::::: " + ctItemprice.getUnitPrice()
+								+ " and ctItemprice.isEditable() : " + ctItemprice.isEditable() + " itempriceid : "
+								+ ctItemprice.getItemPriceId());
+
+					}
+				}
+			}
+
+		}
+	}
 	
 	}
