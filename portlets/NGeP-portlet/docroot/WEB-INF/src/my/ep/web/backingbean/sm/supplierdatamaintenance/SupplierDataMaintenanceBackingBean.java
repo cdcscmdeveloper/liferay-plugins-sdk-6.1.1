@@ -887,52 +887,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
 			
-			//26238 - start
-			if(resDTO.isSuccessful()){
-				if(resDTO.getCategoryList() != null){
-					SupplierDataMaintenanceReqDTO supplierDataMaintenanceReqDTO = new SupplierDataMaintenanceReqDTO();
-					SmAppl latestAppl = resDTO.getSmAppl();
-					SmSupplier supplier = latestAppl.getSmSupplier();
-
-					//26238 -  Disciplonary action - 29399 - start
-
-//					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplierForBackDate(supplier);
-					
-					//26238 -  Disciplonary action - 29399 - end
-					if(discList != null){
-						for(SmDisciplinaryAction disc : discList){
-							if(disc.getDisciplinaryActionId() != null 
-									&& disc.isRecordStatus()){
-								supplierDataMaintenanceReqDTO.setDisciplinaryActionId(disc.getDisciplinaryActionId());
-								break;
-							}
-						}
-					}
-					supplierDataMaintenanceReqDTO.setSelectedCategories(resDTO.getCategoryList());
-					SupplierDataMaintenanceResDTO resDTO2 = new SupplierDataMaintenanceResDTO();
-					resDTO2 = SmServiceLookup.getSupplierDataMaintenanceSO()
-							.updateSelectedCategory(supplierDataMaintenanceReqDTO);
-
-					//26238 -  Disciplonary action - 29399 - 30155 - start
-					// Check if got active application for this supplier
-					 activeAppl = SmCommonUtil
-							.getActiveApplBySupplier(getManagedBean().getSmSupplier());
-					
-					 if(activeAppl != null){
-						 supplierDataMaintenanceReqDTO.setSelectedCategories(resDTO.getCategoryList()); 
-							resDTO2 = SmServiceLookup.getSupplierDataMaintenanceSO()
-									.updateSelectedCategoryWIP(supplierDataMaintenanceReqDTO,activeAppl);
-						 
-					 }
-
-						//26238 -  Disciplonary action - 29399- 30155 - end
-					if(!resDTO2.isSuccessful()){
-						throw new EpException("Failed to update Supplier Category imposed Disciplinary Action");
-					}
-				}
-			} 
-			//26238 - end
 			
 			//26238 -  Disciplonary action - 28146 - start
 			if (getManagedBean().getOwnerAndDirectorList() != null && getManagedBean().getOwnerAndDirectorList().size() > 0 
@@ -1513,33 +1467,6 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	}
 
-	private String getActionDesc(SmAppl appl) {
-		PmUser user = new FacesScopes().getUserSessionBean();
-		StringBuffer sb = new StringBuffer();
-		sb.append("Keterangan Lain untuk bidang:<br />");
-		boolean editOtherDesc = false;
-		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
-			for (SmSupplierCategory sc : appl.getSmSupplierCategories()) {
-				if (!StringUtils.isBlank(sc.getOtherDesc())
-						&& !sc.getOtherDesc().equals(sc.getEntryMode())) {
-					editOtherDesc = true;
-					sb.append(sc.getPmCategoryL1().getCategoryL1Code()
-							+ sc.getPmCategoryL2().getCategoryL2Code()
-							+ sc.getPmCategoryL3().getCategoryL3Code());
-					sb.append(" telah dikemaskini dari ")
-							.append(sc.getEntryMode()).append(" kepada ")
-							.append(sc.getOtherDesc()).append(" oleh ")
-							.append(user.getUserName()).append("<br />");
-				}
-			}
-		}
-		if (!editOtherDesc) {
-			sb = new StringBuffer();
-			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
-		}
-		return sb.toString();
-	}
-
 	private void setCategoryTypeConfirm() {
 		if (getManagedBean().getSmAppl().getApplCategoryType()
 				.equalsIgnoreCase("N")) {
@@ -1764,11 +1691,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			//28858: Disciplinary Action - end - 26238
 			//28281 - start
 			getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
-			List<SmSupplierCategory> catList = getManagedBean().getApprovedCategoryList();
-			for(SmSupplierCategory cat: catList){
+			for(SmSupplierCategory cat: getManagedBean().getApprovedCategoryList()){
 				cat.setSelected(false);
+				cat.setSelectable(true);
 			}
-			getManagedBean().setApprovedCategoryList(catList);
 			//28494
 			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
 			//28281 - end
@@ -1783,46 +1709,19 @@ public class SupplierDataMaintenanceBackingBean extends
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(true);
 			} else if (getManagedBean().isBlacklistOwnerOrDirector()) {
 				//26238 -  Disciplinary action - 28146 - start
-				/*getManagedBean().setCancelRegistration(true);
-				getManagedBean().setFlagBlacklistCancel(true);*/
 				getManagedBean().setSelectedOwnerAndDirectorList(getManagedBean().getOwnerAndDirectorList());
 				//26238 -  Disciplinary action - 28146 - end
 			} else {
 				getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
-				
-				//26238 -  Disciplinary action - 28146 - start
-				/*if(getManagedBean().isFlagBlacklistCancel()){
-					getManagedBean().setCancelRegistration(false);
-					getManagedBean().setFlagBlacklistCancel(false);
-				}*/
 				//26238 -  Disciplinary action - 28146 - end
 			}
 
 			//26238: Disciplinary Action - start - 28324 ,28779
 			//28281 - start (bumi code)
-			if((getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode()
-					|| getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration()
-					|| getManagedBean().isBlacklistOwnerOrDirector() 
-					|| getManagedBean().isManufacturerStatusCancel() ) && getManagedBean().isBumiputeraStatusCancel()){
-				
-				if (getManagedBean().getSmSupplier().isBumi()){
-					if (getManagedBean().isBumiputeraStatusCancel()){
-						autoTickBumiCode();  
-					} 
-				} 
-				
-			} else if (getManagedBean().isBumiputeraStatusCancel()){
-				if (getManagedBean().getSmSupplier().isBumi()){
-					if (getManagedBean().isBumiputeraStatusCancel()){
-						autoTickBumiCode();  
-					} 
-				} 
-			}
+			unSelectCancelBumiCategories();
 			//32386 - start
-			else if (!getManagedBean().isBumiputeraStatusCancel()){
-				getManagedBean().setDisabledApprovedCategories(false);
+			getManagedBean().setDisabledApprovedCategories(false);
  
-			}
 			//32386 - end
 			//28281 - end
 			//26238: Disciplinary Action - end - 28324 ,28779
@@ -2519,121 +2418,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				"disciplinaryActionHistoryDlg.show();");
 	} 
 	
-	//28281
-	/*
-	private static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
-		List<DisciplinaryActionVO> voList = new ArrayList<DisciplinaryActionVO>();
-		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
-		perReqDTO.setSmSupplierId(currSupp.getSupplierId());
-		
-		//27915: Disciplinary Action - start - 26238
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelDABySupplierId(perReqDTO);
-		//27915: Disciplinary Action - end - 26238
-		
-		//27796: Disciplinary Action - start - 26238
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveDisciplinaryActionHistoryBySupplier(currSupp);
-		
-		if (resultList != null
-				&& resultList.size() > 0) {
-			for (int i = 0; i < resultList.size(); i++){
-				SmDisciplinaryAction disciplinaryAction = resultList.get(i);
-				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-				List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
-				if(disciplinaryAction.getEditNo() == 1){
-					if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
-							|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-							|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-							|| disciplinaryAction.isBumiputeraCancel()){
-						
-						if(disciplinaryAction.getStartDate() != null)
-							retVal.setStartDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getStartDate()));
-						retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-						if(disciplinaryAction.getEndDate() != null)
-							retVal.setEndDate(DateUtils.dateToString("dd/MM/yyyy",disciplinaryAction.getEndDate()));
-						
-						DisciplinaryActionVO rem = new DisciplinaryActionVO();
-						rem.setRemarks(disciplinaryAction.getRemark());
-						remList.add(rem);
-						for (int k = i+1; k < resultList.size(); k++){
-							SmDisciplinaryAction da1 = resultList.get(k);
-							if(disciplinaryAction.getEndDate().toString().contentEquals(da1.getEndDate().toString()) &&
-									disciplinaryAction.getStartDate().toString().contentEquals(da1.getStartDate().toString())
-									){
-								DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
-								rem1.setRemarks(da1.getRemark());
-								remList.add(rem1);
-								
-							}
-						}
-						retVal.setRemarksList(remList);
-						
-						if(disciplinaryAction.isWarning())
-							retVal.setWarning(true);
-						if(disciplinaryAction.isCancelCategory())
-							retVal.setCancelCategory(true);
-						if(disciplinaryAction.isSuspendRegistration())
-							retVal.setSuspendRegistration(true);
-						if(disciplinaryAction.isCancelRegistration())
-							retVal.setCancelRegistration(true);
-						if(disciplinaryAction.isBumiputeraCancel())
-							retVal.setBumiputeraCancel(true);
-						if(disciplinaryAction.isManufacturerCancel())
-							retVal.setManufacturerCancel(true);
-						if(disciplinaryAction.isBlacklistOwner())
-							retVal.setBlacklistOwnerDirector(true);
-						//27576: Disciplinary Action - start
-						if(disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel()){
-							List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<DisciplinaryActionCategoryVO>();
-							//27617 : Disciplinary Action - 26238
-							List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(disciplinaryAction.getDisciplinaryActionId());
-							
-							if(catList != null
-									&& catList.size() > 0){
-								for(Object[] arr : catList){
-									if(arr[7] != null){
-										if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
-											DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-											String catCode = StringUtils.EMPTY;
-											catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-											catVo.setCategoryCode(catCode);	
-											catVoList.add(catVo);
-										}
-									}								
-								}						
-								retVal.setCategoryCodeList(catVoList);
-							}
-						}
-
-						//27576: Disciplinary Action - end
-						
-						if(disciplinaryAction.isBlacklistOwner()
-								|| disciplinaryAction.isSuspendRegistration()
-									|| disciplinaryAction.isCancelRegistration()){
-							List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-							if(personnelResDTO != null 
-									&& personnelResDTO.getSmPersonnelList().size() > 0){
-								for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-									if(personnel.isCancelRegistration()
-											|| personnel.isSuspendRegistration()
-												|| personnel.isBlacklisted()){
-										blacklistOwner.setIcNo(personnel.getIdentificationNo());
-										blacklistownerDirectorList.add(blacklistOwner);
-									}
-								}
-								retVal.setBlacklistownerDirectorList(blacklistownerDirectorList);
-							}
-						}
-						voList.add(retVal);	
-					}
-				}
-							
-			}
-			//27796: Disciplinary Action - end - 26238
-		}
-		return voList;
-	}
-	*/
 	/**
 	 * Retrieve owner and director list
 	 */
@@ -3259,39 +3043,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	//26238 -  Disciplonary action - 28146 - end
 	
 	
-	//28281: auto-tick bumi code when bumi status DA is ticked
-	private void autoTickBumiCode(){
-		List<SmSupplierCategory> catList = getManagedBean().getApprovedCategoryList();
-		if(catList == null || catList.isEmpty()) return;		
-		List<Long> bumiList = getManagedBean().getBumiCodeList();
-		if(bumiList == null || bumiList.isEmpty()){
-			bumiList = SmApplicationUtil.retrieveBumiCodeList();
-			getManagedBean().setBumiCodeList(bumiList);
-		}
-		
-		List<SmSupplierCategory> selectList = getManagedBean().getSelectedApprovedCategories();
-		for(SmSupplierCategory cat: catList){
-			if(bumiList.contains(cat.getPmCategoryL3().getCategoryL3Id())){
-				if(!cat.isSelected()) selectList.add(cat);
-				cat.setSelected(true);
-			}
-		}		
-		getManagedBean().setApprovedCategoryList(catList);
-		getManagedBean().setSelectedApprovedCategories(selectList);
-		// Start 27815,28324, 32386
-		if (!getManagedBean().isBumiputeraStatusCancel()) {
-			log.info("---do nothing semua DA---");
-			if(getManagedBean().isDisabledApprovedCategories()){ 
-				getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
-			}
-		} else if(getManagedBean().isBumiputeraStatusCancel()){
-			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? true : false);
-
-		}
-		// End 27815,28324 32386
-	}
-	//28281 end
-	
 	//13320-Start
 	public void populateDivisionByAddType(String typeAdd, boolean reset) {
 		log.info("---------------Division By Type--------------------");
@@ -3335,32 +3086,27 @@ public class SupplierDataMaintenanceBackingBean extends
 	//32618 - Start
 	/**
 	 * Removed selected cancel bumi categories from the list.
-	 * 
-	 * @param e
-	 *            -AjaxBehaviorEvent
+	 *  Mandatory auto-tick 100% bumi, disable non-bumi, enable 51% bumi for selection
 	 */
-	public void unSelectCancelBumiCategories(AjaxBehaviorEvent e) {
-		if (getManagedBean().getSmSupplier().isBumi() && getManagedBean().isBumiputeraStatusCancel()){
-			if (getManagedBean().getSelectedPendingApprovedCategories() != null) {
-				List<Long> bumiList = getManagedBean().getBumiCodeList();
-				if(bumiList == null || bumiList.isEmpty()){
-					bumiList = SmApplicationUtil.retrieveBumiCodeList();
-					getManagedBean().setBumiCodeList(bumiList);
-				}
-	
-				List<SmSupplierCategory> selectList = new ArrayList<SmSupplierCategory>();
-				Iterator<SmSupplierCategory> iterator = getManagedBean().getApprovedCategoryList().iterator();
-				while (iterator.hasNext()) {
-					SmSupplierCategory cat = iterator.next();
-					if(bumiList.contains(cat.getPmCategoryL3().getCategoryL3Id())){
-						selectList.add(cat);
-					}
-				}
-				//32760 - Start
-				getManagedBean().setSelectedApprovedCategories(selectList);
-				//32760 - End
-			}
+	public void unSelectCancelBumiCategories() {
+		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
+				|| getManagedBean().getSelectedPendingApprovedCategories() == null){
+			return;
 		}
+		List<SmSupplierCategory> selectList = new ArrayList<>();
+		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
+		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
+		while (it.hasNext()) {
+			SmSupplierCategory cat = it.next();
+			int bumiPct = cat.getPmCategoryL3().getBumiPercentage().intValue();
+			if((bumiPct > 50 && prevSelect.contains(cat))
+						|| bumiPct == 100){
+				selectList.add(cat);
+			} 
+			cat.setSelectable(bumiPct > 50 && bumiPct < 100);
+		}
+		//32760 - Start
+		getManagedBean().setSelectedApprovedCategories(selectList);
 	}
 	//32618 - End
 	

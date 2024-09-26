@@ -176,9 +176,6 @@ public class ViewSuppProfileManagedBean extends
 	private boolean disableDeleteButtonAprrovedCategoryCodePanel;
 	//End - 27815
 	
-	//28281
-	private List<Long> bumiCodeList;
-	
 	// Start 27815
 	private boolean disabledApprovedCategories;
 	// End 27815
@@ -965,14 +962,6 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
-	}
-
-	public List<Long> getBumiCodeList() {
-		return bumiCodeList;
-	}
-
-	public void setBumiCodeList(List<Long> bumiCodeList) {
-		this.bumiCodeList = bumiCodeList;
 	}
 
 	public boolean isDisabledApprovedCategories() {

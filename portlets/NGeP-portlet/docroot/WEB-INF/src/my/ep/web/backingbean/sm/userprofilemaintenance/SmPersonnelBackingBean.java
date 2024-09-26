@@ -27,7 +27,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.vo.WorklistItemVO;
@@ -42,7 +41,6 @@ import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -52,7 +50,6 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -66,7 +63,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -142,19 +139,10 @@ public class SmPersonnelBackingBean extends
 		getManagedBean().setDisableAddNewUser(validatePersonLimit(smSupplier));
 		getManagedBean().setSalutationItems(SmCommonUtil.getSalutationItems());
 		
-		//27536 : Disciplinary Action - start also fix 27537
-		String labelNameVal = "";
-		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-		supReqDTO.setSupplier(smSupplier);
-		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-		if(activeDisc != null
-				&& activeDisc.getSmDisciplinaryActions() != null){
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-							new String[] { labelNameVal })));
+		//27536 : Disciplinary Action - start also fix 27537 - #26238
+		if(hasValidDisciplinaryAction(getManagedBean().getSmSupplier())){
+			getManagedBean().setSuppInPunishment(true);
 			getManagedBean().setDisableAddNewUser(true);
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml", "", null, null);
 		}
 		//27536 : Disciplinary Action - end also fix 27537
 				
@@ -223,22 +211,7 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().setHasActiveAppl(true);
 		}
 		
-		//26238 - start
-		//check disciplinary action on supplier
-		String labelNameVal = "";
-		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-		supReqDTO.setSupplier(smSupplier);
-		SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-		if(activeDisc != null
-				&& activeDisc.getSmDisciplinaryActions() != null){
-			FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-							new String[] { labelNameVal })));
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/userProfileMaintenance/adminReAssign.xhtml", "", null, null);
-		}
-		//26238 - end
-
+		hasValidDisciplinaryAction(smSupplier);		//#26238
 		redirectPage = "adminReAssign.xhtml";
 		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())) {
 			List<SmPersonnel> authorizedPersonnelList = resDTO
@@ -1540,6 +1513,230 @@ public class SmPersonnelBackingBean extends
 			getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmCity().setCityId(null);
 	}
 
+	//#34159 - Start
+	/**
+	 * When Country dropdown is selected, to set State list
+	 * reset value of State, Division, District and City.
+	 * Use at Supplier User Maintenance(Basic), Supplier Maintenance(MOF)
+	 * @param SmAddress addr
+	 * @param addrType
+	 */
+	public void onChangeCountry(SmAddress addr, String addrType){
+		Long countryId = addr.getPmCountry().getCountryId();
+		
+		if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
+			this.getManagedBean().setPermAddStateList(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermAddCityList(new ArrayList<SelectItem>());
+			getManagedBean().setDivisionBox(false);
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setPermAddStateList(SmCommonUtil.getStateList(countryId));
+			}
+			
+		} else if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			this.getManagedBean().setMailAddStateList(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailAddCityList(new ArrayList<SelectItem>());
+			getManagedBean().setMailDivisionBox(false);
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setMailAddStateList(SmCommonUtil.getStateList(countryId));
+			} 
+		} else if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+			this.getManagedBean().setResAddStateList(new ArrayList<SelectItem>());
+			this.getManagedBean().setResAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setResAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setResAddCityList(new ArrayList<SelectItem>());
+			getManagedBean().setResDivisionBox(false);
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setResAddStateList(SmCommonUtil.getStateList(countryId));
+			} 
+		} else if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)){
+			this.getManagedBean().setOffAddStateList(new ArrayList<SelectItem>());
+			this.getManagedBean().setOffAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setOffAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setOffAddCityList(new ArrayList<SelectItem>());
+			getManagedBean().setOffDivisionBox(false);
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setOffAddStateList(SmCommonUtil.getStateList(countryId));
+			} 
+		}
+
+		addr.setPmState(new PmState());
+		addr.setPmDivision(new PmDivision());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+	}
+	
+	/**
+	 * When State dropdown is selected, to set Division/District list,
+	 * Reset value of division, District and City 
+	 * Use at Supplier User Maintenance(Basic), Supplier Maintenance(MOF)
+	 * @param SmAddress addr
+	 * @param addrType
+	 */
+	public void onChangeState(SmAddress addr, String addrType){
+		Long stateId = addr.getPmState().getStateId();
+
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			this.getManagedBean().setPermAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermAddCityList(new ArrayList<SelectItem>());
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setPermAddDivisionList(SmCommonUtil.getDivisionList(stateId));
+					getManagedBean().setDivisionBox(true);
+				} else {
+					this.getManagedBean().setPermAddDistrictList(SmCommonUtil.getDistrictList(stateId));
+					getManagedBean().setDivisionBox(false);
+				}
+			} else {
+				addr.setPmState(new PmState());
+				getManagedBean().setDivisionBox(false);
+			}
+		}
+		else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			this.getManagedBean().setMailAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailAddCityList(new ArrayList<SelectItem>());
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setMailAddDivisionList(SmCommonUtil.getDivisionList(stateId));
+					getManagedBean().setMailDivisionBox(true);
+				} else {
+					this.getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictList(stateId));
+					getManagedBean().setMailDivisionBox(false);
+				}
+			} else {
+				addr.setPmState(new PmState());
+				getManagedBean().setMailDivisionBox(false);
+			}	
+		}
+		else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+			this.getManagedBean().setResAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setResAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setResAddCityList(new ArrayList<SelectItem>());
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setResAddDivisionList(SmCommonUtil.getDivisionList(stateId));
+					getManagedBean().setResDivisionBox(true);
+				} else {
+					this.getManagedBean().setResAddDistrictList(SmCommonUtil.getDistrictList(stateId));
+					getManagedBean().setResDivisionBox(false);
+				}
+			} else {
+				addr.setPmState(new PmState());
+				getManagedBean().setResDivisionBox(false);
+			}	
+		}
+		else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)){
+			this.getManagedBean().setOffAddDivisionList(new ArrayList<SelectItem>());
+			this.getManagedBean().setOffAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setOffAddCityList(new ArrayList<SelectItem>());
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setOffAddDivisionList(SmCommonUtil.getDivisionList(stateId));
+					getManagedBean().setOffDivisionBox(true);
+				} else {
+					this.getManagedBean().setOffAddDistrictList(SmCommonUtil.getDistrictList(stateId));
+					getManagedBean().setOffDivisionBox(false);
+				}
+			} else {
+				addr.setPmState(new PmState());
+				getManagedBean().setOffDivisionBox(false);
+			}	
+		}
+		addr.setPmDivision(new PmDivision());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+	}
+	
+	/**
+	 * When Division dropdown is selected, to set District list,
+	 * Reset value of District and City 
+	 * Use at Supplier User Maintenance(Basic), Supplier Maintenance(MOF)
+	 * @param SmAddress addr
+	 * @param addrType
+	 */
+	public void onChangeDivision(SmAddress addr, String addrType){
+		Long divisionId = addr.getPmDivision().getDivisionId();
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			this.getManagedBean().setPermAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermAddCityList(new ArrayList<SelectItem>());
+			if(divisionId != null){
+				this.getManagedBean().setPermAddDistrictList(SmCommonUtil.getDistrictListByID(divisionId));
+			}
+		} 
+		else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			this.getManagedBean().setMailAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailAddCityList(new ArrayList<SelectItem>());
+			if(divisionId != null){
+				this.getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictListByID(divisionId));
+			}
+		}
+		else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+			this.getManagedBean().setResAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setResAddCityList(new ArrayList<SelectItem>());
+			if(divisionId != null){
+				this.getManagedBean().setResAddDistrictList(SmCommonUtil.getDistrictListByID(divisionId));
+			}
+		}
+		else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)){
+			this.getManagedBean().setOffAddDistrictList(new ArrayList<SelectItem>());
+			this.getManagedBean().setOffAddCityList(new ArrayList<SelectItem>());
+			if(divisionId != null){
+				this.getManagedBean().setOffAddDistrictList(SmCommonUtil.getDistrictListByID(divisionId));
+			}
+		}
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+	}
+	
+	/**
+	 * When District dropdown is selected, to set City list,
+	 * Reset value of City 
+	 * Use at Supplier User Maintenance(Basic), Supplier Maintenance(MOF)
+	 * @param SmAddress addr
+	 * @param addrType
+	 */
+	public void onChangeDistrict(SmAddress addr, String addrType){
+		Long districtId = addr.getPmDistrict().getDistrictId();
+
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			this.getManagedBean().setPermAddCityList(new ArrayList<SelectItem>());
+			if(districtId != null){
+				this.getManagedBean().setPermAddCityList(SmCommonUtil.getCityList(districtId));
+			}
+		} else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			this.getManagedBean().setMailAddCityList(new ArrayList<SelectItem>());
+			if(districtId != null){
+				this.getManagedBean().setMailAddCityList(SmCommonUtil.getCityList(districtId));
+			}
+		} else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)){
+			this.getManagedBean().setResAddCityList(new ArrayList<SelectItem>());
+			if(districtId != null){
+				this.getManagedBean().setResAddCityList(SmCommonUtil.getCityList(districtId));
+			}
+		} else if (addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)){
+			this.getManagedBean().setOffAddCityList(new ArrayList<SelectItem>());
+			if(districtId != null){
+				this.getManagedBean().setOffAddCityList(SmCommonUtil.getCityList(districtId));
+			}
+		}
+		addr.setPmCity(new PmCity());
+	}
+	//#34159 - End
+		
 	/**
 	 * Update mail address if tick same as permanent address
 	 */
@@ -3967,5 +4164,31 @@ public class SmPersonnelBackingBean extends
 		return valid;
 	}
 	//32515 END
-
+	
+	//#26238
+	/**
+	 * Display error if supplier has active DA 
+	 * (cancel registration / suspend registration / blacklist owner)
+	 * @param supplier
+	 * @return
+	 */
+	private boolean hasValidDisciplinaryAction(SmSupplier supplier){
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveActiveDisciplinaryActionBySupplier(reqDTO);
+		if(EntityHelper.isCollectionEmpty(resDTO.getSmDisciplinaryActions())){
+			return false;
+		}
+		for (SmDisciplinaryAction da : resDTO.getSmDisciplinaryActions()){
+			if(da.isCancelRegistration() || da.isSuspendRegistration() || da.isBlacklistOwner()){
+				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", 
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+								new String[] { "" })));
+				return true;
+			}
+		}
+		return false;
+	}
 }
