@@ -1849,6 +1849,13 @@ public class PurchaseInquiryBackingBean extends
 	 * @return the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
+		// #36466
+		StringBuilder sb = new StringBuilder();
+		if (getManagedBean().getScPrInquiry() != null) {
+			sb.append(getManagedBean().getScPrInquiry().getPrInquiryNo());
+		}
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
 		return textBeforeSign;
 	}
 
