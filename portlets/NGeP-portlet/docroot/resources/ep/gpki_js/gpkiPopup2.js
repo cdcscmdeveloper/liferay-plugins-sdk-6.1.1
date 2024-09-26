@@ -5,6 +5,7 @@
  */
 var hostOTP = "";
 var hostBroker = "";
+var gpkiNonce;
 var gpki = {};
 (function () {
   var nric = "";
@@ -12,7 +13,6 @@ var gpki = {};
   var modeUsed = "";
   var appCode = "";
   var agencyId = "";
-  var nonce = "";
   var signType = "";
   var saluran = "";
   var text = "";
@@ -43,11 +43,9 @@ var gpki = {};
     request_otp(nric, agencyId, nric, modeUsed, otpExp, saluran, email);
   };
 
-  this.setNonce = function (n) { nonce = n; };
-
   this.signToken = function (a) {
     gpkiBlockWidget.show();
-    text = a[0];
+    text = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);
@@ -70,7 +68,7 @@ var gpki = {};
       return;
     }
     const data = encodeURIComponent(Gpki.hash(text));
-    sign_roaming(nric, nonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
+    sign_roaming(nric, gpkiNonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
   };
 
   this.otpExp = function () { return otpExp; };
@@ -136,7 +134,7 @@ function parseTxResultRequestOTP(msg) {
       if (obj.status) {
         disableOtpTimeout();
         const response = jQuery.parseJSON(obj.response);
-        gpki.setNonce(response.nonce);
+        gpkiNonce = response.nonce;
         alert("OTP code: " + response.otp);	//alert - DO NOT MERGE TO PROD!
       } else {
         showError(obj.status, obj.message);
