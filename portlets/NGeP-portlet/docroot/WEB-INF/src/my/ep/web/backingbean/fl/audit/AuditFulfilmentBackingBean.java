@@ -435,7 +435,7 @@ public class AuditFulfilmentBackingBean extends BaseBackingBean<AuditFulfilmentM
 
 			response.setContentType("application/ms-excel");
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition", "attachment; filename=\"Butiran Jejak Audit.xlsx\"");
+			response.setHeader("Content-Disposition", "attachment; filename="+AuditFLConst.FL_AU_EXCEL_FILE_NAME);
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.flushBuffer();
 

@@ -103,8 +103,9 @@ public class AuditFulfilmentManagedBean extends BaseManagedBean {
 	 * @return the auditFLSearchBean
 	 */
 	public AuditFLSearchBean getAuditFLSearchBean() {
-		if (auditFLSearchBean == null)
-			auditFLSearchBean = new AuditFLSearchBean();
+		if (auditFLSearchBean == null){
+			auditFLSearchBean = new AuditFLSearchBean();			
+		}
 		return auditFLSearchBean;
 	}
 
