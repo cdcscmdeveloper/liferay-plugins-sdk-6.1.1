@@ -526,21 +526,4 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	public void setMailDivisions(List<SelectItem> mailDivisions) {
 		this.mailDivisions = mailDivisions;
 	}
-	// #28895_35501 Start - AUDIT TRAIL SM
-	public String getOldIdentification() {
-		return oldIdentification;
-	}
-
-	public void setOldIdentification(String oldIdentification) {
-		this.oldIdentification = oldIdentification;
-	}
-
-	public String getNewIdentifiction() {
-		return newIdentifiction;
-	}
-
-	public void setNewIdentifiction(String newIdentifiction) {
-		this.newIdentifiction = newIdentifiction;
-	}
-	// #28895_35501 End
 }

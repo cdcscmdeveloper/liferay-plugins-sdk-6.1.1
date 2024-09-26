@@ -931,24 +931,6 @@ public class SupplierDataMaintenanceBackingBean extends
 						throw new EpException("Failed to update Supplier Category imposed Disciplinary Action");
 					}
 				}
-				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailSO.class);
-				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-					auditSmBackingBean = new AuditSupplierManagementApprovedCategoryCodesBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-					auditSmBackingBean = new AuditSupplierManagementOverlappingCategoryBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-					auditSmBackingBean = new AuditSupplierManagementApproverRemarksBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-					auditSmBackingBean = new AuditSupplierManagementListOwnerDirectorBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
-				}
-				// #28895_35501 End
 			} 
 			//26238 - end
 			
