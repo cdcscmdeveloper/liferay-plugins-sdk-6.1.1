@@ -3828,6 +3828,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+		IRequestNoteSO requestNoteSO = null; //#36119
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
@@ -3842,12 +3843,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
 			
-			cancelRN(prObj, prSize);
-			
 			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
 			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
 			IPurchaseRequestSO purchaseRequestSO = null;
-			IRequestNoteSO requestNoteSO = null;
+
 			try {
 				purchaseRequestSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -3857,12 +3856,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IRequestNoteSO.class);
 				
+				//#36119 - start
+				if(!getManagedBean().isSourcingDpNewBpmVer()){
+					cancelRN(prObj, prSize);
+				}
+				//#36119 - end
+				
 				if (null != purchaseRequest && null != purchaseRequestSO) {
 					
 					purchaseRequest.setRecordStatusFlg(2);
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setPurchaseRequest(purchaseRequest);
 					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO );
+					
+					//#36119 - start
+					if(getManagedBean().isSourcingDpNewBpmVer()){
+						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+						if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
+							rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
+							rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
+							requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+						}				
+					}
+					//#36119 - end
+					
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1],
 								(String) prObj[3], Boolean.TRUE);
@@ -6176,6 +6193,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// end - #25790
+	
+	// #36119 - start
+	/**
+	 * Act as reload RN for codification wrapper
+	 * 
+	 * @param RequestNoteResDTO
+	 *            rnResDTO
+	 * 
+	 * @return void
+	 */
+	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO) {
+		reloadRequestNoteForCodification(requestNoteResDTO);
+	}
+
+	// #36119 - end
 	
 	// 36362 - start
 	/**
