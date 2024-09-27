@@ -2424,10 +2424,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}	
 			}
 			//#34159 - START
-			 else {
-				 this.getManagedBean().setPermenantDivisionLs(new ArrayList<SelectItem>());
-				 this.getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
-				 this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
+			else {
+				this.getManagedBean().setPermenantDivisionLs(new ArrayList<SelectItem>());
+				this.getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
+				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 			}
 			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 			this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
