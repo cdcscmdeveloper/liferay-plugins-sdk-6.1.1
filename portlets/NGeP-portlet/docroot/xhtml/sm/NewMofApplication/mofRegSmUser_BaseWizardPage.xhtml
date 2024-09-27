@@ -154,7 +154,7 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
-											styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" />
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" >
 											<f:param name="disableValidation" value="true" />
 										</p:commandLink>
 									</li>
