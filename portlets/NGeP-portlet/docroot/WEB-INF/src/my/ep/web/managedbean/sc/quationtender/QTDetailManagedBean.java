@@ -1871,6 +1871,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
 
+	private boolean isSampleShowHide;//11104wip
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11859,6 +11861,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
 		this.isCheckUserCanRevise = isCheckUserCanRevise;
 	}
+	
+	/**
+	 * 11104-Start
+	 * @return the isSampleShowHide
+	 */
+	public boolean isSampleShowHide() {
+		return isSampleShowHide;
+	}
+
+	/**
+	 * @param isSampleShowHide the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}//11104-End
 }
 
 // ***25201
