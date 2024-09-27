@@ -2265,20 +2265,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							}
 							map.put(p.getUser().getUserId(), p.getUser().getLoginId());
 						}
-						try {
-							requestContent.setRequestContent(map);
-						} catch (IOException e) {
-							String qtNo = null != scQt ? scQt.getQtNo() : "";
-							SLAUtils.getInstance().logSLAError(
-									ModuleCodeConst.SUPPLIER_SELECTION,
-									ParameterConst.DOCTYPE_QUOTATION,
-									qtNo,
-									SLALogConstant.QT_DETAIL_BACKINGBEAN.concat(
-											SLALogConstant.QT_SLA_DOT_SEPARATOR).concat(
-											SLALogConstant.QT_PREPARE_QT_INFO),
-									getUserIdSessionFromLoginId(), e);
-
-						}
+						requestContent.setRequestContent(map);
 					}
 				}
 			} else if (CollectionUtils.isNotEmpty(deskOfficerAdminList)) {

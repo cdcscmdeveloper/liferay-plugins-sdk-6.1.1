@@ -3059,61 +3059,56 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @param digiSign
 	 */
 	public void updateGenericApprovalTask(PmDigiSign digiSign) {
-		try {
-			FacesScopes facesScopes = new FacesScopes();
-			SCQuotationTenderDataType payload = (SCQuotationTenderDataType) this.getManagedBean().getPayLoad();
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt.getQtNo();
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			if (CollectionUtils.isEmpty(this.getManagedBean().getPmuserContactpersonList())) {
-				this.getManagedBean().setPmuserContactpersonList(new ArrayList<ScQtContactPerson>());
-			}
 
-			Map<Long, String> map = new HashMap<>();
-			for (ScQtContactPerson p : this.getManagedBean().getPmuserContactpersonList()) {
-				map.put(p.getUser().getUserId(), p.getUser().getLoginId());
-			}
-			this.getManagedBean().getRequestContent().setRequestContent(map);
-
-			reqDTO.setApproverAction(this.getManagedBean().getAction());
-			reqDTO.setPayLoad(payload);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setDocId(payload.getRequestId());
-			reqDTO.setDocType(this.getManagedBean().getCurrentTaskDocType());
-			reqDTO.setQtdetail(scQt);
-			reqDTO.setTaskName(this.getManagedBean().getTaskName());
-			reqDTO.setRequestRemark(this.getManagedBean().getDoaaRequest().getAppRequestRemarks().get(0));
-			ScQtAppRequestRemark remark = reqDTO.getRequestRemark();
-			String remarkStr = remark == null ? "" : remark.getRemark();
-
-			if (this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REVISE) && StringUtils.isEmpty(remarkStr)) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-						"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
-			}
-			if (digiSign != null) {
-				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_DOA_ASSIGNMENT, reqDTO.getQtdetail().getQtId(),
-						reqDTO.getQtdetail().getQtNo());
-				reqDTO.setDigiSignData(digiSign);
-			}
-
-			getQTDetailSO().updateGenericRequestApprovalTask(reqDTO);
-			String qtDocTypeDesc = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			String msgCode = MessageConst.INFO_700026;
-			fc.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgCode, new String[] {
-							qtDocTypeDesc, qtNo }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-		} catch (IOException e) {
-			ScQt scQt = this.getManagedBean().getQt();
-			String qtNo = scQt == null ? "" : scQt.getQtNo();
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-					qtNo, "approvalBackingBean.updateGenericApprovalTask", getUserIdSessionFromLoginId(), e);
+		FacesScopes facesScopes = new FacesScopes();
+		SCQuotationTenderDataType payload = (SCQuotationTenderDataType) this.getManagedBean().getPayLoad();
+		ScQt scQt = this.getManagedBean().getQt();
+		String qtNo = scQt.getQtNo();
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		if (CollectionUtils.isEmpty(this.getManagedBean().getPmuserContactpersonList())) {
+			this.getManagedBean().setPmuserContactpersonList(new ArrayList<ScQtContactPerson>());
 		}
+
+		Map<Long, String> map = new HashMap<>();
+		for (ScQtContactPerson p : this.getManagedBean().getPmuserContactpersonList()) {
+			map.put(p.getUser().getUserId(), p.getUser().getLoginId());
+		}
+		this.getManagedBean().getRequestContent().setRequestContent(map);
+
+		reqDTO.setApproverAction(this.getManagedBean().getAction());
+		reqDTO.setPayLoad(payload);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+		reqDTO.setPmUser(facesScopes.getUserSessionBean());
+		reqDTO.setDocId(payload.getRequestId());
+		reqDTO.setDocType(this.getManagedBean().getCurrentTaskDocType());
+		reqDTO.setQtdetail(scQt);
+		reqDTO.setTaskName(this.getManagedBean().getTaskName());
+		reqDTO.setRequestRemark(this.getManagedBean().getDoaaRequest().getAppRequestRemarks().get(0));
+		ScQtAppRequestRemark remark = reqDTO.getRequestRemark();
+		String remarkStr = remark == null ? "" : remark.getRemark();
+
+		if (this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REVISE) && StringUtils.isEmpty(remarkStr)) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+		if (digiSign != null) {
+			updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_DOA_ASSIGNMENT, reqDTO.getQtdetail().getQtId(),
+					reqDTO.getQtdetail().getQtNo());
+			reqDTO.setDigiSignData(digiSign);
+		}
+
+		getQTDetailSO().updateGenericRequestApprovalTask(reqDTO);
+		String qtDocTypeDesc = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String msgCode = MessageConst.INFO_700026;
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgCode, new String[] {
+						qtDocTypeDesc, qtNo }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale())));
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+	
 	}
 	
 	/**
