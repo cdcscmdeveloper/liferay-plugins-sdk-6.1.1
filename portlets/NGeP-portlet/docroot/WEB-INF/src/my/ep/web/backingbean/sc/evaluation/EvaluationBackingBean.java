@@ -8797,7 +8797,7 @@ public void saveComplianceSample() {
 						}//#34741
 						//sonarqube issue (#35)
 						else if (this.getManagedBean().getOneTierFinancialActiveIndex() == 2
-								&& this.getManagedBean().isReadOnly()) {
+								&& !this.getManagedBean().isReadOnly()) {//#36444
 							checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
 						}// #34741
 						
