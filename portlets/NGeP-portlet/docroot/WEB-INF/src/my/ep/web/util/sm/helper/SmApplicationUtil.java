@@ -10048,7 +10048,10 @@ public class SmApplicationUtil {
 			List<SelectItem> stateItems = SmCommonUtil.getStateList(coutryId);
 			if (!panelName
 					.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)) {
-				stateLs = retrievePmStateList(coutryId);
+				//#34159 - START
+				if(coutryId != null)
+					stateLs = retrievePmStateList(coutryId);
+				//#34159 - END
 			}
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
@@ -10058,6 +10061,7 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
 				bean.setBasicOffFacStates(stateItems);
+				bean.setBasicOffFacDivisions(new ArrayList<SelectItem>()); //#34159
 				bean.setBasicOffFacDistricts(new ArrayList<SelectItem>());
 				bean.setBasicOffFacCities(new ArrayList<SelectItem>());
 				break;
@@ -10069,6 +10073,7 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 				bean.setAssocCompanyStates(stateItems);
+				bean.setAssocCompanyDivisions(new ArrayList<SelectItem>()); //#34159
 				bean.setAssocCompanyDistricts(new ArrayList<SelectItem>());
 				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
 				break;
