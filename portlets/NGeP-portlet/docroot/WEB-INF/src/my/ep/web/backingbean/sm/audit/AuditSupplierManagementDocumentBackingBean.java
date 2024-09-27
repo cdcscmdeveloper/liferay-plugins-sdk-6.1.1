@@ -350,7 +350,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 			response.setContentType("application/ms-excel");
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition", ReportExcelAuditConstant.RPT_FILE_NAME);
+			response.setHeader("Content-Disposition", ReportExcelAuditConstant.RPT_FILE_CONTENT_DISPOSITION);
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.flushBuffer();
 
