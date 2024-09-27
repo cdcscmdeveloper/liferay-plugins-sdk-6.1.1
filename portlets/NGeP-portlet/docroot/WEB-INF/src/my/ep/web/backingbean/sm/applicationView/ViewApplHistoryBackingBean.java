@@ -2045,4 +2045,11 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END	
+	// #28895_35501 Start - AUDIT TRAIL SM
+		private void initAuditTab() {
+			SmAppl suppAppl = getManagedBean().getSmAppl();
+			AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+			auSmView.initAuditTab(suppAppl);
+		}
+		// #28895_35501 End
 }
