@@ -379,6 +379,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Object payLoad = getManagedBean().getPayLoad();
 		RequestNoteResDTO requestNoteResDTO = null;
 		Boolean isAssignedState = getManagedBean().isAssignedState();
+		
 		try {
 
 			// 26284 - Start
@@ -3650,6 +3651,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("showSimpleQuote");
 		SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 		if (getManagedBean().getRequestNote().getQuote() != null) {
+			//#25790 - start
+			if (!StringUtils.isBlank(getManagedBean().getContinuityPageSession())) {
+				simpleQuoteBackingBean.getManagedBean().setTrackingDairyView(true);
+			}
+			//#25790 - end
 			ScQuote scQuote = getManagedBean().getRequestNote().getQuote();
 			simpleQuoteBackingBean.viewQuote(scQuote.getQuoteId());
 		}
@@ -4203,14 +4209,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						IRequestNoteSO.class);
 				
 				//#36119 - start
-				if(getManagedBean().isSourcingDpNewBpmVer()){
-					RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
-					if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
-						rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
-						rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
-						requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
-					}				
-				} else{
+				if(!getManagedBean().isSourcingDpNewBpmVer()){
 					cancelRN(prObj, prSize);
 				}
 				//#36119 - end
@@ -4221,6 +4220,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setPurchaseRequest(purchaseRequest);
 					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO);
+					
+					//#36119 - start
+					if(getManagedBean().isSourcingDpNewBpmVer()){
+						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+						if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
+							rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
+							rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
+							requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+						}				
+					}
+					//#36119 - end
+					
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1], (String) prObj[3], Boolean.TRUE);
 						/************ AUDIT #28895_35492 *************/
@@ -6646,6 +6657,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
+			fulfilmentOrderBackingBean.getManagedBean().setDpContinuityView(true);
 			fulfilmentOrderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigatePO);
 		} catch(Exception e) {
