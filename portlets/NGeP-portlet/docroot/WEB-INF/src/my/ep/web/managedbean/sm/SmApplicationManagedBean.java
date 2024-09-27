@@ -664,10 +664,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
 	private List<SmApplSupportDoc> missinDocsMandatory;
 	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
 	//#34393 - end
 	//#31043 START
 	private boolean allowedToSiteVisit;
 	//#31043 END
+	//#34831 - Start
+	private boolean basicSupplier;
+	//#34831 - End
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -748,6 +752,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			//#34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			//#34831 - End
 		}
 
 		defaultAddr = new SmAddress();
@@ -4622,7 +4632,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
 	//#30762 -End 
-
+	//#34392 - start
 	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
 		return mandatoryDocsInquiry;
 	}
@@ -4654,6 +4664,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
 		this.missinDocsMandatory = missinDocsMandatory;
 	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
+	//#34392 - end
 	//#31043 START
 	public boolean isAllowedToSiteVisit() {
 		return allowedToSiteVisit;
@@ -4663,4 +4682,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.allowedToSiteVisit = allowedToSiteVisit;
 	}
 	//#31043 END
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
 }

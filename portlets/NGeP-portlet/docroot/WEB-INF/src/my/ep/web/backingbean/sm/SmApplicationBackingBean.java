@@ -1282,9 +1282,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmSupplier smApplSupplier = new SmSupplier();
 
 		MofRegistrationResDTO resDto = new MofRegistrationResDTO();
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		boolean redirectToBankInfoTab = false;
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		
 		log.info("[proceedToApplication] #31754 fromBpm: " + fromBpm);
 		if (!fromBpm) {
@@ -1319,29 +1316,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 			} 
 			//26238 - end 28144
-			
-			//27748 : Disciplinary Action - #26238 - start 
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-3", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-								redirectToBankInfoTab = true;
-								// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
-							}
-						}
-					}
-				}	
-			}				
-			//27748 : Disciplinary Action - #26238 - end
 			
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -1789,12 +1763,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SmApplicationUtil.getStaffList(smAppl));
 		}
 
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		if(redirectToBankInfoTab){
-			getManagedBean().setTabActiveIndex(4);
-		} else {
-			getManagedBean().setTabActiveIndex(0);
+		//#26238 Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			SmApplicationUtil.enableBankSectionOnly(getManagedBean());
 		}
+		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
 		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 
 		if (!fromBpm) {
@@ -2216,34 +2189,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 				"SmApplicationBackingBean.proceedToApplication", "setAllSectionEditorVO-29", 
 				subStartTime); //20211005@fadhli - #31754
-		
-		//27805: Disciplinary Action - start
-		if(!fromBpm){
-			subStartTime = System.currentTimeMillis();
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-					"SmApplicationBackingBean.proceedToApplication", "subStartTime-30", 
-					subStartTime); //20211005@fadhli - #31754
-			
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-31", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-							}
-						}
-					}
-				}	
-			}
-		}
-		//27805: Disciplinary Action - end
 
 		subStartTime = System.currentTimeMillis();
 		// show or hide travel software panel
@@ -2859,33 +2804,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 		}
 	//END 28767
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		if (fromBpm) {
-		
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-				if(currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-35", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disc : activeDisc){
-							if(disc.isSuspendRegistration()){
-								getManagedBean().getEditVO().setDisciplinary(true);
-								getManagedBean().setTabActiveIndex(4);
-							}
-						}
-					}
-				}	
-			}				
-		}
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
 		// 35311 - Start
-		if (getManagedBean().getSmAppl().getPmStatus() != null
-				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+		if ((EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplSupportDocs())) && (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION)) {
 			for (SmFacility facility : getManagedBean().getSmAppl().getSmFacilities()) {
 				if (facility.getFacilityId() != null) {
 					assignApplicationSupportingDocs();
@@ -3991,8 +3912,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 					// to init page whether normal or special category type is
 					// allowed
-					initApplCategoryType();
-
+					if(getManagedBean().isSupplierUser()){
+						initApplCategoryType();
+					}
 					// API FOR LIST OF OVERLAPPING CATEGORIES
 					SmApplicationUtil
 							.checkOverLappingCategories(getManagedBean());
@@ -4640,20 +4562,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	private void validateBeforeSubmit() {
 		//START 26238 -  Disciplonary action - 27748
-		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-			if(this.getManagedBean().getSmAppl().getSmSupplier() != null){
-				List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(this.getManagedBean().getSmAppl().getSmSupplier());
-				
-				if(activeDisc != null && activeDisc.size() > 0){
-					for(SmDisciplinaryAction disc : activeDisc){
-						if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-							getManagedBean().getEditVO().setDisciplinary(true);
-						}
-					}
-				}
-			}	
-		}
-	
+		SmApplicationUtil.enableBankSectionOnly(getManagedBean());
 		if(getManagedBean().getEditVO()!=null && getManagedBean().getEditVO().isDisciplinary()){
 			return;
 		}
@@ -7330,8 +7239,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
 				.getSmAppl().getSmFacilities());
-		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
-				.getApplStoreFacilities());
+		/*EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
+				.getApplStoreFacilities());*/ //commented for #34711
 		//#27853
 		SmApplicationUtil.validateCoordinate(getManagedBean());
 		if (smFac.getFacilityId() == null) {
@@ -12917,8 +12826,29 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @param String
 	 *            panelName
 	 */
+	//#34159 - START - Refactor this method
 	public void onChangeState(SmAddress addr, String panelName) {
-		//13320-start
+		Long stateId = addr.getStateId();
+		if (stateId != null) {
+			addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+			
+			if(addr.getPmState() != null && addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				SmApplicationUtil.getInstance().populateDivisionsByState(addr, panelName, getManagedBean());
+			} else {
+				SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
+			}
+		} else {
+			addr.setPmState(new PmState());
+			addr.getPmState().setAdoptDivision(false);
+			SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
+		}
+		
+		addr.setPmDivision(null);
+		addr.setPmDistrict(null);
+		addr.setPmCity(null);
+		setRoleStaffAddrReqd();
+		
+		/*//13320-start
 		Long stateId = addr.getStateId();
 		if (stateId != null) {
 			addr.setPmState(SmCommonUtil.getInstance()
@@ -12944,9 +12874,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 					panelName, getManagedBean());
 			setRoleStaffAddrReqd();
-		}
-		
+		}*/
 	}
+	//#34159 - END
 
 	/**
 	 * Ajax call when select district to populate cities
@@ -16047,7 +15977,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		BigDecimal foreignCapital = new BigDecimal(0);// f
 		BigDecimal localCapital = new BigDecimal(0);// C
 */		for(SmPersonnel personnel: personnels){
-			if(personnel.isEquityOwner() && personnel.getShareAmt() !=null){
+			if(personnel.isEquityOwner() && personnel.getShareAmt() !=null && personnel.getPmCountry() !=null){//#29582 #35300
 				if (ParameterConst.IDENTIFICATION_TYPES_PASSPORT
 						.equalsIgnoreCase(personnel.getIdentificationType()
 								.getParameterCode())
@@ -16392,6 +16322,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			//SET EQUITY COMPANY
 			//if(this.getManagedBean().getSmAppl().getSmEquityCompanies()!=null){
 			// #30660
+			
+			//#31549 - comment this if block to duplicate all(ssm & non-ssm data) equity company during resubmit
+			/*
 			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 				this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 				if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
@@ -16408,11 +16341,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				for(SmEquityCompany equityCompany : ssmResDTO.getSmEquityCompanys()){
 						equityCompany.setSmAppl(this.getManagedBean().getSmAppl());
 						this.getManagedBean().getSmAppl().getSmEquityCompanies().add(equityCompany);
-				}
-				
-				
-				
+				}	
 			}
+			*/
+			
 			//SET SMPERSONNEL
 			if(ssmResDTO.getSmPersonnelAll()!=null){				
 				if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
@@ -17170,7 +17102,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		String approveDialog = "approveDialog";
 		String approve = "APPROVE";
 		Boolean pendingQT;
-		Boolean closedQTSubmitProposal;
 
 		switch (managedBean.getSmAppl().getApplType()) {
 		case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
@@ -17199,13 +17130,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
 					/**
-					 * check if QT notice been closed and supplier submitted
-					 * proposal.
-					 */
-					closedQTSubmitProposal = mofRegistrationSO
-							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-
-					/**
 					 * #29727 FL Module had selected the branch information,
 					 * then supplier wanted to delete the selected branch
 					 * information at SM Module.
@@ -17215,12 +17139,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 					if (deletedBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deletedBranchName.toString() });
-					} else if (pendingQT && closedQTSubmitProposal) {
-						RequestContext.getCurrentInstance().execute("pendingQTPopUpAll.show()");
 					} else if (pendingQT) {
 						RequestContext.getCurrentInstance().execute("pendingQTPopUp.show()");
-					} else if (closedQTSubmitProposal) {
-						RequestContext.getCurrentInstance().execute("closeandsubmitQTPopUp.show()");
 					} else {
 						RequestContext.getCurrentInstance().execute("branchDeletePopUp.show()");
 					}
@@ -17245,24 +17165,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 					// #28777 - END
 
-					closedQTSubmitProposal = mofRegistrationSO
-							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-
 					StringBuilder deleteBranchName = checkingDeletedBranchPendingFL(managedBean.getSmSupplier()
 							.getSupplierId(), supplierBranch);
 
 					if (deleteBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721121, new String[] { deleteBranchName.toString() });
-					} else if (pendingQT || closedQTSubmitProposal) {
-						if (pendingQT && closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprovePo.show()");
-						} else if (pendingQT) {
+					} else if (pendingQT) {
 							RequestContext.getCurrentInstance().execute("pendingQTPopUpRecommendApprovePo.show()");
-						} else if (closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpCloseApprovePo.show()");
-						} else {
-							throw new EpException(MessageConst.ERROR_721108);
-						}
 					} else {
 						if (process.equalsIgnoreCase(approveDialog)) {
 							assignFinalApproveOrReject(process);
@@ -17301,24 +17210,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					pendingQT = mofRegistrationSO
 							.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
-					closedQTSubmitProposal = mofRegistrationSO
-							.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
-
 					StringBuilder deleteBranchName = checkingDeletedBranchPendingFL(managedBean.getSmSupplier()
 							.getSupplierId(), supplierBranch);
 
 					if (deleteBranchName.length() > 0) {
 						throw new EpException(MessageConst.ERROR_721120, new String[] { deleteBranchName.toString() });
-					} else if (pendingQT || closedQTSubmitProposal) {
-						if (pendingQT && closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverTwo.show()");
-						} else if (pendingQT) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
-						} else if (closedQTSubmitProposal) {
-							RequestContext.getCurrentInstance().execute("pendingQTPopUpApproverClose.show()");
-						} else {
-							throw new EpException(MessageConst.ERROR_721108);
-						}
+					} else if (pendingQT) {
+						RequestContext.getCurrentInstance().execute("pendingQTPopUpApprover.show()");
 					} else {
 						if (process.equalsIgnoreCase(approverAppDialog)) {
 							assignFinalApproveOrReject(process);
@@ -17373,7 +17271,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// #34135 END
 		Boolean pendingQT;
 		// #28777 - START - Updated CR
-		Boolean closedQTSubmitProposal;
 		StringBuilder msg = new StringBuilder();
 
 		switch (getManagedBean().getSmAppl().getApplType()) {
@@ -17394,15 +17291,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				pendingQT = mofRegistrationSO
 						.isPendingSiteVisitUntilPendingNegotiationBySupplierIdStateIdDistrictId(reqDTO);
 
-				closedQTSubmitProposal = mofRegistrationSO.isCloseQTSubmitPRoposalBySupplierIdStateIdDistrictId(reqDTO);
 				if (pendingQT) {
 					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.pending", null));
-					msg.append("<br />");
-				}
-				if (closedQTSubmitProposal) {
-					msg.append("<br />");
-					msg.append(SmCommonUtil.getMessage("lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal",
-							null));
 				}
 				// #28777 - END - Updated CR
 				getManagedBean().setDeleteBranchMsg(msg.toString());

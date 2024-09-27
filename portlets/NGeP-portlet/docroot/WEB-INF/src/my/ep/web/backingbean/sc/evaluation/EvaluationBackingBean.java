@@ -3283,10 +3283,8 @@ public void saveComplianceSample() {
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
 						|| this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_SIGN_OFF)
-						&& !this.getManagedBean().isReadOnly()
 						&& this.getManagedBean().getScQt().getEvaluationType()
-								.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
-						&& this.getManagedBean().getScQt().isTechEvaluationReq()) {
+								.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)) {//#35384 need to recalculate new formula at endorse & sign off for prepareFinancialEvaluationSummary
 				//#25138 -end
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
@@ -3314,7 +3312,9 @@ public void saveComplianceSample() {
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
 					// #25638 - End.
 						&& !this.getManagedBean().isReadOnly()
-						&& !getManagedBean().isFinancialSummaryGenerated()) {
+						&& !getManagedBean().isFinancialSummaryGenerated()
+						|| (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) || this
+								.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF))) {//#35384 need to recalculate new formula at endorse & sign off for prepareFinancialEvaluationSummary
 
 					financialCheckListStatusCheck();//32426
 					/*
@@ -8069,7 +8069,10 @@ public void saveComplianceSample() {
 					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
 									.getCommitteeType())
-							&& !this.getManagedBean().isReadOnly()) {
+							&& (!this.getManagedBean().isReadOnly() || (this.getManagedBean().getCurrentStatusId()
+											.equals(QTStatusConst.EC_PENDING_ENDORSEMENT) || this.getManagedBean()
+											.getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF))
+									&& null == this.getManagedBean().getScQt().getTecEvaluationCheck())) {// #35384
 						retriveComplianceTechnical();//#25138
 						if (null == this.getManagedBean().getScQt()
 								.getTecEvaluationCheck()) {
@@ -8794,7 +8797,7 @@ public void saveComplianceSample() {
 						}//#34741
 						//sonarqube issue (#35)
 						else if (this.getManagedBean().getOneTierFinancialActiveIndex() == 2
-								&& this.getManagedBean().isReadOnly()) {
+								&& !this.getManagedBean().isReadOnly()) {//#36444
 							checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
 						}// #34741
 						

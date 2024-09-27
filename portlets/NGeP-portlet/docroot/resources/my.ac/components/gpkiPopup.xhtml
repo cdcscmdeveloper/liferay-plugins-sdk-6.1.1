@@ -32,9 +32,14 @@
 		function signSkipToken(widgetVar){
 			gpkiBlockWidget.show();
 			const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
-			postSignOTP([ {name: 'textBeforeSign', value: textBeforeSign},
-			                    {name: 'skipBtn', value: 'true'},
-			                    {name: 'dialog', value: widgetVar}, ]);
+			if (!(typeof textBeforeSign === 'string' || textBeforeSign instanceof String)
+					|| textBeforeSign.trim() === ""){
+				errorAction([ {name : 'statusMsg',	value : 'TextBeforeSign null'}, ]);
+			} else {
+				postSignOTP([ {name: 'textBeforeSign', value: textBeforeSign},
+				              {name: 'skipBtn', value: 'true'},
+				              {name: 'dialog', value: widgetVar}, ]);
+			}
 		}
 	</script>
 		<!-- #35488 -->
