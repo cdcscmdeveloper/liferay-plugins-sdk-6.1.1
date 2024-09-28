@@ -1165,7 +1165,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >START<");
 			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
-			itemPriceFlagVerification(resDTO);
+			//itemPriceFlagVerification(resDTO);
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer resDTO.getCtContractVer()"+resDTO.getCtContractVer().getContractVerId());
 			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			//26753 - start  #29403 start (comment old code)
