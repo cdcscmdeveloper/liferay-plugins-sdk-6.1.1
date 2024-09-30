@@ -3120,7 +3120,8 @@ public class PurchaseInquiryBackingBean extends
 
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
 
-		if (scSupplierItemPrices != null) {
+		// [Start] - #36315 - Sqube DP Code Smell Major G97
+		if (scSupplierItemPrices != null && !scSupplierItemPrices.isEmpty()) {
 			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
 				if (!scSupplierItemPrice.isSelected()) {
 					isSelectedALL = Boolean.FALSE;
@@ -3132,11 +3133,10 @@ public class PurchaseInquiryBackingBean extends
 				setFlagZonalTierPromotion(isSelectedALL);
 			}
 			this.getManagedBean().setEnableZonalTierPromoDel(true);
-		}
-		
-		if (scSupplierItemPrices.isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		} else {
 			this.getManagedBean().setEnableZonalTierPromoDel(false);
 		}
+		// [End] - #36315 - Sqube DP Code Smell Major G97
 
 		this.getManagedBean().setPricingTabIndex(3);
 		this.getManagedBean().setZonalTierPricingIndex(1);
