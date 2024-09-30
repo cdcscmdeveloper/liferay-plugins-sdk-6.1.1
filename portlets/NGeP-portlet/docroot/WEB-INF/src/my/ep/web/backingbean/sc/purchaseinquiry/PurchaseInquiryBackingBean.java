@@ -2942,23 +2942,23 @@ public class PurchaseInquiryBackingBean extends
 
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierStandardPrices();
 		
-		if (scSupplierItemPrices != null) {
+		// [Start] - #36313 - Sqube DP Code Smell Major G97
+		if (scSupplierItemPrices != null && !scSupplierItemPrices.isEmpty()) {
 			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
 				if (!scSupplierItemPrice.isSelected()) {
-					isSelectedALL= Boolean.FALSE;
+					isSelectedALL = Boolean.FALSE;
 					break;
-				} 
+				}
 			}
-			
-			if(isSelectedALL){
+
+			if (isSelectedALL) {
 				setFlagZonalTierStandard(isSelectedALL);
 			}
 			this.getManagedBean().setEnableZonalTierNormalDel(true);
-		}
-		
-		if (scSupplierItemPrices.isEmpty()) {
+		} else {
 			this.getManagedBean().setEnableZonalTierNormalDel(false);
 		}
+		// [End] - #36313 - Sqube DP Code Smell Major G97
 		
 		this.getManagedBean().setPricingTabIndex(3); 
 		this.getManagedBean().setZonalTierPricingIndex(0);
