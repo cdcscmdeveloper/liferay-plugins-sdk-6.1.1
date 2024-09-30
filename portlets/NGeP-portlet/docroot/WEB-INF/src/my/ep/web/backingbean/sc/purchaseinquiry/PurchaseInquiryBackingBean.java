@@ -3151,15 +3151,18 @@ public class PurchaseInquiryBackingBean extends
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScSupplierItemPrice> scSupplierItemPrices = this.getManagedBean().getSupplierItemZonalTierPromotionPrices();
 
-		if (scSupplierItemPrices != null) {
+		// [Start] - #36316 - Sqube DP Code Smell Major G97
+		if (scSupplierItemPrices != null && !scSupplierItemPrices.isEmpty()) {
 			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
-				scSupplierItemPrice.setSelected(flag); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+				scSupplierItemPrice.setSelected(flag); // Sonarqube DP Code
+														// Smell Minor Zairul
+														// Rizwan [26/4/2024]
 			}
 			this.getManagedBean().setEnableZonalTierPromoDel(true);
-		}
-		if (scSupplierItemPrices.isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		} else {
 			this.getManagedBean().setEnableZonalTierPromoDel(false);
 		}
+		// [End] - #36316 - Sqube DP Code Smell Major G97
 
 		this.getManagedBean().setPricingTabIndex(3);
 		this.getManagedBean().setZonalTierPricingIndex(1);
