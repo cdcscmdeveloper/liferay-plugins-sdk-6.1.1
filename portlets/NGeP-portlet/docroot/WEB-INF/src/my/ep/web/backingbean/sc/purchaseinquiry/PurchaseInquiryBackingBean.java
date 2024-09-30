@@ -2718,7 +2718,7 @@ public class PurchaseInquiryBackingBean extends
 				.getSupplierItemZonalTierPromotionPrices());
 
 		// save for type 01
-		if (!this.getManagedBean().getSupplierItemNormalPrices().isEmpty() && !this.getManagedBean().getSupplierItemNormalPrices().isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		if (!this.getManagedBean().getSupplierItemNormalPrices().isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024] - #36312 - Sqube DP Master Code Smell Major G97
 			List<ScSupplierItemPrice> tempScSupplierItemPrices = this.getManagedBean().getSupplierItemNormalPrices();
 
 			for (ScSupplierItemPrice addedScSupplierItemPrice : tempScSupplierItemPrices) {
