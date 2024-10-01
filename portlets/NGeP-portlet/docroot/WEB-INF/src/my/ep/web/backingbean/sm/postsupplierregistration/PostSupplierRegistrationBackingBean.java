@@ -140,7 +140,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
-			//30713 - Start 
+			//30713 & 36474 - Start 
 			//31792 - START
 			Boolean resubmitExpired = false;
 			if(rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
@@ -157,7 +157,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 			}
 			//31792 - END
-			//30713 - End
+			//30713 & 36474- End
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Self Request Supplier Admin
@@ -255,7 +255,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
-								//31792
+								//31792 & 36474
 								//32627 START
 								if(wfStat != null && !resubmitExpired &&
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
@@ -286,7 +286,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
 									
-									if(rejectedWf != null && !resubmitExpired){
+									if(rejectedWf != null && !resubmitExpired){ //#36474
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
 								//#35579 --start--
 										if(wfStat != null &&

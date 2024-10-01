@@ -17,9 +17,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
@@ -1371,8 +1373,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						if(manDtl == null){
 							//#34209 - START
 							FacesContext facesContext = FacesContext.getCurrentInstance();
-						    HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-						    String URI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+							ExternalContext externalContext = facesContext.getExternalContext();
+							PortletRequest request = (PortletRequest) externalContext.getRequest();
+							String URI = (String) request.getAttribute("javax.servlet.forward.request_uri");
 							if(URI.toLowerCase().contains("application-history")){
 								activeManufacturingDtls.add(manuFacDtl);
 							} else {
