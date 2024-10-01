@@ -11921,13 +11921,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.proposalValidityChangeValue = proposalValidityChangeValue;
 	}
 
-	/**
-	 * @param isSampleShowHide the isSampleShowHide to set
-	 */
-	public void setSampleShowHide(boolean isSampleShowHide) {
-		this.isSampleShowHide = isSampleShowHide;
-	}//11104-end
-
 	public boolean isNullEPVRemark() {
 		return nullEPVRemark;
 	}
@@ -11950,6 +11943,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public boolean isSampleShowHide() {
 		return isSampleShowHide;
 	}
+
+	/**
+	 * @param isSampleShowHide the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}//11104-end
 		
 	
 }
