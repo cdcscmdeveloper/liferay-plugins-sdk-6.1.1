@@ -173,7 +173,7 @@
 								value="#{bb.managedBean.countryLs}" />
 							<p:ajax event="change" process="@this"
 								listener="#{bb.onChangeCountry(bb.managedBean.selectedBranch.smAddress.pmCountry,'BRANCH_ADDRESS')}"
-								update="supBrnCntry,branchState,branchDist,branchDivision,branchCity,postCodeBranchPanelId" />
+								update="supBrnCntry,branchState,branchDist,divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu> 
 						<!-- #34159 - END -->
 						<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"

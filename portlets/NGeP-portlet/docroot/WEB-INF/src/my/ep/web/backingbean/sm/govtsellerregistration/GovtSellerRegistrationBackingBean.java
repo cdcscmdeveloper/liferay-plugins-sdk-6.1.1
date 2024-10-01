@@ -1436,6 +1436,7 @@ public class GovtSellerRegistrationBackingBean extends
 			onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
 		}
 	}
+	//#34159 - END
 
 	/**
 	 * Initialized user permanent address drop down values
