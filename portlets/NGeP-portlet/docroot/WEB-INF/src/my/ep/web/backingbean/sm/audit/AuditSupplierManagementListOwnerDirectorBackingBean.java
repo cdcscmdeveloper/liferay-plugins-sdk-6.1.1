@@ -37,19 +37,19 @@ public class AuditSupplierManagementListOwnerDirectorBackingBean extends AuditSu
 		List<SmPersonnel> selectedOwnerAndDirectorList = mBean.getSelectedOwnerAndDirectorList();
 
 		for (SmPersonnel owner : selectedOwnerAndDirectorList) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME, null, owner.getName(), null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_NAME));
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_IDENTIFICATION_NO, null,
-					owner.getIdentificationNo(), null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_IDENTIFICATION_NO));
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ROLE_IN_COMPANY, null, getRoleCompany(owner), null,
-					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ROLE_IN_COMPANY));
+//			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+//					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME, null, owner.getName(), null, null,
+//					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_NAME));
+//			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+//					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_IDENTIFICATION_NO, null,
+//					owner.getIdentificationNo(), null, null,
+//					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_IDENTIFICATION_NO));
+//			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+//					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ROLE_IN_COMPANY, null, getRoleCompany(owner), null,
+//					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ROLE_IN_COMPANY));
 		}
 
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION);
+//		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION);
 
 		return auObj;
 	}
