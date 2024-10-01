@@ -5,8 +5,6 @@ package my.ep.web.managedbean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,7 +31,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
 /**
@@ -173,6 +170,10 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	// 27346
 	private StreamedContent downloadfile;
+	
+	// #32236 start
+	private String outputPage;
+	// #32236 end
 	
 	//#28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
@@ -1029,6 +1030,16 @@ public abstract class BaseManagedBean implements Serializable {
 		this.isDowngradeRole = isDowngradeRole;
 	}
 	// end #29956
+	
+	//#32236 - start
+	public String getOutputPage() {
+		return outputPage;
+	}
+
+	public void setOutputPage(String outputPage) {
+		this.outputPage = outputPage;
+	}
+	//#32236 - end
 
 	public Integer getWipStatusMax() {
 		return wipStatusMax;
