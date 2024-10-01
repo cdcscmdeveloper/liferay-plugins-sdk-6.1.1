@@ -1812,9 +1812,7 @@ public class ViewApplHistoryBackingBean extends
 					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
-		}/* else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
-			showErrorAdminHasBeenReplace();
-		}*/
+		}
 		// #35336 END
 		if(latestRejectedAppl != null &&
 				smAppl.getApplId().equals(latestRejectedAppl.getApplId())){
@@ -1982,12 +1980,6 @@ public class ViewApplHistoryBackingBean extends
 	private boolean isValidDateComparison(SmAppl latestRegisteredAppl, SmAppl latestRejectedAppl) {
 		return latestRegisteredAppl != null && latestRegisteredAppl.getChangedDate() != null
 			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
-	}
-
-	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
-		return latestRejectedAppl != null && latestRejectedAppl.getApplId() != null
-				&& latestRejectedAppl.getApplId().equals(smAppl.getApplId())
-				&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
 	}
 
 	private void showErrorAdminHasBeenReplace() {
