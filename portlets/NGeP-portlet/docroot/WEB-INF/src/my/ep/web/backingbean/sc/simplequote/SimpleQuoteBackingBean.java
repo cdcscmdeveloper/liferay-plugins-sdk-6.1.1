@@ -5745,7 +5745,7 @@ public class SimpleQuoteBackingBean extends
 		Locale locale = new FacesScopes().getUserLocale();
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
 			//30552 - start
-			getManagedBean().getProductTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			getManagedBean().getProductTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			// 30552 - end
 			TplSpecMaster specMaster = specAnswerList.get(0).getTplSpecQuestion()
 			.getTplSpecMaster();
@@ -5759,7 +5759,7 @@ public class SimpleQuoteBackingBean extends
 		// validate tpl spec - service before spki authenticate
 		if (CollectionUtils.isNotEmpty(specAnswerList)) {
 			// 30552 - start
-			getManagedBean().getServiceTemplateSpecBean().setBackupspecAnswerList(specAnswerList);
+			getManagedBean().getServiceTemplateSpecBean().setBackupSpecAnswerList(specAnswerList);
 			// 30552 - end
 			//#Newly add
 			///#21695 farid start
@@ -5858,9 +5858,9 @@ public class SimpleQuoteBackingBean extends
 					specAnswers.addAll(getManagedBean()
 							.getProductTemplateSpecBean().getSpecAnswerList());
 				}else {
-					if (getManagedBean().getProductTemplateSpecBean().getBackupspecAnswerList() != null){
+					if (getManagedBean().getProductTemplateSpecBean().getBackupSpecAnswerList() != null){
 						specAnswers.addAll(getManagedBean()
-								.getProductTemplateSpecBean().getBackupspecAnswerList());
+								.getProductTemplateSpecBean().getBackupSpecAnswerList());
 					}
 				}
 			
@@ -5902,8 +5902,8 @@ public class SimpleQuoteBackingBean extends
 							.getServiceTemplateSpecBean().getSpecAnswerList());
 				}else {
 					if (!isProduct){
-						if (getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList() != null){
-							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupspecAnswerList());
+						if (getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList() != null){
+							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList());
 						}
 					}
 				}
