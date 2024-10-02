@@ -442,8 +442,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
 				@Override
 				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-					return Long.compare(s1.getLoiLoaItemId(),
-							s2.getLoiLoaItemId());
+					return Long.compare(s1.getScRequestItem().getRequestNoteItemId(),
+							s2.getScRequestItem().getRequestNoteItemId());//#36473
 				}
 			});
 		}
@@ -11352,6 +11352,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		this.getManagedBean().setResetAll(true);
 		saveSupplierSpecification(false);
 	}
+	/**
+	 * replace all special characters and next line characters to html codes.
+	 * @param str
+	 * @return updatedStr
+	 */
+	public String replaceAllSpecialCharactersAndNewline(String str) {
+		String updatedStr = str.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		return updatedStr;
+	}
 	/*#29007 End Vinod*/
 	
 	//#25725 start
@@ -11585,16 +11597,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	} 
 	
-	public String supplierRemarks(String supplierRemarks){
-	String remarks="T/B";;
-	if(null!=supplierRemarks && StringUtils.isNotBlank(supplierRemarks) && StringUtils.isNotEmpty(supplierRemarks)){
-	return supplierRemarks;	
-	}else{
+	/**
+	 * this method to display N/A or T/B based on language for Supplier remark.
+	 * 
+	 * @param supplierRemarks
+	 * @return updated string
+	 */
+	public String supplierRemarks(String supplierRemarks) {
+		String remarks = "T/B";
+		if (null != supplierRemarks && StringUtils.isNotBlank(supplierRemarks)
+				&& StringUtils.isNotEmpty(supplierRemarks)) {
+			return this.replaceAllSpecialCharactersAndNewline(supplierRemarks);
+		}
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
 			remarks = "N/A";
-		}	
-	}
-	return remarks;
+		}
+		return remarks;
 	}
 	
 	private void createLampiranA3forQTVerification(boolean isComplete){
@@ -11721,8 +11739,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
 			char[] arr = text.toCharArray();
 			arr[index] = Character.toLowerCase(arr[index]);
-			String newPrefixName = new String(arr);
-			return newPrefixName;
+			return new String(arr);//return string in lowercase  //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 		}
 		return text;	
 	}

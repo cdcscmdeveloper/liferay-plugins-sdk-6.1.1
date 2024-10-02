@@ -1176,9 +1176,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				// 36362 - start
-				validateTierQuantityExceedMaxQuantity(requestNoteDtl);
-				// 36362 - end
+				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) { // #36467
+					// 36362 - start
+					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
+					// 36362 - end
+				}// #36467
 				
 				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
@@ -3828,7 +3830,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-		IRequestNoteSO requestNoteSO = null; //#36119
+		// #36119 - start
+		IRequestNoteSO requestNoteSO = null;
+		List<ScRequestNoteDtl> rndtls = null;
+		// #36119 - end
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
@@ -3860,16 +3865,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(!getManagedBean().isSourcingDpNewBpmVer()){
 					cancelRN(prObj, prSize);
 				}
-				//#36119 - end
 				
-				if (null != purchaseRequest && null != purchaseRequestSO) {
-					
-					purchaseRequest.setRecordStatusFlg(2);
+				
+				if (getManagedBean().getRequestNoteDtls().size() > 0 && null != purchaseRequestSO) {
+										
+					rndtls = getManagedBean().getRequestNoteDtls();
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-					reqDTO.setPurchaseRequest(purchaseRequest);
-					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO );
+					reqDTO.setRequestNoteDtls(rndtls);
+					PurchaseRequestResDTO response = purchaseRequestSO.updateCancelCodifyPR(reqDTO);
 					
-					//#36119 - start
 					if(getManagedBean().isSourcingDpNewBpmVer()){
 						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
 						if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
@@ -3883,23 +3887,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1],
 								(String) prObj[3], Boolean.TRUE);
-						/************ AUDIT #28895_35492 *************/
-						IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-
-						AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
-						if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
-							getManagedBean().setPurchaseRequestResDTO(response);
-							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
-						}
-						/************ END AUDIT #28895_35492 *************/
+//						/************ AUDIT #28895_35492 *************/
+//						IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+//								ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+//
+//						AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
+//						if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
+//							getManagedBean().setPurchaseRequestResDTO(response);
+//							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
+//						}
+//						/************ END AUDIT #28895_35492 *************/
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
 					
 					if (null != requestNoteSO) {
 						RequestNoteReqDTO reqNoteDTO = new RequestNoteReqDTO();
-						reqNoteDTO.setRequestNoteDtls(requestNoteDtls);
+						reqNoteDTO.setRequestNoteDtls(rndtls);//36119
 						requestNoteSO.updateRequestNoteDtls(reqNoteDTO);
 					}
 				}
@@ -5458,11 +5462,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						getManagedBean().setDisciplinaryActionEndDate(str2.toString());
 						
 						//#32643,32642 - Start (follow from SM bug 28198))
-						List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
+						List<DisciplinaryActionVO> remList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 						
 						List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disciplinaryAction);
 						
-						if(remarksList != null && remarksList.size() > 0){
+						if (remarksList != null && !remarksList.isEmpty()) { //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 							for (SmDisciplinaryActionRemarks remarks : remarksList) {
 								DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
 								rem1.setRemarks(remarks.getRemark());
@@ -5501,7 +5505,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
-							List<String> catCodeList = new ArrayList<String>();
+							List<String> catCodeList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 							for(Object[] arr : catList){
 								if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
 									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
