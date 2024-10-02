@@ -1259,7 +1259,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
 		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
 		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		List<String> roleCodes = new ArrayList<String>();
+		List<String> roleCodes = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 		roleCodes.add(RoleCode.GOVT_SELLER.value());
 		roleCodes.add(RoleCode.G2G_SUPPLIER_USER.value());
 		roleCodes.add(RoleCode.G2G_SUPPLIER_ADMIN.value());
@@ -1278,7 +1278,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		String roleCode = null;
 
-		List<String> pmRoleCodes = new ArrayList<String>();
+		List<String> pmRoleCodes = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 
 		if (null != roleDesc) {
 			for (PmRoleDesc pmRoleDesc : roleDesc) {
