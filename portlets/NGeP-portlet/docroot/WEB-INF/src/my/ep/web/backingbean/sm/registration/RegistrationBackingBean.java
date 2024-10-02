@@ -2248,7 +2248,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().getSmPermenantAdd().setPmCountry(defaultCountry);
 					this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
 					
+				}//#34159 - START
+				else{
+					if(this.getManagedBean().getSmPermenantAdd().getPmCountry().getCountryId() == null){
+						this.getManagedBean().setPermenantStateLs(new ArrayList<SelectItem>());
+					} 
 				}
+				this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
+				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
+				this.getManagedBean().setPermenantDivisionLs(new ArrayList<SelectItem>());
+				//#34159 - END
 				////#16052019 - SSM INTEGRATION CR
 				this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
