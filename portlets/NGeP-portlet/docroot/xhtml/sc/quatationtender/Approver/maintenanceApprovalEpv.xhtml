@@ -149,7 +149,7 @@
 								pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText> <p:message id="approvalDateChairpersonMsg"
 							for="approvalDateChairperson" display="icon" /></td>
-					<c:if test="#{renderMOF eq true}">
+					<c:if test="#{renderMOF eq true and qTDetailBB.managedBean.scQtApprovalRequest.mofDate != null}">
 						<td style="width: 235px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /></td>
 						<td><p:calendar
