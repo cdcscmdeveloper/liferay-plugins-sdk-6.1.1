@@ -3968,7 +3968,9 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #29187 End Vinod
+	//#36248_haziq - start
 	/**
+	 * #36248
 	 * To validate Wieghtage input value
 	 * @param context
 	 * @param component
@@ -3983,5 +3985,6 @@ public class TemplateSpecBackingBean extends
 			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
 		}
 	}
+	//#36248_haziq - End
 
 }
