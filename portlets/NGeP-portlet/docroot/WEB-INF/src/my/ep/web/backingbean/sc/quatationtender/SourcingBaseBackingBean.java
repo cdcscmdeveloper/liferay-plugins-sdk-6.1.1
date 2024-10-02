@@ -4066,7 +4066,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (CollectionUtils.isNotEmpty(quoteResDTO.getProductAnswersTpl())) {
 
 					TplSpecMaster master = null;
-					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 					for (TplSpecAnswer answer : quoteResDTO.getProductAnswersTpl()) {
 						if (answer.getTplSpecQuestion().getTplSpecMaster().getTplSpecZone() != null) {
@@ -4105,7 +4105,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
 										.getSpecQuestionId()) {
 									addSpecList = true;
-									continue;
+									//continue; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 								}
 								if (addSpecList) {
 									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
@@ -4222,7 +4222,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						}
 					}
 					if (master != null) {
-						if (masters.size() == 0) {
+						if (masters.isEmpty()) { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 							masters.add(master);
 						} else {
 							boolean itemFound = false;

@@ -4177,19 +4177,14 @@ public class SimpleQuoteBackingBean extends
 	}
 	
 	 //#32855 - start
-	private Boolean isQuaterHourFormat(Date chosenDate){
-		long timeDiff = Math.abs(chosenDate.getTime());
-		String mins = String
-				.format("%d", (TimeUnit.MILLISECONDS
-						.toMinutes(timeDiff) - TimeUnit.HOURS
-						.toMinutes(TimeUnit.MILLISECONDS
-								.toHours(timeDiff))));
-		if (mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30")
-				|| mins.equalsIgnoreCase("45"))
-			return true;
-		
-		return false;
-	}
+	//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		private Boolean isQuaterHourFormat(Date chosenDate) {
+		    long timeDiff = Math.abs(chosenDate.getTime());
+		    String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
+		    return mins.equalsIgnoreCase("0") || mins.equalsIgnoreCase("15") || mins.equalsIgnoreCase("30") || mins.equalsIgnoreCase("45");
+		}
+		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+
 	//#32855 - end
 
 	/**
