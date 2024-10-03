@@ -10099,17 +10099,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		//#25726#323 - End
 		
-		//#25726#323 - Start
-		if(changeResetValuePK7FullfilmentType() && !this.getManagedBean().isRequiredAgreementChange()){
-			 getManagedBean().setYesParameterId(StringUtils.EMPTY);
-		     getManagedBean().setNoParameterId(StringUtils.EMPTY);
-		}
-		
-		if(getManagedBean().getScLoa().isAgreementReq() || !getManagedBean().getScLoa().isAgreementReq()){ 
-			this.getManagedBean().setRequiredAgreementChange(false);
-		}
-		//#25726#323 - End
-		
 		if (StringUtils.isEmpty(getManagedBean().getAgreemetSelectedVal())) {
 			if (getManagedBean().getScLoa().isAgreementReq()) { 
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
