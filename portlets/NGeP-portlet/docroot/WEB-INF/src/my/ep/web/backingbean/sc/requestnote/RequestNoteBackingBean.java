@@ -1322,9 +1322,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				// 36362 - start
-				validateTierQuantityExceedMaxQuantity(requestNoteDtl);
-				// 36362 - end
+				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) { //#36467
+					// 36362 - start
+					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
+					// 36362 - end
+				}//#36467
 
 				if (!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())) {
 					results.add(requestNoteDtl.getProcurementTitle());
@@ -4174,7 +4176,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
-		IRequestNoteSO requestNoteSO = null; //#36119
+		//#36119 - start
+		IRequestNoteSO requestNoteSO = null; 
+		List<ScRequestNoteDtl> rndtls = null;
+		//#36119 - end
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
@@ -4197,9 +4202,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
 			
-			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
-			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
-			IPurchaseRequestSO purchaseRequestSO = null;
+			IPurchaseRequestSO purchaseRequestSO = null;			
 			
 			try {
 				purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -4211,17 +4214,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				//#36119 - start
 				if(!getManagedBean().isSourcingDpNewBpmVer()){
 					cancelRN(prObj, prSize);
-				}
-				//#36119 - end
-
-				if (null != purchaseRequest && null != purchaseRequestSO) {
-
-					purchaseRequest.setRecordStatusFlg(2);
-					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-					reqDTO.setPurchaseRequest(purchaseRequest);
-					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO);
+				}			
+				
+				if (getManagedBean().getRequestNoteDtls().size() > 0 && null != purchaseRequestSO) {
 					
-					//#36119 - start
+					rndtls = getManagedBean().getRequestNoteDtls();
+					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+					reqDTO.setRequestNoteDtls(rndtls);
+					PurchaseRequestResDTO response = purchaseRequestSO.updateCancelCodifyPR(reqDTO);
+								
 					if(getManagedBean().isSourcingDpNewBpmVer()){
 						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
 						if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
@@ -4234,23 +4235,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1], (String) prObj[3], Boolean.TRUE);
-						/************ AUDIT #28895_35492 *************/
-						IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-
-						AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
-						if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
-							getManagedBean().setPurchaseRequestResDTO(response);
-							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
-						}
-						/************ END AUDIT #28895_35492 *************/
+//						/************ AUDIT #28895_35492 *************/
+//						IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+//								ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+//
+//						AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
+//						if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
+//							getManagedBean().setPurchaseRequestResDTO(response);
+//							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
+//						}
+//						/************ END AUDIT #28895_35492 *************/
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
 
 					if (null != requestNoteSO) {
 						RequestNoteReqDTO reqNoteDTO = new RequestNoteReqDTO();
-						reqNoteDTO.setRequestNoteDtls(requestNoteDtls);
+						reqNoteDTO.setRequestNoteDtls(rndtls);//36119
 						requestNoteSO.updateRequestNoteDtls(reqNoteDTO);
 					}
 				}
