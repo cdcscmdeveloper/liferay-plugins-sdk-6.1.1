@@ -1217,7 +1217,7 @@ public class SmApplicationBackingBean extends
 				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "getLatesRejectedApplicationBySuppIdAndAppType-6", 
 						subStartTime); //20211005@fadhli - #31754
-				//30713 - Start
+				//30713 & 36474 - Start
 				subStartTime = System.currentTimeMillis();
 				//Add checking check expired for KN
 				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
@@ -1240,7 +1240,7 @@ public class SmApplicationBackingBean extends
 						rejectedAppl = null;
 					}
 				}
-				//30713 - End
+				//30713 & 36474 - End
 				String labelNameVal = "";
 				//27951 - If from resubmit appl history/status no need display message
 				if (rejectedAppl != null && !this.getManagedBean().isPreRegistration()) {
@@ -14513,7 +14513,7 @@ public class SmApplicationBackingBean extends
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
 				currSupp.getSupplierId(), "N");
-		//30713 - Start
+		//30713 & 36474 - Start
 		//Add checking check expired for KN
 		SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
 		//31792 - START
@@ -14528,7 +14528,7 @@ public class SmApplicationBackingBean extends
 				rejectedAppl = null;
 			}
 		}
-		//30713 - End
+		//30713 & 36474 - End
 		String labelNameVal = "";
 		if (rejectedAppl != null) {
 			FacesContext.getCurrentInstance().addMessage("rejectedExist", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -17122,7 +17122,7 @@ public class SmApplicationBackingBean extends
 	}
 	//12492 - END
 	
-	//30713 - Start
+	//30713 & 36474 - Start
 	private SmWorkflowStatus rejectedApplExist(Long supplierId){
 		SmWorkflowStatus wf = null;
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
@@ -17148,7 +17148,7 @@ public class SmApplicationBackingBean extends
 		
 		return wf;
 	}
-	//30713 - End
+	//30713 & 36474 - End
 	//30974 - Start
 	public void setReasonIdList(){
 		List<Long> reasonIdList = new ArrayList<Long>();
