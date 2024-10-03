@@ -1709,7 +1709,7 @@ public class SmApplicationUtil {
 					.getSmFacilities()) {
 				if (StringUtils.isNotBlank(fac.getFacilityType())
 						&& (fac.getFacilityType().equals("H") || fac
-								.getFacilityType().equals("B"))) {
+								.getFacilityType().equals("B")) && (fac.isHeadquarters())) {
 					hq = fac;
 					break;
 				}
@@ -3818,6 +3818,7 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			managedBean.setOverLappedCategoryExists(true); //#31018
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
@@ -4913,7 +4914,8 @@ public class SmApplicationUtil {
 					&& rejectedAppl.getCreatedDate()
 							.after(resDto.getSmSupplier().getSmAppl()
 									.getCreatedDate())
-					&& rejectedAppl.getApplType().equals(applicationType)) {
+					&& rejectedAppl.getApplType().equals(applicationType)
+					&& isApplPORejectedAfterApprovelSV(rejectedAppl)) { //#34483
 				if (isRejectedApplValidForResubmission(rejectedAppl)) {
 					result = true;
 					throw new EpException(MessageConst.ERROR_722643);
@@ -5015,7 +5017,7 @@ public class SmApplicationUtil {
 						}
 						if (applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							if (diffDays > 90) {
+							if (diffDays > 180) { //#36391
 								result = true;
 								throw new EpException(MessageConst.ERROR_722501);
 							} else if (diffDays < -365) {
@@ -5072,9 +5074,14 @@ public class SmApplicationUtil {
 
 	private static void validateDontHaveSuppAdmin(SmAppl appl) {
 		boolean valid = false;
+		//#34483 START
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplNo(appl.getApplNo());
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
 
-		if (appl.getSmPersonnels() != null) {
-			for (SmPersonnel per : appl.getSmPersonnels()) {
+		if (personnels != null) {
+			for (SmPersonnel per : personnels) { //#34483 END
 				if (!StringUtils.isBlank(per.getEpRole())
 						&& per.getPmUser() != null
 						&& per.getPmUser().getUserId() != null
@@ -8020,6 +8027,41 @@ public class SmApplicationUtil {
 		}
 
 	}
+	
+	//#34303 - Start
+	/**
+	 * Remove facility that have different facility type in sm_facility and pm_category_l3
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public void removeFacilitiesHaveDifferentFacType(SmApplicationManagedBean bean) {
+		if (!SmCommonUtil.isCollectionEmpty(bean.getSmAppl().getSmFacilities())) {
+			for (Iterator<SmFacility> facIt = bean.getSmAppl().getSmFacilities().iterator(); facIt
+					.hasNext();) {
+				boolean deleteFacility = false;
+				SmFacility fac = facIt.next();
+				if (StringUtils.isNotBlank(fac.getFacilityType())
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+						&& !fac.getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+					for (SmSupplierCategoryFacility cat : fac.getSmSupplierCategoryFacilities()) {
+						if ((cat.getPmCategoryL3().getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+								&& (!cat.getPmCategoryL3().getFacilityType()
+										.equals(fac.getFacilityType()))) {
+							deleteFacility = true;
+						}
+					}
+					if(deleteFacility){
+						facIt.remove();	
+					}
+				}
+			}
+		}
+	}
+	//#34303 - End
 
 	private boolean isFacilityExistInLatest(SmFacility fac,
 			List<SmFacility> latestFacilities) {
@@ -9840,6 +9882,7 @@ public class SmApplicationUtil {
 			bean.getSmAppl().setSmCategoryOverlapDocs(
 					new ArrayList<SmCategoryOverlapDoc>());
 			bean.setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			bean.setOverLappedCategoryExists(false); //#31018
 		}
 	}
 
@@ -15316,4 +15359,34 @@ public class SmApplicationUtil {
 		managedBean.setAllowedToSiteVisit(allowSiteVisit);
 	}
 	//#31043 END
+	//#34483 START
+	public static boolean isApplPORejectedAfterApprovelSV(SmAppl appl){
+		boolean isRejected = false;
+		boolean isHasBasic = false;
+		if(appl.getPmStatus().getStatusId() == 20112){
+			for(SmWorkflowStatus smWorkflowStatus : appl.getSmWorkflowStatuses()){
+				if(smWorkflowStatus.getPmStatus().getStatusId() == 20116 || smWorkflowStatus.getPmStatus().getStatusId() == 20117){
+					isRejected = true;
+					break;
+				}
+			}
+		}
+		
+		for(SmAppl previousSmAppl : appl.getSmSupplier().getSmAppls()){
+			if(previousSmAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)){
+				isHasBasic = true;
+				break;
+			}
+		}
+		
+		if(appl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && isRejected && !isHasBasic){
+			return false;
+		}else if((appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ 
+			return false;
+		}
+		
+		return true;
+	}
+	//#34483 END
 }
