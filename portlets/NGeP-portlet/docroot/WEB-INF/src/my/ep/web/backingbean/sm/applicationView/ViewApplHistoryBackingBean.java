@@ -1875,7 +1875,7 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
-			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+			.retrieveLatestRegisteredApplicationBySupplierId(mofReqDTO).getSmAppl();
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl);
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl.getCreatedDate());
 		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl);
