@@ -14261,13 +14261,6 @@ public class SmApplicationUtil {
 				valid = false;
 			}
 		}
-		//#32304 - start
-		Long statusId = rejAppl.getPmStatus().getStatusId();
-		if(statusId.equals(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE)
-				|| statusId.equals(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_OTHER_APPL)){
-			valid = false;
-		}
-		//#32304 - end
 		return valid;
 	}
 
