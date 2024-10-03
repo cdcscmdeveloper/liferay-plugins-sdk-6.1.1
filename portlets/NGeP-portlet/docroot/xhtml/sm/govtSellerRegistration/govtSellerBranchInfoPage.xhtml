@@ -355,12 +355,16 @@
 	
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					id="branchPopUpSaveBtn"
 					action="#{bb.addOrUpdateBranchToSmAppl}"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
 					partialSubmit="true" process="banchDialog"
-					update=":form:dt,@([id$=Msg]),:#{p:component('pnlBankInfo')}" />
+					update=":form:dt,@([id$=Msg]),:#{p:component('pnlBankInfo')}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this"
 					action="#{bb.assignCancelBranchBean}" />
