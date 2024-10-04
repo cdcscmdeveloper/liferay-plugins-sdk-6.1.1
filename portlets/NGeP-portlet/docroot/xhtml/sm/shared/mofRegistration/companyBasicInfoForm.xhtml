@@ -168,9 +168,8 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<!-- #34159 - START -->
 						<p:selectOneMenu label="#{lbl['lbl.sm.country']}"
-							style="width: 250px;margin-bottom: 5px;" required="#{!empty param['disableValidation']}"
+							style="width: 250px;margin-bottom: 5px;" required="true"
 							id="smSupCont" disabled="#{(backingBean.managedBean.smAppl.applValidWithSsm ? !backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull : true) or backingBean.managedBean.upsCannotEdit}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -179,7 +178,6 @@
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress,SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 								update="basicComState,basicCompDist,basicCompCity,postCodeCompPanelId" />
 						</p:selectOneMenu>
-						<!-- #34159 - END -->
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull)}" 
 							poUser="true" /> 
@@ -214,11 +212,10 @@
 						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td>		
-						<!-- #34159 - START -->						
+					<td>								
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicComState"
-							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
+							required="true" label="#{lbl['lbl.sm.state']}"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull) or backingBean.managedBean.upsCannotEdit}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -228,7 +225,6 @@
 								SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 								update="basHdPan,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity" />
 						</p:selectOneMenu> 
-						<!-- #34159 - END -->
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
 							poUser="true" />
@@ -262,8 +258,7 @@
 						<h:panelGroup
 							id="divisionCompInfoDropdownPanelId"
 							rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
-							<!-- #34159 - START -->
-							<p:selectOneMenu id="basicComDivision" required="#{!empty param['disableValidation']}"
+							<p:selectOneMenu id="basicComDivision" required="true"
 								label="#{lbl['lbl.sm.division']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
 								style="width: 250px;margin-bottom: 5px;"
@@ -277,7 +272,6 @@
 									listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 									update="basicCompDist,basicCompCity" />
 							</p:selectOneMenu>
-							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}" 
@@ -306,10 +300,9 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<!-- #34159 - START -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompDist"
-							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
+							required="true" label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.districtId }"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -318,7 +311,6 @@
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 								update="basicCompCity,localAuthInputOutPanelId" />
 						</p:selectOneMenu> 
-						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}" 
@@ -337,10 +329,9 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<!-- #34159 - START -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompCity"
-							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
+							required="true" label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.cityId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -349,7 +340,6 @@
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 								update="basicCompCity" />
 						</p:selectOneMenu> 
-						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}" 
