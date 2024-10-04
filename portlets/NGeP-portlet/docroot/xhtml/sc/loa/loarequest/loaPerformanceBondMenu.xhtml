@@ -39,7 +39,11 @@
 						value="#{lbl['lbl.sc.loiloa.loa.bond.percentage']}" /></td>
 				<td><p:inputText style="text-align: right;"
 						value="#{lOADetailBackingBean.managedBean.scLoa.bondPercentage}"
-						disabled="true" size="35" readonly="true" /></td>
+						disabled="true" size="35" readonly="true">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</p:inputText></td>
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.amt']}" /></td>

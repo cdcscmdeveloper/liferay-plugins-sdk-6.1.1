@@ -26,7 +26,7 @@
 		<cc:attribute name="addressType" required="true"/>
 		<cc:attribute name="stateItems" required="true"/>
 		<cc:attribute name="districtItems" required="true"/>
-		<cc:attribute name="cityItems" required="true"
+		<cc:attribute name="cityItems" required="true"/>
 		<cc:attribute name="disableValidation" required="true"/>
 	</cc:interface>
 
@@ -115,7 +115,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<!-- #34159 - START - add required condition -->
+						<!-- #34159 - START - change required condition -->
 						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.country']}"
 							required="#{!cc.attrs.addrObj.sameAsPerm and !empty param['disableValidation']}"
@@ -150,7 +150,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<!-- #34159 - START - add required condition -->
+						<!-- #34159 - START - change required condition -->
 						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.state']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.stateSsmNull)}"
@@ -189,7 +189,7 @@
 					<td>
 					<p:outputPanel id="divisionSharDropdownPanelId">
 				<ui:fragment rendered="#{cc.attrs.addrObj.smAddress.pmState.adoptDivision}">
-					<!-- #34159 - START - add required condition -->
+					<!-- #34159 - START - change required condition -->
 					<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.division']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
@@ -229,7 +229,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<!-- #34159 - START - add required condition -->
+						<!-- #34159 - START - change required condition -->
 						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.district']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
@@ -257,7 +257,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
-						<!-- #34159 - START - add required condition -->
+						<!-- #34159 - START - change required condition -->
 						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.towncity']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"

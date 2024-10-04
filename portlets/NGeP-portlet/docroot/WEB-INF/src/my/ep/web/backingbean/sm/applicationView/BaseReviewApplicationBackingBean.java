@@ -17,9 +17,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
@@ -1347,9 +1349,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			// #32809 - start - #30766
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 				// filter category code that not imposed with DA
-				if ((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
-						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED)
-						&& cat.getPmCategoryL3() != null
+				if (//#34209 - START
+						/*(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+						&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED && cat
+						.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED)
+						&& */
+					//#34209 - END
+						cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
 							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
@@ -1365,9 +1371,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						SmManufacturingDtl manDtl = (SmManufacturingDtl) EntityHelper.getEntityBySinglePropertyFromList(
 								manuFacDtl.getManufacturingDtlId(), activeManufacturingDtls, "manufacturingDtlId");
 						if(manDtl == null){
-							activeManufacturingDtls.add(manuFacDtl);
-						}
+							//#34209 - START
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							ExternalContext externalContext = facesContext.getExternalContext();
+							PortletRequest request = (PortletRequest) externalContext.getRequest();
+							String URI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+							if(URI.toLowerCase().contains("application-history")){
+								activeManufacturingDtls.add(manuFacDtl);
+							} else {
+								if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED
+										&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED 
+										&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+									activeManufacturingDtls.add(manuFacDtl);
+								}
+							}
+						} 
 					}
+					//#34209 - END
 					//#33467, #32809 - end - #30766
 				}
 			}
@@ -4526,6 +4546,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (resultList != null
 				&& resultList.size() > 0) {
+			boolean isMOF = false;
+			if (!EntityHelper.isCollectionEmpty(personnelResDTO.getSmPersonnelList())){
+				String suppType = personnelResDTO.getSmPersonnelList().get(0).getSmAppl().getSupplierType();
+				isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
+						|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
+			}
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
 						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
@@ -4646,9 +4672,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}
 					}
 					
-					if(disciplinaryAction.getMofNo() != null){
-						retVal.setMofNoExist(true);
-					}
+					retVal.setMofNoExist(isMOF);
 					voList.add(retVal);
 				}
 				log.info(voList);					
