@@ -13,13 +13,19 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang.StringUtils;
 
+import my.ep.constant.MessageConst;
 import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.TrustGateHelper;
 import my.ep.web.vo.SpkiVO;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.msctg.cdc.pki.IKMCAPIResponse;
+import com.msctg.cdc.pki.KMCClient;
+import com.msctg.cdc.pki.KMCRequestBuilder;
 
 /**
  * Test SPKI
@@ -89,6 +95,9 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		}	
 	}
 	
+	/**
+	 * Submit to get Challenge Question
+	 */
 	public void submit(){
 		log.info("testSPKI-submit:\t_"+idNo+"_\t_"+epNo);
 		try {
@@ -98,11 +107,14 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		}
 	}
 	
+	/**
+	 * Sign
+	 */
 	public void sign(){
 		log.info("testSPKI-sign:\t_"+idNo+"_\t_"+epNo+"_\t_"+getPassword()+"_\t_"
 				+getChallengeQues1()+"_\t_"+getChallengeAns1()+"_\t_"+dataForSigning);
 		try {
-			Map<Object, Object> challenges = new HashMap<Object, Object>();
+			Map<Object, Object> challenges = new HashMap<>();
 			challenges.put(getChallengeQues1(), getChallengeAns1());
 			
 			SpkiVO vo = instance.getSignedData(idNo, epNo, getPassword(), challenges, dataForSigning);
@@ -189,7 +201,28 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	class TrustHelp extends TrustGateHelper implements CertHelper{
 		@Override
 		public List<String> getChallengeQuestion(){
-			return super.getChallengeQuestion(idNo, epNo, getChallengeQues1());
+			
+			KMCClient client = getClient();
+			log.info("Test Client=" + client);
+			KMCRequestBuilder reqbuilder = getReqBuilder();
+			log.info("Test reqbuilder=" + reqbuilder);
+			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(idNo, 10, epNo);
+			log.info("Test Question=" + res);
+			
+			log.info("Test TG status code: "+res.getStatusCode());
+			if(EntityHelper.isCollectionEmpty(res.CHALLENGE_RESPONSES)){
+				log.info("empty challenge responses");
+				throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
+			}
+			if(StringUtils.isBlank(getChallengeQues1())){
+				return res.CHALLENGE_RESPONSES;
+			}
+			if(getChallengeQues1().equalsIgnoreCase(res.CHALLENGE_RESPONSES.get(0))){
+				res.CHALLENGE_RESPONSES.remove(0);
+			}
+				
+			return res.CHALLENGE_RESPONSES;
+			//return super.getChallengeQuestion(idNo, epNo, getChallengeQues1());
 		}
 	}
 	
@@ -200,7 +233,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		}
 	}
 	
-	//getters, setters
+	//getters, setters	
 	public String getCert() {
 		return cert;
 	}
