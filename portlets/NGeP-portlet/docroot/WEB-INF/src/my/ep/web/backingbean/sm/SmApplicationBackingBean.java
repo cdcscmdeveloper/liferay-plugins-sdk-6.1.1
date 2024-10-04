@@ -16824,7 +16824,8 @@ public class SmApplicationBackingBean extends
 	// #34392 - start
 	/**
 	 * re-select inquiry before opening popup
-	 * @param applInquiry 
+	 * 
+	 * @param applInquiry
 	 */
 	public void resetSmApplSupportDocInquiries(SmApplInquiry applInquiry) {
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
@@ -16832,11 +16833,24 @@ public class SmApplicationBackingBean extends
 						ISupportingDocInquirySO.class);
 		SupportingDocInquiryResDTO resDTO = reqSO
 				.retrieveInquiryByApplInquiryId(applInquiry.getApplInquiryId());
-		applInquiry.setSmApplSupportDocInquiries(
-						resDTO.getSmApplInquiry()
-								.getSmApplSupportDocInquiries());
+		applInquiry.setSmApplSupportDocInquiries(resDTO.getSmApplInquiry()
+				.getSmApplSupportDocInquiries());
 	}
 
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
 	// #34392 - end
 
 	// START #29727
