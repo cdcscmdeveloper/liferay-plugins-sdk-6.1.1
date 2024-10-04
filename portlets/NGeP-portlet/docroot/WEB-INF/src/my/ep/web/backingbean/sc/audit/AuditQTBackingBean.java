@@ -547,7 +547,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 			if (headerType == 1) {
 				return ReportExcelAuditConstant.TAB_OPENING_COMMITTEE_APPOINTMENT;
 			} else {
-				return ReportExcelAuditConstant.HEADER_TECHNICAL_COMMITTEE_APPOINTMENT;
+				return ReportExcelAuditConstant.HEADER_OPENING_COMMITTEE_APPOINTMENT;
 			}
 
 		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_TEC)) {
