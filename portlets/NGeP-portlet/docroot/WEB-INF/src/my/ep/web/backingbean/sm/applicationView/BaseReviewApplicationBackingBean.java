@@ -164,7 +164,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
-import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
