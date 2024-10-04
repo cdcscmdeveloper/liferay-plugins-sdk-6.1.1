@@ -3838,7 +3838,7 @@ public class SmApplicationUtil {
 					.getOverlapCategoryVOList());
 			//13362
 			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
-			
+			managedBean.setOverLappedCategoryExists(true); //#31018
 		}else{
 			log.info("overlapCategoryVO == null");
 		}
@@ -5074,7 +5074,8 @@ public class SmApplicationUtil {
 					&& rejectedAppl.getCreatedDate()
 							.after(resDto.getSmSupplier().getSmAppl()
 									.getCreatedDate())
-					&& rejectedAppl.getApplType().equals(applicationType)) {
+					&& rejectedAppl.getApplType().equals(applicationType)
+					&& isApplPORejectedAfterApprovelSV(rejectedAppl)) { //#34483
 				if (isRejectedApplValidForResubmission(rejectedAppl)) {
 					result = true;
 					throw new EpException(MessageConst.ERROR_722643);
@@ -5187,9 +5188,14 @@ public class SmApplicationUtil {
 
 	private static void validateDontHaveSuppAdmin(SmAppl appl) {
 		boolean valid = false;
+		//#34483 START
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplNo(appl.getApplNo());
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
 
-		if (appl.getSmPersonnels() != null) {
-			for (SmPersonnel per : appl.getSmPersonnels()) {
+		if (personnels != null) {
+			for (SmPersonnel per : personnels) { //#34483 END
 				if (!StringUtils.isBlank(per.getEpRole())
 						&& per.getPmUser() != null
 						&& per.getPmUser().getUserId() != null
@@ -10094,6 +10100,7 @@ public class SmApplicationUtil {
 			bean.getSmAppl().setSmCategoryOverlapDocs(
 					new ArrayList<SmCategoryOverlapDoc>());
 			bean.setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			bean.setOverLappedCategoryExists(false); //#31018
 		}
 	}
 
@@ -10252,7 +10259,10 @@ public class SmApplicationUtil {
 			List<SelectItem> stateItems = SmCommonUtil.getStateList(coutryId);
 			if (!panelName
 					.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)) {
-				stateLs = retrievePmStateList(coutryId);
+				//#34159 - START
+				if(coutryId != null)
+					stateLs = retrievePmStateList(coutryId);
+				//#34159 - END
 			}
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
@@ -10262,6 +10272,7 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
 				bean.setBasicOffFacStates(stateItems);
+				bean.setBasicOffFacDivisions(new ArrayList<SelectItem>()); //#34159
 				bean.setBasicOffFacDistricts(new ArrayList<SelectItem>());
 				bean.setBasicOffFacCities(new ArrayList<SelectItem>());
 				break;
@@ -10273,6 +10284,7 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 				bean.setAssocCompanyStates(stateItems);
+				bean.setAssocCompanyDivisions(new ArrayList<SelectItem>()); //#34159 
 				bean.setAssocCompanyDistricts(new ArrayList<SelectItem>());
 				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
 				break;
@@ -15054,15 +15066,6 @@ public class SmApplicationUtil {
 		return daHistoryList;
 	}
 	
-	//28281 - start
-	public static List<Long> retrieveBumiCodeList(){
-		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
-		return supplierCategorySO.retrieveBumiCodeList();
-	}
-	//28281 - end
-	
-	
 	//27796: Disciplinary Action - end - 26238
 	//28198: Disciplinary Action - start - 26238
 			public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction smDisciplinaryAction){
@@ -15613,4 +15616,59 @@ public class SmApplicationUtil {
 		managedBean.setAllowedToSiteVisit(allowSiteVisit);
 	}
 	//#31043 END
+	//#34483 START
+	public static boolean isApplPORejectedAfterApprovelSV(SmAppl appl){
+		boolean isRejected = false;
+		boolean isHasBasic = false;
+		if(appl.getPmStatus().getStatusId() == 20112){
+			for(SmWorkflowStatus smWorkflowStatus : appl.getSmWorkflowStatuses()){
+				if(smWorkflowStatus.getPmStatus().getStatusId() == 20116 || smWorkflowStatus.getPmStatus().getStatusId() == 20117){
+					isRejected = true;
+					break;
+				}
+			}
+		}
+		
+		for(SmAppl previousSmAppl : appl.getSmSupplier().getSmAppls()){
+			if(previousSmAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)){
+				isHasBasic = true;
+				break;
+			}
+		}
+		
+		if(appl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && isRejected && !isHasBasic){
+			return false;
+		}else if((appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ 
+			return false;
+		}
+		
+		return true;
+	}
+	//#34483 END
+	
+	//#26238
+	 /**
+	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
+	 *  can edit Bank Information only
+	 * @param bean
+	 */
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean){
+		if(bean.getEditVO() != null){
+			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
+				bean.getEditVO().setDisciplinary(false);
+				return;
+			}
+			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			if(EntityHelper.isCollectionEmpty(activeDA)){
+				return;
+			}
+			for(SmDisciplinaryAction da : activeDA){
+				if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+					bean.getEditVO().setDisciplinary(true);
+					return;
+				}
+			}
+		}
+	}	
 }

@@ -1612,10 +1612,10 @@ public class QTCommitteBackingBean extends
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 		
 		// 28895-35500 start
-		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList()) 
-				? this.getManagedBean().getNewScCommitteeMemberList(): new ArrayList<ScCommitteeMember>();
-		newScCommitteeMemberList.addAll(toBeAddedList);
-		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);
+		List<ScCommitteeMember> newScCommitteeMemberAuditTrailList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()) 
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList(): new ArrayList<ScCommitteeMember>();
+		newScCommitteeMemberAuditTrailList.addAll(toBeAddedList);
+		this.getManagedBean().setNewScCommitteeMemberAuditTrailList(newScCommitteeMemberAuditTrailList);
 		// 28885-35500 end
 
 		}
@@ -1852,7 +1852,11 @@ public class QTCommitteBackingBean extends
 		}
 
 		List<ScCommitteeMember> committeeMembers = getManagedBean().getToBeDelCommitteMemebers();
-		List<ScCommitteeMember> deletedCommitteeMembers = new ArrayList<>();//28895 - 35500
+		//28895 - 35500 start
+		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList())
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();	
+		List<ScCommitteeMember> deletedCommitteeMembers = new ArrayList<>();
+		//28895 - 35500 end
 		
 		if (committeeMembers == null) {
 			committeeMembers = new ArrayList<ScCommitteeMember>();	
@@ -1873,9 +1877,6 @@ public class QTCommitteBackingBean extends
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.add(this.getManagedBean().getSelectedTabIndex(), bean);
-		//28895 - 35500
-		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberList())
-				? this.getManagedBean().getNewScCommitteeMemberList() : new ArrayList<ScCommitteeMember>();	
 		for (int i = 0; i < selectedList.size(); i++) {
 			log.debug("====delete committee member name==="+selectedList.get(i).getMemberName());
 			scCommitte.getScCommitteeMembers().remove(selectedList.get(i));
@@ -1885,17 +1886,17 @@ public class QTCommitteBackingBean extends
 				selectedList.get(i).setRepresentativeType(null);
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
-				deletedCommitteeMembers.add(selectedList.get(i));//#28895 - 35500
-				//28895 - 35500
+				//#28895 - 35500 start
+				deletedCommitteeMembers.add(selectedList.get(i));
 				if (!(newScCommitteeMemberList == null || newScCommitteeMemberList.isEmpty())) {
 					newScCommitteeMemberList.remove(selectedList.get(i));
 				}				
 			}
 			
 		}		
-		//#28895 - 35500 start
-		this.getManagedBean().setNewScCommitteeMemberList(newScCommitteeMemberList);
-		this.getManagedBean().setDeletedScCommitteeMemberList(deletedCommitteeMembers);
+		
+		this.getManagedBean().setNewScCommitteeMemberAuditTrailList(newScCommitteeMemberList);
+		this.getManagedBean().setDeletedScCommitteeMemberAuditTrailList(deletedCommitteeMembers);
 		//#28895 - 35500 end
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);

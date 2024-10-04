@@ -859,7 +859,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		List<ScCommitteeMember> memberList = addExistingUser();
 		if (memberList != null){
 			committeeMemberList.addAll(memberList);
-			this.getManagedBean().setNewCommitteeList(memberList);//28895-35500
+			this.getManagedBean().setNewCommitteeAuditTrailList(memberList);//28895-35500
 		}
 		Collections.sort(committeeMemberList);
 		
@@ -886,8 +886,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 							= getManagedBean().getCommitteeMembersList();
 		
 			List<ScCommitteeMember> localList=new ArrayList<ScCommitteeMember>();
-			List<ScCommitteeMember> newCommitteeMember = this.getManagedBean().getNewCommitteeList() != null
-					? this.getManagedBean().getNewCommitteeList() : new ArrayList<ScCommitteeMember>() ;//28895-35500
+			List<ScCommitteeMember> newCommitteeMember = this.getManagedBean().getNewCommitteeAuditTrailList() != null
+					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>() ;//28895-35500
 			
 			if (CollectionUtils.isNotEmpty(currentCommitteeMemList)) {
 				for(ScCommitteeMember committeemember:currentCommitteeMemList){
@@ -900,8 +900,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 				
 				currentCommitteeMemList.removeAll(localList);
 				//28895-35500 Start
-				this.getManagedBean().setRemoveCommitteeList(localList);
-				this.getManagedBean().setNewCommitteeList(newCommitteeMember);
+				this.getManagedBean().setRemoveCommitteeAuditTrailList(localList);
+				this.getManagedBean().setNewCommitteeAuditTrailList(newCommitteeMember);
 				//28895-35500 End
 				}
 			}
@@ -2020,10 +2020,10 @@ if (CollectionUtils.isNotEmpty(
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		}else if(action.equalsIgnoreCase("confirm")){
 			validateCommitteeChanges();
-			List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeList() != null
-					? this.getManagedBean().getNewCommitteeList() : new ArrayList<ScCommitteeMember>();
-			List<ScCommitteeMember> deletedCommitteeMembers = this.getManagedBean().getRemoveCommitteeList() != null
-					? this.getManagedBean().getRemoveCommitteeList() : new ArrayList<ScCommitteeMember>();
+			List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeAuditTrailList() != null
+					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+			List<ScCommitteeMember> deletedCommitteeMembers = this.getManagedBean().getRemoveCommitteeAuditTrailList() != null
+					? this.getManagedBean().getRemoveCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
 			if(finalBB!=null){
 				finalBB.getManagedBean().setCommitteModified(this.getManagedBean().isCommitteeModified());
 				this.getManagedBean().setTaskName(finalBB.getManagedBean().getTaskName());
