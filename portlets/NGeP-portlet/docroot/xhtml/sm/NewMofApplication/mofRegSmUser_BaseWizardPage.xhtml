@@ -77,16 +77,13 @@
 						<td><div class="navDiv" id="menuDiv" align="center">
 								<ul class="menu-text">
 									<li>
-										<!-- #34159 - START - add param disablevalidation foreach button -->
 										<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 0}"
-											styleClass="#{backingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" >
-											<f:param name="disableValidation" value="true" />
-										</p:commandLink>
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
 									</li>
 
 									<li><h:outputText
@@ -98,9 +95,7 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 1}"
-											styleClass="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" >
-											<f:param name="disableValidation" value="true" />
-										</p:commandLink>
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" />
 									</li>
 
 									<li><h:outputText
@@ -112,10 +107,7 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 2}"
-											styleClass="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" >
-											<f:param name="disableValidation" value="true" />
-										</p:commandLink>
-									</li>
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
@@ -126,10 +118,7 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 3}"
-											styleClass="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" >
-											<f:param name="disableValidation" value="true" />
-										</p:commandLink>
-									</li>
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
 
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
@@ -140,10 +129,7 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 4}"
-											styleClass="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" >
-											<f:param name="disableValidation" value="true" />
-										</p:commandLink>
-									</li>
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
 
 									<li><h:outputText
 											value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
@@ -154,10 +140,7 @@
 											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
-											styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" >
-											<f:param name="disableValidation" value="true" />
-										</p:commandLink>
-									</li>
+											styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" /></li>
 
 									<c:choose>
 										<c:when
@@ -172,10 +155,7 @@
 													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)}"
 													update=":form"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
-													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" >
-													<f:param name="disableValidation" value="true" />
-												</p:commandLink>
-											</li>
+													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
 
 											<c:choose>
 												<c:when
@@ -190,10 +170,7 @@
 															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 															update=":form"
 															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
-															styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" >
-															<f:param name="disableValidation" value="true" />
-														</p:commandLink>
-													</li>
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
 													<li><h:outputText
 															value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 															rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
@@ -205,10 +182,7 @@
 															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 															update=":form"
 															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
-															styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" >
-															<f:param name="disableValidation" value="true" />
-														</p:commandLink>
-													</li>
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
 
 													<li><h:outputText
 															value="#{lbl['lbl.sm.wizard.declarationLbl']}"
@@ -221,10 +195,7 @@
 															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
 															update=":form"
 															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 9}"
-															styleClass="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'currentStep' : ''}" >
-															<f:param name="disableValidation" value="true" />
-														</p:commandLink>
-													</li>
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'currentStep' : ''}" /></li>
 												</c:when>
 												<c:otherwise>
 													<li><h:outputText
@@ -238,10 +209,7 @@
 															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 															update=":form"
 															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
-															styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" >
-															<f:param name="disableValidation" value="true" />
-														</p:commandLink>
-													</li>
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
 
 													<li><h:outputText
 															value="#{lbl['lbl.sm.wizard.declarationLbl']}"
@@ -254,10 +222,7 @@
 															action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
 															update=":form"
 															rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
-															styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" >
-															<f:param name="disableValidation" value="true" />
-														</p:commandLink>
-													</li>
+															styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
 												</c:otherwise>
 											</c:choose>
 
@@ -273,10 +238,7 @@
 													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 													update=":form"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
-													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" >
-													<f:param name="disableValidation" value="true" />
-												</p:commandLink>
-											</li>
+													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
 
 											<li><h:outputText
 													value="#{lbl['lbl.sm.wizard.declarationLbl']}"
@@ -289,11 +251,8 @@
 													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
 													update=":form"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
-													styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" >
-													<f:param name="disableValidation" value="true" />
-												</p:commandLink>
-											</li>
-											<!-- #34159 - END -->
+													styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+
 										</c:otherwise>
 									</c:choose>
 
@@ -365,16 +324,12 @@
 									<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
 										update=":form" onclick="mofApplDelConfirm.show()"
 										type="button" style="margin-bottom:5px;" />
-									<!-- #34159 - START -->
 									<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 										onclick="this.disabled=true;" onstart="blockWidget.show()"
 										oncomplete="this.disabled=false;blockWidget.hide();"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 										action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
-										update=":form" style="margin-bottom:5px;" >
-										<f:param name="disableValidation" value="true" />
-									</p:commandButton>
-									<!-- #34159 - END -->
+										update=":form" style="margin-bottom:5px;" />
 									<p:outputPanel rendered="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}">
 										<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 									</p:outputPanel>
