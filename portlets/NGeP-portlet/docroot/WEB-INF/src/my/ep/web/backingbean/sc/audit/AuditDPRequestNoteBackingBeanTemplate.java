@@ -1,14 +1,18 @@
 package my.ep.web.backingbean.sc.audit;
 
 import java.io.Serializable;
+
+import org.apache.log4j.Logger;
+
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import org.apache.log4j.Logger;
 
 /**
  * The Class AuditDPRequestNoteBackingBeanTemplate. #28895_35492
@@ -16,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author Muliana
  * @since 19.02.2024
  */
-public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializable {
+public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/** The log. */
 	private static Logger log = Logger.getLogger(AuditDPRequestNoteBackingBeanTemplate.class);
@@ -29,13 +33,6 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 	}
 
 	/**
-	 * Gets the audit dp request note so.
-	 * 
-	 * @return the audit dp request note so
-	 */
-	/**
-	 * The void auditSaveData.
-	 * 
 	 * @param managebean
 	 * @param userId
 	 */
@@ -65,6 +62,9 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate implements Serializa
 		try {
 			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+
+			new LogKey(getUserIdSessionFromLoginId());
+
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
