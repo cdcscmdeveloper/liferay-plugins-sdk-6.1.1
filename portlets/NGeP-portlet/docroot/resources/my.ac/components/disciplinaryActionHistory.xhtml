@@ -11,7 +11,7 @@
 		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.view.history.disciplinary.action.headerlbl']}"/>
 		<cc:attribute name="dialogHeader1" default="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}"/>
 		<cc:attribute name="dialogWidth" default="1100px" />
-		<cc:attribute name="dialogHeight" default="500px" />
+		<cc:attribute name="dialogHeight" default="500" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="dialogMessage" default=""/>
@@ -29,10 +29,12 @@
 			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />
 			<p:spacer height="3" />
 		</p:outputPanel>
+		
+		<ui:param name="isMOF" value="#{cc.attrs.voList.get(0).mofNoExist}" />
 							
 		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
 		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
-		 style="table-layout: fixed;">
+		 style="table-layout: fixed;" scrollable="true" scrollHeight="#{cc.attrs.dialogHeight}">
 			
 	/*  start : 27445 = Disciplinary Actions / history popup window*/
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important; vertical-align:top;">
@@ -92,11 +94,7 @@
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" 
 					style="border: none !important; table-layout: fixed;">
 					<p:column style="border: none !important;">
-						<!-- 26238 - START -->
-						<p:scrollPanel style="height:300px;border:0;" mode="native">
-							<h:outputText value="#{remarksList.remarks}" escape="false" style="white-space:pre-line;"/>
-						</p:scrollPanel>
-						<!-- 26238 - END -->
+						<h:outputText value="#{remarksList.remarks}" escape="false" style="white-space:pre-line;"/>
 					</p:column>
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.remarksList}"/>
@@ -105,7 +103,7 @@
 			<!-- 28613, 28637 -->
 			<!-- 30842 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
-				rendered="#{supplierDataMaintenanceBackingBean.managedBean.viewCatCode || cc.attrs.mofView || cc.attrs.smAppl.supplierType eq 'K' || cc.attrs.smAppl.supplierType eq 'J'}"
+				rendered="#{isMOF}"
 				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 				<!-- 30842 End -->
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"
