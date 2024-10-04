@@ -94,6 +94,18 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApproverRemarksBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementDisciplinaryActionBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementListOwnerDirectorBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementOverlappingCategoryBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
+//#28895_35501 End
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
 @RequestScoped
@@ -351,6 +363,16 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setFlagShowButtonSubmit(true);
 		}
 		//#28278 - Disciplonary action - #28278, #26238, #32818 -end
+		// #28895_35501 Start - AUDIT TRAIL SM
+		this.getManagedBean().setOldSmAppl(
+				(SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
+		this.getManagedBean().setOldApprovedCategoryList(
+				CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getApprovedCategoryList()));
+		this.getManagedBean().setOldPoApprOverlappedRemark(this.getManagedBean().getPoApprOverlappedRemark());
+		this.getManagedBean().setOldApproverRemark(this.getManagedBean().getApproverRemark());
+		this.getManagedBean().setOldOwnerAndDirectorList(
+				CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getOwnerAndDirectorList()));
+		// #28895_35501 End
 		
 		//#34209 - START
 			getManagedBean().setTempCategoryLs(new HashMap<Long, String>());
@@ -522,6 +544,16 @@ public class SupplierDataMaintenanceBackingBean extends
 				
 			}
 			//26238 - Disciplinary Action - 28798 - end
+			// #28895_35501 Start - AUDIT TRAIL SM
+			IAuditTrailSO auditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
+			if (auditSO.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+				auditSmBackingBean = new AuditSupplierManagementListOwnerDirectorBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+			}
+			// #28895_35501 End
 			
 		} catch (NullPointerException nex) {
 			throw new EpException(nex.getMessage());
@@ -854,8 +886,26 @@ public class SupplierDataMaintenanceBackingBean extends
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
-			
-			
+			// #28895_35501 Start - AUDIT TRAIL SM
+			if(resDTO.isSuccessful()){
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean = new AuditSupplierManagementApprovedCategoryCodesBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean = new AuditSupplierManagementOverlappingCategoryBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean = new AuditSupplierManagementApproverRemarksBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean = new AuditSupplierManagementListOwnerDirectorBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+				}
+			}
+			// #28895_35501 End			
 			//26238 -  Disciplonary action - 28146 - start
 			if (getManagedBean().getOwnerAndDirectorList() != null && getManagedBean().getOwnerAndDirectorList().size() > 0 
 					&& getManagedBean().isBlacklistOwnerOrDirector() && reqDTO.getSelectedOwnerAndDirector() != null){
@@ -2004,6 +2054,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		//getManagedBean().setEditDisciplinaryAction(false); //27857: Disciplinary Action - disabled hardcoded value - 26238
 		getManagedBean().setHasActiveDA(false); //#34626
 		DisciplinaryActionVO discipline = getInitDisciplinaryActionVO();
+		// #28895_35501 - AUDIT TRAIL SM
+		this.getManagedBean().setOldSmDisciplinaryAction(null);
 		if (!EntityHelper
 				.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			for (SmDisciplinaryAction disc : supplier
@@ -2094,6 +2146,10 @@ public class SupplierDataMaintenanceBackingBean extends
 							disc.getEndDate());
 					discipline.setSuspend(true);
 					getManagedBean().setHasActiveDA(true); //#34626
+					// #28895_35501 Start - AUDIT TRAIL SM
+					this.getManagedBean().setOldSmDisciplinaryAction(
+							(SmDisciplinaryAction) CustomUtils.getInstance().deepCopy(disc));
+					// #28895_35501 End
 					break;
 				}
 			}
