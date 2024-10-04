@@ -196,9 +196,8 @@ public class ViewApplHistoryBackingBean extends
 								.equalsIgnoreCase(getManagedBean()
 										.getSmSupplier().getBusinessType())) {
 					initFifthTabInfo();
-				// #28895_35501 Start - AUDIT TRAIL SM
-				} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getManagedBean()
-						.getAccountType())) {
+					// #28895_35501 Start - AUDIT TRAIL SM
+				} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getManagedBean().getAccountType())) {
 					initAuditTab();
 				}
 			} else if (outputTab == 5) {
