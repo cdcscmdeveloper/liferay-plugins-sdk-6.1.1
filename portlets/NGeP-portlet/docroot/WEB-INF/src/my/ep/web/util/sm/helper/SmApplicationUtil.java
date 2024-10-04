@@ -1222,7 +1222,7 @@ public class SmApplicationUtil {
 								.equalsIgnoreCase("H")) {
 					// #34303 - start
 					if (appl.getSmFacilities().get(i).isHeadquarters()) {
-						appl.getSmFacilities().set(i, managedBean.getBasicCompanyFacility());
+						appl.getSmFacilities().set(i, managedBean.getBasicCompanyFacility()); //#36360
 						break;
 					}
 					// #34303 - end
@@ -13333,7 +13333,7 @@ public class SmApplicationUtil {
 			if (item == null) {
 				item = new SelectItem();
 				item.setLabel(eduLevel.getCodeName());
-				item.setValue(eduLevel.getParameterDescId());
+				item.setValue(eduLevel.getPmParameter().getParameterId()); 
 				eduLevelItems.add(item);
 			}
 		}
