@@ -1859,6 +1859,23 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//14530
 	
+	// #34392 - Start
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
+	// #34392 - end
+	
 	//#31248 - START
 	public Boolean setResubmitButton(SmAppl smAppl){
 		log.info("#35336 - START setResubmitButton(smAppl)");
