@@ -2230,7 +2230,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
 				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}/*Remark validation end*/
