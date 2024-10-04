@@ -202,12 +202,14 @@
 	  	<h:panelGrid style="width:270px; margin-left:5px">
 	  	 	<h:panelGrid columns="3" 
 		     	rendered="#{!ctBackingBean.managedBean.directPurchase and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+		     <!-- #13847 start-->
 			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractAmount.bondExempted}"
 				 disabled="#{ctBackingBean.managedBean.viewContract
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 				 	or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractAmendment}" style="text-align:top;">
-				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true"></p:ajax>
+				 <p:ajax event="change" update="@all" process="@all" partialSubmit="true" listener="#{ctBackingBean.bondExempDocReset()}"></p:ajax>
 			  </p:selectBooleanCheckbox>
+			  <!-- #13847 end-->
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">
 				  <h:outputText value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />

@@ -28,9 +28,11 @@ import java.util.TreeMap;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -5784,4 +5786,23 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #29187 End Vinod
+	
+	/**
+	 * To validate Wieghtage input value
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
+		BigDecimal weightage = (BigDecimal) value;
+
+		if (weightage.compareTo(BigDecimal.valueOf(100)) > 0) {
+			String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+	}
+	
+
+	
 }
