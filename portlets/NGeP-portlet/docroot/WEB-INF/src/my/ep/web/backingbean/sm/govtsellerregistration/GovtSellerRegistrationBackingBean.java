@@ -1270,11 +1270,6 @@ public class GovtSellerRegistrationBackingBean extends
 			getManagedBean().setBranchCompanyDistricts(SmCommonUtil.getDistrictList(address.getPmState().getStateId()));
 		}
 		getManagedBean().setBranchCompanyCities(SmCommonUtil.getCityList(address.getPmDistrict().getDistrictId()));
-		
-		/*onChangeCountry(address.getPmCountry(), "BRANCH_ADDRESS");
-		onChangeState(address.getPmState(), "BRANCH_ADDRESS");
-		onChangeDivision(address.getPmDivision(), "BRANCH_ADDRESS");//13320
-		onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");*/
 		//#34159 - END
 	}
 
