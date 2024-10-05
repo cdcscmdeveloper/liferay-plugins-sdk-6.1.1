@@ -41,19 +41,33 @@
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
 				<ui:remove> #28834 - start </ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					rendered="#{validityDaysExpiredQt and bpmAction != 'REVISEBP'}"
+					rendered="#{validityDaysExpiredQt and (bpmAction != 'REVISEBP' or bpmAction != 'SUBMIT')}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@all" partialSubmit="true"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 				<ui:remove> #28834 - end </ui:remove>
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+					oncomplete="confirmUpdateAsAttendPopup.show();"
+					style="float:right;" />
 			</ui:repeat>
 		</ui:fragment>
-		<p:commandButton value="#{lbl['lbl.btn.save']}"
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex ne 5}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified}"
+				style="float:right;" process="@form" update="@form"
+				action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
+		</ui:fragment>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}"
+			disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
+			styleClass="ui-button"
+			action="#{evaluationMeetingBackingBean.submitMettingDetails()}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			disabled="#{evaluationBackingBean.managedBean.readOnly}"
-			style="float:right;" process="@form" update="@form"
-			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
-
+			style="float:right;" process="@all" partialSubmit="true">
+		</p:commandButton>
 		<!-- 25638 -start- -->
 		<p:dialog id="reviseApprovalDlgs" widgetVar="reviseApprovalDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
@@ -162,6 +176,16 @@
 		</c:if>
 
 		<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml"></ui:include>
+		<ac:confirmationPopup id="confirmSubmitMeetingMainId"
+			widget="confirmSubmitMeetingMainPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
+			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
+		<ac:confirmationPopup id="confirmUpdateAsAttendId"
+			widget="confirmUpdateAsAttendPopup" loadingWidget="blockWidget"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
+			content="#{lbl['lbl.sc.popup.updateasattended']}" />
 	</ui:define>
 
 </ui:composition>
