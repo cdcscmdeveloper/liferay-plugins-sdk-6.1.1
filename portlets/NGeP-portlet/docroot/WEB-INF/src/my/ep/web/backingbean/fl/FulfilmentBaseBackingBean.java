@@ -901,4 +901,53 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return filteredItemName;
 	}
 	//21416 end
+	
+	//36386 -Start
+	/**
+	 * Checks if is Government User Role
+	 *
+	 * @return true, if user has Government User Role
+	 */
+	public boolean hasFlGovernmentUserRole() {
+		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()))
+			return Boolean.TRUE;
+		else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
+			return Boolean.TRUE;
+		else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value()))
+			return Boolean.TRUE;
+		else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()))
+			return Boolean.TRUE;		
+		else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value()))
+			return Boolean.TRUE;	
+		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
+			return Boolean.TRUE;		
+		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()))
+			return Boolean.TRUE;	
+		else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()))
+			return Boolean.TRUE;	
+		else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()))
+			return Boolean.TRUE;	
+		else if (getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value()))
+			return Boolean.TRUE;
+		else
+			return Boolean.FALSE;
+	}
+	
+	/**
+	 * Determines whether the PRCR link can be viewed based on user roles.
+	 * 
+	 * @return {@code true} if the user can view the PRCR link, {@code false} otherwise
+	 */
+	public boolean canViewPRCRLink() {
+		
+		if ((hasSupplierRole() || hasFactoringUserRole())) {
+			if(hasGovtSellerRole() && hasFlGovernmentUserRole()){
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
+	//36386 -End
+
 }

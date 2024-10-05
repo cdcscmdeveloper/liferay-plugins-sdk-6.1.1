@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -112,6 +113,7 @@ import my.ep.web.vo.DisciplinaryActionVO;
 @ManagedBean(name="stopInstrBB")
 @RequestScoped
 public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrManagedBean>{
+	private static Logger log = Logger.getLogger(StopInstrBackingBean.class);
 
 	private static final long serialVersionUID = 1L;
 	private static final String NAV_PO = "/xhtml/fl/purchaseorder/poBasePage.xhtml";
@@ -133,10 +135,14 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		IFulfilmentOrderSO orderSO = null;
 		try {
 			orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+			IFulfilmentSO flfulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlStopInstr flStopInstr = getManagedBean().getStopInstr();
+			
+			String functionType = getManagedBean().getSearchFunctionType(); //36386			
+			PmUser approver = flfulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_STOP_DELIVERY , getManagedBean().getStopInstr().getStopInstrId(), RoleCode.FL_APPROVER.value()).getUser();//36386			
 
 			reqDTO.setStopIns(flStopInstr);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -152,7 +158,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
 			if(reqDTO.isApprover() && hasSupplierRole()) {
 				// Check login user's org is it same with supplier id
-				UserReqDTO userReqDTO = new UserReqDTO();
+				/**UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 				if(userResDTO.isSuccessful() && !userResDTO.getUserOrgList().isEmpty()) {
@@ -164,7 +170,21 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 							break;
 						}
 					}
-				}
+				}**/
+				//36386-start
+				if (functionType != null) { // from maintenance
+					if (functionType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+						reqDTO.setUserRole(getUserRole());
+						reqDTO.setApprover(true);
+					} else if (functionType.equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)) {
+						reqDTO.setUserRole(getUserSupplierRole());
+						reqDTO.setApprover(false);
+					}
+				} else if (approver != null) {// from task list
+					reqDTO.setUserRole(getUserRole());
+					reqDTO.setApprover(true);
+				}		
+				//36386-end
 			}
 
 			if(getManagedBean().getPmDigiSign() != null){
