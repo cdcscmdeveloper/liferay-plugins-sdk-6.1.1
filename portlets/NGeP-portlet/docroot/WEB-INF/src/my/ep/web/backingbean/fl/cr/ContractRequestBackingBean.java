@@ -4820,6 +4820,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setShowItemAddrList(new ArrayList<FlFulfilmentItemAddr>());
 			
 			FlFulfilmentItemAddr flItemAddr = null;
+			boolean isPidService = false;//36468
 			List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			ContractItemResDTO resDTO = new ContractItemResDTO();		
@@ -4872,13 +4873,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					flItemAddr.setGstAmount(BigDecimal.ZERO);
 					flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				}
+
+				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+				
+				//36468-Start
 				if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && flItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 					flItemAddr.setOrderedQty(getManagedBean().getFlRequest().getScPurchaseInDefault().getQuantity());
+					flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+					isPidService = true;
 				}else{
 					flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				}
-				
-				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+				//36468-End
 				itemAddrList.add(flItemAddr);
 			}
 			String suspendedItemName = null;
@@ -4900,6 +4907,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().getItemAddrList().addAll(itemAddrList);
 				getManagedBean().getShowItemAddrList().addAll(itemAddrList);
 				if(getManagedBean().getSelectedDelAddr()!=null) {
+					//36468-Start
+					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && isPidService){
+						getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().addAll(itemAddrList);
+					}
+					//36468-End
 					populateItemsForSelectedAddress();
 				}
 		} 
