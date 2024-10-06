@@ -94,8 +94,7 @@
 						<c:when test="#{empty cc.attrs.resetInput}">
 							<p:commandButton id="yesWithResetId"
 								value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
-								process="#{cc.attrs.okProcess}" partialSubmit="true"
-								onstart="confirmPopupBlockWidget.show();"
+								partialSubmit="true" onstart="confirmPopupBlockWidget.show();"
 								action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 								oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();"
 								update="#{cc.attrs.update}" />
@@ -103,8 +102,7 @@
 						<c:otherwise>
 							<p:commandButton id="yesWithoutResetId"
 								value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
-								process="#{cc.attrs.okProcess}" partialSubmit="true"
-								onstart="confirmPopupBlockWidget.show();"
+								partialSubmit="true" onstart="confirmPopupBlockWidget.show();"
 								action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 								oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();"
 								update="#{cc.attrs.update}">
