@@ -2631,8 +2631,14 @@ public class QTDetailBackingBean extends
 	 * @param isApprovalReq
 	 *            the is approval req
 	 */
+	// Bug 32277 - start
 	public void retrieveCommitteeAppointmentTabDtl(int formCommitteeFlag, int reformCommitteeFlag) {
-		
+		retrieveCommitteeAppointmentTabDtl(formCommitteeFlag, reformCommitteeFlag, false);
+	}
+
+	public void retrieveCommitteeAppointmentTabDtl(int formCommitteeFlag, int reformCommitteeFlag,
+			boolean committeeReadOnly) {
+		// Bug 32277 - end		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
 		
@@ -2644,8 +2650,8 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().getQt()
 					.setFinalizationSecratery(new PmUser());
 		}
-		List<TabBean> committeTabs = this.getManagedBean()
-				.getScCommitteeMemberTabList();
+		List<TabBean> committeTabs = committeeReadOnly ? this.getManagedBean().getReadOnlyCommitteeTabBean() : this
+				.getManagedBean().getScCommitteeMemberTabList(); // Bug 32277
 		//20210325@asyrafhaziq_30518 - Start
 		if (committeTabs != null){
 			String evaluationType = this.getManagedBean().getQt()
@@ -2873,9 +2879,20 @@ public class QTDetailBackingBean extends
 				committeTabs.add(new TabBean(fcTitleName, tabType, null));
 			}
 		} 
-
-		this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
-
+		// Bug 32277 - start
+		if (committeeReadOnly) {
+			this.getManagedBean().setReadOnlyCommitteeTabBean(committeTabs);
+			int index = 0;
+			this.getManagedBean().setSelectedTabIndex(index);
+			this.getManagedBean().setSelectedCommitteeTabIndex(index);
+			TabBean committeTabBean = this.getManagedBean().getReadOnlyCommitteeTabBean().get(index);
+			this.getManagedBean().setSelectedTabBean(committeTabBean);
+			this.getManagedBean().setShowHistory(false);
+		} else {
+			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
+		}
+		// Bug 32277 - end
+		
 		for (TabBean tabBean : committeTabs) {
 			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
 					.getTabType()) && tabBean.getScQtCommittee()
@@ -5581,17 +5598,25 @@ public class QTDetailBackingBean extends
 	/**
 	 * Committe tab change action.
 	 */
+	// Bug 32277 - start
 	public void committeTabChangeAction(int selectedCommitteeTabIndex) {
+		committeTabChangeAction(selectedCommitteeTabIndex, false);
+	}
+
+	public void committeTabChangeAction(int selectedCommitteeTabIndex, boolean committeeReadOnly) {
+	// Bug 32277 - end
 		if (log.isDebugEnabled()) {
 			log.debug("Committe Tab change Action");
 		}
 
 		// this.getManagedBean().setToBeDelCommitteMemebers(null);
 		this.getManagedBean().setSelectedTabIndex(selectedCommitteeTabIndex);
-		this.getManagedBean().setSelectedCommitteeTabIndex(
-				selectedCommitteeTabIndex);
-		TabBean committeTabBean = this.getManagedBean()
-				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
+		// Bug 32277 - start
+		List<TabBean> committeTabBeans = committeeReadOnly ? this.getManagedBean().getReadOnlyCommitteeTabBean() : this
+				.getManagedBean().getScCommitteeMemberTabList();
+		this.getManagedBean().setSelectedCommitteeTabIndex(selectedCommitteeTabIndex);
+		TabBean committeTabBean = committeTabBeans.get(selectedCommitteeTabIndex);
+		// Bug 32277 - end
 
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
 		// 25037 - start
@@ -6265,7 +6290,13 @@ public class QTDetailBackingBean extends
 				}
 				// 29464-end
 				// detailSO.validateSupplierQualificationDtls(reqDTO);
-				retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
+				// Bug 32277 - start
+				if (StringUtils.equals(this.getManagedBean().getTaskName(), SCProcessNameConst.APPROVE_COMMITTEE)) {
+					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION, true);
+				} else {
+					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
+				}
+				// Bug 32277 - end
 				break;
 			case 3:
 				// 25635&34502-start
@@ -6337,8 +6368,24 @@ public class QTDetailBackingBean extends
 
 				//#25692-start
 				 if (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) {
-					 ApprovalBackingBean approvalbean=new ApprovalBackingBean();
-					 approvalbean.retriveCommiteeApprovalTabDetails();
+					// Bug 32277 - start
+					if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())) {
+						ApprovalBackingBean approvalbean = new ApprovalBackingBean();
+						approvalbean.retriveCommiteeApprovalTabDetails();
+					} else {
+						int index = 0;
+						this.getManagedBean().setSelectedTabIndex(index);
+						this.getManagedBean().setSelectedCommitteeTabIndex(index);
+						TabBean committeTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(index);
+						this.getManagedBean().setSelectedTabBean(committeTabBean);
+						this.getManagedBean().setPublicationApproval(null);
+						if (null != committeTabBean.getScQtCommittee()) {
+							List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean
+									.getScQtCommittee().getScCommittee());
+							this.getManagedBean().setMemberHistoryList(historyList);
+						}
+					}
+					// Bug 32277 - end	
 				 } else if(getUserTaskIsBPKApproval() && isApprovalScreen()) {
 					 this.getManagedBean().setPublicationApproval(null);	
 				 } else if(getUserTaskIsPublicationApproval() && isApprovalScreen()) {

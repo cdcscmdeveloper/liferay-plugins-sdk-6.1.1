@@ -1692,6 +1692,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> mainTaskNames;
 
 	// 25037 - end
+	private List<TabBean> readOnlyCommitteeTabBean;// Bug 32277
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10738,4 +10739,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mainTaskNames = mainTaskNames;
 	}
 	// 25037 - end
+	// Bug 32277 - start
+	public List<TabBean> getReadOnlyCommitteeTabBean() {
+		return readOnlyCommitteeTabBean;
+	}
+
+	public void setReadOnlyCommitteeTabBean(List<TabBean> readOnlyCommitteeTabBean) {
+		this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
+	}
+	// Bug 32277 - end
 }
