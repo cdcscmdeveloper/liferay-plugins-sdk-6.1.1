@@ -637,8 +637,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctReqDTO.setViewOnly(true);
 				getManagedBean().setBackToNtf("notifications"); // 25956
 				getManagedBean().setViewOnly(true);
-				getManagedBean().setSelectedTabIndex(0);
-				
+				getManagedBean().setSelectedTabIndex(0);				
+
 				setAmendmentContractVer(ctReqDTO);
 				ctBackingBean.getManagedBean().setViewContract(true); // 25956
 				ctBackingBean.getManagedBean().setDisableAmendDetails(true); // 25956
@@ -879,35 +879,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * //25956
 	 */
 	public String backAction() throws IOException {
-<<<<<<< HEAD
-		//25956 - Start ( Back to notification pages )
-		if(getManagedBean().getBackToNtf() != null){ 
-			
-			getManagedBean().setBackToNtf("");
-			getManagedBean().setViewOnly(false);
-			ctBackingBean.getManagedBean().setViewContract(false);
-			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
-=======
 		// 25956 - Start ( Back to notification pages )
 		if (getManagedBean().getBackToNtf() != null) {
->>>>>>> refs/remotes/origin/release-sit
 
-<<<<<<< HEAD
-			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.redirect(commonUrl + "notifications");
-=======
 			getManagedBean().setBackToNtf("");
 			getManagedBean().setViewOnly(false);
 			ctBackingBean.getManagedBean().setViewContract(false);
 			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
->>>>>>> refs/remotes/origin/release-sit
 
-<<<<<<< HEAD
-			return null;
-		}
-		//25956 - End ( Back to notification pages )
-=======
 			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			externalContext.redirect(commonUrl + "notifications");
@@ -915,7 +894,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return null;
 		}
 		// 25956 - End ( Back to notification pages )
->>>>>>> refs/remotes/origin/release-sit
 		
 		//Bug 34142, 15851 - shaqimi start 04/12/2022
 		ctBackingBean.getManagedBean().setInPage(false);
