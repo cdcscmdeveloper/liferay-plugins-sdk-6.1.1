@@ -1283,10 +1283,16 @@ public class GovtSellerRegistrationBackingBean extends
 	 *            address
 	 */
 	private void initBranchAddressSelectItems(SmAddress address) {
-		onChangeCountry(address.getPmCountry(), "BRANCH_ADDRESS");
-		onChangeState(address.getPmState(), "BRANCH_ADDRESS");
-		onChangeDivision(address.getPmDivision(), "BRANCH_ADDRESS");//13320
-		onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");
+		//#34159 - START - refactor this method
+		getManagedBean().setBranchCompanyStates(SmCommonUtil.getStateList(address.getPmCountry().getCountryId()));
+		if(address.getPmDivision() != null && address.getPmDivision().getDivisionId() != null){
+			getManagedBean().setBranchCompanyDivisions(SmCommonUtil.getDivisionList(address.getPmState().getStateId()));
+			getManagedBean().setBranchCompanyDistricts(SmCommonUtil.getDistrictListByID(address.getPmDivision().getDivisionId()));
+		} else {
+			getManagedBean().setBranchCompanyDistricts(SmCommonUtil.getDistrictList(address.getPmState().getStateId()));
+		}
+		getManagedBean().setBranchCompanyCities(SmCommonUtil.getCityList(address.getPmDistrict().getDistrictId()));
+		//#34159 - END
 	}
 
 	/**
