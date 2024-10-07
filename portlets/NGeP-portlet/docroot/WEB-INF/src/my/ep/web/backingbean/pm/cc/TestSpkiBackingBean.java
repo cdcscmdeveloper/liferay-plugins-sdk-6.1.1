@@ -1,0 +1,281 @@
+package my.ep.web.backingbean.pm.cc;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
+import org.apache.commons.lang.StringUtils;
+
+import my.ep.constant.MessageConst;
+import my.ep.constant.sm.SupplierManagementConst;
+import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
+import my.ep.web.util.DigiCertHelper;
+import my.ep.web.util.TrustGateHelper;
+import my.ep.web.vo.SpkiVO;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.msctg.cdc.pki.IKMCAPIResponse;
+import com.msctg.cdc.pki.KMCClient;
+import com.msctg.cdc.pki.KMCRequestBuilder;
+
+/**
+ * Test SPKI
+ */
+@ManagedBean(name = "testSpkiBackingBean")
+@SessionScoped
+public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+	private transient TrustHelp trustgate = new TrustHelp();
+	private transient DigiHelp digicert = new DigiHelp();
+	private transient CertHelper instance = trustgate;
+	private String cert = SupplierManagementConst.CERT_TRUSTGATE;
+	private String idNo;
+	private String epNo;
+	private String email;
+	private String dataForSigning;
+	
+	
+	public String getTitle(){
+		if (cert.equals(SupplierManagementConst.CERT_TRUSTGATE)){
+			return "Test Trustgate";
+		}
+		if (cert.equals(SupplierManagementConst.CERT_DIGICERT)){
+			return "Test Digicert";
+		}
+		return "wrong cert: "+cert;
+	}
+	
+	/**
+	 * Change PIN
+	 */
+	public void requestChangePIN() {
+		log.info("testSPKI-RequestChangePIN:\t_"+idNo+"_\t_"+epNo);
+		try {
+			instance.changePIN(idNo, epNo);
+		} catch (Exception e){
+			err(e);
+		}		
+	}
+	
+	/**
+	 * Update challenge response
+	 */
+	public void requestChallRespUpdate() {
+		log.info("testSPKI-RequestChallRespUpdate:\t_"+idNo+"_\t_"+epNo);
+		try {
+			instance.updateChallResp(idNo, epNo);
+		} catch (Exception e){
+			err(e);
+		}
+	}
+
+	/**
+	 * Reset PIN
+	 */
+	public void requestResetPIN() {
+		if (email.isEmpty()){
+			err(new Exception("Email mandatory for PIN reset"));
+		}
+		log.info("testSPKI-RequestResetPIN:\t_"+idNo+"_\t_"+epNo+"_\t_"+email);
+		try {
+			instance.resetPIN(idNo, epNo, email);
+		} catch (Exception e){
+			err(e);
+		}	
+	}
+	
+	/**
+	 * Submit to get Challenge Question
+	 */
+	public void submit(){
+		log.info("testSPKI-submit:\t_"+idNo+"_\t_"+epNo);
+		try {
+			 setChallengeQues1(instance.getChallengeQuestion().get(0));
+		} catch (Exception e){
+			err(e);
+		}
+	}
+	
+	/**
+	 * Sign
+	 */
+	public void sign(){
+		log.info("testSPKI-sign:\t_"+idNo+"_\t_"+epNo+"_\t_"+getPassword()+"_\t_"
+				+getChallengeQues1()+"_\t_"+getChallengeAns1()+"_\t_"+dataForSigning);
+		try {
+			Map<Object, Object> challenges = new HashMap<>();
+			challenges.put(getChallengeQues1(), getChallengeAns1());
+			
+			SpkiVO vo = instance.getSignedData(idNo, epNo, getPassword(), challenges, dataForSigning);
+			if (!StringUtils.isBlank(vo.getErrMsg())){
+				err(new Exception(vo.getErrMsg()));
+			} else {
+				String result = new String(vo.getSignedData());
+				log.info("sign success: "+vo.getSignedData());
+				FacesContext.getCurrentInstance().addMessage("spki", 
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "", "SIGN SUCCESS: "+result));
+			}
+		} catch (Exception e){
+			err(e);
+		}
+	}
+	
+	@Override
+	public void changeChallengeQuestions() {
+		log.info("testSPKI-changeChallengeQuestions:\t_"+idNo+"_\t_"+epNo);
+		try {
+			 setChallengeQues1(instance.getChallengeQuestion().get(0));
+		} catch (Exception e){
+			err(e);
+		}
+	}
+	
+	private void err(Exception e){
+		FacesContext.getCurrentInstance().addMessage("spki", 
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", e.getMessage()));
+		log.info(e);
+	}
+	
+	//wrapper
+	interface CertHelper{
+		/**
+		 * @param identificationNo
+		 * @param epNo
+		 * @throws IOException
+		 * @throws PortalException
+		 * @throws SystemException
+		 */
+		@SuppressWarnings("squid:S1160")
+		void changePIN(String identificationNo, String epNo) 
+				throws IOException, PortalException, SystemException;
+		/**
+		 * @param identificationNo
+		 * @param epNo
+		 * @throws IOException
+		 * @throws PortalException
+		 * @throws SystemException
+		 */
+		@SuppressWarnings("squid:S1160")
+		void updateChallResp(String identificationNo, String epNo) 
+				throws IOException, PortalException, SystemException;
+		/**
+		 * @param identificationNo
+		 * @param epNo
+		 * @param email
+		 * @throws IOException
+		 * @throws PortalException
+		 * @throws SystemException
+		 */
+		@SuppressWarnings("squid:S1160")
+		void resetPIN(String identificationNo, String epNo, String email)
+				throws IOException, PortalException, SystemException;
+		/**
+		 * @return
+		 */
+		List<String> getChallengeQuestion();
+		
+		/**
+		 * 
+		 * @param identificationNo
+		 * @param epNo
+		 * @param pin
+		 * @param challenges
+		 * @param dataForSigning
+		 * @return
+		 */
+		public SpkiVO getSignedData(String identificationNo, String epNo,
+				String pin, Map<Object, Object> challenges, String dataForSigning);
+	}
+	
+	class TrustHelp extends TrustGateHelper implements CertHelper{
+		@Override
+		public List<String> getChallengeQuestion(){
+			
+			KMCClient client = getClient();
+			log.info("Test Client=" + client);
+			KMCRequestBuilder reqbuilder = getReqBuilder();
+			log.info("Test reqbuilder=" + reqbuilder);
+			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(idNo, 10, epNo);
+			log.info("Test Question=" + res);
+			
+			log.info("Test TG status code: "+res.getStatusCode());
+			if(EntityHelper.isCollectionEmpty(res.CHALLENGE_RESPONSES)){
+				log.info("empty challenge responses");
+				throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
+			}
+			if(StringUtils.isBlank(getChallengeQues1())){
+				return res.CHALLENGE_RESPONSES;
+			}
+			if(getChallengeQues1().equalsIgnoreCase(res.CHALLENGE_RESPONSES.get(0))){
+				res.CHALLENGE_RESPONSES.remove(0);
+			}
+				
+			return res.CHALLENGE_RESPONSES;
+			//return super.getChallengeQuestion(idNo, epNo, getChallengeQues1());
+		}
+	}
+	
+	class DigiHelp extends DigiCertHelper implements CertHelper{
+		@Override
+		public List<String> getChallengeQuestion(){
+			return super.getChallengeQuestion(idNo);
+		}
+	}
+	
+	//getters, setters	
+	public String getCert() {
+		return cert;
+	}
+
+	public void setCert(String cert) {
+		this.cert = cert;
+		if (cert.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+			this.instance = trustgate;
+		} else {
+			this.instance = digicert;
+		}
+	}
+
+	public String getIdNo() {
+		return idNo;
+	}
+
+	public void setIdNo(String idNo) {
+		this.idNo = idNo.trim();
+	}
+
+	public String getEpNo() {
+		return epNo;
+	}
+
+	public void setEpNo(String epNo) {
+		this.epNo = epNo.trim();
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email.trim();
+	}
+
+	public String getDataForSigning() {
+		return dataForSigning;
+	}
+
+	public void setDataForSigning(String dataForSigning) {
+		this.dataForSigning = dataForSigning;
+	}
+}

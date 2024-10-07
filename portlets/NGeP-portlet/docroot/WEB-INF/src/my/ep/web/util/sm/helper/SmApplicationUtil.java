@@ -1709,7 +1709,7 @@ public class SmApplicationUtil {
 					.getSmFacilities()) {
 				if (StringUtils.isNotBlank(fac.getFacilityType())
 						&& (fac.getFacilityType().equals("H") || fac
-								.getFacilityType().equals("B"))) {
+								.getFacilityType().equals("B")) && (fac.isHeadquarters())) {
 					hq = fac;
 					break;
 				}
@@ -3818,6 +3818,7 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			managedBean.setOverLappedCategoryExists(true); //#31018
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
@@ -9881,6 +9882,7 @@ public class SmApplicationUtil {
 			bean.getSmAppl().setSmCategoryOverlapDocs(
 					new ArrayList<SmCategoryOverlapDoc>());
 			bean.setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			bean.setOverLappedCategoryExists(false); //#31018
 		}
 	}
 
@@ -10046,10 +10048,7 @@ public class SmApplicationUtil {
 			List<SelectItem> stateItems = SmCommonUtil.getStateList(coutryId);
 			if (!panelName
 					.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)) {
-				//#34159 - START
-				if(coutryId != null)
-					stateLs = retrievePmStateList(coutryId);
-				//#34159 - END
+				stateLs = retrievePmStateList(coutryId);
 			}
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
@@ -10059,7 +10058,6 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
 				bean.setBasicOffFacStates(stateItems);
-				bean.setBasicOffFacDivisions(new ArrayList<SelectItem>()); //#34159
 				bean.setBasicOffFacDistricts(new ArrayList<SelectItem>());
 				bean.setBasicOffFacCities(new ArrayList<SelectItem>());
 				break;
@@ -10071,7 +10069,6 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 				bean.setAssocCompanyStates(stateItems);
-				bean.setAssocCompanyDivisions(new ArrayList<SelectItem>()); //#34159 
 				bean.setAssocCompanyDistricts(new ArrayList<SelectItem>());
 				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
 				break;

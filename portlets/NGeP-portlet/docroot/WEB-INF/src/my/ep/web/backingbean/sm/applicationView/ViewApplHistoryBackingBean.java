@@ -1859,6 +1859,23 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//14530
 	
+	// #34392 - Start
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
+	// #34392 - end
+	
 	//#31248 - START
 	public Boolean setResubmitButton(SmAppl smAppl){
 		log.info("#35336 - START setResubmitButton(smAppl)");
@@ -1875,22 +1892,21 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
-			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+			.retrieveLatestRegisteredApplicationBySupplierId(mofReqDTO).getSmAppl();
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl);
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl.getCreatedDate());
 		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl);
 		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl.getCreatedDate());
 		log.info("#35336 -> isValidDateComparison(latestRegisteredAppl, latestRejectedAppl) ->" + isValidDateComparison(latestRegisteredAppl, latestRejectedAppl));
-		log.info("#35336 -> isMatchingDeletedApplication(latestRejectedAppl, smAppl)" + isMatchingDeletedApplication(latestRejectedAppl, smAppl));
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
 			log.info("#35336 -> latestRegisteredAppl.getCreatedDate() ->" + latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate()));
 			log.info("#35336 -> latestRejectedAppl.getCreatedDate() ->" + latestRejectedAppl.getCreatedDate());
 			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())
+					&& smAppl.getApplId().equals(latestRejectedAppl.getApplId())
+					&& !SmApplicationUtil.checkRejectedApplExpired(smAppl) 
 					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
-		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
-			showErrorAdminHasBeenReplace();
 		}
 		// #35336 END
 		if(latestRejectedAppl != null &&
@@ -2035,15 +2051,6 @@ public class ViewApplHistoryBackingBean extends
 	private boolean isValidDateComparison(SmAppl latestRegisteredAppl, SmAppl latestRejectedAppl) {
 		return latestRegisteredAppl != null && latestRegisteredAppl.getChangedDate() != null
 			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
-	}
-
-	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
-		log.info("#35336 - latestRejectedAppl.applId ==>" +latestRejectedAppl.getApplId());
-		log.info("#35336 - smAppl.applId ==>" + smAppl.getApplId());
-		log.info("#35336 - smAppl.getRecordStatusFlg ==>" + smAppl.getRecordStatusFlg());
-		return latestRejectedAppl != null && latestRejectedAppl.getApplId() != null 
-			&& latestRejectedAppl.getApplId().equals(smAppl.getApplId()) 
-			&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
 	}
 
 	private void showErrorAdminHasBeenReplace() {
