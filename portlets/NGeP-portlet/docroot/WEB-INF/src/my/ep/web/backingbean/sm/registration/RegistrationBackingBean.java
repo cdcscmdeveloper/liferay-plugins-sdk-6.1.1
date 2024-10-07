@@ -2255,7 +2255,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					} 
 				}
 				this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
-				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
+				//this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 				this.getManagedBean().setPermenantDivisionLs(new ArrayList<SelectItem>());
 				//#34159 - END
 				////#16052019 - SSM INTEGRATION CR
@@ -2338,7 +2338,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
 				//#34159 - START
 				if(this.getManagedBean().getSmResAdd().getPmDivision() != null && this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId() != null){
-					this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
+					//this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
 				}
 				//#34159 - END
 			}
@@ -2393,7 +2393,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
 				//#34159 - START
 				if(this.getManagedBean().getSmPermenantAdd().getPmDivision() != null && this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId() != null){
-					this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
+					//this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
 				}
 				//#34159 - END
 			}
