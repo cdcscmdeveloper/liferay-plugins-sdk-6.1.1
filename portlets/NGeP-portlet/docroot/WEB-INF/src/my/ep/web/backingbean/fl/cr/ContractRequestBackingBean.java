@@ -3268,6 +3268,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
+			
+			// 36468-Start - Add validation for the PID with the service item because the quantity is set by default based on the PID.
+			if (getManagedBean().getFlRequest().getScPurchaseInDefault() != null
+					&& uiItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)
+					&& uiItemAddr.getOrderedQty().doubleValue() > 0) {
+				throw new EpException(MessageConst.ERROR_740072);
+			}
+			// 36468-End
+			
 			//#29171, CR 14650: Static Code Analysis Start
 			//if(accumulatedQty.doubleValue()==0) {
 				if(accumulatedQty.doubleValue()==0 && !ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode())){
