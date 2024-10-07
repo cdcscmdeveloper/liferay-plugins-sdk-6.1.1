@@ -402,6 +402,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
     
+    //#35492#58 - Start
+    private Long orgProfileId;
+    //#35492#58 - End
+    
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2316,4 +2320,15 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.sourcingDpNewBpmVer = sourcingDpNewBpmVer;
 	}
 	//#36119 - end
+	
+	//#35492#58 - Start
+	public Long getOrgProfileId() {
+		return orgProfileId;
+	}
+
+	public void setOrgProfileId(Long orgProfileId) {
+		this.orgProfileId = orgProfileId;
+	}
+	//#35492#58 - End
+	
 }
