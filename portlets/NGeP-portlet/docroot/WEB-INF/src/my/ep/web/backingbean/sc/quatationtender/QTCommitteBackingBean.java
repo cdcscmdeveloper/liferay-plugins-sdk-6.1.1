@@ -2103,7 +2103,8 @@ public class QTCommitteBackingBean extends
 				&& ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(committeeType);
 		boolean assignFECCommitteeTask = SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equals(taskName)
 				&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType);
-		return Arrays.asList(assignECOCCommitteeTask, assignTECCommitteeTask, assignFECCommitteeTask,
+		return Arrays.asList(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeType),
+				assignECOCCommitteeTask, assignTECCommitteeTask, assignFECCommitteeTask,
 				SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equals(taskName),
 				Arrays.asList(QTStatusConst.CMT_REVISION_GROUP).contains(cmtStatus)).contains(Boolean.TRUE);
 	}

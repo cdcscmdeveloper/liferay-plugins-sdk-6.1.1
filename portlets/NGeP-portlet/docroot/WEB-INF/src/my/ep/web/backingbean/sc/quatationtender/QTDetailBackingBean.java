@@ -6328,6 +6328,20 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setCommitteeAppointmentMenuTab(true);
 					
 					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
+				} else if (taskName.equalsIgnoreCase(SCProcessNameConst.APPROVE_COMMITTEE)) {
+					if (CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())) {
+						int index = 0;
+						this.getManagedBean().setSelectedTabIndex(index);
+						this.getManagedBean().setSelectedCommitteeTabIndex(index);
+						TabBean committeTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(index);
+						this.getManagedBean().setSelectedTabBean(committeTabBean);
+						this.getManagedBean().setPublicationApproval(null);
+						if (null != committeTabBean.getScQtCommittee()) {
+							List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean
+									.getScQtCommittee().getScCommittee());
+							this.getManagedBean().setMemberHistoryList(historyList);
+						}
+					}
 				} else {
 					if (isMaintancePendingChklistStatus) {
 						retrieveDocumentTabDtl();
