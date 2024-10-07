@@ -2,7 +2,6 @@ package my.ep.web.bean.sc.directpurchase;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import org.apache.log4j.Logger;
 
 /**
  * 
@@ -11,7 +10,6 @@ import org.apache.log4j.Logger;
  */
 public class AuditDPSearchBean implements Serializable {
 
-	private static Logger log = Logger.getLogger(AuditDPSearchBean.class);
 	private static final long serialVersionUID = 1L;
 	private String language;
 	private BigInteger docId;
