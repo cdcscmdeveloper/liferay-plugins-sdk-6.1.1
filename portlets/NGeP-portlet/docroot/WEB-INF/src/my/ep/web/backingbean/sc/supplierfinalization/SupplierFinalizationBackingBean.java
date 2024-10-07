@@ -1456,6 +1456,10 @@ public class SupplierFinalizationBackingBean extends
 			if (CollectionUtils.isNotEmpty(toBeRemovedReports) && isSubmit)
 			// #35205 -end-
 			{
+				// 25037 -start-
+				if (skipValidation)
+					return;
+				// 25037 -end-
 				navigateToEndorsementReportTab();
 			    throw new EpException(MessageConst.ERROR_770271);
 			}
