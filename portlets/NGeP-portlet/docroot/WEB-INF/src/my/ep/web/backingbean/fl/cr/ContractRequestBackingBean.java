@@ -3268,9 +3268,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
-			
 			// 36468-Start - Add validation for the PID with the service item because the quantity is set by default based on the PID.
-			if (getManagedBean().getFlRequest().getScPurchaseInDefault() != null
+			if (getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty() &&
+					getManagedBean().getFlRequest().getScPurchaseInDefault() != null
 					&& uiItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)
 					&& uiItemAddr.getOrderedQty().doubleValue() > 0) {
 				throw new EpException(MessageConst.ERROR_740072);
