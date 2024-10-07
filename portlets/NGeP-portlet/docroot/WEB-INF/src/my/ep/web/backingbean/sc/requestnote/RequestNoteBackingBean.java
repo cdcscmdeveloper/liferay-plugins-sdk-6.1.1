@@ -3877,6 +3877,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setRequestNoteDtls(rndtls);
 					PurchaseRequestResDTO response = purchaseRequestSO.updateCancelCodifyPR(reqDTO);
+					auditResponse = response; //#35492#58
 					
 					if(getManagedBean().isSourcingDpNewBpmVer()){
 						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();

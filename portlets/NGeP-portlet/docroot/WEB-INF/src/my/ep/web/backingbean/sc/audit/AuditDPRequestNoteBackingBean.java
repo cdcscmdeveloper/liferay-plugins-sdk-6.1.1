@@ -27,7 +27,7 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 		AuDPRequestNoteDTO auObj = new AuDPRequestNoteDTO();
 		List<AuDPRequestNoteDetailSPDTO> auDPRequestnoteDetailSPDTOList = new ArrayList<>();
 		AuDPRequestNoteDetailSPDTO data;
-		for (ScRequestNoteDtl ri : managedBeans.getPurchaseRequestResDTO().getRequestNoteDtls()) {// #35492#58
+		for (ScRequestNoteDtl ri : managedBeans.getPurchaseRequestResDTO().getRequestNoteDtl()) {// #35492#58
 			data = new AuDPRequestNoteDetailSPDTO();
 			data.setSubDocId(BigInteger.valueOf(ri.getRequestItem().getRequestNoteItemId()));
 			data.setSubDocNo(ri.getRequestItem().getItemName());
