@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -58,6 +59,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -67,6 +69,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
@@ -1858,6 +1861,23 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//14530
 	
+	// #34392 - Start
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
+	// #34392 - end
+	
 	//#31248 - START
 	public Boolean setResubmitButton(SmAppl smAppl){
 		log.info("#35336 - START setResubmitButton(smAppl)");
@@ -1874,22 +1894,21 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
-			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+			.retrieveLatestRegisteredApplicationBySupplierId(mofReqDTO).getSmAppl();
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl);
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl.getCreatedDate());
 		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl);
 		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl.getCreatedDate());
 		log.info("#35336 -> isValidDateComparison(latestRegisteredAppl, latestRejectedAppl) ->" + isValidDateComparison(latestRegisteredAppl, latestRejectedAppl));
-		log.info("#35336 -> isMatchingDeletedApplication(latestRejectedAppl, smAppl)" + isMatchingDeletedApplication(latestRejectedAppl, smAppl));
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
 			log.info("#35336 -> latestRegisteredAppl.getCreatedDate() ->" + latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate()));
 			log.info("#35336 -> latestRejectedAppl.getCreatedDate() ->" + latestRejectedAppl.getCreatedDate());
 			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())
+					&& smAppl.getApplId().equals(latestRejectedAppl.getApplId())
+					&& !SmApplicationUtil.checkRejectedApplExpired(smAppl) 
 					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
-		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
-			showErrorAdminHasBeenReplace();
 		}
 		// #35336 END
 		if(latestRejectedAppl != null &&
@@ -2036,15 +2055,6 @@ public class ViewApplHistoryBackingBean extends
 			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
 	}
 
-	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
-		log.info("#35336 - latestRejectedAppl.applId ==>" +latestRejectedAppl.getApplId());
-		log.info("#35336 - smAppl.applId ==>" + smAppl.getApplId());
-		log.info("#35336 - smAppl.getRecordStatusFlg ==>" + smAppl.getRecordStatusFlg());
-		return latestRejectedAppl != null && latestRejectedAppl.getApplId() != null 
-			&& latestRejectedAppl.getApplId().equals(smAppl.getApplId()) 
-			&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
-	}
-
 	private void showErrorAdminHasBeenReplace() {
 		log.info("#35336 - START -> showErrorAdminHasBeenReplace");
 		FacesContext.getCurrentInstance().addMessage(
@@ -2055,4 +2065,32 @@ public class ViewApplHistoryBackingBean extends
 	}
 	// #35336 - END
 	
+	//#34209 - START
+	public void rePopulateApplFacilitiesList()
+	{
+		getManagedBean().setDockYardFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setFactoryFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setStoreFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setWorkshopFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if(cat.getPmCategoryL3() != null && !StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())) {
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD))
+						getManagedBean().getDockYardFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY))
+						getManagedBean().getFactoryFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE))
+						getManagedBean().getStoreFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP))
+						getManagedBean().getWorkshopFacilitiesVOList().add(cat.getPmCategoryL3());
+				}
+			}
+		}
+	}
+	
+	public void rePopulateMachine(){
+		getManagedBean().getSmAppl().setSmMachineDtls(getManagedBean().getAllMachineDtls());
+	}
+	//#34209 - END
 }
