@@ -1379,7 +1379,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		// temp: to monitor performance
-		MDC.put("taskId", taskId);
+		if (taskId != null) { //28855 - handle the NullPointerException
+			MDC.put("taskId", taskId);
+		}
 		getLoginUserOrg();
 		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 		if (taskId != null) {
