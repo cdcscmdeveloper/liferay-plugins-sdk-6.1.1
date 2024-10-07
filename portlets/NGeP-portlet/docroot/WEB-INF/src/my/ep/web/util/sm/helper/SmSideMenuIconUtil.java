@@ -46,6 +46,7 @@ public class SmSideMenuIconUtil {
 
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
+		SmApplicationUtil.checkOverLappingCategories(bean); //#31018
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
@@ -437,6 +438,8 @@ public class SmSideMenuIconUtil {
 			//#31230 START
 			if(step6OverlappedCategory(bean.isOverLappedCategoryExists())){
 				bean.getEditVO().setHasOverlapped(true);
+			} else {
+				bean.getEditVO().setHasOverlapped(false); //#31018
 			}
 			//#31230 END
 		} else if (sectionType
@@ -739,7 +742,6 @@ public class SmSideMenuIconUtil {
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 				//24964 & 31043 - start
-				//retVal = ICON_UNTICK; 
 				
 				boolean mandatoryDocVerified = false; 
 				boolean nonMandatoryDocVerified = true; 
@@ -747,69 +749,30 @@ public class SmSideMenuIconUtil {
 				
 				log.info("SmAppl revise: "+bean.getSmAppl().getPmStatus().getStatusId());
 				
-				//#31043 start
-				/*if(bean.isApproverUser() || bean.isReviewSiteVisit()
-						|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
-					retVal = ICON_TICK;
-					bean.setDocumentVerified(true);
-					mandatoryDocVerified = true; 
-				}
-				else{
-					retVal = ICON_UNTICK;
-				}
-				//#31043 end
-				
-				//24964 & 31043 - end
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
 				if (!EntityHelper.isCollectionEmpty(bean
 						.getMandatoryLicenseDocs())) {
 					for (SmLicenseInfoVO docVO : bean.getMandatoryLicenseDocs()) {
 						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
 					}
 				}
-				//24964 & 31043 - start
-				if(!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())){
-					if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser(),
-							bean.getSmAppl().getApplNo())){
-						mandatoryDocVerified = true;
-					}
-					else{
-						if(bean.isApproverUser()){
-							mandatoryDocVerified = false;
+				
+				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
+					for (SmApplSupportDoc doc : licenseMandatoryDocs) {
+						if(bean.isPoUser() && doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0){
+							licenseMandatoryDocVerified = false;
+							break;
+						}
+						if(bean.isApproverUser() && doc.getVerifiedFlg() != null){
+							doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
+							if(doc.getApproverVerifiedFlg() == 0){
+								licenseMandatoryDocVerified = false;
+								break;
+							}
 						}
 					}
 				}
 				
-				if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
-					if(SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getNonMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser(),
-							bean.getSmAppl().getApplNo())){
-						nonMandatoryDocVerified = true;
-					}
-				} else {
-					nonMandatoryDocVerified = true;
-				}
-				
-				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
-					if(SmApplicationUtil.isAllSuppDocAlreadyVerified(
-							licenseMandatoryDocs, bean.getSmAppl()
-							.getSupportingDocMode(), bean
-							.isApproverUser(), bean.getSmAppl().getApplNo())){
-						licenseMandatoryDocVerified = true;
-					}
-				} else {
-					licenseMandatoryDocVerified = true;
-				}*/
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
-				if (!EntityHelper.isCollectionEmpty(bean
-						.getMandatoryLicenseDocs())) {
-					for (SmLicenseInfoVO docVO : bean.getMandatoryLicenseDocs()) {
-						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
-					}
-				}
 				if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 						.getMandatoryDocs(), bean.getSmAppl()
 						.getSupportingDocMode(), bean.isApproverUser())
@@ -849,21 +812,18 @@ public class SmSideMenuIconUtil {
 							else
 								mandatoryDocVerified = false;
 					}
-					if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
-						for (SmApplSupportDoc doc : licenseMandatoryDocs) {
-							if(doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0){
-								licenseMandatoryDocVerified = false;
-								break;
-							}
-						}
-					}
 					
 					if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
 						for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
 							if(doc.getSmApplDocFiles() != null){
 								for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
-									if(!(" ").equals(docFile.getFilePath()) && doc.getVerifiedFlg() != null 
-											&& doc.getVerifiedFlg() == 0){
+									if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+											|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
+										nonMandatoryDocVerified = false;
+										break;
+									}
+									if(bean.isApproverUser() && !(" ").equals(docFile.getFilePath()) && doc.getApproverVerifiedFlg() != null 
+											&& doc.getApproverVerifiedFlg() == 0){
 										nonMandatoryDocVerified = false;
 										break;
 									}
@@ -877,10 +837,7 @@ public class SmSideMenuIconUtil {
 				
 				if(mandatoryDocVerified){
 					retVal = ICON_TICK;
-					if(!licenseMandatoryDocVerified && !EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
-						retVal = ICON_UNTICK;
-					}
-					if(!nonMandatoryDocVerified){
+					if(!licenseMandatoryDocVerified || !nonMandatoryDocVerified){
 						retVal = ICON_UNTICK;
 					}
 				}else{
