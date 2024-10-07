@@ -29,6 +29,7 @@
 			<p:outputLabel value="Email" for="email" id="emailLbl" />
 			<p:inputText value="#{bb.email}" id="email" />
 			
+			<p:outputLabel value=""/>
 			<p:selectOneRadio value="#{bb.cert}" id="certRadio">
 				<f:selectItem itemLabel="Trustgate" itemValue="TG" />
 				<f:selectItem itemLabel="Digicert" itemValue="DG" />
@@ -45,13 +46,14 @@
 		<h:commandLink action="#{bb.requestResetPIN()}" target="_blank" >
 			<p:commandButton value="#{lbl['lbl.sm.button.reset.pin']}" />
 		</h:commandLink>
+		<br/><br/>
+		<h:outputText value="Click Sign to get Challenge Question:" />
 		<br/>
-		<h:outputText value="Click Submit to get Challenge Question for the panel below:" />
-		<p:commandButton action="#{bb.submit()}" value="#{lbl['lbl.btn.submit']}" update="@form"/>
+		<p:commandButton action="#{bb.submit()}" value="#{lbl['lbl.btn.sign']}" update="@form"/>
 		
 	</p:panel>
 	
-	<p:panel header="Test Submit" style="width:500" id="submitPnl" >
+	<p:panel header="Test Sign" style="width:500" id="submitPnl" rendered="#{not empty bb.challengeQues1}">
 		<h:panelGrid columns="2" cellpadding="5" id="pnlSubmit" >
 			<p:outputLabel value="#{bb.challengeQues1}" for="answer" id="quesLbl" styleClass="required"/>
 			<p:inputText value="#{bb.challengeAns1}" id="answer" />
@@ -63,12 +65,9 @@
 			<p:inputText value="#{bb.dataForSigning}" id="signBeforeText" />
 		</h:panelGrid>
 		
-		<h:commandLink action="#{bb.sign()}" target="_blank" >
-			<p:commandButton value="#{lbl['lbl.btn.sign']}" />
-		</h:commandLink>
-		<h:commandLink action="#{bb.changeChallengeQuestions}" target="_blank" >
-			<p:commandButton value="#{lbl['lbl.btn.change.question']}" />
-		</h:commandLink>
+		<p:commandButton value="#{lbl['lbl.btn.sign']}" action="#{bb.sign()}"/>
+		
+		<p:commandButton value="#{lbl['lbl.btn.change.question']}" action="#{bb.changeChallengeQuestions}"/>
 	</p:panel>
 	</ui:define>
 </ui:composition>

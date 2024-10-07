@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.cc;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -21,10 +22,11 @@ import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.TrustGateHelper;
 import my.ep.web.vo.SpkiVO;
 
+import com.augtech.kmc.client.InvalidKMCAPIFieldException;
+import com.augtech.kmc.client.KMCAPIException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.msctg.cdc.pki.IKMCAPIResponse;
-import com.msctg.cdc.pki.KMCClient;
 import com.msctg.cdc.pki.KMCRequestBuilder;
 
 /**
@@ -118,7 +120,8 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			challenges.put(getChallengeQues1(), getChallengeAns1());
 			
 			SpkiVO vo = instance.getSignedData(idNo, epNo, getPassword(), challenges, dataForSigning);
-			if (!StringUtils.isBlank(vo.getErrMsg())){
+			
+			if (!StringUtils.contains(vo.getErrMsg(), "Code: 1")){
 				err(new Exception(vo.getErrMsg()));
 			} else {
 				String result = new String(vo.getSignedData());
@@ -202,7 +205,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		@Override
 		public List<String> getChallengeQuestion(){
 			
-			KMCClient client = getClient();
+			com.msctg.cdc.pki.KMCClient client = getClient();
 			log.info("Test Client=" + client);
 			KMCRequestBuilder reqbuilder = getReqBuilder();
 			log.info("Test reqbuilder=" + reqbuilder);
@@ -224,12 +227,47 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			return res.CHALLENGE_RESPONSES;
 			//return super.getChallengeQuestion(idNo, epNo, getChallengeQues1());
 		}
+		
+		@Override
+		public SpkiVO getSignedData(String identificationNo, String epNo,
+				String pin, Map<Object, Object> challenges, String dataForSigning){
+			SpkiVO vo = new SpkiVO();
+			com.msctg.cdc.pki.KMCRequestBuilder reqbuilder = getReqBuilder();
+			com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
+					challenges, new ByteArrayInputStream(dataForSigning.getBytes()));
+			vo.setSignedData(res.SIGNATURE);
+			vo.setErrMsg("Code: "+res.getStatusCode());
+			return vo;
+		}
 	}
 	
 	class DigiHelp extends DigiCertHelper implements CertHelper{
 		@Override
 		public List<String> getChallengeQuestion(){
 			return super.getChallengeQuestion(idNo);
+		}
+		
+		@Override
+		public SpkiVO getSignedData(String identificationNo, String epNo,
+				String pin, Map<Object, Object> challenges, String dataForSigning){
+			SpkiVO vo = new SpkiVO();
+			com.augtech.kmc.client.KMCClient client = getClient();
+			try {
+				com.augtech.kmc.client.IKMCAPIResponse res = client.requestService(
+						com.augtech.kmc.client.KMCRequestBuilder.signData(identificationNo, epNo, pin.toCharArray(),
+						challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+				vo.setSignedData((byte[]) res
+						.get(com.augtech.kmc.client.IKMCAPIResponse.SignDataResponse.SIGNATURE));
+				vo.setErrMsg("Code: "+res.getStatusCode()+" "+res.getStatusMessage());
+				
+			} catch (KMCAPIException e) {
+				log.info(e);
+				vo.setErrMsg("DigiCert error - KMCAPIException");
+			} catch (InvalidKMCAPIFieldException e) {
+				log.info(e);
+				vo.setErrMsg("DigiCert error - InvalidKMCAPIFieldException");
+			}
+			return vo;
 		}
 	}
 	
