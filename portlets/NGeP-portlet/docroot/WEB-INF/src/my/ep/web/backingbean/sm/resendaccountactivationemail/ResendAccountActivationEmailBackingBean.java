@@ -213,9 +213,11 @@ public class ResendAccountActivationEmailBackingBean extends
 		SmPersonnel retVal = null;
 		//#35442 START
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setApplNo(supplier.getSmAppl() == null ? supplier.getSmAppl().getApplNo() : null);
+		if(supplier.getSmAppl() != null){
+			reqDTO.setApplId(supplier.getSmAppl().getApplId());
+		}
 		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
-				.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
+				.retrievePersonnelListByApplId(reqDTO).getSmPersonnelList();
 		
 		if (personnels != null
 				&& !EntityHelper.isCollectionEmpty(personnels)) {
