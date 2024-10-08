@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
+import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.persistence.constant.DbValueConst;
@@ -57,7 +58,10 @@ public class DowngradeExpMofPersonnelRest {
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_DOWNGRADE_BASIC);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
 					schedulerReqDTO.getSmSupplier().setPrevSuppStatus(mofAccount.getSmSupplier().getRecordStatusFlg());
-
+					log.info("DowngradeExpMofPersonnelRest >>> METHOD downgradeMOFToBasic >>>>");
+					log.info("SmSchedulerReqDTO --- SUPPLIER_ID =" + schedulerReqDTO.getSmSupplier().getSupplierId());
+					log.info("SmSchedulerReqDTO --- PREV SUPP STATUS =" + schedulerReqDTO.getSmSupplier().getPrevSuppStatus());
+					log.info("SmSchedulerResDTO SmMofAccount --- MOF_ACCOUNT_ID =" + mofAccount.getMofAccountId());
 					try {
 						reqSO.updateMOFSupplierPersonnelToBasic(schedulerReqDTO);
 					} catch (Exception ex) {
@@ -87,6 +91,9 @@ public class DowngradeExpMofPersonnelRest {
 					schedulerReqDTO.setMofAccount(mofAccount);
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_ONEYEAR);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
+					log.info("DowngradeExpMofPersonnelRest >>> METHOD changeExpiredMofPersonnelToDeleted >>>>");
+					log.info("SmSchedulerReqDTO --- SUPPLIER_ID =" + schedulerReqDTO.getSmSupplier().getSupplierId());
+					log.info("SmSchedulerResDTO SmMofAccount --- MOF_ACCOUNT_ID =" + mofAccount.getMofAccountId());
 
 					try {
 						reqSO.updateExpiredMOFSupplierPersonnel(schedulerReqDTO);
@@ -126,6 +133,11 @@ public class DowngradeExpMofPersonnelRest {
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_TWOYEARS);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
 					schedulerReqDTO.getSmSupplier().setPrevSuppStatus(mofAccount.getSmSupplier().getRecordStatusFlg());
+					log.info("DowngradeExpMofPersonnelRest >>> METHOD updateMOFExpiredMoreThanTwoYears >>>>");
+					log.info("SmSchedulerReqDTO --- SUPPLIER_ID =" + schedulerReqDTO.getSmSupplier().getSupplierId());
+					log.info("SmSchedulerReqDTO --- PREV SUPP STATUS =" + schedulerReqDTO.getSmSupplier().getPrevSuppStatus());
+					log.info("SmSchedulerResDTO SmMofAccount --- MOF_ACCOUNT_ID =" + mofAccount.getMofAccountId());
+					
 					try {
 						reqSO.updateMOFExpiredMoreThanTwoYears(schedulerReqDTO);
 					} catch (Exception ex) {
@@ -155,6 +167,11 @@ public class DowngradeExpMofPersonnelRest {
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_THREEYEARS);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
 					schedulerReqDTO.getSmSupplier().setPrevSuppStatus(mofAccount.getSmSupplier().getRecordStatusFlg());
+					log.info("DowngradeExpMofPersonnelRest >>> METHOD updateForMOFExpiredMoreThanThreeYears >>>>");
+					log.info("SmSchedulerReqDTO --- SUPPLIER_ID =" + schedulerReqDTO.getSmSupplier().getSupplierId());
+					log.info("SmSchedulerReqDTO --- PREV SUPP STATUS =" + schedulerReqDTO.getSmSupplier().getPrevSuppStatus());
+					log.info("SmSchedulerResDTO SmMofAccount --- MOF_ACCOUNT_ID =" + mofAccount.getMofAccountId());
+					
 					try {
 						reqSO.updateForMOFExpiredMoreThanThreeYears(schedulerReqDTO);
 					} catch (Exception ex) {
