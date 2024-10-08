@@ -3227,6 +3227,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
+		//35357-Start
+		else if(getManagedBean().getBackToNtf() != null){
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect(
+						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			} catch (IOException e) {
+				log.error("File:purchaseRequestBackingBean Method:backToPervious", e);
+			}
+			return null;
+		}
+		//35357-End
 		else{
 			return "flDocSearch";
 		}
@@ -4352,7 +4363,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35357
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
@@ -4363,6 +4374,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			setFulfilmentRequestField(resDTO);
 			getManagedBean().setBackToDocument(null);
+			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
