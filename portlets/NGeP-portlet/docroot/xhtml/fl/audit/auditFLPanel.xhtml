@@ -6,21 +6,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel toggleable="true">
-		<div align="right" style="width: 100%">
-			<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-				<!-- 								<p:fileDownload value="" /> -->
-			</p:commandLink>
-			&#160;
-			<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
-				<!-- 								<p:fileDownload value="" /> -->
-			</p:commandLink>
-			&#160;
-		</div>
-		<p:dataTable id="searchOverlappingCategoryId" var="obj" rows="10" width="100%"
-			value="#{auditSearchDPRequestNoteBackingBean.searchDP}"
-			rowIndexVar="index" lazy="true">
-			<ac:paginator for="searchOverlappingCategoryId"></ac:paginator>
+	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
+		<p:dataTable id="searchFLId" var="obj" rows="10" width="100%"
+			value="#{auditFulfilmentBackingBean.searchFL}" rowIndexVar="index"
+			lazy="true">
+			<ac:paginator for="searchFLId"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
 				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.createdDate}">
@@ -30,7 +20,10 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.action.type']}"
 				style="white-space: normal!important;" width="5%">
-				<h:outputText value="#{obj.actionType}" />
+				<h:outputText rendered="#{obj.actionType == null}"
+					value="#{lbl['lbl.fl.empty']}" />
+				<h:outputText rendered="#{obj.actionType != null}"
+					value="#{obj.actionType}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.action.by']}"
 				style="white-space: normal!important;" width="5%">
@@ -40,29 +33,39 @@
 				style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.orgName}" escape="false" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.audit.header.role']}"
-				style="width :5%">
+			<p:column headerText="#{lbl['lbl.audit.header.role']}" width="5%">
 				<h:outputText value="#{obj.roleName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.audit.header.docType']}"
-				style="width :5%">
+			<p:column headerText="#{lbl['lbl.audit.header.docType']}" width="5%">
 				<h:outputText value="#{obj.docType}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.audit.header.docNo']}"
-				style="width :10%">
+			<p:column headerText="#{lbl['lbl.audit.header.docNo']}" width="10%">
 				<h:outputText value="#{obj.docNo}" />
 			</p:column>
+			<p:column headerText="#{lbl['lbl.audit.header.docStatus']}"
+				style="white-space: pre-line;" width="10%">
+				<h:outputText value="#{obj.docStatus}" escape="false" />
+			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
-				style="width :5%">
-				<h:outputText value="#{obj.fieldName}" />
+				style="white-space: pre-line;" width="15%">
+				<h:outputText rendered="#{obj.fieldName == null}"
+					value="#{lbl['lbl.fl.empty']}" />
+				<h:outputText rendered="#{obj.fieldName != null}"
+					value="#{obj.fieldName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
-				style="width :5%">
-				<h:outputText value="#{obj.oldValue}" />
+				style="white-space: pre-line;" width="15%">
+				<h:outputText rendered="#{obj.oldValue == null}"
+					value="#{lbl['lbl.fl.empty']}" />
+				<h:outputText rendered="#{obj.oldValue != null}"
+					value="#{obj.oldValue}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
-				style="width :5%">
-				<h:outputText value="#{obj.newValue}" />
+				style="white-space: pre-line;" width="15%">
+				<h:outputText rendered="#{obj.newValue == null}"
+					value="#{lbl['lbl.fl.empty']}" />
+				<h:outputText rendered="#{obj.newValue != null}"
+					value="#{obj.newValue}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

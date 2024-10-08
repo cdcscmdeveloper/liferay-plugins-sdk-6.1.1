@@ -95,7 +95,7 @@
 		</td>
 		<td>
 			<p:outputPanel id="countryInputId">
-				<!-- #34159 - START - change required condition -->
+				<!-- #34159 - START - change required condition, update division panel -->
 				<p:selectOneMenu id="countryId"
 					required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 					label="#{lbl['lbl.sm.country']}"
@@ -163,11 +163,10 @@
 					value="#{cc.attrs.facility.smAddress.divisionId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems 
-						value="#{cc.attrs.divisionItems}" />
+					<f:selectItems value="#{cc.attrs.divisionItems}" />
 					<p:ajax event="change" process="@this"
-					listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
-	                 update="districtId,cityId"/>
+						listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
+	                 	update="districtId,cityId"/>
 				</p:selectOneMenu>
 				<p:message id="divisionIdMsg" for="divisionId" showSummary="true" showDetail="false" display="icon" />
 				<!-- #34159 - END -->
@@ -193,8 +192,7 @@
 					value="#{cc.attrs.facility.smAddress.districtId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems 
-						value="#{cc.attrs.districtItems}" />
+					<f:selectItems value="#{cc.attrs.districtItems}" />
 					<p:ajax event="change" process="@this"
 						listener="#{cc.attrs.backingBean.onChangeDistrict(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
@@ -220,8 +218,7 @@
 					value="#{cc.attrs.facility.smAddress.cityId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems
-						value="#{cc.attrs.cityItems}" />
+					<f:selectItems value="#{cc.attrs.cityItems}" />
 					<p:ajax event="change" process="@this"
 						listener="#{cc.attrs.backingBean.onChangeCity(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
