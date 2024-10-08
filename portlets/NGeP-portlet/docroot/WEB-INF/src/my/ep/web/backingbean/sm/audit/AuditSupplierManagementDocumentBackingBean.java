@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -26,7 +25,6 @@ import my.ep.web.managedbean.sm.audit.AuditSupplierManagementViewManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -36,7 +34,6 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.primefaces.util.Constants;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -50,7 +47,6 @@ import com.liferay.portal.util.PortalUtil;
 public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<AuditSupplierManagementViewManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(AuditSupplierManagementDocumentBackingBean.class);
 
 	/**
 	 * Generate all tab excel format.
@@ -71,7 +67,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
 					auSmSearchBean.getDocId().toString(),
-					"AuditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails",
+					"generateRptExcelForAuditTrailDetails",
 					getUserIdSessionFromLoginId(), e);
 		}
 
@@ -342,8 +338,6 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 	private void exportExcelReportAudit(Workbook wb) {
 		try {
-			FacesContext.getCurrentInstance().getExternalContext()
-					.addResponseCookie(Constants.DOWNLOAD_COOKIE, "true", Collections.<String, Object> emptyMap());
 			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
@@ -364,7 +358,9 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			outStream.close();
 			wb.close();// Close Workbook
 		} catch (Exception e) {
-			log.error(e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
+					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptExcelForAuditTrailDetails",
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
 }
