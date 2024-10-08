@@ -375,203 +375,196 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	
 	 /**
-		 * The method used to reset the search criteria for circular.
-		 */
-		public void searchReset(){
-			
-			AmendmentBackingBean ccBB = new AmendmentBackingBean();
-			ContractBackingBean bbBB = new ContractBackingBean();
+	 * The method used to reset the search criteria for circular.
+	 */
+	public void searchReset() {
 
-			getManagedBean().setItemcode(null);
-			getManagedBean().setItemname(null);
-			getManagedBean().setItemstatus(null);
-			getManagedBean().setItemtype(null);
-			getManagedBean().setUOM(null);
-			getManagedBean().setSkuno(null);
-			getManagedBean().setTypeofgoods(null);
-			ccBB.getManagedBean().setSelectedItem(null);
-			ccBB.getManagedBean().setSelectedServiceItem(null);
-			// Start Fix - #31042		
-			getManagedBean().getContractListingPagingDataModel().resetData();
-			getManagedBean().getServiceListingPagingDataModel().resetData();     
-			
-			if(bbBB.getManagedBean().getCtItemList().size() > 0 || !bbBB.getManagedBean().getCtItemList().isEmpty()){
-				getManagedBean().setItemProductExist(true);
-			}else{
-				getManagedBean().setItemProductExist(false);
+		AmendmentBackingBean ccBB = new AmendmentBackingBean();
+		ContractBackingBean bbBB = new ContractBackingBean();
+
+		getManagedBean().setItemcode(null);
+		getManagedBean().setItemname(null);
+		getManagedBean().setItemstatus(null);
+		getManagedBean().setItemtype(null);
+		getManagedBean().setUOM(null);
+		getManagedBean().setSkuno(null);
+		getManagedBean().setTypeofgoods(null);
+		ccBB.getManagedBean().setSelectedItem(null);
+		ccBB.getManagedBean().setSelectedServiceItem(null);
+		// Start Fix - #31042
+		getManagedBean().getContractListingPagingDataModel().resetData();
+		getManagedBean().getServiceListingPagingDataModel().resetData();
+
+		if (bbBB.getManagedBean().getCtItemList().size() > 0 || !bbBB.getManagedBean().getCtItemList().isEmpty()) {
+			getManagedBean().setItemProductExist(true);
+		} else {
+			getManagedBean().setItemProductExist(false);
+		}
+
+		if (bbBB.getManagedBean().getCtItemServiceList().size() > 0 || !bbBB.getManagedBean().getCtItemServiceList().isEmpty()) {
+			getManagedBean().setItemServiceExist(true);
+		} else {
+			getManagedBean().setItemServiceExist(false);
+		}
+		// End Fix - #31042
+
+	}
+
+		
+	/**
+	 * The method used for searching the circular list.
+	 * A warning message will display on screen when searching
+	 * with empty search criteria.
+	 * 
+	 * @throws Exception  if an exception occurred
+	 * @see    Exception
+	 */
+	public void searchCircular() throws Exception {
+		// 20997 - Start - Fixing
+		try {
+			if (getManagedBean().getItemcode().equals("") 
+					&& getManagedBean().getItemname().equals("") 
+					&& getManagedBean().getItemstatus() == null 
+					&& getManagedBean().getItemtype() == null 
+					&& getManagedBean().getSkuno().equals("")
+					&& getManagedBean().getTypeofgoods() == null) {
+
+				throw new EpException(MessageConst.ERROR_750049);
+
+			} else if (getManagedBean().getItemtype() != null) {
+				getManagedBean().setResetval(true);
+				ContractBackingBean ccBB = new ContractBackingBean();
+				ccBB.getManagedBean().setSelectedItem(null);
+				ccBB.getManagedBean().setServiceselectedItem(null);
+				if (getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
+					getManagedBean().getContractListingPagingDataModel().reloadData();
+					getManagedBean().setItemProductExist(true);
+					getManagedBean().setItemServiceExist(false);
+
+				} else if (getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+					getManagedBean().getServiceListingPagingDataModel().reloadData();
+					getManagedBean().setItemServiceExist(true);
+					getManagedBean().setItemProductExist(false);
+
+				} else if (getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE)) {
+					getManagedBean().getContractListingPagingDataModel().reloadData();
+					getManagedBean().getServiceListingPagingDataModel().reloadData();
+					if (ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()) {
+						getManagedBean().setItemProductExist(true);
+					} else {
+						getManagedBean().setItemProductExist(false);
+					}
+
+					if (ccBB.getManagedBean().getCtItemServiceList().size() > 0 || !ccBB.getManagedBean().getCtItemServiceList().isEmpty()) {
+						getManagedBean().setItemServiceExist(true);
+					} else {
+						getManagedBean().setItemServiceExist(false);
+					}
+					// 20997 - End-Fixing
+				}
 			}
-			
-			if(bbBB.getManagedBean().getCtItemServiceList().size() > 0 || !bbBB.getManagedBean().getCtItemServiceList().isEmpty()){
-				getManagedBean().setItemServiceExist(true);
-			}else{
-				getManagedBean().setItemServiceExist(false);
+			// Start Fix - #31042
+			else if (getManagedBean().getItemtype() == null) {
+
+				getManagedBean().getContractListingPagingDataModel().reloadData();
+				getManagedBean().getServiceListingPagingDataModel().reloadData();
+
 			}
 			// End Fix - #31042
-			
+		} finally {
+			// Do nothing
+		}
+	}
+
+	/** to concat Itemcode and Item Name */
+	// #31558 start
+	public ScRequestItem contactItem(CtContractItem ctItem) {
+
+		String itemcode = ctItem.getScRequestItem().getCmItem().getExtensionCode();
+		String itemName = ctItem.getScRequestItem().getItemName();
+		if (itemcode == null) {
+			itemcode = ParameterConst.ITEM_CODE;
+		}
+		if (itemName == null) {
+			itemName = ParameterConst.ITEM_NAME;
 		}
 
-		
-		/**
-		 * The method used for searching the circular list.
-		 * A warning message will display on screen when searching
-		 * with empty search criteria.
-		 * 
-		 * @throws Exception  if an exception occurred
-		 * @see    Exception
-		 */
-		public void searchCircular() throws Exception {
-			//20997 - Start - Fixing
-			try {		 
-						if( getManagedBean().getItemcode().equals("") && 
-								getManagedBean().getItemname().equals("") &&
-								getManagedBean().getItemstatus() == null &&
-								getManagedBean().getItemtype()== null &&
-								getManagedBean().getSkuno().equals("") &&
-								getManagedBean().getTypeofgoods()== null  ){
-						
-						throw new EpException(MessageConst.ERROR_750049);
-						
-					}else if(getManagedBean().getItemtype()!=null){
-						getManagedBean().setResetval(true);
-						ContractBackingBean ccBB = new ContractBackingBean();
-						ccBB.getManagedBean().setSelectedItem(null);
-						ccBB.getManagedBean().setServiceselectedItem(null);
-						if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
-							getManagedBean().getContractListingPagingDataModel().reloadData();
-								getManagedBean().setItemProductExist(true);
-								getManagedBean().setItemServiceExist(false);
-						
-						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_SERVICE)){
-							  getManagedBean().getServiceListingPagingDataModel().reloadData();
-									getManagedBean().setItemServiceExist(true);
-									getManagedBean().setItemProductExist(false);
- 
-						}else if(getManagedBean().getItemtype().equals(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE)){
-							  getManagedBean().getContractListingPagingDataModel().reloadData();
-							  getManagedBean().getServiceListingPagingDataModel().reloadData();
-								if(ccBB.getManagedBean().getCtItemList().size() > 0 || !ccBB.getManagedBean().getCtItemList().isEmpty()){
-									getManagedBean().setItemProductExist(true);
-								}else{
-									getManagedBean().setItemProductExist(false);
-								}
-								
-								if(ccBB.getManagedBean().getCtItemServiceList().size() > 0 || !ccBB.getManagedBean().getCtItemServiceList().isEmpty()){
-									getManagedBean().setItemServiceExist(true);
-								}else{
-									getManagedBean().setItemServiceExist(false);
-								}
-						//20997 - End-Fixing
-						}					
-					}// Start Fix - #31042
-					 else if(getManagedBean().getItemtype() == null){
-							
-							  getManagedBean().getContractListingPagingDataModel().reloadData();
-							  getManagedBean().getServiceListingPagingDataModel().reloadData();
-							  
-						}
-//						    // End Fix - #31042
-			} finally{
-				    // Do nothing
-				}
-		}
+		ScRequestItem scRequestItem = new ScRequestItem();
+		scRequestItem.setItemName(itemName);
+		scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
+		scRequestItem.getCmItem().setExtensionCode(itemcode);
 
-		/** to concat Itemcode and Item Name */
-		//#31558 start
-		public ScRequestItem contactItem(CtContractItem ctItem) {
-			
-			
-			String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
-			String itemName=ctItem.getScRequestItem().getItemName();
-			if(itemcode==null)
-			{
-				itemcode=ParameterConst.ITEM_CODE;
-			}
-			if(itemName==null)
-			{
-				itemName=ParameterConst.ITEM_NAME;
-			}			
-			
-			ScRequestItem scRequestItem = new ScRequestItem();
-			scRequestItem.setItemName(itemName);
-			scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
-			scRequestItem.getCmItem().setExtensionCode(itemcode);
-			
-			return scRequestItem;
-		     
-		}
-		//#31558 end
-		
-		public String contactItemProd(CtContractItem ctItem) {
-			//String result=new String();
-			
-			String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
-			String itemName=ctItem.getScRequestItem().getItemName();
-			String sKuNo=ctItem.getSku();
-			if(itemcode==null)
-			{
-				itemcode=ParameterConst.ITEM_CODE;
-			}
-			if(itemName==null)
-			{
-				itemName=ParameterConst.ITEM_NAME;
-			}
-			if(sKuNo==null)
-			{
-				sKuNo=ParameterConst.SKUNO;
-			}
-			String result = itemName +","+ itemcode+","+sKuNo;
+		return scRequestItem;
 
-			/*result.append(itemcode);
-			result.append(",");
-			result.append(itemName);
-			*/
+	}
+	// #31558 end
 		
-			return result;
-		     
+	public String contactItemProd(CtContractItem ctItem) {
+		//String result=new String();
+		
+		String itemcode = ctItem.getScRequestItem().getCmItem().getExtensionCode();
+		String itemName = ctItem.getScRequestItem().getItemName();
+		String sKuNo = ctItem.getSku();
+		if (itemcode == null) {
+			itemcode = ParameterConst.ITEM_CODE;
 		}
-		
-		/**
-		* Gets the local goods radio values.
-		* 
-		* @param itemType
-		* the item type
-		* @return the local goods radio values
+		if (itemName == null) {
+			itemName = ParameterConst.ITEM_NAME;
+		}
+		if (sKuNo == null) {
+			sKuNo = ParameterConst.SKUNO;
+		}
+		String result = itemName + "," + itemcode + "," + sKuNo;
+
+		/*result.append(itemcode);
+		result.append(",");
+		result.append(itemName);
 		*/
-		public SelectItem[] getLocalGoodsRadioValues(String itemType) {
+	
+		return result;
+	     
+	}
+		
+	/**
+	* Gets the local goods radio values.
+	* 
+	* @param itemType
+	* the item type
+	* @return the local goods radio values
+	*/
+	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCAL_GOODS);
 		types.add(ParameterConst.IMPORTED_GOODS);
 		SelectItem[] items = null;
 		try {
-		items = new SelectItem[types.size()];
-		int i = 0;
-		for (String location : types) {
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
-		for (PmParameterDesc paramDesc : localParamDesc) {
-		if (paramDesc.getPmParameter().getParameterCode()
-		.equals(location)) {
-		items[i++] = new SelectItem(paramDesc.getPmParameter()
-		.getParameterId(), paramDesc.getCodeName());
-		}
-		}
-		}
+			items = new SelectItem[types.size()];
+			int i = 0;
+			for (String location : types) {
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterCode().equals(location)) {
+						items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterId(), paramDesc.getCodeName());
+					}
+				}
+			}
 		} finally {
 
 		}
 		return items;
-		}
+	}
 		
-		/**
-		 * Retrieve parameter desc by type.
-		 * 
-		 * @param type
-		 *            (String type)
-		 * @returnList<PmParameterDesc>
-		 */
-		public List<PmParameterDesc> retrieveParameterDescByType(String type) {
-			return ParameterHelper.getInstance().getParameterDescList(type);
+	/**
+	 * Retrieve parameter desc by type.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @returnList<PmParameterDesc>
+	 */
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
 
-		}
+	}
 
 	/**
 	 * The method used to retrieve the information and render it on screen.
@@ -1165,7 +1158,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer >START<");
 			resDTO = contractAmendmentSO.retrieveContractAmendVerDtls(reqDTO);
-			//itemPriceFlagVerification(resDTO);
 			log.info("Check Putra gotoAmendPage setAmendmentContractVer resDTO.getCtContractVer()"+resDTO.getCtContractVer().getContractVerId());
 			ctBackingBean.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			//26753 - start  #29403 start (comment old code)
@@ -8446,144 +8438,142 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 *             if an exception occurred
 	 * @see Exception
 	 */
-	public void validateRemarkCancel(String action) throws Exception {
-
-		String remark = getManagedBean().getRemarkList().get(0).getRemark();
-		String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
-		String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
-
+	public void validateRemarkCancel(String action) {
 		// #26688 start
 		String message = null;
-		if (BpmOutcomeConst.BPM_REVISE.equals(action)) {
-			message = MessageConst.ERROR_100022;
-		} else if (BpmOutcomeConst.BPM_CANCEL.equals(action) || BpmOutcomeConst.BPM_REJECT.equals(action)) {
-			message = MessageConst.ERROR_100064;
-		}
+		
+		try {
+			
+			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+			String itemRemark = ctBackingBean.getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+			String supplierRemark = ctBackingBean.getManagedBean().getContractVer().getSupplierRemarks().get(0).getRemark();
 
-		if (message != null
-				&& ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (supplierRemark == null || supplierRemark
-						.length() == 0))) {
-			// setTabValue("AD");
-
-			// #35434 - Start
-			if (getManagedBean().getAckFA() != null
-					&& getManagedBean().getAckFA().equals(ContractConst.SUPPLIER_ACK_LOA)) {
-				getManagedBean().setSelectedTabIndex(
-						getManagedBean().getIndexing().get(
-								ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			} else {
-				getManagedBean().setSelectedTabIndex(
-						getManagedBean().getIndexing().get(
-								ResourceBundleUtils.getMessage("lbl.ct.menu.amendment",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			
+			if (BpmOutcomeConst.BPM_REVISE.equals(action)) {
+				message = MessageConst.ERROR_100022;
+			} else if (BpmOutcomeConst.BPM_CANCEL.equals(action) || BpmOutcomeConst.BPM_REJECT.equals(action)) {
+				message = MessageConst.ERROR_100064;
 			}
-			// #35434 - End
 
-			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			if (message != null && ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (supplierRemark == null || supplierRemark.length() == 0))) {
+				// setTabValue("AD");
+				
+				log.info("Masuk Condition IF 1");
+
+				// #35434 - Start
+				if (getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equals(ContractConst.SUPPLIER_ACK_LOA)) {
+					log.info("Masuk Condition IF 2");
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				} else {
+					log.info("Masuk Condition IF ELSE");
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				}
+				// #35434 - End
+				log.info("Throw Condition");
+				throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+			}
+			// #26688 end
+			
+		} catch (Exception e) {
+			log.info("Catch Exception");
+			log.info(e.toString(), e);
+			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 		}
-		// #26688 end
-
 	}
 	// #25956 - End
 		
-		//#30428 - Start
-		/**
-		 * The method used to entered new ceiling quantity.
-		 * 
-		 * @param ctItemCeilingQty   object of CeilingQty item
-		 */
-		public void onChangeCeilingQty(CtItemCeilingQty ctItemCeilingQty) {
+	//#30428 - Start
+	/**
+	 * The method used to entered new ceiling quantity.
+	 * 
+	 * @param ctItemCeilingQty   object of CeilingQty item
+	 */
+	public void onChangeCeilingQty(CtItemCeilingQty ctItemCeilingQty) {
 
-				if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
-					for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
-						if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-							// Start Fix - #34539  
-							if (item.isBrandNew()) {
-								if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
-									getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(item.getCtItemCeilingQties());
-									getManagedBean().getSelectedItem().setCtItemCeilingQties(item.getCtItemCeilingQties());
-								} 
-							} else {
-								if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
-									item.getCtItemCeilingQties().clear();
-									item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
-								} 
-							}
-							// End Fix - #34539
-							if (!item.getCtItemCeilingQties().isEmpty()) {						
-								for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
-									if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
-										ceilingQty.setCeilingQuantity(ctItemCeilingQty.getCeilingQuantity());
-										break;
-										}								
-									}
-								}							
+		if (getManagedBean().getSelectedItem().getCtItemCeilingQties().size() > 0) {
+			for (CtContractItem item : ctBackingBean.getManagedBean().getContractVer().getCtContractItems()) {
+				if (getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())) {
+					// Start Fix - #34539
+					if (item.isBrandNew()) {
+						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+							getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(item.getCtItemCeilingQties());
+							getManagedBean().getSelectedItem().setCtItemCeilingQties(item.getCtItemCeilingQties());
+						}
+					} else {
+						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+							item.getCtItemCeilingQties().clear();
+							item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
+						}
+					}
+					// End Fix - #34539
+					if (!item.getCtItemCeilingQties().isEmpty()) {
+						for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
+							if (ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())) {
+								ceilingQty.setCeilingQuantity(ctItemCeilingQty.getCeilingQuantity());
+								break;
 							}
 						}
 					}
 				}
-		//#30428 - End
-		
-		// Start Fix - #30022	
-		/**
-		 * The method used for validating the contractadmin status.
-		 * Checking process to check contractadmin status when user is inactive or
-		 * move to other ptj/active in other ptj 
-		 */	
-	 public void contractadminstatuschecking(){	
-			CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-			UserReqDTO userReqDTO = null;
-			IUserSO userSO = null;
-			UserReqDTO reqLoadDTO = null;
-
-	      if(ctAmendment.getAmendmentLoa()!=null) {
-	    	    userReqDTO = new UserReqDTO();
-				userReqDTO.setUserId(ctAmendment.getAmendmentLoa().getContractAdmin().getUserId());
-				userReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-					userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-				} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-					userReqDTO.setRoleCode(RoleCode.BPK_CCA.value());
-				}
-				
-				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);		
-				ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(userReqDTO).getPmUser());
-				if(ctAmendment.getAmendmentLoa().getContractAdmin() == null){
-					reqLoadDTO = new UserReqDTO();
-					reqLoadDTO.setOrgProfileId(userReqDTO.getOrgProfileId());
-					reqLoadDTO.setRoleCode(userReqDTO.getRoleCode());
-					userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);		
-					ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(reqLoadDTO).getPmUser());
-					
-				}
-
 			}
 		}
-	 
-	 //End Fix - #30022
+	}
+	//#30428 - End
+		
+	// Start Fix - #30022	
+	/**
+	 * The method used for validating the contractadmin status.
+	 * Checking process to check contractadmin status when user is inactive or
+	 * move to other ptj/active in other ptj 
+	 */	
+	public void contractadminstatuschecking() {
+		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		UserReqDTO userReqDTO = null;
+		IUserSO userSO = null;
+		UserReqDTO reqLoadDTO = null;
+
+		if (ctAmendment.getAmendmentLoa() != null) {
+			userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(ctAmendment.getAmendmentLoa().getContractAdmin().getUserId());
+			userReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				userReqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
+			} else if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+				userReqDTO.setRoleCode(RoleCode.BPK_CCA.value());
+			}
+
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(userReqDTO).getPmUser());
+			if (ctAmendment.getAmendmentLoa().getContractAdmin() == null) {
+				reqLoadDTO = new UserReqDTO();
+				reqLoadDTO.setOrgProfileId(userReqDTO.getOrgProfileId());
+				reqLoadDTO.setRoleCode(userReqDTO.getRoleCode());
+				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				ctAmendment.getAmendmentLoa().setContractAdmin(userSO.checkingcontractadminstatus(reqLoadDTO).getPmUser());
+
+			}
+
+		}
+	}
+	// End Fix - #30022
 	 
 	 // Start Fix - #29368 / #30856
 	 /**
-		 * The method used to check the bond exempted condition,
-		 * set bondExempted false if no attachment/letter for bond_exemption
-		 * otherwise true
-		 */
-		public void checkandResetBondExempted(){
-			
-			if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()){
-				if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null){
-					
-					ctBackingBean.getManagedBean().getCtContractAmount().setBondExempted(false);
-				  }
-			   }
+	 * The method used to check the bond exempted condition,
+	 * set bondExempted false if no attachment/letter for bond_exemption
+	 * otherwise true
+	 */
+	public void checkandResetBondExempted() {
 
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondReq() && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().isBondExempted()) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFileName() == null && ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getBondExemptedFilePath() == null) {
+
+				ctBackingBean.getManagedBean().getCtContractAmount().setBondExempted(false);
+			}
 		}
-		
+
+	}
 	// End Fix - #29368 / #30856
 	
 	// #30879 - Start
@@ -9083,30 +9073,4 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	// #25956 - Start
-	
-	private void itemPriceFlagVerification(ContractResDTO resDTO) {
-		log.info(" #33287 amendmentbackingbean itemPriceFlagVerification() ");
-		IContractAmendmentSO contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-		log.info(" #33287 amendmentbackingbean itemPriceFlagVerification() "
-				+ resDTO.getCtContractVer().getCtContractItems().size());
-
-		for (CtContractItem ctItemList : resDTO.getCtContractVer().getCtContractItems()) {
-
-			if (ctItemList.getCtItemPrices() != null && !ctItemList.getCtItemPrices().isEmpty()) {
-				for (CtItemPrice ctItemprice : ctItemList.getCtItemPrices()) {
-					ContractAmendmentResDTO amendResDTO = contractAmendmentSO.itemAmendmentReqFlag(ctItemprice);
-					if (amendResDTO != null) {
-						ctItemprice.setEditable(amendResDTO.isEditableItemPrice());
-						log.info("amendmentbackingbean ctItemprice.getUnitPrice() ::::: " + ctItemprice.getUnitPrice()
-								+ " and ctItemprice.isEditable() : " + ctItemprice.isEditable() + " itempriceid : "
-								+ ctItemprice.getItemPriceId());
-
-					}
-				}
-			}
-
-		}
-	}
-	
-	}
+}
