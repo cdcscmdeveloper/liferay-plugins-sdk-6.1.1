@@ -18,23 +18,26 @@
 	<ui:define name="content">
 	<p:panel header="Test SPKI" style="width:500" id="testSpkiPnl">
 		<p:messages id="msgTestSpki" for="spki" showDetail="true" autoUpdate="true" closable="true"/>
-		<h:panelGrid columns="2" cellpadding="5" id="pnlGrid" >
-			
-			<p:outputLabel value="ID No." for="idNo" id="idLbl" styleClass="required" />
-			<p:inputText value="#{bb.idNo}" id="idNo" />
-			
-			<p:outputLabel value="eP No." for="epNo" id="epLbl" styleClass="required" />
-			<p:inputText value="#{bb.epNo}" id="epNo" />
-			
-			<p:outputLabel value="Email" for="email" id="emailLbl" />
-			<p:inputText value="#{bb.email}" id="email" />
-			
+		<h:panelGrid columns="3" cellpadding="5" id="pnlGrid" >
 			<p:outputLabel value=""/>
 			<p:selectOneRadio value="#{bb.cert}" id="certRadio">
 				<f:selectItem itemLabel="Trustgate" itemValue="TG" />
 				<f:selectItem itemLabel="Digicert" itemValue="DG" />
 				<p:ajax event="change" update="@form" />
 			</p:selectOneRadio>
+			<p:outputLabel value=""/>
+			
+			<p:outputLabel value="ID No." for="idNo" id="idLbl" styleClass="required" />
+			<p:inputText value="#{bb.idNo}" id="idNo" />
+			<p:outputLabel value=""/>
+			
+			<p:outputLabel value="eP No." for="epNo" id="epLbl" styleClass="required" />
+			<p:inputText value="#{bb.epNo}" id="epNo" />
+			<p:outputLabel value=""/>
+			
+			<p:outputLabel value="Email" for="email" id="emailLbl" />
+			<p:inputText value="#{bb.email}" id="email" />
+			<p:outputLabel value="Mandatory for Digicert - Reset PIN"/>
 		</h:panelGrid>
 		
 		<h:commandLink action="#{bb.requestChallRespUpdate()}" target="_blank" >
@@ -46,8 +49,7 @@
 		<h:commandLink action="#{bb.requestResetPIN()}" target="_blank" >
 			<p:commandButton value="#{lbl['lbl.sm.button.reset.pin']}" />
 		</h:commandLink>
-		<br/><br/>
-		<h:outputText value="Click Sign to get Challenge Question:" />
+		
 		<p:commandButton action="#{bb.submit()}" value="#{lbl['lbl.btn.sign']}" update="@form"/>
 		
 	</p:panel>
@@ -64,7 +66,7 @@
 			<p:inputText value="#{bb.dataForSigning}" id="signBeforeText" />
 		</h:panelGrid>
 		
-		<p:commandButton value="#{lbl['lbl.btn.sign']}" action="#{bb.sign()}"/>
+		<p:commandButton value="#{lbl['lbl.btn.sign']}" action="#{bb.sign()}" update="@form"/>
 		
 		<p:commandButton value="#{lbl['lbl.btn.change.question']}" action="#{bb.changeChallengeQuestions}"/>
 	</p:panel>
