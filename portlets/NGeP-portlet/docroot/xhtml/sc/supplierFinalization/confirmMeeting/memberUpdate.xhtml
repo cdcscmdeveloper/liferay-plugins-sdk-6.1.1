@@ -149,7 +149,7 @@
 				<ui:fragment	rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 					<h:outputText value="#{meetingBB.getFCMemberRole(committeeMember.memberRole)}" />
 				</ui:fragment>
-a					<ui:fragment
+					<ui:fragment
 						rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
 						<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
 						<p:selectOneMenu id="meetingRoleId" required="true"
