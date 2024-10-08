@@ -7755,6 +7755,12 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSelectedShareHolder()
 									.getBumiFlgTrans());
 		}
+		
+		//#31130 --START -set bumi flg to 0 when country other than Malaysia
+		if(!getManagedBean().getSelectedShareHolder().getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+		getManagedBean().getSelectedShareHolder().setBumiFlg(0);
+		} //#31130 --END	
 
 		// set muslim flg
 		//#29856 - start
@@ -12614,29 +12620,8 @@ public class SmApplicationBackingBean extends
 	 * @param String
 	 *            panelName
 	 */
-	//#34159 - START - Refactor this method
 	public void onChangeState(SmAddress addr, String panelName) {
-		Long stateId = addr.getStateId();
-		if (stateId != null) {
-			addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
-			
-			if(addr.getPmState() != null && addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-				SmApplicationUtil.getInstance().populateDivisionsByState(addr, panelName, getManagedBean());
-			} else {
-				SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
-			}
-		} else {
-			addr.setPmState(new PmState());
-			addr.getPmState().setAdoptDivision(false);
-			SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
-		}
-		
-		addr.setPmDivision(null);
-		addr.setPmDistrict(null);
-		addr.setPmCity(null);
-		setRoleStaffAddrReqd();
-		
-		/*//13320-start
+		//13320-start
 		Long stateId = addr.getStateId();
 		if (stateId != null) {
 			addr.setPmState(SmCommonUtil.getInstance()
@@ -12662,9 +12647,9 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 					panelName, getManagedBean());
 			setRoleStaffAddrReqd();
-		}*/
+		}
+		
 	}
-	//#34159 - END
 
 	/**
 	 * Ajax call when select district to populate cities
@@ -16845,7 +16830,8 @@ public class SmApplicationBackingBean extends
 	// #34392 - start
 	/**
 	 * re-select inquiry before opening popup
-	 * @param applInquiry 
+	 * 
+	 * @param applInquiry
 	 */
 	public void resetSmApplSupportDocInquiries(SmApplInquiry applInquiry) {
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
@@ -16853,11 +16839,24 @@ public class SmApplicationBackingBean extends
 						ISupportingDocInquirySO.class);
 		SupportingDocInquiryResDTO resDTO = reqSO
 				.retrieveInquiryByApplInquiryId(applInquiry.getApplInquiryId());
-		applInquiry.setSmApplSupportDocInquiries(
-						resDTO.getSmApplInquiry()
-								.getSmApplSupportDocInquiries());
+		applInquiry.setSmApplSupportDocInquiries(resDTO.getSmApplInquiry()
+				.getSmApplSupportDocInquiries());
 	}
 
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
 	// #34392 - end
 
 	// START #29727

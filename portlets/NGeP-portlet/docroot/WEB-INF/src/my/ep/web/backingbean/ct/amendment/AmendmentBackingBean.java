@@ -8480,7 +8480,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			// #35434 - End
 
-			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark",
+			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 		}
 		// #26688 end

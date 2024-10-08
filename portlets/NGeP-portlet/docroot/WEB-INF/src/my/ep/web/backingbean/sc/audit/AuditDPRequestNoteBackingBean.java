@@ -27,10 +27,11 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 		AuDPRequestNoteDTO auObj = new AuDPRequestNoteDTO();
 		List<AuDPRequestNoteDetailSPDTO> auDPRequestnoteDetailSPDTOList = new ArrayList<>();
 		AuDPRequestNoteDetailSPDTO data;
-		for (ScRequestNoteDtl ri : managedBeans.getPurchaseRequestResDTO().getPurchaseRequest().getRequestNoteDtls()) {
+		for (ScRequestNoteDtl ri : managedBeans.getPurchaseRequestResDTO().getRequestNoteDtl()) {// #35492#58
 			data = new AuDPRequestNoteDetailSPDTO();
 			data.setSubDocId(BigInteger.valueOf(ri.getRequestItem().getRequestNoteItemId()));
 			data.setSubDocNo(ri.getRequestItem().getItemName());
+			data.setPurchaseRequestId(BigInteger.valueOf(ri.getPurchaseRequest().getPurchaseRequestId()));// #35492#58
 			auDPRequestnoteDetailSPDTOList.add(data);
 		}
 		auObj.setAuDPRequestNoteDetailSPDTOList(auDPRequestnoteDetailSPDTOList);
@@ -44,9 +45,7 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 		auDPRequestNoteSPDTO.setDpFieldLabelId(AuditDPRequestNoteConst.SC_DP_AU_RN_FIELDLABELID);
 		auDPRequestNoteSPDTO.setNewValue(null);
 		auDPRequestNoteSPDTO.setOldValue(null);
-		auDPRequestNoteSPDTO.setPurchaseRequestId(BigInteger.valueOf(managedBeans.getPurchaseRequestResDTO()
-				.getPurchaseRequest().getPurchaseRequestId()));
-
+		
 		auDPRequestnoteSPDTOList.add(auDPRequestNoteSPDTO);
 		auObj.setAuDPRequestNoteSPDTOList(auDPRequestnoteSPDTOList);
 		return auObj;
