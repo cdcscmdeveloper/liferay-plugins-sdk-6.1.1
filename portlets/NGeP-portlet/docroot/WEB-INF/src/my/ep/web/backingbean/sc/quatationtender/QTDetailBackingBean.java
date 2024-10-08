@@ -7660,7 +7660,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(taskName.equalsIgnoreCase(SCProcessNameConst.ASSIGN_SCORING_COMMITTEE)){
 					this.getManagedBean().setCommitteeAppointmentMenuTab(true);
 					retrieveCommitteeAppointmentTabDtl(FORM_NO_ACTION, REFORM_NO_ACTION);
-				}else{
+				} 
+				// 32277 - start
+				else if (taskName.equalsIgnoreCase(SCProcessNameConst.APPROVE_COMMITTEE)) {
+					if (CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())) {
+						int index = 0;
+						this.getManagedBean().setSelectedTabIndex(index);
+						this.getManagedBean().setSelectedCommitteeTabIndex(index);
+						TabBean committeTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(index);
+						this.getManagedBean().setSelectedTabBean(committeTabBean);
+						this.getManagedBean().setPublicationApproval(null);
+						if (null != committeTabBean.getScQtCommittee()) {
+							List<QtCommitteeMemberBean> historyList = getMemberHistoryList(committeTabBean
+									.getScQtCommittee().getScCommittee());
+							this.getManagedBean().setMemberHistoryList(historyList);
+						}
+					}
+				}
+				// 32277 - end
+				else{
 					if(isMaintancePendingChklistStatus){
 						retriveFulfilmentDtls();//#29474
 					} else{
