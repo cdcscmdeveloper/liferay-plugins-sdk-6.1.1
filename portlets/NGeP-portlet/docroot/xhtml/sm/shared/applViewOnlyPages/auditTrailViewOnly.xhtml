@@ -10,14 +10,6 @@
 	xmlns:tp="http://java.sun.com/jsf/composite/ep"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
-		<script>
-			function start() {
-				blockWidget.show();
-			}
-			function stop() {
-				blockWidget.hide();
-			}
-		</script>
 		<table style="width: 100%">
 			<tr>
 				<td>
@@ -28,7 +20,7 @@
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
-							ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);">
+							ajax="false">
 							<p:fileDownload
 								value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetailsAll(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
 						</p:commandLink>
@@ -92,8 +84,7 @@
 							<!-- 								<p:fileDownload value="" /> -->
 						</p:commandLink>
 						&#160;
-						<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false"
-							onclick="PrimeFaces.monitorDownload(start, stop);">
+						<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
 							<p:fileDownload
 								value="#{auditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
 						</p:commandLink>
