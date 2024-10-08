@@ -2241,23 +2241,6 @@ if (CollectionUtils.isNotEmpty(
 		this.getManagedBean().getCommitteeMembersList().add(index, activity);
 	}
 	
-	/**
-	 * Populate member role dropdown selection
-	 * @param scqt
-	 * @param user
-	 * @return
-	 */
-	public SelectItem[] getRoleTypeDropdownValues() {
-
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
-		List<String> recommendList = new ArrayList<>();
-		recommendList.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
-		searchBean.getDataFilterBeans()
-				.add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_IN.value(),
-						recommendList));
-		return getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
-	}
-	
 	private boolean isCommitteeModified(List<ScCommitteeMember> currList) {
 		List<QtCommitteeMemberBean> previousList = this.getManagedBean().getPrevCommitteeMembers();
 		if (CollectionUtils.isEmpty(previousList)) {
