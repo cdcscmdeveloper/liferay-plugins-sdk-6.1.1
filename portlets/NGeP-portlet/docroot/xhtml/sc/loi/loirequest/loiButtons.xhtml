@@ -16,10 +16,21 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-
+<table style="width:100%"><!-- #25791 start -->
+		<tr>
+			<td><!-- #25791 end -->
 		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 			rendered="#{lOIDetailBackingBean.managedBean.editFlag or lOIDetailBackingBean.isQtMaintenanceScreen}"
-			style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
+			style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" /></td>
+				<!-- #25791 start -->
+				<td style="vertical-align: bottom;" align="right">
+					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+					style="float:right;"
+					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, lOIDetailBackingBean.managedBean.scQt.qtId)}"
+					immediate="true" rendered="#{lOIDetailBackingBean.isQtMaintenanceScreen}"/>
+					</td>
+					</tr>
+					</table><!-- #25791 end -->
 			<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
 		<ui:decorate
 			template="/WEB-INF/facelets/templates/claim_template.xhtml">

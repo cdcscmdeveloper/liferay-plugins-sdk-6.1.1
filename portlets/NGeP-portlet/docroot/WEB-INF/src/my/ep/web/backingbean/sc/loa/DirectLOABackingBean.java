@@ -5294,9 +5294,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				QTStatusConst.LOA_COMPLETED.equals(scLoa
 						.getPmStatus().getStatusId().longValue()))){
 			getManagedBean().setIconForDL(true);
-			
-		}
-		//#32199 - end
+		}//#32199 - end
+		
+		if (isQTMaintenanceScreen() || isCTMaintenanceScreen()) {// 25791-start
+			this.getManagedBean().setSelectedTabIndex(
+					QTConstants.TAB_MAIN_INDEX);
+		}// 25791-end
 		
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
