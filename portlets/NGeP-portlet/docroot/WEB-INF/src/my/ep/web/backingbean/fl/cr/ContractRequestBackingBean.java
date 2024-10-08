@@ -570,6 +570,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						flItemAddr.setGstAmount(BigDecimal.ZERO);
 						flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 					}
+					
+					//36468-Start
+					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && flItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+						flItemAddr.setOrderedQty(getManagedBean().getFlRequest().getScPurchaseInDefault().getQuantity());
+						flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}
+					//36468-End
 				}
 			}
 			if(getManagedBean().getSelectedDelAddr()!=null) {
@@ -3268,14 +3275,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
-			
 			// 36468-Start - Add validation for the PID with the service item because the quantity is set by default based on the PID.
-			if (getManagedBean().getFlRequest().getScPurchaseInDefault() != null
+			if (getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty() &&
+					getManagedBean().getFlRequest().getScPurchaseInDefault() != null
 					&& uiItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)
 					&& uiItemAddr.getOrderedQty().doubleValue() > 0) {
+				getManagedBean().setSelectedTabIndex(1);
 				throw new EpException(MessageConst.ERROR_740072);
-			}
-			// 36468-End
+			}else if (!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty() &&
+					getManagedBean().getFlRequest().getScPurchaseInDefault() != null
+					&& uiItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)
+					&& uiItemAddr.getOrderedQty().doubleValue() > 0) {
+				accumulatedQty = uiItemAddr.getOrderedQty();
+			}// 36468-End
 			
 			//#29171, CR 14650: Static Code Analysis Start
 			//if(accumulatedQty.doubleValue()==0) {
