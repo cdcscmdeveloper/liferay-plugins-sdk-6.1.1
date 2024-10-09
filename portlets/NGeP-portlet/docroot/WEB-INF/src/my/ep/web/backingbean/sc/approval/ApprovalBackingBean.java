@@ -3301,6 +3301,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					bpmSO.withdrawTask(bpmReqDTO);
 
 					isWithdrawTask = true;
+					break;
 				}
 			}
 			if (isWithdrawTask) {

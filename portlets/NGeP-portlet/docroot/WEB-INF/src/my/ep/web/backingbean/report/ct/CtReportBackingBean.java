@@ -205,10 +205,10 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					ccContractItemMonitoringRptBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
 					//cc
 					ccContractItemMonitoringRptBB.getManagedBean().setDisableMinistryField(true);
-					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
+					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					//mc
 					getManagedBean().setDisableMinistryField(true);
-					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
+					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));//Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				}
 				
 				else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())

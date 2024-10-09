@@ -22175,7 +22175,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		//start insert and update into tplSpecZoneDtlHistory
 		// check existing in TplSpecZoneDtlHistory
 		// listZone == null = non zonal
-		if (null != listZone && listZone.size() > 0) {
+		if (null != listZone && !listZone.isEmpty()) { //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 			if (null != specificationReqDTO.getSpecZoneId()) {
 				SpecificationResDTO resDTO = getQtSpecSO().getTplSpecZoneDtlHistoryBySpecZoneId(specificationReqDTO);
 				if (!resDTO.isSuccessful()) {
