@@ -654,6 +654,11 @@ public class SupplierManagementConst {
 	public static final String STATUS_REVISE_ENG = "Pending Revise Application";
 	public static final String STATUS_REVISE_BM = "Menunggu Kaji Semula Permohonan";
 	// #12483 - END
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -1427,4 +1432,14 @@ public class SupplierManagementConst {
 	public static String getIdentificationTypeIc() {
 		return IDENTIFICATION_TYPE_IC;
 	}
+	
+	// #34392 - Start
+	public String getPENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL;
+	}
+	
+	public String getPENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM;
+	}
+	// #34392 - End
 }
