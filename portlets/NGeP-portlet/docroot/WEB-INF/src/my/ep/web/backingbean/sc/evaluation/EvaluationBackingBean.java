@@ -13723,7 +13723,7 @@ private void retriveCommitteeRemarksList(){
 
 		} else {
 			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
-					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906 
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906 //#21692 note-418 issue 6
 				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -13738,6 +13738,7 @@ private void retriveCommitteeRemarksList(){
 										new FacesScopes().getUserLocale())));
 
 			}
+			//#21692 note-418 issue 6 - Start
 			if (this.getManagedBean().isAllSupplierRejectEpv()) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -13747,6 +13748,7 @@ private void retriveCommitteeRemarksList(){
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
+			//#21692 note-418 issue 6 - End
 		}
 
 	}
