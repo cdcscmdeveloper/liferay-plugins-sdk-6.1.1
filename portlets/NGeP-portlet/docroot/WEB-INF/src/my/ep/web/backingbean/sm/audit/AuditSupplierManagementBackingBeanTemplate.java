@@ -144,7 +144,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			// but organization name were store in SmSupplier for Supplier and
 			// orgProfile for Approver
 			auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
-			if (org.getPmOrgValidityList().isEmpty()) {
+			if (org.getSmSupplier() != null && org.getSmSupplier().getCompanyName() != null) {
 				auObj.setOrgName(org.getSmSupplier().getCompanyName());
 			} else {
 				auObj.setOrgName(org.getOrgName());
