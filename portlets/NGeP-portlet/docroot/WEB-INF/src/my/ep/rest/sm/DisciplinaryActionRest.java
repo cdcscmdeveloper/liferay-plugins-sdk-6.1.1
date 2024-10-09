@@ -101,7 +101,7 @@ public class DisciplinaryActionRest {
 			// 28798: Disciplinary Action - get all active for cancel registration and blacklist
 			SupplierDataMaintenanceResDTO updateBCDAList = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveBlacklistCancelDisciplinaryAction();
 
-			if (updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && updateBCDAList.getSmDisciplinaryActions().size() > 0) {
+			if (updateBCDAList != null && updateBCDAList.getSmDisciplinaryActions() != null && !updateBCDAList.getSmDisciplinaryActions().isEmpty()) {
 				Date today = new Date();
 				for (SmDisciplinaryAction cancelRegBlacklist : updateBCDAList.getSmDisciplinaryActions()) {
 					log.info("updateBCDAList. supplier id==============" + cancelRegBlacklist.getSmSupplier().getSupplierId());
@@ -113,8 +113,7 @@ public class DisciplinaryActionRest {
 								cancelRegBlacklist.getSmSupplier().getSmAppl();
 								PmUser user = SmCommonUtil.getUserByUserId(cancelRegBlacklist.getChangedBy());
 								List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-								// 30878 to check isPendingCanel /
-								// isPendingBlack list is updated
+								// 30878 to check isPendingCanel / isPendingBlack list is updated
 								SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(cancelRegBlacklist, user, userRoles);
 
 								// 31100,30878 start
