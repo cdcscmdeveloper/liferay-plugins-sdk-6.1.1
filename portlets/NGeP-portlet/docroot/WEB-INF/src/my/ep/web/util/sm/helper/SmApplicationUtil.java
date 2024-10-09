@@ -1973,10 +1973,6 @@ public class SmApplicationUtil {
 							if(cat.getPoDecFlg() == null){
 								cat.setPoDecFlg(0);
 							}
-							//#35086 - start
-							if(cat.getPoDecFlg() == null){
-								cat.setPoDecFlg(0);
-							}
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
