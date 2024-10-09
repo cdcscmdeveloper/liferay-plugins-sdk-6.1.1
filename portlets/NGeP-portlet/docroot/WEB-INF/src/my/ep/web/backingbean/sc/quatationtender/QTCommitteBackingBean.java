@@ -2160,6 +2160,7 @@ public class QTCommitteBackingBean extends
 		boolean assignFECCommitteeTask = SCProcessNameConst.ASSIGN_FEC_COMMITTEE.equals(taskName)
 				&& ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(committeeType);
 		return Arrays.asList(
+				ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeType),
 				assignECOCCommitteeTask, 
 				assignTECCommitteeTask, 
 				assignFECCommitteeTask,
