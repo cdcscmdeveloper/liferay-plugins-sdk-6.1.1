@@ -241,7 +241,9 @@ public class SmVirtualCertHelper {
 	public Map<String, String> getReportParam(SmMofCert cert){
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("PAPPLID", cert.getSmAppl().getApplId().toString());
-		
+		// #36401 - Start
+		paramMap.put("PMOFCERTID", Long.valueOf(cert.getMofCertId()).toString());
+		// #36401 - End
 		return paramMap;
 	}
 	
