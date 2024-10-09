@@ -25,11 +25,14 @@
 				<td><p:outputLabel id="docNoLbl"
 						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td style="width: 14%" class="header-info-text">
-				<!-- #25791 start -->
-						<p:commandLink process="@this" partialSubmit="true" immediate="true"
-					    	action="#{qTDetailBB.editQuationTenderDetails(biddingBB.managedBean.scQt, false, true, view.viewId)}">
-						<h:outputText value="#{biddingBB.managedBean.scheduledBid.scBid.docNo}" escape="false" />
-					</p:commandLink><!-- #25791 end -->
+					<!-- #25791 start --> <p:commandLink process="@this"
+						partialSubmit="true" immediate="true"
+						action="#{qTDetailBB.editQuationTenderDetails(biddingBB.managedBean.scQt, false, true, view.viewId)}">
+						<h:outputText
+							value="#{biddingBB.managedBean.scheduledBid.scBid.docNo}"
+							escape="false" />
+					</p:commandLink>
+					<!-- #25791 end -->
 				</td>
 
 				<td><p:outputLabel id="ptjNameLbl" value="#{lbl['lbl.sc.ptj']}" /></td>
