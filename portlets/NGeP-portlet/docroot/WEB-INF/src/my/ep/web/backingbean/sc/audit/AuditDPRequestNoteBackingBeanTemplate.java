@@ -63,7 +63,6 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingB
 			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
 			
-			new LogKey(getUserIdSessionFromLoginId());//#35492#58
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 			
