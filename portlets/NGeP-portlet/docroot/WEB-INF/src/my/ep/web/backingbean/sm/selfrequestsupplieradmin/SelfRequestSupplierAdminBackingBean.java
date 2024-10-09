@@ -347,17 +347,6 @@ public class SelfRequestSupplierAdminBackingBean extends
 				reqDTO);
 		
 		//#34159 - START
-<<<<<<< HEAD
-		if(permAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
-				&& !permAddr.getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)
-				&& permAddr.getSmAddress().getPmDivision()!=null && permAddr.getSmAddress().getPmDivision().getDivisionId()!=null){
-			SmAddress addr = SmServiceLookup.getSmAddressSO().retrieveSmAddressByAddressId(permAddr.getSmAddress().getAddressId());
-			addr.getPmDivision().setDivisionId(null);
-			//SmServiceLookup.getSmAddressSO().saveOrUpdateSmAddress(addr);
-			SmServiceLookup.getSmAddressSO().updatePmDivisionByAddressId(addr.getPmDivision(), addr.getAddressId());
-		}
-		
-=======
 		if (permAddr != null && permAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
 				&& !permAddr.getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)
 				&& permAddr.getSmAddress().getPmDivision() != null && permAddr.getSmAddress().getPmDivision().getDivisionId() != null) {
@@ -365,7 +354,6 @@ public class SelfRequestSupplierAdminBackingBean extends
 			addr.getPmDivision().setDivisionId(null);
 			SmServiceLookup.getSmAddressSO().updatePmDivisionByAddressId(addr.getPmDivision(), addr.getAddressId());
 		}
->>>>>>> branch 'sit_bug_34159_self-request' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 		//#34159 - END
 
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
