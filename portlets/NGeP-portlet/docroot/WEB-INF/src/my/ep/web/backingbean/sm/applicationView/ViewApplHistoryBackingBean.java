@@ -704,7 +704,6 @@ public class ViewApplHistoryBackingBean extends
 			Collections.sort(cert, new Comparator<SmMofCert>() {
 				@Override
 				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					// TODO Auto-generated method stub
 					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
 				}
 			});
@@ -716,7 +715,6 @@ public class ViewApplHistoryBackingBean extends
 			Collections.sort(bumiCert, new Comparator<SmMofCert>() {
 				@Override
 				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					// TODO Auto-generated method stub
 					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
 				}
 			});
@@ -727,11 +725,11 @@ public class ViewApplHistoryBackingBean extends
 			// clear actual list
 			mofCerts.clear();
 
-			if (cert.size() > 0) {
+			if (!cert.isEmpty()) {
 				mofCerts.add(cert.get(0));
 			}
 
-			if (bumiCert.size() > 0) {
+			if (!bumiCert.isEmpty()) {
 				mofCerts.add(bumiCert.get(0));
 			}
 		}
