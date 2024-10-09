@@ -22,6 +22,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import org.apache.log4j.Logger;
 
 /**
  * @author Firdaus Omar
@@ -33,6 +34,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	private static final long serialVersionUID = 1L;
 
 	private LogKey logKey = new LogKey();
+	
+	public static Logger log = Logger.getLogger(AuditSupplierManagementBackingBeanTemplate.class);
 
 	public AuditSupplierManagementBackingBeanTemplate() {
 	}
@@ -87,6 +90,11 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userId);
 			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
+				if (orgProfile.getSmSupplier().getSupplierId() != null) {
+					log.info("*****#28895_35501*****orgProfile exist, supplierId: " + orgProfile.getSmSupplier().getSupplierId());
+				} else if (orgProfile.getOrgProfileId() != null) {
+					log.info("*****#28895_35501*****orgProfile exist, orgProfileId: " + orgProfile.getOrgProfileId());
+				}
 			}
 		}
 		return orgProfile;
@@ -145,8 +153,10 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			// orgProfile for Approver
 			auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
 			if (org.getSmSupplier() != null && org.getSmSupplier().getCompanyName() != null) {
+				log.info("*****#28895_35501*****into smSupplier, orgName: "+org.getSmSupplier().getCompanyName().toString());
 				auObj.setOrgName(org.getSmSupplier().getCompanyName());
 			} else {
+				log.info("*****#28895_35501*****into orgProfile, orgName: "+org.getOrgName());
 				auObj.setOrgName(org.getOrgName());
 			}
 		}
