@@ -3840,6 +3840,7 @@ public class SmApplicationUtil {
 			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
 			managedBean.setOverLappedCategoryExists(true); //#31018
 		}else{
+			managedBean.setOverlapDocs(null);//#31018
 			log.info("overlapCategoryVO == null");
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
