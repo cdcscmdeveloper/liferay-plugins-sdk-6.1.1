@@ -1172,8 +1172,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			//#21692 05/02/2024 - Start
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
-			if (selectedScQt.getResponsePeriod() != null &&
-					selectedScQt.getResponsePeriod() != result) {
+			if (!enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD)) {//#21692 note-#418 issue 2
+				//Reopen #452 remove null checking
 				selectedScQt.setResponsePeriod(result);
 			}
 			//#21692 05/02/2024 - End
@@ -7762,7 +7762,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			// #25077 - End
 			//#25426 - Start
-			if(activeIndex != 3){
+			if(activeIndex != 3
+					&& !isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(this.getManagedBean().getQt().getQtStatus().getStatusId())){//#21692 note-418 issue 1
 				ScQt qt = this.getManagedBean().getQt();
 				Long[] orgIds={qt.getOwnerOrgProfile().getOrgProfileId(),qt.getPmOrgProfile().getOrgProfileId()};
 				DualListModel<ScQtApproverSettings> budgetApprovalUsers=ApproverSettings.getDetails(RoleCode.COMMITTEE_APPROVER,orgIds,this.getManagedBean().getScQtApproval());
@@ -13293,6 +13294,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	// #28784 note-#634 - End
 	
 	// #21692 - start
+	/**
+	 * retrieve Response Period from Pm Rule Config Table
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public int retrieveResponsePeriod(String value) {
 
 		IRuleSO ruleSO = null;
@@ -13303,8 +13310,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 			ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IRuleSO.class);
 			RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
-			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueList() != null
-					&& roleResDTO.getRuleValueList().size() > 0) {
+			if (roleResDTO.isSuccessful()
+					&& roleResDTO.getRuleValueList() != null
+					&& CollectionUtils.isNotEmpty(roleResDTO.getRuleValueList())) {
 				if (value.equals(ParameterConst.RULE_VALUE)) {
 					result = Integer.parseInt(roleResDTO.getRuleValueList().get(0).getRuleValue());
 				}
@@ -13317,13 +13325,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 			} else {
 				throw new EpException(MessageConst.ERROR_770222, new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
 			}
-		} finally {
-			ruleSO = null;
+		} catch(Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "Retrieve Response Period from Pm Rule Config Table", getManagedBean().getQt().getQtNo(),
+					"retrieveResponsePeriod", getUserIdSessionFromLoginId(), e);
 		}
 
 		return result;
 	}
-
+	
+	/**
+	 * retrieve new proposal validity
+	 * 
+	 * @param scQt
+	 * @param newValidityPeriod
+	 * @return
+	 */
 	public Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -13335,9 +13351,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
 		if (status != null) {
 
-			Date date = null;
-
-			date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
+			Date date = DateUtils.addDays(scQt.getClosingDate(), newValidityPeriod);
 
 			Timestamp ts = null;
 			if (date != null) {
@@ -13347,13 +13361,20 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * make sure qt after publish
+	 * 
+	 * @param currentStatusId
+	 * @return
+	 */
 	public boolean isQTStatusInProposalValidPeriodExtApprovalAndIsRefinalization(Long currentStatusId) {
 		List<Long> validPeriodExts = Arrays.asList(QTStatusConst.QT_PENDING_PUBLICATION,
 				QTStatusConst.QT_BRIEFING_SITE_VISIT, QTStatusConst.QT_PROPOSAL_PREPARATION,
 				QTStatusConst.QT_EVALUATION_PROPOSAL, QTStatusConst.QT_SUPPLIER_FINALIZATION,
 				QTStatusConst.QT_PENDING_LOI, QTStatusConst.QT_PENDING_LOA, QTStatusConst.QT_AWARDED,
-				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT, QTStatusConst.QT_RE_FINALIZATION);
+				QTStatusConst.QT_CLOSED, QTStatusConst.QT_CONSOLIDATION_REPORT,
+				QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER, QTStatusConst.QT_RE_FINALIZATION);
 
 		for (int i = 0; i < validPeriodExts.size(); i++) {
 			if (validPeriodExts.get(i).longValue() == currentStatusId)
