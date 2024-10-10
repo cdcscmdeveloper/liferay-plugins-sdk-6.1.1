@@ -74,7 +74,7 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	/** The back to previous page. */
 	private String backToPreviousPage;
 	
-	private boolean ableToCancelLOA;//#36339 committed under #21692
+	private boolean ableToCancelLOA;//#36339, #21692
 
 
 	/**
@@ -340,7 +340,7 @@ public class QtLOAManagedBean extends BaseManagedBean {
 		this.backToPreviousPage = backToPreviousPage;
 	}
 
-	//#36339 committed under #21692 - Start
+	//#36339, #21692 - Start
 	public boolean isAbleToCancelLOA() {
 		return ableToCancelLOA;
 	}
@@ -348,7 +348,7 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	public void setAbleToCancelLOA(boolean ableToCancelLOA) {
 		this.ableToCancelLOA = ableToCancelLOA;
 	}
-	//#36339 committed under #21692 - End
+	//#36339, #21692 - End
 	
 	
 

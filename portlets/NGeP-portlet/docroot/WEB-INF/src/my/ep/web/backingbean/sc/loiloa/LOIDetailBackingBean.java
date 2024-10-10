@@ -6665,7 +6665,7 @@ public class LOIDetailBackingBean extends
 				&& isValidFor21692
 				) ? true : false;
 		
-		getManagedBean().setAbleToCancelLOI(supplierStatus);//#36339 committed under #21692
+		getManagedBean().setAbleToCancelLOI(supplierStatus);//#36339, #21692
 		
 		return supplierStatus;
 	}
