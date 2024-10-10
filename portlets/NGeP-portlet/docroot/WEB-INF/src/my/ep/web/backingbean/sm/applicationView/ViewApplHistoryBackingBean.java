@@ -414,7 +414,7 @@ public class ViewApplHistoryBackingBean extends
 		//START 27951
 		//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 		boolean proceed = true;
-		String baseUrl = ""; //#36474
+		String baseUrl; //#36474
 		smApplBB.getManagedBean().setPreRegistration(this.getManagedBean().isPreRegistration());
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
