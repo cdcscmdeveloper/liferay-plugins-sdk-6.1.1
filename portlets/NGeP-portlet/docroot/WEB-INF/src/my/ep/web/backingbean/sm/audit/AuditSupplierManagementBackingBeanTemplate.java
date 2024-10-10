@@ -95,7 +95,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userId);
 			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
-				if (orgProfile.getSmSupplier().getSupplierId() != null) {
+				if (orgProfile.getSmSupplier() != null) {
 					log.info("*****#28895_35501*****orgProfile exist, supplierId: " + orgProfile.getSmSupplier().getSupplierId());
 				} else if (orgProfile.getOrgProfileId() != null) {
 					log.info("*****#28895_35501*****orgProfile exist, orgProfileId: " + orgProfile.getOrgProfileId());
