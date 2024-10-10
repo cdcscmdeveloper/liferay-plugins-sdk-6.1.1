@@ -344,7 +344,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
 						if(null != orderInfo){	
 							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(),reqDTO.getUserId());
+							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getDeliveryOrderId() , orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(),reqDTO.getUserId()); //36361
 							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatusId(),docsearchResult.getDocId(),orderInfo.getRole(),orderInfo.getOrderId(),reqDTO.getUserId());
 							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
 								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
@@ -421,6 +421,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				receivedNoteSO  = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 				resDTO = receivedNoteSO.getReceivedNoteById(reqDTO);
 				if(null != resDTO.getFulfilmentNote()){
+					orderInfo.setDeliveryOrderId(resDTO.getFlDeliveryOrder().getDeliveryOrderId());//36361
 					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
 						orderInfo.setOrderId(reqDTO.getFlOrderId());
@@ -817,6 +818,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		private boolean isTaxable=false;
 		
 		private String coGSTRNo;
+		
+		private Long deliveryOrderId;//36361
 
 		/**
 		 * Gets the role.
@@ -926,6 +929,21 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			this.coGSTRNo = coGSTRNo;
 		}
 
+		//36361-Start
+		/**
+		 * @return the deliveryOrderId
+		 */
+		public Long getDeliveryOrderId() {
+			return deliveryOrderId;
+		}
+
+		/**
+		 * @param deliveryOrderId the deliveryOrderId to set
+		 */
+		public void setDeliveryOrderId(Long deliveryOrderId) {
+			this.deliveryOrderId = deliveryOrderId;
+		}
+		//36361-End
 		
 		
 	}
