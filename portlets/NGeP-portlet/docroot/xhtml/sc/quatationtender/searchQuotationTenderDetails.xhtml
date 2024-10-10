@@ -8,7 +8,7 @@
 
 
 		
-			<table style="width:1100px;"><!-- #25791 start -->
+			<table style="width:1100px;"> <ui:remove> #25791 start </ui:remove>
 				<tr>
 					<td>
 						<p:outputLabel id="searchMinistryLbL" value="#{lbl['lbl.sc.ministry']}" />
@@ -119,16 +119,16 @@
 						  <h:outputLabel for="docNo" value="#{lbl['lbl.sc.document.no']}" />
 					</td>
 					<td style="width:385px">
-					<table><!-- #25791 start -->
+					<table><ui:remove> #25791 start </ui:remove>
 					<tr>
-					<td><!-- #25791 end -->
+					<td><ui:remove> #25791 end </ui:remove>
 					<p:inputText id="docNo"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docNo}"
 							maxlength="21" style="width:288px;">
 							<p:ajax update="@form" process="@this"/>
 						</p:inputText>
 					</td>
-					<td style="margin-top: -3px"><!-- #25791 start -->
+					<td style="margin-top: -3px"><ui:remove> #25791 start </ui:remove>
 					<ui:fragment rendered="#{!specMaintenanceBB.isSpecCommittee()}">
 					<ac:iconTooltip 
 										value="#{lbl['lbl.sc.qt.doc.no.wild.card.search.tooltip']}" />
@@ -136,7 +136,7 @@
 					</td>
 					</tr>
 					</table>	
-					</td><!-- #25791 end -->
+					</td><ui:remove> #25791 end </ui:remove>
 							
 					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 					<td style="width:385px"><p:selectOneMenu id="procurementid"

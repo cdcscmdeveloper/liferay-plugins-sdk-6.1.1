@@ -59,7 +59,7 @@
 			enableAutoUpdate="#{suppFinalizationBackingBean.enableAutoUpdate()}" />
 
 		<table style="width: 100%">
-			<!-- #25791 start -->
+			<ui:remove> #25791 start </ui:remove>
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true"
@@ -73,7 +73,7 @@
 						rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" /></td>
 			</tr>
 		</table>
-		<!-- #25791 end -->
+		<ui:remove> #25791 end </ui:remove>
 
 		<div align="right" class="BtnSpacing"
 			style="display: inline-block; width: 100%">
