@@ -56,7 +56,7 @@
 				</c:if> 
 				<c:if test="#{ParameterConst.doctypeBidding  eq qTDetailBB.managedBean.qtnTenderSearchBean.docType}" > <ui:remove> #25791 start </ui:remove>
 				    <c:set var="tableHeader" value="#{lbl['lbl.sc.qt.loa.search.results']}" scope="view" />
-				</c:if> <<ui:remove> #25791 start </ui:remove>
+				</c:if> <ui:remove> #25791 start </ui:remove>
 				<c:set var="dataModel" value="#{qTDetailBB.searchQTDataModel}" scope="view" />
 			</c:otherwise>
 		</c:choose>	
