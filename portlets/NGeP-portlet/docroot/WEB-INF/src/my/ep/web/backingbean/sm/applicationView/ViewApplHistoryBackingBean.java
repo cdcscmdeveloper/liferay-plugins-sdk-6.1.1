@@ -54,7 +54,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -404,7 +403,7 @@ public class ViewApplHistoryBackingBean extends
 		this.getManagedBean().setPreRegistration(true);
 		//log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
-			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
+			//List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			//start #29956
 			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
 			if(displayPopupDowngradeSSMOwner){
@@ -1655,7 +1654,8 @@ public class ViewApplHistoryBackingBean extends
 		
 		if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_MOF) && isRejected && !isHasBasic){
 			return false;
-		}else if(this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY) && isRejected){
+		}else if((this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ //#34483
 			return false;
 		}
 		

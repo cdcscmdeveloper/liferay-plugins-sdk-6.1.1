@@ -34,7 +34,7 @@
 	        #if($newBusinessRegistrationNo != $null)
 	      	<td>$newBusinessRegistrationNo</td>
 	      	#else
-	      	<td>$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
+	      	<td>N/A</td>
 	      	#end
     	</tr>
     	<!-- 24819 end

@@ -16,7 +16,7 @@
 			autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" severity="error, info" />
 		<ac:gpkiPopup
-			beforeSignText="#{approvalBackingBean.textBeforeSign}"
+			textBeforeSign="#{approvalBackingBean.textBeforeSign}"
 			postSignAction="#{approvalBackingBean.updateGenericApprovalTask(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
 		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}"/>
