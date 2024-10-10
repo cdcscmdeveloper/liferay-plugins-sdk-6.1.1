@@ -17,9 +17,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
@@ -1371,8 +1373,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						if(manDtl == null){
 							//#34209 - START
 							FacesContext facesContext = FacesContext.getCurrentInstance();
-						    HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-						    String URI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+							ExternalContext externalContext = facesContext.getExternalContext();
+							PortletRequest request = (PortletRequest) externalContext.getRequest();
+							String URI = (String) request.getAttribute("javax.servlet.forward.request_uri");
 							if(URI.toLowerCase().contains("application-history")){
 								activeManufacturingDtls.add(manuFacDtl);
 							} else {
@@ -4543,6 +4546,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (resultList != null
 				&& resultList.size() > 0) {
+			boolean isMOF = false;
+			if (!EntityHelper.isCollectionEmpty(personnelResDTO.getSmPersonnelList())){
+				String suppType = personnelResDTO.getSmPersonnelList().get(0).getSmAppl().getSupplierType();
+				isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
+						|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
+			}
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
 						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
@@ -4663,9 +4672,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}
 					}
 					
-					if(disciplinaryAction.getMofNo() != null){
-						retVal.setMofNoExist(true);
-					}
+					retVal.setMofNoExist(isMOF);
 					voList.add(retVal);
 				}
 				log.info(voList);					
