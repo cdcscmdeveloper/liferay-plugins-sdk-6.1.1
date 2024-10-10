@@ -1020,9 +1020,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
+			//#25790 - start
+			Locale localeMY = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+					CommonConstants.DEFAULT_COUNTRY_CODE);
+			
+			Locale localeEN = new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			//#25790 - end
 			for (PmStatusDesc statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName());
+				//#25790 - start
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc
+						.getStatusName()
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeMY), StringUtils.EMPTY)
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeEN), StringUtils.EMPTY));
+				//#25790 - end
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
