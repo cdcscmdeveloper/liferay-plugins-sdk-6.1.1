@@ -277,6 +277,7 @@ public class gpkiBackingBean implements Serializable {
 		try {
 			returnObj = postSignMtd.invoke(fc.getELContext(), new Object[] { pmDigiSign });
 		} catch (Exception e){
+			e.printStackTrace();
 			nonSigningException = e;
 			log.error(e);
 		}
