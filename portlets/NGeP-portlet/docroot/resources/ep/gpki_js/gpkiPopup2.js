@@ -45,7 +45,7 @@ var gpki = {};
 
   this.signToken = function (a) {
     gpkiBlockWidget.show();
-    text = a[0];
+    text = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);

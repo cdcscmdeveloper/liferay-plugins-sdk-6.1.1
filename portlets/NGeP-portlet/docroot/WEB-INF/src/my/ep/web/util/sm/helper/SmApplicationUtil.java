@@ -1566,6 +1566,117 @@ public class SmApplicationUtil {
 			}	
 		}
 	}//#30508-end
+	
+	//#32236-start
+	public static void validateSpecialAndNormalCategoryCapital(SmApplicationManagedBean managedBean) {
+		StringBuilder bf = new StringBuilder();
+		int index = 1;
+			
+		for (SmSupplierCategory category : managedBean.getSmAppl().getSmSupplierCategories()) {
+			// paid up capital must less than paid-up capital of category
+			// code
+			if (category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)
+					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)
+					|| category.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+				if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital()
+						.compareTo(category.getPmCategoryL3().getPaidUpCapital()) < 0) {
+					if (index == 1) {
+						bf.append("<br>" + index++ + ". " + category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code() + " - RM"
+								+ category.getPmCategoryL3().getPaidUpCapital() + "<br>");
+					} else if (index > 1) {
+						bf.append(index++ + ". " + category.getPmCategoryL1().getCategoryL1Code()
+								+ category.getPmCategoryL2().getCategoryL2Code()
+								+ category.getPmCategoryL3().getCategoryL3Code() + " - RM"
+								+ category.getPmCategoryL3().getPaidUpCapital() + "<br>");
+					}
+				}
+			}
+		}
+
+		if (managedBean.isSupplierUser()) {
+			if (index > 1) {
+				throw new EpException(MessageConst.ERROR_722693, new String[] { bf.toString() });
+			}
+		} else if (managedBean.isApproverUser() || managedBean.isPoUser()) {
+			if (index > 1) {
+				throw new EpException(MessageConst.ERROR_722695, new String[] { bf.toString() });
+			}
+		}
+	}
+		
+	/**
+	 * Get whether supplier already is business office and had approved special
+	 * category
+	 * @param managedBean 
+	 */
+	public static void setBusinessAndHadApprovedSpecialCatcode(SmApplicationManagedBean managedBean) {
+		managedBean.setAlreadyBusinessSpecialCatcode(false);
+		StringBuilder bf = new StringBuilder();
+		int index = 1;
+
+		SmFacility hq = getHq(managedBean);
+		if (hq != null && hq.getFacilityType().equals("H")) {
+			for (SmSupplierCategory cat : managedBean.getSmAppl().getSmSupplierCategories()) {
+				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+						&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE
+						// Bug #27188-start
+						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE
+						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+						&& cat.getPmCategoryL3().getHomeOperated() != DbValueConst.RECORD_STATUS_ACTIVE) {
+					// Bug #27188-end
+					managedBean.setAlreadyBusinessSpecialCatcode(true);
+					if (index == 1) {
+						bf.append("<br> " + index + "." + " " + cat.getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
+								+ "," + "<br />");
+						index++;
+					} else if (index > 1) {
+						bf.append(index + "." + " " + cat.getPmCategoryL1().getCategoryL1Code()
+								+ cat.getPmCategoryL2().getCategoryL2Code() + cat.getPmCategoryL3().getCategoryL3Code()
+								+ "," + "<br />");
+						index++;
+					}
+				}
+				// }
+			}
+		}
+
+		if (index > 1) {
+			if (managedBean.isApproverUser() || managedBean.isPoUser()) {
+				throw new EpException(MessageConst.ERROR_722696, new String[] { bf.toString() });
+			} else if (managedBean.isSupplierUser()) {
+				throw new EpException(MessageConst.ERROR_722694, new String[] { bf.toString() });
+			}
+		}
+	}
+		
+	/**
+	 * Get HQ
+	 * @param managedBean 
+	 * 
+	 * @return SmFacility
+	 */
+	private static SmFacility getHq(SmApplicationManagedBean managedBean) {
+		SmFacility hq = null;
+		if (!SmCommonUtil.isCollectionEmpty(managedBean.getSmAppl()
+				.getSmFacilities())) {
+			for (SmFacility fac : managedBean.getSmAppl()
+					.getSmFacilities()) {
+				if (StringUtils.isNotBlank(fac.getFacilityType())
+						&& (fac.getFacilityType().equals("H") || fac
+								.getFacilityType().equals("B")) && (fac.isHeadquarters())) {
+					hq = fac;
+					break;
+				}
+			}
+		}
+		return hq;
+	}
+	//#32236-end
+	
 	/**
 	 * Validate categories before saving application based on supplier type ,
 	 * personnel info and logged in user role.
@@ -1583,6 +1694,13 @@ public class SmApplicationUtil {
 		validateCategoryOtherDesc(validSave, managedBean, currentTab);
 		validateOverlapSuppDoc(validSave, managedBean, currentTab);
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
+		//#32236 - start
+		if(managedBean.isSupplierUser()){
+			if(currentTab == 5 && !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
+				validateSpecialAndNormalCategoryCapital(managedBean);	
+			}	
+		}
+		//#32236 - end
 
 		if (!managedBean.isSiteVisitAfterApproval()) {
 			//#11765
@@ -6976,6 +7094,7 @@ public class SmApplicationUtil {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.isSpecialCategory()
+					&& cat.getPmCategoryL3() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode()
 							.getParameterId() != null
@@ -13253,7 +13372,7 @@ public class SmApplicationUtil {
 			if (item == null) {
 				item = new SelectItem();
 				item.setLabel(eduLevel.getCodeName());
-				item.setValue(eduLevel.getParameterDescId());
+				item.setValue(eduLevel.getPmParameter().getParameterId()); //#36360
 				eduLevelItems.add(item);
 			}
 		}
