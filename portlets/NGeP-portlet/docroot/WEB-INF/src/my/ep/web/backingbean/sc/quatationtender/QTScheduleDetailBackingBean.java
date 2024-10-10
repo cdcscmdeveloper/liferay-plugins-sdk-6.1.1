@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,6 +55,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
@@ -427,21 +429,14 @@ public class QTScheduleDetailBackingBean extends
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
-	List<ScQtContactPerson> contactPersonList=	this.getManagedBean().getToBeRemovalContactPersonList();
-	if(null== contactPersonList){
-		contactPersonList=new ArrayList<ScQtContactPerson>();
-	}
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
 		} else {
-			contactPersonList.addAll(selectedContactList);
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
 			}
 		}
-		this.getManagedBean().setToBeRemovalContactPersonList(contactPersonList);
-		this.getManagedBean()
-		.setSelectedpmuserContactpersonList(null);
+		this.getManagedBean().setSelectedpmuserContactpersonList(null);// 25037
 	}
 
 	/**
@@ -452,9 +447,6 @@ public class QTScheduleDetailBackingBean extends
 	 */
 	public void retrievePmuserName(ScQtContactPerson contactPerson, int index) {
 		debugLogger("retrievePmuserName");
-		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
-		List<ScQtContactPerson> doaaList = this.getManagedBean()
-				.getPmuserContactpersonList();
 		/*
 		 * List<Long> doaaIdList = new ArrayList<Long>();
 		 * 
@@ -464,25 +456,39 @@ public class QTScheduleDetailBackingBean extends
 		 * doa.getUser()&& null != doa.getUser().getUserId()) {
 		 * doaaIdList.add(doa.getUser().getUserId()); } } }
 		 */
-
-		if (list != null) {
-			for (PmUser user : list) {
-				if (user.getUserId()
-						.equals(contactPerson.getUser().getUserId())) {
-
-					contactPerson.setName(user.getUserName());
-					contactPerson.setEmail(user.getEmail());
-					contactPerson.setPhoneNo(user.getPhoneNo());
-					contactPerson.setFaxNo(user.getFaxNo());
-					contactPerson.setUser(user);
-					break;
-				}
-
-			}
+		
+		// 25037 - start
+		Long previousId = null;
+		if (contactPerson.getUserId() == null) {
+			previousId = contactPerson.getUser().getUserId();
 		}
-		doaaList.remove(index);
-		doaaList.add(index, contactPerson);
+		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
+		list = list == null ? new ArrayList<PmUser>() : list;
 
+		List<ScQtContactPerson> list2 = this.getManagedBean().getPmuserContactpersonList();
+		list2 = list2 == null ? new ArrayList<ScQtContactPerson>() : list2;
+
+		Map<Object, Object> map = CustomUtils.listToMap(list, "getUserId");
+		Map<Object, Object> map2 = CustomUtils.listToMap(list2, "getUser.getUserId");
+
+		if (previousId != null) {
+			ScQtContactPerson person = (ScQtContactPerson) map2.get(previousId);
+			person.setUser(new PmUser());
+		}
+
+		if (map2.get(contactPerson.getUserId()) != null) {
+			contactPerson.setUserId(null);
+			throw new EpException(getMessage("lbl.sc.alreadyExisted", new String[] {}));
+		}
+		PmUser newUser = (PmUser) map.get(contactPerson.getUserId());
+		if (newUser != null) {
+			contactPerson.setName(newUser.getUserName());
+			contactPerson.setEmail(newUser.getEmail());
+			contactPerson.setPhoneNo(newUser.getPhoneNo());
+			contactPerson.setFaxNo(newUser.getFaxNo());
+			contactPerson.setUser(newUser);
+		}
+		// 25037 - end
 	}
 
 	/**
