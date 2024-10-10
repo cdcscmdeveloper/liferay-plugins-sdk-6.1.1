@@ -1179,6 +1179,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void submitAction() {
 		log.info("Submit proposal validity Period (Days) extension");
 
+		this.getManagedBean().setProposalValidityRevised(false);
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
 		checkResponsePeriod();
@@ -1226,6 +1227,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 		this.getManagedBean().setScQtApprovalRequestList(scQtApprovalRequests);
+		checkNullRemark();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 
 			Long decessionType = approvalRequest.getDecessionType().getParameterId();
@@ -1237,10 +1239,17 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				notifyUsers(approvalRequest);
 			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
 					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) { //1835L || 1855L
-				
+
+				reviseRemarkMandatory();//#21692 remark is mandatory for reject.
 				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
 				notifyUsers(approvalRequest);
 //				prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);//#21692 Re-open
+			} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decessionType.longValue()
+					|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decessionType.longValue()) {
+				reviseRemarkMandatory();
+				this.getManagedBean().setProposalValidityRevised(true);
+				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);//Revised, but use reject due to Revise flow == Reject flow
+				notifyUsers(approvalRequest);
 			}
 			
 		}
@@ -2304,6 +2313,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (requestdetails.getDecisionCertPBM().getParameterCode() != null) {
 				if (requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
 					parameterReqDTO.setParameterId(ParameterConst.TR3_REJECT);
+					requestdetails
+							.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
+					this.getManagedBean().getQt().setMofDate(null);//Null date after hide
+				} else if (requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_REVISE)) {
+					parameterReqDTO.setParameterId(QTStatusConst.PCB_RQ3_REVISED);
 					requestdetails
 							.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
@@ -3431,6 +3446,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String showDialog = "supplierRejectConfirmation.show()";
 			RequestContext.getCurrentInstance().execute(showDialog);
 		}
+		//#21692 - Start
 		/**
 		 * Finalization committee message after use click on submit
 		 * whether reject or accept EPV
@@ -3441,13 +3457,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		private String getFCMessgeConstant(String outCome) {
 			String msgCode;
 			if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				msgCode = MessageConst.INFO_790103;
+				msgCode = this.getManagedBean().isProposalValidityRevised() ? MessageConst.INFO_790104 : MessageConst.INFO_790103;
 			} else {
 				msgCode = MessageConst.INFO_790102;
 			}
 			
 			return msgCode;
 		}
+		//#21692 - End
 		
 		private Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
 			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
@@ -3669,14 +3686,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		
+		//#21692 - End
+		//#21692 - Start
 		private List<ScQtApprovalRequest> proposalValidityWip(String outcome) {
 
 			List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 			for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 				if (approvalRequest.getApproverAction() == null) {
 					PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
-							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
+							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? 
+									this.getManagedBean().isProposalValidityRevised() ? ParameterConst.TR2_REVISE : ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
 					approvalRequest.setApproverAction(pmParameter);
 					approvalRequest.setDecessionType(null);
 					approvalRequest.setDecisionCertPBM(null);
@@ -3686,7 +3705,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			return scQtApprovalRequests;
 		}
-		
+		//#21692 - End
+		//#21692 - Start
 		private void checkResponsePeriod() {
 			if (this.getManagedBean().getQt().getResponsePeriod() != this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod()) {
 				List<ScQtApprovalRemark> remarks = getManagedBean().getScQtApproval().getScQtApprovalRemarks();
@@ -3725,7 +3745,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM() != null
 					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode() != null
-					&& this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
+					&& (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)
+							|| this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_REVISE))) {
 				this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);
 				this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 			}
@@ -3752,7 +3773,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				
 				String userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
-				if (null == userRemark || "".equals(userRemark)) {
+				if (this.getManagedBean().isNullEPVRemark()) {
 					userRemark = ResourceBundleUtils.getMessage(SourcingConstants.NOT_AVAILABLE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
 				}
@@ -3763,6 +3784,35 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} catch(Exception e) {
 				SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "notifyUsers", scQt.getQtNo(), "notifyUsers",
 						getUserIdSessionFromLoginId(), e);
+			}
+		}
+		//#21692 - End
+		//#21692 - Start
+		private void reviseRemarkMandatory() {
+			List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
+			if (null != remarks) {
+				for (int i = 0; i < remarks.size(); i++) {
+					String userRemark = remarks.get(i).getRemark();
+					
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERR_775152);
+					}
+				}
+			}
+		}
+		//#21692 - End
+		//#21692 - Start
+		private void checkNullRemark() {
+			this.getManagedBean().setNullEPVRemark(false);
+			List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
+			if (null != remarks) {
+				for (int i = 0; i < remarks.size(); i++) {
+					String userRemark = remarks.get(i).getRemark();
+					
+					if (null == userRemark || "".equals(userRemark)) {
+						this.getManagedBean().setNullEPVRemark(true);
+					}
+				}
 			}
 		}
 		//#21692 - End

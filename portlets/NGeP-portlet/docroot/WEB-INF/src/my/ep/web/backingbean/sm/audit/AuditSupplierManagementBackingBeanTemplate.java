@@ -1,0 +1,196 @@
+package my.ep.web.backingbean.sm.audit;
+
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Locale;
+
+import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
+import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import org.apache.log4j.Logger;
+
+/**
+ * @author Firdaus Omar
+ * @since 16.05.2024 #28895_35501
+ */
+
+public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private LogKey logKey = new LogKey();
+	
+	public static Logger log = Logger.getLogger(AuditSupplierManagementBackingBeanTemplate.class);
+
+	public AuditSupplierManagementBackingBeanTemplate() {
+	}
+
+	/**
+	 * Saves audit data
+	 * 
+	 * @param manageBean
+	 * @param userId
+	 */
+	public final void saveAuditData(BaseManagedBean manageBean, Long userId) {
+		log.info("*****#28895_35501***** Start saveAuditData");
+		try {
+			String roleCode = getRoleCode();
+			PmOrgProfile org = retriveUserOrg(getUserIdSessionFromLoginId());
+			AuditSupplierManagementDTO auObj = prepareAuditData(manageBean, roleCode, org);
+			if (!auObj.getAuditDetails().isEmpty()) {
+				auditSmSo(auObj);
+			log.info("*****#28895_35501***** End saveAuditData");
+			}
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null,
+					"AuditSupplierManagementSO", userId, ex);
+		}
+	}
+
+	private String getRoleCode() {
+		log.info("*****#28895_35501***** Start getRoleCode");
+		String roleCode = null;
+		if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			roleCode = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())) {
+			roleCode = RoleCode.BASIC_SUPPLIER_USER.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			roleCode = RoleCode.G2G_SUPPLIER_ADMIN.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+			roleCode = RoleCode.G2G_SUPPLIER_USER.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+			roleCode = RoleCode.MOF_SUPPLIER_USER.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			roleCode = RoleCode.MOF_SUPPLIER_ADMIN.value();
+		} else if (getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())) {
+			roleCode = RoleCode.UPS_APPROVER.value();
+		}
+		log.info("*****#28895_35501***** End getRoleCode");
+		return roleCode;
+	}
+
+	private FacesScopes getFacesScopes() {
+		return new FacesScopes();
+	}
+
+	private PmOrgProfile retriveUserOrg(Long userId) {
+		log.info("*****#28895_35501***** Start retriveUserOrg");
+		PmOrgProfile orgProfile = new PmOrgProfile();
+		if (userId != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userId);
+			if (!orgList.isEmpty()) {
+				orgProfile = orgList.get(0).getPmOrgProfile();
+				if (orgProfile.getSmSupplier() != null) {
+					log.info("*****#28895_35501*****orgProfile exist, supplierId: " + orgProfile.getSmSupplier().getSupplierId());
+				} else if (orgProfile.getOrgProfileId() != null) {
+					log.info("*****#28895_35501*****orgProfile exist, orgProfileId: " + orgProfile.getOrgProfileId());
+				}
+			}
+		}
+		log.info("*****#28895_35501***** End retriveUserOrg");
+		return orgProfile;
+	}
+
+	/**
+	 * Prepares audit data
+	 * 
+	 * @param managedBean
+	 * @param roleCode
+	 * @param org
+	 * @return AuditSupplierManagementDTO
+	 */
+	public abstract AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode,
+			PmOrgProfile org);
+
+	protected AuditSupplierManagementDetailDTO createAuditData(String actionType, Long fieldLabelId, String oldValue,
+			String newValue, Long oldValueId, Long newValueId, Long fieldLabelCode) {
+		log.info("*****#28895_35501***** Start createAuditData");
+		AuditSupplierManagementDetailDTO auDetail = new AuditSupplierManagementDetailDTO();
+		auDetail.setActionType(actionType);
+		auDetail.setSmFieldLabelId(BigInteger.valueOf(fieldLabelId));
+		auDetail.setOldValue(oldValue != null ? oldValue : null);
+		auDetail.setNewValue(newValue != null ? newValue : null);
+		auDetail.setOldValueId(oldValueId != null ? BigInteger.valueOf(oldValueId) : null);
+		auDetail.setNewValueId(newValueId != null ? BigInteger.valueOf(newValueId) : null);
+		auDetail.setFieldLabelCode(BigInteger.valueOf(fieldLabelCode));
+		log.info("*****#28895_35501***** End createAuditData");
+		return auDetail;
+	}
+
+	protected String getLabel(String label) {
+		log.info("*****#28895_35501***** Start getLabel");
+		Locale locale = new Locale(AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA,
+				SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		log.info("*****#28895_35501***** End getLabel");
+		return ResourceBundleUtils.getMessage(label, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+	}
+
+	protected void auditBaseData(AuditSupplierManagementDTO auObj, SmSupplier supplier, String roleCode,
+			PmOrgProfile org, List<AuditSupplierManagementDetailDTO> auDetails, Long groupSectionId) {
+		log.info("*****#28895_35501***** Start auditBaseData");
+		if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
+		} else if (supplier.getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+				|| supplier.getSmAppl().getSupplierType()
+						.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
+		} else if (supplier.getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
+		}
+		auObj.setRoleCode(roleCode);
+		if (org == null) {
+			auObj.setOrgProfileId(null);
+			auObj.setOrgName(null);
+		} else {
+			// Both Supplier and Approver organization ID stored in orgProfile
+			// but organization name were store in SmSupplier for Supplier and
+			// orgProfile for Approver
+			auObj.setOrgProfileId(BigInteger.valueOf(org.getOrgProfileId()));
+			if (org.getSmSupplier() != null && org.getSmSupplier().getCompanyName() != null) {
+				log.info("*****#28895_35501*****into smSupplier, orgName: "+org.getSmSupplier().getCompanyName().toString());
+				auObj.setOrgName(org.getSmSupplier().getCompanyName());
+			} else {
+				log.info("*****#28895_35501*****into orgProfile, orgName: "+org.getOrgName());
+				auObj.setOrgName(org.getOrgName());
+			}
+		}
+		auObj.setDocId(BigInteger.valueOf(supplier.getSupplierId()));
+		auObj.setDocNo(supplier.getEpNo());
+		auObj.setAuditDetails(auDetails);
+		auObj.setApplId(BigInteger.valueOf(supplier.getSmAppl().getApplId()));
+		auObj.setApplNo(supplier.getSmAppl().getApplNo());
+		auObj.setGroupSectionId(BigInteger.valueOf(groupSectionId));
+		log.info("*****#28895_35501***** End auditBaseData");
+	}
+
+	private void auditSmSo(AuditSupplierManagementDTO auObj) {
+		log.info("*****#28895_35501***** Start auditSmSo");
+		try {
+			IAuditSupplierManagementSO auSmSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+			auSmSo.insertAudit(auObj);
+			log.info("*****#28895_35501***** End auditSmSo");
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", auObj.getDocNo(),
+					"AuditSupplierManagementSO", logKey.getUserId(), ex);
+		}
+	}
+}

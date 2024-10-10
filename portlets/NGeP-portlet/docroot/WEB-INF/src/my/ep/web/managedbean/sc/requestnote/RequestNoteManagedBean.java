@@ -2316,4 +2316,5 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.sourcingDpNewBpmVer = sourcingDpNewBpmVer;
 	}
 	//#36119 - end
+	
 }
