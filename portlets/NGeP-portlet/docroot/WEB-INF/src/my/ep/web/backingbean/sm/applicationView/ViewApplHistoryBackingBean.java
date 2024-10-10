@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sm.application.ISupplierApplicationSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -42,6 +44,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.application.SupplierApplicationReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
@@ -68,6 +71,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
@@ -652,6 +656,36 @@ public class ViewApplHistoryBackingBean extends
 	 * Initialized PO or approver decision info
 	 */
 	private void initPOApproverDecisionInfo() {
+		//#35759 --START
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		for (SmApplSectionReview sectionReview : getManagedBean().getSmAppl()
+				.getSmApplSectionReviews()) {
+			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+			SmWorkflowStatus poWorkflowStatus = workFlowStatusSO.retrieveWorkflowStatusWhenApplicationPendingPOReview(reqDTO)
+					.getWorkflowStatus();
+			if(poWorkflowStatus != null){
+				if(sectionReview.getChangedBy() != null
+						&& sectionReview.getRoleType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+						&& sectionReview.getChangedBy().equals(getManagedBean().getSmAppl().getCreatedBy())){	
+					PmUser user = SmCommonUtil.getUserByUserId(poWorkflowStatus.getChangedBy());
+					sectionReview.setChangedBy(user.getUserId());
+					saveSmApplSectionReview(sectionReview);
+					break;	
+				}
+			}else{
+				if(sectionReview.getChangedBy() != null
+						&& sectionReview.getRoleType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+						&& sectionReview.getChangedBy().equals(getManagedBean().getSmAppl().getCreatedBy())){
+					if(getManagedBean().getSmAppl().getPoUserId() != null){
+						PmUser user = SmCommonUtil.getUserByUserId(getManagedBean().getSmAppl().getPoUserId());
+						sectionReview.setChangedBy(user.getUserId());
+						saveSmApplSectionReview(sectionReview);	
+					}
+					break;
+				}
+			}		
+		} //#35759 --END
 
 		log.info("initPOApproverDecisionInfo");
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO()
@@ -1859,6 +1893,23 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//14530
 	
+	// #34392 - Start
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
+	// #34392 - end
+	
 	//#31248 - START
 	public Boolean setResubmitButton(SmAppl smAppl){
 		log.info("#35336 - START setResubmitButton(smAppl)");
@@ -1875,7 +1926,7 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
-			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+			.retrieveLatestRegisteredApplicationBySupplierId(mofReqDTO).getSmAppl();
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl);
 		log.info("#35336 - latestRejectedAppl ---> "+ latestRejectedAppl.getCreatedDate());
 		log.info("#35336 - latestRegisteredAppl ---> "+ latestRegisteredAppl);
@@ -2074,4 +2125,15 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().getSmAppl().setSmMachineDtls(getManagedBean().getAllMachineDtls());
 	}
 	//#34209 - END
+	
+	//#35759 --START
+	private void saveSmApplSectionReview(SmApplSectionReview smApplSecReview) {
+		SupplierApplicationReqDTO reqDTO = new SupplierApplicationReqDTO();
+		reqDTO.setSmApplSectionReview(smApplSecReview);
+		ISupplierApplicationSO reqSO = (ISupplierApplicationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISupplierApplicationSO.class);
+		reqSO.saveSmApplSectionReview(reqDTO);
+	
+	} //#35759 --END
+	
 }

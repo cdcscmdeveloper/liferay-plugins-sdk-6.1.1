@@ -155,8 +155,8 @@
 					label="#{lbl['lbl.sc.loiloa.newoffered.specification']}"
 					style="width:calc(100% - 30px);" value="#{spec.newSupplierOffer}"
 					disabled="#{directLOABackingBean.managedBean.supPropSpecDisable}"
-					rows="5" 
-					rendered="#{spec.renderNewSpec}"
+					rows="5"
+					rendered="#{spec.renderNewSpec}" autoResize="false"
 					onmouseout="limitTextArea(this,1000);">
 					<p:ajax event="change" process="@this" update="@this" />
 					<f:validateLength for="newOfferedSpec" maximum="1000" />
