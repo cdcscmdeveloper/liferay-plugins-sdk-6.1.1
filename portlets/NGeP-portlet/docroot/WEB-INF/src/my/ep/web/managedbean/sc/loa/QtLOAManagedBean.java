@@ -344,7 +344,9 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	public boolean isAbleToCancelLOA() {
 		return ableToCancelLOA;
 	}
+	//#36339, #21692 - End
 
+	//#36339, #21692 - Start
 	public void setAbleToCancelLOA(boolean ableToCancelLOA) {
 		this.ableToCancelLOA = ableToCancelLOA;
 	}

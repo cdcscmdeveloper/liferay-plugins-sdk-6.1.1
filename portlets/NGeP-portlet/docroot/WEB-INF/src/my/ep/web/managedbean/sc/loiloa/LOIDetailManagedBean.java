@@ -2470,7 +2470,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public boolean isAbleToCancelLOI() {
 		return ableToCancelLOI;
 	}
+	//#36339, #21692 - End
 
+	//#36339, #21692 - Start
 	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
 		this.ableToCancelLOI = ableToCancelLOI;
 	}
