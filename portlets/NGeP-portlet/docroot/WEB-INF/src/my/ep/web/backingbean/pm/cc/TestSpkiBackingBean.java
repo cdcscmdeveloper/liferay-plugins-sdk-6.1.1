@@ -146,6 +146,19 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		}
 	}
 	
+	/**
+	 * Reset
+	 */
+	public void reset(){
+		idNo = "";
+		epNo = "";
+		email = "";
+		setChallengeQues1("");
+		setChallengeAns1("");
+		setPassword("");
+		dataForSigning = "";
+	}
+	
 	private void err(Exception e){
 		String msg = e.getMessage();
 		if(msg.equals(MessageConst.ERROR_DIGICERT_776051)){
