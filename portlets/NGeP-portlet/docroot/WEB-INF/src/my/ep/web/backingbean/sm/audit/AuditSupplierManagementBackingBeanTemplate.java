@@ -17,6 +17,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -29,7 +30,7 @@ import org.apache.log4j.Logger;
  * @since 16.05.2024 #28895_35501
  */
 
-public abstract class AuditSupplierManagementBackingBeanTemplate implements Serializable {
+public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -50,7 +51,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		log.info("*****#28895_35501***** Start saveAuditData");
 		try {
 			String roleCode = getRoleCode();
-			PmOrgProfile org = retriveUserOrg(userId);
+			PmOrgProfile org = retriveUserOrg(getUserIdSessionFromLoginId());
 			AuditSupplierManagementDTO auObj = prepareAuditData(manageBean, roleCode, org);
 			if (!auObj.getAuditDetails().isEmpty()) {
 				auditSmSo(auObj);
