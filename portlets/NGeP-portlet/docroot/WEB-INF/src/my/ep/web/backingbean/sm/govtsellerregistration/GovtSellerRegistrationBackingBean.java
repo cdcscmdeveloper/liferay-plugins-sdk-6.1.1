@@ -1481,6 +1481,8 @@ public class GovtSellerRegistrationBackingBean extends
 		smPersonnel
 				.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		smPersonnel.setClerical(true);
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
+		
 		if (smPersonnel.getTitle() != null
 				&& smPersonnel.getTitle().getSalutationId() == null) {
 			smPersonnel.setTitle(null);
