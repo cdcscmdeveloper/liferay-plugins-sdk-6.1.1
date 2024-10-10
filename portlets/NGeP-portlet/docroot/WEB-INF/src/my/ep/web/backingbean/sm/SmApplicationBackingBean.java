@@ -651,7 +651,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
 		doc.setOverlapReason(null);
-		SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
+		if(doc.getCategoryOverlapDocId() != null){ //#31018
+			SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
+		}
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
