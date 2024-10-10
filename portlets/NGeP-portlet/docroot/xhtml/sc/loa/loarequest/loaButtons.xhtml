@@ -95,7 +95,7 @@
 					and lOADetailBackingBean.isLOAStatusAbleToCancel()}"
 					oncomplete="cancelLoaPopup.show();"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-					update="#{isReject ? '@this' : '@form'}" /><ui:remove>#36339 committed under #21692</ui:remove>
+					update="#{isReject ? '@this' : '@form'}" /><ui:remove>36339, 21692</ui:remove>
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">

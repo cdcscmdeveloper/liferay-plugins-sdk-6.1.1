@@ -432,7 +432,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
     
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 
-	private boolean ableToCancelLOI;//#36339 committed under #21692
+	private boolean ableToCancelLOI;//#36339, #21692
 
 	
 	
@@ -2466,7 +2466,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#12487 end
 
-	//#36339 committed under #21692 - Start
+	//#36339, #21692 - Start
 	public boolean isAbleToCancelLOI() {
 		return ableToCancelLOI;
 	}
@@ -2474,6 +2474,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
 		this.ableToCancelLOI = ableToCancelLOI;
 	}
-	//#36339 committed under #21692 - End
+	//#36339, #21692 - End
 	
 }
