@@ -195,6 +195,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String memberPtjOrgName;
 	private UserCommitteeSearchBean committeeSearchBean;
 	//12471 End
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean forceReplace;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1216,4 +1218,13 @@ public abstract class BaseManagedBean implements Serializable {
 		this.committeeSearchBean = committeeSearchBean;
 	}
 	//12471 end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isForceReplace() {
+		return forceReplace;
+	}
+
+	public void setForceReplace(boolean forceReplace) {
+		this.forceReplace = forceReplace;
+	}
+	// #28895_35501 End
 }
