@@ -67,6 +67,8 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	
 	//26238 -  START Disciplinary Action - 28111
 	private SmSupplier smSupplier;
+	// #28895_35501 - AUDIT TRAIL SM
+	private PmUser oldSelectedUser;
 	public ProfilePersonalizationManagedBean(){}
 	
 	/**
@@ -408,5 +410,14 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public PmUser getOldSelectedUser() {
+		return oldSelectedUser;
+	}
+
+	public void setOldSelectedUser(PmUser oldSelectedUser) {
+		this.oldSelectedUser = oldSelectedUser;
+	}
+	// #28895_35501 End
 
 }

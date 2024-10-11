@@ -130,6 +130,14 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 //#13320 - Rahim
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 
 /*import com.liferay.portal.security.auth.AuthVerifierResult.State;*/
@@ -933,6 +941,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setContactPerson(SupplierManagementConst.FIRST_USER_CONT_PERSON);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
 		
 		if(!smPersonnel.getPmCountry().getCountryCode().
 				equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
@@ -1586,6 +1595,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//		FacesMessage.SEVERITY_INFO,
 				//		null,
 				//		MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean());
+				}
+				// #28895_35501 End
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
@@ -2255,7 +2272,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					} 
 				}
 				this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
-				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
+				//this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 				this.getManagedBean().setPermenantDivisionLs(new ArrayList<SelectItem>());
 				//#34159 - END
 				////#16052019 - SSM INTEGRATION CR
@@ -2338,7 +2355,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
 				//#34159 - START
 				if(this.getManagedBean().getSmResAdd().getPmDivision() != null && this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId() != null){
-					this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
+					//this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
 				}
 				//#34159 - END
 			}
@@ -2393,7 +2410,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
 				//#34159 - START
 				if(this.getManagedBean().getSmPermenantAdd().getPmDivision() != null && this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId() != null){
-					this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
+					//this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
 				}
 				//#34159 - END
 			}
@@ -3239,6 +3256,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//START 17906
 				if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
 										
+					// #28895_35501 Start - AUDIT TRAIL SM
+					this.getManagedBean().setOldBanks(
+							CustomUtils.getInstance().deepCopyArrayList(
+									this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
+					// #28895_35501 End
 					StringBuilder sb = new StringBuilder();
 					for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
 						if(bank.getAccountNo() != null){
