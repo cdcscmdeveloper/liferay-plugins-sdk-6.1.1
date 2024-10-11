@@ -3240,6 +3240,10 @@ public class QTDetailBackingBean extends
 	 */
 	public String updateBpmTask(String outcome) {
 		
+		//25037 - start - remove after clone(25635) enter production
+		assertSpecificationUpdateInProgress(false);
+		//25037 - end - remove after clone(25635) enter production
+		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
 
@@ -10329,10 +10333,15 @@ public class QTDetailBackingBean extends
 			}
 		}
 		if (inProgress) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2",
-							null))); // #15391
+			//25037 - start - remove when clone(25635) enter production
+			throw new EpException(getMessage("lbl.sc.popup.checkBeforePublish2", null));
+			//25037 - end - remove when clone(25635) enter production
+			//25037 - start - uncomment code when clone(25635) enter production
+//			FacesContext.getCurrentInstance().addMessage(
+//					null,
+//					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, getMessage("lbl.sc.popup.checkBeforePublish2",
+//							null))); // #15391
+			//25037 - end - uncomment code when clone(25635) enter production
 		} else if (showPopup) {
 			// 25037 - end - note 568
 			RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
