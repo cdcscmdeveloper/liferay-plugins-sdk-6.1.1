@@ -88,7 +88,7 @@
 						ADDED : disabled="#{evaluationBackingBean.managedBean.readOnly}
 					</ui:remove>
 					<ui:remove><!-- 6906 - add disabled if isRejected --></ui:remove>
-			        <p:inputText partialSubmit="true" disabled="#{evaluationBackingBean.managedBean.readOnly or isRejected or finSpec.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
+			        <p:inputText partialSubmit="true" disabled="#{evaluationBackingBean.managedBean.readOnly or isRejected or (finSpec.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or finSpec.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}" rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}" 
 			        	id="userScore" label="#{lbl['lbl.tpl.spec.content.user.score']}" style="text-align:right;" maxlength="16" size="2"
 			        	value="#{finSpec.totalScore}"><ui:remove><!-- #34835 remove required --></ui:remove>
 						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" /><!-- -#32458 - start -->
