@@ -7,18 +7,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import my.ep.biz.service.sm.personnelauthorization.IPersonnelAuthorizationSO;
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.sm.SupplierManagementConst;
-import my.ep.dto.sm.personnelauthorization.PersonnelAuthorizationReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
@@ -64,6 +58,7 @@ public class DowngradeExpMofPersonnelRest {
 					schedulerReqDTO.setMofAccount(mofAccount);
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_DOWNGRADE_BASIC);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
+					schedulerReqDTO.getSmSupplier().setSmAppl(mofAccount.getSmSupplier().getSmAppl());
 					schedulerReqDTO.getSmSupplier().setPrevSuppStatus(mofAccount.getSmSupplier().getRecordStatusFlg());
 
 					try {
@@ -95,6 +90,7 @@ public class DowngradeExpMofPersonnelRest {
 					schedulerReqDTO.setMofAccount(mofAccount);
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_ONEYEAR);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
+					schedulerReqDTO.getSmSupplier().setSmAppl(mofAccount.getSmSupplier().getSmAppl());
 
 					try {
 						reqSO.updateExpiredMOFSupplierPersonnel(schedulerReqDTO);

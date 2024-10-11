@@ -476,7 +476,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	//#29732 fix null pointer currentstatus id for 1st time enter
 	
 	QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean();
-	if(renewSessionObject && !isSpecEndorsmentScreen()){
+	if(renewSessionObject){
 		renewSesionObject();
 	}
 	/* ***25692#95 - end */
@@ -544,12 +544,14 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		}
 		specBB.retriveTechnicalCheckList();//#11104-start
 		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();
+		boolean isSampleWip=specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance();//11104Wip
 		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
 		for(ScQtCheckList checkList: technicalChekclist){
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 				.equalsIgnoreCase(checkList.getDefinationType()
 						.getParameterCode())) {
 			scQt_.setSampleReq(Boolean.TRUE);//#11104
+			checkList.setSampleWip(isSampleWip);//11104Wip
 			break;
 
 		}
@@ -610,11 +612,18 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#33795 - end
 		//#15391 - end		
 		
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());//#29732 <--add this coz of impact form #35688 reseting the managebean
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL
-				.equals(scQt.getQtStatus().getStatusId()) && !this.getManagedBean().isReadOnly()) { //#29732 add readonly #171
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& !isQtRevisePubNqtPendingScheDoc()) {
+			if (isSpecRoleMaintenanceValidation()) {
+				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
-			if (!changedCatCodeList.isEmpty()) {
+
+			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().isReadOnly()) {
+				redirect = false;
 				this.getManagedBean().setActiveIndex(1);
 				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
 				FacesContext.getCurrentInstance().addMessage(
@@ -633,7 +642,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		
 		//29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
-		if(redirect || checkDemoRedirect()){//#28784
+		if((redirect && !this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)) || (checkDemoRedirect() && !this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE))){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		//29464-end
@@ -641,7 +650,8 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#29732 copy prev managebean because has null pointer on status id
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
-
+		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
+		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		
@@ -809,5 +819,21 @@ public boolean isSpecCommittee() {
 	public boolean isSpecEndorsmentScreen() {
 		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-	//#29732-end
+
+    private boolean isSpecRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
+	}
+    //29732 end
+
+	private boolean isQtRevisePubNqtPendingScheDoc() {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (QTStatusConst.QT_REVISION_PUBLICATION.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+						.equals(this.getManagedBean().getCurrentStatusId()))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

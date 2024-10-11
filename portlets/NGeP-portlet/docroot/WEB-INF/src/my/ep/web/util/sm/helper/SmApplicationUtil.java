@@ -208,6 +208,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmLicenseInfoVO;
 import my.ep.web.vo.SmMachineCategoryVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 import my.ep.web.vo.SmSiteVisitFacilityVO;
@@ -1720,7 +1721,7 @@ public class SmApplicationUtil {
 					.getSmFacilities()) {
 				if (StringUtils.isNotBlank(fac.getFacilityType())
 						&& (fac.getFacilityType().equals("H") || fac
-								.getFacilityType().equals("B"))) {
+								.getFacilityType().equals("B")) && (fac.isHeadquarters())) {
 					hq = fac;
 					break;
 				}
@@ -3505,7 +3506,7 @@ public class SmApplicationUtil {
 		sec.setBankVerified(isVerifiedAll);
 		sec.setCategoryVerified(isVerifiedAll);
 		//#31043 start
-		if (managedBean.isReviewSiteVisit()) {
+		if (managedBean.isReviewSiteVisit()  && managedBean.isApproverUser()) {
 			sec.setSitevisitVerified(isVerifiedAll);
 		}
 		//#31043 end
@@ -3837,8 +3838,9 @@ public class SmApplicationUtil {
 					.getOverlapCategoryVOList());
 			//13362
 			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
-			
+			managedBean.setOverLappedCategoryExists(true); //#31018
 		}else{
+			managedBean.setOverlapDocs(null);//#31018
 			log.info("overlapCategoryVO == null");
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
@@ -4416,7 +4418,7 @@ public class SmApplicationUtil {
 			SmApplicationManagedBean managedBean) {
 		if (!SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 				.getSmAppl().getSmApplSupportDocs(), managedBean.getSmAppl()
-				.getSupportingDocMode(), managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+				.getSupportingDocMode(), managedBean.isApproverUser())) {
 			throw new EpException(MessageConst.ERROR_722559);
 		}
 	}
@@ -5073,7 +5075,8 @@ public class SmApplicationUtil {
 					&& rejectedAppl.getCreatedDate()
 							.after(resDto.getSmSupplier().getSmAppl()
 									.getCreatedDate())
-					&& rejectedAppl.getApplType().equals(applicationType)) {
+					&& rejectedAppl.getApplType().equals(applicationType)
+					&& isApplPORejectedAfterApprovelSV(rejectedAppl)) { //#34483
 				if (isRejectedApplValidForResubmission(rejectedAppl)) {
 					result = true;
 					throw new EpException(MessageConst.ERROR_722643);
@@ -5153,15 +5156,15 @@ public class SmApplicationUtil {
 			}
 			//#34397, #34398 - start
 			checkMOFExpiryDate(smSupplier, applicationType, false);
-			
-			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI) && smSupplier.isBumi()) {
-				throw new EpException(MessageConst.ERROR_722504);
-			
 			//#32304 - start
-			} else if (applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-					&& SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
+			if (applicationType.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+				if(smSupplier.isBumi()){
+					throw new EpException(MessageConst.ERROR_722504);
+				}
+				if(SmServiceLookup.getMofRegistrationSO().retrievePendingBumiAppl(
 							smSupplier.getSupplierId()).getSmAppl() != null){
-				throw new EpException(MessageConst.ERROR_722697);
+					throw new EpException(MessageConst.ERROR_722697);
+				}
 			}
 			//#32304 - end, #34397, #34398 - end			
 
@@ -5186,9 +5189,14 @@ public class SmApplicationUtil {
 
 	private static void validateDontHaveSuppAdmin(SmAppl appl) {
 		boolean valid = false;
+		//#34483 START
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setApplNo(appl.getApplNo());
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
 
-		if (appl.getSmPersonnels() != null) {
-			for (SmPersonnel per : appl.getSmPersonnels()) {
+		if (personnels != null) {
+			for (SmPersonnel per : personnels) { //#34483 END
 				if (!StringUtils.isBlank(per.getEpRole())
 						&& per.getPmUser() != null
 						&& per.getPmUser().getUserId() != null
@@ -7191,17 +7199,34 @@ public class SmApplicationUtil {
 		if (valid) {
 			valid = false;
 			//#31043 start
+			List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
+			if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryLicenseDocs())) {
+				for (SmLicenseInfoVO docVO : managedBean.getMandatoryLicenseDocs()) {
+					licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+				}
+			}
 			if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
 					.getMandatoryDocs(), managedBean.getSmAppl()
-					.getSupportingDocMode(), managedBean.isApproverUser(),managedBean.getSmAppl().getApplNo())
+					.getSupportingDocMode(), managedBean.isApproverUser())
 					&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
 							managedBean.getNonMandatoryDocs(), managedBean
 									.getSmAppl().getSupportingDocMode(),
-							managedBean.isApproverUser(), managedBean.getSmAppl().getApplNo())) {
+							managedBean.isApproverUser())
+							&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
+									licenseMandatoryDocs, managedBean
+									.getSmAppl().getSupportingDocMode(),
+							managedBean.isApproverUser())) {
 				valid = true;
 			}
-			//#31043 end
 		}
+		if(managedBean.isPoUser() && !managedBean.getPoSecReview().isSitevisitVerified() && managedBean.getCurrentStatus() != null 
+				&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - Before Approval")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan")
+				|| managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Sebelum Diluluskan"))){
+			valid = false;
+		}
+		//#31043 end
 		log.info("*** Valid For Approval Final Decision **** " + valid);
 		managedBean.setAllowedToApprove(valid);
 	}
@@ -7473,22 +7498,8 @@ public class SmApplicationUtil {
 			SmAddress addr, Long siteRefId, String siteType) {
 		
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		String addr1 = AddressUtils.getSmFullFormattedAddress(addr);
-		String param1 = bumiType.getParameterCode();
-		if(facVO.getL3() != null && facVO.getL3().getCategoryTypeCode() != null)
-			param1 = facVO.getL3().getCategoryTypeCode().getParameterCode();
-		boolean isGroup = false;
-				
-		for(SmSvTask t : bean.getSvTaskList()){
-			String addr2 = AddressUtils.getSmFullFormattedAddress(t.getSmSvAddress().getAddress());
-			String param2 = t.getSmSvTemplate().getPmParameter().getParameterCode();
-			if(addr1.equals(addr2) && param1.equals(param2)){
-				isGroup = true;
-				addSmSvTaskGroup(bean, t, bumiType, facVO);
-				break;
-			}
-		}
-		if(isGroup){
+		if(!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr)){
 			return;
 		}
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
@@ -7546,17 +7557,42 @@ public class SmApplicationUtil {
 	}
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
-	private static void addSmSvTaskGroup(SmApplicationManagedBean bean, 
-			SmSvTask svTask, PmParameter bumiType, SmSiteVisitFacilityVO facVO){
+	/**
+	 * Create SmSvTaskGroup if the address and catcode type is the same with one of the SmSvTask(s)
+	 * @param svTaskList
+	 * @param facVO
+	 * @param addr
+	 * @return true if SmSvTaskGroup has been created
+	 */
+	private static boolean checkAddressAndParamSvTask(List<SmSvTask> svTaskList, 
+			SmSiteVisitFacilityVO facVO, SmAddress addr){
+		
+		if(facVO.getL3() == null || facVO.getL3().getCategoryTypeCode() == null){
+			return false;
+			
+		}
+		String addr1 = AddressUtils.getSmFullFormattedAddress(addr);
+		String param1 = facVO.getL3().getCategoryTypeCode().getParameterCode();
+		
+		for(SmSvTask task : svTaskList){
+			String addr2 = AddressUtils.getSmFullFormattedAddress(task.getSmSvAddress().getAddress());
+			String param2 = task.getSmSvTemplate().getPmParameter().getParameterCode();
+			if(addr1.equals(addr2) && param1.equals(param2)){
+				addSmSvTaskGroup(task, facVO);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	private static void addSmSvTaskGroup(SmSvTask svTask, SmSiteVisitFacilityVO facVO){
 		SmSvTaskGroup group = new SmSvTaskGroup();
 		group.setSmSvTask(svTask);
 		SmSvTemplate template = new SmSvTemplate();
 		template.setSmSvTaskGroup(group);
-		template.setPmParameter(bumiType);
-		if (!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
-			group.setPmCategoryL3(facVO.getL3());
-			template.setPmParameter(facVO.getL3().getCategoryTypeCode());
-		}
+		group.setPmCategoryL3(facVO.getL3());
+		template.setPmParameter(facVO.getL3().getCategoryTypeCode());
 		group.setSmSvTemplate(template);
 		
 		if(svTask.getSmSvTaskGroups() == null){
@@ -7849,15 +7885,13 @@ public class SmApplicationUtil {
 				.getSmSupplierCategories()) {
 			//26671 - Site Visit Grouping Enhancement -28775 - start
 			if (cat.isSpecialCategory()
-					&& cat.getPmCategoryL3() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 					&& cat.getPmCategoryL3().getCategoryTypeCode()
 							.getParameterId() != null
-					&& cat.getRecordStatusFlg() != null
-					&& (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0
-					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+					//#32008 - after approval bug
+					&& (cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+							|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+							|| isActiveCategoryAfterApproval(cat, managedBean.getSmAppl().getApplId()))
 					&& !isCategoryRejected(cat)) {
 				//26671 - Site Visit Grouping Enhancement -28775 - end
 				String catType = "";
@@ -8022,8 +8056,9 @@ public class SmApplicationUtil {
 		if (!bean.isSiteVisitAfterApproval()) {
 			// removePendingApprovedCategoryIfNotValid(bean.getSmAppl(), bean
 			// .getBasicCompanyFacility().getFacilityType());
-			removeFacilitiesNotInTheSameCategoryFacType(bean.getSmAppl(),
-					bean.getLatestAppl());
+			//#34303 - Start
+			removeFacilitiesHaveDifferentFacType(bean);
+			//#34303 - End
 			removeTravellingSoftwareIfNotApplicable(bean);
 			removeEquipmentIfNotApplicable(bean);
 			removeOverlapCategoryIfDocNotUploaded(bean);
@@ -8247,6 +8282,55 @@ public class SmApplicationUtil {
 		}
 
 	}
+	
+	// #34303 - Start
+	/**
+	 * Remove facility that have different facility type in sm_facility and
+	 * pm_category_l3
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 */
+	public void removeFacilitiesHaveDifferentFacType(SmApplicationManagedBean bean) {
+		if (!SmCommonUtil.isCollectionEmpty(bean.getSmAppl().getSmFacilities())) {
+			for (Iterator<SmFacility> facIt = bean.getSmAppl().getSmFacilities().iterator(); facIt.hasNext();) {
+				boolean deleteFacility = false;
+				SmFacility fac = facIt.next();
+				if (StringUtils.isNotBlank(fac.getFacilityType())
+						&& !fac.getFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+						&& !fac.getFacilityType().equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+					for (SmSupplierCategoryFacility cat : fac.getSmSupplierCategoryFacilities()) {
+						if ((cat.getPmCategoryL3().getFacilityType()
+								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE))
+								&& (isfacilityValidToCompare(bean, cat))
+								&& (!cat.getPmCategoryL3().getFacilityType().equals(fac.getFacilityType()))) {
+							deleteFacility = true;
+						}
+					}
+					if (deleteFacility) {
+						facIt.remove();
+					}
+				}
+			}
+		}
+	}
+
+	public boolean isfacilityValidToCompare(SmApplicationManagedBean bean, SmSupplierCategoryFacility cat) {
+		boolean retVal = false;
+		for (SmSupplierCategory supCat : bean.getSmAppl().getSmSupplierCategories()) {
+			if (StringUtils.isNotBlank(supCat.getPmCategoryL3().getFacilityType())) {
+				if ((supCat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0 || supCat
+						.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+						&& !isCategoryRejected(supCat)) {
+					if (supCat.getPmCategoryL3().getCategoryL3Id().equals(cat.getPmCategoryL3().getCategoryL3Id())) {
+						retVal = true;
+					}
+				}
+			}
+		}
+		return retVal;
+	}
+	// #34303 - End
 
 	private boolean isFacilityExistInLatest(SmFacility fac,
 			List<SmFacility> latestFacilities) {
@@ -9641,6 +9725,8 @@ public class SmApplicationUtil {
 				//#32627 END
 				.append(")");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setNotUsedConditionExpired(true);  //#36064 START
+		reqDTO.setCurrent(true);				  //#36064 END
 		reqDTO.setSupplierId(supplierId);
 		reqDTO.setWorkflowStatus(sb.toString());
 		reqDTO.setAppType(applType);
@@ -10065,6 +10151,7 @@ public class SmApplicationUtil {
 			bean.getSmAppl().setSmCategoryOverlapDocs(
 					new ArrayList<SmCategoryOverlapDoc>());
 			bean.setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			bean.setOverLappedCategoryExists(false); //#31018
 		}
 	}
 
@@ -10180,7 +10267,7 @@ public class SmApplicationUtil {
 				return smFac;
 			}
 		}
-		// #34303 - start
+		// #34303 - end
 		return null;
 	}
 
@@ -10223,7 +10310,10 @@ public class SmApplicationUtil {
 			List<SelectItem> stateItems = SmCommonUtil.getStateList(coutryId);
 			if (!panelName
 					.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)) {
-				stateLs = retrievePmStateList(coutryId);
+				//#34159 - START
+				if(coutryId != null)
+					stateLs = retrievePmStateList(coutryId);
+				//#34159 - END
 			}
 			switch (panelName) {
 			case SupplierManagementConst.SM_BASIC_INFO_PANEL:
@@ -10233,6 +10323,7 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL:
 				bean.setBasicOffFacStates(stateItems);
+				bean.setBasicOffFacDivisions(new ArrayList<SelectItem>()); //#34159
 				bean.setBasicOffFacDistricts(new ArrayList<SelectItem>());
 				bean.setBasicOffFacCities(new ArrayList<SelectItem>());
 				break;
@@ -10244,6 +10335,7 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 				bean.setAssocCompanyStates(stateItems);
+				bean.setAssocCompanyDivisions(new ArrayList<SelectItem>()); //#34159 
 				bean.setAssocCompanyDistricts(new ArrayList<SelectItem>());
 				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
 				break;
@@ -10768,6 +10860,7 @@ public class SmApplicationUtil {
 				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						//26671 - Site Visit Grouping Enhancement -28775
 						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+						|| isActiveCategoryAfterApproval(cat, appl.getApplId()) //#32008 - after approval bug
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -11653,13 +11746,11 @@ public class SmApplicationUtil {
 	 *            appl
 	 * @return boolean
 	 */
-	//#31043 start
 	public static boolean isAllSuppDocAlreadyVerified(
-			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver, String applNo) {
+			List<SmApplSupportDoc> docs, String suppDocMode, boolean approver) {
 		boolean retVal = true;
 		if (!EntityHelper.isCollectionEmpty(docs)) {
 			for (SmApplSupportDoc doc : docs) {
-				if(doc.getSmAppl().getApplNo().equals(applNo)){
 					if ((approver && (doc.getApproverVerifiedFlg() == null || doc
 							.getApproverVerifiedFlg() == 0))
 							|| (!approver && (doc.getVerifiedFlg() == null || doc
@@ -11686,11 +11777,6 @@ public class SmApplicationUtil {
 						retVal = false;
 						break;
 					}
-				} else{
-					retVal = false;
-					break;
-				}
-				//#31043 end
 			}
 		}
 
@@ -11789,11 +11875,10 @@ public class SmApplicationUtil {
 				&& !EntityHelper.isCollectionEmpty(smAppl
 						.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if ((cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-						.getRecordStatusFlg()
-						.compareTo(
-								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+				//#32008 - after approval bug
+				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
 						&& (cat.getPmCategoryL3() != null
 								&& !StringUtils.isBlank(cat.getPmCategoryL3()
 										.getFacilityType()) && cat
@@ -11849,11 +11934,10 @@ public class SmApplicationUtil {
 			SmMachineDtl machDtlTmp = null;
 			boolean isNew = false;
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if ((cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-						.getRecordStatusFlg()
-						.compareTo(
-								SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
+				//#32008 - after approval bug
+				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
+						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
@@ -12799,6 +12883,9 @@ public class SmApplicationUtil {
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 		//END 14530
+		//#34392 - start
+		bean.setInquirySiteVisitAfter(true);
+		//#34392 - end
 
 		if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 				.getSmApplInquiries())) {
@@ -12833,6 +12920,15 @@ public class SmApplicationUtil {
 						}
 					}
 				}
+				
+				//#34392 - start
+				if (bean.getCurrentStatus()
+						.equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)
+						|| bean.getCurrentStatus()
+								.equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)) {
+					bean.setInquirySiteVisitAfter(false);
+				}
+				//#34392 - end
 
 			}
 			// if Supplier (Respond to PO inquiry)
@@ -12866,6 +12962,9 @@ public class SmApplicationUtil {
 			}
 		} else {
 			// initialize po inquiry
+			//#34392 - start
+			bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+			//#34392 - end
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 	}
@@ -13042,7 +13141,10 @@ public class SmApplicationUtil {
 				countAuthorizedPersonnel++;
 			}
 			//#29616 -start
-			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					"sm", ISupplierSearchSO.class);
+			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					|| supplierSearchSO.isSoftCeritificateActive(shr.getPmUser())) {
 				throw new EpException(MessageConst.ERROR_722685,
 						new String[] { shr.getName() });
 			}//#29616 -end
@@ -13226,10 +13328,12 @@ public class SmApplicationUtil {
 						retVal = false;
 					}
 					//27821
-					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())
-							|| smPersonnel.getIdentificationType() != null && ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ //#30064
+					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){ 
 						retVal = false;
-					}
+					}//29582, 30064, 35300 start 
+					if (smPersonnel.getIdentificationType() != null && smPersonnel.isPermanentResident() ){
+						retVal = false;
+					}//29582, 30064, 35300 end 
 					// #28831 - start
 				} else {
 					if (smPersonnel.getIdentificationType() != null
@@ -13237,7 +13341,12 @@ public class SmApplicationUtil {
 							&& (smPersonnel.getPmCountry() != null && smPersonnel.getPmCountry().getCountryId() != 131)
 							&& !(smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 						retVal = false;
-					}
+					}//29582 strat
+					if (smPersonnel.getIdentificationType() != null
+							&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel
+									.getIdentificationType().getParameterCode())) {
+						retVal = false;
+					}//29582 end
 				}
 				// #28831 - start
 			}
@@ -14124,7 +14233,7 @@ public class SmApplicationUtil {
 			if (item == null) {
 				item = new SelectItem();
 				item.setLabel(eduLevel.getCodeName());
-				item.setValue(eduLevel.getParameterDescId());
+				item.setValue(eduLevel.getPmParameter().getParameterId()); //#36360
 				eduLevelItems.add(item);
 			}
 		}
@@ -15001,15 +15110,6 @@ public class SmApplicationUtil {
 		return daHistoryList;
 	}
 	
-	//28281 - start
-	public static List<Long> retrieveBumiCodeList(){
-		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
-		return supplierCategorySO.retrieveBumiCodeList();
-	}
-	//28281 - end
-	
-	
 	//27796: Disciplinary Action - end - 26238
 	//28198: Disciplinary Action - start - 26238
 			public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction smDisciplinaryAction){
@@ -15452,14 +15552,8 @@ public class SmApplicationUtil {
 
 		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
 			for (SmPersonnel per : latestActivePersonnels) {
-				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					sb.append(++i + ". ");
-					sb.append(per.getName());
-					sb.append(" ");
-					validPersonnels = true;
-				}
-				if (per.getSoftcertFlg() != DbValueConst.RECORD_STATUS_ACTIVE 
-						&& supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE 
+						 || supplierSearchSO.isSoftCeritificateActive(per.getPmUser())) {
 					sb.append(++i + ". ");
 					sb.append(per.getName());
 					sb.append(" ");
@@ -15475,16 +15569,17 @@ public class SmApplicationUtil {
 	
 	//28778 - Site Visit Grouping Enhancement -28775 - start
 	/**
-	 * 
 	 * @param appl
-	 * @return
+	 * @return true if appl has special category codes
 	 */
 	public static boolean hasSpecialCategory(SmAppl appl){
 		if(appl == null || appl.getSmSupplierCategories() == null){
 			return false;
 		}
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL,
+				DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		for(SmSupplierCategory suppCat : appl.getSmSupplierCategories()){
-			if (suppCat.isSpecialCategory()){
+			if (suppCat.isSpecialCategory() && validStatus.contains(suppCat.getRecordStatusFlg())){
 				return true;
 		    }
 		}
@@ -15512,4 +15607,112 @@ public class SmApplicationUtil {
 		return sCat != null ? otherLbl + sCat.getOtherDesc() : null;
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
+	
+	// #34303 - start
+	public static void setFacilityTypeNotInTheSameCategoryFacType(SmApplicationManagedBean smApplicationManagedBean) {
+		for (SmFacility facility : smApplicationManagedBean.getSmAppl().getSmFacilities()) {
+			if (facility.getFacilityId() != null) {
+				for (SmSupplierCategoryFacility fac : facility.getSmSupplierCategoryFacilities()) {
+					if (facility.getFacilityId() != null) {
+						if (facility.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+								&& fac.getPmCategoryL3().getFacilityType()
+										.equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+							facility.setFacilityType(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE);
+						}
+					}
+				}
+			}
+		}
+	}
+	// #34303 - end
+	//#32008 - after approval bug
+	private static boolean isActiveCategoryAfterApproval(SmSupplierCategory cat, Long applId){
+		return cat.getRecordStatusFlg().intValue() == SupplierManagementConst.APPROVED_RECORD_STATUS
+				&& applId.equals(cat.getApplRefId());
+	}
+	//#31043 START
+	/**
+	 * Check if the Approver or PO is allowed allowed to recommend to site visit application.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 */
+	public static void checkAllowedToRecommendSiteVisit(SmApplicationManagedBean managedBean) {
+		boolean allowSiteVisit = false;
+		List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
+		if (!EntityHelper.isCollectionEmpty(managedBean.getMandatoryLicenseDocs())) {
+			for (SmLicenseInfoVO docVO : managedBean.getMandatoryLicenseDocs()) {
+				licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
+			}
+		}
+		if (SmApplicationUtil.isAllSuppDocAlreadyVerified(managedBean
+				.getMandatoryDocs(), managedBean.getSmAppl()
+				.getSupportingDocMode(), managedBean.isApproverUser())
+				&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
+						managedBean.getNonMandatoryDocs(), managedBean
+								.getSmAppl().getSupportingDocMode(),
+						managedBean.isApproverUser()) && SmApplicationUtil.isAllSuppDocAlreadyVerified(
+								licenseMandatoryDocs, managedBean
+								.getSmAppl().getSupportingDocMode(),
+						managedBean.isApproverUser())) {
+			allowSiteVisit = true;
+		}
+		managedBean.setAllowedToSiteVisit(allowSiteVisit);
+	}
+	//#31043 END
+	//#34483 START
+	public static boolean isApplPORejectedAfterApprovelSV(SmAppl appl){
+		boolean isRejected = false;
+		boolean isHasBasic = false;
+		if(appl.getPmStatus().getStatusId() == 20112){
+			for(SmWorkflowStatus smWorkflowStatus : appl.getSmWorkflowStatuses()){
+				if(smWorkflowStatus.getPmStatus().getStatusId() == 20116 || smWorkflowStatus.getPmStatus().getStatusId() == 20117){
+					isRejected = true;
+					break;
+				}
+			}
+		}
+		
+		for(SmAppl previousSmAppl : appl.getSmSupplier().getSmAppls()){
+			if(previousSmAppl.getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)){
+				isHasBasic = true;
+				break;
+			}
+		}
+		
+		if(appl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && isRejected && !isHasBasic){
+			return false;
+		}else if((appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_CATEGORY)
+				|| appl.getApplType().equalsIgnoreCase(SupplierManagementConst.APPL_TYPE_BUMI)) && isRejected){ 
+			return false;
+		}
+		
+		return true;
+	}
+	//#34483 END
+	
+	//#26238
+	 /**
+	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
+	 *  can edit Bank Information only
+	 * @param bean
+	 */
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean){
+		if(bean.getEditVO() != null){
+			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
+				bean.getEditVO().setDisciplinary(false);
+				return;
+			}
+			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			if(EntityHelper.isCollectionEmpty(activeDA)){
+				return;
+			}
+			for(SmDisciplinaryAction da : activeDA){
+				if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+					bean.getEditVO().setDisciplinary(true);
+					return;
+				}
+			}
+		}
+	}	
 }

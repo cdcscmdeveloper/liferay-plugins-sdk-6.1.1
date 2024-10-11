@@ -100,7 +100,7 @@
 						value="#{lbl['lbl.sc.gst.branch.attachment.tooltip']}" />
 				</td>
 			</tr>
-			<!-- #29693 start -->
+			<!-- 20230111@Haziq - #12487&29693 - start  -->
 			<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
@@ -109,8 +109,9 @@
 					<tr>
 						<td>
 							<p:inputText id="ContractAmtId2"
-								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
-								style="text-align:right;" partialSubmit="true" size="5"
+								value="#{directLOABackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:directLOABackingBean.managedBean.scLoa.loaResponsePeriod}"
+
+								style="text-align:right;" partialSubmit="true" size="2"
 								disabled="true" >
 							</p:inputText> 	
 				
@@ -126,7 +127,7 @@
 				           <p:outputPanel
 									id="ContractAmtId3">
 								<p:inputText
-									value="#{lOADetailBackingBean.managedBean.scLoa.ackDueDate eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.ackDueDate}"
+									value="#{directLOABackingBean.retrieveDueDate()}"
 									style="text-align:right;" disabled="true" partialSubmit="true" >
 									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 								</p:inputText>
@@ -140,7 +141,7 @@
 					</tr>
 				</table></td>
 			</tr>
-				<!-- #29693 end -->
+				<!-- 20230111@Haziq - #12487&29693 - end  -->
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.supplier.sign.date']}" />

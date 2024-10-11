@@ -372,8 +372,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
-	
-	private String firstZone;//Bug #34757
+		
+	//Bug #34757 - Start
+	private String firstZone;
+	private List<Long> itemList;
+	private List<Long> loaItemIds;
+	//Bug #34757 - End
 	
 	private int retainPageNumber = 0;//#34242
 	
@@ -2006,7 +2010,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	public List<ScLoiLoaItem> getHighestZoneScLoiLoaItemList() {
 		if(highestZoneScLoiLoaItemList ==null) {
-			highestZoneScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+			highestZoneScLoiLoaItemList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		}
 		return highestZoneScLoiLoaItemList;
 	}
@@ -2202,6 +2206,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.listSpecAnswer = listSpecAnswer;
 	}
 	//29006 @zaim end
+
+	public List<Long> getItemList() {
+		return itemList;
+	}
+
+	public void setItemList(List<Long> itemList) {
+		this.itemList = itemList;
+	}
+
+	public List<Long> getLoaItemIds() {
+		return loaItemIds;
+	}
+
+	public void setLoaItemIds(List<Long> loaItemIds) {
+		this.loaItemIds = loaItemIds;
+	}
 
 }
 

@@ -401,9 +401,10 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
-			<!-- #29693 start -->
+			<!-- 20230111@Haziq - #12487&29693 - start  -->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td><table>
 					<tr>
@@ -412,19 +413,20 @@
 						<c:when test="#{isEditableStatus and !lOADetailBackingBean.managedBean.readOnly}">
 							<p:inputText id="ContractAmtId2"
 								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
-								style="text-align:right;" partialSubmit="true" size="5" >
+								label="#{lbl['lbl.sc.resp.period']}"
+								style="text-align:right;" partialSubmit="true" size="2" required="true" >
 								<p:ajax event="change"
 									listener="#{lOADetailBackingBean.validateResponsePeriod(lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod)}"
 									partialSubmit="true" process="@this"
 									update="@([id$=ContractAmtId3])" />
-							</p:inputText> 	
+							</p:inputText> 
+							<p:message id="ContractAmtId2Msg" for="ContractAmtId2" display="icon" />	
 						</c:when>
 						<c:otherwise>
 						    <p:inputText id="ContractAmtId2"
 								value="#{lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.loaResponsePeriod}"
-								style="text-align:right;" partialSubmit="true" size="5"
-								disabled="true" >
-								
+								style="text-align:right;" partialSubmit="true" size="2"
+								disabled="true" >					
 							</p:inputText> 	
 						</c:otherwise>
 						</c:choose>
@@ -453,7 +455,7 @@
 					</tr>
 				</table>
 				</td>
-			<!-- #29693 end -->
+			<!-- 20230111@Haziq - #12487&29693 - end  -->
 			
 			</tr>
 		<c:if test="#{isDocTypeQuotation}">

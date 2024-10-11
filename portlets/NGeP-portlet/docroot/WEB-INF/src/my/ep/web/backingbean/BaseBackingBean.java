@@ -100,6 +100,7 @@ import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -128,7 +129,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
-import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
@@ -1019,9 +1019,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
+			//#25790 - start
+			Locale localeMY = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+					CommonConstants.DEFAULT_COUNTRY_CODE);
+			
+			Locale localeEN = new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			//#25790 - end
 			for (PmStatusDesc statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName());
+				//#25790 - start
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc
+						.getStatusName()
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeMY), StringUtils.EMPTY)
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeEN), StringUtils.EMPTY));
+				//#25790 - end
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -2860,6 +2874,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
+						resDTO.getSmPersonnel().setSsmData(false);
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -2957,6 +2974,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
 				//checking with ssm
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				//#29582
+				ssmReqDTO.setSmSupp(smSupplier);
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
 				//27329
@@ -3207,6 +3226,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			this.getManagedBean().setSmSupplierSsm(new SmSupplier());
+			//#24819 - START
+			if(this.getManagedBean().getSmSupplier() == null){
+				this.getManagedBean().setSmSupplier(new SmSupplier());
+				this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
+			}
+			//#24819 - END
 			/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
 					.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
 					: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
@@ -3407,7 +3432,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		return retVal;
-	}	
+	}
+	
+	//29956 START
+	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
+		Boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
+		}
+		return retVal;
+	}
+	//29956 END
 
 	public static void checkEquityOwnerUpdateAllowance(BaseManagedBean managedBean) {
 		// #27165
@@ -4101,47 +4138,98 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#21387 - End
 	
 	//#28175 - start, 29380 - Site Visit Grouping Enhancement -28775
+	//28175 Refactor start
 	/**
+	 * Returns the supplier category name based on the provided parameters.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
 	 * @param isSupplierProfile
-	 * @param isFullName for L1, L2, L3 category names
-	 * @return latest or old category code description
+	 *            whether it's a supplier profile
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the supplier category name
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName){
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName) {
 		if (catL3 == null) {
 			return null;
 		}
+
 		SmAppl appl = getManagedBean().getSmAppl();
-		String pmCategoryName = catL3.getCategoryName();
-		if(isFullName){
-			pmCategoryName = catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName()+" / "
-					+ catL3.getPmCategoryL2().getCategoryName()+" / "+catL3.getCategoryName();
+		String categoryName = getCategoryName(catL3, isFullName);
+
+		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			return categoryName;
 		}
-		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
-				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
-			return pmCategoryName;
+
+		SmSupplierCategory supplierCategory = getSupplierCategory(appl, catL3);
+		if (supplierCategory == null) {
+			return categoryName;
 		}
-		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
-				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
-		if(sCat == null){
-			return pmCategoryName;
-		}
-		if(isFullName){
-			return sCat.getCategoryL1Name()+" / "+sCat.getCategoryL2Name()+" / "+sCat.getCategoryL3Name();
+
+		return isFullName ? getFullSupplierCategoryName(supplierCategory) : supplierCategory.getCategoryL3Name();
 	}
-		return sCat.getCategoryL3Name();
+
+	/**
+	 * Returns the category name based on the provided PmCategoryL3 object and
+	 * whether to return the full name.
+	 * 
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the category name
+	 */
+	private String getCategoryName(PmCategoryL3 catL3, boolean isFullName) {
+		String categoryName = catL3.getCategoryName();
+		if (isFullName) {
+			categoryName = String.format("%s / %s / %s", catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName(),
+					catL3.getPmCategoryL2().getCategoryName(), categoryName);
+		}
+		return categoryName;
 	}
-	
+
+	/**
+	 * Returns the SmSupplierCategory object based on the provided SmAppl object
+	 * and PmCategoryL3 object.
+	 * 
+	 * @param appl
+	 *            the SmAppl object
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @return the SmSupplierCategory object
+	 */
+	private SmSupplierCategory getSupplierCategory(SmAppl appl, PmCategoryL3 catL3) {
+		return (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(),
+				appl.getSmSupplierCategories(), "pmCategoryL3");
+	}
+
+	/**
+	 * Returns the full supplier category name based on the provided
+	 * SmSupplierCategory object.
+	 * 
+	 * @param supplierCategory
+	 *            the SmSupplierCategory object
+	 * @return the full supplier category name
+	 */
+	private String getFullSupplierCategoryName(SmSupplierCategory supplierCategory) {
+		return String.format("%s / %s / %s", supplierCategory.getCategoryL1Name(),
+				supplierCategory.getCategoryL2Name(), supplierCategory.getCategoryL3Name());
+	}
+	//28175 Refactor end
 	/**
 	 * @param cat
 	 * @param appl
 	 * @return latest or old category code description
 	 */
 	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		String catName1 = cat.getPmCategoryL1().getCategoryName();
+		String catName2 = cat.getPmCategoryL2().getCategoryName();
+		String catName3 = cat.getPmCategoryL3().getCategoryName();
 		return isLatestCatCodeDesc(false, appl) ?  
-				cat.getPmCategoryL1().getCategoryName()+" / "+cat.getPmCategoryL2().getCategoryName()
-				+" / "+cat.getPmCategoryL3().getCategoryName()
-				: cat.getCategoryL1Name()+" / "+cat.getCategoryL2Name()+" / "+cat.getCategoryL3Name();
+				String.format("%s / %s / %s",catName1,catName2,catName3)
+				: getFullSupplierCategoryName(cat);
 	}
 	
 	/**
@@ -4158,16 +4246,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
-		boolean isStatusNull = false;
-		try {
-		if(appl == null || appl.getPmStatus() == null){
+		if(appl == null){
 			return false;
 		}
-		} catch (Exception e) {
-			log.info("", e);
-			isStatusNull = true;
-		}
-		if (isStatusNull) {
+		if (appl.getPmStatus() == null) {
 			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();
@@ -4181,29 +4263,48 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
 		getManagedBean().getPersonnelsRole().clear();
 		getManagedBean().setDowngradeRole(false);
+		getManagedBean().setDisAllowOwnerEdit(false);
+		
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
+		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-		if(!resDto.getSmPersonnelList().isEmpty() && resDto.getSmPersonnelList() != null){
+		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 				
-				if(smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(!isMofAccEffDatePassedCurrDate(supplier) 
-						&& isPersonnelAdminRole(personnel)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(isMofAccEffDatePassedCurrDate(supplier)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				
+				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
+				
+				if(isPersonnelAdminRole
+						&& !isMofAccEffDatePassed6MonthCurrDate
+						&& !isBasicAccount){
+					getManagedBean().setDisAllowOwnerEdit(true);
+				}
+				
+//				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
+//						&& isPersonnelAdminRole(personnel)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				}
 			}
 		}
-		if(!getManagedBean().getPersonnelsRole().isEmpty()){
+		if(getManagedBean().getPersonnelsRole() != null 
+				&& !getManagedBean().getPersonnelsRole().isEmpty()){
+			
 			getManagedBean().setDowngradeRole(true);
 			
 			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
@@ -4233,9 +4334,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//END #29956
 	
 	//#12487 start
-	
+	/**
+	 * To retrieve PTJ code by org profile ID and created date
+	 * @param orgProfileId
+	 * @param tranDate
+	 * @return Organization Code
+	 */
 	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
-		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate
+		IOrgProfileSO profileSO =  BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IOrgProfileSO.class);
@@ -4246,10 +4352,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				reqDTO).getPmOrgProfile();
 		if (orgProfile != null) {
 			return orgProfile.getOrgCode();
-		} else {
-			log.info("PTJ not found : " + orgProfileId);
-			return null;
 		}
+			
+		return null;
 	}
 	
 	//#12487 end
@@ -4261,7 +4366,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @throws IOException
 	 */
 	public void downloadCancelledBumiAppl(boolean isSVC) throws IOException{
-		Map<String, String> paramMap = new HashMap<String, String>();
+		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
 		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes().getUserSessionBean().getUserId().toString());
 		paramMap.put("PLANGUANGE", "ms");
@@ -4269,6 +4374,41 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		generateReport(report, paramMap);
 	}
+	
+	//#28854,#25000 - Start
+	/**
+	 * Processes the given string by replacing newline characters with HTML line break tags
+	 * and encoding the < and > characters to their HTML entity equivalents. If the string
+	 * is null or empty, it returns null.
+	 *
+	 * @param value the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by &lt;br/&gt;
+	 *         and <, > characters encoded to &lt; and &gt; respectively; {@code null} if the input is null or empty
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+	    if (value == null || value.isEmpty()) {
+	        return null;
+	    }
+	    // Replace < and > with their HTML entity equivalents
+	    String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+	    // Replace newline characters with <br/>
+	    return formatted.replace("\n", "<br/>");
+	}
+	//#28854,#25000 - End
+	
+	// #25000 - Start
+	/**
+	 * A utility method to format a date.
+	 * 
+	 * @param date
+	 *            the Date object to format
+	 * @return the formatted date string, or an empty string if the date is null
+	 */
+	public String formatDate(Date date) {
+		SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		return date != null ? dateformat.format(date) : "";
+	}
+	// #25000 - End
 	
 }
 

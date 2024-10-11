@@ -84,8 +84,8 @@ public class SumForTotalNumAndValOfPoByStatRptBackingBean extends FlReportBackin
 		} else if(getManagedBean().getSupplierId() != null){
 			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSupplierId());
 		}
-		if (StringUtils.isNotBlank(getManagedBean().getPurchaseOrderStatus())) {
-			params.put(FlReportConst.FL_RPT_PO_STATUS, getManagedBean().getPurchaseOrderStatus());
+		if (StringUtils.isNotBlank(getManagedBean().getGroupStatus())) {
+			params.put(FlReportConst.FL_RPT_PURCHASE_GROUP_STATUS, getManagedBean().getGroupStatus());
 		}
 		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());

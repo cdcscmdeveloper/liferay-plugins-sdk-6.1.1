@@ -37,7 +37,8 @@
 				selection="#{backingBean.managedBean.deleteExistingCategoryList}">
 				<ac:paginator for="catExistDt" />
 				<!-- 32008 disable for ups -->
-				<!-- p:column selectionMode="multiple" style="width:2%" rendered="#{!backingBean.managedBean.approverUser}" disabledSelection="#{aprvdCatBean.cancelCategory}"/-->
+				<p:column selectionMode="multiple" style="width:2%" rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}" 
+					disabledSelection="#{aprvdCatBean.cancelCategory}" />
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:outputLabel value="#{index + 1}"
 						style="float: left;white-space: normal;" />
@@ -73,7 +74,7 @@
 						<p:inputTextarea id="otherDesc" maxlength="100"
 							style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 							rendered="#{aprvdCatBean.pmCategoryL3.otherDescReq eq 1}"
-							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" disabled="#{backingBean.managedBean.upsCannotEdit}">
+							value="#{aprvdCatBean.otherDesc}" rows="5" cols="20" > <!-- #36289 -->
 						</p:inputTextarea>
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc 
@@ -333,9 +334,9 @@
 					</p:outputPanel>
 				</p:column>
 			</p:dataTable>
-			<!-- 32008 disable for ups
+			<!-- 32008 disable for ups -->
 			<p:spacer height="2px;" />
-			<c:if test="#{!backingBean.managedBean.approverUser}">
+			<c:if test="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -345,7 +346,6 @@
 					</p:commandButton>
 				</div>
 			</c:if>
-			-->
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">

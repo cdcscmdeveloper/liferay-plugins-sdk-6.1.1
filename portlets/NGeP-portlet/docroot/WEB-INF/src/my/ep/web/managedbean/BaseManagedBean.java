@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 
@@ -183,7 +184,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean newVersion;
 	
 	//12471 Start
-	private String orgCat;
 	private SelectItem[] ministryDDList;
 	private SelectItem[] ptjGroupDDList;
 	private SelectItem[] ptjDDList;
@@ -193,9 +193,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private String memberMinOrg;
 	private String memberPtjOrgCode;
 	private String memberPtjOrgName;
-	private String orgType;
-	private String orgName;
+	private UserCommitteeSearchBean committeeSearchBean;
 	//12471 End
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean forceReplace;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1209,28 +1210,21 @@ public abstract class BaseManagedBean implements Serializable {
 		this.memberPtjOrgName = memberPtjOrgName;
 	}
 
-	public String getOrgCat() {
-		return orgCat;
+	public UserCommitteeSearchBean getCommitteeSearchBean() {
+		return committeeSearchBean;
 	}
 
-	public void setOrgCat(String orgCat) {
-		this.orgCat = orgCat;
-	}
-
-	public String getOrgType() {
-		return orgType;
-	}
-
-	public void setOrgType(String orgType) {
-		this.orgType = orgType;
-	}
-
-	public String getOrgName() {
-		return orgName;
-	}
-
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
+	public void setCommitteeSearchBean(UserCommitteeSearchBean committeeSearchBean) {
+		this.committeeSearchBean = committeeSearchBean;
 	}
 	//12471 end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isForceReplace() {
+		return forceReplace;
+	}
+
+	public void setForceReplace(boolean forceReplace) {
+		this.forceReplace = forceReplace;
+	}
+	// #28895_35501 End
 }
