@@ -1697,21 +1697,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
-	//#25037-START
+	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
 	private String currentCommitteeDesc;
 	private ScCommitteeMemberHistory selectedCommitteeHistory;
 	private Paginator selectedHistoryMember;
 	private boolean committeeReviseFlow;
-	private List<QtCommitteeMemberBean>memberHistoryList;
+	private List<QtCommitteeMemberBean> memberHistoryList;
 	private ScQtApprovalRequest scQtApprovalRequest;
 	private boolean specUpdateInProgress;
 	private ScQtApprovalRequest doaaRequest;
 	private boolean doaRequestEditable;
 	private List<ScQtContactPerson> newDoaList;
 	private List<ScQtContactPerson> prevDoaList;
-	private List<PmUser> deskOfficerAssistantList; 
+	private List<PmUser> deskOfficerAssistantList;
 	private ScQtRequestContent requestContent;
 	private boolean reapproval;
 	private String prevDOAs;
@@ -1721,7 +1721,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeUpdateFlow;
 	private List<String> mainTaskNames;
 
-	//#25037-END
+	// 25037 - end
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded=false;
