@@ -31,7 +31,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Long loginId = getUserIdSessionFromLoginId();
+	private Long loginUserId = getUserIdSessionFromLoginId();
 
 	public AuditSupplierManagementBackingBeanTemplate() {
 	}
@@ -51,7 +51,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBac
 				auditSmSo(auObj);
 			}
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null, "AuditSupplierManagementSO", loginId, ex);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null, "AuditSupplierManagementSO", loginUserId, ex);
 		}
 	}
 
@@ -81,8 +81,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBac
 
 	private PmOrgProfile retriveUserOrg() {
 		PmOrgProfile orgProfile = new PmOrgProfile();
-		if (loginId != null) {
-			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(loginId);
+		if (loginUserId != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(loginUserId);
 			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
 			}
@@ -157,7 +157,7 @@ public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBac
 					IAuditSupplierManagementSO.class);
 			auSmSo.insertAudit(auObj);
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", auObj.getDocNo(), "AuditSupplierManagementSO", loginId,
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", auObj.getDocNo(), "AuditSupplierManagementSO", loginUserId,
 					ex);
 		}
 	}
