@@ -33,7 +33,6 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 	 */
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
-		log.info("*****#28895_35501***** Start prepareAuditData(AuditSupplierManagementBankInformationBackingBean)");
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		RegistrationManagedBean mBean = (RegistrationManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
@@ -60,7 +59,6 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 		auditAddedData(bankList, auDetails, newBanks);
 		auditBaseData(auObj, mBean.getSmSupp(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
-		log.info("*****#28895_35501***** End prepareAuditData(AuditSupplierManagementBankInformationBackingBean)");
 		return auObj;
 	}
 
