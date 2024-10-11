@@ -16,17 +16,17 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		<ui:remove> #25791 start </ui:remove>
 		<table style="width: 100%">
-			<ui:remove> #25791 start </ui:remove>
 			<tr>
-				<td>
-					<ui:remove> #25791 end </ui:remove> <p:commandButton immediate="true"
-						value="#{lbl['lbl.btn.back']}"
+				<td><ui:remove> #25791 end </ui:remove> 
+				<p:commandButton
+						immediate="true" value="#{lbl['lbl.btn.back']}"
 						rendered="#{lOIDetailBackingBean.managedBean.editFlag or lOIDetailBackingBean.isQtMaintenanceScreen}"
 						style="float:left;"
-						action="#{lOIDetailBackingBean.backToPrevious}" />
-				</td>
+						action="#{lOIDetailBackingBean.backToPrevious}" /> 
 				<ui:remove> #25791 start </ui:remove>
+				</td>
 				<td style="vertical-align: bottom;" align="right"><p:commandLink
 						value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, lOIDetailBackingBean.managedBean.scQt.qtId)}"

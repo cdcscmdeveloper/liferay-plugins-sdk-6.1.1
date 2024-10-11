@@ -1875,14 +1875,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#29732
 	private boolean isFromSubmitCatChange;
 	private boolean isCheckUserCanRevise;
-	
-	
-	
-	
-	
-	private boolean isSampleShowHide;//11104wip
-	
-	private List<ScQt> qtTrackingdiaryView;// 25791-start
+
+	private boolean isSampleShowHide;// 11104wip
+
+	// 25791-start
+	private List<ScQt> qtTrackingdiaryView;
 	private String qtAuditORMaintenanceView;
 	private List<ScLoa> qtLoaTrackingDtls;
 	private ScQt viewTrackingDiaryQTDL;
@@ -1891,7 +1888,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<VCtContract> loaContractListTracking;
 	private IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls;
 	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
-	private Map<Long, VCtContract> checkLoaContract;// 25791-End
+	private Map<Long, VCtContract> checkLoaContract;
+	// 25791-End
+
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11962,10 +11961,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSampleShowHide(boolean isSampleShowHide) {
 		this.isSampleShowHide = isSampleShowHide;
 	}//11104-end
-		
-	
+
+	// 25791-start
 	/**
-	 *25791-start
 	 * @return the qtTrackingdiaryView
 	 */
 	public List<ScQt> getQtTrackingdiaryView() {
@@ -11973,7 +11971,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qtTrackingdiaryView the qtTrackingdiaryView to set
+	 * @param qtTrackingdiaryView
+	 *            the qtTrackingdiaryView to set
 	 */
 	public void setQtTrackingdiaryView(List<ScQt> qtTrackingdiaryView) {
 		this.qtTrackingdiaryView = qtTrackingdiaryView;
@@ -11987,7 +11986,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qtAuditORMaintenanceView the qtAuditORMaintenanceView to set
+	 * @param qtAuditORMaintenanceView
+	 *            the qtAuditORMaintenanceView to set
 	 */
 	public void setQtAuditORMaintenanceView(String qtAuditORMaintenanceView) {
 		this.qtAuditORMaintenanceView = qtAuditORMaintenanceView;
@@ -12001,7 +12001,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qtLoaTrackingDtls the qtLoaTrackingDtls to set
+	 * @param qtLoaTrackingDtls
+	 *            the qtLoaTrackingDtls to set
 	 */
 	public void setQtLoaTrackingDtls(List<ScLoa> qtLoaTrackingDtls) {
 		this.qtLoaTrackingDtls = qtLoaTrackingDtls;
@@ -12015,7 +12016,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param viewTrackingDiaryQTDL the viewTrackingDiaryQTDL to set
+	 * @param viewTrackingDiaryQTDL
+	 *            the viewTrackingDiaryQTDL to set
 	 */
 	public void setViewTrackingDiaryQTDL(ScQt viewTrackingDiaryQTDL) {
 		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
@@ -12029,7 +12031,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param loaContractTrackingDtls the loaContractTrackingDtls to set
+	 * @param loaContractTrackingDtls
+	 *            the loaContractTrackingDtls to set
 	 */
 	public void setLoaContractTrackingDtls(List<ScLoaForQt> loaContractTrackingDtls) {
 		this.loaContractTrackingDtls = loaContractTrackingDtls;
@@ -12043,7 +12046,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param loaContractTrackingDtl the loaContractTrackingDtl to set
+	 * @param loaContractTrackingDtl
+	 *            the loaContractTrackingDtl to set
 	 */
 	public void setLoaContractTrackingDtl(ScLoaForQt loaContractTrackingDtl) {
 		this.loaContractTrackingDtl = loaContractTrackingDtl;
@@ -12057,11 +12061,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param loaContractListTracking the loaContractListTracking to set
+	 * @param loaContractListTracking
+	 *            the loaContractListTracking to set
 	 */
 	public void setLoaContractListTracking(List<VCtContract> loaContractListTracking) {
 		this.loaContractListTracking = loaContractListTracking;
-	}//25791-End
+	}
 
 	/**
 	 * @return the viewQtDlLoaContractTrackingDtls
@@ -12071,10 +12076,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param viewQtDlLoaContractTrackingDtls the viewQtDlLoaContractTrackingDtls to set
+	 * @param viewQtDlLoaContractTrackingDtls
+	 *            the viewQtDlLoaContractTrackingDtls to set
 	 */
-	public void setViewQtDlLoaContractTrackingDtls(
-			IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls) {
+	public void setViewQtDlLoaContractTrackingDtls(IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls) {
 		this.viewQtDlLoaContractTrackingDtls = viewQtDlLoaContractTrackingDtls;
 	}
 
@@ -12086,10 +12091,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param viewLoaContractDataModel the viewLoaContractDataModel to set
+	 * @param viewLoaContractDataModel
+	 *            the viewLoaContractDataModel to set
 	 */
-	public void setViewLoaContractDataModel(
-			IPagingDataModel<VCtContract> viewLoaContractDataModel) {
+	public void setViewLoaContractDataModel(IPagingDataModel<VCtContract> viewLoaContractDataModel) {
 		this.viewLoaContractDataModel = viewLoaContractDataModel;
 	}
 
@@ -12101,11 +12106,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkLoaContract the checkLoaContract to set
+	 * @param checkLoaContract
+	 *            the checkLoaContract to set
 	 */
 	public void setCheckLoaContract(Map<Long, VCtContract> checkLoaContract) {
 		this.checkLoaContract = checkLoaContract;
-	}//25791-End
+	}
+	// 25791-End
 }
-
-// ***25201

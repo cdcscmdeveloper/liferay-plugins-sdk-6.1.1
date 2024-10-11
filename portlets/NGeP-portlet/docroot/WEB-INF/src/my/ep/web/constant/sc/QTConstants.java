@@ -411,10 +411,10 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "9";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "10";
 	//Bug #35688@Syazani 10/07/2024 -- End
-	
-	
-	public static final String QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml";// 25791-start
-	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";// 25791-start
+
+	// 25791-start
+	public static final String QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml";
+	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
 	public static final String LOA_CT_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewLOAContractList.xhtml";
 	public static final int TAB_MAIN_INDEX = 0;
 	public static final String CONTRACT_PAGE_DETAILS_VIEW = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
@@ -426,5 +426,6 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_TERMINATED = "lbl.ct.terminated";
 	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
-	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";// 25791-End
+	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	// 25791-End
 }

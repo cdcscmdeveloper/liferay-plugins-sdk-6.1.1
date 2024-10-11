@@ -57,9 +57,8 @@
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{suppFinalizationBackingBean.enableAutoUpdate()}" />
-
+		<ui:remove> #25791 start </ui:remove>
 		<table style="width: 100%">
-			<ui:remove> #25791 start </ui:remove>
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true"
