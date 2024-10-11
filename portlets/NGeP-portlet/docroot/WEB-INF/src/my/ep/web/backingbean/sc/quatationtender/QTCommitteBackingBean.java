@@ -2480,12 +2480,14 @@ public class QTCommitteBackingBean extends
 				ScQt scQt = this.getManagedBean().getQt();
 				ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,
 						scQt.getQtId());
+				Long specStatusId = 0L;
 				if (null != wfStatus) {
-					Long[] specStatusArr = new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT,
-							QTStatusConst.SE_PENDING_SIGNOFF, QTStatusConst.SE_PENDING_REVISION };
-					specCheck = !Arrays.asList(specStatusArr).contains(wfStatus.getPmStatus().getStatusId());
-					return specCheck;
+					specStatusId = wfStatus.getPmStatus().getStatusId();
 				}
+				Long[] specStatusArr = new Long[] { QTStatusConst.SE_PENDING_ENDORSMENT,
+						QTStatusConst.SE_PENDING_SIGNOFF, QTStatusConst.SE_PENDING_REVISION };
+				specCheck = !Arrays.asList(specStatusArr).contains(specStatusId);
+				return specCheck;
 			}
 		} else {
 			return Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(statusId)
