@@ -744,8 +744,9 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			
-			//Bug 27022 - start 			
-			SmAppl latestAppl = supplierProfile.getSmAppl();
+			//Bug 27022 - start 	
+			//#30766 & #34209 - START
+			/*SmAppl latestAppl = supplierProfile.getSmAppl();
 			 if(latestAppl != null 
 					 && latestAppl.getSmSupplierCategories() != null
 					 	&& getManagedBean().getSmAppl().getSmSupplierCategories() != null){
@@ -759,7 +760,8 @@ public class SmApplicationBackingBean extends
 						 }
 					 }
 				 }
-			 }
+			 }*/
+			//#30766 & #34209 - END
 			//Bug 27022 - end
 			 
 			 //3460 - Start

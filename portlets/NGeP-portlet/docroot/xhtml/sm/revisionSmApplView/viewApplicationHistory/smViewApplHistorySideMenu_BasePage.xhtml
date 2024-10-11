@@ -23,6 +23,7 @@
 		</p:blockUI>
 		
 		<p:outputPanel id="supplierProfilePanelId">
+			#{viewSmApplBackingBean.rePopulateApplFacilitiesList()} <!-- #30766 & #34209 -->
 			<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
 			
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/backButtonAndUrl.xhtml" />
