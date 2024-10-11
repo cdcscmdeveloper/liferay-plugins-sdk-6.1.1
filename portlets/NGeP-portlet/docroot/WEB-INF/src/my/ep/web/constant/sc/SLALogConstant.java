@@ -37,6 +37,12 @@ public class SLALogConstant {
 	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
+	
+	// 25037 - start
+	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
+	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
+	// 25037 - end
+	
 	/*
 	 * METHOD_NAME
 	 */
@@ -73,7 +79,14 @@ public class SLALogConstant {
 	//12471 - end
 	//06022024@Sonarqube QT#58 - haziq
 	public static final String QT_CALC_TOTAL_AMOUNT = "calcTotalAmount";
+	// 25037 - start
+	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
+	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
+	public static final String QT_PRESUBMIT_GENERIC_APPROVAL_TASK = "preSubmitGenericApprovalTask";
+	public static final String QT_PREPARE_COMMITTEE_HISTORY = "prepareCommitteeHistory";
+	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
 
+	// 25037 - end
 	private SLALogConstant(){
 		
 	}	
