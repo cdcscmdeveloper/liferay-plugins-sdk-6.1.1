@@ -475,7 +475,9 @@ public class SmApplicationUtil {
 			sortSupplierCategory(catList);
 			for (SmSupplierCategory cat : catList) {
 				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen{
-				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getPoDecFlg() == null) {
+				//#30766 & #34209 - START
+				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && cat.getPoDecFlg() == null) {
+				//#30766 & #34209 - END
 					//Enhancement #11765
 					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
 				}
@@ -6913,7 +6915,10 @@ public class SmApplicationUtil {
 								.getRecordStatusFlg()
 								.compareTo(
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-						&& !isCategoryRejected(cat)) {
+						//#30766 & #34209 - START
+						&& ( ((cat.getApprvrDecFlg()!=null && cat.getApprvrDecFlg() == 1) || (cat.getPoDecFlg()!=null && cat.getPoDecFlg()==1)) ||  (cat.getPoDecFlg()==null && cat.getApprvrDecFlg()==null))) { 
+						//&& !isCategoryRejected(cat)) {
+					   //#30766 & #34209 - END
 					String facType = "";
 					if (cat.getPmCategoryL3().getFacilityType() != null) {
 						facType = cat.getPmCategoryL3().getFacilityType();
@@ -7344,7 +7349,10 @@ public class SmApplicationUtil {
 							.getRecordStatusFlg()
 							.compareTo(
 									SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-							&& !isCategoryRejected(cat)) {
+							//#30766 & #34209 - START
+							//&& !isCategoryRejected(cat)
+							) {
+							//#30766 & #34209 - END
 						pendingApproveCatTypeList.add(cat.getPmCategoryL3()
 								.getCategoryTypeCode().getParameterCode());
 					}
@@ -11066,8 +11074,11 @@ public class SmApplicationUtil {
 								&& !StringUtils.isBlank(cat.getPmCategoryL3()
 										.getFacilityType()) && cat
 								.getPmCategoryL3().getFacilityType()
-								.equalsIgnoreCase(facType))) {
-
+								.equalsIgnoreCase(facType))
+						//#30766 & #34209 - START
+						&& ( ((cat.getApprvrDecFlg()!=null && cat.getApprvrDecFlg() == 1) || (cat.getPoDecFlg()!=null && cat.getPoDecFlg()==1)) ||  (cat.getPoDecFlg()==null && cat.getApprvrDecFlg()==null))		
+						) {
+						//#30766 & #34209 - END
 					cat.getPmCategoryL3().setFacilityList(
 							new ArrayList<SmFacility>());
 					cat.getPmCategoryL3().setSelectedFacilityList(
@@ -11125,8 +11136,11 @@ public class SmApplicationUtil {
 								.contains(
 										cat.getPmCategoryL3()
 												.getCategoryTypeCode()
-												.getParameterCode())) {
-
+												.getParameterCode())
+						//#30766 & #34209 - START
+						&& ( ((cat.getApprvrDecFlg()!=null && cat.getApprvrDecFlg() == 1) || (cat.getPoDecFlg()!=null && cat.getPoDecFlg()==1)) ||  (cat.getPoDecFlg()==null && cat.getApprvrDecFlg()==null))) { 
+						//#30766 & #34209 - END
+					
 					machineCategoryVO = (SmMachineCategoryVO) EntityHelper
 							.getEntityBySinglePropertyFromList(cat
 									.getPmCategoryL3().getCategoryTypeCode()
