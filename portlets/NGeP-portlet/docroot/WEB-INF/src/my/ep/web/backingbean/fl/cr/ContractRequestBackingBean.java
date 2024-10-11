@@ -9,16 +9,19 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -200,6 +203,7 @@ import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
@@ -211,6 +215,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 
@@ -1727,38 +1732,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//35024-end
 		}
-		//26279 - start
-		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_APPROVAL.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION.longValue()) {
-			SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-			if(smDisciplinaryAction != null) {
-				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				boolean isWarningOnly = false;
-				String warningOrDisciplinaryActionMsg;
-				String language =  new FacesScopes().getUserLocale().getLanguage();
-				if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
-						&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
-						&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
-						&& !smDisciplinaryAction.isManufacturerCancel()) {
-					isWarningOnly = true;
-					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-				} else if(smDisciplinaryAction.isCancelCategory() 
-						|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
-						|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
-						|| smDisciplinaryAction.isManufacturerCancel()){
-					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-				}
-			} else {
-				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
-		//26279 - end
+		 
+		checkDisciplinaryAction(); //26279
 		
 		//Default procurement type category to Supply of Goods in case of null
 		if(getManagedBean().getFlRequest().getProcurementTypeCategory()==null) {
@@ -1796,6 +1771,64 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//24956 - end
 		
 	}
+	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (isDisciplinaryActionCRPendingStatus()) {
+			SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				setDisciplinaryActionMsg(smDisciplinaryAction);
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+
+	/**
+	 * Checks if the current CR's status is one of the pending statuses
+	 * 
+	 * @return true if the CR's status is one of the pending statuses, false for
+	 *         otherwise statuses
+	 */
+	private boolean isDisciplinaryActionCRPendingStatus() {
+		Long statusId = getManagedBean().getFlRequest().getStatus().getStatusId();
+		Set<Long> pendingStatusIds = new HashSet<>(
+				Arrays.asList(FulfilmentStatusConst.CR_PENDING_SUBMISSION, FulfilmentStatusConst.CR_PENDING_APPROVAL,
+						FulfilmentStatusConst.CR_PENDING_REVISION, FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL,
+						FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION));
+		return pendingStatusIds.contains(statusId);
+	}
+
+	/**
+	 * Sets the disciplinary action message
+	 * 
+	 * @param smDisciplinaryAction
+	 */
+	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		boolean isWarningOnly = false;
+		String warningOrDisciplinaryActionMsg;
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		if (isWarningOnly(smDisciplinaryAction)) {
+			isWarningOnly = true;
+			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
+					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+		} else if (!isWarningOnly(smDisciplinaryAction)) {
+			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
+					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+		}
+	}
+
+	// 26279 - End
 
 	private void getEspkbCommitmentNo() {
 		String gfmasEnable="true";
@@ -7261,17 +7294,27 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	//end-13984 - CrList - Back Button
 	
-	//26279 - start
+	// 26279 - start
 	/**
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
-		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		SmSupplier currSupp;
+
+		if (getManagedBean().getFlRequest().getSmSupplier() != null) {
+			currSupp = getManagedBean().getFlRequest().getSmSupplier();
+		} else {
+			currSupp = SmApplicationUtil.getCurrentSupplier();
+		}
+		currSupp.setFlagSupplier(true);
+		currSupp.setFlagDASuppProfile(true);
+
+		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
+		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
-	//26279 - end
+
+	// 26279 - end
 	//24893 - start
 	/**
 	 * check role user is requisitioner

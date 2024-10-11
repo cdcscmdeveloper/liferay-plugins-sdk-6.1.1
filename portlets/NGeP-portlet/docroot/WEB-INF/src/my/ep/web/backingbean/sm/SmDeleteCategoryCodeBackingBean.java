@@ -326,7 +326,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					LogKey logKey = new LogKey();
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementCancelRegisteredCategoryBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+					auditSmBackingBean.saveAuditData(getManagedBean());
 				}
 				// #28895_35501 End
 				//START 14150

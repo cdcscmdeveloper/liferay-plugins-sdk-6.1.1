@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -3330,6 +3329,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					bpmSO.withdrawTask(bpmReqDTO);
 
 					isWithdrawTask = true;
+					break;
 				}
 			}
 			if (isWithdrawTask) {
@@ -3361,8 +3361,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			workFlowReqDTO.setDocId(scQt.getQtId());
 			workFlowStatusSO.updateCurrentWorkflowStatus(workFlowReqDTO);
 
-		} finally {
-			// Close or release any resources if needed
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					scQt.getQtNo(), "approvalBackingBean.updateWorkFlowStatus", getUserIdSessionFromLoginId(), e);
 		}
 	}
 
