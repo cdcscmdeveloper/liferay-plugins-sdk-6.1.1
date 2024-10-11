@@ -4271,7 +4271,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
 				if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
 					getManagedBean().setPurchaseRequestResDTO(auditResponse);
-					auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
+					auTemplate.auditSaveData(getManagedBean(), getUserIdSessionFromLoginId());//#35492#58
 				}
 				// /************ END AUDIT #28895_35492 *************//
 			}
