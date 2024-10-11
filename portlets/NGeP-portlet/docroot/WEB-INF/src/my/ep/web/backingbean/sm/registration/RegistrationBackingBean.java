@@ -941,6 +941,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setContactPerson(SupplierManagementConst.FIRST_USER_CONT_PERSON);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
 		
 		if(!smPersonnel.getPmCountry().getCountryCode().
 				equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
@@ -2271,7 +2272,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					} 
 				}
 				this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
-				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
+				//this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 				this.getManagedBean().setPermenantDivisionLs(new ArrayList<SelectItem>());
 				//#34159 - END
 				////#16052019 - SSM INTEGRATION CR
@@ -2354,7 +2355,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
 				//#34159 - START
 				if(this.getManagedBean().getSmResAdd().getPmDivision() != null && this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId() != null){
-					this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
+					//this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
 				}
 				//#34159 - END
 			}
@@ -2409,7 +2410,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
 				//#34159 - START
 				if(this.getManagedBean().getSmPermenantAdd().getPmDivision() != null && this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId() != null){
-					this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
+					//this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
 				}
 				//#34159 - END
 			}
