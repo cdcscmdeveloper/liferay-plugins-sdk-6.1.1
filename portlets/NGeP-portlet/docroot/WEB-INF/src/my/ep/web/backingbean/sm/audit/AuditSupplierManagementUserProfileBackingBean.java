@@ -31,6 +31,7 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 	@Override
 	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
 
+		log.info("*****#28895_35501***** Start prepareAuditData(AuditSupplierManagementUserProfileBackingBean)");
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ProfilePersonalizationManagedBean mBean = (ProfilePersonalizationManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
@@ -54,7 +55,7 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 
 		auditBaseData(auObj, mBean.getCurrentProfile().getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO);
-
+		log.info("*****#28895_35501***** End prepareAuditData(AuditSupplierManagementUserProfileBackingBean)");
 		return auObj;
 	}
 

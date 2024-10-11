@@ -651,7 +651,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
 		doc.setOverlapReason(null);
-		SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
+		if(doc.getCategoryOverlapDocId() != null){ //#31018
+			SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
+		}
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
@@ -3330,6 +3332,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setBusinessAndHadApprovedSpecialCatcode();
 			}
 			//#32236- end
+			
+			// #34303 - Start
+			if ((outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY) || outputPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION))
+					&& (getManagedBean().isSupplierUser())) {
+				SmApplicationUtil.getInstance().removeNotApplicableInformationBeforeSave(getManagedBean());
+			}
+			// #34303 - End
 			setSupplierChangeValues(currentPageType);
 			setBranchDisplayTable(); //29727 , //#34135
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
@@ -10375,9 +10385,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getCompanyBasicGst());
 			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 					.getSelectedBranch().getGst());
-			// #34303 - start
-			SmApplicationUtil.setFacilityTypeNotInTheSameCategoryFacType(getManagedBean());
-			// #34303 - end
 			SmApplicationUtil.getInstance()
 					.removeNotApplicableInformationBeforeSave(getManagedBean());
 
