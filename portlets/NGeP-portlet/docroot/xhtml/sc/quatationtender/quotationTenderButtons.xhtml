@@ -136,10 +136,6 @@
 							<ui:param name="bpAction" value="SUBMIT" />
 							<!-- 25077 -end- -->
 							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button"
-								actionListener="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"
-								update="@([id$=#{submitConfirmId2}])" rendered="#{isClone2}" />
-							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{!qTDetailBB.isCancel(bpmAction)}"
