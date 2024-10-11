@@ -1664,11 +1664,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #29468 Vinod End
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
+	//#21692 - Start
 	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
-	private ScQtEpvSupplierResponse suppResp;//#21692
-	private boolean chmnFinalizationRejectEPV;//#21692
-	private boolean proposalValidityRevised;//#21692
+	private ScQtEpvSupplierResponse suppResp;
+	private boolean chmnFinalizationRejectEPV;
+	private boolean proposalValidityRevised;
+	private boolean nullEPVRemark;
+	//#21692 - End
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
@@ -11944,8 +11947,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			boolean proposalValidityChangeValue) {
 		this.proposalValidityChangeValue = proposalValidityChangeValue;
 	}
-	//#21692 - End
 
+	public boolean isNullEPVRemark() {
+		return nullEPVRemark;
+	}
+
+	public void setNullEPVRemark(boolean nullEPVRemark) {
+		this.nullEPVRemark = nullEPVRemark;
+	}
+	//#21692 - End
+	
+	
+	
+	
+	
+
+	
+	
 	/**11104-start
 	 * @return the isSampleShowHide
 	 */

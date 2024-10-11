@@ -890,6 +890,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>() ;//28895-35500
 			
 			if (CollectionUtils.isNotEmpty(currentCommitteeMemList)) {
+				
 				for(ScCommitteeMember committeemember:currentCommitteeMemList){
 					if(committeemember.isSelected()){
 						localList.add(committeemember);
