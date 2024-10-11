@@ -120,6 +120,8 @@ public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBac
 
 	protected void auditBaseData(AuditSupplierManagementDTO auObj, SmSupplier supplier, String roleCode, PmOrgProfile org,
 			List<AuditSupplierManagementDetailDTO> auDetails, Long groupSectionId) {
+		auObj.setCreatedBy(loginUserId);
+		auObj.setChangedBy(loginUserId);
 		if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
 		} else if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
