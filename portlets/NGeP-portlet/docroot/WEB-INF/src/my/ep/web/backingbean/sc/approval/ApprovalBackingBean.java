@@ -1238,7 +1238,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				notifyUsers(approvalRequest);
 			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
 					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) { //1835L || 1855L
-				
+
+				reviseRemarkMandatory();//#21692 remark is mandatory for reject.
 				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
 				notifyUsers(approvalRequest);
 //				prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);//#21692 Re-open

@@ -4546,6 +4546,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 		if (resultList != null
 				&& resultList.size() > 0) {
+			boolean isMOF = false;
+			if (!EntityHelper.isCollectionEmpty(personnelResDTO.getSmPersonnelList())){
+				String suppType = personnelResDTO.getSmPersonnelList().get(0).getSmAppl().getSupplierType();
+				isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
+						|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
+			}
 			for(SmDisciplinaryAction disciplinaryAction: resultList){
 				if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
 						|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
@@ -4666,9 +4672,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}
 					}
 					
-					if(disciplinaryAction.getMofNo() != null){
-						retVal.setMofNoExist(true);
-					}
+					retVal.setMofNoExist(isMOF);
 					voList.add(retVal);
 				}
 				log.info(voList);					
