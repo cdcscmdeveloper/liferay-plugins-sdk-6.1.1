@@ -25,7 +25,11 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
 				<h:outputText
-					value="#{approvalBackingBean.getParameterDesc(historyDtls.approverAction)}" />
+					value="#{approvalBackingBean.getParameterDesc(historyDtls.approverAction)}"
+					rendered="#{historyDtls.decessionType eq null}"/>
+				<h:outputText
+					value="#{approvalBackingBean.retrieveApproverAction(historyDtls)}"
+					rendered="#{historyDtls.decessionType ne null}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.date']}">
 				<h:outputText value="#{historyDtls.approverActionDate}">
