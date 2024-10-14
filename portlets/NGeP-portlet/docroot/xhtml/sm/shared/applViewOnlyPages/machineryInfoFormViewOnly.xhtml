@@ -7,6 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true">
+	<!-- #28175 --><!-- #30766 & #34209 - START -->
+		<ui:param name="isSuppProfile" 
+				  value="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}"/>
+		<c:if test="#{!isSuppProfile}" >
+			#{viewSmApplBackingBean.rePopulateMachine()}
+		</c:if>
+	<!-- #30766 & #34209 - END -->
 		<p:outputPanel id="machInfPan" layout="block">
 			<p:dataTable var="macBean" widgetVar="smMachDtWidVar" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smMachineDtls}"
@@ -19,11 +26,15 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.category']}">
 					<ui:repeat var="catFac" value="#{macBean.smMachineCategories}">
+					<!-- #30766 & #34209 - START -->
+						<h:panelGroup id="machineCatPanelGroup" rendered="#{(isSuppProfile and catFac.recordStatusFlg ne 9) or (!isSuppProfile)}">
 						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 									#{catFac.pmCategoryL3.categoryL3Code}
 								 	(#{catFac.pmCategoryL3.categoryName})" 
 							style="float: left;white-space: normal;" /><br />
+						</h:panelGroup >
+					<!-- #30766 & #34209 - END -->
 					</ui:repeat>
 				</p:column>
 				
