@@ -28,7 +28,7 @@ public class AuditSupplierManagementOverlappingCategoryBackingBean extends Audit
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ViewSuppProfileManagedBean mBean = (ViewSuppProfileManagedBean) managedBean;
@@ -40,25 +40,23 @@ public class AuditSupplierManagementOverlappingCategoryBackingBean extends Audit
 		if (oldPoApprOverlappedRemark == null || " ".equals(oldPoApprOverlappedRemark)) {
 			if (!poApprOverlappedRemark.isEmpty() && !" ".equals(poApprOverlappedRemark)) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK, null,
-						poApprOverlappedRemark, null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK, null, poApprOverlappedRemark, null, null,
 						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK));
 			}
 		} else {
 			if (poApprOverlappedRemark.isEmpty()) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK, oldPoApprOverlappedRemark,
-						null, null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK));
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK, oldPoApprOverlappedRemark, null, null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK));
 			} else if (!oldPoApprOverlappedRemark.equals(poApprOverlappedRemark)) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK, oldPoApprOverlappedRemark,
-						poApprOverlappedRemark, null, null,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK));
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK, oldPoApprOverlappedRemark, poApprOverlappedRemark, null,
+						null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_OVERLAPPING_REMARK));
 			}
 		}
 
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_OVERLAPPING_REMARKS);
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_OVERLAPPING_REMARKS,
+				loginUserId);
 
 		return auObj;
 	}

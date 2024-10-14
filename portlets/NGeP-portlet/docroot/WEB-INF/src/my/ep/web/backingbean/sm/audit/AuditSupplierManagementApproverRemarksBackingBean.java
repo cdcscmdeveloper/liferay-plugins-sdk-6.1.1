@@ -28,7 +28,7 @@ public class AuditSupplierManagementApproverRemarksBackingBean extends AuditSupp
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ViewSuppProfileManagedBean mBean = (ViewSuppProfileManagedBean) managedBean;
@@ -43,8 +43,8 @@ public class AuditSupplierManagementApproverRemarksBackingBean extends AuditSupp
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_APPROVER_REMARK));
 		}
 
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVER_REMARKS);
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVER_REMARKS,
+				loginUserId);
 
 		return auObj;
 	}
