@@ -3885,6 +3885,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
 							rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
 							requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+							
+							//tracking diary
+							ScRequestNote requestNote = getManagedBean().getRequestNote();
+							rnReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+							rnReqDTO.setPmUser(facesScopes.getUserSessionBean());
+							rnReqDTO.setOutcome(BpmOutcomeConst.BPM_COMPLETE);
+							rnReqDTO.setUserLocale(facesScopes.getUserLocale());
+							requestNote.setRequestNoteDtls(rndtls);
+							rnReqDTO.setRequestNote(requestNote);
+							rnReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+							getRequestNoteSO().prepareTrackingDiaryDPM(rnReqDTO, getManagedBean().getSelectedPrDtls());
 						}				
 					}
 					//#36119 - end

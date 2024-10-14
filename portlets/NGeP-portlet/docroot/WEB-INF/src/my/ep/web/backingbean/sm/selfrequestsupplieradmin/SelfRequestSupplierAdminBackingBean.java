@@ -347,15 +347,13 @@ public class SelfRequestSupplierAdminBackingBean extends
 				reqDTO);
 		
 		//#34159 - START
-		if(permAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
+		if (permAddr != null && permAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
 				&& !permAddr.getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)
-				&& permAddr.getSmAddress().getPmDivision()!=null && permAddr.getSmAddress().getPmDivision().getDivisionId()!=null){
+				&& permAddr.getSmAddress().getPmDivision() != null && permAddr.getSmAddress().getPmDivision().getDivisionId() != null) {
 			SmAddress addr = SmServiceLookup.getSmAddressSO().retrieveSmAddressByAddressId(permAddr.getSmAddress().getAddressId());
 			addr.getPmDivision().setDivisionId(null);
-			//SmServiceLookup.getSmAddressSO().saveOrUpdateSmAddress(addr);
 			SmServiceLookup.getSmAddressSO().updatePmDivisionByAddressId(addr.getPmDivision(), addr.getAddressId());
 		}
-		
 		//#34159 - END
 
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
