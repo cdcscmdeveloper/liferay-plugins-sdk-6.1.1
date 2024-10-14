@@ -1232,6 +1232,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 		this.getManagedBean().setScQtApprovalRequestList(scQtApprovalRequests);
+		checkNullRemark();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 
 			Long decessionType = approvalRequest.getDecessionType().getParameterId();
@@ -1243,7 +1244,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				notifyUsers(approvalRequest);
 			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
 					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) { //1835L || 1855L
-				
+
+				reviseRemarkMandatory();//#21692 remark is mandatory for reject.
 				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
 				notifyUsers(approvalRequest);
 //				prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);//#21692 Re-open
@@ -3778,6 +3780,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		//#21692 - End
 		
+
 		/**
 	     * Method to prepare needed audit trails parameters for Briefing Site/Visit & Desk Officer Assistant Maintenance
 	     * #29995-35500
@@ -3871,7 +3874,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 				
 				String userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
-				if (null == userRemark || "".equals(userRemark)) {
+				if (this.getManagedBean().isNullEPVRemark()) {
 					userRemark = ResourceBundleUtils.getMessage(SourcingConstants.NOT_AVAILABLE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
 				}
@@ -3894,6 +3897,21 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 					if (null == userRemark || "".equals(userRemark)) {
 						throw new EpException(MessageConst.ERR_775152);
+					}
+				}
+			}
+		}
+		//#21692 - End
+		//#21692 - Start
+		private void checkNullRemark() {
+			this.getManagedBean().setNullEPVRemark(false);
+			List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
+			if (null != remarks) {
+				for (int i = 0; i < remarks.size(); i++) {
+					String userRemark = remarks.get(i).getRemark();
+					
+					if (null == userRemark || "".equals(userRemark)) {
+						this.getManagedBean().setNullEPVRemark(true);
 					}
 				}
 			}

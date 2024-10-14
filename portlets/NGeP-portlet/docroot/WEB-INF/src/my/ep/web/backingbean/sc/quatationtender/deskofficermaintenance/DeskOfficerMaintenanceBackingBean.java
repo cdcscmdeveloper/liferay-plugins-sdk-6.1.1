@@ -103,7 +103,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.constant.sc.QTAuditConstant;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.deskofficermaintenance.DeskOfficerMaintenanceManagedBean;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
@@ -129,7 +128,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	private static final Logger log = EpLogger.getLogger(DeskOfficerMaintenanceBackingBean.class);
 	
 	private PagingDataModel<PmUser> userListDataModel = new UserPagingDataModel();
-
+	
 	//25627 for 31303 code review start
 	private static final String PAGE_DESKOFFICER_MAINTENANCE = "/xhtml/sc/quatationtender/deskOfficerMaintenance/deskOfficerMaintenance.xhtml";
 	private static final String PAGE_DESKOFFICER_MAINTENANCE_APPROVAL = "/xhtml/sc/quatationtender/deskOfficerMaintenance/approval/deskOfficerMaintenanceApproval.xhtml";
@@ -150,6 +149,12 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 	private String textBeforeSign;
 
 	public String getTextBeforeSign() {
+		StringBuilder sb = new StringBuilder();
+		if (getManagedBean().getCurrentApproval().getScQt() != null) {
+			sb.append(getManagedBean().getCurrentApproval().getScQt().getQtNo());
+		}
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
 		return textBeforeSign;
 	}
 	
@@ -1330,7 +1335,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication().getNavigationHandler().handleNavigation(context, null, page);
-		
 	}
 	
 	public String requestTypeDescription(Long requestId){
