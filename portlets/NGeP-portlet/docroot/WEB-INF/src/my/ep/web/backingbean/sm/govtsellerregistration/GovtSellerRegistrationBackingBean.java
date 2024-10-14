@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.govtsellerregistration;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1131,7 +1132,7 @@ public class GovtSellerRegistrationBackingBean extends
 						IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean.saveAuditData(getManagedBean());
 				}
 				// #28895_35501 End
 				SmCommonUtil.redirectToPage(
@@ -1552,6 +1553,8 @@ public class GovtSellerRegistrationBackingBean extends
 		smPersonnel
 				.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		smPersonnel.setClerical(true);
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
+		
 		if (smPersonnel.getTitle() != null
 				&& smPersonnel.getTitle().getSalutationId() == null) {
 			smPersonnel.setTitle(null);

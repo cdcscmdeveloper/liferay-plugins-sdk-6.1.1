@@ -13,10 +13,10 @@ import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -28,11 +28,10 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
  * @since 16.05.2024 #28895_35501
  */
 
-public abstract class AuditSupplierManagementBackingBeanTemplate implements Serializable {
+public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	private LogKey logKey = new LogKey();
+	private Long loginUserId = getUserIdSessionFromLoginId();
 
 	public AuditSupplierManagementBackingBeanTemplate() {
 	}
@@ -43,17 +42,16 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	 * @param manageBean
 	 * @param userId
 	 */
-	public final void saveAuditData(BaseManagedBean manageBean, Long userId) {
+	public final void saveAuditData(BaseManagedBean manageBean) {
 		try {
 			String roleCode = getRoleCode();
-			PmOrgProfile org = retriveUserOrg(userId);
+			PmOrgProfile org = retriveUserOrg();
 			AuditSupplierManagementDTO auObj = prepareAuditData(manageBean, roleCode, org);
 			if (!auObj.getAuditDetails().isEmpty()) {
 				auditSmSo(auObj);
 			}
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null,
-					"AuditSupplierManagementSO", userId, ex);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null, "AuditSupplierManagementSO", loginUserId, ex);
 		}
 	}
 
@@ -81,10 +79,10 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 		return new FacesScopes();
 	}
 
-	private PmOrgProfile retriveUserOrg(Long userId) {
+	private PmOrgProfile retriveUserOrg() {
 		PmOrgProfile orgProfile = new PmOrgProfile();
-		if (userId != null) {
-			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(userId);
+		if (loginUserId != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(loginUserId);
 			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
 			}
@@ -100,11 +98,10 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	 * @param org
 	 * @return AuditSupplierManagementDTO
 	 */
-	public abstract AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode,
-			PmOrgProfile org);
+	public abstract AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org);
 
-	protected AuditSupplierManagementDetailDTO createAuditData(String actionType, Long fieldLabelId, String oldValue,
-			String newValue, Long oldValueId, Long newValueId, Long fieldLabelCode) {
+	protected AuditSupplierManagementDetailDTO createAuditData(String actionType, Long fieldLabelId, String oldValue, String newValue,
+			Long oldValueId, Long newValueId, Long fieldLabelCode) {
 		AuditSupplierManagementDetailDTO auDetail = new AuditSupplierManagementDetailDTO();
 		auDetail.setActionType(actionType);
 		auDetail.setSmFieldLabelId(BigInteger.valueOf(fieldLabelId));
@@ -117,22 +114,20 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 	}
 
 	protected String getLabel(String label) {
-		Locale locale = new Locale(AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA,
-				SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		Locale locale = new Locale(AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA, SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		return ResourceBundleUtils.getMessage(label, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 	}
 
-	protected void auditBaseData(AuditSupplierManagementDTO auObj, SmSupplier supplier, String roleCode,
-			PmOrgProfile org, List<AuditSupplierManagementDetailDTO> auDetails, Long groupSectionId) {
+	protected void auditBaseData(AuditSupplierManagementDTO auObj, SmSupplier supplier, String roleCode, PmOrgProfile org,
+			List<AuditSupplierManagementDetailDTO> auDetails, Long groupSectionId) {
+		auObj.setCreatedBy(loginUserId);
+		auObj.setChangedBy(loginUserId);
 		if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_BASIC)) {
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_BASIC);
-		} else if (supplier.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
-				|| supplier.getSmAppl().getSupplierType()
-						.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
+		} else if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
+				|| supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_MOF);
-		} else if (supplier.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+		} else if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 			auObj.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 		}
 		auObj.setRoleCode(roleCode);
@@ -160,12 +155,12 @@ public abstract class AuditSupplierManagementBackingBeanTemplate implements Seri
 
 	private void auditSmSo(AuditSupplierManagementDTO auObj) {
 		try {
-			IAuditSupplierManagementSO auSmSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+			IAuditSupplierManagementSO auSmSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+					IAuditSupplierManagementSO.class);
 			auSmSo.insertAudit(auObj);
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", auObj.getDocNo(),
-					"AuditSupplierManagementSO", logKey.getUserId(), ex);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", auObj.getDocNo(), "AuditSupplierManagementSO", loginUserId,
+					ex);
 		}
 	}
 }

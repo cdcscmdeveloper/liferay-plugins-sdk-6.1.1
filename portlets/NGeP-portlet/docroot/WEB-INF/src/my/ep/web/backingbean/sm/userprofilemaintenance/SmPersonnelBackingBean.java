@@ -2411,7 +2411,7 @@ public class SmPersonnelBackingBean extends
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					LogKey logKey = new LogKey();
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+					auditSmBackingBean.saveAuditData(getManagedBean());
 				}
 				// #28895_35501 End
 				SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
@@ -2882,7 +2882,7 @@ public class SmPersonnelBackingBean extends
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
-				auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+				auditSmBackingBean.saveAuditData(getManagedBean());
 			}
 			// #28895_35501 End
 			SmCommonUtil
@@ -3803,8 +3803,8 @@ public class SmPersonnelBackingBean extends
 					
 					PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 					PersonnelResDTO resDTO1 = new PersonnelResDTO();
-					
-					personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					personnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
+					/*personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));*/
 					
 					//admin assign new roles to personnel (supplier user & fullfillment user)
 					if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && !ePStatus
@@ -3870,7 +3870,7 @@ public class SmPersonnelBackingBean extends
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
-				auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+				auditSmBackingBean.saveAuditData(getManagedBean());
 			}
 			// #28895_35501 End
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();

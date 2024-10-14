@@ -54,7 +54,6 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 
 		auditBaseData(auObj, mBean.getCurrentProfile().getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO);
-
 		return auObj;
 	}
 
