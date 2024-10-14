@@ -149,18 +149,24 @@
 				<ui:fragment	rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 					<h:outputText value="#{meetingBB.getFCMemberRole(committeeMember.memberRole)}" />
 				</ui:fragment>
-				<ui:fragment rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
-				<p:selectOneMenu id="meetingRoleId" required="true"
-						label="#{lbl['lbl.sc.role']}"
-						value="#{committeeMember.memberRoleId}"
-						style="width: 110px;margin-bottom: 5px;" 
-						disabled="#{!isCommitteeUpdatable}">
-						<f:selectItems
-							value="#{meetingBB.getRoleTypeDropdownValues(committeeMember.PNP,meetingBB.managedBean.scQt,committeeMember.pmUser)}" />
-						<p:ajax event="change" update="memberListTbl" process="@this" partialSubmit="true" listener="#{meetingBB.changeMemberRole(index,meetingBB.managedBean.committeeMembersList)}"></p:ajax>
-					</p:selectOneMenu>
-					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
-				</ui:fragment>					
+					<ui:fragment
+						rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
+						<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
+						<p:selectOneMenu id="meetingRoleId" required="true"
+							label="#{lbl['lbl.sc.role']}"
+							value="#{committeeMember.memberRoleId}"
+							style="width: 110px;margin-bottom: 5px;"
+							disabled="#{!isCommitteeUpdatable}">
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								value="#{meetingBB.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,meetingBB.managedBean.scQt,committeeMember.pmUser, filteredRoles)}"
+								itemLabel="#{role.codeName}"
+								itemValue="#{role.pmParameter.parameterId}" />
+							<p:ajax event="change" update="memberListTbl" process="@this"
+								partialSubmit="true"
+								listener="#{meetingBB.changeMemberRole(index,meetingBB.managedBean.committeeMembersList)}"></p:ajax>
+						</p:selectOneMenu>
+						<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+					</ui:fragment>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.representative.type']}">

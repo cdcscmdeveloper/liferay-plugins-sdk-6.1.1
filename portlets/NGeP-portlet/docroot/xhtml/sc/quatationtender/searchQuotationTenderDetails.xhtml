@@ -7,8 +7,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-		
-			<table width="1100px">
+		<ui:remove> #25791 start </ui:remove>
+			<table style="width:1100px;"> 
+			<ui:remove> #25791 end </ui:remove>
 				<tr>
 					<td>
 						<p:outputLabel id="searchMinistryLbL" value="#{lbl['lbl.sc.ministry']}" />
@@ -118,15 +119,28 @@
 					<td style="width: 165px;">
 						  <h:outputLabel for="docNo" value="#{lbl['lbl.sc.document.no']}" />
 					</td>
-					<td style="width:385px">
-						<p:inputText id="docNo"
-							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docNo}"
-							maxlength="21" style="width:288px;">
-							<p:ajax update="@form" process="@this"/>
-						</p:inputText>
-					</td>
-							
-					<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
+			<ui:remove> #25791 start </ui:remove>
+			<td style="width: 385px">
+				<table>
+					<tr>
+						<td><ui:remove> #25791 end </ui:remove> <p:inputText
+								id="docNo"
+								value="#{qTDetailBB.managedBean.qtnTenderSearchBean.docNo}"
+								maxlength="21" style="width:288px;">
+								<p:ajax update="@form" process="@this" />
+							</p:inputText></td>
+						<ui:remove> #25791 start </ui:remove>
+						<td style="margin-top: -3px"><ui:fragment
+								rendered="#{!specMaintenanceBB.isSpecCommittee()}">
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.doc.no.wild.card.search.tooltip']}" />
+							</ui:fragment></td>
+					</tr>
+				</table>
+			</td>
+			<ui:remove> #25791 end </ui:remove>
+
+			<td style="width:165px"><h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 					<td style="width:385px"><p:selectOneMenu id="procurementid"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
 							style="width:297px;margin-bottom: 5px;">
