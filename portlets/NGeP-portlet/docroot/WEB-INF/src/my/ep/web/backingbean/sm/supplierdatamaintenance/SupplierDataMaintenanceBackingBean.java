@@ -878,13 +878,13 @@ public class SupplierDataMaintenanceBackingBean extends
 						IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 					auditSmBackingBean = new AuditSupplierManagementApprovedCategoryCodesBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 					auditSmBackingBean = new AuditSupplierManagementOverlappingCategoryBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 					auditSmBackingBean = new AuditSupplierManagementApproverRemarksBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
 			}
 			// #28895_35501 End			

@@ -29,7 +29,7 @@ public class AuditSupplierManagementPersonnelBackingBean extends AuditSupplierMa
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
@@ -38,21 +38,17 @@ public class AuditSupplierManagementPersonnelBackingBean extends AuditSupplierMa
 		String newRole = mBean.getNewRole();
 
 		if (oldRole.isEmpty() && !newRole.isEmpty()) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EP_ROLE, null, newRole, null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EP_ROLE));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EP_ROLE,
+					null, newRole, null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EP_ROLE));
 		} else if (newRole.equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EP_ROLE, oldRole, null, null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EP_ROLE));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EP_ROLE,
+					oldRole, null, null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EP_ROLE));
 		} else if (!oldRole.equalsIgnoreCase(newRole)) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EP_ROLE, oldRole, newRole, null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EP_ROLE));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EP_ROLE,
+					oldRole, newRole, null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EP_ROLE));
 		}
 
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO);
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO, loginUserId);
 
 		return auObj;
 	}
