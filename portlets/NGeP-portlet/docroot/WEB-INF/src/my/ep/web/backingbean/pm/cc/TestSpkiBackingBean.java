@@ -18,7 +18,9 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.util.MessageUtils;
 import my.ep.web.util.DigiCertHelper;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.TrustGateHelper;
 import my.ep.web.vo.SpkiVO;
 
@@ -144,9 +146,27 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		}
 	}
 	
+	/**
+	 * Reset
+	 */
+	public void reset(){
+		idNo = "";
+		epNo = "";
+		email = "";
+		setChallengeQues1("");
+		setChallengeAns1("");
+		setPassword("");
+		dataForSigning = "";
+	}
+	
 	private void err(Exception e){
+		String msg = e.getMessage();
+		if(msg.equals(MessageConst.ERROR_DIGICERT_776051)){
+			msg = MessageUtils.getMessage(msg, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		}
 		FacesContext.getCurrentInstance().addMessage("spki", 
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", e.getMessage()));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", msg));
 		log.info(e);
 	}
 	
@@ -225,7 +245,6 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			}
 				
 			return res.CHALLENGE_RESPONSES;
-			//return super.getChallengeQuestion(idNo, epNo, getChallengeQues1());
 		}
 		
 		@Override
