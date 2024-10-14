@@ -22659,12 +22659,17 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 			TreeNode rootNode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_ROOT, null);
 			Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
-			for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class)
-					.retrieveCategoryL1List().getCategoryL1List()) {
+			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+			List<PmCategoryL1> categoryL1List = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
+			for (PmCategoryL1 pmCategoryL1 : categoryL1List) {
 				Map<Long, String> l1Map = new HashMap<>();
 				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
-				for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setCategoryL1Id(pmCategoryL1.getCategoryL1Id());
+				List<PmCategoryL2> categoryL2List = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO)
+						.getCategoryL2List();
+				for (PmCategoryL2 pmCategoryL2 : categoryL2List) {
 					Map<Long, Map<Long, String>> l2Map = new HashMap<>();
 					l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
 					addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
@@ -22682,7 +22687,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	private void addCategoryL3ForMap(PmCategoryL1 pmCategoryL1, PmCategoryL2 pmCategoryL2,
 			Map<Long, Map<Long, String>> l2Map, Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode,
 			TreeNode rootNode) {
-		for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
+		ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(pmCategoryL2.getCategoryL2Id());
+		List<PmCategoryL3> categoryL3List = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO).getCategoryL3List();
+		for (PmCategoryL3 pmCategoryL3 : categoryL3List) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
 			TreeNode catCode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATCODE,
 					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
@@ -22714,11 +22724,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		TreeNode selectedTreeNode = event.getTreeNode();
 		selectedTreeNode.setSelected(true);
 		List<String> selectedCatCodes = new ArrayList<>();
-		String code=(String) selectedTreeNode.getData();
-		if(getManagedBean().getSelectedCategories()!=null 
-			&& !getManagedBean().getSelectedCategories().isEmpty())  
-				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
-			
+		String code = (String) selectedTreeNode.getData();
+		if (getManagedBean().getSelectedCategories() != null && !getManagedBean().getSelectedCategories().isEmpty()) {
+			selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+		}
+
 		if (!selectedCatCodes.isEmpty()) {
 			if (!selectedCatCodes.contains(code)) {
 				selectedCatCodes.add(code);
@@ -22741,8 +22751,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		List<String> selectedCatCodes = new ArrayList<>();
 			
 		if(getManagedBean().getSelectedCategories()!=null 
-			&& !getManagedBean().getSelectedCategories().isEmpty())  
-				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+			&& !getManagedBean().getSelectedCategories().isEmpty()){
+			selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+		}
 			
 		if(!selectedCatCodes.isEmpty()){
 			selectedCatCodes.remove((String) selectedTreeNode.getData());
