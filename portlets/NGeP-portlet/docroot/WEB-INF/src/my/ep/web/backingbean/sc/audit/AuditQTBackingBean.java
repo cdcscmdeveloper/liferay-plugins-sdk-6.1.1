@@ -331,29 +331,15 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 	 * @param docId
 	 * @return List<AuditQTDTO>
 	 */
-	public void getAuditTrailDetailsForExlRpt(BigInteger docId) {
+	public void getAuditTrailDetailsForExlRpt(BigInteger docId, Long groupSecId) {
 
 		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTAuditTrailSO.class);
 
-		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, this.getManagedBean()
-				.getGroupSectionId());
-
-		generateRptExcelForAuditTrailDetails(auditQTList);
-	}
-
-	/**
-	 * #35500, Retrieve All audit trail detail transaction records.
-	 * 
-	 * @param docId
-	 * @return List<AuditQTDTO>
-	 */
-	public void getAllAuditTrailDetailsForExlRpt(BigInteger docId) {
-
-		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTAuditTrailSO.class);
-
-		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, null);
+		if (groupSecId.equals(0L)) {
+			groupSecId = null;
+		}
+		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, groupSecId);
 
 		generateRptExcelForAuditTrailDetails(auditQTList);
 	}
@@ -641,7 +627,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 
 			response.setContentType("application/ms-excel");
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition", "attachment; filename=\"Butiran Jejak Audit.xlsx\"");
+			response.setHeader("Content-Disposition", ReportExcelAuditConstant.RPT_FILE_CONTENT_DISPOSITION);
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.flushBuffer();
 
