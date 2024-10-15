@@ -3791,6 +3791,24 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * retrieve the result of Proposal Validity Extension
+	 * from status Pending Approval
+	 * 
+	 * @param approvalRequest
+	 * @return 'Revise' if parameterCode 'V'
+	 */
+	public String retrieveApproverAction(ScQtApprovalRequest approvalRequest) {
+		if (approvalRequest.getDecessionType().getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_REVISED)) {
+			return ResourceBundleUtils.getMessage(SourcingConstants.STATUS_REVISE_ACTION_LABEL, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		} else {
+			return getParameterDesc(approvalRequest.getApproverAction());
+		}
+	}
+	//#21692 - End
 }
 
 // ***25692
