@@ -1412,7 +1412,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().setOldIdentification(getManagedBean().getReactivateBasic().getIdentificationNo());
 				getManagedBean().setNewIdentifiction(getManagedBean().getReactivateBasic().getNewIdentificationNo());
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
-				auditSmBackingBean.saveAuditData(getManagedBean());
+				auditSmBackingBean.saveAuditData(getManagedBean(), null);
 			}
 			// #28895_35501 End
 		} else {

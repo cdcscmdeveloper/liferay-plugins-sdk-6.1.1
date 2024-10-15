@@ -30,7 +30,7 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
 		String oldAdminIC;
@@ -45,8 +45,6 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 			supplier = mBean.getSmSupplier();
 			oldOrg = null;
 			oldRoleCode = null;
-			auObj.setCreatedBy(null);
-			auObj.setChangedBy(null);
 		} else {
 			SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
 			supplier = mBean.getOldSmSupplier();
@@ -56,10 +54,9 @@ public class AuditSupplierManagementAdminInformationBackingBean extends AuditSup
 			newAdminIC = mBean.getSelectedPersonnelToReassign().getIdentificationNo();
 		}
 		auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-				AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ADMIN_IDENTIFICATION_NO, oldAdminIC, newAdminIC, null,
-				null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ADMIN_IDENTIFICATION_NO));
-		auditBaseData(auObj, supplier, oldRoleCode, oldOrg, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO);
+				AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ADMIN_IDENTIFICATION_NO, oldAdminIC, newAdminIC, null, null,
+				AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ADMIN_IDENTIFICATION_NO));
+		auditBaseData(auObj, supplier, oldRoleCode, oldOrg, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO, loginUserId);
 		return auObj;
 	}
 }
