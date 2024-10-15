@@ -2632,30 +2632,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return NAV_CO;
 	}
 	// End - #30866
-	// #34443 start
-	/**
-	 * to trigger confirm dialogue
-	 * 
-	 * @param action
-	 *            the action button
-	 * @return the string
-	 * @throws Exception
-	 *             the exception
-	 */
-	public String confirmDialogueTrigger(String action) throws Exception {
-		Long status = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
-		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
-				&& ("true").equalsIgnoreCase(getManagedBean().getFactoringCheck())
-				&& status.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
-			validateFulfillmentOrder(action);
-			RequestContext.getCurrentInstance().execute("ackConfirmDlg.show()");
-			return null;
-		} else {
-			return signingAction(action);
-		}
-	}
-	// #34443 end
-	
 	// Start - #25790
 	/**
 	 * 
@@ -2694,4 +2670,48 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return NAV_PR;
 	}
 	// End - #25790
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String action) throws Exception {
+		Long status = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
+				&& ("true").equalsIgnoreCase(getManagedBean().getFactoringCheck())
+				&& status.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
+			validateFulfillmentOrder(action);
+			RequestContext.getCurrentInstance().execute("ackConfirmDlg.show()");
+			return null;
+		}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
+			RequestContext.getCurrentInstance().execute("fcConfirmDlg.show()");
+			return null;
+		}else {
+			return signingAction(action);
+		}
+	}
+
+	/**
+	 * to trigger confirm dialogue for remove factoring page
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTriggerForRFC(String action) throws Exception {
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			RequestContext.getCurrentInstance().execute("ackRFCConfirmDlg.show()");
+			return null;
+		} else {
+			return signingAction(action);
+		}
+	}
+	// #34443 end
 }

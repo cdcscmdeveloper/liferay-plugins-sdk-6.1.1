@@ -52,7 +52,7 @@
 						<ui:param name="buttonLabel2" value="#{fn:replace(buttonLabel1, ' ','.')}" />
 						<p:commandButton value="#{lbl[buttonLabel2]}" 
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							action="#{flOrderBB.signingAction(bpmAction)}"
+							action="#{flOrderBB.confirmDialogueTriggerForRFC(bpmAction)}"
 							process="@this" />
 							</ui:repeat>
 						</ui:define>
@@ -87,9 +87,10 @@
 					</p:outputPanel></td>
 			</tr>
 		</table>
-		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.reject.dialogue']}"
+		<ui:remove>#34443 start</ui:remove>
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.reject.dialogue.rfc']}"
 			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true" 
@@ -100,6 +101,21 @@
 					partialSubmit="true"
 					onclick="cancelConfirmDlg.hide();" />
 			</div>
-		</p:confirmDialog>	
+		</p:confirmDialog>
+		<p:confirmDialog
+			message="#{lbl['lbl.fl.confirmation.ack.dialogue.rfc']}"
+			severity="alert" widgetVar="ackRFCConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{flOrderBB.signingAction(BpmOutcomeConstant.bpmAcknowledge)}"
+					onstart="ackRFCConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="ackRFCConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<ui:remove>#34443 end</ui:remove>
 	</ui:define>
 </ui:composition>

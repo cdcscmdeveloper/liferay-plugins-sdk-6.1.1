@@ -508,24 +508,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * @throws Exception the exception
 	 */
 	public String signingAction(String outcome) throws Exception{
-		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		validatePOCOCurrentStatus(); //29870
-
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-			}
-		} else {
-			if(getManagedBean().getStopInstr().getPmReason().getReasonCode() == null){
-				throw new EpException(MessageConst.ERROR_100022, new String[]{
-						ResourceBundleUtils.getMessage("lbl.fl.stop.instuc.reason.justification",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-			}
-			if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
-				if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
-					throw new EpException(MessageConst.ERROR_740026);
-				}
-			}
-		}
+		
+		//#34443 change validation into method
+		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 			if(hasSupplierRole() || getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
 				IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
@@ -976,4 +961,76 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		return itemName;		
 	}
 	//#21416 end
+	
+	// #34443 start
+	/**
+	 * to trigger confirm dialogue
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTrigger(String action) throws Exception {
+		validateStopFulfilment(action);
+		String dialogCommand = null;
+		switch (action) {
+		case BpmOutcomeConst.BPM_STOP_FULFILMENT:
+			dialogCommand = "stopFlConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_SUBMIT:
+			dialogCommand = "submitConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_CANCEL:
+			dialogCommand = "cancelConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_APPROVE:
+			dialogCommand = "approveConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_REJECT:
+			dialogCommand = "rejectConfirmDlg.show()";
+			break;
+		default:
+			return signingAction(action);
+		}
+		if (dialogCommand != null) {
+			RequestContext.getCurrentInstance().execute(dialogCommand);
+		}
+
+		return null;
+	}
+
+	/**
+	 * validation stop instr
+	 * 
+	 * @param outcome
+	 *            the action button
+	 */
+	private void validateStopFulfilment(String outcome) {
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		validatePOCOCurrentStatus(); // 29870
+
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null
+					|| flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Remark" });
+			}
+		} else {
+			if (getManagedBean().getStopInstr().getPmReason().getReasonCode() == null) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.fl.stop.instuc.reason.justification", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			if (FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason()
+					.getReasonCode())) {
+				if (null == getManagedBean().getStopInstr().getReasonDesc()
+						|| getManagedBean().getStopInstr().getReasonDesc().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_740026);
+				}
+			}
+		}
+	}
+	// #34443 end
 }
