@@ -741,11 +741,11 @@ public class EvaluationMeetingBackingBean extends
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
-		this.getManagedBean().setNewCommitteeAuditTrailList(localList);//28895-35500
-		//#25037 - start
-		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(), "getIcPassport");
-		List<ScCommitteeMember> listToSync = new ArrayList<ScCommitteeMember>();
-		List<ScCommitteeMember> listToReSync = new ArrayList<ScCommitteeMember>();
+		// 25037 - start
+		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(),
+				QTSearchBeanConst.SEARCH_GETICPASSPORT);
+		List<ScCommitteeMember> listToSync = new ArrayList<>();
+		List<ScCommitteeMember> listToReSync = new ArrayList<>();
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getRemoveCommitteeList())) {
 			for (ScCommitteeMember m : this.getManagedBean().getRemoveCommitteeList()) {
