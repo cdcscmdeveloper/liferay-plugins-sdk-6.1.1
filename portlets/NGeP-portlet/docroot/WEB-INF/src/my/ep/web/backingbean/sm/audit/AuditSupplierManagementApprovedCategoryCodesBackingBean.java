@@ -31,7 +31,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ViewSuppProfileManagedBean mBean = (ViewSuppProfileManagedBean) managedBean;
@@ -85,7 +85,7 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 		}
 
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVE_CATEGORY_CODES);
+				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVE_CATEGORY_CODES, loginUserId);
 
 		return auObj;
 	}

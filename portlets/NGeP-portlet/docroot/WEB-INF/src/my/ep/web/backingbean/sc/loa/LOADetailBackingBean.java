@@ -6205,6 +6205,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa.getPmStatus().getStatusId())){
 						getManagedBean().setSelectedTabIndex(1);
 					}
+					
+					setTabActiveIndex();//25791
+					
 					return editLOAAction(resDTO.getScLoa());
 				} else if (resDTO.getScLoi() != null) {
 					return null;
@@ -12349,5 +12352,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqNoteBB.viewRequestNote(requestNoteId);
 	}
 	// #25790 - end
+	
+	
+
+
+	/**
+	 * set tab activeIndex.
+	 */
+	private void setTabActiveIndex() {// 25791-start
+		if (isQTMaintenanceScreen()) {
+			getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
+		}
+	}// 25791-end	
 }
 
