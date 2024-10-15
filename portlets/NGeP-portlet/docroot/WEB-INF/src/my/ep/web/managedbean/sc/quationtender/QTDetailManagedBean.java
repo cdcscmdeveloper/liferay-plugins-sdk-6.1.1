@@ -1667,7 +1667,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#11104-End
 	
 	private boolean isSampleShowHide;//11104wip
-	
+
 	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
@@ -1690,9 +1690,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long currentCMTStatus;
 	private boolean committeeUpdateFlow;
 	private List<String> mainTaskNames;
-
+	private List<TabBean> readOnlyCommitteeTabBean; // Bug 32277
 	// 25037 - end
-	private List<TabBean> readOnlyCommitteeTabBean;// Bug 32277
 
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10569,7 +10568,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSampleShowHide(boolean isSampleShowHide) {
 		this.isSampleShowHide = isSampleShowHide;
 	}//11104-End
-	
+
 	// 25037 - start
 	public boolean isShowHistory() {
 		return showHistory;
@@ -10738,7 +10737,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setMainTaskNames(List<String> mainTaskNames) {
 		this.mainTaskNames = mainTaskNames;
 	}
-	// 25037 - end
+
 	// Bug 32277 - start
 	public List<TabBean> getReadOnlyCommitteeTabBean() {
 		return readOnlyCommitteeTabBean;
@@ -10748,4 +10747,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
 	}
 	// Bug 32277 - end
+	// 25037 - end
 }
