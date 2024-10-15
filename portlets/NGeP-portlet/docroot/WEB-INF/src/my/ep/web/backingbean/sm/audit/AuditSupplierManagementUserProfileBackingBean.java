@@ -29,9 +29,8 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 
-		log.info("*****#28895_35501***** Start prepareAuditData(AuditSupplierManagementUserProfileBackingBean)");
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ProfilePersonalizationManagedBean mBean = (ProfilePersonalizationManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
@@ -48,14 +47,12 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 		}
 
 		if (!oldUser.getEmail().equalsIgnoreCase(newUser.getEmail())) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EMAIL, oldUser.getEmail(), newUser.getEmail(), null,
-					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EMAIL));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EMAIL,
+					oldUser.getEmail(), newUser.getEmail(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EMAIL));
 		}
 
 		auditBaseData(auObj, mBean.getCurrentProfile().getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO);
-		log.info("*****#28895_35501***** End prepareAuditData(AuditSupplierManagementUserProfileBackingBean)");
+				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO, loginUserId);
 		return auObj;
 	}
 

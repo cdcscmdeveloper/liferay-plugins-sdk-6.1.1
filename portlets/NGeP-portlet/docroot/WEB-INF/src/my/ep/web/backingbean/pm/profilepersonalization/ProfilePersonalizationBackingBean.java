@@ -442,7 +442,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			getManagedBean().setPasswordPolicy(null);
 			generatePasswordPolicy();
 			// #28895_35501 Start - AUDIT TRAIL SM
-			if(isAuditUser()){
+			if(isSmAuditUser()){
 				this.getManagedBean().setOldSelectedUser(
 						(PmUser) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSelectedUser()));
 			}
@@ -947,9 +947,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				// #28895_35501 Start - AUDIT TRAIL SM
 				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
 						IAuditTrailSO.class);
-				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF) && isAuditUser()) {
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF) && isSmAuditUser()) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
 				// #28895_35501 End
 				loadUserProfile(user.getUserId());
@@ -1867,7 +1867,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 	} // #28720 - End
 	// #28895_35501 Start - AUDIT TRAIL SM
-	private boolean isAuditUser() {
+	private boolean isSmAuditUser() {
 		String[] roles = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(),
 				RoleCode.G2G_SUPPLIER_USER.value(), RoleCode.G2G_SUPPLIER_ADMIN.value(),
 				RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value() };
