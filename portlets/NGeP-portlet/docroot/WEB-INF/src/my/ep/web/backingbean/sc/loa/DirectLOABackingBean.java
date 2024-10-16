@@ -2995,6 +2995,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return the text before sign
 	 */
 	public String getTextBeforeSign() {
+		//#36466
+		StringBuilder sb = new StringBuilder();
+		if (getManagedBean().getScLoa() != null) {
+			sb.append(getManagedBean().getScLoa().getLoaNo());
+		}
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
 		return textBeforeSign;
 	}
 
@@ -10833,14 +10840,14 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		List<ScLoiLoaItem> scLoiLoaItemsList = null; 
 		String dafaltValue = "T/B";
 		FacesScopes facesScopes = new FacesScopes();
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 		if (ReportConst.ENG_LANGUAGE_CODE.equals(pmUser.getPreferredLanguage())) {
 			dafaltValue = "T/B";//29007
 		}
-		if(scLoa.getScLoiLoaItems().size() != 0){
+		if(!scLoa.getScLoiLoaItems().isEmpty()){
 			scLoiLoaItemsList = new ArrayList<>();
 			for(ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()){
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");//29007
@@ -10884,120 +10891,141 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				specReqDto.setSpecSearchForApp(false);
 				
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
-				if(this.getManagedBean().getScQt().isZonal()){//29007&31423-start
-				List<TplSpecAnswer>	zoneSpecAnswerList=new ArrayList<>();
-				boolean newOfferedSpecification=false;//29007
-				for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
-					if(TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion().getQuestionType())){
-						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
-							String itemName=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClItem());
-							specAnswer.getTplSpecQuestion().setClItem(VmUtil.getInstance().addLineBreaks(itemName,30));
-						}
-						
-						if(scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId().equals(specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()) || scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId()==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){
-							
-							if(null!=scLoiLoaItem.getTplSpecTierQty()){
-								
-								if(scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId().equals(specAnswer.getTplSpecTierQty().getSpecTierQtyId()) || scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId()==specAnswer.getTplSpecTierQty().getSpecTierQtyId()){
-									
-									zoneSpecAnswerList.add(specAnswer);	
-								}
-							}else{
-								zoneSpecAnswerList.add(specAnswer);		
+				if (this.getManagedBean().getScQt().isZonal()) {// 29007&31423-start
+					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<>();
+					boolean newOfferedSpecification = false;// 29007
+					List<Long> replacedQuestionIds = new ArrayList<>();
+					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
+						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
+								.getQuestionType())) {
+							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
+									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
+											.getSpecQuestionId()) ? true : false;
+							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
+									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem()) ? true
+									: false;
+							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {// 29007-start
+								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClItem());
+								specAnswer.getTplSpecQuestion().setClItem(
+										VmUtil.getInstance().addLineBreaks(itemName, 30));
+								replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 							}
-						}
-					}else{
-						if(!scLoiLoaItem.isComplete()){//29007-start
-							specAnswer.setNewSupplierOffer(null);	
-						}//29007-End
-						if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
-							newOfferedSpecification=true;
-							String newSupplierOffered=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getNewSupplierOffer());
-							specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,25));
-						} else if (specAnswer.getTplSpecQuestion().getClSpecDetail()!=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())){
-							String spec=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClSpecDetail());
-							specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec,25));
-						}
-						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
-							String itemName=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClItem());
-							specAnswer.getTplSpecQuestion().setClItem(VmUtil.getInstance().addLineBreaks(itemName,20));
-						}
-						if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
-							String ansRemark=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getAnswerRemark());
-							specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark,25));
-						}
-						zoneSpecAnswerList.add(specAnswer);	
-					}
-					if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){
-						String newSupplierOffered=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getNewSupplierOffer());
-						specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,25));
-					} else if (specAnswer.getTplSpecQuestion().getClSpecDetail()!=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())){
-						String spec=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClSpecDetail());
-						specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec,25));
-					}
-					if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
-						String itemName=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClItem());
-						specAnswer.getTplSpecQuestion().setClItem(VmUtil.getInstance().addLineBreaks(itemName,20));
-					}
-					if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
-						String ansRemark=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getAnswerRemark());
-						specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark,25));
-					}
-					
-				}
-				if(!newOfferedSpecification){//29007-start
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(null);	
-					}//29007-End
-				scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);//29007&31423
-				}else{//29007&31423_End
-					List<TplSpecAnswer>	zoneSpecAnswerList=new ArrayList<>();//29007&31423-Start
-					boolean newOfferedSpecification=false;//29007
-					for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
-						if(TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion().getQuestionType())){
-							
-							if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
-								String itemName=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClItem());
-								specAnswer.getTplSpecQuestion().setClItem(VmUtil.getInstance().addLineBreaks(itemName,20));
-							}
-								
-								if(null!=scLoiLoaItem.getTplSpecTierQty()){
-									
-									if(scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId().equals(specAnswer.getTplSpecTierQty().getSpecTierQtyId()) || scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId()==specAnswer.getTplSpecTierQty().getSpecTierQtyId()){
-										
-										zoneSpecAnswerList.add(specAnswer);	
+
+							if (scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
+									.equals(specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId())
+									|| scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId() == specAnswer
+											.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()) {
+
+								if (null != scLoiLoaItem.getTplSpecTierQty()) {
+
+									if (scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId()
+											.equals(specAnswer.getTplSpecTierQty().getSpecTierQtyId())
+											|| scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId() == specAnswer
+													.getTplSpecTierQty().getSpecTierQtyId()) {
+
+										zoneSpecAnswerList.add(specAnswer);
 									}
-								}else{
-									zoneSpecAnswerList.add(specAnswer);		
+								} else {
+									zoneSpecAnswerList.add(specAnswer);
 								}
-						}else{
-							if(!scLoiLoaItem.isComplete()){//29007-start
-								specAnswer.setNewSupplierOffer(null);	
-							}//29007-End
-							if(specAnswer.getNewSupplierOffer() != null && StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) && StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){//29007-start
-								newOfferedSpecification=true;
-								String newSupplierOffered=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getNewSupplierOffer());
-								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,25));
-							} else if (specAnswer.getTplSpecQuestion().getClSpecDetail()!=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())){
-								String spec=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClSpecDetail());
-								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec,25));
 							}
-							if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
-								String itemName=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClItem());
-								specAnswer.getTplSpecQuestion().setClItem(VmUtil.getInstance().addLineBreaks(itemName,20));
+						} else {
+							if (!scLoiLoaItem.isComplete()) {// 29007-start
+								specAnswer.setNewSupplierOffer(null);
+							}// 29007-End
+							if (specAnswer.getNewSupplierOffer() != null
+									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer())
+									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())) {// 29007-start
+								newOfferedSpecification = true;
+								String newSupplierOffered = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getNewSupplierOffer());
+								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,
+										25));
+							} else if (specAnswer.getTplSpecQuestion().getClSpecDetail() != null
+									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())) {
+								String spec = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClSpecDetail());
+								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec, 25));
 							}
-							if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
-								String ansRemark=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getAnswerRemark());
-								specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark,25));
+							if (specAnswer.getAnswerRemark() != null
+									&& StringUtils.isNotBlank(specAnswer.getAnswerRemark())
+									&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())) {
+								String ansRemark = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getAnswerRemark());
+								specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark, 25));
 							}
-							zoneSpecAnswerList.add(specAnswer);	
+							zoneSpecAnswerList.add(specAnswer);
 						}
-						
-					}//29007&31423-End
-					if(!newOfferedSpecification){//29007-start
-						scLoiLoaItem.setLoaSpecJustificationForVelocity(null);	
-						}//29007-End
-				scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);//29007&31423
-				}//29007&31423_End
+					}
+					if (!newOfferedSpecification) {// 29007-start
+						scLoiLoaItem.setLoaSpecJustificationForVelocity(null);
+					}// 29007-End
+					scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);// 29007&31423
+				} else {// 29007&31423_End
+					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<>();// 29007&31423-Start
+					boolean newOfferedSpecification = false;// 29007
+					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
+						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
+								.getQuestionType())) {
+
+							if (specAnswer.getTplSpecQuestion() != null
+									&& specAnswer.getTplSpecQuestion().getClItem() != null
+									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())) {// 29007-start
+								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClItem());
+								specAnswer.getTplSpecQuestion().setClItem(
+										VmUtil.getInstance().addLineBreaks(itemName, 20));
+							}
+
+							if (null != scLoiLoaItem.getTplSpecTierQty()) {
+
+								if (scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId()
+										.equals(specAnswer.getTplSpecTierQty().getSpecTierQtyId())
+										|| scLoiLoaItem.getTplSpecTierQty().getSpecTierQtyId() == specAnswer
+												.getTplSpecTierQty().getSpecTierQtyId()) {
+
+									zoneSpecAnswerList.add(specAnswer);
+								}
+							} else {
+								zoneSpecAnswerList.add(specAnswer);
+							}
+						} else {
+							if (!scLoiLoaItem.isComplete()) {// 29007-start
+								specAnswer.setNewSupplierOffer(null);
+							}// 29007-End
+							if (specAnswer.getNewSupplierOffer() != null
+									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer())
+									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())) {// 29007-start
+								newOfferedSpecification = true;
+								String newSupplierOffered = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getNewSupplierOffer());
+								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,
+										25));
+							} else if (specAnswer.getTplSpecQuestion().getClSpecDetail() != null
+									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())) {
+								String spec = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClSpecDetail());
+								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec, 25));
+							}
+							if (specAnswer.getAnswerRemark() != null
+									&& StringUtils.isNotBlank(specAnswer.getAnswerRemark())
+									&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())) {
+								String ansRemark = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getAnswerRemark());
+								specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark, 25));
+							}
+							zoneSpecAnswerList.add(specAnswer);
+						}
+
+					}// 29007&31423-End
+					if (!newOfferedSpecification) {// 29007-start
+						scLoiLoaItem.setLoaSpecJustificationForVelocity(null);
+					}// 29007-End
+					scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);// 29007&31423
+				}// 29007&31423_End
 				
 				if(itemIds.isEmpty() || !itemIds.contains(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
 					scLoiLoaItemsList.add(scLoiLoaItem);
@@ -11232,6 +11260,18 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		this.getManagedBean().setNewSupplierJustification(null);
 		saveSupplierSpecification(false);
 	}
+	/**
+	 * replace all special characters and next line characters to html codes.
+	 * @param str
+	 * @return updatedStr
+	 */
+	public String replaceAllSpecialCharactersAndNewline(String str) {
+		String updatedStr = str.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		return updatedStr;
+	}
 	/*#29007 End Vinod*/
 	/*#31003 STARTS*/
 	public boolean isHiddenDownloadButtonDAHistory(){
@@ -11283,16 +11323,22 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			return null;
 		}
 	} 
-	public String supplierRemarks(String supplierRemarks){
-	String remarks="T/B";;
-	if(null!=supplierRemarks && StringUtils.isNotBlank(supplierRemarks) && StringUtils.isNotEmpty(supplierRemarks)){
-	return supplierRemarks;	
-	}else{
+	/**
+	 * this method to display N/A or T/B based on language for Supplier remark.
+	 * 
+	 * @param supplierRemarks
+	 * @return updated string
+	 */
+	public String supplierRemarks(String supplierRemarks) {
+		String remarks = "T/B";
+		if (null != supplierRemarks && StringUtils.isNotBlank(supplierRemarks)
+				&& StringUtils.isNotEmpty(supplierRemarks)) {
+			return this.replaceAllSpecialCharactersAndNewline(supplierRemarks);
+		}
 		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
 			remarks = "N/A";
-		}	
-	}
-	return remarks;
+		}
+		return remarks;
 	}//29007-End
 	
 
@@ -11303,8 +11349,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
 				char[] arr = text.toCharArray();
 				arr[index] = Character.toLowerCase(arr[index]);
-				String newPrefixName = new String(arr);
-				return newPrefixName;
+				return new String(arr); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 			}
 			return text;	
 		}
@@ -12591,7 +12636,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("specType", specType);
 					map.put("itemType", itemType);
 					int rowspan = question.getSpecList().size() + 1 ;
-					log.info("Calculate "+ String.valueOf(rowspan));
 					map.put("rowSpan", rowspan);
 							
 					return map;
@@ -12676,7 +12720,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("specType", specType);
 					map.put("itemType", itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ String.valueOf(rowspan));
 					map.put("rowSpan", rowspan);
 						listZonalDLSpec.add(map);
 					}
@@ -12784,7 +12827,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 					map.put("specType", specType);
 					map.put("itemType", itemType);
 					int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-					log.info("Calculate "+ String.valueOf(rowspan));
 					map.put("rowSpan", rowspan);
 						listZonalDLSpec.add(map);
 					}
@@ -12806,7 +12848,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				map.put("specType", specType);
 				map.put("itemType", itemType);
 				int rowspan = question.getSpecList().size() + question.getTplSpecZoneQties().size();
-				log.info("Calculate "+ String.valueOf(rowspan));
 				map.put("rowSpan", rowspan);
 				listZonalDLSpec.add(map);
 			}

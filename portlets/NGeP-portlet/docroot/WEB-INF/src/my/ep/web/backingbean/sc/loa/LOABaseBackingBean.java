@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.loa;
 
-import java.util.ArrayList; //#26475
 import java.util.List;
 import java.util.Locale;
 

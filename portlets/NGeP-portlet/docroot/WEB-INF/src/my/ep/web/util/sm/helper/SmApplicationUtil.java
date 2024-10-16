@@ -1709,7 +1709,7 @@ public class SmApplicationUtil {
 					.getSmFacilities()) {
 				if (StringUtils.isNotBlank(fac.getFacilityType())
 						&& (fac.getFacilityType().equals("H") || fac
-								.getFacilityType().equals("B"))) {
+								.getFacilityType().equals("B")) && (fac.isHeadquarters())) {
 					hq = fac;
 					break;
 				}
@@ -3819,6 +3819,8 @@ public class SmApplicationUtil {
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
 			managedBean.setOverLappedCategoryExists(true); //#31018
+		} else {
+			managedBean.setOverlapDocs(null);//#31018
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
