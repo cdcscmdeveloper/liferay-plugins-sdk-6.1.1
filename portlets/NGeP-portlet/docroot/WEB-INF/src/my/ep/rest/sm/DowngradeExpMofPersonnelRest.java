@@ -52,6 +52,8 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
+					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);
@@ -85,6 +87,7 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
@@ -126,6 +129,7 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
@@ -161,6 +165,8 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
+					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);
