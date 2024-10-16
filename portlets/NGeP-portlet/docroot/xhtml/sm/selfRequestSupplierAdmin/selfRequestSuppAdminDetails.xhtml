@@ -495,10 +495,13 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 						action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
 						update="@form" />
-					
+				<!-- #34159 - START - add param disablevalidation -->
 					<p:commandButton id="btnSubmitSuppAdminDetails" value="#{lbl['lbl.btn.submit']}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
-						action="#{selfRequestSupplierAdminBackingBean.submit}" />
+						action="#{selfRequestSupplierAdminBackingBean.submit}" >
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+				<!-- #34159 - END -->
 				</td>
 			</tr>
 		</table>

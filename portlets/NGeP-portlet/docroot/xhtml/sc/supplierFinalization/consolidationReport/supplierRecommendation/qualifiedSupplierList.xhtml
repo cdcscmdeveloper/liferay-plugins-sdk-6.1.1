@@ -20,6 +20,11 @@
 			<ui:remove> #28777#29729 - Start </ui:remove>
 			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
 			<ui:remove> #28777#29729 - End </ui:remove>
+			<ui:remove>#21692 - start</ui:remove>
+			<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+				<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
+			</c:forEach>
+			<ui:remove>#21692 - end</ui:remove>
 		</c:if>
 		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
@@ -27,11 +32,6 @@
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 			</h:outputText>
 		</c:if>
-		<ui:remove>#21692 - start</ui:remove>
-		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
-			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.rec.instruction']}" />
-		</c:if>
-		<ui:remove>#21692 - end</ui:remove>
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 		<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
@@ -205,7 +205,7 @@
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"><ui:remove> #28777#29729 </ui:remove>
+								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or (qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"><ui:remove> #28777#29729 </ui:remove>
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true"  />
@@ -218,13 +218,13 @@
 				</p:column>
 				
 				<p:column style="text-align:left;">
-					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected}" 
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected and qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 required="false" size="20" autocomplete="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" 
 								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />
 					</p:inputText>
-					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" 
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 id="deskOfficerRemarks2" value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}"  
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 size="20" autocomplete="false" disabled="true">

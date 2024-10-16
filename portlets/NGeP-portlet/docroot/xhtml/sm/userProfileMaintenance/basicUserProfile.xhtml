@@ -649,8 +649,8 @@
 													<!-- #34159 - START -->			
 													<p:selectOneMenu id="basicMailAddDivisionList"
 														label="#{lbl['lbl.sm.division']}"
-														value="#{smPersonnelBackingBean.managedBean.mailDivisionId}"
-														required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+														value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmDivision.divisionId}"
+														required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 														readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 														disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 														style="width: 207px;margin-bottom: 5px;">
