@@ -10830,9 +10830,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	/* ***19336#73 - end */
 
 	
-	/* ***19287#86 - start */
+	/**
+	 * 25791
+	 * 19287#86 - start
+	 * Redirect to mainPage.
+	 */
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
+		if (ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean()
+				.getQtnTenderSearchBean().getResultDocType())) {//25791-start
+			getManagedBean().setViewOriginalUrl(
+					QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
+		}//25791-end
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
@@ -13854,7 +13863,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 	// 25791 -start-
 	/**
-	 * This method is used to view Direct and Normal Loa contract deatils based
+	 * This method is used to view Direct and Normal Loa contract details based
 	 * on LoaDetails.
 	 * 
 	 * @param loaForQtDl
