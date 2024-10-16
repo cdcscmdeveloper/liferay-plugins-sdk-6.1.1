@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sm.application.ISupplierApplicationSO;
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
@@ -43,6 +44,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.application.SupplierApplicationReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
@@ -392,6 +394,7 @@ public class ViewApplHistoryBackingBean extends
 		//START 27951
 		//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 		boolean proceed = true;
+		String baseUrl; //#36474
 		smApplBB.getManagedBean().setPreRegistration(this.getManagedBean().isPreRegistration());
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
@@ -409,11 +412,13 @@ public class ViewApplHistoryBackingBean extends
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
 						.getResubmitUrl());
 			}else{
+				baseUrl = "supptemp-mof-registration"; //#36474
 				// #24923
 				smApplBB.getManagedBean().setNewSupplierType(
 						getManagedBean().getSmAppl().getSupplierType());
 				smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
-		
+				
+				SmCommonUtil.redirectToExternalUrl(baseUrl); //#36474
 				// Enhancement #20467 - point to new appl page with bullet
 				String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
 						.get("RE");
@@ -654,6 +659,36 @@ public class ViewApplHistoryBackingBean extends
 	 * Initialized PO or approver decision info
 	 */
 	private void initPOApproverDecisionInfo() {
+		//#35759 --START
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		for (SmApplSectionReview sectionReview : getManagedBean().getSmAppl()
+				.getSmApplSectionReviews()) {
+			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+			SmWorkflowStatus poWorkflowStatus = workFlowStatusSO.retrieveWorkflowStatusWhenApplicationPendingPOReview(reqDTO)
+					.getWorkflowStatus();
+			if(poWorkflowStatus != null){
+				if(sectionReview.getChangedBy() != null
+						&& sectionReview.getRoleType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+						&& sectionReview.getChangedBy().equals(getManagedBean().getSmAppl().getCreatedBy())){	
+					PmUser user = SmCommonUtil.getUserByUserId(poWorkflowStatus.getChangedBy());
+					sectionReview.setChangedBy(user.getUserId());
+					saveSmApplSectionReview(sectionReview);
+					break;	
+				}
+			}else{
+				if(sectionReview.getChangedBy() != null
+						&& sectionReview.getRoleType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SECTION_REV_ROLE_PO)
+						&& sectionReview.getChangedBy().equals(getManagedBean().getSmAppl().getCreatedBy())){
+					if(getManagedBean().getSmAppl().getPoUserId() != null){
+						PmUser user = SmCommonUtil.getUserByUserId(getManagedBean().getSmAppl().getPoUserId());
+						sectionReview.setChangedBy(user.getUserId());
+						saveSmApplSectionReview(sectionReview);	
+					}
+					break;
+				}
+			}		
+		} //#35759 --END
 
 		log.info("initPOApproverDecisionInfo");
 		SmRemaksResDTO resDTO = SmServiceLookup.getSmRemarksSO()
@@ -2093,4 +2128,15 @@ public class ViewApplHistoryBackingBean extends
 		getManagedBean().getSmAppl().setSmMachineDtls(getManagedBean().getAllMachineDtls());
 	}
 	//#34209 - END
+	
+	//#35759 --START
+	private void saveSmApplSectionReview(SmApplSectionReview smApplSecReview) {
+		SupplierApplicationReqDTO reqDTO = new SupplierApplicationReqDTO();
+		reqDTO.setSmApplSectionReview(smApplSecReview);
+		ISupplierApplicationSO reqSO = (ISupplierApplicationSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISupplierApplicationSO.class);
+		reqSO.saveSmApplSectionReview(reqDTO);
+	
+	} //#35759 --END
+	
 }

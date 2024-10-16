@@ -551,6 +551,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setLoiLoaItemsResult(null);
 		}
 		//Bug 34404 - related to 29007 - end
+		new QtLOABackingBean().isSupplierEPVStatusRejected();//#36339, #21692
 		return QTConstants.LOA_PAGE;
 	}
 	
