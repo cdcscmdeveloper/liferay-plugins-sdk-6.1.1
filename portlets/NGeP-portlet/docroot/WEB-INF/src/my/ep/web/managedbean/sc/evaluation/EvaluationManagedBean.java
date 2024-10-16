@@ -518,6 +518,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	// 25037 - end
 	
+	// 6906 - start
+	private boolean noProposalSubmitted;
+	private boolean supplierRejected;
+
+	// 6906 - end
 	/**
 	 * Gets the today.
 	 * 
@@ -3525,4 +3530,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	// 25037 - end
 
+	// 6906 - start
+	public boolean isNoProposalSubmitted() {
+		return noProposalSubmitted;
+	}
+
+	public void setNoProposalSubmitted(boolean noProposalSubmitted) {
+		this.noProposalSubmitted = noProposalSubmitted;
+	}
+
+	public boolean isSupplierRejected() {
+		return supplierRejected;
+	}
+
+	public void setSupplierRejected(boolean supplierRejected) {
+		this.supplierRejected = supplierRejected;
+	}
+	// 6906 - end
 }

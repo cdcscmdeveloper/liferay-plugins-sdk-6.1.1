@@ -21,15 +21,23 @@
 			rows="10">
 			<ac:paginator for="othersTechListId" />
 
-
+			<ui:param name="isRejected"
+				value="#{not empty othersList.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:25%; text-align:center;">
-
-				<h:outputText value="#{othersList.scQtProposal.supplierNo}"></h:outputText>
-
-
+				style="width:20%; text-align:center;">
+				<table
+					style="table-layout: fixed; margin: auto !important; max-width: 90px !important">
+					<tr>
+						<td style="text-align: center; border: 0 !important" />
+						<td style="text-align: center; border: 0 !important"><h:outputText
+								value="#{othersList.scQtProposal.supplierNo}" /></td>
+						<td style="text-align: center; border: 0 !important"><ac:iconRejectRemarkBox
+								show="#{isRejected}" id="remarkId"
+								remark="#{othersList.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{othersList.scQtProposal.supplierNo}" /></td>
+					</tr>
+				</table>
 			</p:column>
-
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:20%;text-align:right;">
@@ -54,12 +62,14 @@
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{othersList.evaluationStatus.statusId eq '61600'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}" />
+					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}"
+					disabled="#{isRejected}"/>
 
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{othersList.evaluationStatus.statusId eq '61601'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}" />
+					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}"
+					disabled="#{isRejected}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
