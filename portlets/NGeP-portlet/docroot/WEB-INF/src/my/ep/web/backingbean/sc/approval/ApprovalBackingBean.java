@@ -1568,7 +1568,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
 				tenderResDTO.setQtDetail(qt);
 			
-			} else if(SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)){ //#28784
+			} else if(SCProcessNameConst.DEMO_APPROVE_CANCELLATION.equalsIgnoreCase(taskName)){ //#28784 s
 				DemoResDTO resDTO = new DemoResDTO();
 				DemoInvitationBackingBean demoBB = new DemoInvitationBackingBean();
 				resDTO.setScQt(qt);
