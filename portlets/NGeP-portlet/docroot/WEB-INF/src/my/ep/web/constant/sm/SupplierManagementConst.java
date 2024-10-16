@@ -560,7 +560,6 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_PODEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC;
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC;
 	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY;
-	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL; //35501
 
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
@@ -574,6 +573,7 @@ public class SupplierManagementConst {
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -659,6 +659,11 @@ public class SupplierManagementConst {
 	public static final String STATUS_REVISE_ENG = "Pending Revise Application";
 	public static final String STATUS_REVISE_BM = "Menunggu Kaji Semula Permohonan";
 	// #12483 - END
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -742,6 +747,17 @@ public class SupplierManagementConst {
 	
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
+	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
+	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
+	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
+	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
+	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
+	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
+	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
+	// #28895_35501 End
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
@@ -1452,5 +1468,48 @@ public class SupplierManagementConst {
 	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
 		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
 	}
+	
+	// #34392 - Start
+	public String getPendingReviewSiteVisitReportAfterApproval() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL;
+	}
+	public String getPendingReviewSiteVisitReportAfterApprovalBM() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM;
+	}
+	// #34392 - End
+
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getAuTabIdBankInfo() {
+		return AU_TAB_ID_BANK_INFO;
+	}
+
+	public String getAuTabIdCategoryCodeInfo() {
+		return AU_TAB_ID_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdSupplierInfo() {
+		return AU_TAB_ID_SUPPLIER_INFO;
+	}
+
+	public String getAuTabIdApprovedCategoryCodeInfo() {
+		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdOverlappingRemarkInfo() {
+		return AU_TAB_ID_OVERLAPPING_REMARK_INFO;
+	}
+
+	public String getAuTabIdApproverRemarkInfo() {
+		return AU_TAB_ID_APPROVER_REMARK_INFO;
+	}
+
+	public String getAuTabIdUserInfo() {
+		return AU_TAB_ID_USER_INFO;
+	}
+
+	public String getAuTabIdAdminInfo() {
+		return AU_TAB_ID_ADMIN_INFO;
+	}
+	// #28895_35501 End
 
 }

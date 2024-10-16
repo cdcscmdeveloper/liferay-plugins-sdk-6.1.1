@@ -274,9 +274,10 @@ public interface QTConstants {
 	
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	
-	//25037 QT Bpm Composite Version Validity ID
-	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	
+	// 25037 - start
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L; 
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
 
 	//#11104
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
@@ -312,6 +313,7 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	public static final String LAMPIRAN_A3_JUSTIFICATION = "Dikemas kini atas sebab ";
 	//#29007 End Vinod
 	// #29007 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
@@ -409,4 +411,21 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "9";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "10";
 	//Bug #35688@Syazani 10/07/2024 -- End
+
+	// 25791-start
+	public static final String QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml";
+	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
+	public static final String LOA_CT_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewLOAContractList.xhtml";
+	public static final int TAB_MAIN_INDEX = 0;
+	public static final String CONTRACT_PAGE_DETAILS_VIEW = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
+	public static final String DATATABLE_QT_DL_LOA_CT_COMPONENT_ID = "ctLoaId";
+	public static final String DATATABLE_LOA_CT_COMPONENT_ID = "laCtdvd";
+	public static final String CONTRACT_STATUS_EFFECTIVE = "lbl.ct.effective";
+	public static final String CONTRACT_STATUS_INACTIVE = "lbl.ct.inactive";
+	public static final String CONTRACT_STATUS_EXPIRED = "lbl.ct.expired";
+	public static final String CONTRACT_STATUS_TERMINATED = "lbl.ct.terminated";
+	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
+	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
+	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	// 25791-End
 }

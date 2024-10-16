@@ -177,6 +177,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -1019,9 +1020,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
+			//#25790 - start
+			Locale localeMY = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+					CommonConstants.DEFAULT_COUNTRY_CODE);
+			
+			Locale localeEN = new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			//#25790 - end
 			for (PmStatusDesc statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName());
+				//#25790 - start
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc
+						.getStatusName()
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeMY), StringUtils.EMPTY)
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeEN), StringUtils.EMPTY));
+				//#25790 - end
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -1391,36 +1406,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//25638 - End
 
+	// 25037 - start
 	/**
-	 * Success message.
+	 * Return success message by message code.
 	 * 
 	 * @param messageCode
-	 *            the message code
-	 * @param String
-	 *            [] params
+	 * @param params
 	 */
-	//#25037-START
-	public void successMessage(String messageCode, String [] params){
+	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
-	//#25037-END
 
-	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
+	/**
+	 * Return success message by message code. Navigate to acknowledgment page
+	 * if required.
+	 * 
+	 * @param messageCode
+	 * @param params
+	 * @param isAcknowledgeRequired
+	 */
+	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
+	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								params,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		//#25037-START
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageCode, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
-		//#25037-END
-
+		// 25037 - end
 	}
 
 	/**
@@ -2340,8 +2356,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+			// 25037 - start
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
-			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());// 25037
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
+			// 25037 - end
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2356,23 +2374,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param outComes the out comes
 	 * @return the string[]
 	 */
-	private String[] sortOutcomes(String[] outComes) {
-		outComes = outComes==null ? new String[]{} : outComes;//29253-start
-		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
+	private String[] sortOutcomes(String[] outcomes) {
+		// 25037(29253) - start
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY;
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
 		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[]{
-					BpmOutcomeConst.BPM_ENDORSE, 
-					BpmOutcomeConst.BPM_CANCEL}; 
-			//last index will appear on the far right, 
-			//if outcome not ranked, order come as is,
-			//existed ordered outcome will take precedent
+			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
+			// last index will appear on the far right,
+			// if outcome not ranked, order come as is,
+			// existed ordered outcome will take precedent
 			List<String> sortOrder = Arrays.asList(orderedAction);
+
+			@Override
 			public int compare(String s1, String s2) {
 				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
 			}
-		});//29253-end
-		outComes = new String[bpmActions.size()];
-		return bpmActions.toArray(outComes);
+		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
+		// 25037(29253) - end
 	}
 
 	/**
@@ -3212,6 +3234,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			this.getManagedBean().setSmSupplierSsm(new SmSupplier());
+			//#24819 - START
+			if(this.getManagedBean().getSmSupplier() == null){
+				this.getManagedBean().setSmSupplier(new SmSupplier());
+				this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
+			}
+			//#24819 - END
 			/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
 					.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
 					: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
@@ -4118,47 +4146,98 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#21387 - End
 	
 	//#28175 - start, 29380 - Site Visit Grouping Enhancement -28775
+	//28175 Refactor start
 	/**
+	 * Returns the supplier category name based on the provided parameters.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
 	 * @param isSupplierProfile
-	 * @param isFullName for L1, L2, L3 category names
-	 * @return latest or old category code description
+	 *            whether it's a supplier profile
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the supplier category name
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName){
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName) {
 		if (catL3 == null) {
 			return null;
 		}
+
 		SmAppl appl = getManagedBean().getSmAppl();
-		String pmCategoryName = catL3.getCategoryName();
-		if(isFullName){
-			pmCategoryName = catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName()+" / "
-					+ catL3.getPmCategoryL2().getCategoryName()+" / "+catL3.getCategoryName();
+		String categoryName = getCategoryName(catL3, isFullName);
+
+		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			return categoryName;
 		}
-		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
-				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
-			return pmCategoryName;
+
+		SmSupplierCategory supplierCategory = getSupplierCategory(appl, catL3);
+		if (supplierCategory == null) {
+			return categoryName;
 		}
-		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
-				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
-		if(sCat == null){
-			return pmCategoryName;
-		}
-		if(isFullName){
-			return sCat.getCategoryL1Name()+" / "+sCat.getCategoryL2Name()+" / "+sCat.getCategoryL3Name();
-		}
-		return sCat.getCategoryL3Name();
+
+		return isFullName ? getFullSupplierCategoryName(supplierCategory) : supplierCategory.getCategoryL3Name();
 	}
-	
+
+	/**
+	 * Returns the category name based on the provided PmCategoryL3 object and
+	 * whether to return the full name.
+	 * 
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the category name
+	 */
+	private String getCategoryName(PmCategoryL3 catL3, boolean isFullName) {
+		String categoryName = catL3.getCategoryName();
+		if (isFullName) {
+			categoryName = String.format("%s / %s / %s", catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName(),
+					catL3.getPmCategoryL2().getCategoryName(), categoryName);
+		}
+		return categoryName;
+	}
+
+	/**
+	 * Returns the SmSupplierCategory object based on the provided SmAppl object
+	 * and PmCategoryL3 object.
+	 * 
+	 * @param appl
+	 *            the SmAppl object
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @return the SmSupplierCategory object
+	 */
+	private SmSupplierCategory getSupplierCategory(SmAppl appl, PmCategoryL3 catL3) {
+		return (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(),
+				appl.getSmSupplierCategories(), "pmCategoryL3");
+	}
+
+	/**
+	 * Returns the full supplier category name based on the provided
+	 * SmSupplierCategory object.
+	 * 
+	 * @param supplierCategory
+	 *            the SmSupplierCategory object
+	 * @return the full supplier category name
+	 */
+	private String getFullSupplierCategoryName(SmSupplierCategory supplierCategory) {
+		return String.format("%s / %s / %s", supplierCategory.getCategoryL1Name(),
+				supplierCategory.getCategoryL2Name(), supplierCategory.getCategoryL3Name());
+	}
+	//28175 Refactor end
 	/**
 	 * @param cat
 	 * @param appl
 	 * @return latest or old category code description
 	 */
 	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		String catName1 = cat.getPmCategoryL1().getCategoryName();
+		String catName2 = cat.getPmCategoryL2().getCategoryName();
+		String catName3 = cat.getPmCategoryL3().getCategoryName();
 		return isLatestCatCodeDesc(false, appl) ?  
-				cat.getPmCategoryL1().getCategoryName()+" / "+cat.getPmCategoryL2().getCategoryName()
-				+" / "+cat.getPmCategoryL3().getCategoryName()
-				: cat.getCategoryL1Name()+" / "+cat.getCategoryL2Name()+" / "+cat.getCategoryL3Name();
+				String.format("%s / %s / %s",catName1,catName2,catName3)
+				: getFullSupplierCategoryName(cat);
 	}
 	
 	/**
@@ -4303,6 +4382,41 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		generateReport(report, paramMap);
 	}
+	
+	//#28854,#25000 - Start
+	/**
+	 * Processes the given string by replacing newline characters with HTML line break tags
+	 * and encoding the < and > characters to their HTML entity equivalents. If the string
+	 * is null or empty, it returns null.
+	 *
+	 * @param value the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by &lt;br/&gt;
+	 *         and <, > characters encoded to &lt; and &gt; respectively; {@code null} if the input is null or empty
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+	    if (value == null || value.isEmpty()) {
+	        return null;
+	    }
+	    // Replace < and > with their HTML entity equivalents
+	    String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+	    // Replace newline characters with <br/>
+	    return formatted.replace("\n", "<br/>");
+	}
+	//#28854,#25000 - End
+	
+	// #25000 - Start
+	/**
+	 * A utility method to format a date.
+	 * 
+	 * @param date
+	 *            the Date object to format
+	 * @return the formatted date string, or an empty string if the date is null
+	 */
+	public String formatDate(Date date) {
+		SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		return date != null ? dateformat.format(date) : "";
+	}
+	// #25000 - End
 	
 }
 

@@ -9,16 +9,19 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -200,6 +203,7 @@ import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
@@ -211,6 +215,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 
@@ -570,6 +575,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						flItemAddr.setGstAmount(BigDecimal.ZERO);
 						flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 					}
+					
+					//36468-Start
+					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && flItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+						flItemAddr.setOrderedQty(getManagedBean().getFlRequest().getScPurchaseInDefault().getQuantity());
+						flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}
+					//36468-End
 				}
 			}
 			if(getManagedBean().getSelectedDelAddr()!=null) {
@@ -1720,38 +1732,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			}
 			//35024-end
 		}
-		//26279 - start
-		if(getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_SUBMISSION.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_APPROVAL.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL.longValue() 
-				|| getManagedBean().getFlRequest().getStatus().getStatusId().longValue() == FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION.longValue()) {
-			SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-			if(smDisciplinaryAction != null) {
-				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				boolean isWarningOnly = false;
-				String warningOrDisciplinaryActionMsg;
-				String language =  new FacesScopes().getUserLocale().getLanguage();
-				if(smDisciplinaryAction.isWarning() && !smDisciplinaryAction.isCancelCategory() 
-						&& !smDisciplinaryAction.isSuspendRegistration() && !smDisciplinaryAction.isCancelRegistration() 
-						&& !smDisciplinaryAction.isBlacklistOwner() && !smDisciplinaryAction.isBumiputeraCancel() 
-						&& !smDisciplinaryAction.isManufacturerCancel()) {
-					isWarningOnly = true;
-					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-				} else if(smDisciplinaryAction.isCancelCategory() 
-						|| smDisciplinaryAction.isSuspendRegistration() || smDisciplinaryAction.isCancelRegistration() 
-						|| smDisciplinaryAction.isBlacklistOwner() || smDisciplinaryAction.isBumiputeraCancel() 
-						|| smDisciplinaryAction.isManufacturerCancel()){
-					warningOrDisciplinaryActionMsg = getWarningOrDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(), language, isWarningOnly) ;
-					getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-				}
-			} else {
-				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
-		//26279 - end
+		 
+		checkDisciplinaryAction(); //26279
 		
 		//Default procurement type category to Supply of Goods in case of null
 		if(getManagedBean().getFlRequest().getProcurementTypeCategory()==null) {
@@ -1789,6 +1771,64 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		//24956 - end
 		
 	}
+	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (isDisciplinaryActionCRPendingStatus()) {
+			SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				setDisciplinaryActionMsg(smDisciplinaryAction);
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+
+	/**
+	 * Checks if the current CR's status is one of the pending statuses
+	 * 
+	 * @return true if the CR's status is one of the pending statuses, false for
+	 *         otherwise statuses
+	 */
+	private boolean isDisciplinaryActionCRPendingStatus() {
+		Long statusId = getManagedBean().getFlRequest().getStatus().getStatusId();
+		Set<Long> pendingStatusIds = new HashSet<>(
+				Arrays.asList(FulfilmentStatusConst.CR_PENDING_SUBMISSION, FulfilmentStatusConst.CR_PENDING_APPROVAL,
+						FulfilmentStatusConst.CR_PENDING_REVISION, FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL,
+						FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION));
+		return pendingStatusIds.contains(statusId);
+	}
+
+	/**
+	 * Sets the disciplinary action message
+	 * 
+	 * @param smDisciplinaryAction
+	 */
+	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		boolean isWarningOnly = false;
+		String warningOrDisciplinaryActionMsg;
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		if (isWarningOnly(smDisciplinaryAction)) {
+			isWarningOnly = true;
+			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
+					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+		} else if (!isWarningOnly(smDisciplinaryAction)) {
+			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
+					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+		}
+	}
+
+	// 26279 - End
 
 	private void getEspkbCommitmentNo() {
 		String gfmasEnable="true";
@@ -3268,6 +3308,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				}
 			}
+			// 36468-Start - Add validation for the PID with the service item because the quantity is set by default based on the PID.
+			if (getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty() &&
+					getManagedBean().getFlRequest().getScPurchaseInDefault() != null
+					&& uiItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)
+					&& uiItemAddr.getOrderedQty().doubleValue() > 0) {
+				getManagedBean().setSelectedTabIndex(1);
+				throw new EpException(MessageConst.ERROR_740072);
+			}else if (!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty() &&
+					getManagedBean().getFlRequest().getScPurchaseInDefault() != null
+					&& uiItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)
+					&& uiItemAddr.getOrderedQty().doubleValue() > 0) {
+				accumulatedQty = uiItemAddr.getOrderedQty();
+			}// 36468-End
+			
 			//#29171, CR 14650: Static Code Analysis Start
 			//if(accumulatedQty.doubleValue()==0) {
 				if(accumulatedQty.doubleValue()==0 && !ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode())){
@@ -4449,41 +4503,45 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param flItemAddr the fl item addr
 	 */
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
-		IRequestItemSO requestItemSO = null;
-		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-		
+		IRequestItemSO requestItemSO;
+		requestItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IRequestItemSO.class);
+
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 		getManagedBean().setItemDesc(flItemAddr.getScRequestItem().getItemDesc());
 		
 		// 28855 - Start
-		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+		getManagedBean().setSpecificationList(
+				requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
-				if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
-						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId()) &&
-						specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+				if (specification.getSupplierOffer() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 				}
-				if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
-						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId()) &&
-						specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+				if (specification.getNewOfferSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
 				}
-				if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
-						.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())&&
-						specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
-					getManagedBean().setItemSpecification(specification.getItemSpec());	
+				if (specification.getItemSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFlRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
+					getManagedBean().setItemSpecification(specification.getItemSpec());
 					getManagedBean().getItemSpecList().add(specification);
-				}				
+				}
 			}
 
 		} else {
-		getManagedBean().setSupplierOffer(null);
-		getManagedBean().setNewOfferedSpec(null);
-		getManagedBean().setItemSpecification(null);
-		getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
+			getManagedBean().setSupplierOffer(null);
+			getManagedBean().setNewOfferedSpec(null);
+			getManagedBean().setItemSpecification(null);
+			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
 		}
 		// 28855 - End
 		
@@ -4519,13 +4577,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				ciItemResDTO = contractItemSO.getPricePerUom(reqDTO);
 				
 				getManagedBean().setPricePerUom(ciItemResDTO.getItemPrice());
-				//28855 start - prod issue
-				if(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity() !=null ){
-					getManagedBean().setMinOrderQuantity(contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity().getMaxQuantity().doubleValue());
-				}else{
+				// 28855 start - prod issue
+				if (contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity() != null) {
+					getManagedBean().setMinOrderQuantity(
+							contractItemSO.getItemMaxQuantity(reqDTO).getCtItemMaxQuantity().getMaxQuantity()
+									.doubleValue());
+				} else {
 					getManagedBean().setMinOrderQuantity(1.0);
 				}
-				//28855 end - prod issue
+				// 28855 end - prod issue
 			}
 			getManagedBean().setUomName(flItemAddr.getScRequestItem().getUom() != null ? flItemAddr.getScRequestItem().getUom().getUomName() : "");
 			
@@ -4580,24 +4640,25 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}	
 		
 		// 28855 - Start
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
 		reqFDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();	
+		String loaDocType = fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
 
-			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
-				getManagedBean().setDpFlag(true);
-				String supplierOffer = getManagedBean().getSupplierOffer();
-				if(supplierOffer !=null && supplierOffer.length() > 0) {
-					String trimWipDpZone = supplierOffer.replace("<br/>", "");
-					getManagedBean().setSupplierOffer(trimWipDpZone);
-				}
-			} else {
-				getManagedBean().setDpFlag(false);
-				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
-					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
-				}
+		if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			getManagedBean().setDpFlag(true);
+			String supplierOffer = getManagedBean().getSupplierOffer();
+			if (supplierOffer != null && supplierOffer.length() > 0) {
+				String trimWipDpZone = supplierOffer.replace("<br/>", "");
+				getManagedBean().setSupplierOffer(trimWipDpZone);
 			}
+		} else {
+			getManagedBean().setDpFlag(false);
+			if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+			}
+		}
 		// 28855 - End
 	}
 
@@ -4813,6 +4874,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setShowItemAddrList(new ArrayList<FlFulfilmentItemAddr>());
 			
 			FlFulfilmentItemAddr flItemAddr = null;
+			boolean isPidService = false;//36468
 			List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			ContractItemResDTO resDTO = new ContractItemResDTO();		
@@ -4865,13 +4927,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					flItemAddr.setGstAmount(BigDecimal.ZERO);
 					flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				}
+
+				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+				
+				//36468-Start
 				if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && flItemAddr.getItemType().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
 					flItemAddr.setOrderedQty(getManagedBean().getFlRequest().getScPurchaseInDefault().getQuantity());
+					flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+					isPidService = true;
 				}else{
 					flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				}
-				
-				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+				//36468-End
 				itemAddrList.add(flItemAddr);
 			}
 			String suspendedItemName = null;
@@ -4893,6 +4961,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				getManagedBean().getItemAddrList().addAll(itemAddrList);
 				getManagedBean().getShowItemAddrList().addAll(itemAddrList);
 				if(getManagedBean().getSelectedDelAddr()!=null) {
+					//36468-Start
+					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && isPidService){
+						getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().addAll(itemAddrList);
+					}
+					//36468-End
 					populateItemsForSelectedAddress();
 				}
 		} 
@@ -7221,17 +7294,27 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	//end-13984 - CrList - Back Button
 	
-	//26279 - start
+	// 26279 - start
 	/**
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
-		getManagedBean().setDisciplineVOs(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		SmSupplier currSupp;
+
+		if (getManagedBean().getFlRequest().getSmSupplier() != null) {
+			currSupp = getManagedBean().getFlRequest().getSmSupplier();
+		} else {
+			currSupp = SmApplicationUtil.getCurrentSupplier();
+		}
+		currSupp.setFlagSupplier(true);
+		currSupp.setFlagDASuppProfile(true);
+
+		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
+		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
-	//26279 - end
+
+	// 26279 - end
 	//24893 - start
 	/**
 	 * check role user is requisitioner

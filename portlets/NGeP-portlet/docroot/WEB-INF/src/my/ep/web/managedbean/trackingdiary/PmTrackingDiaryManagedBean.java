@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -1056,7 +1056,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
-
+			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
+ 
+			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
+			
 			if (isSearchBeanEmpty) {
 				if (isFilterBySupplier()) {
 					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true);
@@ -1074,53 +1077,34 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						// END - Bug #29861
 					}
 				}
+				reqDTO.setSearchBean(searchBean);
 
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
-					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
-							.getServiceObject("cc", ITrackingDiarySO.class);
-
-					// #25790 - Start and #25791
-					if (isReqOrApprover() && ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSelectedDocType())
-							|| isReqOrApprover()
-							&& ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_REQUEST_NOTE.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(getSelectedDocType())
-							|| isReqOrApprover()
-							&& ParameterConst.DOCTYPE_PURCHASE_INQUIRY.equals(getSelectedDocType())
-							|| isReqOrApprover() && ParameterConst.DOCTYPE_QUOTATION.equals(getSelectedDocType())) {
-						String docType = getSelectedDocType();
-						Long docId = getSelectedDocId();
-						resDTO = trackingDiarySO.retrieveTrackingDiaryByGroupDocAndGroupId(docId, docType, reqDTO,
-								searchBean, searchFilterBeanAnd1);
-
-						// #25396 - Start
-						ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
-						HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
-						if (isUseViewAsOption()) {
-							if (isViewAsSupplier()) {
-								List<String> listOfSupplierRole = getAllSupplierRole();
-								for (PmTrackingDiary getResultList : resDTO.getResultBean().getResultList()) {
-									if (listOfSupplierRole.contains(getResultList.getRoleCode())) {
-										tempPmTrackingDiary.put(getResultList.getTrackingDiaryId(), getResultList);
-									}
+					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
+							.getInstance().getServiceObject("cc",
+									ITrackingDiarySO.class);
+					
+					resDTO = trackingDiarySO
+							.retrieveTrackingDiaryBySearchBean(reqDTO);
+					
+					// #25396 - Start
+					ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
+					HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
+					if (isUseViewAsOption()) {
+						if (isViewAsSupplier()) {
+							List<String> listOfSupplierRole = getAllSupplierRole();
+							for (PmTrackingDiary getResultList : resDTO.getResultBean().getResultList()) {
+								if (listOfSupplierRole.contains(getResultList.getRoleCode())) {
+									tempPmTrackingDiary.put(getResultList.getTrackingDiaryId(), getResultList);
 								}
-								tempResultBean.getResultList().clear();
-								tempResultBean.getResultList().addAll(
-										new ArrayList<PmTrackingDiary>(tempPmTrackingDiary.values()));
-
-								resDTO.setResultBean(tempResultBean);
 							}
+							tempResultBean.getResultList().clear();
+							tempResultBean.getResultList().addAll(
+									new ArrayList<PmTrackingDiary>(tempPmTrackingDiary.values()));
+
+							resDTO.setResultBean(tempResultBean);
 						}
-						// #25396 - end
-
-					} else {
-						searchBean.getDataFilterBeans().add(
-								new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
-						reqDTO.setSearchBean(searchBean);
-
-						setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
-						resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 					}
 					// #25790 - End
 
@@ -1166,10 +1150,11 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		return pmOrgProfile;
 	}
 
+	//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	// to get list of all supplier role
 	// Start - #25396
 	private List<String> getAllSupplierRole() {
-		List<String> supplierRoles = new ArrayList<String>();
+		List<String> supplierRoles = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		supplierRoles.add(RoleCode.MOF_SUPPLIER_ADMIN.value());
 		supplierRoles.add(RoleCode.MOF_SUPPLIER_USER.value());
@@ -1182,6 +1167,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 		return supplierRoles;
 	}
+	//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 	// End - #25396
 

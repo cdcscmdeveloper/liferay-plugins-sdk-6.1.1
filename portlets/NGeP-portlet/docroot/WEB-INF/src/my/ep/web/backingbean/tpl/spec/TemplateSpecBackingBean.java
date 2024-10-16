@@ -28,9 +28,11 @@ import java.util.TreeMap;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -251,6 +253,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 				// #21695 - Farid
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
@@ -5506,33 +5509,12 @@ public class TemplateSpecBackingBean extends
 		}
 		return false;
 	}
-//#21695 Farid end 2/4/2021
-	
-	//#28784 - Start
-	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
-		ITemplateSpecSO templateSpecSO = null;
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean
-					.getSelectedSpecQuestion();
-			List<TplSpecScoring> specScorings = selectedSpecQuestion
-					.getTplSpecScorings();
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-			BigDecimal demoScore = templateSpecSO.validateScoring(
-					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
-			if(demoScore != null && demoScore.equals(new BigDecimal(0))){
-				throw new EpException(MessageConst.ERROR_760476);
-			}
-			if (demoScore != null) {
-				selectedSpecQuestion.setDemoScore(demoScore);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-		templateSpecBean.setSelectedSpecQuestion(null);
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
-	}
+//#21695 Farid end 2/4/2021	
 
+	/**
+	 * #28784 - Demo scoring cancle
+	 * @param templateSpecBean
+	 */
 	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
@@ -5804,4 +5786,23 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #29187 End Vinod
+	
+	/**
+	 * To validate Wieghtage input value
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
+		BigDecimal weightage = (BigDecimal) value;
+
+		if (weightage.compareTo(BigDecimal.valueOf(100)) > 0) {
+			String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+	}
+	
+
+	
 }
