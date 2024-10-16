@@ -5198,7 +5198,7 @@ public class SimpleQuoteBackingBean extends
 				
 				//36301 - start
 				boolean isContainDraft = isQuoteDocContainDraft(scQuote.getQuoteDocs());
-				if (isContainDraft){
+				if (isContainDraft && scQuote.getQuoteId() != null){
 					isSpCompleted = getQuoteSO().executeSPFortemplateStatusDraft(scQuote.getQuoteId());
 				}
 				//36301 - end
