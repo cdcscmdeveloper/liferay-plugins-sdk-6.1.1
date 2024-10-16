@@ -306,6 +306,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean isGrouped;
 	//#28718 - end
 	
+	private String backToNtf; //35357
 /**
  * Gets the charge line item root.
  *
@@ -3382,5 +3383,21 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.isGrouped = isGrouped;
 	}
 	//#28718 - end
+
+	//35357-Start
+	/**
+	 * @return the backToNtf
+	 */
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	/**
+	 * @param backToNtf the backToNtf to set
+	 */
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	//35357-End
 	
 }
