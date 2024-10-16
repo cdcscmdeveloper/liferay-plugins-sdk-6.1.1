@@ -10999,9 +10999,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public String finalDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
 		//#31043 - start
-		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+		if(!decision.equalsIgnoreCase("REJECT") || !decision.equalsIgnoreCase("INQUIRY")
+				&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) ){
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
 		//#31043 - end
@@ -11138,9 +11139,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
 		//#31043 - start
-		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+		if(!res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) 
+				|| !res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)
+				&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) ){
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
 		//#31043 - end
