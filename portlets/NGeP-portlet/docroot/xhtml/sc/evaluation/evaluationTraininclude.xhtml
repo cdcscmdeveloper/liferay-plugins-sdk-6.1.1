@@ -22,6 +22,7 @@
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 0}"
+								disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
 						</li>
 
@@ -34,6 +35,7 @@
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 1}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" /></li>
 
 						</ui:fragment>
@@ -46,6 +48,7 @@
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 						</ui:fragment>
 
@@ -59,6 +62,7 @@
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 2}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 						</ui:fragment>
 
@@ -71,6 +75,7 @@
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
 
 						</ui:fragment>
@@ -86,6 +91,7 @@
 									actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
 									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 									rendered="#{evaluationBackingBean.managedBean.tempTab ge 3}"
+									disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
 
 						</ui:fragment>
@@ -98,6 +104,7 @@
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 4}"
+								disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
 
 
@@ -109,6 +116,7 @@
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 5}"
+								disabled="#{evaluationMeetingBackingBean.managedBean.committeeModified}"
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" />
 						</li>
 

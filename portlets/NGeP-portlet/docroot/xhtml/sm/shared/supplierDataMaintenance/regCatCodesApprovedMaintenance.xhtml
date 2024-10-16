@@ -84,16 +84,16 @@
 	</p:dataTable>
 	
 	<div align="right">
-
+		<!-- #30766 & #34209 - START - add component to update -->
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
 			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 
-			update=":#{p:component('catcodeMainPanelId')}" partialSubmit="true" 
+			update=":#{p:component('catcodeMainPanelId')},:#{p:component('messages')}" partialSubmit="true" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			process="@this">
 		</p:commandButton>
-
+		<!-- #30766 & #34209 - END -->
 	</div>
 
 </ui:composition>
