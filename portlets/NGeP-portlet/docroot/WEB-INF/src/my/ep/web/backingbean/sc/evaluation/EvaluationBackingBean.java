@@ -855,9 +855,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				this.getManagedBean().setScQt(qtResDTO.getScQt());
 			}
 
-			// 25037 #568 -start-
+			// 25037 - start - note 568
 			if (!this.getManagedBean().isCommitteModified()) {
-				// 25037 #568 -end-
+			// 25037 - end - note 568
 				if (null == this.getManagedBean().getScQtMeetings()) {
 					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 	
@@ -16149,7 +16149,10 @@ private void retriveCommitteeRemarksList(){
 	}
 	//Enhancement #26339 -end-
 	
-	//#25037-START
+	// 25037 - start
+	/**
+	 * Populate the data for the screen update committee member.
+	 */
 	public void prepareUpdateCommitteeMember() {
 		ScQt scQt = this.getManagedBean().getScQt();
 		ScQtCommittee qtCommittee = this.getManagedBean().getScQtCommittee();
@@ -16173,12 +16176,15 @@ private void retriveCommitteeRemarksList(){
 	}
 	//#25037-END	
 	
-	// 25037 #568 - start
+	// 25037 - start - note 568
+	/**
+	 * Submit committee member changes and send for approval.
+	 */
 	public void submitCommitteeUpdate() {
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		FacesScopes facesScopes = new FacesScopes();
-		
+
 		EvaluationReqDTO reqDTO = evaluationPreparation();
 		reqDTO.setCommType(this.getManagedBean().getCommitteeType());
 		reqDTO.setCommitteeModified(true);
@@ -16190,15 +16196,15 @@ private void retriveCommitteeRemarksList(){
 		reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 		reqDTO.setDeletedCommitteeMembers(this.getManagedBean().getRemoveCommitteeList());
 		reqDTO.setScQtApprovalRemark(this.getManagedBean().getScQtApprovalRemark());
-		
+
 		evaluationSO.updateCommitteeBpmAction(reqDTO);
 
 		ScQt qt = getManagedBean().getScQt();
-		
+
 		String committeeType = this.getManagedBean().getCommitteeType();
 		committeeType = StringUtils.isEmpty(committeeType) ? "" : this.getParameterDesc(ParameterConst.COMMITTE_TYPE,
 				committeeType);
-		
+
 		String procumentMode = this.getParameterDesc(qt.getProcurementMode());
 		String message = MessageUtils.getMessage(MessageConst.INFO_760504, new String[] { committeeType, procumentMode,
 				qt.getQtNo() }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
@@ -16207,7 +16213,8 @@ private void retriveCommitteeRemarksList(){
 		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
-	// 25037 #568 - end
+
+	// 25037 - end - note 568
  
 	// #25638 - Start	
 	public boolean displayReviseInstrn() {
