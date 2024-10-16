@@ -74,13 +74,14 @@
 								<c:if
 									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+										<!-- #31043 -->
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>
@@ -124,13 +125,13 @@
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
-								
+							<!-- #31043 -->		
 							<p:commandButton
 								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
 								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this"
@@ -168,13 +169,14 @@
 								<c:if
 									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+										<!-- #31043 -->
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>
