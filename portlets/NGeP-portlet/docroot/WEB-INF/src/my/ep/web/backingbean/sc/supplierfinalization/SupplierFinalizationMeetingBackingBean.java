@@ -2013,7 +2013,6 @@ if (CollectionUtils.isNotEmpty(
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SupplierFinalizationBackingBean finalBB = this.getManagedBean().getFinalBB();
 		SupplierFinalizationBiddingBackingBean finalBiddingBB = this.getManagedBean().getFinalBiddingBB();
-
 		String mainPage = "/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml";
 		mainPage = finalBB == null ? mainPage : "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
 		mainPage = finalBiddingBB == null ? mainPage
@@ -2028,6 +2027,12 @@ if (CollectionUtils.isNotEmpty(
 					.handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
 		} else if ("confirm".equalsIgnoreCase(action)) {
 			validateCommitteeChanges();
+			//28895 - 35500 start
+			List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeAuditTrailList() != null
+					? this.getManagedBean().getNewCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+			List<ScCommitteeMember> deletedCommitteeMembers = this.getManagedBean().getRemoveCommitteeAuditTrailList() != null
+					? this.getManagedBean().getRemoveCommitteeAuditTrailList() : new ArrayList<ScCommitteeMember>();
+			//28895 - 35500 end
 			if (finalBB != null) {
 				submitChanges(finalBB, mainPage);
 			} else if (finalBiddingBB != null) {
@@ -2036,6 +2041,8 @@ if (CollectionUtils.isNotEmpty(
 				saveAction();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
 			}
+
+			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);//28895 - 35500
 		}
 	}
 
