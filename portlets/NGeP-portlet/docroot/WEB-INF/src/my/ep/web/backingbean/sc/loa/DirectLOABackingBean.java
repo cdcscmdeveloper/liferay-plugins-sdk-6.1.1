@@ -12310,25 +12310,32 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	 * @return
 	 */
 	public void searchTemplateSpecAction() {
-		validateBeforeAndAfterDate();
+		Date createdFromDate = getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate();
+		Date createdToDate = getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate();
+		boolean isDatesNull = createdFromDate == null && createdToDate == null;
+
+		if (!isDatesNull) {
+			validateBeforeAndAfterDate(createdFromDate, createdToDate);
+		}
+
 		if (null == getManagedBean().getTemplateSpecCreate()) {
 			getManagedBean().setTemplateSpecCreate(new CreateTemplateSpecPagingDataModel());
 		}
 		getManagedBean().getTemplateSpecCreate().reloadData();
 	}
 	
-	private void validateBeforeAndAfterDate() {
-		Date createdFromDate = getManagedBean().getQtnTendertemplateSearchBean().getFromCreatedDate();
-		Date createdToDate = getManagedBean().getQtnTendertemplateSearchBean().getToCreatedDate();
-		if (null != createdFromDate && null == createdToDate) {
-			throw new EpException(MessageConst.ERROR_775187);
-		}
-		if (null == createdFromDate && null != createdToDate) {
+	private void validateBeforeAndAfterDate(Date createdFromDate, Date createdToDate) {
+
+		if (createdFromDate == null) {
 			throw new EpException(MessageConst.ERROR_775184);
 		}
-		if (null != createdFromDate && null != createdToDate && createdFromDate.after(createdToDate)) {
+		if (createdToDate == null) {
+			throw new EpException(MessageConst.ERROR_775187);
+		}
+		if (createdFromDate.after(createdToDate)) {
 			throw new EpException(MessageConst.ERROR_775182);
-		} else if (null != createdFromDate && null != createdToDate && createdToDate.before(createdFromDate)) {
+		}
+		if (createdToDate.before(createdFromDate)) {
 			throw new EpException(MessageConst.ERROR_775183);
 		}
 	}
