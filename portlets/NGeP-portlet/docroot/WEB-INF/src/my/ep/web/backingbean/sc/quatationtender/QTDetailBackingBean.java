@@ -1305,8 +1305,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			// #29732 Start
 			//qtmaintenance from audit search ,ADD ISREADONLY
+			//add !isdeskofficer, DO suppose not to show alert message
 			if ((this.getManagedBean().getQt().getQtStatus().getStatusId()
-					.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) || 
+					.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && !isDeskOfficer() || 
 					this.getManagedBean().getQt().getQtStatus().getStatusId()
 							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
 							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
