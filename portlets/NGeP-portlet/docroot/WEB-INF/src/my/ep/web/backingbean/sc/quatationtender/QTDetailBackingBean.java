@@ -13897,7 +13897,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 	// 25791 -start-
 	/**
-	 * This method is used to view Direct and Normal Loa contract deatils based
+	 * This method is used to view Direct and Normal Loa contract details based
 	 * on LoaDetails.
 	 * 
 	 * @param loaForQtDl
