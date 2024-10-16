@@ -122,15 +122,8 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			challenges.put(getChallengeQues1(), getChallengeAns1());
 			
 			SpkiVO vo = instance.getSignedData(idNo, epNo, getPassword(), challenges, dataForSigning);
+			err(new Exception(vo.getErrMsg()));
 			
-			if (!StringUtils.contains(vo.getErrMsg(), "Code: 1")){
-				err(new Exception(vo.getErrMsg()));
-			} else {
-				String result = new String(vo.getSignedData());
-				log.info("sign success: "+vo.getSignedData());
-				FacesContext.getCurrentInstance().addMessage("spki", 
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "", "SIGN SUCCESS: "+result));
-			}
 		} catch (Exception e){
 			err(e);
 		}
@@ -255,7 +248,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
 					challenges, new ByteArrayInputStream(dataForSigning.getBytes()));
 			vo.setSignedData(res.SIGNATURE);
-			vo.setErrMsg("Code: "+res.getStatusCode());
+			vo.setErrMsg("Code: "+res.getStatusCode()+" - "+res.getStatusMessage());
 			return vo;
 		}
 	}
@@ -277,7 +270,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 						challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 				vo.setSignedData((byte[]) res
 						.get(com.augtech.kmc.client.IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				vo.setErrMsg("Code: "+res.getStatusCode()+" "+res.getStatusMessage());
+				vo.setErrMsg("Code: "+res.getStatusCode()+" - "+res.getStatusMessage());
 				
 			} catch (KMCAPIException e) {
 				log.info(e);
