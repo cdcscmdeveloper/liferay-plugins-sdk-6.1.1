@@ -4633,7 +4633,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
 
 			// #25729 #174			 
-			if ((actualIntendedPrice.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
+			// Bug #35061 - asyrafhaziq
+			// get total indicative price threshold validation value
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0)) {
+				// Bug #35061 -end-
 				return Boolean.TRUE;
 			}
 		}
