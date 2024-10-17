@@ -3991,7 +3991,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		double thresoldAmt = 0;
+		//36560-Start
+		Map<String, BigDecimal> extensionCodeCache = new HashMap<>(); // Cache for extension codes and their corresponding sumAmt
+		double thresoldAmt;
+		//36560-end
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
@@ -3999,9 +4002,28 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
-			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
-			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			
+			//36560-Start
+			String extensionCode = requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8);
+		    summReq.setExtensionCode(extensionCode);
+		    
+		    BigDecimal sumAmt;
+		    
+		    List<Long> flFulfilmentRequestList = null;
+			flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(summReq);
+
+		    // Check if the extensionCode already exists in the cache
+		    log.info("extensionCode="+extensionCode);
+		    if(extensionCodeCache.containsKey(extensionCode)) {
+		        sumAmt = extensionCodeCache.get(extensionCode);
+		        log.info("sumAmt 1="+sumAmt);
+		    } else {
+		        // If not, call the method and store the result in the cache
+		        sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
+		        extensionCodeCache.put(extensionCode, sumAmt);
+		        log.info("sumAmt 2="+sumAmt);
+		    }
+		    //36560-End
 			
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
