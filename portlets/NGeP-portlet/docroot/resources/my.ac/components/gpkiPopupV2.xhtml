@@ -44,10 +44,14 @@
 					enableBtn();
 				}, gpki.otpExp() * 1000);
 		}
+		
+		function reset(){
+			$("[id='#{otpPin.clientId}']").val('');
+		}
 	</script>
 
 	<p:dialog id="gpki_dlg" widgetVar="gpki_dlg" 
-		onShow="#{gpkiBackingBean.getGpkiEnabledProperty() ? 'getUser();' : 'setMediumType();'}"
+		onShow="reset(); #{gpkiBackingBean.getGpkiEnabledProperty() ? 'getUser();' : 'setMediumType();'}"
 		resizable="false" modal="true" showHeader="false" closable="false">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:dialog>
