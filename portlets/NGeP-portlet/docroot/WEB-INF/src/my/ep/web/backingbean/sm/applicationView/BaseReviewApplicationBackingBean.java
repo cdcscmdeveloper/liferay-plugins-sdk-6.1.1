@@ -1230,6 +1230,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new ArrayList<SmMachineDtl>());
 		} else {
 			List<SmMachineDtl> activeMachineDtls = new ArrayList<SmMachineDtl>();
+			List<SmMachineDtl> allMachineDtls = new ArrayList<SmMachineDtl>(); //#34209 & #30766
 			SmMachineDtl machDtlTmp = null;
 
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -1241,76 +1242,62 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// #32809 - start
 				// filter category code that not imposed with DA
 				if(cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED){
-					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl()
-							.getSmMachineDtls()) {
-						machDtlTmp = (SmMachineDtl) EntityHelper
-								.getEntityBySinglePropertyFromList(
-										machineDtl.getMachineDtlId(),
-										activeMachineDtls, "machineDtlId");
-						if (machineDtl.getSmMachineCategories() != null
-								&& machineDtl.getSmMachineCategories().size() > 0) {
-							for (SmMachineCategory machCat : machineDtl
-									.getSmMachineCategories()) {
-								String macCatCode = machCat
-										.getPmCategoryL3()
-										.getPmCategoryL2()
-										.getPmCategoryL1()
-										.getCategoryL1Code()
-										.concat(machCat.getPmCategoryL3()
-												.getPmCategoryL2()
-												.getCategoryL2Code())
-										.concat(machCat.getPmCategoryL3()
-												.getCategoryL3Code());
-								String suppCatCode = cat
-										.getPmCategoryL3()
-										.getPmCategoryL2()
-										.getPmCategoryL1()
-										.getCategoryL1Code()
-										.concat(cat.getPmCategoryL3()
-												.getPmCategoryL2()
-												.getCategoryL2Code())
-										.concat(cat.getPmCategoryL3()
-												.getCategoryL3Code());
-								if (machineDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-										&& macCatCode
-												.equalsIgnoreCase(suppCatCode)
-										&& machDtlTmp == null) {
-									// #32809 - start
-									List<SmMachineCategory> activeSmMachineCategory = new ArrayList<SmMachineCategory>();
-									
-									//filter DA category code for machine
-									for (SmMachineCategory catCodeNoDA : machineDtl.getSmMachineCategories() ) {
-										String catCode = catCodeNoDA
-												.getPmCategoryL3()
-												.getPmCategoryL2()
-												.getPmCategoryL1()
-												.getCategoryL1Code()
-												.concat(cat.getPmCategoryL3()
-														.getPmCategoryL2()
-														.getCategoryL2Code())
-												.concat(cat.getPmCategoryL3()
-														.getCategoryL3Code());
-										if(suppCatCode.equals(catCode)){
-											activeSmMachineCategory.add(catCodeNoDA);
-										}
-									}
-									
-									machineDtl.setSmMachineCategories(activeSmMachineCategory);
-									// #32809 - end
-									activeMachineDtls.add(machineDtl);
-									break;
+					for (SmMachineDtl machineDtl : getManagedBean().getSmAppl().getSmMachineDtls()) {
+						machDtlTmp = (SmMachineDtl) EntityHelper.getEntityBySinglePropertyFromList(machineDtl.getMachineDtlId(), activeMachineDtls, "machineDtlId");
+						if (machineDtl.getSmMachineCategories() != null && machineDtl.getSmMachineCategories().size() > 0) {
+							for (SmMachineCategory machCat : machineDtl.getSmMachineCategories()) {
+								String macCatCode = machCat.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().concat(
+											machCat.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()).concat(
+											machCat.getPmCategoryL3().getCategoryL3Code());
+								String suppCatCode = cat.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().concat(
+										cat.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()).concat(
+										cat.getPmCategoryL3().getCategoryL3Code());
+								
+								//#34209 & #30766 - START
+								if(macCatCode.equalsIgnoreCase(suppCatCode) && (SmMachineDtl) EntityHelper.getEntityBySinglePropertyFromList(machineDtl.getMachineDtlId(), allMachineDtls, "machineDtlId") == null){
+									allMachineDtls.add(machineDtl);
 								}
+								if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED){
+									if (machineDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && macCatCode.equalsIgnoreCase(suppCatCode) && machDtlTmp == null) {
+										// #32809 - start
+										List<SmMachineCategory> activeSmMachineCategory = new ArrayList<SmMachineCategory>();
+									
+										//filter DA category code for machine
+										for (SmMachineCategory catCodeNoDA : machineDtl.getSmMachineCategories()) {
+											String catCode = catCodeNoDA
+													.getPmCategoryL3()
+													.getPmCategoryL2()
+													.getPmCategoryL1()
+													.getCategoryL1Code()
+													.concat(cat.getPmCategoryL3()
+															.getPmCategoryL2()
+															.getCategoryL2Code())
+													.concat(cat.getPmCategoryL3()
+															.getCategoryL3Code());
+											if (suppCatCode.equals(catCode)) {
+												activeSmMachineCategory.add(catCodeNoDA);
+											}
+										}
+									
+										machineDtl.setSmMachineCategories(activeSmMachineCategory);
+										// #32809 - end
+										activeMachineDtls.add(machineDtl);
+										break;
+									}
+								}
+								//#30766 & #34209 - END
 							}
 						}
 					}
 				}
+				//#30766 & #34209 - END
 				// #32809 - end
 
 				// #30021 - start
 //				}
 				// #30021 - end
 			}
-
+			getManagedBean().setAllMachineDtls(allMachineDtls); //#30766 & #34209
 			getManagedBean().getSmAppl().setSmMachineDtls(activeMachineDtls);
 		}
 		// manufacturingOrAssmblyInfoFormViewOnly
@@ -1323,13 +1310,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			// #32809 - start
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 				// filter category code that not imposed with DA
-				if ((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED)
-						&& cat.getPmCategoryL3() != null
+				if ((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED) && cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING
-							.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
+						&& my.ep.constant.pm.ParameterConst.CATEGORY_TYPE_MANUFACTURING.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode())) {
 					for (SmManufacturingDtl manuFacDtl : getManagedBean().getSmAppl().getSmManufacturingDtls()) { // filter manufacture not imposed DA
-				if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+						if (manuFacDtl.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
 							if(activeManufacturingDtls.size() > 0){
 								for (SmManufacturingDtl manuFacDtlAct : activeManufacturingDtls) {
 									if (!manuFacDtl.equals(manuFacDtlAct)) {
@@ -1337,9 +1322,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 									} 
 								}
 							} else {
-					activeManufacturingDtls.add(manuFacDtl);
-				}
-			}
+								activeManufacturingDtls.add(manuFacDtl);
+							}
+						}
 					}
 					// #32809 - end
 				}
@@ -3552,37 +3537,33 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<PmCategoryL3> getCategoryFacilityVO(SmAppl smAppl,
 			String facType) {
-		//#32809 - start
-		return getCategoryFacilityVO(facType, smAppl,
-				smAppl.getSmFacilities());
-		//#32809 - end
+		// #32809 - start - #30766 & #34209 - START
+		return getCategoryFacilityVO(facType, smAppl, smAppl.getSmFacilities());
+		// #32809 - end - #30766 & #34209 - END
 	}
 
+	//#30766 & #34209 - START
 	public static List<PmCategoryL3> getCategoryFacilityVO(String facType,
-			SmAppl smAppl, List<SmFacility> facilities) {
+			SmAppl smAppl, List<SmFacility> facilities) { 
 		List<PmCategoryL3> categoryFacilityVOList = new ArrayList<PmCategoryL3>();
 		
 		//#32809 - start
 		if (!EntityHelper.isCollectionEmpty(smAppl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-						&& cat.getPmCategoryL3() != null
-						&& !StringUtils.isBlank(cat.getPmCategoryL3()
-								.getFacilityType())
-						&& cat.getPmCategoryL3().getFacilityType()
-								.equalsIgnoreCase(facType)) {
+				if (//cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED //#30766 & #34209
+						//&& 														 //#30766 & #34209
+					cat.getPmCategoryL3() != null
+						&& !StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())
+						&& cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(facType)) {
 					
 					// filter category code that not imposed with DA
 					if(cat.getDisciplinaryActionId() == null){
 						
-						cat.getPmCategoryL3().setFacilityList(
-								new ArrayList<SmFacility>());
-						cat.getPmCategoryL3().setSelectedFacilityList(
-								new ArrayList<SmFacility>());
+						cat.getPmCategoryL3().setFacilityList(new ArrayList<SmFacility>());
+						cat.getPmCategoryL3().setSelectedFacilityList(new ArrayList<SmFacility>());
 	
 						for (SmFacility fac : facilities) {
-							if (!EntityHelper.isCollectionEmpty(fac
-									.getSmSupplierCategoryFacilities())) {
+							if (!EntityHelper.isCollectionEmpty(fac.getSmSupplierCategoryFacilities())) {
 								SmSupplierCategoryFacility catTmp = (SmSupplierCategoryFacility) EntityHelper
 										.getEntityBySinglePropertyFromList(cat
 												.getPmCategoryL3()
@@ -3606,15 +3587,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						}
 
 						// only add category that have facilities
-						if (cat.getPmCategoryL3() != null
-								&& !EntityHelper.isCollectionEmpty(cat
-										.getPmCategoryL3().getFacilityList())) {
-							categoryFacilityVOList.add(cat.getPmCategoryL3());
+						if (cat.getPmCategoryL3() != null && !EntityHelper.isCollectionEmpty(cat.getPmCategoryL3().getFacilityList())) {
+							//#30766 & #34209 - START
+							if((cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+									&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_SUSPENDED 
+									&& cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_CANCELLED)){
+								categoryFacilityVOList.add(cat.getPmCategoryL3());
+							}
+							//#30766 & #34209 - END
 						}
 					}
 				}
 			}
 		}
+		//#30766 & #34209 - END
 		//#32809 - end
 
 		return categoryFacilityVOList;
