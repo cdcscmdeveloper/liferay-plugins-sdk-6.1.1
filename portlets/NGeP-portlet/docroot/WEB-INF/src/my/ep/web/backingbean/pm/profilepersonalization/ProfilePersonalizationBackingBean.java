@@ -949,7 +949,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 						IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF) && isSmAuditUser()) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
 				// #28895_35501 End
 				loadUserProfile(user.getUserId());
