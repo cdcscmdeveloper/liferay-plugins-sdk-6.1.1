@@ -25,6 +25,7 @@ public class AuditQTManagedBean extends BaseManagedBean {
 	private AuditQTSearchBean auditQTSearchBean;
 	private Long groupSectionId;
 	
+	
 
 	public String getModuleSelected() {
 		return moduleSelected;

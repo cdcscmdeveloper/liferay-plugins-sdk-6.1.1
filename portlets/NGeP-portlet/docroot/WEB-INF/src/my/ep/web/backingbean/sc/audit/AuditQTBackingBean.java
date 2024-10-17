@@ -64,6 +64,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 	 * @throws IOException
 	 * @throws PortalException
 	 * @throws SystemException
+	 * 
 	 */
 	public void redirectToAuditTrailsViews(Long docId) throws IOException, PortalException,
 			SystemException {
@@ -83,6 +84,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 	 * Method to navigate back to previous page
 	 * 
 	 * @return the previous page
+	 * 
 	 */
 	public void backAction() {
 		FacesContext fc = FacesContext.getCurrentInstance();
