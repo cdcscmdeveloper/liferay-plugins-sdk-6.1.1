@@ -13673,6 +13673,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	
 	/**
 	 * #35500 check user role to access audit Trails
+	 * 
 	 */
 	public void checkRolesToAuditView() {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
