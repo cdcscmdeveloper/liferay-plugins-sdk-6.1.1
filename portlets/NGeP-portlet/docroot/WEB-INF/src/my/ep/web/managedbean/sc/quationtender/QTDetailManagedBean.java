@@ -1802,6 +1802,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<TabBean> readOnlyCommitteeTabBean;//Bug 32277
 	
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -11283,4 +11286,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
 	}
 	// Bug 32277 - end
+	
+	//Bug #35061 - asyrafhaziq - Start
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+	//Bug #35061 - asyrafhaziq - End
 }
