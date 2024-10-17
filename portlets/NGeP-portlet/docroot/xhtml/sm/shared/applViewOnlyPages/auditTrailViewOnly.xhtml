@@ -16,7 +16,8 @@
 					<div align="right" style="vertical-align: top; width: 100%">
 						<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
 							ajax="false">
-							<!-- 								<p:fileDownload value="" /> -->
+							<p:fileDownload
+								value="#{auditSupplierManagementDocumentBackingBean.generateRptPdfForAuditTrailDetailsAll(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
@@ -39,7 +40,7 @@
 							<c:when
 								test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
 								<p:tab id="#{SupplierManagementConst.auTabIdBankInfo}"
-									title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
+									title="#{lbl['lbl.audit.tab.approve.bank.information']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 									title="#{lbl['lbl.audit.tab.user.profile']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
@@ -48,7 +49,7 @@
 							<c:when
 								test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
 								<p:tab id="#{SupplierManagementConst.auTabIdBankInfo}"
-									title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
+									title="#{lbl['lbl.audit.tab.approve.bank.information']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 									title="#{lbl['lbl.audit.tab.user.profile']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
@@ -81,7 +82,8 @@
 				<td>
 					<div align="right" style="width: 100%">
 						<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-							<!-- 								<p:fileDownload value="" /> -->
+							<p:fileDownload
+								value="#{auditSupplierManagementDocumentBackingBean.generateRptPdfForAuditTrailDetails(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
