@@ -205,7 +205,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
-	public void retrieveOnlineBiddingEndorsement(Long qtId) {//#25037 - change public to private
+	// 25037 - start
+	/**
+	 * Populate finalization preparation data
+	 * 
+	 * @param qtId
+	 */
+	public void retrieveOnlineBiddingEndorsement(Long qtId) {
+	// 25037 - end
 		retriveQTDetails(qtId);
 		if (StringUtils.isNotBlank(
 				getManagedBean().getCommitteeType())) {
@@ -357,7 +364,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
-	public void retrieveCommitteeAndMeetingDetails(Long qtId) {//#25037 - change private to public
+	// 25037 - start
+	/**
+	 * Populate committee and meeting data
+	 * @param qtId
+	 */
+	public void retrieveCommitteeAndMeetingDetails(Long qtId) {
+	// 25037 - end			
 		IQTMeetingSO meetingSO = null;
 		try {
 			meetingSO = BusinessDelegate.getInstance()
@@ -1153,7 +1166,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// #25037 -start
 			Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeList(),
 					"getScCommitteeMember.getCommitteeMemberId");
-			List<ScQtCommitteeActivity> missingActivities = new ArrayList<ScQtCommitteeActivity>();
+			List<ScQtCommitteeActivity> missingActivities = new ArrayList<>();
 
 			for (ScCommitteeMember member : scQtCommittee.getScCommittee().getScCommitteeMembers()) {
 				if (map.get(member.getCommitteeMemberId()) == null) {
@@ -1202,9 +1215,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 				remarks.get(0).setEditable(true);
 
 				Collections.sort(remarks, new Comparator<ScQtCommitteRemarks>() {
+					@Override
 					public int compare(ScQtCommitteRemarks o1, ScQtCommitteRemarks o2) {
-						if (o1.getCreatedDate() == null || o2.getCreatedDate() == null)
+						if (o1.getCreatedDate() == null || o2.getCreatedDate() == null) {
 							return 0;
+						}
 						return o2.getCreatedDate().compareTo(o1.getCreatedDate());
 					}
 				});
@@ -1870,13 +1885,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 	/**
 	 * To save online endorsement
 	 */
+	// 25037 - start
 	public void saveOnlineEndorsement() {
-		// #25037 - start
 		saveOnlineEndorsement(false);
 	}
 
-	public void saveOnlineEndorsement(boolean skipValidation) { 
-	// #25037 - end
+	/**
+	 * To save online endorsement, skip validation if required
+	 * 
+	 * @param skipValidation
+	 */
+	public void saveOnlineEndorsement(boolean skipValidation) {
+	// 25037 - end
 	IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -3010,6 +3030,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 	
 	// #25037-START
+	/**
+	 * Populate and initialize data for update committee screen.
+	 */
 	public void prepareUpdateCommitteeMember() {
 		if (StringUtils.isBlank(this.getManagedBean().getCommitteeType()))
 			return;
@@ -3030,6 +3053,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 	// #25037 -end-
 	
 	// #25037 -start-
+	/**
+	 * Submit action.
+	 * 
+	 * @param action
+	 */
 	public void submitAction(String action) {
 		this.checkIfLoggedinUserIsSecretary();
 
