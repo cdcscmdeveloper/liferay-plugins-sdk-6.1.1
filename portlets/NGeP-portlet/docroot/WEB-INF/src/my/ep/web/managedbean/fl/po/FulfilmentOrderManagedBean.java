@@ -201,6 +201,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private boolean isDpContinuityView = false;//#26790 note 266
 	
+	private String backToNtf;//36519
+	
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -1638,4 +1640,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.isDpContinuityView = isDpContinuityView;
 	}
 	// #25790 - end
+
+	//36519-Start
+	/**
+	 * @return the backToNtf
+	 */
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	/**
+	 * @param backToNtf the backToNtf to set
+	 */
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	//36519-End
 }
