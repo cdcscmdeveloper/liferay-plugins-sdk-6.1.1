@@ -676,6 +676,19 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
 	}
 	
+	// 35508 - start
+	/**
+	 * Checks if is Ep Admin.
+	 * 
+	 * @return true, if is Ep Admin
+	 */
+	public boolean isEpAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+
+	// 35508 - end
+	
 	/**
 	 * Gets the doc type list by role.
 	 *
@@ -716,6 +729,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			}
+			// 35508-start
+			if (isEpAdmin()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+			}
+			// 35508-end
 		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getSearchOrderType())) {
 			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 			if(isFlFulfilmentRequisitioner()) {
@@ -747,6 +766,12 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			}
+			// 35508-start
+			if (isEpAdmin()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+			}
+			// 35508-end
 		}
 		
 		return flDocTypes;
