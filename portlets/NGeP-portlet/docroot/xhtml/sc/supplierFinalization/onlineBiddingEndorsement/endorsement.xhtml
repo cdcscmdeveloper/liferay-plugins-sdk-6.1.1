@@ -63,7 +63,7 @@
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							styleClass="ui-button"
-							action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}"
+							action="#{suppFinalBiddingBackingBean.submitAction(bpmAction)}"
 							rendered="#{validityDaysExpiredQt}" />
 					</ui:repeat>
 				</ui:define>
