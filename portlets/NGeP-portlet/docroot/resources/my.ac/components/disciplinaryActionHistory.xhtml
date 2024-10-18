@@ -29,8 +29,7 @@
 			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />
 			<p:spacer height="3" />
 		</p:outputPanel>
-		
-		<ui:param name="isMOF" value="#{cc.attrs.voList.get(0).mofNoExist}" />
+		<ui:param name="isMOF" value="#{empty cc.attrs.voList ? false : cc.attrs.voList.get(0).mofNoExist}" />
 							
 		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
 		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 

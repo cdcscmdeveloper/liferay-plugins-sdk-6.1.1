@@ -1233,7 +1233,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			//#34159 - START
 			if(perm.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(perm.getSmAddress().getPmDivision().getDivisionId()));
+				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(perm.getSmAddress().getPmState().getStateId()));
 			} else {
 				getManagedBean().setPermDivisions(new ArrayList<SelectItem>());
 			}
@@ -1269,7 +1269,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			//#34159 - START
 			if(mail.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(mail.getSmAddress().getPmDivision().getDivisionId()));
+				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(mail.getSmAddress().getPmState().getStateId()));
 			} else {
 				getManagedBean().setMailDivisions(new ArrayList<SelectItem>());
 			}
@@ -1412,7 +1412,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				getManagedBean().setOldIdentification(getManagedBean().getReactivateBasic().getIdentificationNo());
 				getManagedBean().setNewIdentifiction(getManagedBean().getReactivateBasic().getNewIdentificationNo());
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
-				auditSmBackingBean.saveAuditData(getManagedBean());
+				auditSmBackingBean.saveAuditData(getManagedBean(), null);
 			}
 			// #28895_35501 End
 		} else {
