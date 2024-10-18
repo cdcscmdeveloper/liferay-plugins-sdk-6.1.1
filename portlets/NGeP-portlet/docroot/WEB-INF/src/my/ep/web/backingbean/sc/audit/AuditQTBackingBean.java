@@ -24,7 +24,9 @@ import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.constant.sc.QTAuditConstant;
 import my.ep.dto.sc.audit.AuditQTDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -36,6 +38,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -51,12 +54,21 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
+/**
+ * #35500, Audit Trails Views
+ * 
+ */
 @ManagedBean(name = "auditQTBackingBean")
 @RequestScoped
-public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBean> {
-	
+public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
+
 	private static final long serialVersionUID = -5747106368235143463L;
-	private transient IPagingDataModel<AuditQTDTO> searchQT = new SearchQTPagingDataModel();	
+	private transient IPagingDataModel<AuditQTDTO> searchQT = new SearchQTPagingDataModel();
+
+	/**
+	 * Logger instance.
+	 */
+	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 
 	/**
 	 * @param docType
@@ -66,8 +78,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 	 * @throws SystemException
 	 * 
 	 */
-	public void redirectToAuditTrailsViews(Long docId) throws IOException, PortalException,
-			SystemException {
+	public void redirectToAuditTrailsViews(Long docId) throws IOException, PortalException, SystemException {
 
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -93,6 +104,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 
 	/**
 	 * #35500 To navigate to the selected tab
+	 * 
 	 * @param activeIndex
 	 */
 	public void onTabMenuChangeAction(Integer activeIndex) {
@@ -101,7 +113,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 		int previousIndex = this.getManagedBean().getActiveIndex();
 
 		if (previousIndex != activeIndex) {
-			switch (activeIndex) {			
+			switch (activeIndex) {
 			case 0:
 				navigateToGeneralInfoTab();
 				break;
@@ -138,7 +150,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 			case 11:
 				navigateToProcBoardAppointTab();
 				break;
-			default:				
+			default:
 				break;
 			}
 			this.getManagedBean().setActiveIndex(activeIndex);
@@ -331,17 +343,20 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 	 * #35500, Retrieve audit trail detail transaction records.
 	 * 
 	 * @param docId
+	 * @param groupSecId
 	 * @return List<AuditQTDTO>
 	 */
 	public void getAuditTrailDetailsForExlRpt(BigInteger docId, Long groupSecId) {
 
+		Long newGroupSecId = null;
+
 		IQTAuditTrailSO qtAuditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTAuditTrailSO.class);
 
-		if (groupSecId.equals(0L)) {
-			groupSecId = null;
+		if (!groupSecId.equals(0L)) {
+			newGroupSecId = groupSecId;
 		}
-		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, groupSecId);
+		List<AuditQTDTO> auditQTList = qtAuditSO.getQTAuditTrailsRptViewResultList(docId, newGroupSecId);
 
 		generateRptExcelForAuditTrailDetails(auditQTList);
 	}
@@ -351,7 +366,7 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 	 * 
 	 * @param auditQTList
 	 * 
-	 */	
+	 */
 	public void generateRptExcelForAuditTrailDetails(List<AuditQTDTO> auditQTList) {
 
 		Sheet sheetRptAudit = null;
@@ -398,7 +413,8 @@ public class AuditQTBackingBean extends SourcingBaseBackingBean<AuditQTManagedBe
 							.setHAlignment(HorizontalAlignment.CENTER).setVAlignment(VerticalAlignment.CENTER)
 							.buildHeaderCellStyle();
 
-					// Section - Setting Cell Style for No Records Found message.
+					// Section - Setting Cell Style for No Records Found
+					// message.
 					noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
 
 					// Cell Format: String
