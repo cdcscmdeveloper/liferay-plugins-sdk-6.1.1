@@ -248,7 +248,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// 25037 - start
 	private List<ScCommitteeMember> deletedMemberList;
 	private SupplierFinalizationMeetingBackingBean meetingBB;
-
 	// 25037 - end
 
 	/**
