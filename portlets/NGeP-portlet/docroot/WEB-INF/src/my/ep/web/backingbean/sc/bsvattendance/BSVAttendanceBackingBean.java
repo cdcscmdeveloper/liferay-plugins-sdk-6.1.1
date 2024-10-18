@@ -696,12 +696,13 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(null);
 		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
-		//28895-35500
+		//28895-35500 start
 		List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
 		if (newBriefingRegistrationList.contains(selectedReqistration)){
 			newBriefingRegistrationList.remove(selectedReqistration);
 			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
 		}
+		//#28895-35500 end
 	}
 
 	/**
@@ -747,7 +748,7 @@ public class BSVAttendanceBackingBean extends
 			getManagedBean().setBriefingRegistrationList(
 					new ArrayList<ScQtBsvRegistration>());
 		}
-		
+
 		if (mofAccounts != null) {
 			//#29770 - #26247 - Start.
 			IQTBriefingSO bsvSo = BusinessDelegate.getInstance()
@@ -780,6 +781,7 @@ public class BSVAttendanceBackingBean extends
 							.getCompanyName().concat("  ").concat(">"));
 					newBriefingRegistrationList.add(bsvRegistration);
 				}
+				//#28895-35500 start
 				this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
 			} catch (Exception ex) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1248,10 +1250,11 @@ public class BSVAttendanceBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														locate)));
 				
-				//28895 - 35500
+				//28895 - 35500 start
 				if (!newBriefingRegistrationList.isEmpty()){	
 					prepareBSVAttendanceAudit(scQt, newBriefingRegistrationList);					
 				}
+				//#28895-35500 end
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 			}
@@ -1717,10 +1720,11 @@ public class BSVAttendanceBackingBean extends
 					.updateSupplierRegistionsNSendNotifications(briefingReqDTO);
 
 			
-			//28895 - 35500 
+			//28895 - 35500 start
 			if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 				prepareBSVAttendanceAudit(scQt,null);
 			}
+			//#28895-35500 end
 			
 			if (resDTO.isSuccessful()) {
 

@@ -3097,6 +3097,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		reqDTO.setQtdetail(scQt);
 		reqDTO.setTaskName(this.getManagedBean().getTaskName());
 		reqDTO.setRequestRemark(this.getManagedBean().getDoaaRequest().getAppRequestRemarks().get(0));
+		//#28895-35500 start
+		reqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
+		reqDTO.setDoaaList(this.getManagedBean().getNewDoaList());
+		//#28895-35500 end
 		ScQtAppRequestRemark remark = reqDTO.getRequestRemark();
 		String remarkStr = remark == null ? "" : remark.getRemark();
 
@@ -3119,6 +3123,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(msgCode, new String[] {
 						qtDocTypeDesc, qtNo }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 						new FacesScopes().getUserLocale())));
+		
+		prepareQtMaintenanceAuditTrail(scQt,null,reqDTO); //#28895-35500
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	
 	}
@@ -3796,7 +3802,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		/**
 	     * Method to prepare needed audit trails parameters for Briefing Site/Visit & Desk Officer Assistant Maintenance
-	     * #29995-35500
+	     * #28895-35500
 	     * @param scQt
 	     * @param groupTabSection
 	     * @param reqDTO

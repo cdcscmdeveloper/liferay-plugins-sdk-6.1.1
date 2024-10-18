@@ -741,6 +741,7 @@ public class EvaluationMeetingBackingBean extends
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
+		this.getManagedBean().setNewCommitteeAuditTrailList(localList); //#28895-35500
 		// 25037 - start
 		Map<Object, Object> map = CustomUtils.listToMap(this.getManagedBean().getCommitteeMemberActivity(),
 				QTSearchBeanConst.SEARCH_GETICPASSPORT);
@@ -956,7 +957,6 @@ public class EvaluationMeetingBackingBean extends
 			//#25037		
 			prepareCommitteeAuditTrail();// 28895 - 35500
 			// 25037 - end
-
 		} finally {
 
 		}
@@ -2526,5 +2526,4 @@ public class EvaluationMeetingBackingBean extends
 		return auditReqList;
 	}
 	// 25037 - end
-
 }

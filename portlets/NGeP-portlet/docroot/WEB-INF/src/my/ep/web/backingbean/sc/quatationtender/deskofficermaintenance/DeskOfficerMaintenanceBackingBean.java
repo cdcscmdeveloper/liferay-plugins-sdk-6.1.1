@@ -1169,12 +1169,13 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		try{
 			IQTDetailSO detailSO= BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			//#28895-35500
+			//#28895-35500 start
 			IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 			IAuditTrailSO auditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 			List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+			//#28895-35500 end
 			
 			int successCount = 0;
 			for (Map.Entry<Long, PmUser> entry : this.getManagedBean().getQtNoDeskOfficerMap().entrySet()){
@@ -1200,14 +1201,15 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setDeskOfficer(entry.getValue());
 				resDTO = null;
 					
-				//#28895-35500
-				AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+				AuditTrailResDTO auditResDTO = new AuditTrailResDTO(); //#28895-35500
 
 				if(!isCommitteeApprover() && isDeskOfficer()){
 					resDTO = detailSO.submitDOReassignment(reqDTO);
 					
+					//#28895-35500 start
 					auditResDTO.setOldValue(this.getManagedBean().getOriginalDeskOfficer().getUserName());
 					auditResDTO.setOldValueId(this.getManagedBean().getOriginalDeskOfficer().getUserId());
+					//#28895-35500 end
 				}else if(isCommitteeApprover()){
 				
 					IScActorSO scActorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
@@ -1227,9 +1229,12 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					reqDTO.setCAApprover(getFacesScopes().getUserSessionBean());//25627 - update 233
 					resDTO = detailSO.reassignDeskOfficer(reqDTO);
 					
+					//#28895-35500 start
 					auditResDTO.setOldValue(originalDO.getUserName());
 					auditResDTO.setOldValueId(originalDO.getUserId());
+					//#28895-35500 end
 				}
+				//#28895-35500 start
 				if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 					auditResDTO.setRoleCode(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())? RoleCode.COMMITTEE_APPROVER.value():RoleCode.DESK_OFFICER.value());
 					auditResDTO.setOrganizationProfileId(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId());
@@ -1247,13 +1252,13 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
+				//#28895-35500 end
 				
 				if(resDTO.isSuccessful()){
 					successCount ++;
 				}
 			}  
-			qtAuditTrailSO.insertAuditTrail(auditReqList);
-			//#28895-35500 end
+			qtAuditTrailSO.insertAuditTrail(auditReqList); //#28895-35500
 			
 			String msgCode = this.isCommitteeApprover() ? "INFO-760490" : "INFO-760492";
 			if(successCount ==  this.getManagedBean().getQtNoDeskOfficerMap().size()){
@@ -1361,7 +1366,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				reqDTO.setDigiSignData(digisign);
 				QuationTenderResDTO resDTO = getQTDetailSO().updateDOReasignmentTask(reqDTO);
 				
-				//#28895-35500
+				//#28895-35500 start
 				IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 				IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1369,6 +1374,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 					prepareAuditTrailDeskOfficer(qtAuditTrailSO);
 				}
+				//#28895-35500 end
 				
 				if(resDTO.isSuccessful()){
 					String msgCode = outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) ? "INFO-760490" : "INFO-760491";
@@ -1524,6 +1530,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		
 		
 	/**
+	 * #28895-35500
 	 * Prepare audit trails parameters for Desk Officer
 	 * @param qtAuditTrailSO
 	 */

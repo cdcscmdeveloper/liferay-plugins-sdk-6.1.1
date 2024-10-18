@@ -365,6 +365,7 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 		this.disableAssign = disableAssign;
 	}
 
+	//#28895-35500 start
 	/**
 	 * @return the newTempDeskOfficer
 	 */
@@ -378,5 +379,5 @@ public class DeskOfficerMaintenanceManagedBean extends BaseManagedBean {
 	public void setNewTempDeskOfficer(PmUser newTempDeskOfficer) {
 		this.newTempDeskOfficer = newTempDeskOfficer;
 	}
-
+	//#28895-35500 end
 }
