@@ -298,13 +298,11 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 				cellSubDocNo.setCellStyle(cellStyleString);
 
 				Cell cellFieldName = currRow.createCell(9);
-				String escapedOldValue = rsltReportList.get(a).getOldValue().replace("<br/>", "\n");
-				cellFieldName.setCellValue(escapedOldValue);
+				cellFieldName.setCellValue(rsltReportList.get(a).getOldValue());
 				cellFieldName.setCellStyle(cellStyleString);
 
 				Cell cellOldValue = currRow.createCell(10);
-				String escapedNewValue = rsltReportList.get(a).getNewValue().replace("<br/>", "\n");
-				cellOldValue.setCellValue(escapedNewValue);
+				cellOldValue.setCellValue(rsltReportList.get(a).getNewValue());
 				cellOldValue.setCellStyle(cellStyleString);
 			}
 		} else {
