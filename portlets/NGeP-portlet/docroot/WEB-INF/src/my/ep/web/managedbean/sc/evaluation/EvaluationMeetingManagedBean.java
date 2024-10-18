@@ -975,6 +975,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 	//12471 - end
 
+	//#28895-35500 start
 	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
 		return newCommitteeAuditTrailList;
 	}
@@ -982,4 +983,5 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
 		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
 	}
+	//#28895-35500 end
 }

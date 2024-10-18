@@ -478,6 +478,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 		this.attandance_count = attandance_count;
 	}
 
+	//#28895-35500 start
 	public List<ScQtBsvRegistration> getNewBriefingRegistrationList() {
 		return newBriefingRegistrationList;
 	}
@@ -485,6 +486,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setNewBriefingRegistrationList(List<ScQtBsvRegistration> newBriefingRegistrationList) {
 		this.newBriefingRegistrationList = newBriefingRegistrationList;
 	}
+	//#28895-35500 end
 	
 	
 	

@@ -433,7 +433,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		//#28895 - 35500 start
 		List<ScQtContactPerson> deletedContactList = new ArrayList<ScQtContactPerson>();
 		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
-		//#28895-35500 end
+		//#28895 - 35500 end
 		
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
