@@ -1055,8 +1055,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
 			for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 				PmParameter pmParameter = new PmParameter();
-				if (approvalRequest.getDecessionType() == null) {
-					approvalRequest.setDecessionType(pmParameter);
+				if (approvalRequest.getDecisionType() == null) {
+					approvalRequest.setDecisionType(pmParameter);
 				}
 
 				ScQt scQt = getManagedBean().getQt();
@@ -1103,9 +1103,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				approvalRequest.setMofDate(null);
 			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
-			if (approvalRequest.getDecessionType() != null
-					&& approvalRequest.getDecessionType().getParameterType() == null) {
-				approvalRequest.setDecessionType(null);
+			if (approvalRequest.getDecisionType() != null
+					&& approvalRequest.getDecisionType().getParameterType() == null) {
+				approvalRequest.setDecisionType(null);
 			}
 			
 			if (approvalRequest.getDecisionCertPBM() != null
@@ -1143,7 +1143,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		List<ScQtApprovalRequest> approvalRequests = reqDTO.getApprovalRequests();
 		for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-			if (approvalRequest.getDecessionType().getParameterId() == null) {
+			if (approvalRequest.getDecisionType().getParameterId() == null) {
 				if (enableDateMOF) {
 					//#21692 - start
 					if (null != approvalRequest.getDecisionCertPBM().getParameterId()
@@ -1201,7 +1201,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
-					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecessionType().getParameterCode());
+					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecisionType().getParameterCode());
 			approvalRequest.setApproverAction(pmParameter);
 
 			if (!enableDateMOF) {
@@ -1228,22 +1228,22 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		checkNullRemark();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 
-			Long decessionType = approvalRequest.getDecessionType().getParameterId();
+			Long decisionType = approvalRequest.getDecisionType().getParameterId();
 
-			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) { //1834L || 1854L
+			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decisionType.longValue()
+					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decisionType.longValue()) { //1834L || 1854L
 				
 				approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
 				notifyUsers(approvalRequest);
-			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) { //1835L || 1855L
+			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decisionType.longValue()
+					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decisionType.longValue()) { //1835L || 1855L
 
 				reviseRemarkMandatory();//#21692 remark is mandatory for reject.
 				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
 				notifyUsers(approvalRequest);
-//				prepareTrackingDiary(this.getManagedBean().getQt(), decessionType);//#21692 Re-open
-			} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decessionType.longValue()) {
+//				prepareTrackingDiary(this.getManagedBean().getQt(), decisionType);//#21692 Re-open
+			} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decisionType.longValue()
+					|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decisionType.longValue()) {
 				reviseRemarkMandatory();
 				this.getManagedBean().setProposalValidityRevised(true);
 				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);//Revised, but use reject due to Revise flow == Reject flow
@@ -2254,13 +2254,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			IParameterSO parameterSO = getParameterSOGlobal();
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setLanguageCode("en");
-			if (requestdetails.getDecessionType().getParameterId() != null) {
-				parameterReqDTO.setParameterId(requestdetails.getDecessionType().getParameterId());
-				requestdetails.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+			if (requestdetails.getDecisionType().getParameterId() != null) {
+				parameterReqDTO.setParameterId(requestdetails.getDecisionType().getParameterId());
+				requestdetails.setDecisionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 			}
 			//#21692 note-418 issue 3 - Start
 			else {
-				requestdetails.setDecessionType(new PmParameter());
+				requestdetails.setDecisionType(new PmParameter());
 			}
 			//#21692 note-418 issue 3 - End
 		}
@@ -2282,7 +2282,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				requestdetails
 						.setDecisionCertPBM((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 				requestdetails
-						.setDecessionType(new PmParameter());
+						.setDecisionType(new PmParameter());
 				if (requestdetails.getEpvApprovalReqAttachmentR3() != null) {
 					this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_3);
 					deleteEpvUploadFile();
@@ -2298,13 +2298,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
 					parameterReqDTO.setParameterId(ParameterConst.TR3_REJECT);
 					requestdetails
-							.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+							.setDecisionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
 					this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 				} else if (requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_REVISE)) {
 					parameterReqDTO.setParameterId(QTStatusConst.PCB_RQ3_REVISED);
 					requestdetails
-							.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+							.setDecisionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
 					this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 				} else {
@@ -3516,8 +3516,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 * @return
 		 */
 		public boolean isEpvRequestApproved(ScQtApprovalRequest apprvReq) {
-			return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId()
-					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId();
+			return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecisionType().getParameterId()
+					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecisionType().getParameterId();
 		}
 		
 		/**
@@ -3682,12 +3682,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (apprvRequest.getDecisionCertPBM().getParameterId() == null) {
 					apprvRequest.setDecisionCertPBM(null);
 				}
-				if (apprvRequest.getDecessionType().getParameterId() == null) {
-					apprvRequest.setDecessionType(null);
+				if (apprvRequest.getDecisionType().getParameterId() == null) {
+					apprvRequest.setDecisionType(null);
 				}
 			} else {
-				if (apprvRequest.getDecessionType().getParameterId() == null) {
-					apprvRequest.setDecessionType(null);
+				if (apprvRequest.getDecisionType().getParameterId() == null) {
+					apprvRequest.setDecisionType(null);
 				}
 			}
 		}
@@ -3698,12 +3698,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (apprvReq.getDecisionCertPBM() == null) {
 					apprvReq.setDecisionCertPBM(new PmParameter());
 				}
-				if (apprvReq.getDecessionType() == null) {
-					apprvReq.setDecessionType(new PmParameter());
+				if (apprvReq.getDecisionType() == null) {
+					apprvReq.setDecisionType(new PmParameter());
 				}
 			} else {
-				if (apprvReq.getDecessionType() == null) {
-					apprvReq.setDecessionType(new PmParameter());
+				if (apprvReq.getDecisionType() == null) {
+					apprvReq.setDecisionType(new PmParameter());
 				}
 			}
 		}
@@ -3718,7 +3718,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							ParameterTypeConst.APPROVAL_DECISION_TYPE, outcome == BpmOutcomeConst.BPM_REJECT ? 
 									this.getManagedBean().isProposalValidityRevised() ? ParameterConst.TR2_REVISE : ParameterConst.FLAG_REJECT : ParameterConst.FLAG_ACCEPT);
 					approvalRequest.setApproverAction(pmParameter);
-					approvalRequest.setDecessionType(null);
+					approvalRequest.setDecisionType(null);
 					approvalRequest.setDecisionCertPBM(null);
 					
 				}
@@ -3752,8 +3752,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			Date date = new Date();
 			date = DateUtils.addDays(date, request.getResponsePeriod());
 			if (date.after(this.getManagedBean().getScQtApprovalRequestList().get(0).getProposalValidityEndDateNew())
-					&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecessionType().getParameterId()
-							|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == request.getDecessionType().getParameterId())) {
+					&& (QTStatusConst.PCB_RQ1_APPROVED.longValue() == request.getDecisionType().getParameterId()
+							|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == request.getDecisionType().getParameterId())) {
 				throw new EpException(MessageConst.ERROR_770405);
 			}
 		}
@@ -3847,7 +3847,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 * @return 'Revise' if parameterCode 'V'
 		 */
 		public String retrieveApproverAction(ScQtApprovalRequest approvalRequest) {
-			if (approvalRequest.getDecessionType().getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_REVISED)) {
+			if (approvalRequest.getDecisionType().getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_REVISED)) {
 				return ResourceBundleUtils.getMessage(SourcingConstants.STATUS_REVISE_ACTION_LABEL, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale());
 			} else {
