@@ -139,7 +139,6 @@ function parseTxResultRequestOTP(msg) {
       const obj = jQuery.parseJSON(msg);
       if (obj.status) {
     	gpkiRequestTime = Date.now();
-        disableOtpTimeout();
         const response = jQuery.parseJSON(obj.response);
         gpkiNonce = response.nonce;
         saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
@@ -147,6 +146,7 @@ function parseTxResultRequestOTP(msg) {
       } else {
         showError(obj.status, obj.message);
       }
+      disableOtpTimeout();
     });
 }
 
