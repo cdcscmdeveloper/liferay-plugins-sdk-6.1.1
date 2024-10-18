@@ -5,6 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- 25037 -start- -->
 	<style>
 		.committeeDtlTblCl th, .committeeDtlTblCl td{
 			width: auto;
@@ -20,15 +21,17 @@
 			text-align: center !important;
 		}
 	</style>
-
+	<!-- 25037 -end- -->
 	<p:panel header="#{suppFinalizationBackingBean.managedBean.committeeTabLabel}"
 			 toggleable="true">
+		<!-- 25037 -start- -->
 		<p:dataTable id="committeeDtlTbl" var="committeeDtl" styleClass="committeeDtlTblCl"
 			value="#{suppFinalizationBackingBean.managedBean.committeeList}"
 			rows="10" rowKey="#{committeeDtl}" rowIndexVar="index"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			resizableColumns="false">
 			<ac:paginator for="committeeDtlTbl" />
+			<!-- 25037 -end- -->
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}" />
@@ -50,7 +53,9 @@
 				<h:outputText value="#{committeeDtl.scCommitteeMember.grade}" />
 			</p:column>
 
+			<!-- 25037 -start- -->
 			<p:column style="min-width: 50px !important;">
+				<!-- 25037 -end- -->
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}"/>
 					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
@@ -69,12 +74,14 @@
 									  	 committeeDtl.scCommitteeMember.representativeType)}" />
 			</p:column>
 
+			<!-- 25037 -start- -->
 			<p:column style="min-width: 100px !important;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
 					<ac:iconTooltip id="attendanceTooltip"
 						value="#{lbl['lbl.sc.tooltip.attendandendorse']}" />
 				</f:facet>
+				<!-- 25037 -end- -->
 				<ui:remove> #19287 - start </ui:remove>
 				<p:selectBooleanCheckbox value="#{committeeDtl.attended}"
 					disabled="#{!isSecretaryUser or suppFinalizationBackingBean.managedBean.readOnly}" />
@@ -82,6 +89,7 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
+			<!-- 25037 -start- -->		
 			<ui:param name="actionBtnLbl"
 				value="#{suppFinalizationBackingBean.evaluateEndorseSignoffTask(suppFinalizationBackingBean.managedBean.taskName) ? lbl['lbl.sc.btn.view.committee']: lbl['lbl.sc.btn.update.committee']}" />
 			<p:commandButton value="#{actionBtnLbl}"
@@ -89,6 +97,7 @@
 				styleClass="BtnSpacing" onclick="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
 				action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" />
+			<!-- 25037 -end- -->		
 		</div>
 	</p:panel>
 	
