@@ -5,7 +5,9 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -16,11 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
+import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.audit.AuditSupplierManagementResDTO;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sm.AuSmSearchBean;
+import my.ep.web.constant.report.AuditReportConst;
 import my.ep.web.managedbean.sm.audit.AuditSupplierManagementViewManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.rpt.excel.ExcelCellStyleBuilder;
@@ -56,8 +60,8 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 	public void generateRptExcelForAuditTrailDetailsAll(AuSmSearchBean auSmSearchBean) {
 		List<AuditSupplierManagementResDTO> rsltReportList = new ArrayList<>();
 		try {
-			IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+			IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+					IAuditSupplierManagementSO.class);
 			BigInteger docId = auSmSearchBean.getDocId();
 			String docType = auSmSearchBean.getDocType();
 			BigDecimal auGroupSection = null;
@@ -65,36 +69,26 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			resetList();
 			prepareList(rsltReportList);
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
-					auSmSearchBean.getDocId().toString(),
-					"generateRptExcelForAuditTrailDetails",
-					getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
+					"generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
 		}
 
 		Workbook wb = new XSSFWorkbook();
 
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)
-				|| getManagedBean().getSmAppl().getSupplierType()
-						.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+				|| getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_BANK_INFO, getManagedBean().getBankInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, getManagedBean().getUserInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean()
-					.getAdminInfoList());
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean().getAdminInfoList());
 		} else if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
 				|| getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_CANCEL_REGISTERED_CATEGORY, getManagedBean()
-					.getCatCodeInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_SUPPLIER_INFO, getManagedBean()
-					.getSupplierInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVED_CATEGORY_CODE, getManagedBean()
-					.getApprovedCatCodeInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_OVERLAPPING_CATEGORY, getManagedBean()
-					.getOverlappingRemarkInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVER_REMARKS, getManagedBean()
-					.getApproverRemarkInfoList());
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_CANCEL_REGISTERED_CATEGORY, getManagedBean().getCatCodeInfoList());
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_SUPPLIER_INFO, getManagedBean().getSupplierInfoList());
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVED_CATEGORY_CODE, getManagedBean().getApprovedCatCodeInfoList());
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_OVERLAPPING_CATEGORY, getManagedBean().getOverlappingRemarkInfoList());
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVER_REMARKS, getManagedBean().getApproverRemarkInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, getManagedBean().getUserInfoList());
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean()
-					.getAdminInfoList());
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean().getAdminInfoList());
 		}
 
 		// Export to Excel
@@ -155,25 +149,24 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		List<AuditSupplierManagementResDTO> rsltReportList = new ArrayList<>();
 
 		try {
-			IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
+			IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+					IAuditSupplierManagementSO.class);
 			BigInteger docId = auSmSearchBean.getDocId();
 			String docType = auSmSearchBean.getDocType();
 			BigDecimal auGroupSection = auSmSearchBean.getAuGroupSection();
 			rsltReportList = auditSmSo.searchAuditSupplierManagementReport(docId, docType, auGroupSection);
+			resetList();
+			prepareList(rsltReportList);
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
-					auSmSearchBean.getDocId().toString(),
-					"AuditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails",
-					getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
+					"AuditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
 		}
 
 		Workbook wb = new XSSFWorkbook();
 
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)) {
 			generateBasicSupplierSheet(wb, rsltReportList);
-		} else if (getManagedBean().getSmAppl().getSupplierType()
-				.equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
+		} else if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 			generateG2GSupplierSheet(wb, rsltReportList);
 
 		} else if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
@@ -305,13 +298,11 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 				cellSubDocNo.setCellStyle(cellStyleString);
 
 				Cell cellFieldName = currRow.createCell(9);
-				String escapedOldValue = rsltReportList.get(a).getOldValue().replace("<br/>", "\n");
-				cellFieldName.setCellValue(escapedOldValue);
+				cellFieldName.setCellValue(rsltReportList.get(a).getOldValue());
 				cellFieldName.setCellStyle(cellStyleString);
 
 				Cell cellOldValue = currRow.createCell(10);
-				String escapedNewValue = rsltReportList.get(a).getNewValue().replace("<br/>", "\n");
-				cellOldValue.setCellValue(escapedNewValue);
+				cellOldValue.setCellValue(rsltReportList.get(a).getNewValue());
 				cellOldValue.setCellStyle(cellStyleString);
 			}
 		} else {
@@ -321,7 +312,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		// Set column width
 		setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 	}
-	
+
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
 		for (int i = 0; i < totalNoOfCell; i++) {
 			sheetName.autoSizeColumn(i + 1);
@@ -338,8 +329,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 	private void exportExcelReportAudit(Workbook wb) {
 		try {
-			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
-					.getResponse();
+			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
 
 			response.setContentType("application/ms-excel");
@@ -360,6 +350,39 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
 					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptExcelForAuditTrailDetails",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * Generate report for all tab in PDF format.
+	 */
+	public void generateRptPdfForAuditTrailDetailsAll(AuSmSearchBean auSmSearchBean) {
+		try {
+			Map<String, String> paramMap = new HashMap<>();
+			paramMap.put(AuditReportConst.PARAM_DOC_ID, auSmSearchBean.getDocId().toString());
+			paramMap.put(AuditSupplierManagementConst.P_DOC_TYPE, auSmSearchBean.getDocType().toString());
+			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_SM, paramMap);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
+					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptPdfForAuditTrailDetailsAll",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * Generate report for single tab in PDF format.
+	 */
+	public void generateRptPdfForAuditTrailDetails(AuSmSearchBean auSmSearchBean) {
+		try {
+			Map<String, String> paramMap = new HashMap<>();
+			paramMap.put(AuditReportConst.PARAM_DOC_ID, auSmSearchBean.getDocId().toString());
+			paramMap.put(AuditSupplierManagementConst.P_DOC_TYPE, auSmSearchBean.getDocType().toString());
+			paramMap.put(AuditReportConst.PARAM_GROUP_SECTION_ID, auSmSearchBean.getAuGroupSection().toString());
+			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_SM, paramMap);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
+					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptPdfForAuditTrailDetails",
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
