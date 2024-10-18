@@ -152,6 +152,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//25638 - Start.
 	private List<ScQtFinalizationRemarks> finalizationRemarks;
 	//25638 - End.
+
 	private SupplierFinalizationMeetingBackingBean meetingBB; // 25037
 
 	/**
