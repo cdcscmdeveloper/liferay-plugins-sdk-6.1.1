@@ -149,7 +149,6 @@ import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
-import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -7027,7 +7026,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					"smWorkShopDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
-		// 29379 - Site Visit Grouping Enhancement -28775 - start
+		// 29379 - Site Visit Grouping Enhancement -28775
+		validateWorkshopWorkers();
+		
+		saveOrUpdateAppl();
+		getManagedBean().setWorkshopFacilitiesVOList(
+				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
+						.getSmAppl(),
+						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
+		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
+	}
+	
+	// 29379 - Site Visit Grouping Enhancement -28775
+	private void validateWorkshopWorkers(){
 		ArrayList<SmSvWorker> workers = new ArrayList<>();
 		for(SmSvWorker worker : getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers()){
 			worker.setIdentificationType(ParameterHelper.getInstance()
@@ -7062,13 +7073,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().add(work2);
 			}
 		}
-		// 29379 - Site Visit Grouping Enhancement -28775 - end
-		saveOrUpdateAppl();
-		getManagedBean().setWorkshopFacilitiesVOList(
-				SmApplicationUtil.getCategoryFacilityVO(getManagedBean()
-						.getSmAppl(),
-						SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP));
-		RequestContext.getCurrentInstance().execute("workShopDialog.hide()");
 	}
 
 	/**
@@ -14421,19 +14425,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (doc == null || EntityHelper.isCollectionEmpty(doc.getPmDocumentRestrs())) {
 			return retVal;
 		}
-		List<SmSupplierCategory> activeList = new ArrayList<>();
-		List<SmSupplierCategory> smSuppCats = getManagedBean().getSmAppl().getSmSupplierCategories();
-		boolean isRenew = getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
-		if (smSuppCats != null && !smSuppCats.isEmpty()){
-			for (SmSupplierCategory activeSuppCat : smSuppCats){
-				int status = activeSuppCat.getRecordStatusFlg();
-				if (status == SupplierManagementConst.PENDING_ACT_STATUS
-						|| (isRenew && status == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
-					activeList.add(activeSuppCat);
-				}
-			}
-			//28775 - Site Visit Grouping Enhancement -28775 - end
-		}
+		List<SmSupplierCategory> activeList = getLicenseCategoryPending();
+		//28775 - Site Visit Grouping Enhancement -28775 - end
+		
 		for (PmDocumentRestr tmp : doc.getPmDocumentRestrs()) {
 			if (tmp.getPmCategoryL3() != null) {
 				SmSupplierCategory cat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
@@ -14444,6 +14438,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 		return retVal;
+	}
+	
+	//28775 - Site Visit Grouping Enhancement -28775
+	private List<SmSupplierCategory> getLicenseCategoryPending(){
+		List<SmSupplierCategory> list = new ArrayList<>();
+		List<SmSupplierCategory> smSuppCats = getManagedBean().getSmAppl().getSmSupplierCategories();
+		boolean isRenew = getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		
+		if (!EntityHelper.isCollectionEmpty(smSuppCats)){
+			for (SmSupplierCategory activeSuppCat : smSuppCats){
+				int status = activeSuppCat.getRecordStatusFlg();
+				if (status == SupplierManagementConst.PENDING_ACT_STATUS
+						|| (isRenew && status == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
+					list.add(activeSuppCat);
+				}
+			}
+		}
+		return list;
 	}
 
 	public String getLicenseConcatCategories(PmDocument doc) {
