@@ -16,8 +16,7 @@
 					<div align="right" style="vertical-align: top; width: 100%">
 						<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
 							ajax="false">
-							<p:fileDownload
-								value="#{auditSupplierManagementDocumentBackingBean.generateRptPdfForAuditTrailDetailsAll(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
+							<!-- 								<p:fileDownload value="" /> -->
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
@@ -40,7 +39,7 @@
 							<c:when
 								test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
 								<p:tab id="#{SupplierManagementConst.auTabIdBankInfo}"
-									title="#{lbl['lbl.audit.tab.approve.bank.information']}" />
+									title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 									title="#{lbl['lbl.audit.tab.user.profile']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
@@ -49,7 +48,7 @@
 							<c:when
 								test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
 								<p:tab id="#{SupplierManagementConst.auTabIdBankInfo}"
-									title="#{lbl['lbl.audit.tab.approve.bank.information']}" />
+									title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 									title="#{lbl['lbl.audit.tab.user.profile']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
@@ -82,8 +81,7 @@
 				<td>
 					<div align="right" style="width: 100%">
 						<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-							<p:fileDownload
-								value="#{auditSupplierManagementDocumentBackingBean.generateRptPdfForAuditTrailDetails(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
+							<!-- 								<p:fileDownload value="" /> -->
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
@@ -114,7 +112,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.action.by']}"
 							style="white-space: normal!important;" width="5%">
-							<h:outputText value="#{obj.actionBy}"/>
+							<h:outputText value="#{obj.actionBy}" escape="false" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.org.name']}"
 							style="white-space: normal!important;" width="10%">
@@ -137,12 +135,12 @@
 							<h:outputText value="#{obj.fieldName}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
-							style="white-space: pre-wrap!important;" width="5%">
-							<h:outputText value="#{obj.oldValue}"/>
+							style="white-space: normal!important;" width="5%">
+							<h:outputText value="#{obj.oldValue}" escape="false" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
-							style="white-space: pre-wrap!important;" width="5%">
-							<h:outputText value="#{obj.newValue}"/>
+							style="white-space: normal!important;" width="5%">
+							<h:outputText value="#{obj.newValue}" escape="false" />
 						</p:column>
 					</p:dataTable></td>
 			</tr>
