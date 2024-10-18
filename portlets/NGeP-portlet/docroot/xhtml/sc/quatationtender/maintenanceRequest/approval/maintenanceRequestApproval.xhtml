@@ -31,7 +31,7 @@
 							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
+								oncomplete="blockWidget.hide();" update="@form"
 								action="#{approvalBackingBean.preSubmitGenericApprovalTask(bpmAction)}"/>
 						</ui:repeat>
 					</ui:define>

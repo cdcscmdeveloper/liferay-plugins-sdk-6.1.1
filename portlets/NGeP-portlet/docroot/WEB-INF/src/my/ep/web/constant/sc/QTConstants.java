@@ -280,9 +280,10 @@ public interface QTConstants {
 	// 19287#91, 17376#104 -start-
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
-	//25037 QT Bpm Composite Version Validity ID -start-
+	// 25037 - start
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	//25037 -end-
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
 
 	//#15391 #11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
