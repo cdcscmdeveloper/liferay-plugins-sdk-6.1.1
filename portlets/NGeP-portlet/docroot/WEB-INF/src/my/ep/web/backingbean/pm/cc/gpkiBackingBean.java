@@ -11,13 +11,16 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.logging.LogKey;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -54,6 +57,7 @@ public class gpkiBackingBean implements Serializable {
 	private static String serialNumber = "SERIALNUMBER";
 	private static String sn = "SN";
 	private static String surname = "SURNAME";
+	private static String nonce = "gpkiNonce";
 	//#35488 - end
 
 	public gpkiBackingBean() {
@@ -98,13 +102,11 @@ public class gpkiBackingBean implements Serializable {
 				.get("signedText");
 		String subjectDN = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("subjectDN");
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId(); 
+		Long userId = getUserIdSessionFromLoginId(); 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);	//#35488
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
-		userSO.retrieveUserByUserId(reqDTO);
 		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);	//#35488
 		Object returnObj = null;
 		
@@ -250,6 +252,11 @@ public class gpkiBackingBean implements Serializable {
 		RequestContext.getCurrentInstance().addCallbackParam("otpExp", otpExp);
 		RequestContext.getCurrentInstance().addCallbackParam("hostOTP", hostOTP);
 		RequestContext.getCurrentInstance().addCallbackParam("hostBroker", hostBroker);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String gpkiNonce = (String) fc.getExternalContext().getSessionMap().get(nonce);
+		if(gpkiNonce != null){
+			RequestContext.getCurrentInstance().addCallbackParam(nonce, gpkiNonce);
+		}
 	}
 	
 	/**
@@ -267,7 +274,7 @@ public class gpkiBackingBean implements Serializable {
 					"Token's certificate not match with signer identity."));
 			return null;
 		}
-		pmDigiSign.setCreatedBy((new FacesScopes()).getUserSessionBean().getUserId());
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId());
 		pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		pmDigiSign.setOriginalData(map.get("textBeforeSign"));
 		pmDigiSign.setGpkiSignedData(map.get("signedText"));
@@ -341,10 +348,47 @@ public class gpkiBackingBean implements Serializable {
 	}
 	
 	/**
-	 * Toggle re-send OTP button
+	 * Enable Re-send OTP button
 	 */
-	public static void toggleBtn(){
-		disableBtn = !disableBtn;
+	public static void enableBtn(){
+		disableBtn = false;
+	}
+	
+	/**
+	 * Disable Re-send OTP button
+	 */
+	public static void disableBtn(){
+		disableBtn = true;
+	}
+	
+	/**
+	 * Copied from BaseBackingBean - 
+	 * Method to return current session userId from user screenName(loginId)
+	 * @return userId
+	 */
+	public Long getUserIdSessionFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		Long userIdSession = 1L;
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		
+		if (pmUser == null) {
+			userIdSession = facesScopes.getUserSessionBean().getUserId();
+		} else {
+			userIdSession = pmUser.getUserId();
+		}
+		
+		new LogKey(userIdSession);
+		return userIdSession;
+	}
+	
+	public void saveNonce(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
+		fc.getExternalContext().getSessionMap().put(nonce, map.get(nonce));
 	}
 	//#35488 - end
 }

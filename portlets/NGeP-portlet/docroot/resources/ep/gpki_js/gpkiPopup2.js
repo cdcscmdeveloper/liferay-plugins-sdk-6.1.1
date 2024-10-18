@@ -5,6 +5,7 @@
  */
 var hostOTP = "";
 var hostBroker = "";
+var gpkiNonce;
 var gpki = {};
 (function () {
   var nric = "";
@@ -12,7 +13,6 @@ var gpki = {};
   var modeUsed = "";
   var appCode = "";
   var agencyId = "";
-  var nonce = "";
   var signType = "";
   var saluran = "";
   var text = "";
@@ -32,8 +32,9 @@ var gpki = {};
     }
     hostOTP = args.hostOTP;
     hostBroker = args.hostBroker;
+    gpkiNonce = args.gpkiNonce;
     this.requestMedium();
-  }
+  };
 
   this.requestMedium = function () {
     request_mediumList(nric, appCode, modeUsed);
@@ -43,11 +44,9 @@ var gpki = {};
     request_otp(nric, agencyId, nric, modeUsed, otpExp, saluran, email);
   };
 
-  this.setNonce = function (n) { nonce = n; };
-
   this.signToken = function (a) {
     gpkiBlockWidget.show();
-    text = a[0];
+    text = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);
@@ -70,7 +69,7 @@ var gpki = {};
       return;
     }
     const data = encodeURIComponent(Gpki.hash(text));
-    sign_roaming(nric, nonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
+    sign_roaming(nric, gpkiNonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
   };
 
   this.otpExp = function () { return otpExp; };
@@ -92,19 +91,19 @@ function parseResultMedium(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       const response = obj.response;
-      var mediumTypeId = 0;
+      var mediumTypeId;
       if (obj.status) {
         var mediumArr = jQuery.parseJSON(response);
-        var mediumTypeId = mediumArr[0].id;
-        var id = -1;
+        mediumTypeId = mediumArr[0].id;
+        var id;
         //pick roaming otp over token
         for (var i = 0; i < mediumArr.length; i++) {
           id = parseInt(mediumArr[i].id, 10);
           if (id === 5) {
             mediumTypeId = 5;
             break;
-          } else if (id === 4 && mediumTypeId != 4) {
-            id = 4;
+          } else if (id === 4 && mediumTypeId !== 4) {
+        	mediumTypeId = 4;
           }
         }
         setMediumType([{ name: 'message', value: obj.message },
@@ -112,7 +111,7 @@ function parseResultMedium(msg) {
                        { name: 'response', value: response }]);
         if (mediumTypeId === 5) {
           gpki.requestOtp();
-        } else if (mediumTypeId != 4) {
+        } else if (mediumTypeId !== 4) {
           gpki_dlg.hide();
           gpki_dlg2.show();
           showError(obj.status, "Medium Token atau Roaming OTP sahaja");
@@ -136,10 +135,11 @@ function parseTxResultRequestOTP(msg) {
       if (obj.status) {
         disableOtpTimeout();
         const response = jQuery.parseJSON(obj.response);
-        gpki.setNonce(response.nonce);
+        gpkiNonce = response.nonce;
+        saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
         alert("OTP code: " + response.otp);	//alert - DO NOT MERGE TO PROD!
       } else {
-        showError(obj.status, obj.message)
+        showError(obj.status, obj.message);
       }
     });
 }
@@ -173,6 +173,7 @@ function parseTxResultSigningRoaming(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       if (obj.status) {
+    	clearTimeout(otpTimeoutId);
         const response = jQuery.parseJSON(obj.response);
         postSignOTP([{ name: 'message', value: obj.message },
 			         { name: 'subjectDN', value: response.subject_dn },

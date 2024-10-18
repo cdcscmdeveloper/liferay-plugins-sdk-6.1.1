@@ -72,9 +72,10 @@
 			enableAutoUpdate="#{flOrderBB.enableAutoUpdate()}"/>
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 					action="#{flOrderBB.backToPervious}"
 					rendered="#{flOrderBB.managedBean.taskId==null
+					or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView
 					or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" />
 				</td>
 				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>
@@ -215,7 +216,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();"/>
 			</div>
 		</p:dialog>		
-		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplineVOs}" 
+		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplineVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
 	</ui:define>
 </ui:composition>
