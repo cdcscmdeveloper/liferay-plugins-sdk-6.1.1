@@ -7487,8 +7487,12 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	//35024-Start
 
 	// 36468 start
+	/**
+	 * to populate item for each of delivery address of PID with service
+	 * 
+	 */
 	private void populateItemForPIDWithService() {
-		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
+		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 
 		if (getManagedBean().getFlRequest().getScPurchaseInDefault() != null) {
@@ -7500,7 +7504,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			if (ctItemResDTO.getCtContractItem().getScRequestItem().getItemType().getParameterCode()
 					.equals(ParameterConst.ITEM_TYPE_SERVICE)
 					&& !getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()) {
-				
+
 				FlTempItem flTempItem = new FlTempItem();
 				flTempItem.setFlRequest(getManagedBean().getFlRequest());
 				flTempItem.setScRequestItem(ctItemResDTO.getCtContractItem().getScRequestItem());
@@ -7508,23 +7512,25 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 				for (FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					getManagedBean().setSelectedDelAddr(deliveryAddress);
-					log.info("log 36468 item name: "+flTempItem.getScRequestItem().getItemName());
 					itemsToSelectedAddress(setFulfilmentItemAddrForPID(flTempItem));
-					log.info("log 36468 after itemsToSelectedAddress");
 				}
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 			}
 		}
 	}
-	// 36468 end
 	
-	public FlFulfilmentItemAddr setFulfilmentItemAddrForPID(FlTempItem flTempItem) {
-		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(
+	/**
+	 * set FlFulfilmentItemAddr for PID
+	 * @param flTempItem fl temp item
+	 * @return flItemAddr FlFulfilmentItemAddr for PID
+	 */
+	private FlFulfilmentItemAddr setFulfilmentItemAddrForPID(FlTempItem flTempItem) {
+		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 
-		FlFulfilmentItemAddr flItemAddr = null;
+		FlFulfilmentItemAddr flItemAddr;
 		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-		ContractItemResDTO resDTO = new ContractItemResDTO();
+		ContractItemResDTO resDTO;
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 
 		flItemAddr = new FlFulfilmentItemAddr();
@@ -7572,4 +7578,5 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 
 		return flItemAddr;
 	}
+	// 36468 end
 }
