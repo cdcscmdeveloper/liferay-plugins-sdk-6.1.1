@@ -57,6 +57,7 @@ public class gpkiBackingBean implements Serializable {
 	private static String serialNumber = "SERIALNUMBER";
 	private static String sn = "SN";
 	private static String surname = "SURNAME";
+	private static String nonce = "gpkiNonce";
 	//#35488 - end
 
 	public gpkiBackingBean() {
@@ -251,6 +252,11 @@ public class gpkiBackingBean implements Serializable {
 		RequestContext.getCurrentInstance().addCallbackParam("otpExp", otpExp);
 		RequestContext.getCurrentInstance().addCallbackParam("hostOTP", hostOTP);
 		RequestContext.getCurrentInstance().addCallbackParam("hostBroker", hostBroker);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		String gpkiNonce = (String) fc.getExternalContext().getSessionMap().get(nonce);
+		if(gpkiNonce != null){
+			RequestContext.getCurrentInstance().addCallbackParam(nonce, gpkiNonce);
+		}
 	}
 	
 	/**
@@ -377,6 +383,12 @@ public class gpkiBackingBean implements Serializable {
 		
 		new LogKey(userIdSession);
 		return userIdSession;
+	}
+	
+	public void saveNonce(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
+		fc.getExternalContext().getSessionMap().put(nonce, map.get(nonce));
 	}
 	//#35488 - end
 }
