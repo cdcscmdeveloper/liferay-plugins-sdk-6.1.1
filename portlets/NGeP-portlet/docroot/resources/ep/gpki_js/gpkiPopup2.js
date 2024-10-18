@@ -7,6 +7,7 @@ var hostOTP = "";
 var hostBroker = "";
 var gpkiNonce;
 var gpki = {};
+var gpkiRequestTime = 0;
 (function () {
   var nric = "";
   var email = "";
@@ -33,6 +34,10 @@ var gpki = {};
     hostOTP = args.hostOTP;
     hostBroker = args.hostBroker;
     gpkiNonce = args.gpkiNonce;
+    gpkiRequestTime = Number(args.nonceTime);
+    if (typeof gpkiRequestTime !== "number" || isNaN(gpkiRequestTime)) {
+    	gpkiRequestTime = 0;
+    }
     this.requestMedium();
   };
 
@@ -133,6 +138,7 @@ function parseTxResultRequestOTP(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       if (obj.status) {
+    	gpkiRequestTime = Date.now();
         disableOtpTimeout();
         const response = jQuery.parseJSON(obj.response);
         gpkiNonce = response.nonce;
@@ -189,4 +195,21 @@ function parseTxResultSigningRoaming(msg) {
 function showError(code, msg) {
   errorAction([{ name: 'statusCode', value: code },
                { name: 'statusMsg', value: msg }]);
+}
+
+/**
+ * Get timeout in ms, depending on when OTP was last requested
+ * @returns {Number}
+ */
+function getTimeoutMillis(){
+  const DEFAULT_TIMEOUT = 120 * 1000;
+  try {
+    const timeout = gpki.otpExp() * 1000;
+    const diff = Date.now() - gpkiRequestTime;
+    if (isNaN(timeout) || isNaN(diff) || diff < 0 || diff > timeout) {
+      return DEFAULT_TIMEOUT;
+    }
+	return Math.max(timeout - diff, 0);
+  } catch (e){ }
+  return DEFAULT_TIMEOUT;
 }
