@@ -21,9 +21,11 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -227,6 +229,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 				// #21695 - Farid
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
@@ -3965,4 +3968,23 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #29187 End Vinod
+	//#36248_haziq - start
+	/**
+	 * #36248
+	 * To validate Wieghtage input value
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
+		BigDecimal weightage = (BigDecimal) value;
+
+		if (weightage.compareTo(BigDecimal.valueOf(100)) > 0) {
+			String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+	}
+	//#36248_haziq - End
+
 }

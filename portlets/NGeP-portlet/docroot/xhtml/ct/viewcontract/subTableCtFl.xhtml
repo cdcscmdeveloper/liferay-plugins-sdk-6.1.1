@@ -18,6 +18,14 @@
 	{
 	width: 250px;
 }
+
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
 </style>
 
 
@@ -38,56 +46,55 @@
 				<p:column headerText="#{lbl['lbl.ct.audit.fl.contractrequestno']}"
 					style="width:10%;" styleClass="column-align-center"
 					rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
-					<p:commandLink value="#{metadata.docNoCr}" styleClass="blue_font"
-						style="text-align:left; float:left; color:#009ae5 !important;"
-						action="#{flOrderBB.goToCRPage(metadata.docTypeCr, metadata.flRequest.fulfilmentReqId)}"
-						onstart="blkContractSearchAuditTable.show()"
-						oncomplete="blkContractSearchAuditTable.hide()">
-					</p:commandLink>
+					<div class="left-align">
+						<p:commandLink value="#{metadata.docNoCr}" styleClass="blue_font"
+							style="color:#009ae5 !important;"
+							action="#{flOrderBB.goToCRPage(metadata.docTypeCr, metadata.flRequest.fulfilmentReqId)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.fl.contractrequestno']}"
 					style="width:10%;" styleClass="column-align-center"
 					rendered="#{contractDetailsBackingBean.isSupplierRole()}">
-					<h:outputText value="#{metadata.docNoCr}"
-						style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText value="#{metadata.docNoCr}"/>
+					</div>
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.fl.contractorderno']}"
 					style="width:10%;" styleClass="column-align-center">
-					<p:commandLink value="#{metadata.docNoCo}" styleClass="blue_font"
-						style="text-align:left; float:left; color:#009ae5 !important;"
-						action="#{flOrderBB.goToCOPage(metadata.docTypeCo, metadata.flOrder.fulfilmentOrderId)}"
-						onstart="blkContractSearchAuditTable.show()"
-						oncomplete="blkContractSearchAuditTable.hide()">
-					</p:commandLink>
+					<div class="left-align">
+						<p:commandLink value="#{metadata.docNoCo}" styleClass="blue_font"
+							style="color:#009ae5 !important;"
+							action="#{flOrderBB.goToCOPage(metadata.docTypeCo, metadata.flOrder.fulfilmentOrderId)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.fl.doctitle']}"
 					styleClass="column-align-center" style="width:15%; white-space:normal;">
-					<h:outputText value="#{metadata.docTitle}"
-						style="text-align:left; float:left;" />
-
+					<div class="left-align">
+						<h:outputText value="#{metadata.docTitle}"/>
+					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.fl.docstatus']}"
 					style="width:10%;" styleClass="column-align-center">
-					
-					<h:outputText
-						value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCR)}"
-						style="text-align:left; float:left;"
-						rendered="#{metadata.docNoCo == null}" />
-					<h:outputText
-						value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCO)}"
-						style="text-align:left; float:left;"
-						rendered="#{metadata.docNoCo != null}" />
-
+					<div class="left-align">
+						<h:outputText
+							value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCR)}"
+							rendered="#{metadata.docNoCo == null}" />
+						<h:outputText
+							value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCO)}"
+							rendered="#{metadata.docNoCo != null}" />
+					</div>
 				</p:column>
-
-
-
-
 			</p:dataTable>
 		</div>
 
