@@ -14,6 +14,7 @@
 		oncomplete="gpki.setUser(xhr,status,args); "/>
 	<p:remoteCommand name="enableBtn" action="#{gpkiBackingBean.enableBtn()}" update="resendOtpBtn"/>
 	<p:remoteCommand name="disableBtn" action="#{gpkiBackingBean.disableBtn()}" update="resendOtpBtn"/>
+	<p:remoteCommand name="saveNonce" action="#{gpkiBackingBean.saveNonce()}" />
 	<h:outputScript library="ep/gpki_js" name="obfuscate_gpki-api-v2.js" />
 	<h:outputScript library="ep/gpki_js" name="obfuscate_gpkiPopup2.js" />
 
