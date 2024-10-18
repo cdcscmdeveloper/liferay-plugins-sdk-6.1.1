@@ -33,6 +33,8 @@
 							value="#{biddingBB.managedBean.scheduledBid.scBid.docNo}"
 							escape="false" />
 					</p:commandLink> 
+					<h:outputText rendered="#{!biddingBB.isQTMaintenanceScreen()}"
+						value="#{biddingBB.managedBean.scheduledBid.scBid.docNo}" />
 					<ui:remove> #25791 end </ui:remove>
 				</td>
 
