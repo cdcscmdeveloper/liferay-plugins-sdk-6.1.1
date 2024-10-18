@@ -382,7 +382,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_SM, paramMap);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
-					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptPdfForAuditTrailDetailsAll",
+					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptPdfForAuditTrailDetails",
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
