@@ -32,6 +32,7 @@ var gpki = {};
     }
     hostOTP = args.hostOTP;
     hostBroker = args.hostBroker;
+    gpkiNonce = args.gpkiNonce;
     this.requestMedium();
   };
 
@@ -135,6 +136,7 @@ function parseTxResultRequestOTP(msg) {
         disableOtpTimeout();
         const response = jQuery.parseJSON(obj.response);
         gpkiNonce = response.nonce;
+        saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
         alert("OTP code: " + response.otp);	//alert - DO NOT MERGE TO PROD!
       } else {
         showError(obj.status, obj.message);
