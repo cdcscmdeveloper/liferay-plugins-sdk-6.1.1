@@ -361,7 +361,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		try {
 			Map<String, String> paramMap = new HashMap<>();
 			paramMap.put(AuditReportConst.PARAM_DOC_ID, auSmSearchBean.getDocId().toString());
-			paramMap.put(AuditSupplierManagementConst.P_DOC_TYPE, auSmSearchBean.getDocType().toString());
+			paramMap.put(AuditReportConst.PARAM_DOC_TYPE, auSmSearchBean.getDocType().toString());
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_SM, paramMap);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
@@ -377,7 +377,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		try {
 			Map<String, String> paramMap = new HashMap<>();
 			paramMap.put(AuditReportConst.PARAM_DOC_ID, auSmSearchBean.getDocId().toString());
-			paramMap.put(AuditSupplierManagementConst.P_DOC_TYPE, auSmSearchBean.getDocType().toString());
+			paramMap.put(AuditReportConst.PARAM_DOC_TYPE, auSmSearchBean.getDocType().toString());
 			paramMap.put(AuditReportConst.PARAM_GROUP_SECTION_ID, auSmSearchBean.getAuGroupSection().toString());
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_SM, paramMap);
 		} catch (Exception e) {
