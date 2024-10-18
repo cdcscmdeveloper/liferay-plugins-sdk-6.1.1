@@ -88,7 +88,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		navigateToGeneralInfoTab();
 
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "/xhtml/sc/quatationtender/auditTrails/auditTrailDetailsMain.xhtml");
+				.handleNavigation(fc, null, "/xhtml/sc/quatationtender/audit/auditTrailDetailsMain.xhtml");
 	}
 
 	/**
