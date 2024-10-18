@@ -134,8 +134,8 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 	}
 
 	private String codeToString(SmSupplierCategory catCode) {
-		return catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name() + "<br/>"
-				+ catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name() + "<br/>"
+		return catCode.getPmCategoryL1().getCategoryL1Code() + " - " + catCode.getCategoryL1Name() + "\r\n"
+				+ catCode.getPmCategoryL2().getCategoryL2Code() + " - " + catCode.getCategoryL2Name() + "\r\n"
 				+ catCode.getPmCategoryL3().getCategoryL3Code() + " - " + catCode.getCategoryL3Name();
 	}
 
