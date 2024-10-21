@@ -55,12 +55,12 @@
 								action="#{specificationBackingBean.submitAction(bpmAction)}"
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone}" />
-
+							<ui:remove><!-- Add Disable #29732 below--></ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-								disabled="#{specificationBackingBean.managedBean.disableButtonForInactiveChecklist and (bpmAction eq BpmOutcomeConst.BPM_ENDORSE or bpmAction eq BpmOutcomeConst.BPM_SIGNOFF)}"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
-								action="#{specificationBackingBean.submitAction(bpmAction)}" /><!-- #10141 Added disabled Vinod -->
+								disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
+								action="#{specificationBackingBean.submitAction(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat>
 					<ui:fragment
@@ -92,10 +92,11 @@
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-                          
+                            <ui:remove><!-- #29732 add disable--></ui:remove>                      
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;"
+								disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"						
 								action="#{specificationBackingBean.specCommitteMaintenanceBpmTask(bpmAction)}" />
 								
 						</ui:fragment>
@@ -127,34 +128,6 @@
 					onclick="submitConfirmPopUp2.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 		</p:dialog>
-		
-		<!-- #10141 Start Vinod -->
-		<p:dialog id="inActiveChecklistNotificationId"
-			widgetVar="inActiveChecklistNotification" showHeader="false"
-			resizable="false" width="30%" closable="false">
-			<p:outputPanel name="inActiveChecklistNotificationPanel"
-				id="inActiveChecklistNotificationPanel" autoUpdate="true">
-				<h:outputText escape="false"
-					value="#{specificationBackingBean.managedBean.inActiveChecklistNotificationText}" />
-			</p:outputPanel>
-
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}"
-					rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}"
-					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" partialSubmit="true"
-					process="@form" update="@form"
-					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
-				<p:commandButton value="#{lbl['lbl.btn.ok']}"
-					rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}"
-					onclick="inActiveChecklistNotification.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" partialSubmit="true"
-					process="@form" update="@form"
-					action="#{specificationBackingBean.submitSpecMaintenanceDtls('Submit')}" />
-			</div>
-		</p:dialog>
-		<!-- #10141 End Vinod -->
 
 		<p:dialog id="reviseSCDlgs" widgetVar="reviseSCDlgs"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
