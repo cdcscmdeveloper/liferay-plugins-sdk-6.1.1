@@ -694,7 +694,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		}
 		apprvRequest.setEpvApprovalReqAttachment(attachmentList);
 		apprvRequest.setDecisionCertPBM(null);
-		apprvRequest.setDecessionType(null);
+		apprvRequest.setDecisionType(null);
 		
 		ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
 		
@@ -702,7 +702,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		if (this.getManagedBean().getQt().isApprovalPBM()) {
 			apprvReq.setDecisionCertPBM(new PmParameter());
 		}
-		apprvReq.setDecessionType(new PmParameter());
+		apprvReq.setDecisionType(new PmParameter());
 		newApprovalReqList.add(apprvReq);
 		this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
 	}

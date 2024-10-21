@@ -13130,34 +13130,29 @@ public void retrieveDemoQtDetails(Long qtId) {
 		
 		IRuleSO ruleSO = null;
 		int result = 0;
-		try {
-			RuleReqDTO reqDTO = new RuleReqDTO();
-			reqDTO.setRuleType(RuleTypeConst.VALIDITY_PERIOD_EXTENSION_RESPONSE_PERIOD);
-			ruleSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
-			RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
-			if (roleResDTO.isSuccessful()
-					&& roleResDTO.getRuleValueList() != null
-					&& CollectionUtils.isNotEmpty(roleResDTO.getRuleValueList())) {
-				if (value.equals(ParameterConst.RULE_VALUE)) {
-					result = Integer.parseInt(roleResDTO.getRuleValueList()
-							.get(0).getRuleValue());
-				}
-				if (value.equals(ParameterConst.FROM_VALUE)) {
-					result = Integer.parseInt(roleResDTO.getRuleValueList()
-							.get(0).getFromValue().toString());
-				}
-				if (value.equals(ParameterConst.TO_VALUE)) {
-					result = Integer.parseInt(roleResDTO.getRuleValueList()
-							.get(0).getToValue().toString());
-				}
-			} else {
-				throw new EpException(MessageConst.ERROR_770222,
-						new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
+		RuleReqDTO reqDTO = new RuleReqDTO();
+		reqDTO.setRuleType(RuleTypeConst.VALIDITY_PERIOD_EXTENSION_RESPONSE_PERIOD);
+		ruleSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+		RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(reqDTO);
+		if (roleResDTO.isSuccessful()
+				&& roleResDTO.getRuleValueList() != null
+				&& CollectionUtils.isNotEmpty(roleResDTO.getRuleValueList())) {
+			if (value.equals(ParameterConst.RULE_VALUE)) {
+				result = Integer.parseInt(roleResDTO.getRuleValueList()
+						.get(0).getRuleValue());
 			}
-		} catch(Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "Retrieve Response Period from Pm Rule Config Table", getManagedBean().getQt().getQtNo(),
-					"retrieveResponsePeriod", getUserIdSessionFromLoginId(), e);
+			if (value.equals(ParameterConst.FROM_VALUE)) {
+				result = Integer.parseInt(roleResDTO.getRuleValueList()
+						.get(0).getFromValue().toString());
+			}
+			if (value.equals(ParameterConst.TO_VALUE)) {
+				result = Integer.parseInt(roleResDTO.getRuleValueList()
+						.get(0).getToValue().toString());
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_770222,
+					new String[] { getRuleTypeDesc(reqDTO.getRuleType()) });
 		}
 		
 		return result;
