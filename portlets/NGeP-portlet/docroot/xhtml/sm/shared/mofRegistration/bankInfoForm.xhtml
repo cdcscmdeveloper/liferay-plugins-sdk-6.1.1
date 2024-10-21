@@ -365,19 +365,22 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
-							required="#{backingBean.managedBean.valueReqd}"
+					<td>
+					<!-- #34159 - START - add required condition -->
+						<p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}" id="smBankCntryId"
 							value="#{backingBean.managedBean.selectedBank.smAddress.countryId}"
 							style="width: 207px;margin-bottom: 5px;background-color:white;"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCountry"
 								value="#{backingBean.managedBean.countryItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
-								update="smBankCntryId,smBankState,smBankDivision,smBankDist,smBankCity,postCodeBankPanelId" />
+								update="smBankCntryId,smBankState,smBankDivision,smBankDist,smBankCity,postCodeBankPanelId,divisionBankFormLabelPanelId,divisionBankFormDropdownPanelId" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
@@ -392,19 +395,22 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							required="#{backingBean.managedBean.valueReqd}"
+					<td>
+					<!-- #34159 - START - add required condition -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.state']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.stateId}"
 							id="smBankState"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankState"
 								value="#{backingBean.managedBean.bankStates}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
 								update="smBankState,divisionBankFormDropdownPanelId,divisionBankFormLabelPanelId,divisionBankFormDropdownPanelId,smBankDist,smBankCity" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
@@ -430,13 +436,13 @@
 				<p:outputPanel id="divisionBankFormDropdownPanelId">
 				<ui:fragment rendered="#{backingBean.managedBean.selectedBank.smAddress.pmState.adoptDivision}">
 				<!-- #34159 - START -->
-				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							required="#{backingBean.managedBean.valueReqd}"
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.division']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.divisionId}"
 							id="smBankDivision"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankDivision"
 								value="#{backingBean.managedBean.bankDivisions}" />
 							<p:ajax event="change" process="@this"
@@ -462,18 +468,21 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="smBankDist" required="#{backingBean.managedBean.valueReqd}"
+					<td>
+					<!-- #34159 - START - add required condition -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							id="smBankDist" required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.districtId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankDist"
 								value="#{backingBean.managedBean.bankDistricts}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
 								update="smBankDist,smBankCity" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
@@ -487,18 +496,21 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-							id="smBankCity" required="#{backingBean.managedBean.valueReqd}"
+					<td>
+					<!-- #34159 - START - add required condition -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
+							id="smBankCity" required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.cityId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" /> <!-- #34159 set value 0 to trigger listener -->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCity"
 								value="#{backingBean.managedBean.bankCities}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBank.smAddress,SupplierManagementConst.SM_BANK_INFO_PANEL)}"
 								update="smBankCity" />
 						</p:selectOneMenu>
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 								and not empty backingBean.managedBean.selectedBank.supplierBankId}"
@@ -685,12 +697,16 @@
 		</p:outputPanel>
 		<div align="right">
 		<!--#12492-START-->
+		<!-- #34159 - START - add param disableValidation -->
 			<p:commandButton id="save" value="#{lbl['lbl.sm.button.save']}"
 				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
 				onclick="bankDetailsPanelWidget.show();" oncomplete="scrollToTop();bankDetailsPanelWidget.hide();"
-				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
+				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" >
+				<f:param name="disableValidation" value="true" />
+			</p:commandButton>
+		<!-- #34159 - END -->
 		<!--#12492-END-->
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				rendered="#{!backingBean.managedBean.upsCannotEdit}"

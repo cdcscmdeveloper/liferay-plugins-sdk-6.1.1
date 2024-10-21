@@ -115,8 +115,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean disableGstAmount;	
 	private boolean disableStaxAmount;	
 	private boolean disableContractAmount = true;
-//	private boolean bondWaiver; //#35642
-//	private CtContractAmount ctTestBondWaiverAmount; //#35642
 
 	private boolean selectAll;
 	private CtPerformanceBond ctPerformanceBond;
@@ -1187,16 +1185,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setCommonView(boolean commonView) {
 		this.commonView = commonView;
 	}
-	
-	//#35642 start
-	/*public boolean isBondWaiver() {
-		return bondWaiver;
-	}
-
-	public void setBondWaiver(boolean bondWaiver) {
-		this.bondWaiver = bondWaiver;
-	}*/
-	//#35642 end
 
 	public Map<String, CtAgency> getNewAgencyMap() {
 		if(newAgencyMap==null) {
@@ -1260,16 +1248,6 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setUpdateZoneMap(Map<String, CtContractZone> updateZoneMap) {
 		this.updateZoneMap = updateZoneMap;
 	}
-
-	//#35642 start
-//	public CtContractAmount getCtTestBondWaiverAmount() {
-//		return ctTestBondWaiverAmount;
-//	}
-//
-//	public void setCtTestBondWaiverAmount(CtContractAmount ctTestBondWaiverAmount) {
-//		this.ctTestBondWaiverAmount = ctTestBondWaiverAmount;
-//	}
-	//#35642 end
 
 	public List<PmOrgProfile> getAgencySelected() {
 		return agencySelected;

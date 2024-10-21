@@ -86,6 +86,14 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.persistence.logging.LogKey;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 
 /**
@@ -433,12 +441,20 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 			getManagedBean().setPasswordPolicy(null);
 			generatePasswordPolicy();
+			// #28895_35501 Start - AUDIT TRAIL SM
+			if(isSmAuditUser()){
+				this.getManagedBean().setOldSelectedUser(
+						(PmUser) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSelectedUser()));
+			}
+			// #28895_35501 End
 
 			// Load admin profile details of current user
 			searchAdminProfile();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogKey logKey = new LogKey();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "retrieve", id.toString(), "UserSO",
+					logKey.getUserId(), e);
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}
 	}
@@ -928,6 +944,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				 * if(user.getPortrait()!=null){
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+						IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF) && isSmAuditUser()) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -937,7 +961,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogKey logKey = new LogKey();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "save", user.getUserId().toString(),
+					"UserSO", logKey.getUserId(), e);
 			throw e;
 			// throw new EpException(MessageConst.ERROR_770050, new
 			// String[]{e.getMessage()});
@@ -1840,4 +1866,19 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					"emailPopUpWidgetVar.show()");
 		}
 	} // #28720 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private boolean isSmAuditUser() {
+		String[] roles = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+				RoleCode.G2G_SUPPLIER_USER.value(), RoleCode.G2G_SUPPLIER_ADMIN.value(),
+				RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value() };
+		boolean auditUser = false;
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				auditUser = true;
+				break;
+			}
+		}
+		return auditUser;
+	}
+	// #28895_35501 End
 }

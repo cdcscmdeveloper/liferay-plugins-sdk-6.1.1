@@ -55,13 +55,13 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<p:column selectionMode="multiple" disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width:2%" />
+		<p:column selectionMode="multiple" disabledSelection="#{!aprvdCatBean.selectable}" style="width:2%" />
 		<p:column style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
 		</p:column>
 		<!-- 32618 - START -->	
-		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width :350px;white-space : normal">
+		<p:column disabledSelection="#{!aprvdCatBean.selectable}" style="width :350px;white-space : normal">
 		<!-- 32618 - END -->
 			<h:outputText
 				value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
@@ -73,7 +73,7 @@
 				value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
 		</p:column>
 		<!-- 32618 - START -->
-		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width : 10% !important;">
+		<p:column disabledSelection="#{!aprvdCatBean.selectable}" style="width : 10% !important;">
 		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 				rendered="#{!aprvdCatBean.specialCategory}" />
@@ -81,7 +81,7 @@
 				rendered="#{aprvdCatBean.specialCategory}" />
 		</p:column>
 		<!-- 32618 - START -->
-		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}" style="width : 25% !important;">
+		<p:column style="width : 25% !important;">
 		<!-- 32618 - END -->
 			<p:inputTextarea id="otherDescMaintenance" maxlength="100"
 				style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
@@ -103,7 +103,7 @@
 				display="icon" />
 		</p:column>
 		<!-- 32618 - START -->
-		<p:column disabledSelection="#{supplierDataMaintenanceBackingBean.managedBean.disabledApprovedCategories}">
+		<p:column>
 		<!-- 32618 - END -->
 			<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}" />
 		</p:column>
