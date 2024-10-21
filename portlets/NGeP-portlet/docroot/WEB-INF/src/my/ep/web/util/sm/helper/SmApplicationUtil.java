@@ -10453,6 +10453,11 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 				bean.setAssocCompanyDistricts(distItems);
+				//#34159 - START
+				if(!addr.getPmState().getStateCode().contentEquals(SupplierManagementConst.SARAWAK_CODE) && !bean.getAssocCompanyDivisions().isEmpty()){
+					bean.setAssocCompanyDivisions(new ArrayList<SelectItem>());
+				}
+				//#34159 - END
 				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
