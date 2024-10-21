@@ -1775,8 +1775,13 @@ public class SmApplicationUtil {
 										cat.setPoRemarks(cat.getPoRemarks().trim());
 									}
 								}
-							}//#31043 end
-							
+							}
+							//#35086 - start
+							if(cat.getPoDecFlg() == null){
+								cat.setPoDecFlg(0);
+							}
+							//#35086 - end
+							//#31043 end
 							if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
