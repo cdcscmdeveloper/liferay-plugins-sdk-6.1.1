@@ -1117,6 +1117,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		debugLogger("editQuationTenderDetails, @Managedbean = "+ this.getManagedBean());
 		this.getManagedBean().setReadOnly(!editable);
 		this.getManagedBean().setMaintanceFlow(true);
+		checkRolesToAuditView(); // #35500
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
 		if(fullPath){
@@ -1361,7 +1362,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		Long qtId = scQt.getQtId();
 		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
-		
+		checkRolesToAuditView();//#35500
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}
 	
@@ -1387,6 +1388,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		RoleCode[] justAllowRoleCodes = {RoleCode.BPK_AUDITOR};
 		SupplierFinalizationBackingBean sfbb =  new SupplierFinalizationBackingBean();
 		sfbb.renewSesionObject();
+		checkRolesToAuditView();//#35500
 		return sfbb.editSupplierFinalizationDetails(scQt, previousPageUrl, false, justAllowRoleCodes);
 	}
 	
@@ -1404,7 +1406,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		debugLogger("viewSupplierProposalDetails");
 		Long qtId = scQt.getQtId();
 		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
-		
+		checkRolesToAuditView();//#35500
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || 
 				ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)) {
 			return new SPDetailBackingBean().retriveSupplierProposalDtl(qtId, previousPageUrl, true);
@@ -1441,6 +1443,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		ScQt scQt = null;
 		ScLoiForQt scLoiForQt = null;
 		ScLoaForQt scLoaForQt = null;
+		checkRolesToAuditView();//#35500
 		if(getManagedSearchBeanDocumentTypeIsLOA() || getManagedSearchBeanDocumentTypeIsLOI()){
 			if(obj instanceof ScLoiForQt ){
 				/* Bug #27412 START */
@@ -13656,6 +13659,33 @@ public void retrieveDemoQtDetails(Long qtId) {
 				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
 	}
 	// 29732 end
+
+	
+	/**
+	 * #35500 check user role to access audit Trails
+	 * 
+	 */
+	public void checkRolesToAuditView() {
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		if (CollectionUtils.isNotEmpty(roleDesc)) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				if (pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.EP_ADMIN.value())
+						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value())
+						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_INTERNAL.value())
+						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value())) {
+					this.getManagedBean().setAuditViewRole(true);
+				}
+
+			}
+		}
+	}
+	
 
 	// 25791-start
 	/**
