@@ -122,8 +122,12 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			challenges.put(getChallengeQues1(), getChallengeAns1());
 			
 			SpkiVO vo = instance.getSignedData(idNo, epNo, getPassword(), challenges, dataForSigning);
-			err(new Exception(vo.getErrMsg()));
-			
+			if (vo.getErrMsg().contains("Code: 1 -")){
+				FacesContext.getCurrentInstance().addMessage("spki", 
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "", vo.getErrMsg()));
+			} else {
+				err(new Exception(vo.getErrMsg()));
+			}
 		} catch (Exception e){
 			err(e);
 		}
