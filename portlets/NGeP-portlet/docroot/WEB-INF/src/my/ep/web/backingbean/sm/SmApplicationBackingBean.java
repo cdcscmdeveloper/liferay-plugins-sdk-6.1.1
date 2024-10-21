@@ -12617,8 +12617,29 @@ public class SmApplicationBackingBean extends
 	 * @param String
 	 *            panelName
 	 */
+	//#34159 - START - Refactor this method
 	public void onChangeState(SmAddress addr, String panelName) {
-		//13320-start
+		Long stateId = addr.getStateId();
+		if (stateId != null) {
+			addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+			
+			if(addr.getPmState() != null && addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
+				SmApplicationUtil.getInstance().populateDivisionsByState(addr, panelName, getManagedBean());
+			} else {
+				SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
+			}
+		} else {
+			addr.setPmState(new PmState());
+			addr.getPmState().setAdoptDivision(false);
+			SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
+		}
+		addr.setDivisionId(null);
+		addr.setPmDivision(null);
+		addr.setPmDistrict(null);
+		addr.setPmCity(null);
+		setRoleStaffAddrReqd();
+		
+		/*//13320-start
 		Long stateId = addr.getStateId();
 		if (stateId != null) {
 			addr.setPmState(SmCommonUtil.getInstance()
@@ -12644,9 +12665,9 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.getInstance().populateDistrictsByState(addr,
 					panelName, getManagedBean());
 			setRoleStaffAddrReqd();
-		}
-		
+		}*/
 	}
+	//#34159 - END
 
 	/**
 	 * Ajax call when select district to populate cities
