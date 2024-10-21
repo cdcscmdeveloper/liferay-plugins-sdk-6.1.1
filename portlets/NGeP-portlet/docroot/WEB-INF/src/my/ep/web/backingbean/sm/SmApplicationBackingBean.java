@@ -12633,7 +12633,7 @@ public class SmApplicationBackingBean extends
 			addr.getPmState().setAdoptDivision(false);
 			SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
 		}
-		
+		addr.setDivisionId(null);
 		addr.setPmDivision(null);
 		addr.setPmDistrict(null);
 		addr.setPmCity(null);

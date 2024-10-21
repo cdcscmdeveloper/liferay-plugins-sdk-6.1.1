@@ -2363,11 +2363,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
-				//#34159 - START
-				if(this.getManagedBean().getSmResAdd().getPmDivision() != null && this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId() != null){
-					//this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
-				}
-				//#34159 - END
+				this.getManagedBean().getSmResAdd().setPmDivision(null); //#34159
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
 			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
@@ -2416,13 +2412,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		} else if (typeAdd.equals("permenant")) {
 			//13320
 			if(reset){
+				getManagedBean().getSmPermenantAdd().setPmDivision(null); //#34159 
 				getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
-				//#34159 - START
-				if(this.getManagedBean().getSmPermenantAdd().getPmDivision() != null && this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId() != null){
-					//this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
-				}
-				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId()));
 			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
