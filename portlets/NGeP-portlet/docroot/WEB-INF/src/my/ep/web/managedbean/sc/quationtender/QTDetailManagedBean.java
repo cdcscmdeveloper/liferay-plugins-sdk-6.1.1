@@ -1890,6 +1890,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
 	private Map<Long, VCtContract> checkLoaContract;
 	// 25791-End
+	
+	private boolean auditViewRole;//#35500
+	
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -12113,4 +12116,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.checkLoaContract = checkLoaContract;
 	}
 	// 25791-End
+
+	public boolean isAuditViewRole() {
+		return auditViewRole;
+	}
+
+	public void setAuditViewRole(boolean auditViewRole) {
+		this.auditViewRole = auditViewRole;
+	}
 }
