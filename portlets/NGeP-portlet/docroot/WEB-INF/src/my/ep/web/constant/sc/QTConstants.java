@@ -384,6 +384,17 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	// #10141 Start Vinod
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION = "inActiveChecklistNotification.show()";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.techfin.checklist";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE = "lbl.sc.spec.confirm.inactive.techfin.checklist.specprepare";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED = "lbl.sc.spec.confirm.inactive.techfin.checklist.notified";
+	public static final String LBL_INACTIVE_TECH_CHECKLIST = "lbl.sc.spec.confirm.inactive.tech.checklist";
+	public static final String LBL_INACTIVE_FIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.fin.checklist";
+	public static final int ACTIVE_INDEX_4 = 4;
+	public static final int ACTIVE_INDEX_5 = 5;
+	public static final int ACTIVE_INDEX_6 = 6;
+	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
 	public static final String PORTLET_NAME_CREATE = "createmanualsourcing";
