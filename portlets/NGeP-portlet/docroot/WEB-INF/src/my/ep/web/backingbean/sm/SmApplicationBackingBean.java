@@ -12634,6 +12634,8 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
 		}
 		addr.setDivisionId(null);
+		addr.setDistrictId(null);
+		addr.setCityId(null);
 		addr.setPmDivision(null);
 		addr.setPmDistrict(null);
 		addr.setPmCity(null);
