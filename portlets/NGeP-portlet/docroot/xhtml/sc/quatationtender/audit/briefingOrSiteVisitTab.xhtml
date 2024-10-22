@@ -55,11 +55,11 @@
 			</p:column>			
 			
 			<p:column headerText="#{lbl['lbl.audit.header.oldValue']}" style="width:5%;">
-				<h:outputText value="#{empty obj.oldValue ? lbl['lbl.audit.no.available']:obj.oldValue}" />
+				<h:outputText value="#{obj.oldValue}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.audit.header.newValue']}" style="width:5%;">
-				<h:outputText value="#{empty obj.newValue ? lbl['lbl.audit.no.available']:obj.newValue}" />
+				<h:outputText value="#{obj.newValue}" />
 			</p:column>
 			
 		</p:dataTable>	
