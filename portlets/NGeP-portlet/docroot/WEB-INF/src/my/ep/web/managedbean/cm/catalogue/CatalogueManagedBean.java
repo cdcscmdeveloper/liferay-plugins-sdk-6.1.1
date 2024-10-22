@@ -382,16 +382,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	/** The display catalogue. */
 	private boolean displayCatalogue = false;
 	
-	/** MOF supplier status */
-	private boolean mofSupplier = false;				//[#26282]
-	
+	//[#26282] disciplinary action - start
 	/** Supplier disciplinary action list */
-	private List<DisciplinaryActionVO> disciplineVOs;	//[#26282]
+	private List<DisciplinaryActionVO> disciplineVOs;
 	
 	/** Disciplinary message */
-	private String disciplinaryMsg;						//[#26282]
+	private String disciplinaryMsg;
 	
-	//[#26282] disciplinary action - start
 	/** The disciplinary action flag. */
 	private boolean daWarning;
 	private boolean daSuspendReg;
@@ -4328,15 +4325,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setMinDate(Date minDate) {
 		this.minDate = minDate;
 	}
+	
     // [#26282] - Start
-	public boolean isMofSupplier() {
-		return mofSupplier;
-	}
-
-	public void setMofSupplier(boolean mofSupplier) {
-		this.mofSupplier = mofSupplier;
-	}
-
 	public List<DisciplinaryActionVO> getDisciplineVOs() {
 		return disciplineVOs;
 	}
@@ -4385,6 +4375,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
 	// [#26282] - End
+	
 	//20200929@akmal - Enhancement27627 - Start
 	public boolean isSavedFirst() {
 		return isSavedFirst;
@@ -4479,9 +4470,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 	// #30457 - End
 
-	//[#26282] and sonarLint fixing - Start
+	//[#26282] check for Disciplinary Action - Start
 	/**
-	 * checkForDisciplinaryAction
+	 * To check what DA the supplier involve
 	 */
 	public void checkForDisciplinaryAction() {
 

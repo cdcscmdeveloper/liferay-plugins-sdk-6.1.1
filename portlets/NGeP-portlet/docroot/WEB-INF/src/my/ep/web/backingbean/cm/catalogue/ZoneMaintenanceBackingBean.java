@@ -86,10 +86,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	/** The log. */
 	private static Logger log = Logger.getLogger(ZoneMaintenanceBackingBean.class);
 	
-	//[#26282] disciplinary action - start
 	//Navigation Details
-	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml";
-	//[#26282] disciplinary action - end
+	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml"; //[#26282] disciplinary action
 
 	/**
 	 * Instantiates a new zone maintenance backing bean.
@@ -115,11 +113,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 
 		// [#26282] disciplinary action - start
 		checkForDisciplinaryAction();
-		// [#26282] disciplinary action - end
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 
-		// [#26282] disciplinary action - start
 		if (this.getManagedBean().isDaCancelReg() || this.getManagedBean().isDaBlacklistOwner()) {
 			// disciplinary action page
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_DA);
@@ -913,7 +909,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 	
 	// [#26282] and SonarLint Fixing - Start
 	/**
-	 * checkForDisciplinaryAction
+	 * To check what DA the supplier involve
 	 */
 	public void checkForDisciplinaryAction() {
 

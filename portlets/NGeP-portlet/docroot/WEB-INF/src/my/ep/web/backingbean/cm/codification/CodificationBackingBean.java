@@ -640,13 +640,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	/**
 	 * Navigate to extension Search screen.
 	 * 
+	 * @param unspscObj
 	 * @return extensionSearch.xhtml
 	 */
-    //#26282 and SonarLint Fixing - Start
-	/**
-	 * @param unspscObj
-	 * @return NAV_TO_EXTENSION_SEARCH
-	 */
+	//#26282 and SonarLint Fixing - Start
 	public String goToExtensionSearch(CmUnspsc unspscObj) {
 		log.info("[#26282] goToExtensionSearch");
 		this.getManagedBean().setMeasurementCriteria(null);
@@ -3654,9 +3651,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		return itemType;
 	}
 	
-	// [#26282]
+	//[#26282] check for Disciplinary Action - Start
 	/**
-	 * checkForDisciplinaryAction
+	 * To check what DA the supplier involve
 	 */
 	public void checkForDisciplinaryAction() {
 		// check for disciplinary action (DA)
@@ -3690,4 +3687,5 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			log.info("[#26282] - Disciplinary action does not imposed on supplier");
 		}
 	}
+	//[#26282] check for Disciplinary Action - End
 }

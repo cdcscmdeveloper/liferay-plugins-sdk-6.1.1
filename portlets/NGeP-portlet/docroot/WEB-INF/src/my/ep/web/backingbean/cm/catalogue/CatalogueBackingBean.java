@@ -296,11 +296,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	/* 13984 schNo for table */
 	private String schno;
 
-	// [#26282] disciplinary action - start
 	// Navigation Details
-	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml";
-
-	// [#26282] disciplinary action - end
+	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml"; //#26282
 	
 	private boolean declareChecked; //#30457
 
@@ -11915,10 +11912,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
-	// [#26282]
+	// [#26282] check for Disciplinary Action - Start
 	/**
+	 * The popup view for Disciplinary Action list either for Basic Supplier or
+	 * MOF Supplier
+	 * 
 	 * @param supplierId
-	 * @param mofNo
 	 */
 	public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
 		log.info("[#26282] onViewDisciplinaryAction");
@@ -11939,13 +11938,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			} else {
 				log.info("Invalid supplier id!!!");
 				throw new EpException(MessageConst.ERROR_760041);
-			}
-
-			// set MOF supplier status
-			if (mofNo != null && !mofNo.isEmpty()) {
-				getManagedBean().setMofSupplier(true);
-			} else {
-				getManagedBean().setMofSupplier(false);
 			}
 
 			// get disicplinary action history
@@ -11972,8 +11964,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
-	// [#26282]
 	/**
+	 * To check what DA the supplier involve
+	 * 
 	 * @param supplierId
 	 */
 	public void checkForDisciplinaryAction(Long supplierId) {
@@ -12010,6 +12003,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("[#26282] - Disciplinary action does not imposed on supplier");
 		}
 	}
+	// [#26282] check for Disciplinary Action - End
 
 	// 26284 - Start
 	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {

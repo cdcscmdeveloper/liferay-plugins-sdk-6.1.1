@@ -3159,6 +3159,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 		this.getManagedBean().setAction(actions);
 	}
+	
 	//#26282 and SonarLint Fixing - Start
 	/**
 	 * preRenderExtensionView
@@ -3596,10 +3597,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			this.getManagedBean().setDisableLovCommodity(!checkCo);
 		}
 	}
-	//#26282 and SonarLint Fixing - Start
+
 	/**
 	 * preRenderView
 	 */
+	//#26282 and SonarLint Fixing - Start
 	public void preRenderView() {
 		log.debug("**********preRenderView**************");
 		this.getManagedBean().setSelectedLovUnspscSegment(null);
@@ -3736,6 +3738,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		
 		assertView("Review UNSPSC Code",obj);
 	}
+	//#26282 and SonarLint Fixing - End
 
 	public SearchFilterBean getColorFilterBean() {
 		return colorFilterBean;
@@ -4410,9 +4413,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return resDTO.getRemarkList();
 	}
 	
-	// [#26282]
+	//[#26282] check for Disciplinary Action - Start
 	/**
-	 * checkForDisciplinaryAction
+	 * To check what DA the supplier involve
 	 */
 	public void checkForDisciplinaryAction() {
 		// check for disciplinary action
@@ -4446,4 +4449,5 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			log.info("[#26282] - Disciplinary action does not imposed on supplier");
 		}
 	}
+	//[#26282] check for Disciplinary Action - End
 }
