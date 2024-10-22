@@ -112,7 +112,7 @@
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{sdoReviewBackingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 						            			action="#{sdoReviewBackingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
@@ -172,7 +172,7 @@
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{!inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{sdoReviewBackingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 							            		action="#{sdoReviewBackingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
