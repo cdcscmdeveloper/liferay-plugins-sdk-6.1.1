@@ -10453,6 +10453,11 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 				bean.setAssocCompanyDistricts(distItems);
+				//#34159 - START
+				if(!addr.getPmState().getStateCode().contentEquals(SupplierManagementConst.SARAWAK_CODE) && !bean.getAssocCompanyDivisions().isEmpty()){
+					bean.setAssocCompanyDivisions(new ArrayList<SelectItem>());
+				}
+				//#34159 - END
 				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:
@@ -15383,7 +15388,7 @@ public class SmApplicationUtil {
 				if (bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF) ||
 						bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES) ||
 						bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-					if(bean.isPoUser()){
+					if(bean.isPoUser()){ //#36576
 						if(cat.getPoDecFlg() != null && cat.getPoDecFlg() == 0 
 								&& (cat.getPoRemarks() == null || cat.getPoRemarks().isEmpty())){
 							throw new EpException(SmCommonUtil.getMessage(
@@ -15396,7 +15401,7 @@ public class SmApplicationUtil {
 											+ cat.getPmCategoryL2().getCategoryL2Code()
 											+ cat.getPmCategoryL3().getCategoryL3Code() }));
 						}
-					}else if(bean.isApproverUser()){
+					}else if(bean.isApproverUser()){ //#36576
 						if(cat.getApprvrDecFlg() != null && cat.getApprvrDecFlg() == 0 
 								&& (cat.getApproverRemarks() == null || cat.getApproverRemarks().isEmpty())){
 							throw new EpException(SmCommonUtil.getMessage(
@@ -15417,7 +15422,7 @@ public class SmApplicationUtil {
 		if (!SmCommonUtil.isCollectionEmpty(bean.getApprovedCategoryList())) {
 			for (SmSupplierCategory cat : bean.getApprovedCategoryList()) {
 				if (bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-					if(bean.isPoUser()){
+					if(bean.isPoUser()){ //#36576
 						if(cat.getPoDecFlg() != null && cat.getPoDecFlg() == 0 
 								&& (cat.getPoRemarks() == null || cat.getPoRemarks().isEmpty())){
 							throw new EpException(SmCommonUtil.getMessage(
@@ -15430,7 +15435,7 @@ public class SmApplicationUtil {
 											+ cat.getPmCategoryL2().getCategoryL2Code()
 											+ cat.getPmCategoryL3().getCategoryL3Code() }));
 						}
-					}else if(bean.isApproverUser()){
+					}else if(bean.isApproverUser()){ //#36576
 						if(cat.getApprvrDecFlg() != null && cat.getApprvrDecFlg() == 0 
 								&& (cat.getApproverRemarks() == null || cat.getApproverRemarks().isEmpty())){
 							throw new EpException(SmCommonUtil.getMessage(
