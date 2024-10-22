@@ -2650,8 +2650,12 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().getQt()
 					.setFinalizationSecratery(new PmUser());
 		}
+
+		// Bug 32277 -start-
 		List<TabBean> committeTabs = committeeReadOnly ? this.getManagedBean().getReadOnlyCommitteeTabBean() : this
-				.getManagedBean().getScCommitteeMemberTabList(); // Bug 32277
+				.getManagedBean().getScCommitteeMemberTabList();
+		// Bug 32277 -end-
+
 		//20210325@asyrafhaziq_30518 - Start
 		if (committeTabs != null){
 			String evaluationType = this.getManagedBean().getQt()
