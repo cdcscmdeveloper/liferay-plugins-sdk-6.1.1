@@ -4,7 +4,6 @@ import java.io.Serializable;
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -62,9 +61,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingB
 		try {
 			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-			log.info("from Template Class !!!! ");
 			System.out.println("from Template Class !!!! ");
-			new LogKey(getUserIdSessionFromLoginId());//#35492#58
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 			
