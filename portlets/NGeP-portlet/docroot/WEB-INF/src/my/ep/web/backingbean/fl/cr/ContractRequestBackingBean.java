@@ -4968,7 +4968,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(getManagedBean().getSelectedDelAddr()!=null) {
 					//36468-Start
 					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && isPidService){
-						getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().addAll(itemAddrList);
+						populateItemForPIDWithService();
 					}
 					//36468-End
 					populateItemsForSelectedAddress();
@@ -7508,7 +7508,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				FlTempItem flTempItem = new FlTempItem();
 				flTempItem.setFlRequest(getManagedBean().getFlRequest());
 				flTempItem.setScRequestItem(ctItemResDTO.getCtContractItem().getScRequestItem());
-				getManagedBean().getFlRequest().getFlTempItems().add(flTempItem);
 
 				for (FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					getManagedBean().setSelectedDelAddr(deliveryAddress);

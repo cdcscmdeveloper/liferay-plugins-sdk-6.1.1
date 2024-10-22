@@ -1916,8 +1916,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			auFLSPDTO.setStatusId(statusId);
 			auFLSPDTO.setActionType(auditActionType);
 			auFLSPDTO.setFulfilmentRequestId(fldo.getFlRequest().getFulfilmentReqId());
-			auFLSPDTO.setOldValue(newSupplierDoRef);
-			auFLSPDTO.setNewValue(oldSupplierDoRef);
+			auFLSPDTO.setOldValue(oldSupplierDoRef);
+			auFLSPDTO.setNewValue(newSupplierDoRef);
 			auFLSPDTO.setCreatedBy(userAuditId);
 			auFLSPDTO.setChangedBy(userAuditId);
 			auFLSPDTO.setFieldLabelCode(fieldAuditCode);
