@@ -101,7 +101,7 @@
 				<ui:param name="yearsUserScore"
 					value="#{evaluationBackingBean.managedBean.contractScores}"></ui:param>
 				<ui:param name="pageDisable"
-					value="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}"></ui:param><ui:remove><!-- 6906 --> || #21692</ui:remove>
+					value="#{evaluationBackingBean.managedBean.readOnly or (evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"></ui:param><ui:remove><!-- 6906 --> || #21692</ui:remove>
 				<ui:remove><!-- 6906 Start--></ui:remove>
 				<ui:param name="rejectedSupplier"
 					value="#{not empty evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierRejectionRemark}"></ui:param>
