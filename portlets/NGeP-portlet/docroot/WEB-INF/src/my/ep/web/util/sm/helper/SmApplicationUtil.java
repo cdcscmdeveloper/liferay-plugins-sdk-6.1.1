@@ -1744,7 +1744,9 @@ public class SmApplicationUtil {
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
 		if(managedBean.isSupplierUser()){
-			if(currentTab == 5 && !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
+			if(currentTab == 5  
+					&& managedBean.getOutputPage() != null //31018
+					&& !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
 				validateSpecialAndNormalCategoryCapital(managedBean);	
 			}	
 		}
