@@ -36,9 +36,6 @@ public class SLALogConstant {
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
 	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
-	//#10141 Start Vinod
-	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
-	//#10141 End Vinod
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	
 	// 25037 - start
