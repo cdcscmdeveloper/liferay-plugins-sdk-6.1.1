@@ -419,10 +419,9 @@ public class SmApplicationBackingBean extends
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
 		doc.setOverlapReason(null);
-		if(doc.getCategoryOverlapDocId() != null) { //31018
+		if(doc.getCategoryOverlapDocId() != null){ //#31018
 			SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
 		}
-		
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
@@ -6308,6 +6307,18 @@ public class SmApplicationBackingBean extends
 				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
 			}
 		}
+		// #31018 check overlap category
+		int overlapCount = 0;
+		for (SmSupplierCategory smSupplierCategory : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+			if (smSupplierCategory.isOverLapCategory()) {
+				overlapCount++;
+			}
+		}
+
+		if (overlapCount == 0) {
+			getManagedBean().getSmAppl().setSmCategoryOverlapDocs(null);
+		}
+		// #31018 END
 		saveOrUpdateAppl();
 		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 	}
