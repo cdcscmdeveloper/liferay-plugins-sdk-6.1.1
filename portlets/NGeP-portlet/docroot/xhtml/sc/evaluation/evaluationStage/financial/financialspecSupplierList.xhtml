@@ -124,12 +124,12 @@
 						rendered="#{finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus eq null or finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus.statusId eq '61600'}"
 						process="@this"
 						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
-						partialSubmit="true" />
+						partialSubmit="true" disabled="#{isRejected}" />
 					<p:commandButton value="#{lbl['lbl.btn.view']}"
 						rendered="#{finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus ne null and finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus.statusId eq '61601'}"
 						process="@this"
 						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
-						partialSubmit="true" />
+						partialSubmit="true" disabled="#{isRejected}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
