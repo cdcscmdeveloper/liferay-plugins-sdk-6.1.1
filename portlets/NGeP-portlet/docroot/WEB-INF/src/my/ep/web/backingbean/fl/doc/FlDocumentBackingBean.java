@@ -817,7 +817,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
 			danBB.getManagedBean().setSelectedTabIndex(0);
 			danBB.setAdjustmentNote(resDTO);
-			danBB.getManagedBean().setBackToPrevious(null);
+			danBB.getManagedBean().setBackToPrevious("flDocSearch");//36519
 			navgPage=NAV_TO_ADJUSTMENT_NOTE;
 		}
 		return navgPage;
