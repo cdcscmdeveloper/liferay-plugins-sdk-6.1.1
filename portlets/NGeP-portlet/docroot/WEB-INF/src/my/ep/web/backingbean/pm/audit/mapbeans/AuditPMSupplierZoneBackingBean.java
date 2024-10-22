@@ -50,13 +50,14 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			 * New created
 			 */
 			detailObjStatus.setRoleCode(roleCode);
-			detailObjStatus.setDoctype(AuditConst.PM_AUD_SPZ);
+			detailObjStatus.setDocType(AuditConst.PM_AUD_SPZ);
 			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 			detailObjStatus.setDocNo(managedBeans.getPmZone().getZoneCode());
 			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 			detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
+			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
 			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID);
 			detailObjStatus
 					.setNewValue(managedBeans.getZoneResDTO().getPmZone().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
@@ -66,13 +67,14 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 
 			AuditPMSPDTO zoneCode = new AuditPMSPDTO();
 			zoneCode.setRoleCode(roleCode);
-			zoneCode.setDoctype(AuditConst.PM_AUD_SPZ);
+			zoneCode.setDocType(AuditConst.PM_AUD_SPZ);
 			zoneCode.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 			zoneCode.setDocNo(managedBeans.getPmZone().getZoneCode());
 			zoneCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			zoneCode.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 			zoneCode.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 			zoneCode.setDocId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
+			zoneCode.setDocGroupId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
 			zoneCode.setFieldLabelCode(AuditConst.PM_AUD_SPZ_ZONECODE_FIELDLABELID);
 			zoneCode.setNewValue(managedBeans.getZoneResDTO().getPmZone().getZoneCode());
 			zoneCode.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -80,13 +82,14 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 
 			AuditPMSPDTO zoneName = new AuditPMSPDTO();
 			zoneName.setRoleCode(roleCode);
-			zoneName.setDoctype(AuditConst.PM_AUD_SPZ);
+			zoneName.setDocType(AuditConst.PM_AUD_SPZ);
 			zoneName.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 			zoneName.setDocNo(managedBeans.getPmZone().getZoneCode());
 			zoneName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			zoneName.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 			zoneName.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 			zoneName.setDocId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
+			zoneName.setDocGroupId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
 			zoneName.setFieldLabelCode(AuditConst.PM_AUD_SPZ_ZONENAME_FIELDLABELID);
 			zoneName.setNewValue(managedBeans.getZoneResDTO().getPmZone().getZoneName());
 			zoneName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -111,13 +114,14 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			ArrayList<AuditPMSPDTO> objList, String roleCode) {
 		if (managedBeans.getPmZoneOld().getRecordStatusFlg() != managedBeans.getPmZone().getRecordStatusFlg()) {
 			detailObjStatus.setRoleCode(roleCode);
-			detailObjStatus.setDoctype(AuditConst.PM_AUD_SPZ);
+			detailObjStatus.setDocType(AuditConst.PM_AUD_SPZ);
 			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 			detailObjStatus.setDocNo(managedBeans.getPmZone().getZoneCode());
 			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
 			detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
 			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
+			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
 			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID);
 			detailObjStatus.setOldValue(managedBeans.getPmZoneOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
@@ -144,7 +148,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			if (st.getPmState().getStateCode() != null) {
 				AuditPMSPDTO dtlObjStateCodeAdd = new AuditPMSPDTO();
 				dtlObjStateCodeAdd.setRoleCode(roleCode);
-				dtlObjStateCodeAdd.setDoctype(AuditConst.PM_AUD_SPZ);
+				dtlObjStateCodeAdd.setDocType(AuditConst.PM_AUD_SPZ);
 				dtlObjStateCodeAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 				dtlObjStateCodeAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
 				dtlObjStateCodeAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -161,7 +165,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			if (st.getPmState().getStateName() != null) {
 				AuditPMSPDTO dtlObjStateNameAdd = new AuditPMSPDTO();
 				dtlObjStateNameAdd.setRoleCode(roleCode);
-				dtlObjStateNameAdd.setDoctype(AuditConst.PM_AUD_SPZ);
+				dtlObjStateNameAdd.setDocType(AuditConst.PM_AUD_SPZ);
 				dtlObjStateNameAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 				dtlObjStateNameAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
 				dtlObjStateNameAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -188,7 +192,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			if (st.getPmState().getStateCode() != null && st.isBrandNew()) {
 				AuditPMSPDTO dtlObjStateCodeAdd = new AuditPMSPDTO();
 				dtlObjStateCodeAdd.setRoleCode(roleCode);
-				dtlObjStateCodeAdd.setDoctype(AuditConst.PM_AUD_SPZ);
+				dtlObjStateCodeAdd.setDocType(AuditConst.PM_AUD_SPZ);
 				dtlObjStateCodeAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 				dtlObjStateCodeAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
 				dtlObjStateCodeAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -205,7 +209,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			if (st.getPmState().getStateName() != null && st.isBrandNew()) {
 				AuditPMSPDTO dtlObjStateNameAdd = new AuditPMSPDTO();
 				dtlObjStateNameAdd.setRoleCode(roleCode);
-				dtlObjStateNameAdd.setDoctype(AuditConst.PM_AUD_SPZ);
+				dtlObjStateNameAdd.setDocType(AuditConst.PM_AUD_SPZ);
 				dtlObjStateNameAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 				dtlObjStateNameAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
 				dtlObjStateNameAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -231,7 +235,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			if (st.getPmState().getStateCode() != null) {
 				AuditPMSPDTO dtlObjStateCodeAdd = new AuditPMSPDTO();
 				dtlObjStateCodeAdd.setRoleCode(roleCode);
-				dtlObjStateCodeAdd.setDoctype(AuditConst.PM_AUD_SPZ);
+				dtlObjStateCodeAdd.setDocType(AuditConst.PM_AUD_SPZ);
 				dtlObjStateCodeAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 				dtlObjStateCodeAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
 				dtlObjStateCodeAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -248,7 +252,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 			if (st.getPmState().getStateName() != null) {
 				AuditPMSPDTO dtlObjStateNameAdd = new AuditPMSPDTO();
 				dtlObjStateNameAdd.setRoleCode(roleCode);
-				dtlObjStateNameAdd.setDoctype(AuditConst.PM_AUD_SPZ);
+				dtlObjStateNameAdd.setDocType(AuditConst.PM_AUD_SPZ);
 				dtlObjStateNameAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 				dtlObjStateNameAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
 				dtlObjStateNameAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);

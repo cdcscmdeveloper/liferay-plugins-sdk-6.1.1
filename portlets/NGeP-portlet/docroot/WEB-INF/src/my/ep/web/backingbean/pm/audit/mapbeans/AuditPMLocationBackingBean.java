@@ -74,7 +74,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		if (null != managedBean.getState().getStateId() && managedBean.getStateOldVal().getPmState().getStateId() != null) {
 			if (!managedBean.getState().getStateName().equalsIgnoreCase(managedBean.getStateOldVal().getPmState().getStateName())) {
 				objName.setRoleCode(roleCode);
-				objName.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+				objName.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 				objName.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 				objName.setDocNo(managedBean.getState().getStateCode());
 				objName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -90,7 +90,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			if (managedBean.getResState().getAdoptDivision() != managedBean.getStateOldVal().getPmState().getAdoptDivision()) {
 				objDV.setRoleCode(roleCode);
-				objDV.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+				objDV.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 				objDV.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 				objDV.setDocNo(managedBean.getState().getStateCode());
 				objDV.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -106,7 +106,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 			if (managedBean.getResState().getRecordStatusFlg() != managedBean.getStateOldVal().getPmState().getRecordStatusFlg()) {
 				objStatus.setRoleCode(roleCode);
-				objStatus.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+				objStatus.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 				objStatus.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 				objStatus.setDocNo(managedBean.getState().getStateCode());
 				objStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -125,7 +125,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			objStateCode.setRoleCode(roleCode);
-			objStateCode.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+			objStateCode.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 			objStateCode.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 			objStateCode.setDocNo(managedBean.getState().getStateCode());
 			objStateCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -138,7 +138,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objStateCode);
 
 			objCountry.setRoleCode(roleCode);
-			objCountry.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+			objCountry.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 			objCountry.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 			objCountry.setDocNo(managedBean.getState().getStateCode());
 			objCountry.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -151,7 +151,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objCountry);
 
 			objName.setRoleCode(roleCode);
-			objName.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+			objName.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 			objName.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 			objName.setDocNo(managedBean.getState().getStateCode());
 			objName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -164,7 +164,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objName);
 
 			objDV.setRoleCode(roleCode);
-			objDV.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+			objDV.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 			objDV.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 			objDV.setDocNo(managedBean.getState().getStateCode());
 			objDV.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -177,7 +177,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objDV);
 
 			objStatus.setRoleCode(roleCode);
-			objStatus.setDoctype(AuditConst.PM_AUD_ST_DOC_TYPE);
+			objStatus.setDocType(AuditConst.PM_AUD_ST_DOC_TYPE);
 			objStatus.setPmParameterLvlId(AuditConst.PM_AUD_ST_PMPARAMETERLVLID);
 			objStatus.setDocNo(managedBean.getState().getStateCode());
 			objStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -204,7 +204,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			if (!managedBean.getResDivision().getDivisionName()
 					.equalsIgnoreCase(managedBean.getDivisionOldVal().getPmDivision().getDivisionName())) {
 				objName.setRoleCode(roleCode);
-				objName.setDoctype(AuditConst.PM_AUD_DIV_DOC_TYPE);
+				objName.setDocType(AuditConst.PM_AUD_DIV_DOC_TYPE);
 				objName.setPmParameterLvlId(AuditConst.PM_AUD_DIV_PMPARAMETERLVLID);
 				objName.setDocNo(managedBean.getDivision().getDivisionCode());
 				objName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -221,7 +221,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			if (managedBean.getResDivision().getRecordStatusFlg() != managedBean.getDivisionOldVal().getPmDivision()
 					.getRecordStatusFlg()) {
 				objStatus.setRoleCode(roleCode);
-				objStatus.setDoctype(AuditConst.PM_AUD_DIV_DOC_TYPE);
+				objStatus.setDocType(AuditConst.PM_AUD_DIV_DOC_TYPE);
 				objStatus.setPmParameterLvlId(AuditConst.PM_AUD_DIV_PMPARAMETERLVLID);
 				objStatus.setDocNo(managedBean.getDivision().getDivisionCode());
 				objStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -241,7 +241,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		} else {
 			/** INSERT NEW transaction ***/
 			objCountry.setRoleCode(roleCode);
-			objCountry.setDoctype(AuditConst.PM_AUD_DIV_DOC_TYPE);
+			objCountry.setDocType(AuditConst.PM_AUD_DIV_DOC_TYPE);
 			objCountry.setPmParameterLvlId(AuditConst.PM_AUD_DIV_PMPARAMETERLVLID);
 			objCountry.setDocNo(managedBean.getDivision().getDivisionCode());
 			objCountry.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -254,7 +254,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objCountry);
 
 			objStateId.setRoleCode(roleCode);
-			objStateId.setDoctype(AuditConst.PM_AUD_DIV_DOC_TYPE);
+			objStateId.setDocType(AuditConst.PM_AUD_DIV_DOC_TYPE);
 			objStateId.setPmParameterLvlId(AuditConst.PM_AUD_DIV_PMPARAMETERLVLID);
 			objStateId.setDocNo(managedBean.getDivision().getDivisionCode());
 			objStateId.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -267,7 +267,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objStateId);
 
 			objCode.setRoleCode(roleCode);
-			objCode.setDoctype(AuditConst.PM_AUD_DIV_DOC_TYPE);
+			objCode.setDocType(AuditConst.PM_AUD_DIV_DOC_TYPE);
 			objCode.setPmParameterLvlId(AuditConst.PM_AUD_DIV_PMPARAMETERLVLID);
 			objCode.setDocNo(managedBean.getDivision().getDivisionCode());
 			objCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -280,7 +280,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objCode);
 
 			objName.setRoleCode(roleCode);
-			objName.setDoctype(AuditConst.PM_AUD_DIV_DOC_TYPE);
+			objName.setDocType(AuditConst.PM_AUD_DIV_DOC_TYPE);
 			objName.setPmParameterLvlId(AuditConst.PM_AUD_DIV_PMPARAMETERLVLID);
 			objName.setDocNo(managedBean.getDivision().getDivisionCode());
 			objName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -292,7 +292,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			objStatus.setRoleCode(roleCode);
-			objStatus.setDoctype(AuditConst.PM_AUD_DIV_DOC_TYPE);
+			objStatus.setDocType(AuditConst.PM_AUD_DIV_DOC_TYPE);
 			objStatus.setPmParameterLvlId(AuditConst.PM_AUD_DIV_PMPARAMETERLVLID);
 			objStatus.setDocNo(managedBean.getDivision().getDivisionCode());
 			objStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -320,7 +320,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			if (!managedBean.getResDistrict().getDistrictName()
 					.equalsIgnoreCase(managedBean.getDistrictOldVal().getPmDistrict().getDistrictName())) {
 				objName.setRoleCode(roleCode);
-				objName.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+				objName.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 				objName.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 				objName.setDocNo(managedBean.getResDistrict().getDistrictCode());
 				objName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -337,7 +337,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			if (managedBean.getResDistrict().getRecordStatusFlg() != managedBean.getDistrictOldVal().getPmDistrict()
 					.getRecordStatusFlg()) {
 				objStatus.setRoleCode(roleCode);
-				objStatus.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+				objStatus.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 				objStatus.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 				objStatus.setDocNo(managedBean.getResDistrict().getDistrictCode());
 				objStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -357,7 +357,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		} else {
 			/** INSERT NEW transaction ***/
 			objCountry.setRoleCode(roleCode);
-			objCountry.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+			objCountry.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 			objCountry.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 			objCountry.setDocNo(managedBean.getResDistrict().getDistrictCode());
 			objCountry.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -370,7 +370,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objCountry);
 
 			objStateId.setRoleCode(roleCode);
-			objStateId.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+			objStateId.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 			objStateId.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 			objStateId.setDocNo(managedBean.getResDistrict().getDistrictCode());
 			objStateId.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -384,7 +384,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 
 			if (managedBean.getResDistrict().getPmDivision() != null) {
 				objDivisionId.setRoleCode(roleCode);
-				objDivisionId.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+				objDivisionId.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 				objDivisionId.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 				objDivisionId.setDocNo(managedBean.getResDistrict().getDistrictCode());
 				objDivisionId.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -397,7 +397,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 				objList.add(objDivisionId);
 			}
 			objCode.setRoleCode(roleCode);
-			objCode.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+			objCode.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 			objCode.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 			objCode.setDocNo(managedBean.getResDistrict().getDistrictCode());
 			objCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -410,7 +410,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objCode);
 
 			objName.setRoleCode(roleCode);
-			objName.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+			objName.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 			objName.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 			objName.setDocNo(managedBean.getResDistrict().getDistrictCode());
 			objName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -423,7 +423,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objName);
 
 			objStatus.setRoleCode(roleCode);
-			objStatus.setDoctype(AuditConst.PM_AUD_DS_DOC_TYPE);
+			objStatus.setDocType(AuditConst.PM_AUD_DS_DOC_TYPE);
 			objStatus.setPmParameterLvlId(AuditConst.PM_AUD_DS_PMPARAMETERLVLID);
 			objStatus.setDocNo(managedBean.getResDistrict().getDistrictCode());
 			objStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -447,7 +447,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 
 		objName.setRoleCode(roleCode);
-		objName.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
+		objName.setDocType(AuditConst.PM_AUD_CT_DOC_TYPE);
 		objName.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
 		objName.setDocNo(managedBean.getCity().getCityCode());
 		objName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -457,7 +457,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		objName.setFieldLabelCode(AuditConst.PM_AUD_CT_CTNAME_FIELDLABELID);
 
 		objStatus.setRoleCode(roleCode);
-		objStatus.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
+		objStatus.setDocType(AuditConst.PM_AUD_CT_DOC_TYPE);
 		objStatus.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
 		objStatus.setDocNo(managedBean.getCity().getCityCode());
 		objStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -487,7 +487,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		} else {
 			/** INSERT NEW transaction ***/
 			objCountry.setRoleCode(roleCode);
-			objCountry.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
+			objCountry.setDocType(AuditConst.PM_AUD_CT_DOC_TYPE);
 			objCountry.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
 			objCountry.setDocNo(managedBean.getCity().getCityCode());
 			objCountry.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -500,7 +500,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objCountry);
 
 			objStateId.setRoleCode(roleCode);
-			objStateId.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
+			objStateId.setDocType(AuditConst.PM_AUD_CT_DOC_TYPE);
 			objStateId.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
 			objStateId.setDocNo(managedBean.getCity().getCityCode());
 			objStateId.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -513,7 +513,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objStateId);
 
 			objDistrictId.setRoleCode(roleCode);
-			objDistrictId.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
+			objDistrictId.setDocType(AuditConst.PM_AUD_CT_DOC_TYPE);
 			objDistrictId.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
 			objDistrictId.setDocNo(managedBean.getCity().getCityCode());
 			objDistrictId.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -526,7 +526,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(objDistrictId);
 
 			objCode.setRoleCode(roleCode);
-			objCode.setDoctype(AuditConst.PM_AUD_CT_DOC_TYPE);
+			objCode.setDocType(AuditConst.PM_AUD_CT_DOC_TYPE);
 			objCode.setPmParameterLvlId(AuditConst.PM_AUD_CT_PMPARAMETERLVLID);
 			objCode.setDocNo(managedBean.getCity().getCityCode());
 			objCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);

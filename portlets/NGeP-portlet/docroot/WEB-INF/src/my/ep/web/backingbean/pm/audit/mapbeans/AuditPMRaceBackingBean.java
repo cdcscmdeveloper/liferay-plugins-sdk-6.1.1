@@ -45,7 +45,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 		RaceManagedBean managedBeans = (RaceManagedBean) manageBean;
 
 		dtlSatus.setRoleCode(roleCode);
-		dtlSatus.setDoctype(AuditConst.PM_AUD_RACE);
+		dtlSatus.setDocType(AuditConst.PM_AUD_RACE);
 		dtlSatus.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
 		dtlSatus.setDocNo(managedBeans.getPmRace().getRaceCode());
 		dtlSatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -53,7 +53,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 		dtlSatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_RACE);
 
 		dtlObjName.setRoleCode(roleCode);
-		dtlObjName.setDoctype(AuditConst.PM_AUD_RACE);
+		dtlObjName.setDocType(AuditConst.PM_AUD_RACE);
 		dtlObjName.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
 		dtlObjName.setDocNo(managedBeans.getPmRace().getRaceCode());
 		dtlObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -84,7 +84,7 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			dtlCode.setRoleCode(roleCode);
-			dtlCode.setDoctype(AuditConst.PM_AUD_RACE);
+			dtlCode.setDocType(AuditConst.PM_AUD_RACE);
 			dtlCode.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
 			dtlCode.setDocNo(managedBeans.getPmRace().getRaceCode());
 			dtlCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);

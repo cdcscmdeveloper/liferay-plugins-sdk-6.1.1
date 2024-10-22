@@ -45,7 +45,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 		AuditPMSPDTO detailCode = new AuditPMSPDTO();
 
 		detailObjName.setRoleCode(roleCode);
-		detailObjName.setDoctype(AuditConst.PM_AUD_SALUTATION);
+		detailObjName.setDocType(AuditConst.PM_AUD_SALUTATION);
 		detailObjName.setPmParameterLvlId(AuditConst.PM_AUD_SALUTATION_PMPARAMETERLVLID);
 		detailObjName.setDocNo(managedBeans.getPmSalutation().getSalutationCode());
 		detailObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -53,7 +53,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 		detailObjName.setLvlCode3(AuditConst.PM_LVL_CODE_3_SAL);
 
 		detailSatus.setRoleCode(roleCode);
-		detailSatus.setDoctype(AuditConst.PM_AUD_SALUTATION);
+		detailSatus.setDocType(AuditConst.PM_AUD_SALUTATION);
 		detailSatus.setPmParameterLvlId(AuditConst.PM_AUD_SALUTATION_PMPARAMETERLVLID);
 		detailSatus.setDocNo(managedBeans.getPmSalutation().getSalutationCode());
 		detailSatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -85,7 +85,7 @@ public class AuditPMSalutationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			detailCode.setRoleCode(roleCode);
-			detailCode.setDoctype(AuditConst.PM_AUD_SALUTATION);
+			detailCode.setDocType(AuditConst.PM_AUD_SALUTATION);
 			detailCode.setPmParameterLvlId(AuditConst.PM_AUD_SALUTATION_PMPARAMETERLVLID);
 			detailCode.setDocNo(managedBeans.getPmSalutation().getSalutationCode());
 			detailCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);

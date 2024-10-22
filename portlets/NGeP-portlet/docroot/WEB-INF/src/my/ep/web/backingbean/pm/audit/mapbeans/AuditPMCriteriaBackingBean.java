@@ -52,7 +52,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			detailObjStatus.setRoleCode(roleCode);
-			detailObjStatus.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+			detailObjStatus.setDocType(AuditConst.PM_AUD_SUPPPERFCRITERIA);
 			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
 			detailObjStatus.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
 			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
@@ -79,7 +79,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			ArrayList<AuditPMSPDTO> objList) {
 		if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria().getRecordStatusFlg()) {
 			detailObjStatus.setRoleCode(roleCode);
-			detailObjStatus.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+			detailObjStatus.setDocType(AuditConst.PM_AUD_SUPPPERFCRITERIA);
 			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
 			detailObjStatus.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
 			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
@@ -109,7 +109,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 						&& desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
 					AuditPMSPDTO langCodeEn = new AuditPMSPDTO();
 					langCodeEn.setRoleCode(roleCode);
-					langCodeEn.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+					langCodeEn.setDocType(AuditConst.PM_AUD_SUPPPERFCRITERIA);
 					langCodeEn.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
 					langCodeEn.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
 					langCodeEn.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
@@ -129,7 +129,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 						&& desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 					AuditPMSPDTO langCodeBM = new AuditPMSPDTO();
 					langCodeBM.setRoleCode(roleCode);
-					langCodeBM.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+					langCodeBM.setDocType(AuditConst.PM_AUD_SUPPPERFCRITERIA);
 					langCodeBM.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
 					langCodeBM.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
 					langCodeBM.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
@@ -155,7 +155,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
 				AuditPMSPDTO langCodeEn = new AuditPMSPDTO();
 				langCodeEn.setRoleCode(roleCode);
-				langCodeEn.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+				langCodeEn.setDocType(AuditConst.PM_AUD_SUPPPERFCRITERIA);
 				langCodeEn.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
 				langCodeEn.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
 				langCodeEn.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
@@ -173,7 +173,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
 				AuditPMSPDTO langCodeBM = new AuditPMSPDTO();
 				langCodeBM.setRoleCode(roleCode);
-				langCodeBM.setDoctype(AuditConst.PM_AUD_SUPPPERFCRITERIA);
+				langCodeBM.setDocType(AuditConst.PM_AUD_SUPPPERFCRITERIA);
 				langCodeBM.setPmParameterLvlId(AuditConst.PM_AUD_SUPPPERFCRITERIA_PMPARAMETERLVLID);
 				langCodeBM.setDocNo(managedBeans.getSelectedCriteria().getCriteriaCode());
 				langCodeBM.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);

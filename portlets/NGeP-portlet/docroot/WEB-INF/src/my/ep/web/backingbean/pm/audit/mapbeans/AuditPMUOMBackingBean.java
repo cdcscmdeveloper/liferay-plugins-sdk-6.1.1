@@ -38,7 +38,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 		UnitOfMeasurementManagedBean managedBeans = (UnitOfMeasurementManagedBean) manageBean;
 
 		detailObjStatus.setRoleCode(roleCode);
-		detailObjStatus.setDoctype(AuditConst.PM_AUD_UOM);
+		detailObjStatus.setDocType(AuditConst.PM_AUD_UOM);
 		detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_UOM_PMPARAMETERLVLID);
 		detailObjStatus.setDocNo(managedBeans.getPmUom().getUomCode());
 		detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -71,7 +71,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 
 			AuditPMSPDTO uomCode = new AuditPMSPDTO();
 			uomCode.setRoleCode(roleCode);
-			uomCode.setDoctype(AuditConst.PM_AUD_UOM);
+			uomCode.setDocType(AuditConst.PM_AUD_UOM);
 			uomCode.setPmParameterLvlId(AuditConst.PM_AUD_UOM_PMPARAMETERLVLID);
 			uomCode.setDocNo(managedBeans.getPmUom().getUomCode());
 			uomCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -85,7 +85,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 
 			AuditPMSPDTO uomName = new AuditPMSPDTO();
 			uomName.setRoleCode(roleCode);
-			uomName.setDoctype(AuditConst.PM_AUD_UOM);
+			uomName.setDocType(AuditConst.PM_AUD_UOM);
 			uomName.setPmParameterLvlId(AuditConst.PM_AUD_UOM_PMPARAMETERLVLID);
 			uomName.setDocNo(managedBeans.getPmUom().getUomCode());
 			uomName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -99,7 +99,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 
 			AuditPMSPDTO noOfDecimal = new AuditPMSPDTO();
 			noOfDecimal.setRoleCode(roleCode);
-			noOfDecimal.setDoctype(AuditConst.PM_AUD_UOM);
+			noOfDecimal.setDocType(AuditConst.PM_AUD_UOM);
 			noOfDecimal.setPmParameterLvlId(AuditConst.PM_AUD_UOM_PMPARAMETERLVLID);
 			noOfDecimal.setDocNo(managedBeans.getPmUom().getUomCode());
 			noOfDecimal.setLvlCode1(AuditConst.PM_LVL_CODE_1);

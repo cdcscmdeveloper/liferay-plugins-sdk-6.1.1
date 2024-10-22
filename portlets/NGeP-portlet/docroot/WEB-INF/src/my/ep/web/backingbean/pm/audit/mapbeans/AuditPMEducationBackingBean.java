@@ -14,11 +14,10 @@ import my.ep.web.managedbean.pm.educationfield.EducationManagedBean;
 /**
  * AuditPMEducationBackingBean
  * 
- * @author haiza
- * 28895_35509
+ * @author haiza 28895_35509
  * 
  */
-public class AuditPMEducationBackingBean extends AuditPMBackingBeanTemplate{
+public class AuditPMEducationBackingBean extends AuditPMBackingBeanTemplate {
 
 	/**
 	 * 
@@ -27,7 +26,7 @@ public class AuditPMEducationBackingBean extends AuditPMBackingBeanTemplate{
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO dtlObjName = new AuditPMSPDTO();
 	AuditPMSPDTO dtlStatus = new AuditPMSPDTO();
-	
+
 	@Override
 	public String getRoleCode() {
 		AuditPMRoleBackingBean auditPMRoleBackingBean = new AuditPMRoleBackingBean();
@@ -39,69 +38,72 @@ public class AuditPMEducationBackingBean extends AuditPMBackingBeanTemplate{
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
-		
+
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		EducationManagedBean managedBeans = (EducationManagedBean) manageBean;
-		
+
 		dtlStatus.setRoleCode(roleCode);
-		dtlStatus.setDoctype(AuditConst.PM_AUD_EDUCATION);
+		dtlStatus.setDocType(AuditConst.PM_AUD_EDUCATION);
 		dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_EDUCATION_PMPARAMETERLVLID);
 		dtlStatus.setDocNo(managedBeans.getPmEduField().getFieldCode());
 		dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 		dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_EDU);
 		dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_EDU);
-		
+
 		dtlObjName.setRoleCode(roleCode);
-		dtlObjName.setDoctype(AuditConst.PM_AUD_EDUCATION);
+		dtlObjName.setDocType(AuditConst.PM_AUD_EDUCATION);
 		dtlObjName.setPmParameterLvlId(AuditConst.PM_AUD_EDUCATION_PMPARAMETERLVLID);
 		dtlObjName.setDocNo(managedBeans.getPmEduField().getFieldCode());
 		dtlObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 		dtlObjName.setLvlCode2(AuditConst.PM_LVL_CODE_2_EDU);
 		dtlObjName.setLvlCode3(AuditConst.PM_LVL_CODE_3_EDU);
-		
+
 		if (managedBeans.getOldAuditPmEduField() != null && managedBeans.getOldAuditPmEduField().getEduFieldId() != null) {
 			if (managedBeans.getPmEduField().getFieldName() != null
-					&& !managedBeans.getOldAuditPmEduField().getFieldName().equalsIgnoreCase(managedBeans.getPmEduField().getFieldName())) {			
+					&& !managedBeans.getOldAuditPmEduField().getFieldName()
+							.equalsIgnoreCase(managedBeans.getPmEduField().getFieldName())) {
 				dtlObjName.setDocId(BigInteger.valueOf(managedBeans.getPmEduField().getEduFieldId()));
 				dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_EDUCATION_NAME_FIELDLABELID);
 				dtlObjName.setOldValue(managedBeans.getOldAuditPmEduField().getFieldName());
 				dtlObjName.setNewValue(managedBeans.getPmEduField().getFieldName());
 				dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(dtlObjName);
-				auditPMReqDTO.setObjList(objList);	
+				auditPMReqDTO.setObjList(objList);
 			}
-				// status
+			// status
 			if (managedBeans.getOldAuditPmEduField().getRecordStatusFlg() != managedBeans.getPmEduField().getRecordStatusFlg()) {
 				dtlStatus.setDocId(BigInteger.valueOf(managedBeans.getPmEduField().getEduFieldId()));
 				dtlStatus.setFieldLabelCode(AuditConst.PM_AUD_EDUCATION_STATUS_FIELDLABELID);
-				dtlStatus.setOldValue(managedBeans.getOldAuditPmEduField().getRecordStatusFlg()==1?AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
-				dtlStatus.setNewValue(managedBeans.getPmEduField().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
+				dtlStatus.setOldValue(managedBeans.getOldAuditPmEduField().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
+				dtlStatus.setNewValue(managedBeans.getPmEduField().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
 				dtlStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(dtlStatus);
 				auditPMReqDTO.setObjList(objList);
 			}
-			
-		}else {
-			
+
+		} else {
+
 			dtlObjName.setDocId(BigInteger.valueOf(managedBeans.getPmEduField().getEduFieldId()));
 			dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_EDUCATION_NAME_FIELDLABELID);
 			dtlObjName.setNewValue(managedBeans.getPmEduField().getFieldName());
 			dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(dtlObjName);
 			auditPMReqDTO.setObjList(objList);
-			
+
 			dtlStatus.setDocId(BigInteger.valueOf(managedBeans.getPmEduField().getEduFieldId()));
 			dtlStatus.setFieldLabelCode(AuditConst.PM_AUD_EDUCATION_STATUS_FIELDLABELID);
-			dtlStatus.setNewValue(managedBeans.getPmEduField().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE:AuditConst.PM_AUD_INACTIVE);
+			dtlStatus.setNewValue(managedBeans.getPmEduField().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 			dtlStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(dtlStatus);
 			auditPMReqDTO.setObjList(objList);
 		}
 		managedBeans.setEduField(null);
 		managedBeans.setOldAuditPmEduField(null);
-		
+
 		return auditPMReqDTO;
 	}
-
 
 }

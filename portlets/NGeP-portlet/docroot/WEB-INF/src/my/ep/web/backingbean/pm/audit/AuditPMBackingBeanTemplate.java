@@ -8,6 +8,8 @@ import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
+import my.ep.persistence.logging.LogKey;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -15,7 +17,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  * @author normuliana - 28895-35509
  * 
  */
-public abstract class AuditPMBackingBeanTemplate implements Serializable {
+public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AuditPMBackingBeanTemplate.class);
 
@@ -53,6 +55,9 @@ public abstract class AuditPMBackingBeanTemplate implements Serializable {
 	 * @param auditPMReqDTO
 	 */
 	private void pmAuditSO(AuditPMReqDTO auditPMReqDTO, String modName) {
+
+		new LogKey(getUserIdSessionFromLoginId());
+
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
 		if (auditPMReqDTO.getObjList() != null) {

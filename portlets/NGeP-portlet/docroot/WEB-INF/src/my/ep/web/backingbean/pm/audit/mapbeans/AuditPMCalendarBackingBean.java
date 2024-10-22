@@ -3,6 +3,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -51,7 +52,7 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 		} else {
 			AuditPMSPDTO dtlObjStateId = new AuditPMSPDTO();
 			dtlObjStateId.setRoleCode(roleCode);
-			dtlObjStateId.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			dtlObjStateId.setDocType(AuditConst.PM_AUD_CALENDAR);
 			dtlObjStateId.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
 			dtlObjStateId.setDocNo(managedBeans.getEvent().getTitle());
 			dtlObjStateId.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -64,7 +65,7 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(dtlObjStateId);
 
 			detailObjTitle.setRoleCode(roleCode);
-			detailObjTitle.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			detailObjTitle.setDocType(AuditConst.PM_AUD_CALENDAR);
 			detailObjTitle.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
 			detailObjTitle.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
 			detailObjTitle.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -78,14 +79,13 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 
 			String newFrmdate = simpleDateFormat.format(managedBeans.getEvent().getStartDate());
 			detailObjFromDate.setRoleCode(roleCode);
-			detailObjFromDate.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			detailObjFromDate.setDocType(AuditConst.PM_AUD_CALENDAR);
 			detailObjFromDate.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
 			detailObjFromDate.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
 			detailObjFromDate.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjFromDate.setLvlCode2(AuditConst.PM_LVL_CODE_2_CAL);
 			detailObjFromDate.setLvlCode3(AuditConst.PM_LVL_CODE_3_CAL);
-			detailObjFromDate
-					.setDocId(BigInteger.valueOf(managedBeans.getResCalendarDTO().getHoliday().getHolidayId()));
+			detailObjFromDate.setDocId(BigInteger.valueOf(managedBeans.getResCalendarDTO().getHoliday().getHolidayId()));
 			detailObjFromDate.setFieldLabelCode(AuditConst.PM_AUD_CALENDAR_FROMDATE_FIELDLABELID);
 			detailObjFromDate.setNewValue(newFrmdate);
 			detailObjFromDate.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -93,7 +93,7 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 
 			String newTodate = simpleDateFormat.format(managedBeans.getEvent().getEndDate());
 			detailObjToDate.setRoleCode(roleCode);
-			detailObjToDate.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			detailObjToDate.setDocType(AuditConst.PM_AUD_CALENDAR);
 			detailObjToDate.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
 			detailObjToDate.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
 			detailObjToDate.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -122,12 +122,10 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjTitleUpdate(managedBeans, auditPMReqDTO, roleCode);
 		}
 
-		if (managedBeans.getOldStartDate() != null && managedBeans.getNewStartDate() != null
-				|| managedBeans.isDeletedEvent()) {
+		if (managedBeans.getOldStartDate() != null && managedBeans.getNewStartDate() != null || managedBeans.isDeletedEvent()) {
 			detailObjFromDateUpdate(managedBeans, auditPMReqDTO, roleCode);
 		}
-		if (managedBeans.getOldEndDate() != null && managedBeans.getNewEndDate() != null
-				|| managedBeans.isDeletedEvent()) {
+		if (managedBeans.getOldEndDate() != null && managedBeans.getNewEndDate() != null || managedBeans.isDeletedEvent()) {
 			detailObjToDateUpdate(managedBeans, auditPMReqDTO, roleCode);
 		}
 		managedBeans.setDeletedEvent(false);
@@ -135,12 +133,10 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO detailObjTitleUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,
-			String roleCode) {
-		if (!managedBeans.getOldTitleValue().equalsIgnoreCase(managedBeans.getNewTitleValue())
-				|| managedBeans.isDeletedEvent()) {
+	private AuditPMReqDTO detailObjTitleUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO, String roleCode) {
+		if (!managedBeans.getOldTitleValue().equalsIgnoreCase(managedBeans.getNewTitleValue()) || managedBeans.isDeletedEvent()) {
 			detailObjTitle.setRoleCode(roleCode);
-			detailObjTitle.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			detailObjTitle.setDocType(AuditConst.PM_AUD_CALENDAR);
 			detailObjTitle.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
 			detailObjTitle.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
 			detailObjTitle.setLvlCode1(AuditConst.PM_LVL_CODE_1);
@@ -160,21 +156,19 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO detailObjFromDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,
-			String roleCode) {
+	private AuditPMReqDTO detailObjFromDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO, String roleCode) {
 		String oldStartDate = simpleDateFormat.format(managedBeans.getOldStartDate());
-		String newStartDate = managedBeans.getNewStartDate() != null ? simpleDateFormat.format(managedBeans
-				.getNewStartDate()) : null;
+		String newStartDate = managedBeans.getNewStartDate() != null ? simpleDateFormat.format(managedBeans.getNewStartDate())
+				: null;
 		if (!oldStartDate.equalsIgnoreCase(newStartDate) || managedBeans.isDeletedEvent()) {
 			detailObjFromDate.setRoleCode(roleCode);
-			detailObjFromDate.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			detailObjFromDate.setDocType(AuditConst.PM_AUD_CALENDAR);
 			detailObjFromDate.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
 			detailObjFromDate.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
 			detailObjFromDate.setLvlCode1(AuditConst.PM_LVL_CODE_1);
 			detailObjFromDate.setLvlCode2(AuditConst.PM_LVL_CODE_2_CAL);
 			detailObjFromDate.setLvlCode3(AuditConst.PM_LVL_CODE_3_CAL);
-			detailObjFromDate
-					.setDocId(BigInteger.valueOf(managedBeans.getResCalendarDTO().getHoliday().getHolidayId()));
+			detailObjFromDate.setDocId(BigInteger.valueOf(managedBeans.getResCalendarDTO().getHoliday().getHolidayId()));
 			detailObjFromDate.setFieldLabelCode(AuditConst.PM_AUD_CALENDAR_FROMDATE_FIELDLABELID);
 			detailObjFromDate.setOldValue(oldStartDate);
 			detailObjFromDate.setNewValue(!managedBeans.isDeletedEvent() ? newStartDate : null);
@@ -186,14 +180,12 @@ public class AuditPMCalendarBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO detailObjToDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO,
-			String roleCode) {
+	private AuditPMReqDTO detailObjToDateUpdate(CalendarManageBean managedBeans, AuditPMReqDTO auditPMReqDTO, String roleCode) {
 		String oldEndDate = simpleDateFormat.format(managedBeans.getOldEndDate());
-		String newEndDate = managedBeans.getNewEndDate() != null ? simpleDateFormat
-				.format(managedBeans.getNewEndDate()) : null;
+		String newEndDate = managedBeans.getNewEndDate() != null ? simpleDateFormat.format(managedBeans.getNewEndDate()) : null;
 		if (!oldEndDate.equalsIgnoreCase(newEndDate) || managedBeans.isDeletedEvent()) {
 			detailObjToDate.setRoleCode(roleCode);
-			detailObjToDate.setDoctype(AuditConst.PM_AUD_CALENDAR);
+			detailObjToDate.setDocType(AuditConst.PM_AUD_CALENDAR);
 			detailObjToDate.setPmParameterLvlId(AuditConst.PM_AUD_CALENDAR_PMPARAMETERLVLID);
 			detailObjToDate.setDocNo(managedBeans.getResCalendarDTO().getHoliday().getHolidayName());
 			detailObjToDate.setLvlCode1(AuditConst.PM_LVL_CODE_1);
