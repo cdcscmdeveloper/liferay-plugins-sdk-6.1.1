@@ -160,7 +160,8 @@
 						itemValue="0" />
 					<p:ajax event="change" process="@this" update="poCatDecisionRmrk"
 						partialSubmit="true"
-						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
+						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</p:selectOneRadio>
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
@@ -208,9 +209,9 @@
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					id="poCatDecisionRmrk">
-					<f:validateLength maximum="2000"/>
-					<p:ajax process="@this" update=":form:tt:catCodeInfPan"/>
-					</p:inputTextarea>
+					<f:validateLength maximum="2000" />
+					<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
+				</p:inputTextarea>
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.approverUser}"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
@@ -225,7 +226,8 @@
 						itemValue="0" />
 					<p:ajax event="change" process="@this"
 						update="apprvrCatDecisionRmrk" partialSubmit="true"
-						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" />
+						listener="#{backingBean.assignCategoryApproveOrRejectDate(catBean)}" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</p:selectOneRadio>
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
