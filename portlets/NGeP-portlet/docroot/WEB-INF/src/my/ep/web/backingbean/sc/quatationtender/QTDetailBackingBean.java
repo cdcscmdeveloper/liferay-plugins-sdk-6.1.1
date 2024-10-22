@@ -13283,15 +13283,17 @@ public void retrieveDemoQtDetails(Long qtId) {
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setInactiveChecklistNotified(true);
 			QuationTenderResDTO qtresDTO = detailSO.saveQtForInactiveChecklist(qtreqDTO);
-			if(qtresDTO.isSuccessful()){
-				//ScQt scQt = qtresDTO.getQtDetail();
-				//retrieveQuationTenderDetails(scQt.getQtId());
+			if (qtresDTO.isSuccessful()) {
+				boolean inactiveCLWarn = this.getManagedBean().isShowInactiveChecklistWarning();
 				String notifyText = this.getManagedBean().getInActiveChecklistNotificationText();
+				Integer activeIndex = this.getManagedBean().getActiveIndex();
 				renewQTSesionObject();
 				this.getManagedBean().setQt(qtresDTO.getQtDetail());
+				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
 				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
-				Integer activeIndex = this.getManagedBean().getActiveIndex();
-				this.getManagedBean().setActiveIndex(60);
+				if (activeIndex == 0) {
+					this.getManagedBean().setActiveIndex(1);
+				}
 				qtDetailsTabChange(activeIndex);
 			}
 			FacesContext.getCurrentInstance().addMessage(
