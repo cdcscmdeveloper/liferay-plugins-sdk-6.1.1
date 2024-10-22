@@ -4076,43 +4076,39 @@ public class SupplierFinalizationBackingBean extends
 		setRefinalizedAndBiddingAwardStatus(
 				scQtFinalization, currentZoneId);
 		
-		if (CollectionUtils.isNotEmpty(recommendedItems) && 
-								shortlistedSuppliers != null) {
-			ScQtRecommend scQtRecommend = recommendedItems.get(0);
+		if (CollectionUtils.isNotEmpty(recommendedItems) && shortlistedSuppliers != null) {
+			for (ScQtEvaluationResultDtl evalResDtl : shortlistedSuppliers) {
+				// 35563 - start - move code to check for all recommend
+				for (ScQtRecommend scQtRecommend : recommendedItems) {
+					// Disable selection for rejected supplier.
+					boolean supplierDisabled = false;
+					Long specZoneId = scQtRecommend.getTplSpecZoneDtl() != null ? scQtRecommend.getTplSpecZoneDtl()
+							.getSpecZoneId() : 0L;
+					if (scQtRecommend.getRecommendDtls() != null) {
+						Long evaZoneId = evalResDtl.getTplSpecZoneDtl() != null ? evalResDtl.getTplSpecZoneDtl()
+								.getSpecZoneId() : 0L;
 
-			Long specZoneId = scQtRecommend.getTplSpecZoneDtl() != null ? 
-					scQtRecommend.getTplSpecZoneDtl().getSpecZoneId() : 0L;
-			for (ScQtEvaluationResultDtl evalResDtl 
-									: shortlistedSuppliers) {
-				
-				// Disable selection for rejected supplier.
-				if (scQtRecommend.getRecommendDtls() != null) {
-					Long evaZoneId = evalResDtl.getTplSpecZoneDtl() != null ? 
-							evalResDtl.getTplSpecZoneDtl().getSpecZoneId() : 0L;
-
-					for (ScQtRecommendDtl recommendDtl 
-									: scQtRecommend.getRecommendDtls()) {
-						Long recommendDtlId = recommendDtl.getRecommendDtlId();
-						Long supplierId = recommendDtl.getSupplier().getSupplierId();
-
-						if (recommendDtlId != null
-								&& supplierId != null
-								&& supplierId.compareTo(evalResDtl
-										.getQtEvaluationResult()
-										.getScQtProposal().getScQtSupplier()
-										.getSmSupplier().getSupplierId()) == 0
-								&& specZoneId.equals(evaZoneId)
-								&& (recommendDtl.getRecordStatusFlg().equals(
-											DbValueConst.RECORD_STATUS_REJECTED))) {
-
-							// 11134 - add new param -start-
-							resetSupplierSelectionAndDisable(recommendDtl, evalResDtl);
-							// 11134 - add new param -end-
-
-							break;
+						for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+							Long recommendDtlId = recommendDtl.getRecommendDtlId();
+							Long supplierId = recommendDtl.getSupplier().getSupplierId();
+							
+							if (recommendDtlId != null
+									&& supplierId != null
+									&& supplierId.compareTo(evalResDtl.getQtEvaluationResult().getScQtProposal()
+											.getScQtSupplier().getSmSupplier().getSupplierId()) == 0
+									&& specZoneId.equals(evaZoneId)
+									&& (recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_REJECTED))) {
+								// 11134 - add new param
+								resetSupplierSelectionAndDisable(recommendDtl, evalResDtl);
+								supplierDisabled = true;
+								break;
+							}
 						}
+						if (supplierDisabled)
+							break;
 					}
 				}
+				// 35563 - end - move code to check for all recommend
 
 				// #33793 - start
 				if (isQTRefinalized()) {
