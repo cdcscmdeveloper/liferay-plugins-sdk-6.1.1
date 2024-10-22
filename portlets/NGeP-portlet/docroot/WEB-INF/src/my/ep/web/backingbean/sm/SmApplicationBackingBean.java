@@ -11141,7 +11141,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return the redirect page.
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
-		//#31043 - start
+		//#31043 & #36576 - start
 		if(!res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) 
 				&& !res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)
 				&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
@@ -11149,7 +11149,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) ){
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
-		//#31043 - end
+		//#31043 & #36576 - end
 		
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
@@ -12861,7 +12861,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			addr.getPmState().setAdoptDivision(false);
 			SmApplicationUtil.getInstance().populateDistrictsByState(addr, panelName, getManagedBean());
 		}
-		
+		addr.setDivisionId(null);
 		addr.setPmDivision(null);
 		addr.setPmDistrict(null);
 		addr.setPmCity(null);

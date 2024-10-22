@@ -4955,20 +4955,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	//End Fix - #35202
 	
-	//#35137 - Start
-		/**
-		 * Method to Checking Amendment process
-		 * 
-		 * @return boolean
-		 */
-		public boolean isAlreadyAmendment() {
-			if(getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null){
-				if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
-					getManagedBean().setDisableOriginalBond(true);
-					return true;
-				}				
+	// #35137,#24333 - Start
+	/**
+	 * Method to Checking Amendment process
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAlreadyAmendment() {
+		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null) {
+			if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0, 2)
+					.equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+				getManagedBean().setDisableOriginalBond(true);
+				return true;
 			}
-			return false;
 		}
-		//#35137 - End
+		return false;
+	}
+	// #35137,#24333 - End
 }  
