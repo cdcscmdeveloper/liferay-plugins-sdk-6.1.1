@@ -55,6 +55,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -103,8 +104,7 @@ import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
-public class ViewApplHistoryBackingBean extends
-		BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> {
+public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean<ViewApplHistoryManagedBean> {
 
 	/**
 	 * 
@@ -265,7 +265,7 @@ public class ViewApplHistoryBackingBean extends
 	public void viewUnClaimTask(String applNo) {
 		getManagedBean().setViewApplicationHistory(true);
 		getManagedBean().setViewSupplierProfile(true);
-		getManagedBean().setPoApprUnClaimTask(true); //#34209, #32008
+		getManagedBean().setPoApprUnClaimTask(true); //#30766 & #34209, #32008
 		// #28767 - START
 		getManagedBean().setTabActiveIndex(0);
 		// #28767 - END
@@ -1718,6 +1718,35 @@ public class ViewApplHistoryBackingBean extends
 		SmServiceLookup.getSmRemarksSO().updateRoleCode(reqDTO);
 	}
 	// #32424 - end
+	
+	//#30766 & #34209 - START
+	public void rePopulateApplFacilitiesList()
+	{
+		getManagedBean().setDockYardFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setFactoryFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setStoreFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setWorkshopFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if(cat.getPmCategoryL3() != null && !StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())) {
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD))
+						getManagedBean().getDockYardFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY))
+						getManagedBean().getFactoryFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE))
+						getManagedBean().getStoreFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP))
+						getManagedBean().getWorkshopFacilitiesVOList().add(cat.getPmCategoryL3());
+				}
+			}
+		}
+	}
+	
+	public void rePopulateMachine(){
+		getManagedBean().getSmAppl().setSmMachineDtls(getManagedBean().getAllMachineDtls());
+	}
+	//#30766 & #34209 - END
 	
 	//26238 - start
 	public void onViewDisciplinaryAction() {
