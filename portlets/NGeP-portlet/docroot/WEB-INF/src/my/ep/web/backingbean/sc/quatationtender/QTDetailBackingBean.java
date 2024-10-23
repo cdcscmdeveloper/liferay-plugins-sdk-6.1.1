@@ -847,6 +847,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		debugLogger("start of saveQtDetailsAction");
 		this.getManagedBean().setSaveFlow(true);
+		//#10141 Start Vinod
+		boolean isSendNotificationButton = this.getManagedBean().isSaveForSendNotification();
+		boolean inactiveCLWarn = this.getManagedBean().isShowInactiveChecklistWarning();
+		String notifyText = this.getManagedBean().getInActiveChecklistNotificationText();
+		//#10141 End Vinod
 		try {
 			
 			Long currentStatus = this.getManagedBean().getCurrentStatusId();
@@ -874,6 +879,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#29521-end
 			//#28784
 			checkDemoPresentationByStatus();
+			//#10141 Start Vinod
+			if(isSendNotificationButton){
+				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
+				this.getManagedBean().setSaveForSendNotification(false);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED, new String[] { this
+										.getManagedBean().getInActiveChecklistNotificationText() },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				return;
+			}
+			//#10141 End Vinod
 			
 			if(isFirstSave){								
 				 /* 
@@ -4405,6 +4425,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			if ((null != committeResDto && committeResDto.isSuccessful())
 					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
+				
 
 				// 25037 - start
 				if (this.getManagedBean().isReapproval()) {
@@ -13271,37 +13292,14 @@ public void retrieveDemoQtDetails(Long qtId) {
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
 		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
 		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
+		qtResDTO = new QuationTenderResDTO();
+		qtResDTO.setSuccessful(true);
 
 		if (qtResDTO.isSuccessful()) {
-			QuationTenderReqDTO qtreqDTO = prepareQTInfo();
-			reqDTO.setSaveFlow(true);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setInactiveChecklistNotified(true);
-			QuationTenderResDTO qtresDTO = detailSO.saveQtForInactiveChecklist(qtreqDTO);
-			if (qtresDTO.isSuccessful()) {
-				boolean inactiveCLWarn = this.getManagedBean().isShowInactiveChecklistWarning();
-				String notifyText = this.getManagedBean().getInActiveChecklistNotificationText();
-				Integer activeIndex = this.getManagedBean().getActiveIndex();
-				renewQTSesionObject();
-				this.getManagedBean().setQt(qtresDTO.getQtDetail());
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
-				if (activeIndex == 0) {
-					this.getManagedBean().setActiveIndex(1);
-				}
-				qtDetailsTabChange(activeIndex);
-			}
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
-							QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED, new String[] { this
-									.getManagedBean().getInActiveChecklistNotificationText() },
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			this.getManagedBean().setSaveForSendNotification(true);
+			saveQtDetailsAction();
 		}
 	}
 
