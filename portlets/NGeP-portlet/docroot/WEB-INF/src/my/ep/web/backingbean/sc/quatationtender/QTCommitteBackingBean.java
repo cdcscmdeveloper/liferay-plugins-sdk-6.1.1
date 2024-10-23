@@ -1053,8 +1053,9 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setNameRequired(true);
 		// 25037 - start
 		Long qtStatus = getCurrentQtStatusId();
-		if (null == qtStatus)
+		if (null == qtStatus) {
 			return;
+		}
 
 		Long[] specDisabledRoleStatusArr = new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
 				QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
@@ -1784,7 +1785,7 @@ public class QTCommitteBackingBean extends
 		List<ScCommitteeMember> committeeMembers = getManagedBean().getToBeDelCommitteMemebers();
 		
 		if (committeeMembers == null) {
-			committeeMembers = new ArrayList<ScCommitteeMember>();	
+			committeeMembers = new ArrayList<>();	
 		}
 		
 		ScCommittee scCommitte = bean.getScQtCommittee().getScCommittee();
@@ -1947,7 +1948,7 @@ public class QTCommitteBackingBean extends
 			if (this.getManagedBean().getMainTaskNames().contains(SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE)) {
 				return false;
 			}
-
+			
 			if (super.isQTStatusPublished(currentStatusId)) {
 				Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
 						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
@@ -2426,6 +2427,9 @@ public class QTCommitteBackingBean extends
 				return specCheck;
 			}
 		} else {
+			System.out.println("---> statusId " + statusId);
+			System.out.println("---> isValidFor25037 " + this.getManagedBean().isValidFor25037());
+
 			return Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(statusId)
 					&& this.getManagedBean().isValidFor25037();
 		}
