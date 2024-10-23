@@ -1176,7 +1176,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) { // #36467
+				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { //#36467 & #36362
 					// 36362 - start
 					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
 					// 36362 - end
