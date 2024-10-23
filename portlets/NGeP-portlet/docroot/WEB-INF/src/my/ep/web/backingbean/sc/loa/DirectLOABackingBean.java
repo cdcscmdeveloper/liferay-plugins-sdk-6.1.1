@@ -10891,20 +10891,19 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				specReqDto.setSpecSearchForApp(false);
 				
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+				List<Long> replacedQuestionIds = new ArrayList<>();
 				if (this.getManagedBean().getScQt().isZonal()) {// 29007&31423-start
 					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<>();
 					boolean newOfferedSpecification = false;// 29007
-					List<Long> replacedQuestionIds = new ArrayList<>();
 					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
 								.getQuestionType())) {
 							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
 									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
-											.getSpecQuestionId()) ? true : false;
+											.getSpecQuestionId());
 							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
-									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem()) ? true
-									: false;
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
 							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {// 29007-start
 								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
 										specAnswer.getTplSpecQuestion().getClItem());
@@ -10970,14 +10969,18 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
 								.getQuestionType())) {
 
-							if (specAnswer.getTplSpecQuestion() != null
-									&& specAnswer.getTplSpecQuestion().getClItem() != null
+							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
+									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
+											.getSpecQuestionId());
+							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
-									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())) {// 29007-start
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
+							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {// 29007-start
 								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
 										specAnswer.getTplSpecQuestion().getClItem());
 								specAnswer.getTplSpecQuestion().setClItem(
-										VmUtil.getInstance().addLineBreaks(itemName, 20));
+										VmUtil.getInstance().addLineBreaks(itemName, 30));
+								replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 							}
 
 							if (null != scLoiLoaItem.getTplSpecTierQty()) {
