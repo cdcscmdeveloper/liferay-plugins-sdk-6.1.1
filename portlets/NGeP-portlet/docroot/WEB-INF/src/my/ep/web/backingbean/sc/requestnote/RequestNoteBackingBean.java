@@ -1181,11 +1181,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(requestNoteDtl.getProcurementTypeCategory() != null && null == requestNoteDtl.getProcurementTypeCategory().getParameterId()){
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
-				
-				// 36362 - start
-				validateTierQuantityExceedMaxQuantity(requestNoteDtl);
-				// 36362 - end
-				
+				// #36362 - start
+				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { 
+					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
+				}
+				// #36362 - end
 				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
 					if(requestNoteDtls.size() != counter){
