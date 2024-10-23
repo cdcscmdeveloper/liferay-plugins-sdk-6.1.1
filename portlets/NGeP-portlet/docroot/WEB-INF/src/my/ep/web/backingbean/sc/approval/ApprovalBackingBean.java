@@ -3782,10 +3782,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				throw new EpException(MessageConst.ERROR_770405);
 			}
 		}
+		//#21692 - End
 		
+		//#21692 - Start
 		private void initializeDecisionCertPBM() {
+			boolean mofDateAppeared = this.getManagedBean().getScQtApprovalRequestList().get(0).getChmnFinalizationDate() != null
+					&& this.getManagedBean().getQt().getProposalValidityEndDate().before(this.getManagedBean().getScQtApprovalRequestList().get(0).getChmnFinalizationDate());
 			if (this.getManagedBean().getScQtApprovalRequestList().get(0).getDecisionCertPBM() == null
-					&& this.getManagedBean().getQt().getProposalValidityEndDate().before(new Date())) {
+					&& mofDateAppeared) {
 				this.getManagedBean().getScQtApprovalRequestList().get(0).setDecisionCertPBM(new PmParameter());
 			}
 			
