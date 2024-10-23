@@ -148,6 +148,7 @@ import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractManagedBean;
@@ -4036,12 +4037,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
 			directLoaBackingBean.getManagedBean().setIconForDL(true); //28854
+			directLoaBackingBean.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX); // 25791
 			directLoaBackingBean.viewLOA(scLoa.getLoaId());
 		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX); // 25791
 			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
 		}
 
@@ -4952,20 +4955,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	//End Fix - #35202
 	
-	//#35137 - Start
-		/**
-		 * Method to Checking Amendment process
-		 * 
-		 * @return boolean
-		 */
-		public boolean isAlreadyAmendment() {
-			if(getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null){
-				if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
-					getManagedBean().setDisableOriginalBond(true);
-					return true;
-				}				
+	// #35137,#24333 - Start
+	/**
+	 * Method to Checking Amendment process
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAlreadyAmendment() {
+		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null) {
+			if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0, 2)
+					.equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+				getManagedBean().setDisableOriginalBond(true);
+				return true;
 			}
-			return false;
 		}
-		//#35137 - End
+		return false;
+	}
+	// #35137,#24333 - End
 }  

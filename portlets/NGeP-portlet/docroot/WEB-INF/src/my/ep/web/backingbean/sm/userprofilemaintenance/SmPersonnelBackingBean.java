@@ -2411,7 +2411,7 @@ public class SmPersonnelBackingBean extends
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					LogKey logKey = new LogKey();
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
 				// #28895_35501 End
 				SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
@@ -2882,7 +2882,7 @@ public class SmPersonnelBackingBean extends
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
-				auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+				auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 			}
 			// #28895_35501 End
 			SmCommonUtil
@@ -3870,7 +3870,7 @@ public class SmPersonnelBackingBean extends
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
-				auditSmBackingBean.saveAuditData(getManagedBean(), logKey.getUserId());
+				auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 			}
 			// #28895_35501 End
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
