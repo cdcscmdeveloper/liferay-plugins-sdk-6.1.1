@@ -280,9 +280,10 @@ public interface QTConstants {
 	// 19287#91, 17376#104 -start-
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
-	//25037 QT Bpm Composite Version Validity ID -start-
+	// 25037 - start
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	//25037 -end-
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
 
 	//#15391 #11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
@@ -315,6 +316,20 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	// Bug #35688@Syazani 10/07/2024 -- Start
+	public static final String TAB_SC_GENERAL_INFORMATION = "0";
+	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
+	public static final String TAB_SC_TECHNICAL_CHECKLIST = "2";
+	public static final String TAB_SC_FINANCIAL_CHECKLIST = "3";
+	public static final String TAB_SC_TECHNICAL_SCORING = "4";
+	public static final String TAB_SC_FINANCIAL_SCORING = "5";
+	public static final String TAB_SC_OVERALL_SCORING = "6";
+	public static final String TAB_SC_DELIVERY_ADDRESS = "7";
+//	public static final String TAB_SC_PAYMENT_DEDUCTION = "8";
+	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
+	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
+	// Bug #35688@Syazani 10/07/2024 -- End
 
 	// #33831, #21695, #25138 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";

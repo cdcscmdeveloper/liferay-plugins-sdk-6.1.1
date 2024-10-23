@@ -23,7 +23,7 @@
 		</p:blockUI>
 		
 		<p:outputPanel id="supplierProfilePanelId">
-		
+			#{viewSmApplBackingBean.rePopulateApplFacilitiesList()} <!-- #30766 & #34209 -->
 		<!-- Enhancement 26238 - START -->
 		<p:outputPanel style="color:red;font-weight:bold;" rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
 			and viewApplHistoryBackingBean.managedBean.disciplinaryAction}">
