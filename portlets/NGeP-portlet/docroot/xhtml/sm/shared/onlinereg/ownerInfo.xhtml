@@ -281,4 +281,13 @@
 		</p:dataTable>
 		
 	</p:panel>
+	
+	<ac:confirmationPopup id="ownerDeletePopUpId"
+		widget="ownerDeletePopUp"
+		okAction="registrationBackingBean.removeSupplierOwner"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('ownerBusiness')}"/>
+		
 	</ui:composition>
