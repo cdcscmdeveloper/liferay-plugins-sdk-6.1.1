@@ -2609,8 +2609,9 @@ public class CommitteBackingBean extends
 		String committeeType = committee.getCommitteeType().getParameterCode();
 		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
 		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees
-				&& qtCommittees.size() <= 1)
+				&& qtCommittees.size() <= 1) {
 			return true;
+		}
 
 		return committee.isRecordStatus();
 	}
