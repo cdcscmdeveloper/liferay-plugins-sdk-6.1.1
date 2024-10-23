@@ -32,7 +32,11 @@
 						value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, biddingBB.managedBean.scQt.qtId)}"
 						immediate="true"
-						rendered="#{!empty biddingBB.managedBean.previousPageUrl}" /></td>
+						rendered="#{biddingBB.isQTMaintenanceScreen()}">
+						<f:setPropertyActionListener
+							target="#{pmTrackingDiaryBackingBean.managedBean.biddingUrl}"
+							value="#{true}"></f:setPropertyActionListener><ui:remove> #25791 start </ui:remove>
+					</p:commandLink></td>
 				<ui:remove> #25791 end </ui:remove>
 			</tr>
 		</table>
