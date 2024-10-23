@@ -1127,19 +1127,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 				return getManagedBean().getBackToPrevious();
 			}
-			//36519-Start
-			else if(getManagedBean().getBackToNtf() != null){
-				try {
-					FacesContext.getCurrentInstance().getExternalContext().redirect(
-							 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
-				} catch (IOException e) {
-					log.error("File:FulfilmentOrderBackingBean Method:backToPervious", e);
-				}
+			else{
+				FacesContext.getCurrentInstance().getExternalContext().redirect(
+						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
 				return null;
-			}else{
-				return "flDocSearch";
 			}
-			//36519-End
 		}
 
 		/* #28375 - Beginning - Logan */
@@ -1683,7 +1675,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
 //				getManagedBean().setHyperLinkPage(true);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -1692,7 +1684,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setDocMaintainRemarks(true);
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 				getManagedBean().setDocMaintainRemarks(true);
-				getManagedBean().setBackToNtf("notifications");//36519
 				flBB.getManagedBean().setHideRemarks(true);
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -1730,7 +1721,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
 //				getManagedBean().setHyperLinkPage(true);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -1739,7 +1730,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				getManagedBean().setDocMaintainRemarks(true);
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 				getManagedBean().setDocMaintainRemarks(true);
-				getManagedBean().setBackToNtf("notifications");//36519
 				getEspkbCommitmentNo();
 				flBB.getManagedBean().setHideRemarks(true);
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());

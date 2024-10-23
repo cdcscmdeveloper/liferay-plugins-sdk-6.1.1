@@ -361,7 +361,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			PrBB.getManagedBean().setBackToDocument(null);
+			PrBB.getManagedBean().setBackToDocument("flDocSearch");//36519
 	
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
@@ -381,7 +381,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			crBB.getManagedBean().setButtonVal(buttonVal);
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
-			crBB.getManagedBean().setBackToDocument(null);
+			crBB.getManagedBean().setBackToDocument("flDocSearch");//36519
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 				crBB.getManagedBean().setDeclarationCheck(true);
@@ -817,7 +817,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
 			danBB.getManagedBean().setSelectedTabIndex(0);
 			danBB.setAdjustmentNote(resDTO);
-			danBB.getManagedBean().setBackToPrevious(null);
+			danBB.getManagedBean().setBackToPrevious("flDocSearch");//36519
 			navgPage=NAV_TO_ADJUSTMENT_NOTE;
 		}
 		return navgPage;

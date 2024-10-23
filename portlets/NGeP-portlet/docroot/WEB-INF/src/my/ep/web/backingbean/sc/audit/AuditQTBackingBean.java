@@ -68,7 +68,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	/**
 	 * Logger instance.
 	 */
-	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
+	public static final Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 
 	/**
 	 * @param docType
