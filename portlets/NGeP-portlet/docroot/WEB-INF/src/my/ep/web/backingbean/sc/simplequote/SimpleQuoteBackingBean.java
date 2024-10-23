@@ -5159,6 +5159,7 @@ public class SimpleQuoteBackingBean extends
 	 * render the supplier view based on the task id from notification.
 	 */
 	public void supplierView() {
+		int isSpCompleted = 0; //36301 @zaim
 		TplSpecMaster serviceMaster = null;
 		TplSpecMaster productMaster = null;
 		HttpServletRequest servletRequest = new FacesScopes()
@@ -5189,7 +5190,12 @@ public class SimpleQuoteBackingBean extends
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 				Long supplierId = getSupplierId();
 				quoteReqDTO.setSupplierId(supplierId);
-				
+				//36301 - start
+				boolean isContainDraft = isQuoteDocContainDraft(scQuote.getQuoteDocs());
+				if (isContainDraft && scQuote.getQuoteId() != null){
+					isSpCompleted = getQuoteSO().executeSPFortemplateStatusDraft(scQuote.getQuoteId());
+				}
+				//36301 - end
 				// clear session data.
 				renewSesionObject();
 
@@ -5352,7 +5358,9 @@ public class SimpleQuoteBackingBean extends
 			// #28199 - Start : Remove back button from SQ Response Screen
 						getManagedBean().setSqAuditFlg(Boolean.FALSE);
 			// #28199 - End
-			
+			// 36301 - start
+			reloadSupplierView(isSpCompleted);
+			// 36301 - end
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplerView");
@@ -8405,4 +8413,41 @@ public class SimpleQuoteBackingBean extends
 		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
 	}
 	// end - #25790
+	
+	// 36301 - start
+	/**
+	 * To validate if tpl spec master contain template status draft after
+	 * submit.
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public boolean isQuoteDocContainDraft(List<ScQuoteDoc> list) {
+		boolean isContainDraft = Boolean.FALSE;
+
+		if (list != null && CollectionUtils.isNotEmpty(list)) {
+			for (ScQuoteDoc doc : list) {
+				if ((doc.getSpecMaster() != null && StringUtils.isNotEmpty(doc.getSpecMaster().getTemplateStatus()))
+						&& doc.getSpecMaster().getTemplateStatus()
+								.equalsIgnoreCase(TemplateSpecConst.TEMPLATE_STATUS_DRAFT)) {
+					isContainDraft = Boolean.TRUE;
+				}
+			}
+		}
+
+		return isContainDraft;
+	}
+
+	/**
+	 * Reload supplierView() method.
+	 * 
+	 * @param isSpComplete
+	 */
+	public void reloadSupplierView(int isSpCompleted) {
+		if (isSpCompleted == 1) {
+			supplierView();
+		}
+
+	}
+	// 36301 - end
 }
