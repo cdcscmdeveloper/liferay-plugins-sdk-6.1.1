@@ -11281,7 +11281,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
-		//#10141 Start Vinod
+		// #10141 Start Vinod
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)
 				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)) {
 			String qtNo = scQt != null ? scQt.getQtNo() : "";
@@ -11317,7 +11317,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						getUserIdSessionFromLoginId(), e);
 			}
 		}
-		//#10141 End Vinod
+		// #10141 End Vinod
 
 	}
 
@@ -11453,33 +11453,33 @@ if (null != checklist && !checklist.isEmpty()) {
 		}
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 		
-		//#10141 Start Vinod
-		if(this.getManagedBean().getInActiveChecklist()!=null
-				&& !this.getManagedBean().getInActiveChecklist().isEmpty()){
-			List<ScQtCheckList> techCL =this.getManagedBean().getScQtCheckSt2techProposal();
-			List<ScQtCheckList> deleteTechCheckList=deleteInactiveChecklist(techCL);
+		// #10141 Start Vinod
+		if (this.getManagedBean().getInActiveChecklist() != null
+				&& !this.getManagedBean().getInActiveChecklist().isEmpty()) {
+			List<ScQtCheckList> techCL = this.getManagedBean().getScQtCheckSt2techProposal();
+			List<ScQtCheckList> deleteTechCheckList = deleteInactiveChecklist(techCL);
 			techCL.removeAll(deleteTechCheckList);
-			List<ScQtCheckList> finCL =this.getManagedBean().getScQtCheckSt2financeProposalList();
-			List<ScQtCheckList> deletefinCheckList=deleteInactiveChecklist(finCL);
+			List<ScQtCheckList> finCL = this.getManagedBean().getScQtCheckSt2financeProposalList();
+			List<ScQtCheckList> deletefinCheckList = deleteInactiveChecklist(finCL);
 			finCL.removeAll(deletefinCheckList);
-							
+
 			List<ScQtCheckList> technical = this.getManagedBean().getMarkDeletedTechChecklist();
-			if (null == technical){
+			if (null == technical) {
 				technical = new ArrayList<>();
 			}
-			if(!deleteTechCheckList.isEmpty()){
+			if (!deleteTechCheckList.isEmpty()) {
 				technical.addAll(deleteTechCheckList);
 			}
-					
+
 			List<ScQtCheckList> financial = this.getManagedBean().getMarkDeletedFinChecklist();
-			if (null == financial){
+			if (null == financial) {
 				financial = new ArrayList<>();
 			}
-			if(!deletefinCheckList.isEmpty()){
+			if (!deletefinCheckList.isEmpty()) {
 				financial.addAll(deletefinCheckList);
 			}
 		}
-		//#10141 End Vinod
+		// #10141 End Vinod
 
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
@@ -17545,8 +17545,8 @@ if (null != checklist && !checklist.isEmpty()) {
 			checkTechnicalAndFinancialSpec(this.getManagedBean().getQt());
 		}
 		// #10141 Start Vinod
-		checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),action);
-		if(this.getManagedBean().getQt().isInactiveChecklistNotified()){
+		checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), action);
+		if (this.getManagedBean().getQt().isInactiveChecklistNotified()) {
 			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
 		}
 		// #10141 End Vinod
@@ -23531,8 +23531,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	public void closeTechChecklistPreview() {
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())) {
-			for (ScQtCheckList techCL : this.getManagedBean().getScQtCheckSt2techProposal()) {
-				techCL.setSelected(Boolean.FALSE);
+			for (ScQtCheckList techCheckList : this.getManagedBean().getScQtCheckSt2techProposal()) {
+				techCheckList.setSelected(Boolean.FALSE);
 			}
 		}
 	}
@@ -23549,8 +23549,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 */
 	public void closeFinChecklistPreview() {
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())) {
-			for (ScQtCheckList techCL : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
-				techCL.setSelected(Boolean.FALSE);
+			for (ScQtCheckList finCheckList : this.getManagedBean().getScQtCheckSt2financeProposalList()) {
+				finCheckList.setSelected(Boolean.FALSE);
 			}
 		}
 	}

@@ -17,12 +17,12 @@
 					closable="true" severity="error, info" /> <ui:include
 					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeButtons.xhtml" />
 				<ui:include src="/xhtml/sc/specification/common/commonHeader.xhtml" />
-				<!-- #10141 Start Vinod -->
+				<ui:remove>#10141 Start Vinod -- Added print button to print screen</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.print']}" rendered="#{specificationBackingBean.renderPtintButtonForSpecCommittee()}"
 					process="@all" type="button" style="float:right;">
 					<p:printer target="printSpecCommitteeid" />
 				</p:commandButton>
-				<!-- #10141 End Vinod -->
+				<ui:remove>#10141 End Vinod </ui:remove>
 				<ui:include
 					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMenu.xhtml" />
 			</td>

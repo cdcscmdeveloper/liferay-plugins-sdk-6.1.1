@@ -263,16 +263,16 @@
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
 					</c:if>
-					<!-- #10141 Start Vinod -->
+					<ui:remove>#10141 Start Vinod</ui:remove>
 					<p:commandButton
 						value="#{lbl['lbl.sc.spec.inactive.btn.send.notification']}"
 						id="sendNotification" process="@this" style="float:right;"
 						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@all"
-						action="#{qTDetailBB.sendNotificationForInactiveChecklistProcessForDoc()}"
+						action="#{qTDetailBB.sendNotificationForInactiveChecklist()}"
 						rendered="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 						disabled="#{qTDetailBB.managedBean.qt.inactiveChecklistNotified}"
 						title="#{lbl['lbl.sc.spec.inactive.btn.send.notification.mouseover']}" />
-					<!-- #10141 End Vinod -->
+					<ui:remove>#10141 End Vinod</ui:remove>
 				</c:if>
 			</td>
 		</tr>

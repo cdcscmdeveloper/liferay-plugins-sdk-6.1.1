@@ -13264,7 +13264,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 *            .
 	 * @return
 	 */
-	public void sendNotificationForInactiveChecklistProcessForDoc() {
+	public void sendNotificationForInactiveChecklist() {
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -13292,8 +13292,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
 		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
 		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
-		qtResDTO = new QuationTenderResDTO();
-		qtResDTO.setSuccessful(true);
 
 		if (qtResDTO.isSuccessful()) {
 			ScQt qt = this.getManagedBean().getQt();
