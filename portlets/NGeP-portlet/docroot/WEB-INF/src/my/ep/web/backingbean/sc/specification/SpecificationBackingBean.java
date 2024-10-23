@@ -5847,6 +5847,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	public String financialChecklistEditAction(int index,
 			ScQtCheckList checkList, String specType) {
+		// 36211 start
+		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		// 36211 end
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		this.getManagedBean().setScQtChecklist(checkList);
@@ -5858,6 +5862,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
+		// 36211 Start
+		SpecificationReqDTO specReqDto = new SpecificationReqDTO();
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(specSO.checkWipScoreSettingMax(specReqDto));
+		// 36211 End
 		try {
 			this.getManagedBean().setIndex(index);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
