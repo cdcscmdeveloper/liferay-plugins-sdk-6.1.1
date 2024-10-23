@@ -1058,8 +1058,9 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 		
 		// 25037 - start
 		Long qtStatus = getCurrentQtStatusId();
-		if (null == qtStatus)
+		if (null == qtStatus) {
 			return;
+		}
 
 		Long[] specDisabledRoleStatusArr = new Long[] { QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
 				QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT,
@@ -1791,11 +1792,10 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 		List<ScCommitteeMember> committeeMembers = getManagedBean().getToBeDelCommitteMemebers();
 		
 		if (committeeMembers == null) {
-			committeeMembers = new ArrayList<ScCommitteeMember>();	
+			committeeMembers = new ArrayList<>();	
 		}
 		
 		ScCommittee scCommitte = bean.getScQtCommittee().getScCommittee();
-		//scCommitte.getScCommitteeMembers().removeAll(selectedList);
 		if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 				.equalsIgnoreCase(scCommitte.getCommitteeType()
 						.getParameterCode())
