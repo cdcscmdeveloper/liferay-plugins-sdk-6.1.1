@@ -716,7 +716,7 @@ public class TemplateSpecHelper {
 		BigDecimal totalPrice = null;
 		boolean isPriceTypeTier = isPriceTypeTier(
 				specQuestion.getClPriceTypeCode().getParameterCode());
-		BigDecimal unitPriceTemp = unitPrice.setScale(2, QTConstants.QT_ROUNDING_MODE); //Bug #35600@Syazani 19/09/2024
+		BigDecimal unitPriceTemp = unitPrice != null ? unitPrice.setScale(2, QTConstants.QT_ROUNDING_MODE) : null; //Bug #35600@Syazani 19/09/2024
 		if (!isPriceTypeTier) {
 			totalPrice = calulateTotalAmount(specQuestion, unitPriceTemp, quantity);	//Bug #35600@Syazani 19/09/2024
 		}
