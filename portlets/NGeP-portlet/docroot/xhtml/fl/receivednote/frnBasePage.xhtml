@@ -64,7 +64,8 @@
 		<table style="width: 100%;">
 			<tr>
 	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
-						rendered="#{receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
+						rendered="#{receivedNoteBackingBean.managedBean.taskId==null
+						or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
 						action="#{receivedNoteBackingBean.backAction}" /></td>
 				<td colspan="4" style="text-align: right">
 					<c:if test='#{receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>

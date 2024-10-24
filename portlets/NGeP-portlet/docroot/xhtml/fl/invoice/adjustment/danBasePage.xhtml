@@ -62,7 +62,7 @@
 		<!--#36519--><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{danBackingBean.backToPervious}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-						rendered="#{danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" />
+						rendered="#{danBackingBean.managedBean.taskId==null or danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" />
 				</td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
