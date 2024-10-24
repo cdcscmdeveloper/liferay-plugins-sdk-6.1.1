@@ -908,25 +908,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * Page navigation to FLDoc search page in FRN.
 	 *
 	 * @return the string
-	 * @throws IOException 
 	 */
-	public String backToPervious() throws IOException {// 36519-Start
-		if (getManagedBean().getBackToPrevious() != null) {
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
-			flBB.getManagedBean().setAttachmentList(getManagedBean().getPreviousAttachmentList());
-			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
-			return getManagedBean().getBackToPrevious();
-		} else {
-			FacesContext
-					.getCurrentInstance()
-					.getExternalContext()
-					.redirect(
-							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
-									+ "notifications");
-			return null;
-		}
-		// 36519-End
+	public String backToPervious() {
+		return "flDocSearch";
 	}
 	
 	/**
