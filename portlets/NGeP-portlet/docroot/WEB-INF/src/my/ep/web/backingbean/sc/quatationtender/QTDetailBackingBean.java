@@ -13680,23 +13680,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * 
 	 */
 	public void checkRolesToAuditView() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		if (CollectionUtils.isNotEmpty(roleDesc)) {
-			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				if (pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.EP_ADMIN.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_INTERNAL.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value())) {
-					this.getManagedBean().setAuditViewRole(true);
-				}
-
-			}
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value())) {
+			this.getManagedBean().setAuditViewRole(true);
 		}
 	}
 	
