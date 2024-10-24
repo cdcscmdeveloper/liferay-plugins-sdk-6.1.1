@@ -48,6 +48,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	private String epNo;
 	private String email;
 	private String dataForSigning;
+	private String code = "Code: ";
 	
 	
 	public String getTitle(){
@@ -103,7 +104,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	 * Submit to get Challenge Question
 	 */
 	public void submit(){
-		log.info("testSPKI-submit:\t_"+idNo+"_\t_"+epNo);
+		log.info("testSPKI-submit:\t_"+idNo+"_\t_"+epNo+"_ "+helpClass());
 		try {
 			 setChallengeQues1(instance.getChallengeQuestion().get(0));
 		} catch (Exception e){
@@ -122,8 +123,17 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			challenges.put(getChallengeQues1(), getChallengeAns1());
 			
 			SpkiVO vo = instance.getSignedData(idNo, epNo, getPassword(), challenges, dataForSigning);
-			err(new Exception(vo.getErrMsg()));
+			log.info("testSPKI-post_sign:\t"+vo.getErrMsg());
+			if (!vo.getErrMsg().contains(code) && !vo.getErrMsg().contains("error")){
+				vo.setErrMsg(getMsg(vo.getErrMsg()));
+			}
 			
+			if (vo.getErrMsg().contains("Code: 1 -")){
+				FacesContext.getCurrentInstance().addMessage("spki", 
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "", vo.getErrMsg()));
+			} else {
+				err(new Exception(vo.getErrMsg()));
+			}
 		} catch (Exception e){
 			err(e);
 		}
@@ -161,6 +171,48 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		FacesContext.getCurrentInstance().addMessage("spki", 
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", msg));
 		log.info(e);
+	}
+	
+	private String getMsg(String status){
+		String msg = code+status+" - ";
+		switch(status.trim()){
+		case "0":
+			msg += "OPERATION FAILED";
+			break;
+		case "1":
+			msg += "OPERATION SUCCESSFUL";
+			break;
+		case "12":
+			msg += "ERROR USER INVALID";
+			break;
+		case "14":
+			msg += "ERROR USER SUSPENDED";
+			break;
+		case "15":
+			msg += "ERROR USER INACTIVE";
+			break;
+		case "43":
+			msg += "ERROR CERT REVOKED";
+			break;
+		case "50":
+			msg += "ERROR INVALID PIN";
+			break;
+		case "51":
+			msg += "ERROR PIN BLOCKED";
+			break;
+		case "99":
+			msg += "CERT EXPIRED";
+			break;
+		default:
+			msg += "";
+		}
+		return msg;
+	}
+	
+	private String helpClass(){
+		String s = instance.getClass().toString();
+		int i = s.indexOf('$');
+		return i != -1 ? s.substring(i) : s;
 	}
 	
 	//wrapper
@@ -248,7 +300,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
 					challenges, new ByteArrayInputStream(dataForSigning.getBytes()));
 			vo.setSignedData(res.SIGNATURE);
-			vo.setErrMsg("Code: "+res.getStatusCode()+" - "+res.getStatusMessage());
+			vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
 			return vo;
 		}
 	}
@@ -270,8 +322,10 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 						challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
 				vo.setSignedData((byte[]) res
 						.get(com.augtech.kmc.client.IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				vo.setErrMsg("Code: "+res.getStatusCode()+" - "+res.getStatusMessage());
-				
+				vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
+				if (StringUtils.isBlank(res.getStatusMessage())){
+					vo.setErrMsg(String.valueOf(res.getStatusCode()));
+				}
 			} catch (KMCAPIException e) {
 				log.info(e);
 				vo.setErrMsg("DigiCert error - KMCAPIException");
@@ -283,7 +337,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		}
 	}
 	
-	//getters, setters	
+	//getters, setters
 	public String getCert() {
 		return cert;
 	}
@@ -295,6 +349,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		} else {
 			this.instance = digicert;
 		}
+		log.info("testSPKI-setCert: "+cert+"\t"+helpClass());
 	}
 
 	public String getIdNo() {
