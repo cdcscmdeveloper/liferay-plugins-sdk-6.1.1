@@ -3833,10 +3833,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		//36560-Start
-		Map<String, BigDecimal> extensionCodeCache = new HashMap<>(); // Cache for extension codes and their corresponding sumAmt
+		// 36560-Start
+		Map<String, BigDecimal> extensionCodeCache = new HashMap<>();
 		double thresoldAmt;
-		//36560-end
+
+		FlItemSummaryReqDTO paidPaReq = new FlItemSummaryReqDTO();
+		List<Long> flFulfilmentRequestList;
+		paidPaReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		paidPaReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
+		flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(paidPaReq);
+		// 36560-end
 		
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
@@ -3846,27 +3852,19 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
 			
-			//36560-Start
+			// 36560-Start
 			String extensionCode = requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8);
-		    summReq.setExtensionCode(extensionCode);
-		    
-		    BigDecimal sumAmt;
-		    
-		    List<Long> flFulfilmentRequestList = null;
-			flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(summReq);
+			summReq.setExtensionCode(extensionCode);
 
-		    // Check if the extensionCode already exists in the cache
-		    log.info("extensionCode="+extensionCode);
-		    if(extensionCodeCache.containsKey(extensionCode)) {
-		        sumAmt = extensionCodeCache.get(extensionCode);
-		        log.info("sumAmt 1="+sumAmt);
-		    } else {
-		        // If not, call the method and store the result in the cache
-		        sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
-		        extensionCodeCache.put(extensionCode, sumAmt);
-		        log.info("sumAmt 2="+sumAmt);
-		    }
-		    //36560-End
+			BigDecimal sumAmt;
+
+			if (extensionCodeCache.containsKey(extensionCode)) {
+				sumAmt = extensionCodeCache.get(extensionCode);
+			} else {
+				sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
+				extensionCodeCache.put(extensionCode, sumAmt);
+			}
+			// 36560-End
 		    sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
