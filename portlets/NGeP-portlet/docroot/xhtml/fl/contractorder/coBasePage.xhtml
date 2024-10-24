@@ -70,8 +70,7 @@
 			<tr>
 		<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{flOrderBB.backToPervious}"
-						rendered="#{flOrderBB.managedBean.taskId==null
-						or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView
+						rendered="#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView
 						or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" /></td>
 				<td colspan="4" style="text-align: right">
 				<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
