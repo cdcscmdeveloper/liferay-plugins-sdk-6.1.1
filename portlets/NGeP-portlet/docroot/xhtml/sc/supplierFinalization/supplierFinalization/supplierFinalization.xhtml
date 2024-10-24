@@ -356,7 +356,7 @@
 						<!-- #25426 ruzaimah - Start -->
 						<p:ajax event="change" partialSubmit="true" update="@this"
 							process="@this" 
-							listener="#{suppFinalizationBackingBean.CheckInactiveCommiteeRole(suppFinalizationBackingBean.managedBean.scQtFinalization,'ALL')}"/>
+							listener="#{suppFinalizationBackingBean.checkInactiveCommiteeRole(suppFinalizationBackingBean.managedBean.scQtFinalization,'ALL')}"/>
 						<!-- #25426 End -->
 					</p:selectOneMenu>
 					</td>
@@ -397,6 +397,9 @@
 			<ui:remove> #11134 </ui:remove>
 			<ui:param name="haveSupplierRejection"
 				value="#{suppFinalizationBackingBean.managedBean.haveSupplierRejection}" />
+			<ui:remove> #30008 </ui:remove>
+			<ui:param name="isNotReachAgrm"
+				value="#{suppFinalizationBackingBean.managedBean.notReachAgrm}" />
 				
 				<td class="tdWidth" valign="top">
 					<!-- 6906 note 117 -->

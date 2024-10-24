@@ -71,7 +71,7 @@
 		</p:panel>				
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
 						action="#{purchaseRequestBackingBean.backToPervious}"  /></td>
 				<td colspan="4" style="text-align: right">
 			<c:choose>
@@ -216,7 +216,7 @@
 				</div>
 		</p:confirmDialog>	
 		<ac:lovPopup />
-		<ac:disciplinaryActionHistory voList="#{purchaseRequestBackingBean.managedBean.disciplineVOs}" 
+		<ac:disciplinaryActionHistory voList="#{purchaseRequestBackingBean.managedBean.disciplineVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
 	</ui:define>
 </ui:composition>

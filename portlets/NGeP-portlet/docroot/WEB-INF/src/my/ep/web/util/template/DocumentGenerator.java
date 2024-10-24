@@ -3,7 +3,7 @@
  */
 package my.ep.web.util.template;
 
-import java.awt.Font;
+//import java.awt.Font; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -67,9 +67,9 @@ import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 
-import my.ep.constant.EpPropertiesConst;
+//import my.ep.constant.EpPropertiesConst; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import my.ep.factory.EpLogger;
-import my.ep.util.EpPropertiesUtils;
+//import my.ep.util.EpPropertiesUtils; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
@@ -408,9 +408,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		t2.setValue("\r\n Tandatangan & Cap (Syarikat ) : _____________");
 		Text t3 = factory.createText();
 		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak");
-		// 25025 - End.
 		Text t4 = factory.createText();
-		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
+		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini");
+		// 25025 - End.
 		run.getContent().add(t1);
 //		run.getContent().add(br);
 		run.getContent().add(br);
@@ -669,8 +669,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
 			HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 			String requestURL = httpServletRequest.getRequestURL().toString();
-			String url = requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/";
-			return url;
+			return requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length()) +  httpServletRequest.getContextPath() + "/"; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 		}
 		//#26130-end
 }

@@ -178,8 +178,6 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcPoCancelRptBB.hasSupplierRole()}"
       					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
@@ -190,8 +188,12 @@
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 						</c:otherwise>

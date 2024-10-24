@@ -37,8 +37,13 @@ public class SumForTotalNumAndValOfPoByStatRptBackingBean extends FlReportBackin
 	
 	public SumForTotalNumAndValOfPoByStatRptBackingBean() {
 		if(getManagedBean().getMinistry() == null){
-			defaultPtjAndMinistryValues();
+			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+				defaultPtjGrpAndPtjValues();
+			}else{
+				defaultPtjAndMinistryValues();
+			}
 		}
+		
 		if(getManagedBean().getFromDate() == null){
 			setDefaultDateFromAndDateTo();
 		}
@@ -79,8 +84,8 @@ public class SumForTotalNumAndValOfPoByStatRptBackingBean extends FlReportBackin
 		} else if(getManagedBean().getSupplierId() != null){
 			params.put(FlReportConst.FL_RPT_SUPPL_NAME, getManagedBean().getSupplierId());
 		}
-		if (StringUtils.isNotBlank(getManagedBean().getPurchaseOrderStatus())) {
-			params.put(FlReportConst.FL_RPT_PO_STATUS, getManagedBean().getPurchaseOrderStatus());
+		if (StringUtils.isNotBlank(getManagedBean().getGroupStatus())) {
+			params.put(FlReportConst.FL_RPT_PURCHASE_GROUP_STATUS, getManagedBean().getGroupStatus());
 		}
 		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
@@ -102,6 +107,10 @@ public class SumForTotalNumAndValOfPoByStatRptBackingBean extends FlReportBackin
 	public void resetAction(){
 		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
 			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+			}else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 			getManagedBean().setPtjGroup(null);
 			getManagedBean().setPtj(null);
 		}

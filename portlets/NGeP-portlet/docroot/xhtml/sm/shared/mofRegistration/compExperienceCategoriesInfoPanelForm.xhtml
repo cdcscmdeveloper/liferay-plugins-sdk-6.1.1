@@ -46,8 +46,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{backingBean.managedBean.supplierParentCatList}"
-						var="parent" itemLabel="#{parent.categoryL1Code} - #{parent.categoryName}"
-						itemValue="#{parent.categoryL1Id}" />
+						var="parent" itemLabel="#{parent.categoryL1Code} - #{backingBean.getCompanyExpCatName(parent)}"
+						itemValue="#{parent.categoryL1Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceChildCategoryByParent(expCategoryBean.pmCategoryL1.categoryL1Id,
 								expCategoryBean.pmCategoryL2,
@@ -69,8 +69,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL2.pmCategoryL2s}"
-						var="conslChild" itemLabel="#{conslChild.categoryL2Code} - #{conslChild.categoryName}"
-						itemValue="#{conslChild.categoryL2Id}" />
+						var="conslChild" itemLabel="#{conslChild.categoryL2Code} - #{backingBean.getCompanyExpCatName(conslChild)}"
+						itemValue="#{conslChild.categoryL2Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceSubChildCategoryByChild(expCategoryBean.pmCategoryL2.categoryL2Id,expCategoryBean.pmCategoryL3)}"
 						update="conslSubChild" />
@@ -89,8 +89,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL3.pmCategoryL3s}"
-						var="conslSubChild" itemLabel="#{conslSubChild.categoryL3Code} - #{conslSubChild.categoryName}"
-						itemValue="#{conslSubChild.categoryL3Id}" />
+						var="conslSubChild" itemLabel="#{conslSubChild.categoryL3Code} - #{backingBean.getCompanyExpCatName(conslSubChild)}"
+						itemValue="#{conslSubChild.categoryL3Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.checkDuplicateCategoryForProject(expCategoryBean,backingBean.managedBean.selectedCompanyExperience)}"
 						update="conslSubChild" />

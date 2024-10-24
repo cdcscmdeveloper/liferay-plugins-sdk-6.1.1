@@ -199,8 +199,18 @@
 			
 				<table>
 					<tr>
-						<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+					<!-- 29550 - start -->
+						<c:choose>
+							<c:when test='#{flReportBB.hasFactoringUserRole()}'>
+								<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
+								value="#{lbl['lbl.fl.central.contract.panel.name']}" /></td>
+							</c:when>
+							<c:otherwise>
+								<td style="width: 190px;"><p:outputLabel rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
 								value="#{lbl['lbl.fl.sistem.panel.name']}" /></td>
+							</c:otherwise>
+						</c:choose>
+					<!-- 29550 - end -->
 						<td><p:inputText size="28" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"
 						value="#{flDocumentBackingBean.managedBean.searchCentralContractName}"></p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.central.contract.name']}" rendered="#{flDocumentBackingBean.managedBean.checkDocType}"/></td>

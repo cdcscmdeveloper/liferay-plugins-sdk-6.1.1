@@ -43,7 +43,8 @@
 								style="width: 178px;margin-bottom: 5px;" update="@form">
 								<f:selectItems
 									value="#{evaluationBackingBean.downloadByDropDownValues()}"></f:selectItems>
-								<p:ajax event="change"
+								<p:ajax 
+									listener="#{evaluationBackingBean.onSelectDownloadByValue}"
 									update="@([id$=downloadButtonComplianceFinancial])"></p:ajax>
 
 							</p:selectOneMenu></td>
@@ -58,11 +59,31 @@
 				<table width="100%" class="BtnSpacing">
 					<c:if
 						test="#{evaluationBackingBean.managedBean.downloadBy ne null}">
-						<tr>
-							<p:commandButton value="#{lbl['lbl.btn.download']}"
-								style="float:right;" ajax="false"
-								action="#{evaluationBackingBean.downloadAllFinancialDocumentCompliance}"
-								rendered="#{evaluationBackingBean.managedBean.downloadBy ne null}" />
+						<tr style="display: flex; justify-content: space-between">						
+							<c:if test="#{evaluationBackingBean.managedBean.downloadBy eq SourcingConstants.DOWNLOADBY_DOCUMENT}">
+								<p:commandButton value="#{lbl['lbl.btn.preparezip']}"
+									style="float:left;" ajax="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									process="@this" update="@form @([id$=downloadButtonComplianceFinancial])"
+									actionListener="#{evaluationBackingBean.generateAllDocumentComplianceZip}"
+									rendered="#{empty evaluationBackingBean.managedBean.financialZipFileDownloadByDocument}" />
+								<p:commandButton value="#{lbl['lbl.btn.download']}"
+							    	style="float:right;"
+							    	ajax="false"
+							    	rendered="#{not empty evaluationBackingBean.managedBean.financialZipFileDownloadByDocument}"
+							    	action="#{evaluationBackingBean.downloadZippedFile}" />
+							</c:if>
+							<c:if test="#{evaluationBackingBean.managedBean.downloadBy eq SourcingConstants.DOWNLOADBY_SUPPLIER}">
+								<p:commandButton value="#{lbl['lbl.btn.preparezip']}"
+									style="float:left;" ajax="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									process="@this" update="@form @([id$=downloadButtonComplianceFinancial])"
+									actionListener="#{evaluationBackingBean.generateAllDocumentComplianceZip}"
+									rendered="#{empty evaluationBackingBean.managedBean.financialZipFileDownloadBySupplier}" />
+								<p:commandButton value="#{lbl['lbl.btn.download']}"
+							    	style="float:right;"
+							    	ajax="false"
+							    	rendered="#{not empty evaluationBackingBean.managedBean.financialZipFileDownloadBySupplier}"
+							    	action="#{evaluationBackingBean.downloadZippedFile}" />
+							</c:if>
 						</tr>
 					</c:if>
 				</table>
