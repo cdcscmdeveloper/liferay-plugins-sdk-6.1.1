@@ -1882,14 +1882,14 @@ if (CollectionUtils.isNotEmpty(
 		mainPage = finalBiddingBB == null ? mainPage
 				: "/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/endorsement.xhtml";
 
-		if ("back".equalsIgnoreCase(action)) {
+		if (CommonConstants.ACTION_BACK.equalsIgnoreCase(action)) {
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
-		} else if ("update".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_UPDATE.equalsIgnoreCase(action)) {
 			updateAction();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
-		} else if ("confirm".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_CONFIRM.equalsIgnoreCase(action)) {
 			validateCommitteeChanges();
 			if (finalBB != null) {
 				submitChanges(finalBB, mainPage);

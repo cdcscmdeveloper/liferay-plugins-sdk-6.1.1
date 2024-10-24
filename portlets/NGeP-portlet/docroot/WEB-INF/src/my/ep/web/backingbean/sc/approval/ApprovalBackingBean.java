@@ -2584,8 +2584,9 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 		reqDTO.setDocType(committeeType);
 
 		ScWorkFlowStatus wfStatus = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-		if (null == wfStatus || null == wfStatus.getPmStatus())
+		if (null == wfStatus || null == wfStatus.getPmStatus()) {
 			return;
+		}
 		if (Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(wfStatus.getPmStatus().getStatusId())
 				|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(
 						wfStatus.getPmStatus().getStatusId())) {
@@ -2611,8 +2612,9 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 		String[] specTaskName = new String[] { SCProcessNameConst.SPEC_MAINTENANCE_ENDORSE_SCORING,
 				SCProcessNameConst.SPEC_MAINTENANCE_SIGNOFF_SCORING, SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING };// 15391
 
-		if (!Arrays.asList(taskNames).contains(taskName))
+		if (!Arrays.asList(taskNames).contains(taskName)) {
 			return false;
+		}
 
 		boolean inProgress = false;
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -2684,8 +2686,8 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 		String page = "/xhtml/sc/quatationtender/maintenanceRequest/approval/maintenanceRequestApproval.xhtml";
 
 		try {
-			if (ParameterConst.DOCTYPE_DOA_ASSIGNMENT.equals(this.getManagedBean().getCurrentTaskDocType())) {
-				prepareDeskofficerAssistantApproval(qtId, requestId);
+			if (ParameterConst.DOCTYPE_DOA_ASSIGNMENT.equals(requestType)) {
+				prepareDeskOfficerAssistantApproval(qtId, requestId);
 			}
 
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -2709,7 +2711,7 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 
 	}
 	
-	private void prepareDeskofficerAssistantApproval(Long qtId, Long requestId) {
+	private void prepareDeskOfficerAssistantApproval(Long qtId, Long requestId) {
 		assertBriefingSiteVisitIsComplete(qtId);
 		QTScheduleDetailBackingBean scheduleBB = new QTScheduleDetailBackingBean();
 		scheduleBB.getDeskOfficerAdminAssistant();
