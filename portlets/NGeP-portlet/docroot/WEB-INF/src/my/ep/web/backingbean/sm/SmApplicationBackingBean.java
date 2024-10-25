@@ -11640,23 +11640,20 @@ public class SmApplicationBackingBean extends
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
-					//#34552 - start
-					SmApplDocFile file = new SmApplDocFile();
-					file.setFileName(StringUtils.replace(event.getFile()
-							.getFileName(), " ", "-"));
+					doc.getSmApplDocFiles()
+							.get(0)
+							.setFileName(
+									StringUtils.replace(event.getFile()
+											.getFileName(), " ", "-"));
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
 							+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
 							+ "/SD/";
-					file.setFilePath(filePath);
-					file.setSmApplSupportDoc(doc);
+					doc.getSmApplDocFiles().get(0).setFilePath(filePath);
 					//#34392 - start
 					if(doc.getNewAddedFiles() == null){
 						doc.setNewAddedFiles(new ArrayList<SmApplDocFile>());
 					}
-//					doc.getSmApplDocFiles().add(file);
-					doc.getNewAddedFiles().add(file);
 					//#34392 - end
-					//#34552 - end
 					commonUploadFile(event, filePath);
 				}
 			}
