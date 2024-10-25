@@ -530,6 +530,54 @@ public class SmApplicationUtil {
 		}
 		return validSupportDocs;
 	}
+	
+	// #34392 - Start
+	/**
+	 * Validate supporting documents.For online application check whether
+	 * supplier uploaded all the files or not
+	 * 
+	 * @param suppDocs
+	 *            - List of SmApplSupportDoc
+	 * @return true, if successful
+	 */
+	public static boolean validateSupportingDocsEnquiry(List<SmApplSupportDoc> suppDocs) {
+		boolean validSupportDocs = true;
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		sb.append("<br/>");
+		for (SmApplSupportDoc doc : suppDocs) {
+			if (doc.getPmDocument() != null
+					&& doc.getPmDocument().isMandatory()
+					&& !doc.getPmDocument().isHardCopyReq()
+					&& (EntityHelper.isCollectionEmpty(doc.getNewAddedFiles())
+							|| doc.getNewAddedFiles().get(0).getFileName().equalsIgnoreCase(" ") || doc
+							.getSmApplDocFiles().get(0).getFilePath().equalsIgnoreCase(" ")) // 16052019
+																								// -
+																								// SSM
+																								// INTEGRATION
+																								// CR
+																								// -
+																								// #27003
+					&& !sb.toString().contains(doc.getPmDocument().getDocName())) {
+				sb.append(++i + ".)");
+				sb.append(doc.getPmDocument().getDocName());
+				// sb.append(",  ");
+				sb.append("<br/>");
+				validSupportDocs = false;
+			}
+		}
+		if (!validSupportDocs) {
+			throw new EpException(MessageConst.ERROR_722686, new String[] { sb.toString() });
+		} else {
+			for (SmApplSupportDoc doc : suppDocs) {
+				if (doc.getPmDocument() != null && doc.getPmDocument().isHardCopyReq()) {
+					doc.getSmApplDocFiles().clear();
+				}
+			}
+		}
+		return validSupportDocs;
+	}
+	// #34392 - End
 
 	/**
 	 * Gets the current supplier based on the login id.
@@ -12093,7 +12141,14 @@ public class SmApplicationUtil {
 						}
 					}
 				}
-
+				//#34392 - start
+				if (bean.getCurrentStatus()
+						.equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL)
+						|| bean.getCurrentStatus()
+								.equals(SupplierManagementConst.PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM)) {
+					bean.setInquirySiteVisitAfter(false);
+				}
+				//#34392 - end
 			}
 			// if Supplier (Respond to PO inquiry)
 			// START 14530
@@ -12121,6 +12176,9 @@ public class SmApplicationUtil {
 			}
 		} else {
 			// initialize po inquiry
+			//#34392 - start
+			bean.setPoSupplierInquiryHistory(new ArrayList<SmApplInquiry>());
+			//#34392 - end
 			bean.setPoToSupplierInquiry(new SmApplInquiry());
 		}
 	}
