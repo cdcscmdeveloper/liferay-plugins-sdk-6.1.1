@@ -885,24 +885,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			if (!EntityHelper.isCollectionEmpty(certs)) {
 				// #36401 - Start
-				int countCert = 0;
-				for (SmMofCert cert : certs) {
-					if (!cert.isBumiCert()) {
-						countCert = countCert + 1;
-					}
-				}
-
-				// if cert is_bumi = 0 more than 1
-				if (countCert > 1) {
-					getManagedBean().setSmMofCert(assignMofCert(certs));
-				} else {
-					for (SmMofCert cert : certs) {
-						if (!cert.isBumiCert()) {
-							getManagedBean().setSmMofCert(cert);
-							break;
-						}
-					}
-				}
+				int count = countCerts(certs);
+				assignMofCert(certs, count);
 				// #36401 - End
 			}
 		}
@@ -965,36 +949,67 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	
 	// #36401 - Start
-	// Checking cert that is not bumi, if more than 1 cert assign the first one
-	// by asc order
-	public SmMofCert assignMofCert(List<SmMofCert> mofCerts) {
-		// sorted by ascending order first
-		if (mofCerts.size() > 1) {
-			Collections.sort(mofCerts, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+	/**
+	 * to count if non bumi certs more than 1
+	 * @param certs
+	 * @return
+	 */
+	private int countCerts(List<SmMofCert> certs) {
+	    int count = 0;
+	    for (SmMofCert cert : certs) {
+	        if (!cert.isBumiCert()) {
+	            count++;
+	        }
+	    }
+	    return count;
+	}
+	
+	
+	/**
+	 * To assign non bumi cert to display at info
+	 * @param mofCerts
+	 * @param counter
+	 */
+	// Checking cert that is not bumi, if more than 1 cert assign the first one by asc order
+	public void assignMofCert(List<SmMofCert> mofCerts, int counter) {
+
+		if (counter > 1) {
+			// sorted by ascending order first
+			if (mofCerts.size() > 1) {
+				Collections.sort(mofCerts, new Comparator<SmMofCert>() {
+					@Override
+					public int compare(SmMofCert cert1, SmMofCert cert2) {
+						return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+					}
+				});
+			}
+
+			// Then, Divide by 2 type of list, certs and bumi certs.
+			List<SmMofCert> cert = new ArrayList<>();
+			List<SmMofCert> bumiCert = new ArrayList<>();
+
+			for (SmMofCert mofCert : mofCerts) {
+				if (!mofCert.isBumiCert()) {
+					cert.add(mofCert);
 				}
-			});
-		}
 
-		// Then, Divide by 2 type of list, certs and bumi certs.
-		List<SmMofCert> cert = new ArrayList<>();
-		List<SmMofCert> bumiCert = new ArrayList<>();
-
-		for (SmMofCert mofCert : mofCerts) {
-			if (!mofCert.isBumiCert()) {
-				cert.add(mofCert);
+				if (mofCert.isBumiCert()) {
+					bumiCert.add(mofCert);
+				}
 			}
 
-			if (mofCert.isBumiCert()) {
-				bumiCert.add(mofCert);
+			// 1 appl has 1 cert, 1 bumi size
+			// Displaying the earliest cert by created date for the appl
+			getManagedBean().setSmMofCert(cert.get(0));
+
+		} else {
+			for (SmMofCert cert : mofCerts) {
+				if (!cert.isBumiCert()) {
+					getManagedBean().setSmMofCert(cert);
+					break;
+				}
 			}
 		}
-
-		// 1 appl has 1 cert, 1 bumi size
-		// Displaying the earliest cert by created date for the appl
-		return cert.get(0);
 	}
 
 	// #36401 - End
