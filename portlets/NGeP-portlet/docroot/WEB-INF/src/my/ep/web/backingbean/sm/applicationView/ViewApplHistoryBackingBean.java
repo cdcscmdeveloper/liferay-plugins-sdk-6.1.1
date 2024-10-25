@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -57,6 +58,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -66,6 +68,7 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
@@ -315,12 +318,8 @@ public class ViewApplHistoryBackingBean extends
 				//END 27951
 			}
 		} else {			
-			if (SmApplicationUtil
-					.isRejectedApplValidForResubmission(getManagedBean()
-							.getSmAppl())) {
-				log.info("redirectToReapplyNewAppl - START appl_no: "+ getManagedBean().getSmAppl().getApplNo());
+			if (SmApplicationUtil.isRejectedApplValidForResubmission(getManagedBean().getSmAppl())) {
 				redirectToReapplyNewAppl(true); //29956
-				log.info("redirectToReapplyNewAppl - END appl_no: "+ getManagedBean().getSmAppl().getApplNo());
 			} else {
 				//32627 START
 				SmAppl currAppl = this.getManagedBean().getSmAppl();
@@ -337,12 +336,10 @@ public class ViewApplHistoryBackingBean extends
 						}
 					}
 				}
-				if(!resubmit){
-					throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.approvedApplicationCantProceed", null));
-				}else{
-					throw new EpException(SmCommonUtil.getMessage(
-							"lbl.sm.resubmitExpired", null));
+				if (!resubmit) {
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.approvedApplicationCantProceed", null));
+				} else {
+					throw new EpException(SmCommonUtil.getMessage("lbl.sm.resubmitExpired", null));
 				}
 				//32627 END
 			}
@@ -376,6 +373,7 @@ public class ViewApplHistoryBackingBean extends
 		//START 27951
 		//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 		boolean proceed = true;
+		String baseUrl; //#36474
 		smApplBB.getManagedBean().setPreRegistration(this.getManagedBean().isPreRegistration());
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
@@ -394,11 +392,13 @@ public class ViewApplHistoryBackingBean extends
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
 						.getResubmitUrl());
 			}else{
+				baseUrl = "supptemp-mof-registration"; //#36474
 				// #24923
 				smApplBB.getManagedBean().setNewSupplierType(
 						getManagedBean().getSmAppl().getSupplierType());
 				smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
 		
+				SmCommonUtil.redirectToExternalUrl(baseUrl); //#36474
 				// Enhancement #20467 - point to new appl page with bullet
 				String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
 						.get("RE");
@@ -1504,15 +1504,15 @@ public class ViewApplHistoryBackingBean extends
 				.getSmAppl();
 		// #35336 START
 		SmAppl latestRegisteredAppl = SmServiceLookup.getMofRegistrationSO()
-			.retrieveLatestRegisteredApplicationBySupplierIdApplType(mofReqDTO).getSmAppl();
+			.retrieveLatestRegisteredApplicationBySupplierId(mofReqDTO).getSmAppl();
 
 		if (isValidDateComparison(latestRegisteredAppl, latestRejectedAppl)) {
 			if (latestRegisteredAppl.getCreatedDate().before(latestRejectedAppl.getCreatedDate())
+					&& smAppl.getApplId().equals(latestRejectedAppl.getApplId())
+					&& !SmApplicationUtil.checkRejectedApplExpired(smAppl) 
 					&& smAppl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)) {
 				showErrorAdminHasBeenReplace();
 			}
-		} else if (isMatchingDeletedApplication(latestRejectedAppl, smAppl)) {
-			showErrorAdminHasBeenReplace();
 		}
 		// #35336 END
 		if(latestRejectedAppl != null &&
@@ -1788,6 +1788,23 @@ public class ViewApplHistoryBackingBean extends
 	}
 	//14530
 	
+	// #34392 - Start
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
+	// #34392 - end
+	
 	// #32424 - start
 	public void updateRoleCode(Long applId, Long remarkId, String docType, String poRoleCode) {
 		System.out.println("ViewApplHistoryBackingBean.updateRoleCode()");
@@ -1807,12 +1824,6 @@ public class ViewApplHistoryBackingBean extends
 			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
 	}
 
-	private boolean isMatchingDeletedApplication(SmAppl latestRejectedAppl, SmAppl smAppl) {
-		return latestRejectedAppl != null && latestRejectedAppl.getApplId() != null
-			&& latestRejectedAppl.getApplId().equals(smAppl.getApplId())
-			&& smAppl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED;
-	}
-
 	private void showErrorAdminHasBeenReplace() {
 		FacesContext.getCurrentInstance().addMessage(
 			null,
@@ -1821,4 +1832,34 @@ public class ViewApplHistoryBackingBean extends
 				new FacesScopes().getUserLocale())));
 	}
 	// #35336 - END
+	
+	//#34209 - START
+	public void rePopulateApplFacilitiesList()
+	{
+		getManagedBean().setDockYardFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setFactoryFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setStoreFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		getManagedBean().setWorkshopFacilitiesVOList(new ArrayList<PmCategoryL3>());
+		
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierCategories())) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if(cat.getPmCategoryL3() != null && !StringUtils.isBlank(cat.getPmCategoryL3().getFacilityType())) {
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD))
+						getManagedBean().getDockYardFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY))
+						getManagedBean().getFactoryFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE))
+						getManagedBean().getStoreFacilitiesVOList().add(cat.getPmCategoryL3());
+					if(cat.getPmCategoryL3().getFacilityType().equalsIgnoreCase(my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP))
+						getManagedBean().getWorkshopFacilitiesVOList().add(cat.getPmCategoryL3());
+				}
+			}
+		}
+	}
+	
+	public void rePopulateMachine(){
+		getManagedBean().getSmAppl().setSmMachineDtls(getManagedBean().getAllMachineDtls());
+	}
+	//#34209 - END
+		
 }

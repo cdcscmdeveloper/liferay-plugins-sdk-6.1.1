@@ -1146,7 +1146,7 @@ public class SmApplicationBackingBean extends
 				// 25157
 				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
 						currSupp.getSupplierId(), applicationType);
-				//30713 - Start
+				//30713 & 36474 - Start
 				//Add checking check expired for KN
 				SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
 				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
@@ -1162,7 +1162,7 @@ public class SmApplicationBackingBean extends
 						rejectedAppl = null;
 					}
 				}
-				//30713 - End
+				//30713 & 36474 - End
 				String labelNameVal = "";
 				//27951 - If from resubmit appl history/status no need display message
 				if (rejectedAppl != null && !this.getManagedBean().isPreRegistration()) {
@@ -2789,7 +2789,9 @@ public class SmApplicationBackingBean extends
 				//#32236 end
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				//#32236 start
 				getManagedBean().setOutputPage(outputPageType);
+				//#32236 end
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
 				SmApplicationUtil
@@ -2900,10 +2902,23 @@ public class SmApplicationBackingBean extends
 					// #34303 - end
 					//#27356
 					SmApplicationUtil.validateCoordinate(getManagedBean());
-					//#32236 - start
+			//#32236 - start
 			} else if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)){
 				setBusinessAndHadApprovedSpecialCatcode();
 			}
+			//#32236 - End
+			
+			//#34303 - Start
+			if ((outputPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY)
+					|| outputPageType
+							.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)) && (getManagedBean().isSupplierUser())) {
+				SmApplicationUtil.getInstance()
+				.removeNotApplicableInformationBeforeSave(
+						getManagedBean());
+			}
+			//#34303 - End
+			
 			setSupplierChangeValues(currentPageType);
 			setBranchDisplayTable(); //29727 , #34135
 			validateUpdateSmAppl(applType, currentPageType, outputPageType,
@@ -3482,7 +3497,11 @@ public class SmApplicationBackingBean extends
 
 					// to init page whether normal or special category type is
 					// allowed
-					initApplCategoryType();
+					//#32236 - start
+					if(getManagedBean().isSupplierUser()){
+						initApplCategoryType();
+					}
+					//#32236 - end
 
 					// API FOR LIST OF OVERLAPPING CATEGORIES
 					SmApplicationUtil
@@ -6543,6 +6562,7 @@ public class SmApplicationBackingBean extends
 
 		RequestContext.getCurrentInstance().execute("storeDialog.hide()");
 	}
+	// #34303 - end
 	/**
 	 * Add or update selected store info to SmFacility list of the application.
 	 */
@@ -9046,12 +9066,13 @@ public class SmApplicationBackingBean extends
 		}
 		//#32286 - END
 		
-		//#28776 - start
-		if(getManagedBean().getSmAppl().getPmStatus() != null 
-				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION){
-			getManagedBean().getSmAppl().setSupportingDocMode(SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		//#34392 - start
+		//#32286 - START
+		if (!getManagedBean().getSmAppl().getPmStatus().getStatusId()
+				.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
+			assignApplicationSupportingDocs();
 		}
-		//#28776 - end
+		//#32286 - END 
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
@@ -9059,6 +9080,7 @@ public class SmApplicationBackingBean extends
 					.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
 				validateSupportingDocs();
 			}
+		//#34392 - end
 		} else {
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
@@ -10214,14 +10236,6 @@ public class SmApplicationBackingBean extends
 	 */
 	public String finalDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
-		//#31043 - start
-		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
-			SmApplicationUtil.checkCategoryRemark(getManagedBean());
-		}
-		//#31043 - end
-		
 		//24964 - start
 		if (getManagedBean().getSmAppl().getApplType()
 				.equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
@@ -10264,15 +10278,7 @@ public class SmApplicationBackingBean extends
 		return submitPOorApproverReviewToBPM(decision);
 
 	}
-	
-	//#31386 - START
-	public String finalCancelDecisionApproveOrRejectAppln(String dialog,
-			String decision) {
-		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
-		return submitPOorApproverReviewToBPM(decision);
-	}
-	//31386 - END
-	
+
 	/**
 	 * Final decision of PO on delete pending appln
 	 * 
@@ -10339,9 +10345,11 @@ public class SmApplicationBackingBean extends
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
 		//#31043 - start
-		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+		if(!res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) 
+				&& !res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)
+				&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) ){
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
 		//#31043 - end
@@ -11433,6 +11441,7 @@ public class SmApplicationBackingBean extends
 		}
 		// #32236 - End
 	}
+
 
 	/**
 	 * Get HQ
@@ -13868,7 +13877,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void prerenderDirectMofRegistration() {
-		// 30713 - Start
+		// 30713 & 36474- Start
 		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 		SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
 				currSupp.getSupplierId(), "N");
@@ -13884,7 +13893,7 @@ public class SmApplicationBackingBean extends
 				rejectedAppl = null;
 			}
 		}
-		//30713 - End
+		//30713 & 36474 - End
 
 		ISupplierSearchSO supplierSearchSO = null;
 		SmSupplier smSupplier = null;
@@ -15808,6 +15817,20 @@ public class SmApplicationBackingBean extends
 								.getSmApplSupportDocInquiries());
 	}
 
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+
+		return reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+	}
 	// #34392 - end
 	
 	//12492 - START
@@ -16232,7 +16255,15 @@ public class SmApplicationBackingBean extends
 	}
 	//#35145 - end
 	
-	//30713 - Start
+	//#31386 - START
+	public String finalCancelDecisionApproveOrRejectAppln(String dialog,
+			String decision) {
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		return submitPOorApproverReviewToBPM(decision);
+	}
+	//31386 - END
+	
+	//30713 & 36474 - Start
 	private SmWorkflowStatus rejectedApplExist(Long supplierId){
 		SmWorkflowStatus wf = null;
 		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
@@ -16256,7 +16287,8 @@ public class SmApplicationBackingBean extends
 		
 		return wf;
 	}
-	//30713 - End
+	//30713 & 36474 - End
+	
 	//#31043 START
 	private boolean shouldSetApproverVerifiedFlg(SmApplSupportDoc applSuppDoc) {
 	    return applSuppDoc.getVerifiedFlg() != null && applSuppDoc.getApproverVerifiedFlg() == null;
@@ -16297,5 +16329,5 @@ public class SmApplicationBackingBean extends
 
 	    return allDocsMap;
 	}
-		//#31043 END
+	//#31043 END
 }

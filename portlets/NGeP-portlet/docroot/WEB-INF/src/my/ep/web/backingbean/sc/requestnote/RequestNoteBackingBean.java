@@ -139,6 +139,7 @@ import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -1180,7 +1181,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(requestNoteDtl.getProcurementTypeCategory() != null && null == requestNoteDtl.getProcurementTypeCategory().getParameterId()){
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
-				
+				// #36362 - start
+				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { 
+					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
+				}
+				// #36362 - end
 				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
 					if(requestNoteDtls.size() != counter){
@@ -3750,6 +3755,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		List<String> loginIdAssignees = getRequestNoteSO().getSuppliersPendingAssignItemCode(requestNoteReqDTO);
+		// #36119 - start
+		IRequestNoteSO requestNoteSO = null;
+		List<ScRequestNoteDtl> rndtls = null;
+		// #36119 - end
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
@@ -3763,13 +3772,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		    
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
-			
-			cancelRN(prObj, prSize);
-			
+
 			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
 			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
 			IPurchaseRequestSO purchaseRequestSO = null;
-			IRequestNoteSO requestNoteSO = null;
 			try {
 				purchaseRequestSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -3779,12 +3785,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IRequestNoteSO.class);
 				
-				if (null != purchaseRequest && null != purchaseRequestSO) {
+				//#36119 - start
+				if(!getManagedBean().isSourcingDpNewBpmVer()){
+					cancelRN(prObj, prSize);
+				}
+				
+				if (getManagedBean().getRequestNoteDtls().size() > 0 && null != purchaseRequestSO) {
 					
-					purchaseRequest.setRecordStatusFlg(2);
+					rndtls = getManagedBean().getRequestNoteDtls();
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-					reqDTO.setPurchaseRequest(purchaseRequest);
-					PurchaseRequestResDTO response = purchaseRequestSO.savePurchaseRequest(reqDTO );
+					reqDTO.setRequestNoteDtls(rndtls);
+					PurchaseRequestResDTO response = purchaseRequestSO.updateCancelCodifyPR(reqDTO);
+					
+					if(getManagedBean().isSourcingDpNewBpmVer()){
+						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
+						if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
+							rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
+							rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
+							requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+							
+							//tracking diary
+							ScRequestNote requestNote = getManagedBean().getRequestNote();
+							rnReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+							rnReqDTO.setPmUser(facesScopes.getUserSessionBean());
+							rnReqDTO.setOutcome(BpmOutcomeConst.BPM_COMPLETE);
+							rnReqDTO.setUserLocale(facesScopes.getUserLocale());
+							requestNote.setRequestNoteDtls(rndtls);
+							rnReqDTO.setRequestNote(requestNote);
+							rnReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+							getRequestNoteSO().prepareTrackingDiaryDPM(rnReqDTO, getManagedBean().getSelectedPrDtls());
+						}				
+					}
+					//#36119 - end
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1],
 								(String) prObj[3], Boolean.TRUE);
@@ -3794,7 +3826,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					
 					if (null != requestNoteSO) {
 						RequestNoteReqDTO reqNoteDTO = new RequestNoteReqDTO();
-						reqNoteDTO.setRequestNoteDtls(requestNoteDtls);
+						reqNoteDTO.setRequestNoteDtls(rndtls);//36119
 						requestNoteSO.updateRequestNoteDtls(reqNoteDTO);
 					}
 				}
@@ -5005,7 +5037,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean isTierPriceMatched = false;
 		boolean isTierPrice = false;
 		ScSupplierItemPrice topPricedItem = null;
-		log.info("--- Bug 36362 - Method: getTopZonalTierPrice Start ---");
 		for(ScSupplierItemPrice itemPrice : supplierItemPrices) {
 			if (itemPrice.getPriceType().getParameterCode().equals(priceType)) {
 				BigDecimal toQty = itemPrice.getToQty();
@@ -5013,14 +5044,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (fromQty != null
 						&& orderQuantity != null) {
 					isTierPrice = true;
-					log.info("--- Bug 36362 - isTierPrice Value = "+isTierPrice+" ---");
-					log.info("--- Bug 36362 - fromQty = "+fromQty+" orderQuantity = "+orderQuantity+" toQty = "+toQty == null? "toQty null" : toQty+" --- Bug 36362 toQty ---");
-					log.info("--- Bug 36362 - fromQty.compareTo(orderQuantity) Value = "+fromQty.compareTo(orderQuantity)+" ---");
-					log.info("--- Bug 36362 - orderQuantity.compareTo(toQty) Value = "+ toQty == null? "toQty null ":orderQuantity.compareTo(toQty)+" --- Bug 36362 - orderQuantity.compareTo(toQty) ---");
 					if (fromQty.compareTo(orderQuantity) <= 0
 							&& (toQty == null || orderQuantity.compareTo(toQty) <= 0)) {
 						isTierPriceMatched = true;
-						log.info("--- Bug 36362 - isTierPriceMatched Value = "+isTierPriceMatched+" ---");
 						groupedItemPrice.add(itemPrice);
 					} 
 				} else {
@@ -5028,7 +5054,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 		}
-		log.info("--- Bug 36362 - isTierPrice Value Outside loop = "+isTierPrice+" isTierPriceMatched = "+isTierPriceMatched+" ---");
 		if(isTierPrice && !isTierPriceMatched) {
 			throw new EpException(MessageConst.ERROR_760399, new String[] {itemName});
 		} else {
@@ -5036,7 +5061,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				topPricedItem = findMaxPriceItem(groupedItemPrice);
 			}
 		}
-		log.info("--- Bug 36362 - Method: getTopZonalTierPrice end ---");
 		
 		return topPricedItem;
 	}
@@ -5404,4 +5428,39 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
+	
+	// 36362 - start
+	/**
+	 * To validate quantity not exceed tier max quantity
+	 * 
+	 * @param requestNoteDtl
+	 */
+	private void validateTierQuantityExceedMaxQuantity(ScRequestNoteDtl requestNoteDtl) {
+		if ((requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_TIER_STANDARD) || requestNoteDtl
+				.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_ZONAL_TIER_STANDARD))
+				&& requestNoteDtl.getRequestItem().getQuantity()
+						.compareTo(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClQuantity()) > 0) {
+			// Note for 29557, need to change this error message when merge.
+			// Dev -> MessageConst.ERROR_760527
+			// Prod -> MessageConst.ERROR_760399
+			throw new EpException(MessageConst.ERROR_760399, new String[] { requestNoteDtl.getRequestItem()
+					.getItemName() });
+
+		}
+	}
+	// 36362 - end
+	
+	// #36119 - start
+	/**
+	 * Act as reload RN for codification wrapper
+	 * 
+	 * @param RequestNoteResDTO
+	 *            rnResDTO
+	 * 
+	 * @return void
+	 */
+	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO) {
+		reloadRequestNoteForCodification(requestNoteResDTO);
+	}
+	// #36119 - end
 }
