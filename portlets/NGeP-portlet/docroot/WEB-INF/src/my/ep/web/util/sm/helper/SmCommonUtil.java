@@ -4365,8 +4365,10 @@ public class SmCommonUtil {
 			//set default parameter
 			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			PmParameter permanentResidenceType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES_SSM, ParameterConst.PERMANENT_RESIDENCE_TYPES); //#30064
 			ssmReqDTO.setPmParameter(identificationType);
 			ssmReqDTO.setPmParameterIdTypeP(passportType);
+			ssmReqDTO.setPmParameterIdTypePR(permanentResidenceType); //#30064
 			String regNo = ssmReqDTO.getRegNo();
 			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
 			regNo = regNo.substring(0, regNo.length() - 2);
@@ -4621,13 +4623,19 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
+			//29582,35300 start
+			PmParameter ic = retrieveParameterByTypeAndCode(
+					ParameterTypeConst.IDENTIFICATION_TYPES,
+					SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 			if (per.getPmCountry().getCountryCode()
 					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
-				PmParameter ic = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 				per.setIdentificationTypeId(ic.getParameterId());
 				per.setIdentificationType(ic);
+			}	else if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) 
+					&& per.isPermanentResident()){
+				per.setIdentificationType(per.getIdentificationType());
+				per.setIdentificationType(ic);
+			//29582,35300 end
 			} else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
@@ -6043,4 +6051,52 @@ public class SmCommonUtil {
 			}
 		}
 		//13320-End
+	// #29582- start
+	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
+		if (resDTO.getSmPersonnelAll() != null) {
+			boolean hasMykadOwnerOrDirector = false;
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+
+			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
+				if (per.getIdentificationTypeSsm() != null) {
+					String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+							ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+					if (ssmTypeDesc == null) {
+						ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+								ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+					}
+
+					sb.append("<br/>");
+					sb.append(++i + ". ");
+					sb.append(per.getName() + " ");
+					sb.append("("
+							+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationNo() + ", ");
+					sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationTypeSsm() + " = ");
+					sb.append(ssmTypeDesc + ")");
+					sb.append("<br/>");
+				}
+
+				// Check for MYKAD owner/director and break if found
+				if (per.getIdentificationTypeSsm() != null
+						&& per.getIdentificationType().equals(ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
+					hasMykadOwnerOrDirector = true;
+					break;
+				}
+			}
+
+			// Handle error based on application type
+			if (hasMykadOwnerOrDirector) {
+				if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())) {
+					throw new EpException(MessageConst.ERROR_775196);
+				} else {
+					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+				}
+			}
+		}
+	}// #29582- end
 }
