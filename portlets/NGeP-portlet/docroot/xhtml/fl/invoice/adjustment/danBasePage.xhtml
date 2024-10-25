@@ -59,10 +59,10 @@
 		<table style="width: 100%;">
 			<tr>
 				<td>
-					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+		<!--#36519--><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{danBackingBean.backToPervious}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-						rendered="#{danBackingBean.managedBean.taskId==null}" />
+						rendered="#{danBackingBean.managedBean.taskId==null or danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" />
 				</td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">

@@ -6,6 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
+	<!-- #34159 - Add new attribute - disableValidation -->
 	<cc:interface>
 		<cc:attribute name="bBean" required="true" />
 		<cc:attribute name="showTick" default="false"/>
@@ -26,6 +27,7 @@
 		<cc:attribute name="stateItems" required="true"/>
 		<cc:attribute name="districtItems" required="true"/>
 		<cc:attribute name="cityItems" required="true"/>
+		<cc:attribute name="disableValidation" required="true"/>
 	</cc:interface>
 
 	<cc:implementation>
@@ -112,9 +114,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.country']}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty param['disableValidation']}"
 							id="#{cc.attrs.countryId}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.countrySsmNull)}"
 							value="#{cc.attrs.addrObj.smAddress.countryId}"
@@ -126,6 +130,7 @@
 								listener="#{cc.attrs.bBean.onChangeCountry(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.stateId},#{cc.attrs.divisionId},#{cc.attrs.districtId},#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
@@ -144,10 +149,12 @@
 					  <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.state']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm || cc.attrs.bBean.disableFieldSSm(cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.ssmData,cc.attrs.addrObj.smAddress.stateSsmNull)}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;"
 							value="#{cc.attrs.addrObj.smAddress.stateId}"
 							id="#{cc.attrs.stateId}">
@@ -157,8 +164,8 @@
 							<p:ajax event="change" process="@this"
 								listener="#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="divisionSharLabelPanelId,divisionSharDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId}" />
-
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
@@ -182,10 +189,11 @@
 					<td>
 					<p:outputPanel id="divisionSharDropdownPanelId">
 				<ui:fragment rendered="#{cc.attrs.addrObj.smAddress.pmState.adoptDivision}">
-					<p:selectOneMenu
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.division']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;" id="#{cc.attrs.divisionId}"
 							value="#{cc.attrs.addrObj.smAddress.divisionId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -195,6 +203,7 @@
 							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<!-- #35086 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
@@ -219,10 +228,12 @@
 					 <!-- #32014 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.district']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;" id="#{cc.attrs.districtId}"
 							value="#{cc.attrs.addrObj.smAddress.districtId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -232,6 +243,7 @@
 								listener="#{cc.attrs.bBean.onChangeDistrict(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.cityId}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
@@ -244,10 +256,12 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu
+					<td>
+						<!-- #34159 - START - change required condition -->
+						<p:selectOneMenu
 							label="#{cc.attrs.addressTitle} - #{lbl['lbl.sm.towncity']}"
 							disabled="#{cc.attrs.addrObj.sameAsPerm}"
-							required="#{!cc.attrs.addrObj.sameAsPerm}"
+							required="#{!cc.attrs.addrObj.sameAsPerm and !empty cc.attrs.disableValidation}"
 							style="width: 207px;margin-bottom: 5px;" id="#{cc.attrs.cityId}"
 							value="#{cc.attrs.addrObj.smAddress.cityId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -257,6 +271,7 @@
 								listener="#{cc.attrs.bBean.onChangeCity(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.cityId}" />
 						</p:selectOneMenu> 
+						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
 								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
