@@ -751,6 +751,7 @@ public class ViewApplHistoryBackingBean extends
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		for (SmApplSectionReview sectionReview : getManagedBean().getSmAppl()
 				.getSmApplSectionReviews()) {
+			saveSmApplSectionReview(sectionReview);//alter #35759
 			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 			SmWorkflowStatus poWorkflowStatus = workFlowStatusSO.retrieveWorkflowStatusWhenApplicationPendingPOReview(reqDTO)
 					.getWorkflowStatus();

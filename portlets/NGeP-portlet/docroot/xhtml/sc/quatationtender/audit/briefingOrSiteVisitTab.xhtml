@@ -22,15 +22,15 @@
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.audit.header.action.type']}" style="width:5%;">
+			<p:column headerText="#{lbl['lbl.audit.header.action.type']}" style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{empty obj.actionType ? lbl['lbl.audit.no.available']:obj.actionType}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.audit.header.action.by']}" style="width:5%;">
+			<p:column headerText="#{lbl['lbl.audit.header.action.by']}" style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.actionBy}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.audit.header.org.name']}" style="width:10%;">
+			<p:column headerText="#{lbl['lbl.audit.header.org.name']}" style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.orgName}" />
 			</p:column>
 			
