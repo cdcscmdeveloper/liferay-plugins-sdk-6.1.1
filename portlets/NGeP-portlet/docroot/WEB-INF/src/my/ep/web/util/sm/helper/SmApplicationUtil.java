@@ -12431,6 +12431,15 @@ public class SmApplicationUtil {
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
 		}
+		// start - #30064
+		if (bean.getSelectedShareHolder().getIdentificationType() != null
+				&& ParameterConst.PERMANENT_RESIDENCE_TYPES.equalsIgnoreCase(bean.getSelectedShareHolder()
+						.getIdentificationType().getParameterCode())) {
+			bean.getSelectedShareHolder().setIdentificationTypeId(
+					SmApplicationUtil.retrievePmParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES,
+							ParameterConst.IDENTIFICATION_TYPES_IC).getParameterId());
+		}
+		// end - #30064
 		if (bean.getSelectedShareHolder().getIdentificationType() == null) {
 			bean.getSelectedShareHolder().setIdentificationType(
 					new PmParameter());
@@ -12531,6 +12540,10 @@ public class SmApplicationUtil {
 					if(smPersonnel.getIdentificationType() != null && ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel.getIdentificationType().getParameterCode())){
 						retVal = false;
 					}
+					//29582,35300 start 
+					if (smPersonnel.getIdentificationType() != null && smPersonnel.isPermanentResident() ){
+						retVal = false;
+					}//29582,35300 end 
 					// #28831 - start
 				} else {
 					if (smPersonnel.getIdentificationType() != null
@@ -12539,6 +12552,12 @@ public class SmApplicationUtil {
 							&& !(smPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ || smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING)) {
 						retVal = false;
 					}
+					//29582 start
+					if (smPersonnel.getIdentificationType() != null
+							&& ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(smPersonnel
+									.getIdentificationType().getParameterCode())) {
+						retVal = false;
+					}//29582 end
 				}
 				// #28831 - start
 			}
