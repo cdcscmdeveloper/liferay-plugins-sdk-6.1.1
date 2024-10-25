@@ -49,7 +49,6 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 	private List<PmDocumentRestr> appTypeRestrictionsUpdated = new ArrayList<>();
 
 	private List<PmDocumentRestr> appTypeRestrictionsNew = new ArrayList<>();
-	private List<PmDocumentRestr> comTypeRestrictionsNew = new ArrayList<>();
 	private List<PmDocumentRestr> suppTypeRestrictionsNew = new ArrayList<>();
 	private List<PmDocumentRestr> categoryRestrictionsNew = new ArrayList<>();
 	private List<PmDocumentRestr> certBodyRestrictionsNew = new ArrayList<>();
@@ -80,7 +79,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			if (!managedBeans.getSelectedDocument().getDisplaySeq()
 					.equalsIgnoreCase(managedBeans.getSelectedDocumentOld().getDisplaySeq())) {
 				detailObjDisplayPriority.setRoleCode(roleCode);
-				detailObjDisplayPriority.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjDisplayPriority.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjDisplayPriority.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjDisplayPriority.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjDisplayPriority.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -99,7 +98,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			if (managedBeans.getSelectedDocument().getRecordStatusFlg() != managedBeans.getSelectedDocumentOld()
 					.getRecordStatusFlg()) {
 				detailObjStatus.setRoleCode(roleCode);
-				detailObjStatus.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjStatus.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjStatus.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjStatus.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjStatus.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -120,14 +119,12 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			}
 			getOldValList(managedBeans);
 
-			updatedAddCheckBox(managedBeans, roleCode, updated);
-
-			/* Create new row list in update mode */
-			if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-				getNewValList(managedBeans, roleCode, updated);
-			}
+			updatedAddAppTypeChkbox(managedBeans, roleCode, updated);
 
 			deleted(managedBeans, roleCode);
+
+			/* Create new row list in update/create mode */
+			updateCreateTablist(managedBeans, roleCode, updated);
 
 			getUpdatedRowFieldAppTypeTabValList(managedBeans, roleCode);
 		} else {
@@ -136,7 +133,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			 * New created
 			 */
 			detailObjZone.setRoleCode(roleCode);
-			detailObjZone.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjZone.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjZone.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjZone.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjZone.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -151,7 +148,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			auditPMReqDTO.setObjList(objList);
 
 			detailObjDocumentName.setRoleCode(roleCode);
-			detailObjDocumentName.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjDocumentName.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjDocumentName.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjDocumentName.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjDocumentName.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -166,7 +163,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			auditPMReqDTO.setObjList(objList);
 
 			detailObjDisplayPriority.setRoleCode(roleCode);
-			detailObjDisplayPriority.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjDisplayPriority.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjDisplayPriority.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjDisplayPriority.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjDisplayPriority.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -181,7 +178,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			auditPMReqDTO.setObjList(objList);
 
 			detailObjStatus.setRoleCode(roleCode);
-			detailObjStatus.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjStatus.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjStatus.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjStatus.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjStatus.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -198,26 +195,36 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			auditPMReqDTO.setObjList(objList);
 
 			/* Create new row list in new mode */
-			updatedAddCheckBox(managedBeans, roleCode, updated);
-			if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-				getNewValList(managedBeans, roleCode, updated);
-			}
+			updatedAddAppTypeChkbox(managedBeans, roleCode, updated);
+
+			/* Create new row list in update/create mode */
+			updateCreateTablist(managedBeans, roleCode, updated);
 		}
 
 		managedBeans.setSelectedDocumentOld(null);
 		managedBeans.getResDTO().setUpdatedPmDocumentRestrList(null);
-		managedBeans.getResDTO().setDeletedProcurementCatCodeList(null);
+		managedBeans.setMandatoryUpdatedPmDocumentRestrList(null);
+		managedBeans.setComTypeRestrictionsNew(null);
+		managedBeans.setSuppTypeRestrictionsNew(null);
+		managedBeans.setCertBodyRestrictionsNew(null);
+		managedBeans.setAppTypeRestrictionsNew(null);
+		managedBeans.setCategoryRestrictionsNew(null);
+		managedBeans.setNewCategoryL3AuditList(null);
+		appTypeRestrictionsNew.clear();
+		certBodyRestrictionsNew.clear();
+		categoryRestrictionsNew.clear();
+		suppTypeRestrictionsNew.clear();
+		appTypeRestrictionsNew.clear();
 
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO updatedAddCheckBox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
-		// /* Restriction Document - detailObjAppTypeChkbox **/
+	private void updatedAddAppTypeChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isByAppType() != managedBeans.getSelectedDocumentOld().isByAppType()
 				|| !updated) {
 			detailObjAppTypeChkbox.setRoleCode(roleCode);
-			detailObjAppTypeChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjAppTypeChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjAppTypeChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjAppTypeChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjAppTypeChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -231,13 +238,25 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			detailObjAppTypeChkbox.setActionType(actionType(updated));
 			objList.add(detailObjAppTypeChkbox);
 			auditPMReqDTO.setObjList(objList);
+
+			if (null != managedBeans.getAppTypeRestrictionsOld()
+					&& managedBeans.getAppTypeRestrictionsOld().iterator().next().getAppTypeCode() != null
+					&& detailObjAppTypeChkbox.getNewValue() != null
+					&& detailObjAppTypeChkbox.getNewValue().equalsIgnoreCase(AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE)) {
+				managedBeans.setDeleteAppTypeRestrictionsAuditList(new ArrayList<PmDocumentRestr>());
+				managedBeans.getDeleteAppTypeRestrictionsAuditList().addAll(managedBeans.getAppTypeRestrictionsOld());
+			}
 		}
+		updatedAddCompTypeChkbox(managedBeans, roleCode, updated);
+	}
+
+	private void updatedAddCompTypeChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		// /* Restriction Document - detailObjCompTypeChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isByCompType() != managedBeans.getSelectedDocumentOld().isByCompType()
 				|| !updated) {
 			detailObjCompTypeChkbox.setRoleCode(roleCode);
-			detailObjCompTypeChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjCompTypeChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjCompTypeChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjCompTypeChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjCompTypeChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -251,13 +270,30 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			detailObjCompTypeChkbox.setActionType(actionType(updated));
 			objList.add(detailObjCompTypeChkbox);
 			auditPMReqDTO.setObjList(objList);
+
+			if (null != managedBeans.getComTypeRestrictionsOld()
+					&& managedBeans.getComTypeRestrictionsOld().iterator().next().getCompanyTypeCode() != null
+					&& detailObjCompTypeChkbox.getNewValue() != null
+					&& detailObjCompTypeChkbox.getNewValue().equalsIgnoreCase(AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE)) {
+				managedBeans.setDeleteComTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				managedBeans.getDeleteComTypeRestrictionsAudit().addAll(managedBeans.getComTypeRestrictionsOld());
+
+				if (managedBeans.getNewCompanyCodeTypeAuditList() != null) {
+					managedBeans.getNewCompanyCodeTypeAuditList().add(new PmDocumentRestr());
+					managedBeans.getNewCompanyCodeTypeAuditList().clear();
+				}
+			}
 		}
+		updatedAddSupplierTypeChkbox(managedBeans, roleCode, updated);
+	}
+
+	private void updatedAddSupplierTypeChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		// /* Restriction Document - detailObjSupplierTypeChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isBySupplierType() != managedBeans.getSelectedDocumentOld()
 						.isBySupplierType() || !updated) {
 			detailObjSupplierTypeChkbox.setRoleCode(roleCode);
-			detailObjSupplierTypeChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjSupplierTypeChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjSupplierTypeChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjSupplierTypeChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjSupplierTypeChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -272,21 +308,25 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			detailObjSupplierTypeChkbox.setActionType(actionType(updated));
 			objList.add(detailObjSupplierTypeChkbox);
 			auditPMReqDTO.setObjList(objList);
+
+			if (null != managedBeans.getSuppTypeRestrictionsOld()
+					&& managedBeans.getSuppTypeRestrictionsOld().iterator().next().getSupplierTypeCode() != null
+					&& detailObjSupplierTypeChkbox.getNewValue() != null
+					&& detailObjSupplierTypeChkbox.getNewValue().equalsIgnoreCase(AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE)) {
+				managedBeans.setDeleteSuppTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				managedBeans.getDeleteSuppTypeRestrictionsAudit().addAll(managedBeans.getSuppTypeRestrictionsOld());
+			}
 		}
-
-		updatedAddCheckBox2(managedBeans, roleCode, updated);
-
-		return auditPMReqDTO;
+		updatedAddCategoryChkbox(managedBeans, roleCode, updated);
 	}
 
-	/* Refactor from method -- updatedAddCheckBox */
-	private AuditPMReqDTO updatedAddCheckBox2(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+	private void updatedAddCategoryChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		// /* Restriction Document - detailObjCategoryChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isByCategory() != managedBeans.getSelectedDocumentOld().isByCategory()
 				|| !updated) {
 			detailObjCategoryChkbox.setRoleCode(roleCode);
-			detailObjCategoryChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjCategoryChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjCategoryChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjCategoryChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjCategoryChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -300,13 +340,29 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			detailObjCategoryChkbox.setActionType(actionType(updated));
 			objList.add(detailObjCategoryChkbox);
 			auditPMReqDTO.setObjList(objList);
+
+			if (null != managedBeans.getCategoryRestrictionsOld()
+					&& managedBeans.getCategoryRestrictionsOld().iterator().next().getPmCategoryL3() != null
+					&& detailObjCategoryChkbox.getNewValue() != null
+					&& detailObjCategoryChkbox.getNewValue().equalsIgnoreCase(AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE)) {
+				managedBeans.setDeleteCategoryRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				managedBeans.getDeleteCategoryRestrictionsAudit().addAll(managedBeans.getCategoryRestrictionsOld());
+
+				if (managedBeans.getNewCategoryL3AuditList() != null) {
+					managedBeans.getNewCategoryL3AuditList().add(new PmDocumentRestr());
+					managedBeans.getNewCategoryL3AuditList().clear();
+				}
+			}
 		}
-		// /* Restriction Document - detailObjCertBodyChkbox */
+		updatedAddCertBodyChkbox(managedBeans, roleCode, updated);
+	}
+
+	private void updatedAddCertBodyChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isByCertBody() != managedBeans.getSelectedDocumentOld().isByCertBody()
 				|| !updated) {
 			detailObjCertBodyChkbox.setRoleCode(roleCode);
-			detailObjCertBodyChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjCertBodyChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjCertBodyChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjCertBodyChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjCertBodyChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -320,13 +376,24 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			detailObjCertBodyChkbox.setActionType(actionType(updated));
 			objList.add(detailObjCertBodyChkbox);
 			auditPMReqDTO.setObjList(objList);
+
+			if (null != managedBeans.getCertBodyRestrictionsOld()
+					&& managedBeans.getCertBodyRestrictionsOld().iterator().next().getPmCertBody() != null
+					&& detailObjCertBodyChkbox.getNewValue() != null
+					&& detailObjCertBodyChkbox.getNewValue().equalsIgnoreCase(AuditPMSupplierMgtConfigConst.PM_AUD_INACTIVE)) {
+				managedBeans.setDeleteCertBodyRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				managedBeans.getDeleteCertBodyRestrictionsAudit().addAll(managedBeans.getCertBodyRestrictionsOld());
+			}
 		}
-		/* Document Type - detailObjMandatoryChkbox */
+		updatedMandatoryChkbox(managedBeans, roleCode, updated);
+	}
+
+	private void updatedMandatoryChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isMandatory() != managedBeans.getSelectedDocumentOld().isMandatory()
 				|| !updated) {
 			detailObjMandatoryChkbox.setRoleCode(roleCode);
-			detailObjMandatoryChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjMandatoryChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjMandatoryChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjMandatoryChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjMandatoryChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -341,20 +408,16 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			objList.add(detailObjMandatoryChkbox);
 			auditPMReqDTO.setObjList(objList);
 		}
-
-		updatedAddCheckBox3(managedBeans, roleCode, updated);
-
-		return auditPMReqDTO;
+		updatedLicenseChkbox(managedBeans, roleCode, updated);
 	}
 
-	/* Refactor from method -- updatedAddCheckBox2 */
-	private AuditPMReqDTO updatedAddCheckBox3(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+	private void updatedLicenseChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		/* Document Type - detailObjLicenseChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isLicenseReq() != managedBeans.getSelectedDocumentOld().isLicenseReq()
 				|| !updated) {
 			detailObjLicenseChkbox.setRoleCode(roleCode);
-			detailObjLicenseChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjLicenseChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjLicenseChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjLicenseChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjLicenseChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -369,12 +432,16 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			objList.add(detailObjLicenseChkbox);
 			auditPMReqDTO.setObjList(objList);
 		}
+		updatedHardCopyChkbox(managedBeans, roleCode, updated);
+	}
+
+	private void updatedHardCopyChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		/* Document Type - detailObjHardCopyChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isHardCopyReq() != managedBeans.getSelectedDocumentOld().isHardCopyReq()
 				|| !updated) {
 			detailObjHardCopyChkbox.setRoleCode(roleCode);
-			detailObjHardCopyChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjHardCopyChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjHardCopyChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjHardCopyChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjHardCopyChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -389,11 +456,15 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			objList.add(detailObjHardCopyChkbox);
 			auditPMReqDTO.setObjList(objList);
 		}
+		updatedGSTChkbox(managedBeans, roleCode, updated);
+	}
+
+	private void updatedGSTChkbox(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		/* Document Type - detailObjGSTChkbox */
 		if (null != managedBeans.getSelectedDocumentOld()
 				&& managedBeans.getSelectedDocument().isGst() != managedBeans.getSelectedDocumentOld().isGst() || !updated) {
 			detailObjGSTChkbox.setRoleCode(roleCode);
-			detailObjGSTChkbox.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+			detailObjGSTChkbox.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 			detailObjGSTChkbox.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 			detailObjGSTChkbox.setDocNo(managedBeans.getSelectedDocument().getDocName());
 			detailObjGSTChkbox.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -408,112 +479,109 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			objList.add(detailObjGSTChkbox);
 			auditPMReqDTO.setObjList(objList);
 		}
-
-		return auditPMReqDTO;
 	}
 
-	private void getNewValList(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-			if (pmDocumentRestr.isBrandNew() && DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
-				if (managedBeans.getSelectedDocument().isByAppType() && pmDocumentRestr.getAppTypeCode() != null) {
-					appTypeRestrictionsNew.add(pmDocumentRestr);
-					managedBeans.setAppTypeRestrictionsNew(appTypeRestrictionsNew);
-				}
-				if (managedBeans.getSelectedDocument().isByCompType() && pmDocumentRestr.getCompanyTypeCode() != null) {
-					comTypeRestrictionsNew.add(pmDocumentRestr);
+	private void updateCreateTablist(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+		updatedCreatedAppTypeCodeTabList(managedBeans, roleCode, updated);
+		updatedCreatedSuppTypeCodeTabList(managedBeans, roleCode, updated);
+		updatedCreatedCertBodyTypeCodeTabList(managedBeans, roleCode, updated);
 
-				}
-				if (managedBeans.getSelectedDocument().isBySupplierType() && pmDocumentRestr.getSupplierTypeCode() != null) {
-					suppTypeRestrictionsNew.add(pmDocumentRestr);
-					managedBeans.setSuppTypeRestrictionsNew(suppTypeRestrictionsNew);
-				}
-			}
-		}
-		managedBeans.setComTypeRestrictionsNew(comTypeRestrictionsNew);
+		if (null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty())
+			updatedCreatedCompTypeCodeTabList(managedBeans, roleCode, updated);
 
-		getNewValList2(managedBeans, roleCode, updated);
+		if (null != managedBeans.getNewCategoryL3AuditList() && !managedBeans.getNewCategoryL3AuditList().isEmpty())
+			updatedCreatedCatTypeCodeTabList(managedBeans, roleCode, updated);
 	}
 
-	/* Refactor from method -- getNewValList */
-	private void getNewValList2(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
-		SupportDocumentBackingBean bean = new SupportDocumentBackingBean();
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-			if (pmDocumentRestr.isBrandNew() && DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
-				if (managedBeans.getSelectedDocument().isByCategory() && pmDocumentRestr.getPmCategoryL3() != null) {
-					pmDocumentRestr.setPmCategoryL3(bean.retrieveCategoryL3DtlById(pmDocumentRestr.getPmCategoryL3()
-							.getCategoryL3Id()));
-					categoryRestrictionsNew.add(pmDocumentRestr);
-					managedBeans.setCategoryRestrictionsNew(categoryRestrictionsNew);
-				}
-				if (managedBeans.getSelectedDocument().isByCertBody() && pmDocumentRestr.getPmCertBody() != null) {
-					certBodyRestrictionsNew.add(pmDocumentRestr);
-					managedBeans.setCertBodyRestrictionsNew(certBodyRestrictionsNew);
-				}
-			}
-		}
-
-		updatedNewCreatedRowList(managedBeans, roleCode, updated);
-
-		// getNewValList3(managedBeans, roleCode, updated);
-	}
-
-	/* To create a new row list in create and Update mode */
-	private AuditPMReqDTO updatedNewCreatedRowList(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+	private void updatedCreatedAppTypeCodeTabList(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
+		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
+			for (PmDocumentRestr pmDocumentRestrApp : managedBeans.getAppTypeRestrictions()) {
+				if (pmDocumentRestr.isBrandNew()
+						&& managedBeans.getSelectedDocument().isByAppType()
+						&& pmDocumentRestr.getAppTypeCode() != null
+						&& pmDocumentRestrApp.getAppTypeCode().getParameterId() == pmDocumentRestr.getAppTypeCode()
+								.getParameterId()) {
+					pmDocumentRestr.setDocumentRestrId(pmDocumentRestrApp.getDocumentRestrId());
+					appTypeRestrictionsNew.add(pmDocumentRestrApp);
+				}
+			}
+		}
+		managedBeans.setAppTypeRestrictionsNew(appTypeRestrictionsNew);
+
 		if (null != managedBeans.getAppTypeRestrictionsNew() && !managedBeans.getAppTypeRestrictionsNew().isEmpty()) {
 			objList.addAll(newListMapBean.updatedNewCreateRowAppTypeTabList(managedBeans, roleCode, updated));
 			auditPMReqDTO.setObjList(objList);
 		}
-		if (null != managedBeans.getComTypeRestrictionsNew() && !managedBeans.getComTypeRestrictionsNew().isEmpty()) {
-			objList.addAll(newListMapBean.updatedNewCreateRowComTypeTabList(managedBeans, roleCode, updated));
-			auditPMReqDTO.setObjList(objList);
+	}
+
+	private void updatedCreatedCompTypeCodeTabList(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
+		for (PmDocumentRestr restNew : managedBeans.getNewCompanyCodeTypeAuditList()) {
+			for (PmDocumentRestr rest : managedBeans.getComTypeRestrictions()) {
+				if (rest.getCompanyTypeCode().getParameterId() == restNew.getCompanyTypeCode().getParameterId()) {
+					restNew.setDocumentRestrId(rest.getDocumentRestrId());
+				}
+			}
 		}
+
+		objList.addAll(newListMapBean.updatedNewCreateRowComTypeTabList(managedBeans, roleCode, updated));
+		auditPMReqDTO.setObjList(objList);
+	}
+
+	private void updatedCreatedSuppTypeCodeTabList(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
+		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
+			for (PmDocumentRestr pmDocumentRestrSupp : managedBeans.getSuppTypeRestrictions()) {
+				if (pmDocumentRestr.isBrandNew()
+						&& managedBeans.getSelectedDocument().isBySupplierType()
+						&& pmDocumentRestr.getSupplierTypeCode() != null
+						&& pmDocumentRestrSupp.getSupplierTypeCode().getParameterId() == pmDocumentRestr.getSupplierTypeCode()
+								.getParameterId()) {
+					pmDocumentRestr.setDocumentRestrId(pmDocumentRestrSupp.getDocumentRestrId());
+					suppTypeRestrictionsNew.add(pmDocumentRestrSupp);
+				}
+			}
+		}
+		managedBeans.setSuppTypeRestrictionsNew(suppTypeRestrictionsNew);
 		if (null != managedBeans.getSuppTypeRestrictionsNew() && !managedBeans.getSuppTypeRestrictionsNew().isEmpty()) {
 			objList.addAll(newListMapBean.updatedNewCreateRowSuppTypeTabList(managedBeans, roleCode, updated));
 			auditPMReqDTO.setObjList(objList);
 		}
-
-		updatedNewCreatedRowList2(managedBeans, roleCode, updated);
-
-		managedBeans.setAppTypeRestrictionsNew(null);
-		managedBeans.setComTypeRestrictionsNew(null);
-		managedBeans.setSuppTypeRestrictionsNew(null);
-
-		return auditPMReqDTO;
 	}
 
-	/* Refactor from method updatedNewCreatedRowList */
-	private AuditPMReqDTO updatedNewCreatedRowList2(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+	private void updatedCreatedCatTypeCodeTabList(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
-		if (null != managedBeans.getCategoryRestrictionsNew() && !managedBeans.getCategoryRestrictionsNew().isEmpty()) {
-			objList.addAll(newListMapBean.updatedNewCreateRowCategoryTypeTabList(managedBeans, roleCode, updated));
-			auditPMReqDTO.setObjList(objList);
+		for (PmDocumentRestr restNew : managedBeans.getNewCategoryL3AuditList()) {
+			for (PmDocumentRestr rest : managedBeans.getCategoryRestrictions()) {
+				if (rest.getPmCategoryL3().getCategoryL3Id() == restNew.getPmCategoryL3().getCategoryL3Id()) {
+					restNew.setDocumentRestrId(rest.getDocumentRestrId());
+				}
+			}
 		}
+		objList.addAll(newListMapBean.updatedNewCreateRowCategoryTypeTabList(managedBeans, roleCode, updated));
+		auditPMReqDTO.setObjList(objList);
+	}
+
+	private void updatedCreatedCertBodyTypeCodeTabList(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
+		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
+		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
+			for (PmDocumentRestr pmDocumentRestrCertBody : managedBeans.getCertBodyRestrictions()) {
+				if (pmDocumentRestr.isBrandNew()
+						&& pmDocumentRestr.getPmCertBody() != null
+						&& pmDocumentRestr.getPmCertBody().getCertBodyId() == pmDocumentRestrCertBody.getPmCertBody()
+								.getCertBodyId()) {
+					pmDocumentRestr.setDocumentRestrId(pmDocumentRestrCertBody.getDocumentRestrId());
+					certBodyRestrictionsNew.add(pmDocumentRestr);
+
+				}
+			}
+		}
+
+		managedBeans.setCertBodyRestrictionsNew(certBodyRestrictionsNew);
 		if (null != managedBeans.getCertBodyRestrictionsNew() && !managedBeans.getCertBodyRestrictionsNew().isEmpty()) {
 			objList.addAll(newListMapBean.updatedNewCreateRowCertBodyTypeTabList(managedBeans, roleCode, updated));
 			auditPMReqDTO.setObjList(objList);
-		}
-
-		managedBeans.setCategoryRestrictionsNew(null);
-		managedBeans.setCertBodyRestrictionsNew(null);
-
-		return auditPMReqDTO;
-	}
-
-	/* Refactor from method -- getNewValList2 */
-	private void getNewValList3(SupportDocumentManagedBean managedBeans, String roleCode, boolean updated) {
-
-		if (null != managedBeans.getComTypeRestrictionsNew() && !managedBeans.getComTypeRestrictionsNew().isEmpty()) {
-			updatedNewCreatedRowList(managedBeans, roleCode, updated);
-		}
-		if (null != managedBeans.getSuppTypeRestrictionsNew() && !managedBeans.getSuppTypeRestrictionsNew().isEmpty()) {
-			updatedNewCreatedRowList(managedBeans, roleCode, updated);
-		}
-		if (null != managedBeans.getCategoryRestrictionsNew() && !managedBeans.getCategoryRestrictionsNew().isEmpty()) {
-			updatedNewCreatedRowList(managedBeans, roleCode, updated);
-		}
-		if (null != managedBeans.getCertBodyRestrictionsNew() && !managedBeans.getCertBodyRestrictionsNew().isEmpty()) {
-			updatedNewCreatedRowList(managedBeans, roleCode, updated);
 		}
 	}
 
@@ -566,7 +634,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 				}
 			}
 			if (null != managedBeans.getAppTypeRestrictionsUpdated() && !managedBeans.getAppTypeRestrictionsUpdated().isEmpty()
-					&& !managedBeans.getAppTypeRestrictionsOld().isEmpty()) {
+					&& managedBeans.getAppTypeRestrictionsOld() != null) {
 				updatedRowFieldAppTypeTabValList(managedBeans, roleCode);
 			}
 		}
@@ -590,15 +658,14 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 						&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
 					detailObjSectionIsAsscProjChangedList = new AuditPMSPDTO();
 					detailObjSectionIsAsscProjChangedList.setRoleCode(roleCode);
-					detailObjSectionIsAsscProjChangedList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjSectionIsAsscProjChangedList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjSectionIsAsscProjChangedList
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjSectionIsAsscProjChangedList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjSectionIsAsscProjChangedList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjSectionIsAsscProjChangedList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjSectionIsAsscProjChangedList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjSectionIsAsscProjChangedList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjSectionIsAsscProjChangedList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjSectionIsAsscProjChangedList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjSectionIsAsscProjChangedList
@@ -616,15 +683,14 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 						&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
 					detailObjSectionIsCompanyInfoChangedList = new AuditPMSPDTO();
 					detailObjSectionIsCompanyInfoChangedList.setRoleCode(roleCode);
-					detailObjSectionIsCompanyInfoChangedList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjSectionIsCompanyInfoChangedList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjSectionIsCompanyInfoChangedList
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjSectionIsCompanyInfoChangedList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjSectionIsCompanyInfoChangedList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjSectionIsCompanyInfoChangedList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjSectionIsCompanyInfoChangedList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjSectionIsCompanyInfoChangedList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjSectionIsCompanyInfoChangedList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjSectionIsCompanyInfoChangedList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjSectionIsCompanyInfoChangedList
@@ -642,15 +708,14 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 						&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
 					detailObjIsPersonnelBranchChangedList = new AuditPMSPDTO();
 					detailObjIsPersonnelBranchChangedList.setRoleCode(roleCode);
-					detailObjIsPersonnelBranchChangedList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjIsPersonnelBranchChangedList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjIsPersonnelBranchChangedList
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjIsPersonnelBranchChangedList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjIsPersonnelBranchChangedList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjIsPersonnelBranchChangedList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjIsPersonnelBranchChangedList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjIsPersonnelBranchChangedList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjIsPersonnelBranchChangedList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjIsPersonnelBranchChangedList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjIsPersonnelBranchChangedList
@@ -685,13 +750,13 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 						&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
 					isBankChangedList = new AuditPMSPDTO();
 					isBankChangedList.setRoleCode(roleCode);
-					isBankChangedList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					isBankChangedList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					isBankChangedList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					isBankChangedList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					isBankChangedList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					isBankChangedList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					isBankChangedList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					isBankChangedList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+					isBankChangedList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					isBankChangedList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 					isBankChangedList.setFieldLabelCode(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID);
 					isBankChangedList.setOldValue(yesNo(pmDocumentRestrOld.isBankChanged()));
@@ -707,15 +772,14 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 						&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
 					detailObjIsCapitalEquityChangedList = new AuditPMSPDTO();
 					detailObjIsCapitalEquityChangedList.setRoleCode(roleCode);
-					detailObjIsCapitalEquityChangedList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjIsCapitalEquityChangedList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjIsCapitalEquityChangedList
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjIsCapitalEquityChangedList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjIsCapitalEquityChangedList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjIsCapitalEquityChangedList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjIsCapitalEquityChangedList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjIsCapitalEquityChangedList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjIsCapitalEquityChangedList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjIsCapitalEquityChangedList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjIsCapitalEquityChangedList
@@ -729,13 +793,14 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 		auditPMReqDTO.setObjList(objList);
 
-		updatedRowFieldAppTypeTabValList3(managedBeans, roleCode);
+		/* Facility Type : Home/Business Office (Y/N) */
+		updatedRowFieldAppTypeTabFacilityType(managedBeans, roleCode);
 
 		return auditPMReqDTO;
 	}
 
-	/* Refactor from method updatedRowFieldAppTypeTabValList2 */
-	private AuditPMReqDTO updatedRowFieldAppTypeTabValList3(SupportDocumentManagedBean managedBeans, String roleCode) {
+	/* Facility Type : Home/Business Office (Y/N) */
+	private AuditPMReqDTO updatedRowFieldAppTypeTabFacilityType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		AuditPMSPDTO detailObjFacilityTypeHomeList;
 		AuditPMSPDTO detailObjFacilityTypeOfficeList;
 
@@ -746,14 +811,13 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 						&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
 					detailObjFacilityTypeHomeList = new AuditPMSPDTO();
 					detailObjFacilityTypeHomeList.setRoleCode(roleCode);
-					detailObjFacilityTypeHomeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjFacilityTypeHomeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjFacilityTypeHomeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjFacilityTypeHomeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjFacilityTypeHomeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjFacilityTypeHomeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjFacilityTypeHomeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjFacilityTypeHomeList
-							.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+					detailObjFacilityTypeHomeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjFacilityTypeHomeList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjFacilityTypeHomeList
@@ -768,14 +832,13 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 						&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
 					detailObjFacilityTypeOfficeList = new AuditPMSPDTO();
 					detailObjFacilityTypeOfficeList.setRoleCode(roleCode);
-					detailObjFacilityTypeOfficeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjFacilityTypeOfficeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjFacilityTypeOfficeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjFacilityTypeOfficeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjFacilityTypeOfficeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjFacilityTypeOfficeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjFacilityTypeOfficeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjFacilityTypeOfficeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjFacilityTypeOfficeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjFacilityTypeOfficeList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjFacilityTypeOfficeList
@@ -794,7 +857,6 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private AuditPMReqDTO deleted(SupportDocumentManagedBean managedBeans, String roleCode) {
 		AuditPMSupportingDocumentDeletedBackingBean deletedMapbean = new AuditPMSupportingDocumentDeletedBackingBean();
-		System.out.println("getDeleteRestrictions().size() ::::::: " + managedBeans.getDeleteRestrictions().size());
 		if (null != managedBeans.getDeleteAppTypeRestrictionsAuditList()
 				&& !managedBeans.getDeleteAppTypeRestrictionsAuditList().isEmpty()) {
 			objList.addAll(deletedMapbean.deleteAppType(managedBeans, roleCode));

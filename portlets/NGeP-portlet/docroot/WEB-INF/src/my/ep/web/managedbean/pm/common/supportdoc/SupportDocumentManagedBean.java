@@ -85,6 +85,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List<PmDocumentRestr> categoryRestrictionsNew = new ArrayList<>();
 	private List<PmDocumentRestr> certBodyRestrictionsNew = new ArrayList<>();
 	private List<PmDocumentRestr> appTypeRestrictionsUpdated = new ArrayList<>();
+	private List<PmDocumentRestr> newCompanyCodeTypeAuditList = new ArrayList<>();
+	private List<PmDocumentRestr> newCategoryL3AuditList = new ArrayList<>();
 	private boolean deletedAuditList;
 
 	public SupportDocumentManagedBean() {
@@ -697,5 +699,21 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 
 	public void setAppTypeRestrictionsUpdated(List<PmDocumentRestr> appTypeRestrictionsUpdated) {
 		this.appTypeRestrictionsUpdated = appTypeRestrictionsUpdated;
+	}
+
+	public List<PmDocumentRestr> getNewCompanyCodeTypeAuditList() {
+		return newCompanyCodeTypeAuditList;
+	}
+
+	public void setNewCompanyCodeTypeAuditList(List<PmDocumentRestr> newCompanyCodeTypeAuditList) {
+		this.newCompanyCodeTypeAuditList = newCompanyCodeTypeAuditList;
+	}
+
+	public List<PmDocumentRestr> getNewCategoryL3AuditList() {
+		return newCategoryL3AuditList;
+	}
+
+	public void setNewCategoryL3AuditList(List<PmDocumentRestr> newCategoryL3AuditList) {
+		this.newCategoryL3AuditList = newCategoryL3AuditList;
 	}
 }

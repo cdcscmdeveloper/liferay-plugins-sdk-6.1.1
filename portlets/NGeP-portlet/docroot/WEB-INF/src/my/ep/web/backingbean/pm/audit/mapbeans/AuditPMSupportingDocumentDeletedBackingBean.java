@@ -30,24 +30,24 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 		log.info("rowIndex ::: >>> ::: " + rowIndex);
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteAppTypeRestrictionsAuditList()) {
-			if (null != pmDocumentRestr.getAppTypeCode().getParameterId()) {
+			if (null != pmDocumentRestr.getAppTypeCode().getParameterId() && pmDocumentRestr.getDocumentRestrId() != null) {
 				/*
 				 * Restriction Document - AppTypeList - Application Type
 				 */
 				AuditPMSPDTO detailObjApplicationTypeDeleted = new AuditPMSPDTO();
 				detailObjApplicationTypeDeleted.setRoleCode(roleCode);
-				detailObjApplicationTypeDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjApplicationTypeDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjApplicationTypeDeleted.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjApplicationTypeDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjApplicationTypeDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjApplicationTypeDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjApplicationTypeDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjApplicationTypeDeleted.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjApplicationTypeDeleted.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjApplicationTypeDeleted.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 						.getDocumentId()));
 				detailObjApplicationTypeDeleted.setFieldLabelCode(AuditPMSupplierMgtConfigConst.PM_AUD_SD_APPTYPE_FIELDLABELID);
-				detailObjApplicationTypeDeleted.setOldValueId(BigInteger.valueOf(pmDocumentRestr.getAppTypeCode()
-						.getParameterId()));
+				detailObjApplicationTypeDeleted.setOldValue(pmDocumentRestr.getAppTypeCode().getPmParameterDescsSpecCallOnly()
+						.get(1).getCodeDesc());
 				detailObjApplicationTypeDeleted.setActionType(AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_DEL);
 				objList.add(detailObjApplicationTypeDeleted);
 
@@ -58,15 +58,14 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				AuditPMSPDTO detailObjSectionIsAsscProjChangedDeleted = new AuditPMSPDTO();
 				if (pmDocumentRestr.isAsscProjChanged()) {
 					detailObjSectionIsAsscProjChangedDeleted.setRoleCode(roleCode);
-					detailObjSectionIsAsscProjChangedDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjSectionIsAsscProjChangedDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjSectionIsAsscProjChangedDeleted
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjSectionIsAsscProjChangedDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjSectionIsAsscProjChangedDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjSectionIsAsscProjChangedDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjSectionIsAsscProjChangedDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjSectionIsAsscProjChangedDeleted.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjSectionIsAsscProjChangedDeleted.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjSectionIsAsscProjChangedDeleted.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjSectionIsAsscProjChangedDeleted
@@ -83,15 +82,15 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				AuditPMSPDTO detailObjSectionIsCompanyInfoChangedDeleted = new AuditPMSPDTO();
 				if (pmDocumentRestr.isCompanyInfoChanged()) {
 					detailObjSectionIsCompanyInfoChangedDeleted.setRoleCode(roleCode);
-					detailObjSectionIsCompanyInfoChangedDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjSectionIsCompanyInfoChangedDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjSectionIsCompanyInfoChangedDeleted
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjSectionIsCompanyInfoChangedDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjSectionIsCompanyInfoChangedDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjSectionIsCompanyInfoChangedDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjSectionIsCompanyInfoChangedDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjSectionIsCompanyInfoChangedDeleted.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjSectionIsCompanyInfoChangedDeleted
+							.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjSectionIsCompanyInfoChangedDeleted.setDocGroupId(BigInteger.valueOf(managedBeans
 							.getSelectedDocument().getDocumentId()));
 					detailObjSectionIsCompanyInfoChangedDeleted
@@ -109,15 +108,14 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				AuditPMSPDTO detailObjIsPersonnelBranchChangedDeleted = new AuditPMSPDTO();
 				if (pmDocumentRestr.isPersonnelBranchChanged()) {
 					detailObjIsPersonnelBranchChangedDeleted.setRoleCode(roleCode);
-					detailObjIsPersonnelBranchChangedDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjIsPersonnelBranchChangedDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjIsPersonnelBranchChangedDeleted
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjIsPersonnelBranchChangedDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjIsPersonnelBranchChangedDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjIsPersonnelBranchChangedDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjIsPersonnelBranchChangedDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjIsPersonnelBranchChangedDeleted.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjIsPersonnelBranchChangedDeleted.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjIsPersonnelBranchChangedDeleted.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjIsPersonnelBranchChangedDeleted
@@ -134,13 +132,13 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				AuditPMSPDTO isBankChangedDeleted = new AuditPMSPDTO();
 				if (pmDocumentRestr.isBankChanged()) {
 					isBankChangedDeleted.setRoleCode(roleCode);
-					isBankChangedDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					isBankChangedDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					isBankChangedDeleted.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					isBankChangedDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					isBankChangedDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					isBankChangedDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					isBankChangedDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					isBankChangedDeleted.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+					isBankChangedDeleted.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					isBankChangedDeleted.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 					isBankChangedDeleted.setFieldLabelCode(AuditPMSupplierMgtConfigConst.PM_AUD_SD_BANKINFO_FIELDLABELID);
 					isBankChangedDeleted.setOldValue(yesNo(pmDocumentRestr.isBankChanged()));
@@ -155,15 +153,14 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				AuditPMSPDTO detailObjIsCapitalEquityChangedDeleted = new AuditPMSPDTO();
 				if (pmDocumentRestr.isCapitalEquityChanged()) {
 					detailObjIsCapitalEquityChangedDeleted.setRoleCode(roleCode);
-					detailObjIsCapitalEquityChangedDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjIsCapitalEquityChangedDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjIsCapitalEquityChangedDeleted
 							.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjIsCapitalEquityChangedDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjIsCapitalEquityChangedDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjIsCapitalEquityChangedDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjIsCapitalEquityChangedDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjIsCapitalEquityChangedDeleted.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-							.getDocumentId()));
+					detailObjIsCapitalEquityChangedDeleted.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjIsCapitalEquityChangedDeleted.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 							.getDocumentId()));
 					detailObjIsCapitalEquityChangedDeleted
@@ -176,13 +173,13 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				/* Facility Type : Home Office (Y/N) */
 				AuditPMSPDTO detailObjFacilityTypeHomeDeleted = new AuditPMSPDTO();
 				detailObjFacilityTypeHomeDeleted.setRoleCode(roleCode);
-				detailObjFacilityTypeHomeDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjFacilityTypeHomeDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjFacilityTypeHomeDeleted.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjFacilityTypeHomeDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjFacilityTypeHomeDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjFacilityTypeHomeDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjFacilityTypeHomeDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjFacilityTypeHomeDeleted.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjFacilityTypeHomeDeleted.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjFacilityTypeHomeDeleted.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 						.getDocumentId()));
 				detailObjFacilityTypeHomeDeleted
@@ -194,14 +191,13 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				/* Facility Type : Business Office (Y/N) */
 				AuditPMSPDTO detailObjFacilityTypeOfficeDeleted = new AuditPMSPDTO();
 				detailObjFacilityTypeOfficeDeleted.setRoleCode(roleCode);
-				detailObjFacilityTypeOfficeDeleted.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjFacilityTypeOfficeDeleted.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjFacilityTypeOfficeDeleted.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjFacilityTypeOfficeDeleted.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjFacilityTypeOfficeDeleted.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjFacilityTypeOfficeDeleted.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjFacilityTypeOfficeDeleted.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjFacilityTypeOfficeDeleted.setDocId(BigInteger
-						.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjFacilityTypeOfficeDeleted.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjFacilityTypeOfficeDeleted.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 						.getDocumentId()));
 				detailObjFacilityTypeOfficeDeleted
@@ -211,8 +207,6 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				objList.add(detailObjFacilityTypeOfficeDeleted);
 			}
 		}
-
-		managedBeans.setDeleteAppTypeRestrictionsAuditList(null);
 
 		return objList;
 	}
@@ -228,22 +222,21 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 			if (null != pmDocumentRestr.getCompanyTypeCode().getParameterId()) {
 				AuditPMSPDTO detailObjCompTypeList = new AuditPMSPDTO();
 				detailObjCompTypeList.setRoleCode(roleCode);
-				detailObjCompTypeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjCompTypeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjCompTypeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjCompTypeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjCompTypeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjCompTypeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjCompTypeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjCompTypeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjCompTypeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjCompTypeList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 				detailObjCompTypeList.setFieldLabelCode(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID);
-				detailObjCompTypeList.setOldValueId(BigInteger.valueOf(pmDocumentRestr.getCompanyTypeCode().getParameterId()));
+				detailObjCompTypeList.setOldValue(pmDocumentRestr.getCompanyTypeCode().getPmParameterDescsSpecCallOnly().get(1)
+						.getCodeDesc());
 				detailObjCompTypeList.setActionType(AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_DEL);
 				objList.add(detailObjCompTypeList);
 			}
 		}
-
-		managedBeans.setDeleteComTypeRestrictionsAudit(null);
 
 		return objList;
 	}
@@ -254,31 +247,34 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	 * @return
 	 */
 	public List<AuditPMSPDTO> deleteSuppType(SupportDocumentManagedBean managedBeans, String roleCode) {
-		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-		if (managedBeans.getDeleteSuppTypeRestrictionsAudit() != null) {
+		ArrayList<AuditPMSPDTO> objList = new ArrayList<>(); // deletesuppresrictOld
+																// <<< untick
+																// checkbox
+																// suppTypeRestrictionOld
+		if (managedBeans.getDeleteSuppTypeRestrictionsAudit() != null) { // managedBeans.getSuppTypeRestrictionsOld()
+																			// //
+			// managedBeans.getComTypeRestrictionsOld()
 			for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteSuppTypeRestrictionsAudit()) {
 				if (null != pmDocumentRestr.getSupplierTypeCode()
 						&& null != pmDocumentRestr.getSupplierTypeCode().getParameterId()) {
 					AuditPMSPDTO detailObjSuppTypeList = new AuditPMSPDTO();
 					detailObjSuppTypeList.setRoleCode(roleCode);
-					detailObjSuppTypeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjSuppTypeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjSuppTypeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjSuppTypeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjSuppTypeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjSuppTypeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjSuppTypeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjSuppTypeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+					detailObjSuppTypeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjSuppTypeList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 					detailObjSuppTypeList.setFieldLabelCode(AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPTYPE_FIELDLABELID);
-					detailObjSuppTypeList.setOldValueId(BigInteger
-							.valueOf(pmDocumentRestr.getSupplierTypeCode().getParameterId()));
+					detailObjSuppTypeList.setOldValue(pmDocumentRestr.getSupplierTypeCode().getPmParameterDescsSpecCallOnly()
+							.get(1).getCodeDesc());
 					detailObjSuppTypeList.setActionType(AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_DEL);
 					objList.add(detailObjSuppTypeList);
 				}
 			}
 		}
-
-		managedBeans.setDeleteSuppTypeRestrictionsAudit(null);
 
 		return objList;
 	}
@@ -294,33 +290,32 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 			if (null != pmDocumentRestr.getPmCategoryL3().getCategoryL3Id()) {
 				AuditPMSPDTO detailObjCategoryCodeTypeList = new AuditPMSPDTO();
 				detailObjCategoryCodeTypeList.setRoleCode(roleCode);
-				detailObjCategoryCodeTypeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjCategoryCodeTypeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjCategoryCodeTypeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjCategoryCodeTypeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjCategoryCodeTypeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjCategoryCodeTypeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjCategoryCodeTypeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjCategoryCodeTypeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjCategoryCodeTypeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjCategoryCodeTypeList.setDocGroupId(BigInteger
 						.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 				detailObjCategoryCodeTypeList
 						.setFieldLabelCode(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYCODETYPE_FIELDLABELID);
 				detailObjCategoryCodeTypeList.setOldValue(pmDocumentRestr.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1()
-						.getCategoryL1Code().toString()
-						.concat(pmDocumentRestr.getPmCategoryL3().getPmCategoryL2().getCategoryL2Id().toString())
-						.concat(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id().toString()));
+						.getCategoryL1Code().concat(pmDocumentRestr.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code())
+						.concat(pmDocumentRestr.getPmCategoryL3().getCategoryL3Code()));
 				detailObjCategoryCodeTypeList.setActionType(AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_DEL);
 				objList.add(detailObjCategoryCodeTypeList);
 
 				AuditPMSPDTO detailObjMainCategoryTypeList = new AuditPMSPDTO();
 				detailObjMainCategoryTypeList.setRoleCode(roleCode);
-				detailObjMainCategoryTypeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjMainCategoryTypeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjMainCategoryTypeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjMainCategoryTypeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjMainCategoryTypeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjMainCategoryTypeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjMainCategoryTypeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjMainCategoryTypeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjMainCategoryTypeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjMainCategoryTypeList.setDocGroupId(BigInteger
 						.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 				detailObjMainCategoryTypeList
@@ -332,13 +327,13 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 
 				AuditPMSPDTO detailObjSubCategoryTypeList = new AuditPMSPDTO();
 				detailObjSubCategoryTypeList.setRoleCode(roleCode);
-				detailObjSubCategoryTypeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjSubCategoryTypeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjSubCategoryTypeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjSubCategoryTypeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjSubCategoryTypeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjSubCategoryTypeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjSubCategoryTypeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjSubCategoryTypeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjSubCategoryTypeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjSubCategoryTypeList
 						.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 				detailObjSubCategoryTypeList
@@ -349,13 +344,13 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 
 				AuditPMSPDTO detailObjSubDivCategoryTypeList = new AuditPMSPDTO();
 				detailObjSubDivCategoryTypeList.setRoleCode(roleCode);
-				detailObjSubDivCategoryTypeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+				detailObjSubDivCategoryTypeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 				detailObjSubDivCategoryTypeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 				detailObjSubDivCategoryTypeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 				detailObjSubDivCategoryTypeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 				detailObjSubDivCategoryTypeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 				detailObjSubDivCategoryTypeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-				detailObjSubDivCategoryTypeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+				detailObjSubDivCategoryTypeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 				detailObjSubDivCategoryTypeList.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument()
 						.getDocumentId()));
 				detailObjSubDivCategoryTypeList
@@ -365,9 +360,6 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				objList.add(detailObjSubDivCategoryTypeList);
 			}
 		}
-
-		managedBeans.setDeleteCategoryRestrictionsAudit(null);
-
 		return objList;
 	}
 
@@ -383,24 +375,22 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 				if (null != pmDocumentRestr.getPmCertBody().getCertBodyId()) {
 					AuditPMSPDTO detailObjCerBodyTypeList = new AuditPMSPDTO();
 					detailObjCerBodyTypeList.setRoleCode(roleCode);
-					detailObjCerBodyTypeList.setDoctype(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+					detailObjCerBodyTypeList.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
 					detailObjCerBodyTypeList.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 					detailObjCerBodyTypeList.setDocNo(managedBeans.getSelectedDocument().getDocName());
 					detailObjCerBodyTypeList.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
 					detailObjCerBodyTypeList.setLvlCode2(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_2_SD);
 					detailObjCerBodyTypeList.setLvlCode3(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_3_SD);
-					detailObjCerBodyTypeList.setDocId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
+					detailObjCerBodyTypeList.setDocId(BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId()));
 					detailObjCerBodyTypeList
 							.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId()));
 					detailObjCerBodyTypeList.setFieldLabelCode(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CERTBODYTYPE_FIELDLABELID);
-					detailObjCerBodyTypeList.setOldValueId(BigInteger.valueOf(pmDocumentRestr.getPmCertBody().getCertBodyId()));
+					detailObjCerBodyTypeList.setOldValue(pmDocumentRestr.getPmCertBody().getBodyName());
 					detailObjCerBodyTypeList.setActionType(AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_DEL);
 					objList.add(detailObjCerBodyTypeList);
 				}
 			}
 		}
-
-		managedBeans.setDeleteCertBodyRestrictionsAudit(null);
 
 		return objList;
 	}

@@ -77,6 +77,12 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
+import my.ep.constant.pm.AuditConst;
+import my.ep.constant.pm.AuditPMSupplierMgtConfigConst;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMQTChecklistBackingBean;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMSupportingDocumentBackingBean;
 
 /**
  * Backing Bean for Support Document
@@ -797,6 +803,10 @@ public class SupportDocumentBackingBean extends
 			pmDocRestr = getManagedBean().getAppTypeRestrictions()
 					.get(rowIndex);
 			pmDocRestr.setDeleted(true);
+			if (this.getManagedBean().getDeleteAppTypeRestrictionsAuditList() == null) {
+				this.getManagedBean().setDeleteAppTypeRestrictionsAuditList(new ArrayList<PmDocumentRestr>());
+			}
+			getManagedBean().getDeleteAppTypeRestrictionsAuditList().add(pmDocRestr);
 			getManagedBean().getAppTypeRestrictions().remove(pmDocRestr);
 		} else if (restrictionType == RESTR_COMP) {
 			pmDocRestr = getManagedBean().getComTypeRestrictions()
@@ -860,23 +870,41 @@ public class SupportDocumentBackingBean extends
 				pmDocRestr = getManagedBean().getAppTypeRestrictions()
 						.get(rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				if (this.getManagedBean().getDeleteAppTypeRestrictionsAuditList() == null) {
+					this.getManagedBean().setDeleteAppTypeRestrictionsAuditList(new ArrayList<PmDocumentRestr>());
+				}
+				getManagedBean().getDeleteAppTypeRestrictionsAuditList().add(pmDocRestr);
 				getManagedBean().getAppTypeRestrictions().remove(pmDocRestr);
 			} else if (restrictionType == RESTR_COMP) {
 				pmDocRestr = getManagedBean().getComTypeRestrictions()
 						.get(rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				if (this.getManagedBean().getDeleteComTypeRestrictionsAudit() == null) {
+					this.getManagedBean().setDeleteComTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				}
+				getManagedBean().getDeleteComTypeRestrictionsAudit().add(pmDocRestr);
 				getManagedBean().getComTypeRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == RESTR_SUPP) {
 				pmDocRestr = getManagedBean().getSuppTypeRestrictions().get(
 						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				if (this.getManagedBean().getDeleteSuppTypeRestrictionsAudit() == null) {
+					this.getManagedBean().setDeleteSuppTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				}
+				;
+				getManagedBean().getDeleteSuppTypeRestrictionsAudit().add(pmDocRestr);
 				getManagedBean().getSuppTypeRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == RESTR_CATEGORY) {
 				pmDocRestr = getManagedBean().getCategoryRestrictions().get(
 						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				if (this.getManagedBean().getDeleteCategoryRestrictionsAudit() == null) {
+					this.getManagedBean().setDeleteCategoryRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				}
+				;
+				getManagedBean().getDeleteCategoryRestrictionsAudit().add(pmDocRestr);
 				getManagedBean().getCategoryRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == CHECKLIST) {
@@ -889,6 +917,10 @@ public class SupportDocumentBackingBean extends
 				pmDocRestr = getManagedBean().getCertBodyRestrictions().get(
 						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				if (this.getManagedBean().getDeleteCertBodyRestrictionsAudit() == null) {
+					this.getManagedBean().setDeleteCertBodyRestrictionsAudit(new ArrayList<PmDocumentRestr>());
+				}
+				getManagedBean().getDeleteCertBodyRestrictionsAudit().add(pmDocRestr);
 				getManagedBean().getCertBodyRestrictions().remove(pmDocRestr);
 
 			}
@@ -2104,9 +2136,12 @@ public class SupportDocumentBackingBean extends
 				System.out.println("1. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				pmDocument.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
+				getManagedBean().setUpdated(false);
 			} else {
 				System.out.println("2. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				messageId = MessageConst.TD_80801;
+				getManagedBean().setUpdated(true);
+				getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
 			}
 			log.info("setChangedBy|| userId == " + user.getUserId() + "| userName == " + user.getUserName());
 			pmDocument.setChangedBy(user != null ? user.getUserId() : null);
@@ -2127,11 +2162,40 @@ public class SupportDocumentBackingBean extends
 			reqSO = (IDocumentSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IDocumentSO.class);
+			
+			/************ AUDIT *************/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			if (!createAction && pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
+					|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)
+					&& reqDTO.getPmDocument() != null && reqDTO.getPmDocument().getDocumentId() != null) {
+				reqDTO.setDocumentId(reqDTO.getPmDocument().getDocumentId());
+				// DocumentResDTO resDTOOld =
+				// reqSO.retrieveDocumentDtlById(reqDTO);
+				PmDocument pmDocumentOld = retrieveDocumentById(reqDTO.getPmDocument().getDocumentId());
+				getManagedBean().setSelectedDocumentOld(pmDocumentOld);
+			}
+			/************ AUDIT *************/
+			
 			resDTO = reqSO.saveDocument(reqDTO);
+			this.getManagedBean().setNewCompanyCodeTypeAuditList(resDTO.getNewCompanyCodeTypeAuditList());
+			this.getManagedBean().setNewCategoryL3AuditList(resDTO.getNewCategoryL3AuditList());
 			reloadEditData(resDTO.getDocument().getDocumentId());
-
+			AuditPMBackingBeanTemplate auTemplate = null;
+			String modName = null;
+			if (ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(resDTO.getDocument().getDocCategoryCode()
+					.getParameterCode())
+					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(resDTO.getDocument().getDocCategoryCode()
+							.getParameterCode())) {
+				auTemplate = new AuditPMQTChecklistBackingBean();
+				modName = AuditConst.PM_AUD_QTCHECKLIST;
+			} else {
+				auTemplate = new AuditPMSupportingDocumentBackingBean();
+				modName = AuditPMSupplierMgtConfigConst.PM_AUD_SD;
+			}
 			if (resDTO.isSuccessful()) {
 				// loadSupportDoc(resDTO.getDocument().getDocumentId());
+				getManagedBean().setUpdatedPmDocumentRestrList(resDTO.getUpdatedPmDocumentRestrList());
 				if (createAction) {
 					PmCommonUtil.showFacesMsg(
 							FacesContext.getCurrentInstance(), 
@@ -2141,7 +2205,18 @@ public class SupportDocumentBackingBean extends
 									getParameterDesc(pmDocument
 											.getDocCategoryCode()),
 									pmDocument
-											.getDocName()});					
+											.getDocName()});	
+					
+					/************ AUDIT **************/
+					getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
+					// (reqDTO.getPmDocument().getPmDocumentRestrs());
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
+							|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)) {
+						getManagedBean().setResDTO(resDTO);
+						auTemplate.auditSaveData(getManagedBean(), modName);
+					}
+					/************ END AUDIT *************/
+					
 					return redirectToSearchSupportDoc();
 				} else {
 					PmCommonUtil.showFacesMsg(
@@ -2151,6 +2226,16 @@ public class SupportDocumentBackingBean extends
 							new String[] { getParameterDesc(pmDocument
 									.getDocCategoryCode()) });
 					redirectToMaintainDoc(pmDocument.getDocumentId());
+					
+					/************ AUDIT *************/
+					pmDocument.getPmDocumentRestrs();
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
+							|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)) {
+						getManagedBean().setResDTO(resDTO);
+						auTemplate.auditSaveData(getManagedBean(), modName);
+					}
+					/************ END AUDIT *************/
+					
 					return null;
 				}
 			}

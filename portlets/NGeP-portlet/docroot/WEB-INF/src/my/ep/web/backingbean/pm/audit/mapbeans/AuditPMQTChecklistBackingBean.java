@@ -99,8 +99,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjDocumentDefinition.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjDocumentDefinition.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjDocumentDefinition.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_DEFINITION_FIELDLABELID);
-			detailObjDocumentDefinition.setNewValueId(BigInteger.valueOf(managedBeans.getSelectedDocument()
-					.getDocDefinitionTypeCode().getParameterId()));
+			detailObjDocumentDefinition.setNewValue(managedBeans.getSelectedDocument().getDocDefinitionTypeCode()
+					.getPmParameterDescsSpecCallOnly().get(1).getCodeName());
 			detailObjDocumentDefinition.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(detailObjDocumentDefinition);
 			auditPMReqDTO.setObjList(objList);
@@ -115,8 +115,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			detailObjSupplierAction.setDocId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjSupplierAction.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 			detailObjSupplierAction.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_SUPPLIER_ACTION_FIELDLABELID);
-			detailObjSupplierAction.setNewValueId(BigInteger.valueOf(managedBeans.getSelectedDocument().getChecklistActionCode()
-					.getParameterId()));
+			detailObjSupplierAction.setNewValue(managedBeans.getSelectedDocument().getChecklistActionCode()
+					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc());
 			detailObjSupplierAction.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(detailObjSupplierAction);
 			auditPMReqDTO.setObjList(objList);
@@ -160,6 +160,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 		managedBeans.setSelectedDocumentOld(null);
 		managedBeans.getResDTO().setUpdatedPmDocumentRestrList(null);
 		managedBeans.getResDTO().setDeletedProcurementCatCodeList(null);
+
+		managedBeans.setMandatoryUpdatedPmDocumentRestrList(null);
 
 		return auditPMReqDTO;
 	}
@@ -237,6 +239,11 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			ArrayList<AuditPMSPDTO> objList, String roleCode) {
 		if (null != managedBeans.getResDTO().getUpdatedPmDocumentRestrList()
 				&& !managedBeans.getResDTO().getUpdatedPmDocumentRestrList().isEmpty()) {
+			for (PmDocumentRestr pmDocumentRestr : managedBeans.getUpdatedPmDocumentRestrList()) {
+				for (PmDocumentRestr checkList : managedBeans.getCheckListRestrictions()) {
+					pmDocumentRestr.setDocumentRestrId(checkList.getDocumentRestrId());
+				}
+			}
 			updatedPmDocumentRestrList(managedBeans, auditPMReqDTO, objList, roleCode);
 		}
 
@@ -289,7 +296,7 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 
 	private AuditPMReqDTO updatedPmDocumentRestrList(SupportDocumentManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
 			ArrayList<AuditPMSPDTO> objList, String roleCode) {
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getResDTO().getUpdatedPmDocumentRestrList()) {
+		for (PmDocumentRestr pmDocumentRestr : managedBeans.getUpdatedPmDocumentRestrList()) {
 			if (pmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
 				AuditPMSPDTO detailObjProcurementCategory = new AuditPMSPDTO();
 				detailObjProcurementCategory.setRoleCode(roleCode);
@@ -304,8 +311,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 				detailObjProcurementCategory.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument()
 						.getDocumentId()));
 				detailObjProcurementCategory.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-				detailObjProcurementCategory.setNewValueId(BigInteger.valueOf(pmDocumentRestr.getProcurementCatCode()
-						.getParameterId()));
+				detailObjProcurementCategory.setNewValue(pmDocumentRestr.getProcurementCatCode()
+						.getPmParameterDescsSpecCallOnly().get(1).getCodeName());
 				detailObjProcurementCategory.setActionType(isUpdated(managedBeans.isUpdated()));
 				objList.add(detailObjProcurementCategory);
 				auditPMReqDTO.setObjList(objList);
@@ -346,8 +353,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 				detailObjProcCatDelete.setDocId(BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId()));
 				detailObjProcCatDelete.setDocGroupId(BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId()));
 				detailObjProcCatDelete.setFieldLabelCode(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID);
-				detailObjProcCatDelete.setOldValueId(BigInteger.valueOf(deletepmDocumentRestr.getProcurementCatCode()
-						.getParameterId()));
+				detailObjProcCatDelete.setOldValue(deletepmDocumentRestr.getProcurementCatCode()
+						.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc());
 				detailObjProcCatDelete.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
 
 				objList.add(detailObjProcCatDelete);

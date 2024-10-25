@@ -130,8 +130,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 */
 	public String backToSearch() {
 		this.getManagedBean().setLazy(true);
-		getManagedBean().getZoneStateListDeleted().clear();
-		getManagedBean().getZoneStateListNewAdded().clear();
+		getManagedBean().setZoneStateListDeleted(null);
+		getManagedBean().setZoneStateListNewAdded(null);
 		return NAV_TO_MAIN;
 	}
 
@@ -390,6 +390,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				selectedList.add(zonelist);
 			}
 		}
+		if (getManagedBean().getZoneStateListDeleted() == null) {
+			getManagedBean().setZoneStateListDeleted(new ArrayList<PmZoneState>());
+		}
 		if (zoneList.size() == selectedList.size()) {
 			for (PmZoneState zoneState : selectedList) {
 				this.getManagedBean().getZoneStateListDeleted().add(zoneState);
@@ -410,7 +413,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IStateSO.class);
 		StateReqDTO reqStateDTO = new StateReqDTO();
-
+		if (getManagedBean().getZoneStateListNewAdded() == null) {
+			getManagedBean().setZoneStateListNewAdded(new ArrayList<PmZoneState>());
+		}
 		for (PmState state : getManagedBean().getSelectedStates()) {
 			PmZoneState zoneState = new PmZoneState();
 			reqStateDTO.setStateId(state.getStateId());
