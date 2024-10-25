@@ -702,26 +702,15 @@ public class ViewApplHistoryBackingBean extends
 		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
 
 		// if more than 1 Cert on a same appl_id, need reorder it and means
-		// there is duplicate, sort cert by desc order
+		// there is duplicate, sort cert by asc order
 		if (cert.size() > 1) {
-			Collections.sort(cert, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
-				}
-			});
+			sortCertsListByAsc(cert);
 		}
 
 		// if more than 1 bumiCert on a same appl_id, need reorder it and means
-		// there is duplicate, Sort bumiCert by descending order
+		// there is duplicate, Sort bumiCert by asc order
 		if (bumiCert.size() > 1) {
-			Collections.sort(bumiCert, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
-				}
-			});
-
+			sortCertsListByAsc(bumiCert);
 		}
 
 		if (cert.size() > 1 || bumiCert.size() > 1) {
@@ -739,7 +728,18 @@ public class ViewApplHistoryBackingBean extends
 
 		return mofCerts;
 	}
-
+	/**
+	 * To sort list of smMofCert by asc
+	 * @param smMofCert
+	 */
+	public void sortCertsListByAsc(List<SmMofCert> smMofCert) {
+		Collections.sort(smMofCert, new Comparator<SmMofCert>() {
+			@Override
+			public int compare(SmMofCert cert1, SmMofCert cert2) {
+				return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+			}
+		});
+	}
 	// #36401 - End
 
 	/**
