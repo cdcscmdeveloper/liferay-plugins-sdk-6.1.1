@@ -126,11 +126,11 @@ public class PurchaseInDefaultBackingBean extends
 	private String textBeforeSign;
 
 	/** The purchase in default page. */
-	private String PURCHASE_IN_DEFAULT_PAGE = "purchaseInDefaultMain";
+	private String PURCHASE_IN_DEFAULT_PAGE = "/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefaultMain.xhtml";
 	
 	// start - #28865
 	//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
-	private String purchaseInDefaultResponsePage = "purchaseInDefaultResponseMain";
+	private String purchaseInDefaultResponsePage = "/xhtml/sc/directpurchase/purchaseindefaultresponse/purchaseInDefaultResponseMain.xhtml";
 
 	private String purchaseInDefaultRequisitionerResponsePage = "/xhtml/sc/directpurchase/purchaseindefaultresponse/reqPurchaseInDefaultResponseMain.xhtml";
 	//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
