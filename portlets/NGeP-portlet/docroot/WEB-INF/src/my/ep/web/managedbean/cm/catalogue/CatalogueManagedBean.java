@@ -1461,7 +1461,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					if (unspscCodeBackingBean.isRequisitioner()) {
 						checkForDisciplinaryAction();
 					}
-					//[#26282] - end	
+					//[#26282] - end
 				} else {
 					setTotalRecords(ResourceBundleUtils.getMessage("lbl.cm.total.record", new String[] {""+ Integer.toString(resDTO.getViewSuppItemResultBean().getTotalRecord())},
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
