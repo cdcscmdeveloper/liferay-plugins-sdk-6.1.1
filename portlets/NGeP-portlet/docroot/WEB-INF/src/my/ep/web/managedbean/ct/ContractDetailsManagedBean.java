@@ -33,6 +33,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.VCtFl; //Fix - #30866
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -42,6 +43,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.SLAUtils; //Fix - #30866
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -115,6 +117,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private boolean trackingDiarySearch;
 	private PmOrgProfile selectedPtj;
 	private PmOrgProfile oldMinistryProfile;
+	
+	// Start - #30866
+	private boolean isContinuityCircularAuditSearch = false;
+	private boolean isFromResultViewAudit = false;
+	private boolean isFromContractViewPage = false;
+	private VCtContract contractDetailsAuditList;
+	private transient IPagingDataModel<VCtFl> contractDataModelForCtAuditViewFl = new contractDataModelForCtAuditViewSubFl();
+	// End - #30866
 
 	/**
 	 * @return the taskName
@@ -906,6 +916,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);				
 				}
 
+				//Enhancement 29418 - shaqimi start 20/10/2022
+				Boolean hasPBQCRole = 
+						(fc.hasRoleUser(RoleCode.QCA_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.QCA_MEMBER.value()) || fc.hasRoleUser(RoleCode.QCA_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.QCB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.QCB_MEMBER.value()) || fc.hasRoleUser(RoleCode.QCB_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PBA_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PBA_MEMBER.value()) || fc.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PBB_MEMBER.value()) || fc.hasRoleUser(RoleCode.PBB_SECRETARY.value())
+								|| fc.hasRoleUser(RoleCode.PPB_CHAIRPERSON.value()) || fc.hasRoleUser(RoleCode.PPB_MEMBER.value()) || fc.hasRoleUser(RoleCode.PPB_SECRETARY.value()));
+
+				if(!hasPBQCRole){
 				if(fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) && !fc.hasRoleUser(RoleCode.BPK_CCA.value())){
 					SearchFilterBean filterBean = new SearchFilterBean("PARAMETER_CODE",SearchOperator.OPERATOR_LIKE.value(),
 							ParameterConst.CONTRACT_TYPE_MINISTRY);
@@ -927,6 +946,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);		
 				}
+				}
+				//Enhancement 29418 - shaqimi start 20/10/2022
 
 				if (getSearchPtjProfile() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("PTJ_ORG_ID", SearchOperator.OPERATOR_EQUALS.value(),
@@ -1046,6 +1067,47 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
+	
+	// Start - #30866
+	private class contractDataModelForCtAuditViewSubFl extends PagingDataModel<VCtFl> {
+		private static final long serialVersionUID = 1L;
+
+		public contractDataModelForCtAuditViewSubFl() {
+			super("subTableFL", true);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep
+		 * .biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<VCtFl> pageChangeListener(ISearchBean<VCtFl> searchBean) {
+			IContractSO contractSO = null;
+			try {
+
+				searchBean.setUseEntityClass(true);
+				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setAuditObjectSearchBean(searchBean);
+				reqDTO.setContractNo(getSearchContractNo());
+				ContractResDTO resDTO = contractSO.getContractDtlForCtAuditView(reqDTO);
+				setSelectedTabIndex(0);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getAuditObjectSearchBean();
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "ContractDetailsManagedBean", null,
+						"ContractDetailsManagedBean.pageChangeListener", null, e);
+			}
+			return null;
+		}
+	}
+
+	// End - #30866
 
 	public PmOrgProfile getSelectedPtj() {
 		return selectedPtj;
@@ -1062,4 +1124,46 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setOldMinistryProfile(PmOrgProfile oldMinistryProfile) {
 		this.oldMinistryProfile = oldMinistryProfile;
 	}
+	
+	// Start - #30866
+	public boolean isContinuityCircularAuditSearch() {
+		return isContinuityCircularAuditSearch;
+	}
+
+	public void setContinuityCircularAuditSearch(boolean isContinuityCircularAuditSearch) {
+		this.isContinuityCircularAuditSearch = isContinuityCircularAuditSearch;
+	}
+
+	public IPagingDataModel<VCtFl> getContractDataModelForCtAuditViewFl() {
+		return contractDataModelForCtAuditViewFl;
+	}
+
+	public void setContractDataModelForCtAuditViewFl(IPagingDataModel<VCtFl> contractDataModelForCtAuditViewFl) {
+		this.contractDataModelForCtAuditViewFl = contractDataModelForCtAuditViewFl;
+	}
+
+	public VCtContract getContractDetailsAuditList() {
+		return contractDetailsAuditList;
+	}
+
+	public void setContractDetailsAuditList(VCtContract contractDetailsAuditList) {
+		this.contractDetailsAuditList = contractDetailsAuditList;
+	}
+
+	public boolean isFromResultViewAudit() {
+		return isFromResultViewAudit;
+	}
+
+	public void setFromResultViewAudit(boolean isFromResultViewAudit) {
+		this.isFromResultViewAudit = isFromResultViewAudit;
+	}
+
+	public boolean isFromContractViewPage() {
+		return isFromContractViewPage;
+	}
+
+	public void setFromContractViewPage(boolean isFromContractViewPage) {
+		this.isFromContractViewPage = isFromContractViewPage;
+	}
+	// End - #30866
 }

@@ -89,8 +89,8 @@ public class SupplierManagementConst {
 	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
 	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
-	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 7;
-	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 12;
+	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 13; //#31043 start
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;  //#31043 end
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
@@ -138,6 +138,12 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
 
+	//#34711 - START
+	// Facility Ownership
+	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
+	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
+	//#34711 - END
+		
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
@@ -502,6 +508,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
+	public static final long PM_STATUS_PENDING_PAYMENT_SOFT_CERT = 20252; //#35579
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
@@ -560,6 +567,7 @@ public class SupplierManagementConst {
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //#30766 & #34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -1383,6 +1391,15 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
+	
+	//#34711 - START
+	public String getSM_FACILITY_OWNERSHIP_OWN(){
+		return SM_FACILITY_OWNERSHIP_OWN;
+	}
+	public String getSM_FACILITY_OWNERSHIP_RENTED(){
+		return SM_FACILITY_OWNERSHIP_RENTED;
+	}
+	//#34711 - END
 
 	// #35314 - START 
 	public static String getIdentificationTypeIc() {

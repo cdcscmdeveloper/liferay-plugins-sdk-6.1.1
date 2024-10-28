@@ -86,6 +86,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -401,6 +402,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); // Fix - #30866
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 /#33752 start		
 			getManagedBean().setAction(null);
@@ -446,9 +448,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			// #3761 - end
 			return getManagedBean().getGotoPreviewPage();
-		} else {
+		}
+		// Start -#30866
+		else if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			if (circularBB.getManagedBean().getProcurementModeCode()
+					.equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+					|| circularBB.getManagedBean().getProcurementModeCode()
+							.equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				return "/xhtml/ct/viewcontract/resultViewCircularContractQt.xhtml?faces-redirect=true";
+			} else if (circularBB.getManagedBean().getProcurementModeCode()
+					.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				return "/xhtml/ct/viewcontract/resultViewCircularContractDp.xhtml?faces-redirect=true";
+			}
+		}
+		// End -#30866
+		else {
 			return "search.xhtml?faces-redirect=true";
 		}
+		return null;
 	}
 
 	/**

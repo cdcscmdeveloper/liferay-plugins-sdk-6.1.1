@@ -279,15 +279,24 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 											getManagedBean().setDisplayRejectLabel(true);
 										}
 									}
-								}else{
+								} else {
 									getManagedBean().setRejectedApplExist(false);
 									log.info("*******Not Resubmit********");
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
-									
-									if(rejectedWf != null){
+
+									if (rejectedWf != null) {
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+										//#35579 --start--
+										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
+											getManagedBean().setFlowStatus(8);
+										}
+									} else {
+										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
+											getManagedBean().setFlowStatus(7);
+										}
 									}
+									//#35579 --end--
 								}
 							}else{
 								path = MOF_REG_PATH;

@@ -125,9 +125,11 @@
 						
 									<p:spacer height="1px" />
 									<div align="right">
-										<p:commandButton id="yesBtnConfmA" value="#{lbl['lbl.btn.yes']}"
-											onclick="confmAcceptDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
-											action="#{lOADetailBackingBean.confirmSupplierAccept}"/>
+										<!--#30425 - Start -->
+										<p:commandButton id="yesBtnConfmA" value="#{lbl['lbl.btn.yes']}" update="loaMaintMsg"
+											onclick="confmAcceptDlg.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+											action="#{lOADetailBackingBean.confirmSupplierAccept}" />
+										<!--#30425 - End -->
 										<p:commandButton id="noBtnConfmA" value="#{lbl['lbl.btn.no']}"
 											onclick="confmAcceptDlg.hide()" type="button" />
 									</div>

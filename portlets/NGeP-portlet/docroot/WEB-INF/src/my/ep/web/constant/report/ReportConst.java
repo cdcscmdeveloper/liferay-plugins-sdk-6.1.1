@@ -982,6 +982,17 @@ public class ReportConst implements Serializable{
 	public static final int BUFFER_SIZE = 1024; 
 	//Bug #33714 - end
 
+	//Enhancement 29418 - shaqimi
+	public static final String PARAM_CONTRACT_VER_ID = "PCONTRECTVERID";
+	public static final String PARAM_FD_CONTRACT_VER_ID = "PFDCONTRECTVERID";
+	public static final String PARAM_AMENDMENT_ID = "PCONTAMENDID";
+	public static final String PARAM_PRV_AMENDMENT_ID = "PPRVCONTAMENDID";
+	
+
+	public static final String PARAM_PREV_VER_ID = "P_PREV_VER_ID";
+	public static final String PARAM_CURRENT_VER_ID = "P_CURRENT_VER_ID";
+	//Enhancement 29418 - shaqimi
+
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";
 	public static final String PARAM_DISTRICT_ID = "PDISTRICT";
@@ -1145,6 +1156,16 @@ public class ReportConst implements Serializable{
 	public static final String SM_APPL_TRACKING_DIARY = "SM_APPLICATION_TRACKING_DIARY.jsp";
 	public static final String SM_PROFILE_TRACKING_DIARY = "SM_PROFILE_TRACKING_DIARY.jsp";
 	//#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - END
+	
+	//Enhancement 29418 - shaqimi
+	public static final String CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL = "CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ZONE = "CT_AMENDMENT_UPDATE_RPT_ZONE.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_AGENCY = "CT_AMENDMENT_UPDATE_RPT_AGENCY.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL = "CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL = "CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_DEDUCTION = "CT_AMENDMENT_UPDATE_RPT_DEDUCTION.jsp";
+	public static final String CT_AMENDMENT_UPDATE_RPT_SCHEDULE = "CT_AMENDMENT_UPDATE_RPT_SCHEDULE.jsp";
+	//Enhancement 29418 - shaqimi
 	
 	// Bug #34996@Syazani 16/08/2023 -- Start
 	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";

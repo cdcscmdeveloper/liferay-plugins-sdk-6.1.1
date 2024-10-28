@@ -2057,7 +2057,11 @@ public class ConsolidationReportBackingBean extends
 				// BUG 32373 #83, #21695, #25138 -start-
 				reqDTO.setEvaluationStage(evaluationStage);
 				// BUG 32373 #83, #21695, #25138 -end-
-
+				
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				if (resDTO.isSuccessful()) {
