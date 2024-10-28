@@ -1833,9 +1833,12 @@ public class ViewApplHistoryBackingBean extends
 				.getInstance().getServiceObject("sm",
 						ISupportingDocInquirySO.class);
 
-		return reqSO
+		SupportingDocInquiryResDTO resDTO = reqSO
 				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
 	}
+
 	// #34392 - end
 	
 	// #32424 - start
