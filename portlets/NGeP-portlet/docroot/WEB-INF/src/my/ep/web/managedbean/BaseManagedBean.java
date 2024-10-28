@@ -6,6 +6,7 @@ package my.ep.web.managedbean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +54,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private Boolean groupTask;
 	private boolean isReadOnly;
 	private String currentTaskDocType;// #25037
+	private Calendar currentTaskCreatedDate;// #25037
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
@@ -173,6 +175,10 @@ public abstract class BaseManagedBean implements Serializable {
 	//#32236 end
 	
 	private Integer wipStatusMax;//34865,34866,34867 - 29021 WIP
+	
+	//#28784 - Demo WIP - To display QT BPM version
+	private String bpmVersionNo;
+	private boolean newVersion;
 
 
 	public boolean isShowDetailSSM() {
@@ -1076,6 +1082,23 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
 	}
+	
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
+	}
+	//25037 - start
+	public Calendar getCurrentTaskCreatedDate() {
+		return currentTaskCreatedDate;
+	}
+
+	public void setCurrentTaskCreatedDate(Calendar currentTaskCreatedDate) {
+		this.currentTaskCreatedDate = currentTaskCreatedDate;
+	}
+	//25037 - end	
 }
 
 // ***25201

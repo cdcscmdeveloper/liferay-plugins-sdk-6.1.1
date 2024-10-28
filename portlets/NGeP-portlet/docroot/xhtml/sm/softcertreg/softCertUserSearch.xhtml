@@ -65,13 +65,13 @@
 				<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}" disabledSelection="#{personnel.disableRowSelection}">
 					<ac:smSoftcertStatus personnel="#{personnel}" />
 				</p:column>
-				
+				<!-- 29616 start-->
 				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg eq '8'}" />
-					<h:outputText value="#{lbl['lbl.sm.accountstatus.inactive']}" rendered="#{personnel.recordStatusFlg eq '9'}" />
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.deleted']}" rendered="#{personnel.recordStatusFlg eq '9'}"/>
 				</p:column>
-				
+				<!-- 29616 end -->
 				<p:column disabledSelection="#{personnel.disableRowSelection}"
 					headerText="#{lbl['lbl.sm.softcert.no']}">
 					<h:outputText value="#{personnel.softcertNo}" />

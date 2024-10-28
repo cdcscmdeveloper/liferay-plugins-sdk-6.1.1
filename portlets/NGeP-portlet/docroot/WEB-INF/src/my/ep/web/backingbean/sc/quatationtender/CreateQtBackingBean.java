@@ -1187,16 +1187,7 @@ public class CreateQtBackingBean extends
 			//Start Reopen 9019 #note-289 remove the alert message while save
 			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
 				// 25729#174 start
-				//BugBug #35061 - asyrafhaziq
-				// get total indicative price threshold validation value
-				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-				
-				if ((!isPanel && enable.length > 0) && (amount.compareTo(indPriceThreshold) <=0)) {
-					//BugBug #35061 - asyrafhaziq 
-					//set message
-					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String. valueOf(indPriceThreshold).trim() });
-					this.getManagedBean().setMsgConfirmBelowIndi(msg.toString().trim());
-					
+				if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0)) {
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
 				// 25729#174 end
@@ -2918,11 +2909,7 @@ public class CreateQtBackingBean extends
 			//Start - 25729
 			if (null != amount) {
 				// 25729#174 Change 1 line code 
-				//BugBug #35061 - asyrafhaziq
-				// get total indicative price threshold validation value
-				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-				
-				if (amount.compareTo(indPriceThreshold) <=0) {
+				if (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <=0) {
 					setProcurementMode(scQt, amount, "Y");
 				} else {
 					setProcurementMode(scQt, amount);

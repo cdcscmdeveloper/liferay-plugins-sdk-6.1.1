@@ -95,7 +95,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td><p:inputText size="35"
-							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText></td>
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText>
+						<ac:iconTooltip
+							value="#{lbl['lbl.sc.allow.wildcard.search.tooltip']}" /></td>
+					<!-- 25790 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>

@@ -97,7 +97,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	private String processName;
 	private String[] action;
 	private String taskId;
-	private String taskIdPair;/*#31422-basri 190821*/
+//	private String taskIdPair;/*#31422-basri 190821*/
 	private Integer tabActiveIndex = 0;
 	private String taskName;
 	private String tempLoginId; 
@@ -867,13 +867,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 												.intValue()) {
 									IRequestNoteSO rnSO = BusinessDelegate.getInstance().getServiceObject(
 											ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-									RequestNoteReqDTO NotereqDTO = new RequestNoteReqDTO();
+									//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+									RequestNoteReqDTO noteReqDTO = new RequestNoteReqDTO();
 									if (worklistItemVO.getDocNumber() != null
 											&& !worklistItemVO.getDocNumber().isEmpty()) {
-										NotereqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+										noteReqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
 									}
-									RequestNoteResDTO resDTO = rnSO.getRequestNote(NotereqDTO);
-
+									RequestNoteResDTO resDTO = rnSO.getRequestNote(noteReqDTO);
+									//[End] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 									if (resDTO.getRequestNoteDetail() != null) {
 										if (resDTO.getRequestNoteDetail().getRequestNoteDtls() != null
 												&& !resDTO.getRequestNoteDetail().getRequestNoteDtls().isEmpty()) {
@@ -2055,7 +2056,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.roleType = roleType;
 	}
 
-	/*#31422-basri 190821*/
+	/*#31422-basri 190821 (Remove)
 	public void setTaskIdPair(String taskIdPair) {
 		this.taskIdPair = taskIdPair;
 		
@@ -2064,6 +2065,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public String getTaskIdPair() {
 		return taskIdPair;
 	}
-	/*#31422-basri 190821*/
+	#31422-basri 190821*/
 	
 }

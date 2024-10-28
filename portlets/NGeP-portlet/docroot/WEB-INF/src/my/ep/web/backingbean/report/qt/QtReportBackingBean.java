@@ -319,8 +319,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		List<SelectItem> approverNayakTarafList=retrieveApprovarNaikTarafSCS2();
 		List<String> authoriztionList = retriveUserrloeByUserId();
 		
-		if (approverNayakTarafList.size() > 0) {
+		// Bug #34996@Syazani 17/08/2023 -- Start
+		if (approverNayakTarafList.size() > 0
+				|| (authoriztionList.contains(ReportConst.AUDITOR_GENERAL) || authoriztionList
+						.contains(ReportConst.AUDITOR_INTERNAL))) {
 			userRoleLogin = ReportConst.APPROVERNT;
+			// Bug #34996@Syazani 17/08/2023 -- End
 		} else if (authoriztionList.contains(ReportConst.BUDGET_APPROVER)
 				|| authoriztionList.contains(ReportConst.BPK_APPROVER)
 				|| authoriztionList.contains(ReportConst.COMMITTEE_APPROVER) 
@@ -1058,6 +1062,13 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			selectItem1.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ENG_CODE);
 			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
 			statusList.add(selectItem1);
+			//#21692 add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ENG_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//#21692 add for revise - End
 
 		} else if ((strLanguage != null) && (strLanguage.equalsIgnoreCase("ms"))) {
 
@@ -1069,6 +1080,13 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			selectItem1.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_MY_CODE);
 			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
 			statusList.add(selectItem1);
+			//#21692 add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_MY_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//#21692 add for revise - End
 
 		}
 		return statusList;

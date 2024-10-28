@@ -4647,25 +4647,20 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
+			//29582, 30064, 35300 start
+			PmParameter ic = retrieveParameterByTypeAndCode(
+					ParameterTypeConst.IDENTIFICATION_TYPES,
+					SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 			if (per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)
-					|| (per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per // start #30064
-							.getIdentificationType().getParameterCode()
-							.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES))) { // end #30064
-				PmParameter ic = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				per.setIdentificationTypeId(ic.getParameterId());
-				//start #30064
-				if(per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per 
-						.getIdentificationType().getParameterCode()
-						.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
-					per.setIdentificationType(per.getIdentificationType());
-				}else{
-					per.setIdentificationType(ic);
-				}
-				//end #30064
-			} else {
+				per.setIdentificationType(ic);
+			}	else if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) 
+					&& per.isPermanentResident()){
+				per.setIdentificationType(per.getIdentificationType());
+				per.setIdentificationType(ic);
+			}//29582, 30064, 35300 end
+		else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
 						StringUtils.EMPTY);
@@ -6273,18 +6268,17 @@ public class SmCommonUtil {
 			return vCode;
 		}
 		//END 34136
-	// #29582- start
+		
+		//#29582- start
 	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
-		log.info("ssm status: " + resDTO.getStatusCode());
-		if (resDTO.getSmPersonnelAll() != null
-				&& resDTO.getSmPersonnelAll().size() > 0) {
-			boolean errMsg = false;
+		if (resDTO.getSmPersonnelAll() != null) {
+			boolean hasMykadOwnerOrDirector = false;
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
+
 			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
 				if (per.getIdentificationTypeSsm() != null) {
-					String ssmTypeDesc = ParameterHelper.getInstance()
-							.getParameterDesc(
+					String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
 									ParameterConst.IDENTIFICATION_TYPES_SSM,
 									per.getIdentificationTypeSsm());
 					if (ssmTypeDesc == null) {
@@ -6294,6 +6288,7 @@ public class SmCommonUtil {
 										ParameterConst.IDENTIFICATION_TYPES_SSM,
 										"NA");
 					}
+
 					sb.append("<br/>");
 					sb.append(++i + ". ");
 					sb.append(per.getName() + " ");
@@ -6311,10 +6306,19 @@ public class SmCommonUtil {
 					sb.append(per.getIdentificationTypeSsm() + " = ");
 					sb.append(ssmTypeDesc + ")");
 					sb.append("<br/>");
-					errMsg = true;
+				}
+
+				// Check for MYKAD owner/director and break if found
+				if (per.getIdentificationTypeSsm() != null
+						&& per.getIdentificationType().equals(
+								ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
+					hasMykadOwnerOrDirector = true;
+					break;
 				}
 			}
-			if (errMsg) {
+
+			// Handle error based on application type
+			if (hasMykadOwnerOrDirector) {
 				if (resDTO.isBasicAcc()
 						|| SupplierManagementConst.ACC_BASIC.equals(resDTO
 								.getSmAppl().getApplType())) {
@@ -6324,6 +6328,6 @@ public class SmCommonUtil {
 							new String[] { sb.toString() });
 				}
 			}
-		}// #29582- end
-	}
+		}
+	}// #29582- end
 }

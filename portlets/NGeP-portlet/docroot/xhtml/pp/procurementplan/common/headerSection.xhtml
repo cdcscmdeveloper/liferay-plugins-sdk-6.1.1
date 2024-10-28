@@ -61,22 +61,22 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 						</td>		
 				</c:if>
 	    	</div>
-	    	<!--28760 - start -->
-	    	<p:confirmDialog id="dlgProcurementCancel"
+			<!--28760,#35310 //05042024 - start -->
+			<p:confirmDialog id="dlgProcurementCancel"
 				widgetVar="dlgProcurementCancel"
 				message="#{lbl['lbl.msg.confirm.cancel2']}" severity="alert"
 				header="#{lbl['lbl.msg.confirm.cancel2.header']}">
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-						partialSubmit="true" immediate="true"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
 						action="#{pPlanBackingBean.savePlan('CANCEL')}"
-						oncomplete="dlgProcurementCancel.hide();" />
+						onstart="dlgProcurementCancel.hide();blockWidget.show();"
+						oncomplete="blockWidget.hide();" update="@form" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
-						oncomplete="dlgProcurementCancel.hide();" />
+						oncomplete="dlgProcurementCancel.hide();" update="@form" />
 				</div>
 			</p:confirmDialog>
-			<!--28760 - end -->
-	  	</div>
+			<!--28760, #35310 - end -->
+		</div>
 	</p:outputPanel>
 	<div class="clear"></div>
 </ui:composition>

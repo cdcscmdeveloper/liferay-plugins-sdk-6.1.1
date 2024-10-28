@@ -1853,8 +1853,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
-	//Bug #35061 - asyrafhaziq 
-	private String msgConfirmBelowIndi;
 
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11754,14 +11752,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
-	}
-
-	public String getMsgConfirmBelowIndi() {
-		return msgConfirmBelowIndi;
-	}
-
-	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
-		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
 	}
 	
 }
