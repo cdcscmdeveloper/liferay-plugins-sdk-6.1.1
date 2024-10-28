@@ -3645,59 +3645,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}*/
 			
 			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
-				for (ScQtCheckList scQtCheckList : scQtCheckLists) {
-					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<>();
-					TplSpecMaster master = null;
-					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-					// 26130 - Start.
-					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-						/*if (CollectionUtils.isNotEmpty(question.getTplSpecAnswers())) {
-							Iterator<TplSpecAnswer> iterator =  question.getTplSpecAnswers().iterator();
-							while (iterator.hasNext()) {
-								TplSpecAnswer tplSpecAnswer = iterator.next();
-								if (null != tplSpecAnswer && null != tplSpecAnswer.getTplSpecSuppAnswer()
-										&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()
-										&& tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().longValue() == scLoa.getScLoiLoa().getSmSupplier().getSupplierId().longValue()) {
-									String feedback = null;
-									if (null != tplSpecAnswer.getAnswerNumeric()) {
-										feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
-									} else if (null != tplSpecAnswer.getAnswerCompliance()) {
-										if (tplSpecAnswer.getAnswerCompliance()) {
-											feedback = "Yes";
-										} else {
-											feedback = "No";
-										}
-									} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
-										feedback = String.valueOf(tplSpecAnswer.getAnswerText());
-									} 
-									tplSpecAnswer.setFeedback(feedback);
-								} else {
-									iterator.remove();
-								}
-								
-							}
-						}*/
-						//26130 - 26052023
-						// #26130 - Start.
-						if (validateTplSpecMaster(scLoa, master)){
-							// #26130 - Start.
-							constructSpecData(scLoa, master, question);
-							// #26130 - End.
-							constructTplSpecQuestion(dafaltValue,
-									newTplSpecQuestionsList, master, question);
-							//#26130 start
-							if (validateTplSpecQuestion(scLoa, question)) {
-								question.setListCombineZonal(getCOmbineZonalSPec(question, master));
-								// #26130 end
-							}
-						}
-						//26130 - 26052023
-						
-					}
-					// 26130 - End.
-					master.setTplSpecQuestions(newTplSpecQuestionsList);
-					masters.add(master);
-				}
+				loopScQtCheckListsConstructSupplierSpecificationAndRemarks(scQtCheckLists, masters, scLoa, dafaltValue);	// Bug #36438@Syazani - 24/10/2024
 			}
 			
 			// #26130 - End
@@ -3712,6 +3660,71 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			specSO = null;
 		}
 	}
+	
+	// Bug #36438@Syazani - 24/10/2024 -- Start
+	private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
+			List<TplSpecMaster> masters, ScLoa scLoa, String dafaltValue) {
+		// Bug #36438@Syazani - 24/10/2024 -- End
+		for (ScQtCheckList scQtCheckList : scQtCheckLists) {
+			List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<>();
+			TplSpecMaster master = null;
+			// Bug #36438@Syazani - 24/10/2024 -- Start
+			// Making sure it didn't impact original value
+			if (null != scQtCheckList.getScQtDoc() && null != scQtCheckList.getScQtDoc().getTplSpecMaster()) {
+				master = (TplSpecMaster) scQtCheckList.getScQtDoc().getTplSpecMaster().cloneEntity();
+			}
+			// Bug #36438@Syazani - 24/10/2024 -- End
+
+			if (master != null) { // Bug #36438@Syazani - 24/10/2024
+				// 26130 - Start.
+				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					/*if (CollectionUtils.isNotEmpty(question.getTplSpecAnswers())) {
+						Iterator<TplSpecAnswer> iterator =  question.getTplSpecAnswers().iterator();
+						while (iterator.hasNext()) {
+							TplSpecAnswer tplSpecAnswer = iterator.next();
+							if (null != tplSpecAnswer && null != tplSpecAnswer.getTplSpecSuppAnswer()
+									&& null != tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier()
+									&& tplSpecAnswer.getTplSpecSuppAnswer().getSmSupplier().getSupplierId().longValue() == scLoa.getScLoiLoa().getSmSupplier().getSupplierId().longValue()) {
+								String feedback = null;
+								if (null != tplSpecAnswer.getAnswerNumeric()) {
+									feedback = String.valueOf(tplSpecAnswer.getAnswerNumeric());
+								} else if (null != tplSpecAnswer.getAnswerCompliance()) {
+									if (tplSpecAnswer.getAnswerCompliance()) {
+										feedback = "Yes";
+									} else {
+										feedback = "No";
+									}
+								} else if (StringUtils.isNotEmpty(tplSpecAnswer.getAnswerText())) {
+									feedback = String.valueOf(tplSpecAnswer.getAnswerText());
+								} 
+								tplSpecAnswer.setFeedback(feedback);
+							} else {
+								iterator.remove();
+							}
+							
+						}
+					}*/
+					// 26130 - 26052023
+					// #26130 - Start.
+					if (validateTplSpecMaster(scLoa, master)) {
+						// #26130 - Start.
+						constructSpecData(scLoa, master, question);
+						// #26130 - End.
+						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
+						// #26130 start
+						if (validateTplSpecQuestion(scLoa, question)) {
+							question.setListCombineZonal(getCOmbineZonalSPec(question, master));
+							// #26130 end
+						}
+					}
+					// 26130 - 26052023
+				}
+				// 26130 - End.
+				master.setTplSpecQuestions(newTplSpecQuestionsList);
+				masters.add(master);
+			} // Bug #36438@Syazani - 24/10/2024
+		}
+	}	// Bug #36438@Syazani - 24/10/2024
 	
 	//Bug #36104 start
 	private void getAnswerRemarkItem(ScLoa scLoa, List<String> answerRemarkList, TplSpecQuestion tplSpecQuestion) {
@@ -4682,12 +4695,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// space and before space) length for data 'ITEM'.
 				String[] words = clItem.split(" "); // get array of words
 				StringBuilder sb = new StringBuilder();
-				StringBuilder subSb = new StringBuilder();// this is for
-															// perfomance
+				StringBuilder subSb; //Bug #36438@Syazani - 24/10/2024
 				for (String word : words) // affect each word in string
 				{
 					int length = word.length();
 					if (length >= 20) {
+						// subSb reset here due to redundant text issue
+						subSb = new StringBuilder();	//Bug #36438@Syazani - 24/10/2024
 						String subWord;
 						for (int i = 0; i < length; i += 20) {
 							subWord = word.substring(i, Math.min(length, i + 20));
@@ -4790,9 +4804,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * @param context
 	 * @param scLoa
-	 * @param specMasters 
+	 * @param specMastersParam 
 	 */
-	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa, List<TplSpecMaster> specMasters) {
+	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa, List<TplSpecMaster> specMastersParam) {	//Bug #36438@Syazani - 24/10/2024
+		//Making sure it didn't impact original value
+		List<TplSpecMaster> specMasters = CustomUtils.getInstance().deepCopyArrayList(specMastersParam);	//Bug #36438@Syazani - 24/10/2024
 		List<TplSpecMaster> masters = new ArrayList<>();
 		String dafaltValue =SSTConstant.TB;
 		if (CommonConstants.DEFAULT_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage())) {
