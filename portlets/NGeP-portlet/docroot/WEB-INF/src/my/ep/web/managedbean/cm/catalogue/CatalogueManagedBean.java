@@ -4491,6 +4491,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
 				log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
 				log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
+				log.info("[#26282] - ========================================");
 
 				applyDisciplinaryActions(supplierItem, disciplinaryAct);
 			} else {
@@ -4508,14 +4509,17 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		if (disciplinaryAct.isWarning()) {
 			supplierItem.setDaWarning(disciplinaryAct.isWarning());
 		}
+		
 		// disciplinary action - Suspend Registration
 		if (disciplinaryAct.isSuspendRegistration()) {
 			supplierItem.setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
 		}
+		
 		// disciplinary action - Cancel Registration
 		if (disciplinaryAct.isCancelRegistration()) {
 			supplierItem.setDaCancelReg(disciplinaryAct.isCancelRegistration());
 		}
+		
 		// disciplinary action - Blacklist Owner/Director of Company
 		if (disciplinaryAct.isBlacklistOwner()) {
 			supplierItem.setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
