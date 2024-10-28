@@ -2605,14 +2605,15 @@ public class CommitteBackingBean extends
 	 * @return boolean isCommitteeRecordStatusActive
 	 */
 	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {
-		if (committee == null)
+		if (null == committee) {
 			return false;
+		}
 		String committeeType = committee.getCommitteeType().getParameterCode();
 		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
 		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees
-				&& qtCommittees.size() <= 1)
+				&& qtCommittees.size() <= 1) {
 			return true;
-
+		}
 		return committee.isRecordStatus();
 	}
 	// 25037 - end

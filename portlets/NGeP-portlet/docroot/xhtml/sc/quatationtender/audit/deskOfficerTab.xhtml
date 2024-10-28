@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.audit.tab.desk.officer']}" toggleable="true">
-		<p:dataTable id="searchQtTblId" var="obj" rows="10" width="100%"
+		<p:dataTable id="searchQtTblId" var="obj" rows="10" 
 			value="#{auditQTBackingBean.searchQT}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index" lazy="true">
@@ -22,15 +22,15 @@
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.audit.header.action.type']}" style="width:5%;">
+			<p:column headerText="#{lbl['lbl.audit.header.action.type']}" style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{empty obj.actionType ? lbl['lbl.audit.no.available']:obj.actionType}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.audit.header.action.by']}" style="width:5%;">
+			<p:column headerText="#{lbl['lbl.audit.header.action.by']}" style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.actionBy}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.audit.header.org.name']}" style="width:10%;">
+			<p:column headerText="#{lbl['lbl.audit.header.org.name']}" style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.orgName}" />
 			</p:column>
 			
