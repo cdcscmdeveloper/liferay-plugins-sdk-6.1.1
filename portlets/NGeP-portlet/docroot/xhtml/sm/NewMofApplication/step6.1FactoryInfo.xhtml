@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="#{lbl['lbl.sm.factoryStepLbl']}" id="splCatFacDtlsHdr">
-	 
+	
 		<ac:gmapDialog id="gmapDialog" 
 			latitude="#{cc.attrs.latitude}" 
 			longitude="#{cc.attrs.longitude}" 
@@ -27,8 +27,46 @@
 							<br/> 
 						</c:if>
 						<!-- #12483 - END -->
-						<!-- 32008 - START -->
-						<p:outputPanel id="facInfPan">
+						<table style="width: 350px">
+							<!-- #32008 -->
+							<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
+								<tr>
+									<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+											value="#{backingBean.managedBean.poSecReview.factoryVerify}"
+											id="poFacVer">
+											<p:ajax update=":form:tt:facInfPan,:form:revPanHdr"
+												event="change" process="@this,:form:tt:facInfPan"
+												listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.factoryVerify)}" />
+										</p:selectBooleanCheckbox></td>
+									<td valign="top"><h:outputText
+											value="#{lbl['lbl.sm.sectionPoVerf']}"
+											title="For PO to highlight the verified section " /></td>
+
+								</tr>
+							</p:outputPanel>
+							<!-- #32008 -->
+							<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
+								<tr>
+									<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+											value="#{backingBean.managedBean.apprvrSecReview.factoryVerify}"
+											id="apprFacVer">
+											<p:ajax update=":form:tt:facInfPan,:form:revPanHdr"
+												event="change" process="@this,:form:tt:facInfPan"
+												listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.factoryVerify)}" />
+										</p:selectBooleanCheckbox></td>
+									<td valign="top"><h:outputText
+											value="#{lbl['lbl.sm.sectionApprVerf']}"
+											title="For Approver to highlight the verified section " /></td>
+								</tr>
+							</p:outputPanel>
+						</table> <p:outputPanel id="facInfPan" layout="block">
+						
+							<p:blockUI block=":form:tt:facInfPan" widgetVar="buiPoFac"
+								id="poFacBlc"
+								blocked="#{!backingBean.managedBean.upsCannotEdit and 
+									((backingBean.managedBean.poUser and backingBean.managedBean.poSecReview.factoryVerify)
+									or (backingBean.managedBean.approverUser and backingBean.managedBean.apprvrSecReview.factoryVerify))}" /><!-- #32008 -->
+
 							<h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 							<ui:include
@@ -42,7 +80,6 @@
 								src="/xhtml/sm/shared/mofRegistration/storeInfoForm.xhtml" />
 								
 							<ui:include src="/xhtml/sm/shared/mofRegistration/noFacilityRequiredMsg.xhtml" />
-							<!-- 32008 - END -->
 							<br />
 							<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 								<table style="width: 50%">

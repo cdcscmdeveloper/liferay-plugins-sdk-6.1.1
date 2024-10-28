@@ -28,8 +28,8 @@
 			</p:tooltip>
 		</f:facet>
 		<!-- Disable for UPS 32008 - START -->
-		<!-- table style="width: 100%">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+		<table style="width: 100%">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.branchVerified}"
@@ -44,7 +44,8 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<!-- #32008 -->
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.branchVerified}"
@@ -58,7 +59,7 @@
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
-		</table -->
+		</table>
 		<p:outputPanel id="brnInfPan" layout="block">
 			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"

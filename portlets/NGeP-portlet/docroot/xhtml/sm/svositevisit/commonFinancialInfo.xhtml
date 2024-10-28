@@ -87,9 +87,13 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
-				<p:inputTextarea rows="5" cols="35" autoResize="false"  maxlength="500" value="#{bankInfo.remark}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.remark']}">
+			<!-- #34166 - Start  -->
+				<p:inputTextarea rows="5" cols="35" autoResize="false"  maxlength="500" value="#{bankInfo.remark}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.remark']}" validator="#{svoSiteVisitBackingBean.validateText}">
+					<f:attribute name="param" value="#{lbl['lbl.sm.bankDtls.bankDiaHdr']} #{lbl['lbl.sm.remark']}" />
+					<f:ajax event="blur" execute="@this" />
 					<f:validateLength maximum="500" />
 				</p:inputTextarea>
+			<!-- #34166 - End  -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -116,10 +120,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.remark']}">
+			<!-- #34166 - Start  -->
 				<p:inputTextarea rows="5" cols="70" autoResize="false" disabled="#{viewFlag}" maxlength="500" style="width : auto;"
-					value="#{finLsItem.remark}" label="#{lbl['lbl.sm.remark']}">
+					value="#{finLsItem.remark}" label="#{lbl['lbl.sm.remark']}" validator="#{svoSiteVisitBackingBean.validateText}">
+					<f:attribute name="param" value="#{svoSiteVisitBackingBean.getParameterDesc(ParameterTypeConst.svoFinChecklist,finLsItem.pmParameter.parameterCode)} #{lbl['lbl.sm.remark']}"/>
+					<f:ajax event="blur" execute="@this"/>
 					<f:validateLength maximum="500" />
 				</p:inputTextarea>
+			<!-- #34166 - End -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>

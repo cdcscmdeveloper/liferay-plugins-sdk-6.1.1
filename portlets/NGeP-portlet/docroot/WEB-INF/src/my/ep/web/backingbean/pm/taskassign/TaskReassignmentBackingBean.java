@@ -935,6 +935,12 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getReassigneeList().isEmpty()) {
+			// #35325 Start
+			// Workaround to reset already loaded data and error messages since  
+			// existing handling is throwing exception before performing other actions
+			reloadAllTaskList();
+			checkPendingTaskRemove();
+			// #35325 End
 			throw new EpException(MessageConst.ERROR_770208);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
@@ -2744,9 +2750,11 @@ public class TaskReassignmentBackingBean extends
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_CROSS_PTJ:
 			//3 - Cross PTJ
-			if(vo.getOrgProfileId() != null){
-				orgProfile	= PmCommonUtil.retrievePmOrgProfileDtl(vo.getOrgProfileId());
+			// #35396 - Start
+			if (orgProfileId != null) {
+				orgProfile = PmCommonUtil.retrievePmOrgProfileDtl(orgProfileId);
 			}
+			// #35396 - End
 			
 			if (orgProfile != null) {
 				if (OrganizationType.MINISTRY.value().equals(

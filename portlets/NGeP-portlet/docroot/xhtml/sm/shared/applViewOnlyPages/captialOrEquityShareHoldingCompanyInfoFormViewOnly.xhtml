@@ -15,11 +15,13 @@
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 
-				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}">
+				<!-- #34600 start -->
+				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-space: break-spaces;">
 					<h:outputText value="#{equiBean.companyName}" />
 				</p:column>
+				<!-- #34600 end -->
 
-				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}">
+				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}" style="white-space:normal;word-break:break-word;">
 					<h:outputText
 						value="#{viewSmApplBackingBean.getFullAddress(equiBean.smAddress)}"
 						style="float : left" />
@@ -65,7 +67,8 @@
 								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.companyName}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.companyName}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.companyName}"/></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.companyName}"/>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.regNo']}" /></td>
@@ -106,7 +109,8 @@
 								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address1}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address1}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address1}"/></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address1}"/>
+					</td>
 				</tr>
 	
 				<tr>
@@ -118,7 +122,8 @@
 								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address2}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address2}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address2}"/></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address2}"/>
+					</td>
 				</tr>
 				<tr>
 					<td></td>
@@ -129,7 +134,8 @@
 								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address3}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address3}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address3}"/></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.address3}"/>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
@@ -143,7 +149,8 @@
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestEquityCompany and 
 							 	not empty viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress) ?
 								viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmCountry.countryId)
-								: lbl['lbl.txt.na']}"/></td>
+								: lbl['lbl.txt.na']}"/>
+					</td>
 				</tr>
 	
 				<tr>
@@ -158,29 +165,30 @@
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestEquityCompany and 
 							 	not empty viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress) ?
 								viewSmApplBackingBean.getStateLabelById(viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmState.stateId)
-								: lbl['lbl.txt.na']}"/></td>
+								: lbl['lbl.txt.na']}"/>
+					</td>
 				</tr>
 				<!-- 13320 -->
-					<tr>
-						<!-- #13320 - render division -->
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
-											rendered="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" 
-											rendered="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" />
-							<!-- #32008 -->
-							<ac:smFieldChangeAlertView 
-								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
-									and viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision
-									and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
-								oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId}" 
-								currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionId}" 
-								alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestEquityCompany and 
-								 	not empty viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress) ?
-									viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId)
-									: lbl['lbl.txt.na']}"/></td>
-						<!-- #13320 - render division - end-->
-					</tr>
-	
+				<tr>
+					<!-- #13320 - render division -->
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+										rendered="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" 
+										rendered="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision
+								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestEquityCompany and 
+							 	not empty viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress) ?
+								viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId)
+								: lbl['lbl.txt.na']}"/>
+					</td>
+					<!-- #13320 - render division - end-->
+				</tr>	
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtName}" />
@@ -193,7 +201,8 @@
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestEquityCompany and 
 							 	not empty viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress) ?
 								viewSmApplBackingBean.getDistrictLabelById(viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmDistrict.districtId)
-								: lbl['lbl.txt.na']}"/></td>
+								: lbl['lbl.txt.na']}"/>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
@@ -207,7 +216,8 @@
 							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestEquityCompany and 
 							 	not empty viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress) ?
 								viewSmApplBackingBean.getCityLabelById(viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.pmCity.cityId)
-								: lbl['lbl.txt.na']}"/></td>
+								: lbl['lbl.txt.na']}"/>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
@@ -218,7 +228,8 @@
 								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.postcode}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.postcode}"/></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.smAddress.postcode}"/>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -229,7 +240,8 @@
 								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.phoneNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneNo}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.phoneNo}"/></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.phoneNo}"/>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
@@ -240,7 +252,8 @@
 								and not empty viewSmApplBackingBean.managedBean.latestEquityCompany.equityCompanyId}"
 							oriValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.faxNo}" 
 							currValue="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxNo}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.faxNo}"/></td>
+							alertValue="#{viewSmApplBackingBean.managedBean.latestEquityCompany.faxNo}"/>
+					</td>
 				</tr>
 	
 			</table>

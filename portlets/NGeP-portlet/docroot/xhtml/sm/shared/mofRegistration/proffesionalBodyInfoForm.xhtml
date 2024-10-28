@@ -51,7 +51,7 @@
 				selection="#{backingBean.managedBean.selectedAssocBodyList}"
 				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
 				<ac:paginator for="profDt" />
-				<p:column selectionMode="multiple" width="5%" />
+				<p:column selectionMode="multiple" width="5%" rendered="#{!backingBean.managedBean.upsCannotEdit}"/>
 
 
 				<p:column>

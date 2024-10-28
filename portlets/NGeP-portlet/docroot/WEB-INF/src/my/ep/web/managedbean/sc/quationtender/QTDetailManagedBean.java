@@ -112,6 +112,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion; // #25037
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
+import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -1288,7 +1289,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The state code. */
 	private String stateCode;
 	
- private boolean isState;
+ 	private boolean isState;
 
 	/** The district code. */
 	private String districtCode;
@@ -1718,7 +1719,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded = false;
-	private boolean resetBpkCurrentArea=false;
+	private boolean resetBpkCurrentArea = false;
 	private String previousApprovalTabName;
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementICT;
 	private ScQtApprovalReqAttachement scQtApprovalReqAttachementMITI;
@@ -1760,6 +1761,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtCheckList tempScQtChecklist; // 1873 - note 97
 	private ScQtCheckList finTempScQtChecklist; // 1873 - note 97
 	// #1873 -end
+	
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
+	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
+	// Bug #35219@Syazani 07/11/2023 -- End
 
 	//#25138-start
 	private List<TplSpecQuestion> specQuestionList;
@@ -1791,9 +1797,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #28784 -end-
 
 	//====#31913 bug related to #25138==== start
-	private BigDecimal totalmaxscore;
+	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 
+	private List<TabBean> readOnlyCommitteeTabBean;//Bug 32277
+	
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -7547,6 +7558,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtCheckSt2techProposal(
 			List<ScQtCheckList> scQtCheckSt2techProposal) {
+		this.scQtCheckSt2techProposalLstClone = CustomUtils.getInstance().deepCopyArrayList(scQtCheckSt2techProposal);	// Bug #35219@Syazani 07/11/2023
 		this.scQtCheckSt2techProposal = scQtCheckSt2techProposal;
 	}
 
@@ -7577,6 +7589,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtCheckSt2financeProposalList(
 			List<ScQtCheckList> scQtCheckSt2financeProposalList) {
+		this.scQtCheckSt2financeProposalLstClone = CustomUtils.getInstance().deepCopyArrayList(scQtCheckSt2financeProposalList); // Bug #35219@Syazani 07/11/2023
 		this.scQtCheckSt2financeProposalList = scQtCheckSt2financeProposalList;
 	}
 
@@ -10946,7 +10959,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setScQtAppRequestRemarkMITI(String scQtAppRequestRemarkMITI) {
 		this.scQtAppRequestRemarkMITI = scQtAppRequestRemarkMITI;
 	}
-	// #34694 -end-	
+	// #34694 -end-
 	// #25077 - End
 
 	// bug #30435, Enhancement #25077 - start
@@ -11060,6 +11073,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
+	
+	// Bug #35219@Syazani 07/11/2023 -- Start
+	public List<ScQtCheckList> getScQtCheckSt2techProposalLstClone() {
+		return scQtCheckSt2techProposalLstClone;
+	}
+
+	public void setScQtCheckSt2techProposalLstClone(List<ScQtCheckList> scQtCheckSt2techProposalLstClone) {
+		this.scQtCheckSt2techProposalLstClone = scQtCheckSt2techProposalLstClone;
+	}
+
+	public List<ScQtCheckList> getScQtCheckSt2financeProposalLstClone() {
+		return scQtCheckSt2financeProposalLstClone;
+	}
+
+	public void setScQtCheckSt2financeProposalLstClone(List<ScQtCheckList> scQtCheckSt2financeProposalLstClone) {
+		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
+	}
+	// Bug #35219@Syazani 07/11/2023 -- End
 	
 	//#25138 - Reendorsed - start
 	public int getSpecZoneTabIndex() {
@@ -11246,4 +11277,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.demoSpecialCase = demoSpecialCase;
 	}
 	// #28784 - end
+	// Bug 32277 - start
+	public List<TabBean> getReadOnlyCommitteeTabBean() {
+		return readOnlyCommitteeTabBean;
+	}
+
+	public void setReadOnlyCommitteeTabBean(List<TabBean> readOnlyCommitteeTabBean) {
+		this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
+	}
+	// Bug 32277 - end
+	
+	//Bug #35061 - asyrafhaziq - Start
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+	//Bug #35061 - asyrafhaziq - End
 }

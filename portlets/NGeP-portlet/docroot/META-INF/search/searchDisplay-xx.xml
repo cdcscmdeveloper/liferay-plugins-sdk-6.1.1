@@ -184,9 +184,9 @@
 
 	<!-- #30824 & #29712, #32564 - start -->
 	<bean id="SM_RPT_MOF_ACCOUNT" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="supplierId" />
+		<property name="pk" value="rowNum" />
 
-		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="daoClass" value="my.ep.persistence.dao.sm.VMofAccountDAO" />
 		<property name="searchMethod" value="retrieveMOFAccountList" />
 		<property name="columns">
 			<list>
@@ -201,31 +201,31 @@
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.mofno" />
-					<property name="searchable" value="false"></property>
+					<property name="searchable" value="true"></property>
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="regNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.businessregno" />
-					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="columnWidth" value="150" />
 				</bean>
-				<bean class="my.ep.web.bean.LovColumnBean">
+				<!-- <bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="smMofAccounts.mofNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.mofno" />
 					<property name="viewable" value="false" />
-				</bean>
+				</bean> -->
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="supplierStatus" />
+					<property name="columnName" value="supplierRecordStatusStr" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.supplier.status" />
 					<property name="searchable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="mofStatus" />
+					<property name="columnName" value="mofRecordStatusStr" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.mof.status" />
@@ -236,9 +236,9 @@
 	</bean>
 
 	<bean id="SM_RPT_BASIC_ACCOUNT" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="supplierId" />
+		<property name="pk" value="rowNum" />
 
-		<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+		<property name="daoClass" value="my.ep.persistence.dao.sm.VBasicAccountWithMofDAO" />
 		<property name="searchMethod" value="retrieveBasicAccountList" />
 		<property name="columns">
 			<list>
@@ -255,7 +255,7 @@
 					<property name="bundleKey" value="lbl.sm.businessregno" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="supplierStatus" />
+					<property name="columnName" value="supplierRecordStatusStr" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.supplier.status" />
@@ -2450,4 +2450,25 @@
 	</bean>
 	<!-- Enhancement 25627-end- -->
 	
+	<!--29991 start-->
+	<bean id="PM_ORG_PROFILE_WITH_ORGANISATION_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.businessregistrationnoscreen" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.companyName" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!--29991 end-->
 </beans>

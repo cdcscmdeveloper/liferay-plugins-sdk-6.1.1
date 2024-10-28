@@ -529,8 +529,8 @@
 	<p:dialog id="specAndSupplierOfferDlg"
 		widgetVar="specAndSupplierOfferDlgVar"
 		header="#{lbl['lbl.sc.spec.and.supplier.offer']}"
-		styleClass="pop_up_top" modal="true" width="630" resizable="false">
-		<p:spacer height="20" />
+		styleClass="pop_up_top" modal="true" resizable="false">
+		<p:scrollPanel mode="native" style="width:450px;height:500px; border:none !important" >
 		<table>
 			<tr valign="top">
 			<td width="30%">
@@ -587,6 +587,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.close']}"
 				onclick="itemSpecificationDlgVar.hide();" />
 		</div>
+		</p:scrollPanel>
 	</p:dialog>
 	<!-- #29006 - end -->
 	

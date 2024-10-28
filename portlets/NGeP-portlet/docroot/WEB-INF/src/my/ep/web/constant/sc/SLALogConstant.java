@@ -16,7 +16,12 @@ public class SLALogConstant {
 	 * CLASS_NAME
 	 */
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean"; // #29007
+	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean"; // #29007
 	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
+	// 25037 - start
+	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
+	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
+	// 25037 - end
 	/*
 	 * METHOD_NAME
 	 */
@@ -24,7 +29,15 @@ public class SLALogConstant {
 	public static final String QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY = "generateLampiranA3PdfFromVelocity";
 	public static final String QT_CREATE_LAMPIRANA3FORQT = "createLampiranA3forQT";
 	// #29007 -end-
+	// 25037 - start
+	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
+	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
+	public static final String QT_PRESUBMIT_GENERIC_APPROVAL_TASK = "preSubmitGenericApprovalTask";
+	public static final String QT_PREPARE_COMMITTEE_HISTORY = "prepareCommitteeHistory";
+	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
+	public static final String QT_SLA_DOT_SEPARATOR = ".";
 
+	// 25037 - end
 	private SLALogConstant() {
 
 	}

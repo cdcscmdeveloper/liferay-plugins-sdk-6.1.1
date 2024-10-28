@@ -72,22 +72,7 @@
 							display="icon" /></td>
 					<td colspan='2'>&#160;</td>
 				</tr>
-				<!-- 29480 - Start -->
-				<tr align="center">
-					<td colspan='4'>
-					<table style="width: 80%">
-							<tr>
-								<td><i><h:outputText style="float:initial"
-											value="#{lbl['lbl.sm.premises.type.note']} "
-											styleClass="splNotesFonts" escape="false" /> <p:commandLink
-											onclick="showPremisesTypeInfo.show()"
-											value="#{lbl['lbl.sm.premises.type.note1']}"
-											styleClass="splNotesFonts" style="float: inherit" /></i></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<!-- 29480 - End -->
+				<!-- 29480 - Update: remove code for Re-endorsed CR -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
 						<td><p:outputLabel
@@ -549,6 +534,16 @@
 		<p:confirmDialog id="alertFacTypeChangeDlg" closable="true"
 			header="#{lbl['lbl.sm.facility.facilityType.change.alertheader']}" severity="alert"
 			widgetVar="alertFacTypeChangeDlg">
+			<!-- 32236 - Start -->
+			<script>
+      
+				const collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+       			for (let i = 0; i &lt; collection.length; i++) {
+          			collection[i].remove();
+        		};
+			
+	      	</script>
+			<!-- 32236 - End -->
 			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="alertFacTypeChangeDlg.hide();" />

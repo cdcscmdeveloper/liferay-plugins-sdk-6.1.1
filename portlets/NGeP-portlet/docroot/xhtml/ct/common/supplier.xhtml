@@ -41,6 +41,23 @@
                                      value="#{ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
                              </td>
                         </tr>
+                         <!-- #29983 start -->
+	                       <tr>
+	                        	<td>
+	                        		<p:outputLabel value="#{lbl['lbl.ct.business.reg.no.new']}"/>  
+	                        	</td>
+	                        	<td>
+	                        		  <p:inputText id="supplierRegNoNew" disabled="true" style="width:265px;" 
+						                   value="#{ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo == null ? lbl['lbl.txt.na'] : ctBackingBean.managedBean.contractVer.ctContract.smSupplier.ssmNewRegNo}" />
+						               <p:spacer width="1"/>
+									   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no.new']}" />
+						               <br />
+						               <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.note.applicable.for.roc.and.rob']}" style="float:left;margin-bottom: 5px;" /> 
+						           	  	
+	                        	</td>
+	                        </tr>
+	                       
+	                         <!-- #29983 end -->
                         
                          <h:panelGroup  rendered="#{!ctBackingBean.managedBean.viewContract 
                                            and ctBackingBean.managedBean.updateCompanyName}">
@@ -161,7 +178,7 @@
                   <h:panelGrid columns="4">
                         <p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 			                   value="#{ctBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
-			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress" />
+			                          <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress, contactPersonSupplier, faxNoSupplier, phoneNoSupplier, contactEmailSupplier" /><!--Fix #35358 -->
 			                 </p:selectBooleanCheckbox>
 			                               <p:spacer width="2" />	
 			                               <p:outputLabel value="#{lbl['lbl.ct.update.address']}" style="width:120px;text-align:left;"/>
@@ -183,7 +200,8 @@
                  <tr>
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
-                <td>  <p:inputText disabled="true" style="width:265px;margin-bottom: 5px;" 
+                    <!--Fix #35358 -->
+                <td>  <p:inputText id="contactPersonSupplier" disabled="true" style="width:265px;margin-bottom: 5px;" 
                       value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactPerson}" />
                 </td>
                  </tr>
@@ -194,15 +212,15 @@
                       <td style="width:383px;">
                           <table>
                                  <tr>
-                                    <td>
-                                           <p:inputText  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNoFull}"  
+                                    <td>	<!--Fix #35358 -->
+                                           <p:inputText id="phoneNoSupplier" value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.phoneNoFull}"  
                                              disabled="true" style="width:97px;" />
                              </td> <td><p:spacer width="4"></p:spacer>
                                
                                <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/>
                 </td>
-                 <td>
-                <p:inputText  disabled="true" style="width:97px;"  
+                 <td>	<!--Fix #35358 -->
+                <p:inputText id="faxNoSupplier" disabled="true" style="width:97px;"  
                    value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.faxNoFull}"/>  
                  </td>
                  </tr>
@@ -215,8 +233,8 @@
                        <td>
                  <p:outputLabel  value="#{lbl['lbl.ct.email']}"/>  
                  </td>
-                 <td>
-                 <p:inputText disabled="true" style="width:265px;" 
+                 <td>	<!--Fix #35358 -->
+                 <p:inputText id="contactEmailSupplier" disabled="true" style="width:265px;" 
                        value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierAddress.contactEmail}"/>
                        </td>
                        </tr>

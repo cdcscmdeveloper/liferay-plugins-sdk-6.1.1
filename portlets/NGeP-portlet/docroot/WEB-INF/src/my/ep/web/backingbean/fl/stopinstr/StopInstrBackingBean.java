@@ -910,7 +910,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35392
 			getManagedBean().setBackToDocument(null);
 			getManagedBean().setBackToNtf("notifications");
 			getPopulateReasonList();
@@ -951,6 +951,10 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		
 		reqDTO.setFlOrderId(getManagedBean().getStopInstr().getFlFulfilmentOrder().getFulfilmentOrderId());
 		reqDTO.setDocType(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocType());
+		// 36247-Start
+		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
+		reqDTO.setActionCode(FulfilmentConst.STOP_FULFILMENT);
+		// 36247-End
 		resDTO= orderSO.validatePOCOCurrentStatus(reqDTO);
 		
 		allowToProceed = resDTO.isFlag();		
