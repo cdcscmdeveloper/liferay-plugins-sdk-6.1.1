@@ -83,15 +83,15 @@ public class SLALogConstant {
 	//12471 - end
 	//06022024@Sonarqube QT#58 - haziq
 	public static final String QT_CALC_TOTAL_AMOUNT = "calcTotalAmount";
-
 	// 25037 - start
 	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
 	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
 	public static final String QT_PRESUBMIT_GENERIC_APPROVAL_TASK = "preSubmitGenericApprovalTask";
 	public static final String QT_PREPARE_COMMITTEE_HISTORY = "prepareCommitteeHistory";
 	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
-	// 25037 - end
 
+	// 25037 - end
+	
 	// 25791-start
 	public static final String QT_DETAIL_BACKING_BEAN = "QTDetailBackingBean";
 	public static final String QT_RETRIVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLoa";
@@ -102,7 +102,7 @@ public class SLALogConstant {
 	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLoaContractTrackingDtls";
 	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
 	// 25791-end
-
+	
 	private SLALogConstant(){
 		
 	}	

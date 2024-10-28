@@ -1324,37 +1324,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			//9019 - End (Harun)
 			
-			// #29732 Start
-			//qtmaintenance from audit search ,ADD ISREADONLY
-			//add !isdeskofficer, DO suppose not to show alert message
-			if ((this.getManagedBean().getQt().getQtStatus().getStatusId()
-					.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && !isDeskOfficer() || 
-					this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
-							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) && !this.getManagedBean().isReadOnly()) {
-				if (isQTRoleMaintenanceValidation()) {
-					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
-				}
-				String changedCatCodeList = checkCatCodeChange();
-				if (!changedCatCodeList.isEmpty()) {
-					this.getManagedBean().setActiveIndex(1);
-					retrieveSuppQualificationTabDtl();
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-									"lbl.sc.category.has.changes.on.prerender.view.1", null,
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
-									"lbl.sc.category.has.changes.on.prerender.view.2",
-									new String[] { changedCatCodeList }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale())));
-				}
-			}
-			// #29732 End
-			
 			// 25037 - start
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(),
 					QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -13847,23 +13816,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * 
 	 */
 	public void checkRolesToAuditView() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		if (CollectionUtils.isNotEmpty(roleDesc)) {
-			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				if (pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.EP_ADMIN.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_INTERNAL.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value())) {
-					this.getManagedBean().setAuditViewRole(true);
-				}
-
-			}
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value())) {
+			this.getManagedBean().setAuditViewRole(true);
 		}
 	}
 	
