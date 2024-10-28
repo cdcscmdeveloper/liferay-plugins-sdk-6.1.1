@@ -1352,15 +1352,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				for (Long state : stateId) {
 					stateLs.add(state);
 				}
-			
-				if (districtLs.isEmpty()) {
-					if (stateLs != null && !stateLs.isEmpty()) {
-						stateFilterBean.setSearchField("STATE_ID");
-						stateFilterBean.setSearchValue(stateLs);
-						searchBean.getDataFilterBeans().add(stateFilterBean);
-						appendSearchCriteria(sb, stateFilterBean);	
-					}
+			    
+				//#26282 and SonarQube fixing - Start
+				if (districtLs.isEmpty() && stateLs != null && !stateLs.isEmpty()) {
+					stateFilterBean.setSearchField("STATE_ID");
+					stateFilterBean.setSearchValue(stateLs);
+					searchBean.getDataFilterBeans().add(stateFilterBean);
+					appendSearchCriteria(sb, stateFilterBean);
 				}
+				//#26282 and SonarQube fixing - End
 					
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
@@ -4470,7 +4470,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 	// #30457 - End
 
-	//[#26282] check for Disciplinary Action - Start
+	//#26282 and SonarQube fixing - Start
 	/**
 	 * To check what DA the supplier involve
 	 */
@@ -4481,8 +4481,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			// check for disciplinary action
 			List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierItem
 					.getSupplierId());
-
-			if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
+			if (hasDisciplinaryActions(disciplinaryActList)) {
 				SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
 
 				log.info("[#26282] - ====== Disciplinary Action Status ======");
@@ -4492,28 +4491,35 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
 				log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
 				log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
-				log.info("[#26282] - ========================================");
 
-				// disciplinary action - Warning
-				if (disciplinaryAct.isWarning()) {
-					supplierItem.setDaWarning(disciplinaryAct.isWarning());
-				}
-				// disciplinary action - Suspend Registration
-				if (disciplinaryAct.isSuspendRegistration()) {
-					supplierItem.setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
-				}
-				// disciplinary action - Cancel Registration
-				if (disciplinaryAct.isCancelRegistration()) {
-					supplierItem.setDaCancelReg(disciplinaryAct.isCancelRegistration());
-				}
-				// disciplinary action - Blacklist Owner/Director of Company
-				if (disciplinaryAct.isBlacklistOwner()) {
-					supplierItem.setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
-				}
+				applyDisciplinaryActions(supplierItem, disciplinaryAct);
 			} else {
 				log.info("[#26282] - Disciplinary action does not imposed on supplier");
 			}
 		}
 	}
-	//[#26282] and sonarLint fixing - end
+
+	private boolean hasDisciplinaryActions(List<SmDisciplinaryAction> disciplinaryActList) {
+		return disciplinaryActList != null && !disciplinaryActList.isEmpty();
+	}
+
+	private void applyDisciplinaryActions(VCmSupplierItem supplierItem, SmDisciplinaryAction disciplinaryAct) {
+		// disciplinary action - Warning
+		if (disciplinaryAct.isWarning()) {
+			supplierItem.setDaWarning(disciplinaryAct.isWarning());
+		}
+		// disciplinary action - Suspend Registration
+		if (disciplinaryAct.isSuspendRegistration()) {
+			supplierItem.setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
+		}
+		// disciplinary action - Cancel Registration
+		if (disciplinaryAct.isCancelRegistration()) {
+			supplierItem.setDaCancelReg(disciplinaryAct.isCancelRegistration());
+		}
+		// disciplinary action - Blacklist Owner/Director of Company
+		if (disciplinaryAct.isBlacklistOwner()) {
+			supplierItem.setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
+		}
+	}
+	//#26282 and SonarQube fixing - End
 }
