@@ -15827,9 +15827,11 @@ public class SmApplicationBackingBean extends
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
 				.getInstance().getServiceObject("sm",
 						ISupportingDocInquirySO.class);
-
-		return reqSO
+		
+		SupportingDocInquiryResDTO resDTO = reqSO
 				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
 	}
 	// #34392 - end
 	
