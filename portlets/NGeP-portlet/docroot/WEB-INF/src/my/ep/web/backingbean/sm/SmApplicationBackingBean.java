@@ -17116,10 +17116,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm",
 				ISupportingDocInquirySO.class);
 
-		return reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
 	}
 
-		// #34392 - end
+	// #34392 - end
 
 	// START #29727
 	public void unSelectSsmBranch(AjaxBehaviorEvent e) {
