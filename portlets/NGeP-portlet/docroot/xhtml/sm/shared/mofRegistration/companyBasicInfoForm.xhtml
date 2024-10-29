@@ -213,7 +213,9 @@
 						<p:inputText size="35" required="true" id="smSupAddr1"
 							maxlength="100" label="#{lbl['lbl.sm.companyaddress']}"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddr1(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1)}"/>
+						</p:inputText>
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}" 
 							poUser="true" />
