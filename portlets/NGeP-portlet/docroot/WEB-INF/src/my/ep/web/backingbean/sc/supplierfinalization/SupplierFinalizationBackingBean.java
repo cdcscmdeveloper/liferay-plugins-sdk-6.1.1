@@ -1956,10 +1956,6 @@ public class SupplierFinalizationBackingBean extends
 //					reqDTO.setResetSuppliers(
 //							this.getManagedBean().getResetSupplierList());
 					
-					// #25426 ruzaimah - Start
-					// 202407252@haziq #25426
-					validateInactiveRole(scQtFinalization,decisionTypeCode);
-					// #25426 ruzaimah - End
 					
 					break;
 	
@@ -3586,6 +3582,10 @@ return	remarksNotFound;
 		loadRecommededSuppliersItemize();
 		// Save Preparation and Supplier finalization tab(s) data 
 		// before throwing exception
+		// #25426 ruzaimah - Start
+		// 202407252@haziq #25426
+		validateInactiveRole(scQtFinalization,decisionTypeCode);
+		// #25426 ruzaimah - End
 		validateReEvaluation();
 		reqDTO = validateInfo(2);
 		//#27364 Start
