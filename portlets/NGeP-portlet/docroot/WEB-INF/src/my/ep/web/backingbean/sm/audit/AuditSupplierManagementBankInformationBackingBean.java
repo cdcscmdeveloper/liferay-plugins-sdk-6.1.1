@@ -32,7 +32,7 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		RegistrationManagedBean mBean = (RegistrationManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
@@ -57,13 +57,12 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 		oldBanks = mBean.getOldBanks().listIterator();
 		auditDeletedData(auDetails, oldBanks);
 		auditAddedData(bankList, auDetails, newBanks);
-		auditBaseData(auObj, mBean.getSmSupp(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO);
+		auditBaseData(auObj, mBean.getSmSupp(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO, loginUserId);
 		return auObj;
 	}
 
-	private void auditModifiedDataBankName(List<PmFinancialOrg> bankList,
-			List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank, SmSupplierBank newBank) {
+	private void auditModifiedDataBankName(List<PmFinancialOrg> bankList, List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank,
+			SmSupplierBank newBank) {
 		if (!oldBank.getPmFinancialOrg().getFinancialOrgId().equals(newBank.getPmFinancialOrg().getFinancialOrgId())) {
 			String oldBankName = oldBank.getPmFinancialOrg().getFinOrgName();
 			String newBankName = getFinOrgName(bankList, newBank.getPmFinancialOrg().getFinancialOrgId());
@@ -71,22 +70,20 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 			Long newBankId = newBank.getPmFinancialOrg().getFinancialOrgId();
 
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, oldBankName, newBankName, oldBankId,
-					newBankId, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, oldBankName, newBankName, oldBankId, newBankId,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
 		}
 	}
 
-	private void auditModifiedDataBankNo(List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank,
-			SmSupplierBank newBank) {
+	private void auditModifiedDataBankNo(List<AuditSupplierManagementDetailDTO> auDetails, SmSupplierBank oldBank, SmSupplierBank newBank) {
 		if (!oldBank.getAccountNo().equals(newBank.getAccountNo())) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, oldBank.getAccountNo(),
-					newBank.getAccountNo(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_ACC_NO));
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, oldBank.getAccountNo(), newBank.getAccountNo(), null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_ACC_NO));
 		}
 	}
 
-	private void auditDeletedData(List<AuditSupplierManagementDetailDTO> auDetails,
-			ListIterator<SmSupplierBank> oldBanks) {
+	private void auditDeletedData(List<AuditSupplierManagementDetailDTO> auDetails, ListIterator<SmSupplierBank> oldBanks) {
 		// Expected Max Size in loop (93) based on NGEP_PDS database
 		while (oldBanks.hasNext()) {
 			SmSupplierBank oldBank = oldBanks.next();
@@ -99,25 +96,23 @@ public class AuditSupplierManagementBankInformationBackingBean extends AuditSupp
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
 
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, oldBank.getAccountNo(), null, null,
-					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_ACC_NO));
+					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, oldBank.getAccountNo(), null, null, null,
+					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_ACC_NO));
 		}
 	}
 
-	private void auditAddedData(List<PmFinancialOrg> bankList, List<AuditSupplierManagementDetailDTO> auDetails,
-			ListIterator<SmSupplierBank> newBanks) {
+	private void auditAddedData(List<PmFinancialOrg> bankList, List<AuditSupplierManagementDetailDTO> auDetails, ListIterator<SmSupplierBank> newBanks) {
 		// Expected Max Size in loop (93) based on NGEP_PDS database
 		while (newBanks.hasNext()) {
 			SmSupplierBank newBank = newBanks.next();
 			if (newBank.isBrandNew()) {
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_NAME, null,
-						getFinOrgName(bankList, newBank.getPmFinancialOrg().getFinancialOrgId()), null, newBank
-								.getPmFinancialOrg().getFinancialOrgId(),
-						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
+						getFinOrgName(bankList, newBank.getPmFinancialOrg().getFinancialOrgId()), null, newBank.getPmFinancialOrg()
+								.getFinancialOrgId(), AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_NAME));
 				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
-						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, null, newBank.getAccountNo(), null,
-						null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_ACC_NO));
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_BANK_ACC_NO, null, newBank.getAccountNo(), null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_BANK_ACC_NO));
 
 			}
 		}

@@ -414,6 +414,7 @@ public class ViewApplHistoryBackingBean extends
 		//START 27951
 		//ANY CHANGES HERE PLEASE CHANGES IN ViewApplHistoryBackingBean.redirectToReapplyNewAppl & viewOnlineAccount.RegistrationBackingBean & SmApplicationBackingBean.proceedToApplication
 		boolean proceed = true;
+		String baseUrl; //#36474
 		smApplBB.getManagedBean().setPreRegistration(this.getManagedBean().isPreRegistration());
 		smApplBB.getManagedBean().setPersonnelsRole(this.getManagedBean().getPersonnelsRole());
 		this.getManagedBean().setPreRegistration(true);
@@ -431,11 +432,13 @@ public class ViewApplHistoryBackingBean extends
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
 						.getResubmitUrl());
 			}else{
+				baseUrl = "supptemp-mof-registration"; //#36474
 				// #24923
 				smApplBB.getManagedBean().setNewSupplierType(
 						getManagedBean().getSmAppl().getSupplierType());
 				smApplBB.proceedToApplication(ParameterConst.NEW_SM_APPLN_FOR_MOF);
-		
+				
+				SmCommonUtil.redirectToExternalUrl(baseUrl); //#36474
 				// Enhancement #20467 - point to new appl page with bullet
 				String page = my.ep.web.constant.sm.SupplierManagementConst.APPLICATION_BASE_PAGE_BY_TYPE
 						.get("RE");
@@ -699,26 +702,15 @@ public class ViewApplHistoryBackingBean extends
 		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
 
 		// if more than 1 Cert on a same appl_id, need reorder it and means
-		// there is duplicate, sort cert by desc order
+		// there is duplicate, sort cert by asc order
 		if (cert.size() > 1) {
-			Collections.sort(cert, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
-				}
-			});
+			sortCertsListByAsc(cert);
 		}
 
 		// if more than 1 bumiCert on a same appl_id, need reorder it and means
-		// there is duplicate, Sort bumiCert by descending order
+		// there is duplicate, Sort bumiCert by asc order
 		if (bumiCert.size() > 1) {
-			Collections.sort(bumiCert, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
-				}
-			});
-
+			sortCertsListByAsc(bumiCert);
 		}
 
 		if (cert.size() > 1 || bumiCert.size() > 1) {
@@ -736,7 +728,18 @@ public class ViewApplHistoryBackingBean extends
 
 		return mofCerts;
 	}
-
+	/**
+	 * To sort list of smMofCert by asc
+	 * @param smMofCert
+	 */
+	public void sortCertsListByAsc(List<SmMofCert> smMofCert) {
+		Collections.sort(smMofCert, new Comparator<SmMofCert>() {
+			@Override
+			public int compare(SmMofCert cert1, SmMofCert cert2) {
+				return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+			}
+		});
+	}
 	// #36401 - End
 
 	/**
@@ -748,6 +751,7 @@ public class ViewApplHistoryBackingBean extends
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		for (SmApplSectionReview sectionReview : getManagedBean().getSmAppl()
 				.getSmApplSectionReviews()) {
+			saveSmApplSectionReview(sectionReview);//alter #35759
 			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 			SmWorkflowStatus poWorkflowStatus = workFlowStatusSO.retrieveWorkflowStatusWhenApplicationPendingPOReview(reqDTO)
 					.getWorkflowStatus();
