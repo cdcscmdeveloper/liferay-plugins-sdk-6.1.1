@@ -2704,6 +2704,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 *             the exception
 	 */
 	public String confirmDialogueTrigger(String action) throws Exception {
+		log.info("34443 confirmDialogueTrigger action:"+action);
 		Long status = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
 				&& ("true").equalsIgnoreCase(getManagedBean().getFactoringCheck())
@@ -2713,6 +2714,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			return null;
 		}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
 			RequestContext.getCurrentInstance().execute("fcConfirmDlg.show()");
+			return null;
+		}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
 		}else {
 			return signingAction(action);

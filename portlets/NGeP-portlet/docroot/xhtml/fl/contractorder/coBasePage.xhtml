@@ -99,7 +99,7 @@
 			<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancel}'>
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="#{lbl['lbl.btn.cancel']}" update="@form"
-						action="#{flOrderBB.signingAction(BpmOutcomeConstant.bpmCancel)}">
+						action="#{flOrderBB.confirmDialogueTrigger(BpmOutcomeConstant.bpmCancel)}"><!--#34443 change method-->
 						<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 					</p:commandButton></td>
 			</c:if>
@@ -225,6 +225,22 @@
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
 			</div>
 		</p:dialog>
+		<ui:remove>#34443 start</ui:remove>
+		<p:confirmDialog
+			message="#{lbl['lbl.fl.confirmation.cancel.dialogue.po']}"
+			severity="alert" widgetVar="cancelConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{flOrderBB.signingAction(BpmOutcomeConstant.bpmCancel)}"
+					onstart="cancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="cancelConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<ui:remove>#34443 end</ui:remove>
 		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplineVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
 	</ui:define>
