@@ -197,7 +197,8 @@
 					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq DPStatusConstants.rnPendingItemCodification}">
 						<p:menuitem id="cancelBtnIcon" value="#{lbl['lbl.btn.cancel']}"
 							icon="ui-icon-cancel"
-							action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" />
+							action="#{directPurchaseBackingBean.viewMaintenance(Obj, true)}" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /> <ui:remove>36119, add loading icon when click</ui:remove>
 					</p:menuButton>
 					
 					<p:menuButton value="#{lbl['lbl.btn.option']}" rendered="#{Obj[4] eq DPStatusConstants.loaPendingSubmission
