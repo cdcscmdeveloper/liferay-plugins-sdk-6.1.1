@@ -1454,7 +1454,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTempBrandName(String tempBrandName) {
 		this.tempBrandName = tempBrandName;
 	}
-
+	
+	//[#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -1486,7 +1487,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
-
+	//[#26282] disciplinary action - End
+	
 	/*[#27625] begin*/
 	public String getTypeName() {
 		return typeName;
