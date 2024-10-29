@@ -37,13 +37,15 @@
 					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
 					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+					<!-- #33129 - START --> 
 					<ac:confirmationPopup id="declareDeletePopUpId"
-		widget="declareDeletePopUp"
-		okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
-		width="400" height="150"
-		title="#{lbl['lbl.msg.confirm.declare.header']}"
-		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
-		update=":form"/>
+						widget="declareDeletePopUp"
+						okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
+						width="400" height="auto"
+						title="#{lbl['lbl.msg.confirm.declare.header']}"
+						content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
+						update=":form"/>
+					<!-- #33129 - END -->
 				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
 			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
 			<div class="ppLeftBtn">

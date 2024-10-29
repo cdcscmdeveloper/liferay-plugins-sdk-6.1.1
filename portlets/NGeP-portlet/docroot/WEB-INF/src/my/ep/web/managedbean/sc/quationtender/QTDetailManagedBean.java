@@ -1800,6 +1800,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 
+	private List<TabBean> readOnlyCommitteeTabBean;//Bug 32277
+	
+	//Bug #35061 - asyrafhaziq 
+	private String msgConfirmBelowIndi;
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -11272,4 +11277,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.demoSpecialCase = demoSpecialCase;
 	}
 	// #28784 - end
+	// Bug 32277 - start
+	public List<TabBean> getReadOnlyCommitteeTabBean() {
+		return readOnlyCommitteeTabBean;
+	}
+
+	public void setReadOnlyCommitteeTabBean(List<TabBean> readOnlyCommitteeTabBean) {
+		this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
+	}
+	// Bug 32277 - end
+	
+	//Bug #35061 - asyrafhaziq - Start
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+	//Bug #35061 - asyrafhaziq - End
 }

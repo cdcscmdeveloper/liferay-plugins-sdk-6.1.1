@@ -220,11 +220,15 @@
 						disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.managedBean.flRequest.smSupplier.epNo}"></p:inputText></td>
 			</tr>
+			<!-- 29982 start -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+			    <td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.managedBean.flRequest.gstRegNo}" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+						value="#{flOrderBB.managedBean.flRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : flOrderBB.managedBean.flRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.managedBean.flRequest.gstDeclaredDate}">
@@ -233,6 +237,13 @@
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.managedBean.flRequest.gstRegNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+			</tr>
+			<!-- 29982 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"

@@ -107,7 +107,8 @@
 					itemValue="0" />
 				<p:ajax event="change" process="@this" update="poCatRDecisionRmrk"
 					partialSubmit="true"
-					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			</p:selectOneRadio>
 
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
@@ -164,7 +165,8 @@
 					itemValue="0" />
 				<p:ajax event="change" process="@this"
 					update="apprvrCatRDecisionRmrk" partialSubmit="true"
-					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			</p:selectOneRadio>
 			<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
