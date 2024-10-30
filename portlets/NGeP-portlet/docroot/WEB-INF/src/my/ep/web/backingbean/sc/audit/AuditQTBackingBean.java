@@ -154,6 +154,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 				break;
 			}
 			this.getManagedBean().setActiveIndex(activeIndex);
+		} else {
+			RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
 		}
 	}
 
