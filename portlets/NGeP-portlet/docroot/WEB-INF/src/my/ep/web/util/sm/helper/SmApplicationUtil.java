@@ -1744,7 +1744,9 @@ public class SmApplicationUtil {
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
 		if(managedBean.isSupplierUser()){
-			if(currentTab == 5 && !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
+			if(currentTab == 5  
+					&& managedBean.getOutputPage() != null //31018
+					&& !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
 				validateSpecialAndNormalCategoryCapital(managedBean);	
 			}	
 		}
@@ -10453,6 +10455,11 @@ public class SmApplicationUtil {
 				break;
 			case SupplierManagementConst.SM_ASSOC_COMPANY_PANEL:
 				bean.setAssocCompanyDistricts(distItems);
+				//#34159 - START
+				if((stateId==null || !addr.getPmState().getStateCode().contentEquals(SupplierManagementConst.SARAWAK_CODE)) && !bean.getAssocCompanyDivisions().isEmpty()){
+					bean.setAssocCompanyDivisions(new ArrayList<SelectItem>());
+				}
+				//#34159 - END
 				bean.setAssocCompanyCities(new ArrayList<SelectItem>());
 				break;
 			case SupplierManagementConst.SM_EQUI_COMPANY_PANEL:

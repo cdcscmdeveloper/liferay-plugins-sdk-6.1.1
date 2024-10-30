@@ -10910,20 +10910,19 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				specReqDto.setSpecSearchForApp(false);
 				
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+				List<Long> replacedQuestionIds = new ArrayList<>();
 				if (this.getManagedBean().getScQt().isZonal()) {// 29007&31423-start
 					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<>();
 					boolean newOfferedSpecification = false;// 29007
-					List<Long> replacedQuestionIds = new ArrayList<>();
 					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
 								.getQuestionType())) {
 							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
 									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
-											.getSpecQuestionId()) ? true : false;
+											.getSpecQuestionId());
 							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
-									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem()) ? true
-									: false;
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
 							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {// 29007-start
 								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
 										specAnswer.getTplSpecQuestion().getClItem());
@@ -10989,14 +10988,18 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
 								.getQuestionType())) {
 
-							if (specAnswer.getTplSpecQuestion() != null
-									&& specAnswer.getTplSpecQuestion().getClItem() != null
+							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
+									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
+											.getSpecQuestionId());
+							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
-									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())) {// 29007-start
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
+							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {// 29007-start
 								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
 										specAnswer.getTplSpecQuestion().getClItem());
 								specAnswer.getTplSpecQuestion().setClItem(
-										VmUtil.getInstance().addLineBreaks(itemName, 20));
+										VmUtil.getInstance().addLineBreaks(itemName, 30));
+								replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 							}
 
 							if (null != scLoiLoaItem.getTplSpecTierQty()) {
@@ -11382,23 +11385,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 	//26770 - end
 	
-		/*29007 Start
-		 * sorting LoiItems
-		 */
-		private void checkItemSortingLatest(List<ScLoiLoaItem> loiLoaItem) {
-			Collections.sort(loiLoaItem, new Comparator<ScLoiLoaItem>() {
-				public int compare(ScLoiLoaItem loiItem1,
-						ScLoiLoaItem loiItem2) {
-
-					return new CompareToBuilder()
-							.append(loiItem1.getLatestChangedDate(),
-									loiItem2.getLatestChangedDate())
-							.toComparison();
-				}
-			});
-		}
-		//29007 End	
-		
 		// #25726 START
 		private boolean over500K(ScLoa loa) {
 
@@ -11728,7 +11714,8 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				Map<Long, String> l1Map = new HashMap<>();
 				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setCategoryL1Id(pmCategoryL1.getCategoryL1Id());
+				Long l1Id = pmCategoryL1.getCategoryL1Id();
+				reqDTO.setCategoryL1Id(l1Id);
 				List<PmCategoryL2> categoryL2List = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO)
 						.getCategoryL2List();
 				for (PmCategoryL2 pmCategoryL2 : categoryL2List) {
@@ -11753,7 +11740,8 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL1Id(pmCategoryL2.getCategoryL2Id());
+		Long l2Id = pmCategoryL2.getCategoryL2Id();
+		reqDTO.setCategoryL2Id(l2Id);
 		List<PmCategoryL3> categoryL3List = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO).getCategoryL3List();
 		for (PmCategoryL3 pmCategoryL3 : categoryL3List) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
@@ -11839,6 +11827,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		String template = (String) event.getComponent().getAttributes().get(QTConstants.TEMPLATE_CHANGE_VALUE);
 		this.resetTemplate();
 		this.getManagedBean().setStandardTemplate(template);
+		this.getManagedBean().setTemplateSpecCreate(null);
 		PmParameter procCat = this.getManagedBean().getScLoa().getScQt().getPmProcurementCategory();
 
 		if (null != procCat) {

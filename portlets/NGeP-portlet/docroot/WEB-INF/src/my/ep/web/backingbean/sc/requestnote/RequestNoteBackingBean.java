@@ -1170,17 +1170,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// #29693 start
 		// More than 1000 plus request note details data
-		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
-			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
+		if (getManagedBean().getCurrentStatusId() != null
+				&& (getManagedBean().getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) || getManagedBean()
+						.getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL))) {
+			for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
+				String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 
-			if ((getManagedBean().getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) || getManagedBean()
-							.getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL))
-					&& (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || fulfilmentType
-							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
-				approvalNotification();
-				break;
+				if (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+						|| fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+					approvalNotification();
+					break;
+				}
 			}
-
 		}
 		// #29693 end
 
@@ -1322,7 +1323,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) { //#36467
+				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { //#36467 & #36362
 					// 36362 - start
 					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
 					// 36362 - end
