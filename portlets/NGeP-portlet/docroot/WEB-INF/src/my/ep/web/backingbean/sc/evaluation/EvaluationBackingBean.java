@@ -2541,7 +2541,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					// #35384 recalculate at endorse or sign off -start-
 					|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 					&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
-					|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))) { // #35384 recalculate at endorse or sign off -end-
+					|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))
+					// #35384 recalculate at endorse or sign off -end-
+			) { 
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
@@ -2570,8 +2572,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						// #35384 recalculate at endorse or sign off -start-
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
-						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))) { // #35384 recalculate at endorse or sign off -end-
-				
+						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))
+				        // #35384 recalculate at endorse or sign off -end-
+				) {
 					financialCheckListStatusCheck();
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
