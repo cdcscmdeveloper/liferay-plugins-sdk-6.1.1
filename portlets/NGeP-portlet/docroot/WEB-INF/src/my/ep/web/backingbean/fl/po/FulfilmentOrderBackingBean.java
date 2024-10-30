@@ -436,6 +436,13 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
+		//#34443 start
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100026, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+			}
+		}
+		//#34443 end
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CARRYFORWARD)){
 			if("true".equalsIgnoreCase(getManagedBean().getFactoringCheck())){
 				if(null==getManagedBean().getFulfilmentOrder().getPmFinancialOrgId()){
@@ -2704,16 +2711,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 *             the exception
 	 */
 	public String confirmDialogueTrigger(String action) throws Exception {
-		log.info("34443 confirmDialogueTrigger action:"+action);
 		Long status = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)
 				&& ("true").equalsIgnoreCase(getManagedBean().getFactoringCheck())
 				&& status.equals(FulfilmentStatusConst.PO_PENDING_SUPPLIER_ACKNOWLEDGEMENT)) {
 			validateFulfillmentOrder(action);
 			RequestContext.getCurrentInstance().execute("ackConfirmDlg.show()");
-			return null;
-		}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
-			RequestContext.getCurrentInstance().execute("fcConfirmDlg.show()");
 			return null;
 		}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");

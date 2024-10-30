@@ -556,40 +556,37 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			}
 		}
 
-		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-			if(hasSupplierRole() && !hasGovtSellerRole()) { // Supplier stop delivery
-				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-				// set action
-				getManagedBean().setButtonAction(outcome);
-				getManagedBean().setAutoUpdate(Boolean.FALSE);
-				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-				return null;
-			} else {
-				if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && 
-					(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))){
-					if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
-						getManagedBean().setSelectedTabIndex(0);
-						throw new EpException(MessageConst.ERROR_745078);
-					}
-					
-					IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
-					PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
-					personnelReqDTO.setSmSupplierId(getManagedBean().getStopInstr().getFlRequest().getSmSupplier().getSupplierId());
-					PersonnelResDTO personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
-					
-					if(personnelResDTO.getSmPersonnelList().isEmpty()){
-						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-					}
-				}
-				// set action
-				setTextBeforeSign(outcome);
-				getManagedBean().setButtonAction(outcome);
-				getManagedBean().setAutoUpdate(Boolean.FALSE);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-				return null;
-			}
+		//#34443 remove condition if not bpm cancel as cancel outcome need signing action
+		if(hasSupplierRole() && !hasGovtSellerRole()) { // Supplier stop delivery
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			return null;
 		} else {
-			return saveStopInstruction(outcome);
+			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) && 
+				(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT))){
+				if(!getManagedBean().isIssuanceCogstrCheck() && getManagedBean().isCoGstr()){
+					getManagedBean().setSelectedTabIndex(0);
+					throw new EpException(MessageConst.ERROR_745078);
+				}
+					
+				IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
+				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+				personnelReqDTO.setSmSupplierId(getManagedBean().getStopInstr().getFlRequest().getSmSupplier().getSupplierId());
+				PersonnelResDTO personnelResDTO = personnelSO.retrieveLatestActivePersonnelBySupplierId(personnelReqDTO);
+				
+				if(personnelResDTO.getSmPersonnelList().isEmpty()){
+					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.supplierUser",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+			}
+			// set action
+			setTextBeforeSign(outcome);
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
 		}
 	}
 	
