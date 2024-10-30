@@ -9,7 +9,9 @@ import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -23,6 +25,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
@@ -516,6 +519,16 @@ public class SmSideMenuIconUtil {
 	public static String getSideMenuVerificationIcon(
 			SmApplicationManagedBean bean, String sectionType) {
 		String retVal = StringUtils.EMPTY;
+		//#31043 START
+		PmStatus applCurrentStatus = null;
+		if(bean.getSmAppl().getSmWorkflowStatuses() != null){
+			for(SmWorkflowStatus workflowStatus : bean.getSmAppl().getSmWorkflowStatuses()){
+				if(workflowStatus.getIsCurrent()){
+					applCurrentStatus = workflowStatus.getPmStatus();
+				}
+			}
+		}
+		//#31043 END
 		if (!bean.isSupplierUser()) {
 			retVal = ICON_UNTICK;
 			SmApplSectionReview rev = bean.isPoUser() ? bean.getPoSecReview()
@@ -575,6 +588,11 @@ public class SmSideMenuIconUtil {
 								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 					retVal = ICON_VIEW;
 				} else {
+					//#31043
+					if(bean.isReviewSiteVisit()){
+						retVal = ICON_TICK;
+					}
+					
 					boolean isAllCatcodeVerified = true;
 					if (!EntityHelper.isCollectionEmpty(bean.getSmAppl()
 							.getSmSupplierCategories())) {
@@ -595,7 +613,16 @@ public class SmSideMenuIconUtil {
 						//Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
 						//to check, if data not exist no need to auto check
 						if(bean.isPoUser() && isAllCatcodeVerified &&(bean.getActiveCategoryList()==null || bean.getActiveCategoryList().size()<=0) ){
-							isAllCatcodeVerified = false;
+							//#31043 start
+							if(applCurrentStatus.getStatusId() != Long.parseLong(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION)){
+								if (bean.getApprovedCategoryList()!=null) {
+									isAllCatcodeVerified = true;
+									
+								} else {
+									isAllCatcodeVerified = false;
+								}
+							}
+							//#31043 end
 						}
 						
 						if (isAllCatcodeVerified) {
@@ -632,13 +659,35 @@ public class SmSideMenuIconUtil {
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+				//31043 - start
+				boolean mandatoryDocVerified = false; 
+				boolean nonMandatoryDocVerified = true; 
+				boolean licenseMandatoryDocVerified = true; 
+				
+				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
 				if (!EntityHelper.isCollectionEmpty(bean
 						.getMandatoryLicenseDocs())) {
 					for (SmLicenseInfoVO docVO : bean.getMandatoryLicenseDocs()) {
 						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
 					}
 				}
+				
+				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
+					for (SmApplSupportDoc doc : licenseMandatoryDocs) {
+						if(bean.isPoUser() && doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0){
+							licenseMandatoryDocVerified = false;
+							break;
+						}
+						if(bean.isApproverUser() && doc.getVerifiedFlg() != null){
+							doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
+							if(doc.getApproverVerifiedFlg() == 0){
+								licenseMandatoryDocVerified = false;
+								break;
+							}
+						}
+					}
+				}
+				
 				if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 						.getMandatoryDocs(), bean.getSmAppl()
 						.getSupportingDocMode(), bean.isApproverUser())
@@ -651,12 +700,73 @@ public class SmSideMenuIconUtil {
 										.isApproverUser())) {
 					retVal = ICON_TICK;
 				}
-
+				
+				int countDocs = 0;
+				int countVerifiedDocs = 0;
+				if (!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())) {
+					for (SmApplSupportDoc doc : bean.getMandatoryDocs()) {
+						countDocs++;
+						if(bean.isPoUser()){
+							if(doc.getVerifiedFlg() != null){
+								if(doc.getVerifiedFlg() == 1)
+									countVerifiedDocs++;
+							}
+						}
+						else if(bean.isApproverUser()){
+							if(doc.getApproverVerifiedFlg() != null){
+								if(doc.getApproverVerifiedFlg() == 1)
+									countVerifiedDocs++;
+								}
+						}
+					}
+					log.info("No of docs: "+countDocs);
+					log.info("No of docs verified "+countVerifiedDocs);
+					if(countDocs != 0 && countVerifiedDocs != 0)
+						if(countVerifiedDocs == countDocs)
+							mandatoryDocVerified = true;
+						else
+							mandatoryDocVerified = false;
+				}
+				
+				if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
+					for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
+						if(doc.getSmApplDocFiles() != null){
+							for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
+								if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+										|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
+									nonMandatoryDocVerified = false;
+									break;
+								}
+								if(bean.isApproverUser() && !(" ").equals(docFile.getFilePath()) && doc.getApproverVerifiedFlg() != null 
+										&& doc.getApproverVerifiedFlg() == 0){
+									nonMandatoryDocVerified = false;
+									break;
+								}
+							}
+							if(!nonMandatoryDocVerified){
+								break;
+							}
+						}
+					}
+				}
+			
+				if(mandatoryDocVerified){
+					retVal = ICON_TICK;
+					if(!licenseMandatoryDocVerified || !nonMandatoryDocVerified){
+						retVal = ICON_UNTICK;
+					}
+				}else{
+					retVal = ICON_UNTICK;
+				}
+			
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)
 					&& rev.isSitevisitVerified()) {
-				retVal = ICON_TICK;
+				retVal = ICON_UNTICK;
+				if(rev.isSitevisitVerified())
+					retVal = ICON_TICK;
 			}
+			//#31043 - end
 		}
 		return retVal;
 	}

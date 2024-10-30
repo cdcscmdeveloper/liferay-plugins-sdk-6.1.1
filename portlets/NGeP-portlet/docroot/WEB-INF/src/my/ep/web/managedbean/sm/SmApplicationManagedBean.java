@@ -627,6 +627,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	//32008
 	private boolean upsCannotEdit;
+	// 31043 START
+	private boolean showFacilityMachine;
+	
+	private boolean allowedToSiteVisit;
+	// 31043 END
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4632,4 +4637,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			this.upsCannotEdit = upsCannotEdit;
 		}
 		//end 32008
+		
+	//#31043 START	
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
+
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
 }
