@@ -456,20 +456,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (Arrays.asList(QTStatusConst.LOA_PENDING_VERIFICATION,QTStatusConst.LOA_COMPLETED).contains(scLoa.getPmStatus().getStatusId())) {//29007,#32119-start
 			getManagedBean().setSupPropSpecUpdate(true);	
 		}//29007-End
-		if (null != this.getManagedBean().getScLoa()
-				&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
-						.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
-				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa()
-						.getScLoiLoaItems())) {
-			Collections.sort(this.getManagedBean().getScLoa()
-					.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
-				@Override
-				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-					return Long.compare(s1.getScRequestItem().getRequestNoteItemId(),
-							s2.getScRequestItem().getRequestNoteItemId());//#36473
-				}
-			});
-		}
 		//#29007 End Vinod
 		
 		// #27797 - start
@@ -550,20 +536,40 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// sort by scLoiLoaItem.getTplSpecZoneDtl() and scLoiLoaItem..getTplSpecTierQty()
 		if (null != this.getManagedBean().getScLoa()
 				&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
-				.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
-				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())) {
-			Collections.sort(this.getManagedBean().getScLoa().getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
-				@Override
-				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-					if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
-							&& null != s1.getTplSpecZoneDtl() && null != s2.getTplSpecZoneDtl()) {
-						return new CompareToBuilder().append(s1.getTplSpecZoneDtl().getSpecZoneId(), s2.getTplSpecZoneDtl().getSpecZoneId())
-								.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
-					} else {
-						return 0;
+						.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa()
+						.getScLoiLoaItems())) {
+			if(this.getManagedBean().getScLoa().getScQt()!=null && this.getManagedBean().getScLoa().getScQt().isZonal()){
+				Collections.sort(this.getManagedBean().getScLoa()
+						.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
+					@Override
+					public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+						if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
+								&& null != s1.getTplSpecZoneDtl() && null != s2.getTplSpecZoneDtl()) {
+							return new CompareToBuilder().append(s1.getTplSpecZoneDtl().getSpecZoneId(), s2.getTplSpecZoneDtl().getSpecZoneId())
+									.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
+						} else {
+							return Long.compare(s1.getTplSpecZoneDtl().getSpecZoneId(),
+									s2.getTplSpecZoneDtl().getSpecZoneId());
+						}
 					}
-				}
-			});
+				});
+			}else{
+				Collections.sort(this.getManagedBean().getScLoa()
+						.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
+					@Override
+					public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+						if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
+								&& null != s1.getScRequestItem() && null != s2.getScRequestItem()) {
+							return new CompareToBuilder().append(s1.getScRequestItem().getRequestNoteItemId(), s2.getScRequestItem().getRequestNoteItemId())
+									.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
+						} else {
+							return Long.compare(s1.getScRequestItem().getRequestNoteItemId(),
+									s2.getScRequestItem().getRequestNoteItemId());
+						}
+					}
+				});
+			}
 		}
 		// #34915 idham @01/08/2023 - End
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
@@ -6205,6 +6211,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa.getPmStatus().getStatusId())){
 						getManagedBean().setSelectedTabIndex(1);
 					}
+					
+					setTabActiveIndex();//25791
+					
 					return editLOAAction(resDTO.getScLoa());
 				} else if (resDTO.getScLoi() != null) {
 					return null;
@@ -6419,11 +6428,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if(quantity != null){
 					subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 							scLoiLoaItem.getUnitPrice(), quantity);
-					totalAmount = totalAmount.add(subTotal).setScale(2,BigDecimal.ROUND_UP);
+					totalAmount = totalAmount.add(subTotal).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 				}
 			}
 		}
-		totalAmount =  totalAmount.setScale(2, BigDecimal.ROUND_UP);
+		totalAmount =  totalAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		return totalAmount;
 	}
 
@@ -11020,6 +11029,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 				if(null!=templateSpecResDTO && null!=templateSpecResDTO.getSpecAnswerList() && CollectionUtils.isNotEmpty(templateSpecResDTO.getSpecAnswerList())){//29007-start
 					boolean newOfferedSpecification=false;//29007
+					List<Long> replacedQuestionIds = new ArrayList<>();
 					for(TplSpecAnswer specAnswer:templateSpecResDTO.getSpecAnswerList()){
 						String feedback = null;
 						if (null != specAnswer.getAnswerCompliance()) {
@@ -11041,9 +11051,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							String spec=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClSpecDetail());
 							specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec,25));
 						}
-						if(specAnswer.getTplSpecQuestion() != null && specAnswer.getTplSpecQuestion().getClItem() !=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) && StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){//29007-start
-							String itemName=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClItem());
-							specAnswer.getTplSpecQuestion().setClItem(VmUtil.getInstance().addLineBreaks(itemName,20));
+						boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
+								|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
+										.getSpecQuestionId());
+						boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
+								&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
+								&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
+						if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {
+							String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+									specAnswer.getTplSpecQuestion().getClItem());
+							specAnswer.getTplSpecQuestion().setClItem(
+									VmUtil.getInstance().addLineBreaks(itemName, 30));
+							replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 						}
 						if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
 							String ansRemark=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getAnswerRemark());
@@ -11737,23 +11756,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//#25025 - end
 	
-	/*29007 Start
-	 * sorting LoiItems
-	 */
-	private void checkItemSortingLatest(List<ScLoiLoaItem> loiLoaItem) {
-		Collections.sort(loiLoaItem, new Comparator<ScLoiLoaItem>() {
-			public int compare(ScLoiLoaItem loiItem1,
-					ScLoiLoaItem loiItem2) {
-
-				return new CompareToBuilder()
-						.append(loiItem1.getLatestChangedDate(),
-								loiItem2.getLatestChangedDate())
-						.toComparison();
-			}
-		});
-	}
-	//29007 End
-	
 	//#25725 start
 	
 	private boolean validateApprovalLetter(ScLoa scLoa) {
@@ -11909,7 +11911,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				totalPrice = calcSubTotalPrice(item).add(totalPrice) ;
 			}
 		}
-		totalPrice = totalPrice.setScale(2, BigDecimal.ROUND_UP);
+		totalPrice = totalPrice.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 
 		return totalPrice;
 	}
@@ -12349,5 +12351,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		reqNoteBB.viewRequestNote(requestNoteId);
 	}
 	// #25790 - end
+	
+	
+
+
+	/**
+	 * set tab activeIndex.
+	 */
+	private void setTabActiveIndex() {// 25791-start
+		if (isQTMaintenanceScreen()) {
+			getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
+		}
+	}// 25791-end	
 }
 

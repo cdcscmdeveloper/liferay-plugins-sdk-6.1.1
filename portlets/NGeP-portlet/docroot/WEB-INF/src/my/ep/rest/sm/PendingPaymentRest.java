@@ -40,6 +40,9 @@ public class PendingPaymentRest {
 				// #36401 - End
 				try {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
+					//#36401 - Start
+					SmServiceLookup.getPendingPaymentSO().checkTrackCert(smPendingProcess);
+					//#36401 - End
 				} catch (Exception e) {
 					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
 					smPendingProcess.setErrorMsg(e.getMessage());

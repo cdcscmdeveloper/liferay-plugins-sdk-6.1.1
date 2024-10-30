@@ -25,25 +25,19 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
@@ -72,11 +66,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
-import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Base Backing Bean for Fulfilment.
