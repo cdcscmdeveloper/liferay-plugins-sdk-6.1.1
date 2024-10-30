@@ -3325,9 +3325,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Page navigation to FLDoc search page in PR.
 	 *
 	 * @return the string
+	 * @throws IOException //36519
 	 * 
 	 */
-	public String backToPervious(){
+	public String backToPervious() throws IOException{//36519
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -3335,22 +3336,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
-		//35357-Start
-		else if(getManagedBean().getBackToNtf() != null){
-			try {
-				FacesContext.getCurrentInstance().getExternalContext().redirect(
-						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
-			} catch (IOException e) {
-				log.error("File:purchaseRequestBackingBean Method:backToPervious", e);
-			}
+		// 36519-Start
+		else {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+									+ "notifications");
 			return null;
 		}
-		//35357-End
-		else{
-			return "flDocSearch";
-		}
-		
-		
+		// 36519-End
 	}
 	
 	/**
@@ -3991,7 +3987,16 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		double thresoldAmt = 0;
+		//36560-Start
+		Map<String, BigDecimal> extensionCodeCache = new HashMap<>();
+		double thresoldAmt;
+
+		FlItemSummaryReqDTO paidPaReq = new FlItemSummaryReqDTO();
+		List<Long> flFulfilmentRequestList;
+		paidPaReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		paidPaReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
+		flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(paidPaReq);
+		// 36560-end
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
@@ -3999,9 +4004,20 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
-			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
-			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			
+			// 36560-Start
+			String extensionCode = requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8);
+			summReq.setExtensionCode(extensionCode);
+
+			BigDecimal sumAmt;
+
+			if (extensionCodeCache.containsKey(extensionCode)) {
+				sumAmt = extensionCodeCache.get(extensionCode);
+			} else {
+				sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
+				extensionCodeCache.put(extensionCode, sumAmt);
+			}
+			// 36560-End
 			
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
@@ -4497,7 +4513,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35357
-			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+//			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -4507,7 +4523,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			setFulfilmentRequestField(resDTO);
 			getManagedBean().setBackToDocument(null);
-			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();

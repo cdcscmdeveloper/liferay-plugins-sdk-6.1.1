@@ -4432,9 +4432,10 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	/**
 	 * Page navigation to FLDoc search page in CR
+	 * @throws IOException //36519
 	 * 
 	 */
-	public String backToPervious() {
+	public String backToPervious() throws IOException {//36519
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -4442,20 +4443,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
-		//35357-Start
-		else if(getManagedBean().getBackToNtf() != null){
-			try {
-				FacesContext.getCurrentInstance().getExternalContext().redirect(
-						 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
-			} catch (IOException e) {
-				log.error("File:ContractRequestBackingBean Method:backToPervious", e);
-			}
+		// 36519-Start
+		else {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+									+ "notifications");
 			return null;
 		}
-		//35357-End
-		else{
-			return "flDocSearch";
-		}
+		// 36519-End
 	}
 	
 	/**
@@ -4968,7 +4966,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				if(getManagedBean().getSelectedDelAddr()!=null) {
 					//36468-Start
 					if(getManagedBean().getFlRequest().getScPurchaseInDefault() != null && isPidService){
-						getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().addAll(itemAddrList);
+						populateItemForPIDWithService();
 					}
 					//36468-End
 					populateItemsForSelectedAddress();
@@ -6537,7 +6535,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35357
-			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+//			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -6555,7 +6553,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 			}
 			getManagedBean().setBackToDocument(null);
-			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			getEspkbCommitmentNo();
@@ -7508,7 +7505,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				FlTempItem flTempItem = new FlTempItem();
 				flTempItem.setFlRequest(getManagedBean().getFlRequest());
 				flTempItem.setScRequestItem(ctItemResDTO.getCtContractItem().getScRequestItem());
-				getManagedBean().getFlRequest().getFlTempItems().add(flTempItem);
 
 				for (FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					getManagedBean().setSelectedDelAddr(deliveryAddress);

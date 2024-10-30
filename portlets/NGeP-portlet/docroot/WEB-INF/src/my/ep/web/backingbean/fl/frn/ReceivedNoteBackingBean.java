@@ -1249,7 +1249,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 				getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());

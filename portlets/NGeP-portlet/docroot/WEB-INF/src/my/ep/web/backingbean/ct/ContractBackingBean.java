@@ -3110,25 +3110,38 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * list, user allow to enter the bond details and attachment. 
 	 */
 	public void addBondDetails() {
-		CtPerformanceBond newBond = new CtPerformanceBond();
-		newBond.setFinancialOrg(new PmFinancialOrg());
-		newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		cal.add(Calendar.YEAR, 1); 
-		newBond.setExpDate(cal.getTime());
-		//#24333 - Start
-		if(isContractExtendOrIsBond()){
-			newBond.setBondNew(true);
-			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
-		}else{
-			newBond.setBondNew(false);
-			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
-		}
-		//#24333 - End
-	}		    
+	    CtPerformanceBond newBond = new CtPerformanceBond();
+	    newBond.setFinancialOrg(new PmFinancialOrg());
+	    newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+	    
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+	    cal.add(Calendar.YEAR, 1); 
+	    newBond.setExpDate(cal.getTime());
+	    
+	    //#24333,#36491 - Start
+	    // Decide bond type and add to the right collections
+	    boolean isExtendedOrNewBond = isContractExtendOrIsBond();
+	    newBond.setBondNew(isExtendedOrNewBond);
+	    
+	    addBondToCollections(newBond, isExtendedOrNewBond);
+	    //#24333,#36491 - End
+	}
+
+	//#24333,#36491 - Start
+	/**
+	 * Helper method to add the bond to specific collections based on bond type.
+	 * @param bond The performance bond to add.
+	 * @param isExtendedOrNewBond True if bond is new or extended, false if original.
+	 */
+	private void addBondToCollections(CtPerformanceBond bond, boolean isExtendedOrNewBond) {
+	    if (isExtendedOrNewBond) {
+	        getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(bond);
+	    } else {
+	        getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(bond);
+	    }
+	}
+	//#24333,#36491 - End	    
 
 	/**
 	 * The method used to upload performance bond file.
@@ -4955,20 +4968,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	//End Fix - #35202
 	
-	//#35137 - Start
-		/**
-		 * Method to Checking Amendment process
-		 * 
-		 * @return boolean
-		 */
-		public boolean isAlreadyAmendment() {
-			if(getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null){
-				if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
-					getManagedBean().setDisableOriginalBond(true);
-					return true;
-				}				
+	// #35137,#24333 - Start
+	/**
+	 * Method to Checking Amendment process
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAlreadyAmendment() {
+		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null) {
+			if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0, 2)
+					.equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+				getManagedBean().setDisableOriginalBond(true);
+				return true;
 			}
-			return false;
 		}
-		//#35137 - End
+		return false;
+	}
+	// #35137,#24333 - End
 }  
