@@ -4370,7 +4370,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		List<ScQtApproval> scQtApprovals = this.getManagedBean().getQt().getScQtApprovals();
 		//#30477 Start Vinod
-		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod
 			boolean isCmtPendingRevision = false;
 			
@@ -4391,10 +4392,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				boolean valConditionOthers = !approval.getApprovalCategory().getParameterCode()
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
-						&& (CollectionUtils.isEmpty(approval.getApproverSettings()) && this.getManagedBean()
-								.isFirstViewPageCAUsers());
-
-				if (valCondition || valConditionOthers) {
+						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
+				
+				if ((valCondition && approval.getApprovalCategory().getParameterCode()
+						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
+						|| valConditionOthers) {
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174);
 					// #11299 End Vinod
