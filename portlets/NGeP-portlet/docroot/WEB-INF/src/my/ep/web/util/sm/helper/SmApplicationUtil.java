@@ -1832,7 +1832,8 @@ public class SmApplicationUtil {
 												+ cat.getPmCategoryL2().getCategoryL2Code()
 												+ cat.getPmCategoryL3().getCategoryL3Code() }));
 							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							//#36576
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1878,7 +1879,8 @@ public class SmApplicationUtil {
 												+ cat.getPmCategoryL2().getCategoryL2Code()
 												+ cat.getPmCategoryL3().getCategoryL3Code() }));
 							}
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1925,7 +1927,8 @@ public class SmApplicationUtil {
 														+ cat.getPmCategoryL2().getCategoryL2Code()
 														+ cat.getPmCategoryL3().getCategoryL3Code() }));
 							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							//#36576
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1980,7 +1983,8 @@ public class SmApplicationUtil {
 								*/
 								break;
 							}
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2037,7 +2041,8 @@ public class SmApplicationUtil {
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
 							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							//#36576
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2109,7 +2114,8 @@ public class SmApplicationUtil {
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
 							}
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2165,7 +2171,8 @@ public class SmApplicationUtil {
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
 							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							//#36576
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -3877,7 +3884,9 @@ public class SmApplicationUtil {
 				}
 				if (bean.isSupplierUser()) {
 					validateOverlapCategory(bean, currPage);
-				} else {
+				} 
+				//#36576 comment this line of code
+				/*else {
 					for (SmSupplierCategory cat : bean.getSmAppl()
 							.getSmSupplierCategories()) {
 						if (cat.isOverLapCategory()
@@ -3896,7 +3905,7 @@ public class SmApplicationUtil {
 							}
 						}
 					}
-				}
+				}*/
 			}
 		}
 	}
