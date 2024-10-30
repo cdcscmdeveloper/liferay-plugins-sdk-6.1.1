@@ -66,7 +66,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 	private transient IPagingDataModel<AuditQTDTO> searchQT = new SearchQTPagingDataModel();
 
-	public static final Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
+	public static final Logger log = EpLogger.getLogger(AuditQTBackingBean.class);
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
 
