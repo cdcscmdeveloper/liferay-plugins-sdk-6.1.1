@@ -16862,14 +16862,13 @@ public class SmApplicationBackingBean extends
 	 * 
 	 * @param applInquiry
 	 */
-	public List<SmApplInquiryDocFile> reselectDocFileValue(
-			long applSupportDocInquiryId) {
-		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
-				.getInstance().getServiceObject("sm",
-						ISupportingDocInquirySO.class);
+	public List<SmApplInquiryDocFile> reselectDocFileValue(long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm",
+				ISupportingDocInquirySO.class);
 
-		return reqSO
-				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
 	}
 	
 	public void sortMandatoryDocsInquiry() {
