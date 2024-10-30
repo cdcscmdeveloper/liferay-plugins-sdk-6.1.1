@@ -876,12 +876,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.retrieveMofCertsByApplId(certReqDTO).getSmMofCerts();
 
 			if (!EntityHelper.isCollectionEmpty(certs)) {
-				for (SmMofCert cert : certs) {
-					if (!cert.isBumiCert()) {
-						getManagedBean().setSmMofCert(cert);
-						break;
-					}
-				}
+				// #36401 - Start
+				int count = countCerts(certs);
+				assignMofCert(certs, count);
+				// #36401 - End
 			}
 		}
 
@@ -941,6 +939,72 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setReviewApplicationExist(true);
 	}
 
+	// #36401 - Start
+	/**
+	 * to count if non bumi certs more than 1
+	 * 
+	 * @param certs
+	 * @return
+	 */
+	private int countCerts(List<SmMofCert> certs) {
+		int count = 0;
+		for (SmMofCert cert : certs) {
+			if (!cert.isBumiCert()) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * To assign non bumi cert to display at comp info
+	 * 
+	 * @param mofCerts
+	 * @param counter
+	 */
+	// Checking cert that is not bumi, if more than 1 cert assign the first one by asc order
+	public void assignMofCert(List<SmMofCert> mofCerts, int counter) {
+		if (counter > 1) {
+			sortMofCertsByDate(mofCerts);
+			List<SmMofCert> certs = filterCerts(mofCerts, false);
+			getManagedBean().setSmMofCert(certs.get(0));
+		} else {
+			for (SmMofCert cert : mofCerts) {
+				if (!cert.isBumiCert()) {
+					getManagedBean().setSmMofCert(cert);
+					break;
+				}
+			}
+		}
+	}
+
+	// Helper method to sort by asc order
+	private void sortMofCertsByDate(List<SmMofCert> mofCerts) {
+		if (mofCerts.size() > 1) {
+			Collections.sort(mofCerts, new Comparator<SmMofCert>() {
+				@Override
+				public int compare(SmMofCert cert1, SmMofCert cert2) {
+					return cert1.getCreatedDate().compareTo(
+							cert2.getCreatedDate());
+				}
+			});
+		}
+	}
+
+	// Helper method to filter certs
+	private List<SmMofCert> filterCerts(List<SmMofCert> mofCerts,
+			final boolean isBumi) {
+		List<SmMofCert> filteredCerts = new ArrayList<>();
+		for (SmMofCert mofCert : mofCerts) {
+			if (mofCert.isBumiCert() == isBumi) {
+				filteredCerts.add(mofCert);
+			}
+		}
+		return filteredCerts;
+	}
+
+	// #36401 - End
+	
 	/**
 	 * Initialized revision application company information step
 	 */
