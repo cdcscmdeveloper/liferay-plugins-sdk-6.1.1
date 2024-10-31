@@ -15729,12 +15729,11 @@ public class SmApplicationBackingBean extends
 	 * inquiry row select
 	 */
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
-		
-		if(applInquiry.getSmApplSupportDocInquiries() != null){
-			resetSmApplSupportDocInquiries(applInquiry);
-		}
-		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
 		// #34392 - START
+//		if(applInquiry.getSmApplSupportDocInquiries() != null){
+//			resetSmApplSupportDocInquiries(applInquiry);
+//		}
+		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
 		getManagedBean().setMandatoryDocsInquiry(
 				new ArrayList<SmApplSupportDocInquiry>());
 		getManagedBean().setNonMandatoryDocsInquiry(
@@ -15754,10 +15753,8 @@ public class SmApplicationBackingBean extends
 
 			}
 		}
-
 		sortMandatoryDocsInquiry();
 		sortNonMandatoryDocsInquiry();
-
 		// #34392 - End
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
