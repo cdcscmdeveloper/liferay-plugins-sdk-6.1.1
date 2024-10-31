@@ -21,9 +21,9 @@ public class PendingPaymentRest {
 	@Path("smpendingprocess") 
 	public Response retrievePending(@Context HttpServletRequest req) {
 		log.info("Before success calling retrieve rest api....PendingPaymentRestTesting");
-		//#33948 - Start
+		//#36401 - Start
 		long startTime = System.currentTimeMillis();
-		//#33948 - End
+		//#36401 - End
 		String remoteHost = req.getRemoteHost();
 	    String remoteAddr = req.getRemoteAddr();
 	    int remotePort = req.getRemotePort();
@@ -34,8 +34,15 @@ public class PendingPaymentRest {
 			resDTO = SmServiceLookup.getPendingPaymentSO().filterAndUpdateSmPendingProcess(resDTO);
 			//#33948 - End
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
+				// #36401 - Start
+				log.info("#36401 :: logger :: " + smPendingProcess.getApplId() + "Attempt :: "
+						+ smPendingProcess.getAttemp() + "Err Msg :: " + smPendingProcess.getErrorMsg());
+				// #36401 - End
 				try {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
+					//#36401 - Start
+					SmServiceLookup.getPendingPaymentSO().checkTrackCert(smPendingProcess);
+					//#36401 - End
 				} catch (Exception e) {
 					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
 					smPendingProcess.setErrorMsg(e.getMessage());
@@ -46,10 +53,10 @@ public class PendingPaymentRest {
 					}
 				}
 			}
-			//#33948 - Start
+			//#36401 - Start
 			long endTime = System.currentTimeMillis();
-			log.info("#33948 This function takes " + (endTime - startTime) + " milliseconds");
-			//#33948 - End
+			log.info("#36401 This function takes " + (endTime - startTime) + " milliseconds");
+			//#36401 - End
 			return Response.status(200).entity("success calling process pending payment !!").build();
 		} catch (Exception e) {
 			return Response.status(406).entity(e.getMessage()).build();

@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
@@ -36,7 +37,12 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#22211
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -52,6 +58,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
@@ -83,6 +90,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
@@ -104,6 +112,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate; //#22211
 
 import org.apache.commons.lang3.StringUtils;
@@ -597,20 +606,33 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	@SuppressWarnings("unchecked")
 	public void viewDpMaintenance(Object[] prObj) {
+		
+		//#36119 - start
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+		//#36119 - end
+		
 		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
 		if (null != purchaseRequest) {
 			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
+			Long supplierId = null; //#36119
 			System.out.println("Bug 28878 : purchaseRequestId : " + purchaseRequestId);
 			List<ScRequestNoteDtl> requestNoteDtls = null;
 			ScRequestNote requestNote = null;
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
 				requestNote = (ScRequestNote) prObj[7];
-				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
-				requestNoteDtls = loadScPurchaseRequest(purchaseRequestId, objList);//#36018
+				//#36119 - start
+				supplierId = (Long) prObj[9]; 					
+				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+				requestNoteReqDTO.setSupplierId(supplierId);
+				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
+						requestNoteReqDTO);
+				rnBackingBean.reloadRequestNoteForCodificationWrapper(requestNoteResDTO);
+				requestNoteDtls = rnBackingBean.getManagedBean().getRequestNoteDtls();
+				//#36119 - end
 			}
 			
-			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 
-				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 				
 				rnBackingBean.getManagedBean().setSelectedPrDtls(prObj);
 				rnBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				rnBackingBean.getManagedBean().setCancel(true);
@@ -619,6 +641,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				//28878 - Start
 				rnBackingBean.getManagedBean().setPurchaseRequestId(purchaseRequestId);
 				//28878 - End
+				//#36119 - start
+				rnBackingBean.getManagedBean().setSourcingDpNewBpmVer(validateSupportedTask(requestNote.getRequestNoteNo(), SourcingConstants.DP_MAINTENANCE_CANCEL_CODIFY_PR));
+				rnBackingBean.getManagedBean().setSupplierId(supplierId);
+				//#36119 - end
 				if (null != requestNote.getCreatedBy()) {
 					rnBackingBean.getManagedBean().setCreatedBy(rnBackingBean.getUserById(requestNote.getCreatedBy()).getUserName());
 				}
@@ -629,7 +655,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				
 				PmStatus requestNoteStatus = new PmStatus();
 				requestNoteStatus.setStatusId((Long) prObj[4]);
-				rnBackingBean.getManagedBean().setRequestNoteStatus(requestNoteStatus );
+				rnBackingBean.getManagedBean().setRequestNoteStatus(requestNoteStatus);
 				rnBackingBean.getManagedBean().setRequestNote(requestNote);
 				rnBackingBean.viewRequestNote();
 			}
@@ -714,7 +740,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-			reset(false);
+			//reset(false); #36502 - remove this code
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166
@@ -1585,5 +1611,43 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			}
 			
 			// end 25396
+			
+	// #36119 - start
+	/**
+	 * To validate supported task
+	 * 
+	 * @param String docNo
+	 * @param Long validityId
+	 * 
+	 * @return boolean
+	 */
+	public boolean validateSupportedTask(String docNo, Long validityId) {
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		ICompositeValiditySO compositeSO = (ICompositeValiditySO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+		cReqDTO.setCompositeValidityId(validityId);
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setDocNumber(docNo);
+		WorklistVO worklist = bpmSO.getTasksByDocNumber(reqDTO).getWorklistVO();
+		worklist = worklist == null ? new WorklistVO() : worklist;
+		String version = null;
+		if (!CollectionUtils.isEmpty(worklist.getWorklistItem())) {
+			for (WorklistItemVO i : worklist.getWorklistItem()) {
+				if (StringUtils.isNotEmpty(i.getInstanceVersion())) {
+					version = i.getInstanceVersion();
+					break;
+				}
+			}
+		}
+		if (version != null) {
+			return CustomUtils.compositeVersionComparator(version, minVersion) >= 0;
+		}
+		return false;
+	}
+	// #36199 - end
 }
 

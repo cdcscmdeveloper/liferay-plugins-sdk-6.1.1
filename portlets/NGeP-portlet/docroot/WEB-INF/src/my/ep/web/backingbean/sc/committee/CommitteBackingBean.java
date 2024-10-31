@@ -2482,11 +2482,18 @@ public class CommitteBackingBean extends
 		
 	}
 	
-	//#25037-start
+	// 25037 - start
+	/**
+	 * Populate selected history and display the currently selected member
+	 * history.
+	 * 
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	public void onSelectHistory() throws IOException {
 		ScCommitteeMemberHistory history = this.getManagedBean().getSelectedCommitteeHistory();
-		List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>)(Object) history.deserializeList(history.getCommitteeMembers());
+		List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>) (Object) history.deserializeList(history
+				.getCommitteeMembers());
 		CustomUtils.sortQtCommitteeMemberRole(list);
 		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
@@ -2494,7 +2501,8 @@ public class CommitteBackingBean extends
 		CommitteResDTO resDTO = this.getCommitteeSO().retrieveCommitteDetailsByCommitteeId(reqDTO);
 		history.setScCommittee(resDTO.getCommittee());
 	}
-	//#25037-end
+
+	// 25037 - end
 	
 	//#31870 - START
 	//Edit parameter datatype -#31870 (16122021)
@@ -2589,19 +2597,24 @@ public class CommitteBackingBean extends
 	}
 	//#31870 - END
 
-	//25037 - start	
+	// 25037 - start
 	/**
 	 * Evaluate active flag for scCommittee
+	 * 
+	 * @param committee
 	 * @return boolean isCommitteeRecordStatusActive
 	 */
 	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {
-		if (committee == null)
+		if (null == committee) {
 			return false;
+		}
 		String committeeType = committee.getCommitteeType().getParameterCode();
 		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
-		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees && qtCommittees.size()<=1)
-			return true; 
+		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees
+				&& qtCommittees.size() <= 1) {
+			return true;
+		}
 		return committee.isRecordStatus();
 	}
-	//25037 - end	
+	// 25037 - end
 }
