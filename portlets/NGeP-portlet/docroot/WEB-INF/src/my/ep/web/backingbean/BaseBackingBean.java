@@ -4383,26 +4383,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		generateReport(report, paramMap);
 	}
 	
-	//#28854,#25000 - Start
+	// #28854,#25000 - Start
 	/**
-	 * Processes the given string by replacing newline characters with HTML line break tags
-	 * and encoding the < and > characters to their HTML entity equivalents. If the string
-	 * is null or empty, it returns null.
-	 *
-	 * @param value the string to be processed; may be null
-	 * @return the processed string value with newline characters replaced by &lt;br/&gt;
-	 *         and <, > characters encoded to &lt; and &gt; respectively; {@code null} if the input is null or empty
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null or empty, it returns null.
+	 * 
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
 	 */
 	public String encodeHtmlStringOrNull(String value) {
-	    if (value == null || value.isEmpty()) {
-	        return null;
-	    }
-	    // Replace < and > with their HTML entity equivalents
-	    String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
-	    // Replace newline characters with <br/>
-	    return formatted.replace("\n", "<br/>");
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br />");
 	}
-	//#28854,#25000 - End
+	// #28854,#25000 - End
 	
 	// #25000 - Start
 	/**
