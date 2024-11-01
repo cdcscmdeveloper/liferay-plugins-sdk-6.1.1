@@ -1783,12 +1783,14 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
+							//#36576
 							//#35086 - start
-							if(cat.getPoDecFlg() == null){
+							/*if(cat.getPoDecFlg() == null){
 								cat.setPoDecFlg(0);
-							}
+							}*/
 							//#35086 - end
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1816,8 +1818,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -1831,8 +1833,8 @@ public class SmApplicationUtil {
 												+ cat.getPmCategoryL1().getCategoryL1Code()
 												+ cat.getPmCategoryL2().getCategoryL2Code()
 												+ cat.getPmCategoryL3().getCategoryL3Code() }));
-							}
-							//#36576
+							}*/
+							
 							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
@@ -1861,8 +1863,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
-							
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							/*if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1878,8 +1880,8 @@ public class SmApplicationUtil {
 												+ cat.getPmCategoryL1().getCategoryL1Code()
 												+ cat.getPmCategoryL2().getCategoryL2Code()
 												+ cat.getPmCategoryL3().getCategoryL3Code() }));
-							}
-							//#36576
+							}*/
+							
 							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
@@ -1909,8 +1911,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -1926,8 +1928,8 @@ public class SmApplicationUtil {
 														+ cat.getPmCategoryL1().getCategoryL1Code()
 														+ cat.getPmCategoryL2().getCategoryL2Code()
 														+ cat.getPmCategoryL3().getCategoryL3Code() }));
-							}
-							//#36576
+							}*/
+							
 							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
@@ -2015,8 +2017,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -2040,8 +2042,8 @@ public class SmApplicationUtil {
 																		.getCategoryL2Code()
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
-							}
-							//#36576
+							}*/
+							
 							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
@@ -2088,7 +2090,8 @@ public class SmApplicationUtil {
 							//	break;
 							//}
 							//#30508-start
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							/*if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2113,8 +2116,8 @@ public class SmApplicationUtil {
 																		.getCategoryL2Code()
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
-							}
-							//#36576
+							}*/
+							
 							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
@@ -2145,8 +2148,8 @@ public class SmApplicationUtil {
 								}
 							}
 							//#31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -2170,8 +2173,8 @@ public class SmApplicationUtil {
 																		.getCategoryL2Code()
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
-							}
-							//#36576
+							}*/
+							
 							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
