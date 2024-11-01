@@ -35,8 +35,22 @@ public class FinancialTableReportManagedBean extends QtReportManagedBean{
 			.getLogger(FinancialTableReportManagedBean.class);
 	
 	
+	private String procurementTitle;//#29580
+	
+	//#29580 - Start 
+	/**
+	 * @return the procurementTitle
+	 */
+	public String getProcurementTitle() {
+		return procurementTitle;
+	}
 
-	
-	
+	/**
+	 * @param procurementTitle the procurementTitle to set
+	 */
+	public void setProcurementTitle(String procurementTitle) {
+		this.procurementTitle = procurementTitle;
+	}
+	//#29580 - End 
 
 }

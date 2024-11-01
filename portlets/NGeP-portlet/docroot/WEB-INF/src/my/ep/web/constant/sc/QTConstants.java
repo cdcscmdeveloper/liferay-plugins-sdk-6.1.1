@@ -432,4 +432,16 @@ public interface QTConstants {
 	// 25791-End
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
+	
+	//#29580-start
+	public static final String RPT_PREPARATION_LBL = "lbl.rpt.preparation";
+	public static final String RPT_PUBLISHING_LBL = "lbl.rpt.publishing";
+	public static final String RPT_PENDING_EVALUATION_LBL = "lbl.rpt.pendingEvaluation";
+	public static final String RPT_PENDING_SUPPLIER_FINALIZATION_LBL = "lbl.rpt.pendingSupplierFinalization";
+	public static final String RPT_PENDING_LOI_LOA_LBL = "lbl.rpt.pendingLOInLOA";
+	public static final String RPT_LOA_COMPLETED_LBL = "lbl.rpt.loaCompleted";
+	public static final String RPT_DROPDOWN_CANCELLED_LBL = "lbl.rpt.drpdown.cancelledLabel";
+	public static final String RPT_ALL_LBL = "lbl.rpt.all";
+	//#29580-end
+	
 }

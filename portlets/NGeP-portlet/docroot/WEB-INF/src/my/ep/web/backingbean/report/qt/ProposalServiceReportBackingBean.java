@@ -144,9 +144,6 @@ QtReportBackingBean<ProposalServiceReportManagedBean> implements Serializable{
 			params.put(QtReportConst.QUOTATION_TENDER_ID, this.getManagedBean().getQuotationId());
 		}
 		// 29580 - Start (Harun) Change option from single status to multiple 
-		/*if (StringUtils.isNotEmpty(reportFieldBean.getScStatus())) {
-			params.put(QtReportConst.PARAM_PROCURE_STATUS_EQ, reportFieldBean.getScStatus());
-		}*/
 		if(CollectionUtils.isNotEmpty(reportFieldBean.getScStatusManyMenu())){
 			List<String> conversionList = new ArrayList<>();
 			

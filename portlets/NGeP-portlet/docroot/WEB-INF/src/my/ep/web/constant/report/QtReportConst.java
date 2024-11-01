@@ -110,18 +110,6 @@ public class QtReportConst implements Serializable {
 	// 14306 - End (Harun)
 	
 	
-	// 29580 - Report status label constant
-	public static final String LABEL_ALL = "lbl.rpt.all";
-	public static final String LABEL_PREPARATION = "lbl.rpt.preparation";
-	public static final String LABEL_PUBLISHING = "lbl.rpt.publishing";
-	public static final String LABEL_PENDING_EVALUATION = "lbl.rpt.pendingEvaluation";
-	public static final String LABEL_PENDING_SUPPLIER_FINALIZATION = "lbl.rpt.pendingSupplierFinalization";
-	public static final String LABEL_PENDING_LOILOA = "lbl.rpt.pendingLOInLOA";
-	public static final String LABEL_LOA_COMPLETED = "lbl.rpt.loaCompleted";
-	public static final String LABEL_CANCELLED = "lbl.rpt.drpdown.cancelledLabel"; 
-	// 29580 - End (Harun)
-	
-	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
 	 */
