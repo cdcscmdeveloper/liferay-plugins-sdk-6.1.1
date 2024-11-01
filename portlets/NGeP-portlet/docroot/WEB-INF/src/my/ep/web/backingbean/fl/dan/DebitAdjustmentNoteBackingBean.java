@@ -416,7 +416,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * @return the string
 	 * @throws IOException 
 	 */
-	public String backToPervious() throws IOException {
+	public String backToPervious() throws IOException {//36519
 		if(getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -593,12 +593,22 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		
+		//36519-start
 		String danId = originalServletRequest.getParameter("danId");
+		String canId = originalServletRequest.getParameter("canId");
+		String adjustmentId;
+
+		if (danId != null) {
+			adjustmentId = danId;
+		} else {
+			adjustmentId = canId;
+		}
+		//36519-end
+		
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		if(danId!=null) {
-			reqDTO.setDanId(Long.valueOf(danId));
+		if(adjustmentId!=null) {//36519
+			reqDTO.setDanId(Long.valueOf(adjustmentId));//36519
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			reqDTO.setDocType(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 			reqDTO.setPoLink(Boolean.TRUE);
 			renewSesionObject();
 			try {
