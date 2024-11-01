@@ -31,7 +31,7 @@ public class PendingPaymentRest {
 		try {
 			PendingPaymentResDTO resDTO = SmServiceLookup.getPendingPaymentSO().retrievePendingProcess();
 			//#33948 - Start
-			resDTO = SmServiceLookup.getPendingPaymentSO().filterAndUpdateSmPendingProcess(resDTO);
+			//resDTO = SmServiceLookup.getPendingPaymentSO().filterAndUpdateSmPendingProcess(resDTO);
 			//#33948 - End
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
 				try {
