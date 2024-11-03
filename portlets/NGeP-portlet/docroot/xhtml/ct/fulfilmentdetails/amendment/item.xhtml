@@ -670,7 +670,7 @@
      		 		<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(ctBackingBean.managedBean.supplierOffer,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
      		 		</h:panelGroup>      		 				
      			</c:if>
@@ -687,7 +687,7 @@
      		 		<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(ctBackingBean.managedBean.newOfferSpec,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.newOfferSpec}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
      		 		</h:panelGroup>      		 				 			
      			</c:if>
