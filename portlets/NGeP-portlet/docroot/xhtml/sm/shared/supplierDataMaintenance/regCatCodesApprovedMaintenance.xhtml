@@ -110,16 +110,16 @@
 	</p:dataTable>
 	
 	<div align="right">
-
+		<!-- #34209 - START - add component to update -->
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
 			disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableDeleteButtonAprrovedCategoryCodePanel or empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories)}" 
-			update=":#{p:component('catcodeMainPanelId')}" partialSubmit="true" 
+			update=":#{p:component('catcodeMainPanelId')},:#{p:component('messages')}" partialSubmit="true" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			process="@this">
 		</p:commandButton>
-
+		<!-- #34209 - END -->
 	</div>
 
 </ui:composition>

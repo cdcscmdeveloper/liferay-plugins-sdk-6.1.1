@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sm.applicationView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -191,6 +192,8 @@ public class ViewSuppProfileManagedBean extends
 	// #26238 eend
 	
 	private boolean hasActiveDA; //#34626
+	
+	private Map<Long, String> tempCategoryLs; //#34209
 	
 	public ViewSuppProfileManagedBean() {
 
@@ -1011,4 +1014,12 @@ public class ViewSuppProfileManagedBean extends
 		this.hasActiveDA = hasActiveDA;
 	}
 	//#34626 - end
+
+	public Map<Long, String> getTempCategoryLs() {
+		return tempCategoryLs;
+	}
+
+	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
+		this.tempCategoryLs = tempCategoryLs;
+	}
 }

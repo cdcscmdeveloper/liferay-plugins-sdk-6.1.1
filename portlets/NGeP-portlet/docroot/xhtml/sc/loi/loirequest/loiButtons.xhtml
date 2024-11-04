@@ -43,8 +43,8 @@
 					
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					oncomplete="cancelPopup.show();"
-					rendered="#{lOIDetailBackingBean.isSupplierEPVStatusRejected()}"
-					process="@form" update="@form" /><ui:remove>#21692</ui:remove>
+					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI}"
+					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
 
 				<c:choose>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
