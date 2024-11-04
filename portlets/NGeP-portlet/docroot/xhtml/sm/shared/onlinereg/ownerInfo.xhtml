@@ -8,30 +8,49 @@
 
 	<p:panel header="#{registrationBackingBean.managedBean.headerName}" id="ownerBusiness"
 		toggleable="true">
+		<!-- 27691 START -->
 		<p:dataTable id="tableOwner" var="varOwner" rowIndexVar="index"
 			widgetVar="tableOwnerWidget"
-			emptyMessage="No Equity Owner (Individual) is found in SSM for this company."
-			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel and registrationBackingBean.managedBean.labelDataTable eq 'en_US'}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.ssm']}"
+			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel}"
 			value="#{registrationBackingBean.managedBean.smSuppOwners}"
-			rowKey="#{rowKeyObj}"
+			rowKey="#{varOwner}"
 			sortBy="#{varOwner.ownerName}"	>
 			<ac:paginator for="tableOwner" />
-
+			<p:column style="width:2%" disabledSelection="#{registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" rendered="#{not empty registrationBackingBean.managedBean.smSuppOwners and registrationBackingBean.managedBean.companyValidWithSSM eq 'false'}">
+				<f:facet name="header">
+		        	<p:selectBooleanCheckbox value="#{registrationBackingBean.managedBean.allOwnerSelected}" >
+		          		<p:ajax event="change" update=":#{p:component('ownerBusiness')}" 
+							process="@this" partialSubmit="true" 
+							listener="#{registrationBackingBean.toggleAllOwnerTick()}"/>
+		          	</p:selectBooleanCheckbox>
+		       	</f:facet>
+				<p:selectBooleanCheckbox value="#{varOwner.ownerSelected}" disabled="#{registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}">
+					<p:ajax event="change" update=":#{p:component('ownerBusiness')}" listener="#{registrationBackingBean.toggleOwnerCheckBox(varOwner)}"
+						process="@this" partialSubmit="true" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+		<!-- 27691 END -->
 			<p:column style="width:3%" styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.no']}" />
 				</f:facet>
 				<h:outputText value="#{index + 1}" />
 			</p:column>
-
+			<!-- #27691 START -->
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-				<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType == 'K'}">
-					<h:outputText value="#{lbl['lbl.sm.directorname']}" />
-				</c:if>
-				<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != 'K'}">
-					<h:outputText value="#{lbl['lbl.sm.ownername']}" />
-				</c:if>
+				<c:choose>
+				<c:when test="#{registrationBackingBean.managedBean.smSupp.businessType == 'K' or 
+				registrationBackingBean.managedBean.smSupp.businessType == 'L' or 
+				registrationBackingBean.managedBean.smSupp.businessType == 'M' or 
+				registrationBackingBean.managedBean.smSupp.businessType == 'O'}">
+					<h:outputText value="#{lbl['lbl.sm.directorname']}"/>
+				</c:when>
+				<c:otherwise>
+					<h:outputText value="#{lbl['lbl.sm.ownername']}"/>
+				</c:otherwise>
+				</c:choose>	
 					
 				</f:facet>
 						<h:outputText rendered="#{!varOwner.showTextField}" value="#{varOwner.ownerName}" />
@@ -39,7 +58,7 @@
 						<p:inputText rendered="#{varOwner.showTextField}" maxlength="80"  value="#{varOwner.ownerName}"  converter="toUpperCaseConverter">								
 						</p:inputText>		
 			</p:column>
-			
+			<!-- #27691 END -->
 			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
@@ -71,10 +90,13 @@
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
 				<!-- #27878 disable when choose applType = SupplierManagementConst.ACC_BASIC-->
 				<!-- #27826 start -->
+				<!-- #30064 & 29582-->
 				<p:selectOneMenu 
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.nationality.origin']}" 
 					value="#{varOwner.tempCountryId}"
-					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or (!varOwner.nationalityNull and varOwner.tempCountryId ne 0)}">
+					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or 
+					(varOwner.identificationType.parameterCode eq ParameterConst.identificationTypesIc and !varOwner.disableNationality) and
+					(!varOwner.nationalityNull and varOwner.tempCountryId ne 0 )}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
@@ -97,13 +119,15 @@
 									<td style="width:10%" >
 										<c:choose>
 										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{registrationBackingBean.managedBean.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />												
+											<!-- 27691 Start -->
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />												
 										</c:when>
 										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{registrationBackingBean.managedBean.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />																						
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />																						
 										</c:otherwise>
 										</c:choose>
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{registrationBackingBean.managedBean.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
+										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
+										<!-- 27691 End -->
 									</td>
 									<td style="width:20%" >
 										<h:outputText style="float: left" rendered="#{registrationBackingBean.managedBean.showOwner}" value="#{lbl['lbl.sm.person.equiOwner']}" />
@@ -113,14 +137,16 @@
 									<td style="width:10%" >
 										<c:choose>
 										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" value="#{registrationBackingBean.managedBean.ownerIsDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
+										<!-- 27691 Start -->
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" value="#{varOwner.ownerIsDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
 										</c:when>
 										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{registrationBackingBean.managedBean.ownerIsDirector}"/>
+											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{varOwner.ownerIsDirector}"/>
 										</c:otherwise>
 										</c:choose>
 										
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{registrationBackingBean.managedBean.ownerIsDirector}"/>
+										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{varOwner.ownerIsDirector}"/>
+										<!-- 27691 End -->
 									</td>
 									<td style="width:20%" >
 										<h:outputText style="float: left" rendered="#{registrationBackingBean.managedBean.showDirector}" value="#{lbl['lbl.sm.person.dir']}" />
@@ -132,122 +158,39 @@
 			</p:column>
 
 		</p:dataTable>
+		<!-- 27691 - start -->
+		<style>
+		.ui-state-disabled {
+			font-weight: normal !important;
+		}
+		</style>
+		<!-- 27691 - end - Unbold disabled on DEV Server -->
+		<!-- 27691 - start - Add/Delete Supplier Owner -->
+		<script>
+			function unselectSupplierOwner(index) {
+				tableOwnerWidget.unselectRow(index);
+				if (tableOwnerWidget.checkAllToggler.hasClass('ui-state-active')) {
+   					tableOwnerWidget.checkAllToggler.removeClass('ui-state-active');
+   					tableOwnerWidget.checkAllToggler.children().removeClass('ui-icon ui-icon-check');
+   				}
+			}
+		</script>
 		
-		<p:dataTable id="tableOwnerbm" var="varOwner" rowIndexVar="index"
-			widgetVar="tableOwnerbmWidget"
-			emptyMessage="Tiada Pemilik Ekuiti (Individu) dijumpai dalam SSM bagi syarikat ini."
-			rendered="#{!registrationBackingBean.managedBean.showOwnerPersonnel and registrationBackingBean.managedBean.labelDataTable ne 'en_US'}"
-			value="#{registrationBackingBean.managedBean.smSuppOwners}"
-			rowKey="#{rowKeyObj}"
-			sortBy="#{varOwner.ownerName}"	>
-			<ac:paginator for="tableOwner" />
-
-			<p:column style="width:3%" styleClass="column-align-center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.no']}" />
-				</f:facet>
-				<h:outputText value="#{index + 1}" />
-			</p:column>
-
-			<p:column styleClass="column-align-center">
-				<f:facet name="header">
-				<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType == 'K'}">
-					<h:outputText value="#{lbl['lbl.sm.directorname']}" />
-				</c:if>
-				<c:if test="#{registrationBackingBean.managedBean.smSupp.businessType != 'K'}">
-					<h:outputText value="#{lbl['lbl.sm.ownername']}" />
-				</c:if>
-					
-				</f:facet>
-						<h:outputText rendered="#{!varOwner.showTextField}" value="#{varOwner.ownerName}" />
-					
-						<p:inputText rendered="#{varOwner.showTextField}" maxlength="80"  value="#{varOwner.ownerName}"  converter="toUpperCaseConverter">								
-						</p:inputText>		
-			</p:column>
-			
-			<p:column  styleClass="column-align-center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
-				</f:facet>
-				<h:outputText value="#{registrationBackingBean.getParamDescriptionByLanguageAndPmParameter(varOwner.identificationType)}" />
-			</p:column>
-			
-			<p:column styleClass="column-align-center">
-				<f:facet name="header">
-					<c:if test="#{not empty varOwner.nationality and varOwner.nationality.countryCode != 'MY'}">
-						<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
-					</c:if>
-					<c:if test="#{empty varOwner.nationality or varOwner.nationality.countryCode eq 'MY'}">
-						<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
-					</c:if>
-				</f:facet>
-				<h:outputText rendered="#{!varOwner.showTextField}" value="#{varOwner.identificationNo}" />
-			
-				<p:inputText rendered="#{varOwner.showTextField}" maxlength="12" value="#{varOwner.identificationNo}">								
-				</p:inputText>				
-			</p:column>
-			
-			<p:column  styleClass="column-align-center">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.person.nationality.origin']}" />
-				</f:facet>
-				<!-- <h:outputText value="#{varOwner.nationality.countryName}" /> -->
-				<!-- 16052019 - SSM INTEGRATION CR - START -->
-				<p:selectOneMenu value="#{varOwner.tempCountryId}" disabled="#{!varOwner.nationalityNull and varOwner.tempCountryId ne 0}">
-					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
-					<f:selectItems var="counLs"
-						value="#{registrationBackingBean.managedBean.countryLs}" />
-						<p:ajax event="change" listener="#{registrationBackingBean.setOwnerNationality(varOwner,true)}" update=":form:tableOwner" />
-				</p:selectOneMenu>
-				<!-- 16052019 - SSM INTEGRATION CR  - END -->
-			</p:column>
-			
-			<p:column  styleClass="column-align-center" rendered="#{registrationBackingBean.managedBean.showOwner || registrationBackingBean.managedBean.showDirector}">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.person.composition.role']}" />
-				</f:facet>
-				<p:outputPanel>
-						<table>
-							<tr>
-								<c:if test="#{registrationBackingBean.managedBean.showOwner}">
-									<td style="width:10%" >
-										<c:choose>
-										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{registrationBackingBean.managedBean.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />												
-										</c:when>
-										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{registrationBackingBean.managedBean.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />																						
-										</c:otherwise>
-										</c:choose>
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{registrationBackingBean.managedBean.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
-									</td>
-									<td style="width:20%" >
-										<h:outputText style="float: left" rendered="#{registrationBackingBean.managedBean.showOwner}" value="#{lbl['lbl.sm.person.equiOwner']}" />
-								</td>
-								</c:if>
-								<c:if test="#{registrationBackingBean.managedBean.showDirectorInOwner}">
-									<td style="width:10%" >
-										<c:choose>
-										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" value="#{registrationBackingBean.managedBean.ownerIsDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" />
-										</c:when>
-										<c:otherwise>
-											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{registrationBackingBean.managedBean.ownerIsDirector}"/>
-										</c:otherwise>
-										</c:choose>
-										
-										<p:selectBooleanCheckbox rendered="#{varOwner.showTextField and registrationBackingBean.managedBean.showDirector}" disabled="#{registrationBackingBean.managedBean.disableRole}" value="#{registrationBackingBean.managedBean.ownerIsDirector}"/>
-									</td>
-									<td style="width:20%" >
-										<h:outputText style="float: left" rendered="#{registrationBackingBean.managedBean.showDirector}" value="#{lbl['lbl.sm.person.dir']}" />
-									</td>
-								</c:if>
-							</tr>
-						</table>
-					</p:outputPanel>
-			</p:column>
-
-		</p:dataTable>
+		<!-- 27691 - start - Add/Delete Supplier Owner -->
+		<p:outputPanel id="suppOwnersActionPanel" 
+			rendered="#{registrationBackingBean.showSupplierOwnersActionPanel}">
+			<div align="right">
+				<p:commandButton id="addOwnerBtnId" value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+					action="#{registrationBackingBean.addSupplierOwner}"
+					process="@this,tableOwner"
+					update="@this,tableOwner,deleteOwnerBtnId"/>
+				<p:commandButton id="deleteOwnerBtnId" value="#{lbl['lbl.btn.delete']}" partialSubmit="true"
+					disabled="#{empty registrationBackingBean.managedBean.selectedSuppOwners}"
+					process="@this,tableOwner"
+					onclick="ownerDeletePopUp.show();"/>
+			</div>
+		</p:outputPanel>
+		<!-- 27691 - end - Add/Delete Supplier Owner -->
 		
 		<p:dataTable id="tableOwnerPersonnel" var="varOwnerPersonnel" rowIndexVar="index"
 			widgetVar="tableOwnerPersonnelWidget"
@@ -341,4 +284,13 @@
 		</p:dataTable>
 		
 	</p:panel>
+	
+	<ac:confirmationPopup id="ownerDeletePopUpId"
+		widget="ownerDeletePopUp"
+		okAction="registrationBackingBean.removeSupplierOwner"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update=":#{p:component('ownerBusiness')}"/>
+		
 	</ui:composition>
