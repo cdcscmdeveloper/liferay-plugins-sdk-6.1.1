@@ -163,10 +163,6 @@ public abstract class BaseManagedBean implements Serializable {
 	// #32236 start
 	private String outputPage;
 	// #32236 end
-	
-	
-
-	//27346-start 
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -939,7 +935,6 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCurrentTaskCreatedDate(Calendar currentTaskCreatedDate) {
 		this.currentTaskCreatedDate = currentTaskCreatedDate;
 	}
-
 	// 25037 - end
 
 	// 28767
