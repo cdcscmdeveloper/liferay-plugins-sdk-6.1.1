@@ -14978,22 +14978,6 @@ public class SmApplicationUtil {
 	
 	
 	/**
-	 * Get supplier category by supplierId and isCancelCategory
-	 * 
-	 * @return List<SmSupplierCategory>
-	 */
-	public static List<SmSupplierCategory> retrieveSmSupplierCategory() {
-		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
-		Long supplierId = getCurrentSupplier().getSupplierId();
-		
-		reqDTO.setSupplierId(supplierId);
-		
-		SupplierCategoryResDTO resDTO = SmServiceLookup.getSupplierCategorySO().
-				retrieveCategoryBySupplierId(reqDTO);
-		return resDTO.getSupplierCategoryList();
-	}
-	
-	/**
 	 * Get cancel category codes for current supplier
 	 * @return
 	 */
@@ -15019,6 +15003,11 @@ public class SmApplicationUtil {
 	//26238 - end
 	
 	//27617 : Disciplinary Action - 26238 - start
+	/**
+	 * Retrieve Cancel Category
+	 * @param disciplinaryActionId
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<Object[]> retrieveCancelCategoryByDisciplinaryActionId(Long disciplinaryActionId) {
 		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
@@ -15046,6 +15035,11 @@ public class SmApplicationUtil {
 	
 	//27796: Disciplinary Action - start - 26238
 	//28198: Disciplinary Action - start - 26238
+	/**
+	 * Retrieve Active Disciplinary Action Remarks
+	 * @param da
+	 * @return
+	 */
 	public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction da){
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		reqDTO.setSmDisciplinaryAction(da);
@@ -15638,12 +15632,20 @@ public class SmApplicationUtil {
 			if(EntityHelper.isCollectionEmpty(activeDA)){
 				return;
 			}
-			for(SmDisciplinaryAction da : activeDA){
-				if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
-					bean.getEditVO().setDisciplinary(true);
-					return;
-				}
+			if(hasCannotLoginDA(activeDA)){
+				bean.getEditVO().setDisciplinary(true);
+				return;
 			}
 		}
 	}	
+	
+	private static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
+		for(SmDisciplinaryAction da : daList){
+			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+				return true;
+			}
+		}
+		return false;
+	}
+	//#26238 - end
 }
