@@ -114,13 +114,12 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionContDropdownPanelId" rendered="#{registrationBackingBean.managedBean.smResAdd.pmState.adoptDivision}">
-						<p:selectOneMenu id="cmbResDivision"
+						<!-- #34159 - START -->
+						<p:selectOneMenu id="cmbResDivision" required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmDivision.divisionId}"
 						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
-						<f:selectItem itemValue=""
-							itemLabel="#{lbl['lbl.txt.select'].concat('test testsss')}" />
 						<f:selectItems var="division"
 							value="#{registrationBackingBean.managedBean.residentialDivisionLs}"
 							itemValue="#{division.divisionId}"
@@ -129,6 +128,8 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('residential', true)}"
 							update="cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu>
+					<p:message id="cmbResDivisionMsg" for="cmbResDivision" display="icon" />
+					<!-- #34159 - END -->
 					</h:panelGroup>
 				</td>
             </tr>

@@ -169,7 +169,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"/> 
+			<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}"/>
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"/>
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - end --> 
 			</td>
 			<td>
 				<p:inputText value="#{mcInvRptBB.managedBean.supplierInvNo}">
@@ -195,8 +204,6 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcInvRptBB.hasSupplierRole()}"
       					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
@@ -205,16 +212,20 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 					<c:choose>
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.invoiceNo']}"
-								itemValue="#{lbl['lbl.rpt.invoiceNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.supp.invoice.no']}"
-								itemValue="#{lbl['lbl.fl.supp.invoice.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.invoice.no']}"
+								itemValue="#{lbl['lbl.fl.invoice.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.inv.ref']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.inv.ref']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
 								itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 						</c:otherwise>

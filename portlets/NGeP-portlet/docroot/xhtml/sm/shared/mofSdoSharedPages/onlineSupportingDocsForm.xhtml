@@ -48,13 +48,16 @@
 			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500" width="1400">
 				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
 					<table>
-					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
-					</tr>
-					<tr>
-						<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
+					<c:if
+						test="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+						<tr>
+							<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+						</tr>
+						<tr>
+							<td><p:inputText size="50" id="resInquirySubId" disabled="true" 
 								value="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
-					</tr>
+						</tr>
+					</c:if>
 					
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>
@@ -114,8 +117,14 @@
 										<br />
 									</ui:repeat>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory}">
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.sdoRemarks != null}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks != null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks == null and inquirytbl.poRemarks == null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 							<!-- datatable for mandatory support doc with no record to display(fix primeface version bug when no record found) -->
@@ -174,8 +183,14 @@
 										<br />
 									</ui:repeat>
 								</p:column>
-								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.sdoRemarks != null}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks != null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
+								</p:column>
+								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.poRemarks == null and inquirytbl.poRemarks == null}">
+									<h:inputTextarea value="#{inquirytbl.poRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 							<!-- datatable for non-mandatory support doc with no record to display(fix primeface version bug when no record found) -->

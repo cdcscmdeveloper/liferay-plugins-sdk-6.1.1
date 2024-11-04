@@ -46,6 +46,7 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.pm.OrganisationSearchBean;
@@ -55,6 +56,8 @@ import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -336,7 +339,7 @@ public class PmTrackingDiaryBackingBean extends
 		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 		String reportName = getTrackingDiaryReportName(docType,docId);
-		if(docType !=null && docId !=null & reportName!=null) {
+		if(docType !=null && docId !=null && reportName!=null) {//sqube-bug-minor-G59
 			try {
 				generateReport(reportName, paramMap);
 			} catch (IOException e) {
@@ -348,12 +351,22 @@ public class PmTrackingDiaryBackingBean extends
 		//END- #Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 	}
 	
+	/**
+	 * 25791
+	 * Redirect to mainPage.
+	 */
 	public void redirectToMainPage(){
 		log.info(".....redirectToMainPage.....");
-		log.info("............this.getManagedBean().getBackURL()"+this.getManagedBean().getBackURL());
+		log.info("............this.getManagedBean().getBackURL()"
+				+ this.getManagedBean().getBackURL());
+		if (this.getManagedBean().isBiddingUrl()) {// 25791-start
+			this.getManagedBean().setBackURL(
+					QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
+			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
+		}// 25791-end
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, this.getManagedBean().getBackURL()); 
+				.handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
 	/**
 	 * Get Role description by role code and language.
@@ -887,7 +900,10 @@ public class PmTrackingDiaryBackingBean extends
 					reportName = ReportConst.QT_TRACKING_DIARY;
 				}
 			}catch(Exception e){
-				e.printStackTrace();
+				//START : sqube-bug-minor-#G59
+				SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, docType, docId, 
+						"PmTrackingDiaryBackingBean.getTrackingDiaryReportName", getUserIdSessionFromLoginId(), e);
+				//END : sqube-bug-minor-#G59
 			}
 		}
 		

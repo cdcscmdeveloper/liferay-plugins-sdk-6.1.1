@@ -70,7 +70,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+			<!-- 29550 - Start-->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.central.contract.panel.name']}"></p:outputLabel>
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - End -->
 			</td>
 			<td><p:inputText maxlength="30" id="panelNameId"
 					label="#{lbl['lbl.fl.sistem.panel.name']}"
@@ -99,7 +108,18 @@
 			<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}"></p:outputLabel> </td>
 			<td><p:inputText value="#{purInvRptBB.managedBean.invNo}">
 			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
-			<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"></p:outputLabel> </td>
+			<td>
+			<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}"></p:outputLabel> 
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"></p:outputLabel> 
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - end -->
+			</td>
 			<td><p:inputText value="#{purInvRptBB.managedBean.supplierInvNo}">
 			<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" /></p:inputText> </td>
 		</tr>
@@ -138,14 +158,14 @@
 						itemValue="#{null}"></f:selectItem>
 					<c:choose>
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
-							<f:selectItem itemLabel="#{lbl['lbl.fl.sistem.panel.name']}"
-								itemValue="#{lbl['lbl.fl.sistem.panel.name']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+								itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{purInvRptBB.hasSupplierRole()}"
 								itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.invoiceNo']}"
-								itemValue="#{lbl['lbl.rpt.invoiceNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.supp.invoice.no']}"
-								itemValue="#{lbl['lbl.fl.supp.invoice.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.invoice.no']}"
+								itemValue="#{lbl['lbl.fl.invoice.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.inv.ref']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.inv.ref']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"

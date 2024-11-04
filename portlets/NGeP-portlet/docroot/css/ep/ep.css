@@ -3764,3 +3764,10 @@ table.rptTbl {
     		height: 15 px !important;
 		}
 /*#29521 end*/
+
+/* #35597 - start -*/
+.disabled-calendar-icon {
+	pointer-events: none;
+	opacity: 0.5;/* Optional: to visually indicate the button is disabled */
+}
+/* #35597 - end -*/

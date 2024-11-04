@@ -143,10 +143,9 @@
 		<!-- FARID START  add disable tplSpecAnswer.tplSpecZoneQty.qty eq 0-->
 		<p:inputText id="ratePerUom"
 			style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
-			value="#{tplSpecAnswer.ratePerUom}" required="#{isZonal and !isSqSpec ? param[p:component('completeTS')]!=null : false}" 
+			value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}"
-			requiredMessage="#{isZonal ? templateSpecBackingBean.getErrorMessageFinancialPropUnitPrice(true, tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName, lbl['lbl.tpl.spec.content.unit.price']) : templateSpecBackingBean.getErrorMessageFinancialPropUnitPrice(false, '', lbl['lbl.tpl.spec.content.unit.price'])}"
 			disabled="#{!editable or 
 			tplSpecAnswer ne null 
 			and tplSpecAnswer.tplSpecZoneQty ne null 
@@ -167,7 +166,15 @@
 			</c:if>
 			<!-- FARID END -->
 		</p:inputText>
-
+		<!-- Enhancement #3657@Syazani 04/10/2023 - Start -->
+		<h:panelGroup
+			rendered="#{editable and (tplSpecAnswer.componentEmpty) and (!facesContext.validationFailed)}">
+			<h:panelGroup
+				class="ui-message-error ui-widget ui-corner-all ui-message-icon-only ui-helper-clearfix">
+				<h:outputText class="ui-message-error-icon" />
+			</h:panelGroup>
+		</h:panelGroup>
+		<!-- Enhancement #3657@Syazani 04/10/2023 - End -->
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
 	<!---remove here #32952 -->

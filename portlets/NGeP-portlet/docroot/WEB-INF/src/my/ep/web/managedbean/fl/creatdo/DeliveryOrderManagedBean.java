@@ -128,7 +128,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private String supplierUserName;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplineVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
@@ -142,6 +142,11 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<ScRequestItemSpecOffer> specificationList;
 	private List<ScRequestItemSpecOffer> itemSpecList;
 	// 28855 - End
+	
+	//#35508 start
+	private String originalSupplierDoRef;
+	//#35508 end
+	private String backToNtf;//36519
 
 	/**
 	 * Gets the item selected for cal.
@@ -1281,12 +1286,12 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplineVO() {
+		return disciplineVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
+		this.disciplineVO = disciplineVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1363,4 +1368,30 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.itemSpecList = itemSpecList;
 	}
 	//28855 - End
+
+	public String getOriginalSupplierDoRef() {
+		return originalSupplierDoRef;
+	}
+
+	public void setOriginalSupplierDoRef(String originalSupplierDoRef) {
+		this.originalSupplierDoRef = originalSupplierDoRef;
+	}
+	
+	// 36519-Start
+	/**
+	 * @return the backToNtf
+	 */
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	/**
+	 * @param backToNtf
+	 *            the backToNtf to set
+	 */
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	// 36519-End
+
 }
