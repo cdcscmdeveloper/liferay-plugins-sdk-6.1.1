@@ -305,7 +305,7 @@
 											disabled="#{isReadOnly}">
 											<ui:remove>9019 -end</ui:remove>
 											<!-- 25729 -start- -->
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											<!-- 25729 -end- -->
 											</p:ajax>
