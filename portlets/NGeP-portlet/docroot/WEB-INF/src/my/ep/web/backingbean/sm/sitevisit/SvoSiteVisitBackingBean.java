@@ -3365,14 +3365,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			&& !svTask.getSmSvTemplate().getSmSvWorkers().isEmpty()) {
 				return;
 		}
-		
+		//max loop: 39
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
 			if(template.getSuppCategory() == null){
 				continue;
 			}
+			//max loop: 52
 			for(SmFacility fac : svTask.getSmAppl().getSmFacilities()){
 				setWorkshopTemplateWorkers(template, fac);
 			}
+			//max loop: 33
 			for(SmSvWorker worker : template.getSmSvWorkers()){
 				worker.setSmSvTemplate(template);
 			}
@@ -3415,7 +3417,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
 			for(SmSvWorker worker : template.getSmSvWorkers()){
 				String idNo = worker.getIdentificationNo();
-				if(worker.getIdentificationTypeId() == typeId && idNo.length() != 12){
+				if(worker.getIdentificationTypeId() == typeId && idNo.length() != SupplierManagementConst.IC_NO_LENGTH){
 					throw new EpException(MessageConst.ERROR_722532, new String[] {idNo});
 				}
 			}
