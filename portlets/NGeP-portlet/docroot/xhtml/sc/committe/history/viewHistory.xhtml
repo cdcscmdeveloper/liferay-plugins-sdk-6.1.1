@@ -11,12 +11,14 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<!-- 25037 start -->
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{committeBackingBean.viewHistoryBackAction}" />
 		</div>
+		<!-- 25037 end -->
 		<ui:include src="../quotationcommitteeheader.xhtml" />
-
+		<!-- 25037 start -->
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -30,5 +32,6 @@
 			committeeName="#{committeBackingBean.managedBean.currentCommitteeType}"
 			backingBean="#{committeBackingBean}" isSFCommittee="true"
 			isLegacy="true" />
+		<!-- 25037 end -->
 	</ui:define>
 </ui:composition>
