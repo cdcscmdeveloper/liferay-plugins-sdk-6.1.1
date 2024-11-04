@@ -830,7 +830,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
 				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
 			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-				itemSpecList.add(itemSpecOffer.getItemSpec());
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
 			}
 		}
 		getManagedBean().setItemSpecification(itemSpecList);
