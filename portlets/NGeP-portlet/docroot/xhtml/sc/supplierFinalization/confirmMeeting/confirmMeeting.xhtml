@@ -21,7 +21,7 @@
 
 					<div align="right" class="BtnSpacing">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
-							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							partialSubmit="true"
 							action="#{suppFinalMeetingBackingBean.saveAction}" update="@form" />
 
@@ -30,10 +30,12 @@
 							<ui:fragment rendered="#{bpmAction ne '~'}">
 								<ui:param name="buttonLabel"
 									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+								<!-- 25037 start -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" style="float:right;" process="@all"
 									onclick="blockWidget.show();" partialSubmit="true"
 									oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();" />
+								<!-- 25037 end -->
 							</ui:fragment>
 						</ui:repeat>
 					</div> <ui:include
@@ -78,7 +80,8 @@
 									<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 								</f:facet>
 
-								<ac:dateTime id="meetingDate" required="#{!meeting.selected}"
+								<ac:dateTime id="meetingDate"									
+									required="#{!meeting.selected}"
 									label="#{lbl['lbl.sc.meeting.date']}"
 									disabled="#{disableMeeting}" value="#{meeting.meetingDate}"
 									update="@([id$=meetingDate])" rowIndex="#{rowIndex}">
@@ -98,8 +101,7 @@
 								<p:inputTextarea value="#{meeting.meetingLocation}"
 									id="meetingLocation" rows="2" cols="100" maxlength="255"
 									onkeyup="limitTextArea(this,255);"
-									onkeydown="limitTextArea(this,255);"
-									onmouseout="limitTextArea(this,255);"
+									onkeydown="limitTextArea(this,255);" onmouseout="limitTextArea(this,255);"
 									label="#{lbl['lbl.sc.meeting.location']}"
 									required="#{!meeting.selected}" disabled="#{disableMeeting}">
 									<p:ajax process="@this" partialSubmit="true"
@@ -139,17 +141,18 @@
 							update="@([id$=meetingDetailPanel])" />
 
 
-					</p:panel> <h:panelGroup
-						id="supplierFinalizationMeetingCommitteememberspanelGroup">
+						</p:panel> <h:panelGroup id="supplierFinalizationMeetingCommitteememberspanelGroup">
 						<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 							styleClass="header-spacing" id="memberListPanel"
 							toggleable="true">
 
+							<!-- 25037 start -->
 							<p:dataTable id="memberListTbl" var="committeeMember"
 								widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 								update="@this" rowIndexVar="index">
+								<!-- 25037 end -->
 								<ac:paginator for="memberListTbl" />
 
 								<p:column headerText="#{lbl['lbl.sc.name']}"
@@ -190,28 +193,37 @@
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+									<!-- 25037 start -->
 									<h:outputText
 										value="#{suppFinalMeetingBackingBean.getParameterDesc(committeeMember.representativeType)}" />
+									<!-- 25037 end -->
 								</p:column>
 							</p:dataTable>
 
+							<!-- 25037 start -->
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}"
 									styleClass="BtnSpacing"
 									action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" />
+								<!-- 25037 end -->
 							</div>
 
 						</p:panel>
-					</h:panelGroup> <ac:scRemarkAndAttachment
+					</h:panelGroup> 
+					<!-- 25037 start --> 
+					<ac:scRemarkAndAttachment
 						remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
-						showAttachment="false" /></td>
+						showAttachment="false" /> 
+					<!-- 25037 end -->
+				</td>
 			</tr>
 		</table>
+		<!-- 25037 start -->
 		<ac:confirmationPopup id="confirmSubmitMeetingId"
 			widget="confirmSubmitMeetingPopup" width="490" height="100"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="suppFinalMeetingBackingBean.submitAction('SUBMIT')"
 			content="#{lbl['lbl.sc.popup.sendtofinalcommittee']}" />
-
+		<!-- 25037 end -->
 	</ui:define>
 </ui:composition>

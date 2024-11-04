@@ -182,6 +182,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// #25638 - Start
 			displayReviseInstrn(getManagedBean().getCommitteeList());
 			// #25638 - End
+
+			// #25037 -start-
+			prepareUpdateCommitteeMember();
+			// #25037 -end-
 			
 			fc.getApplication()
 					.getNavigationHandler()
