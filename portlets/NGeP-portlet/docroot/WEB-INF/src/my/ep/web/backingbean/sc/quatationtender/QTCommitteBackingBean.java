@@ -1010,7 +1010,6 @@ public class QTCommitteBackingBean extends
 	 * @param committee
 	 * @param titleName
 	 */
-
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
 		addCommitteMember(committee, titleName, null);
 	}
@@ -1051,6 +1050,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setTabTitle(titleName);
 		getManagedBean().setAutoUpdate(false);
 		getManagedBean().setNameRequired(true);
+
 		// 25037 - start
 		Long qtStatus = getCurrentQtStatusId();
 		if (null == qtStatus) {
@@ -1916,6 +1916,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteeInfoEditable(Long committeStatus, String commType) {
 		ScQt scQt = getManagedBean().getQt();
+
 		// 25037 - start
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		if (scQt.getQtStatus() != null) {
@@ -2069,8 +2070,7 @@ public class QTCommitteBackingBean extends
 		
 		if (scQt != null && Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(currentStatusId)
 				&& ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(commType)) {
-			// specification maintenance cannot be concurrent to spec
-			// committee maintenance
+			// specification maintenance cannot be concurrent to spec committee maintenance
 			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT,
 					scQt.getQtId());
 			wfStatus = wfStatus == null ? new ScWorkFlowStatus() : wfStatus;
@@ -2080,6 +2080,7 @@ public class QTCommitteBackingBean extends
 			return !Arrays.asList(specStatusArr).contains(specStatusId);
 		}
 		// 25037 - end
+
 		return true;
 	}
 	
@@ -2422,9 +2423,6 @@ public class QTCommitteBackingBean extends
 				return specCheck;
 			}
 		} else {
-			System.out.println("---> statusId " + statusId);
-			System.out.println("---> isValidFor25037 " + this.getManagedBean().isValidFor25037());
-
 			return Arrays.asList(QTStatusConst.QT_EVAL_COMM_UPDATE_GROUP).contains(statusId)
 					&& this.getManagedBean().isValidFor25037();
 		}
@@ -2432,7 +2430,6 @@ public class QTCommitteBackingBean extends
 	}
 	// 25037 - end
 
-	
 	/**
 	 * Method to check the CheckBox is enable or disable based on committeeStatus and CommitteeType.
 	 * 
@@ -2618,7 +2615,7 @@ public class QTCommitteBackingBean extends
 	}
 	}
 	}
-	
+
 	// 25037 - start
 	private Long getCurrentQtStatusId() {
 		ScQt scQt = getManagedBean().getQt();
