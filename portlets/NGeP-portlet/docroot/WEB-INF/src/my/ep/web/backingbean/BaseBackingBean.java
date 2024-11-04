@@ -4187,8 +4187,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		// Replace < and > with their HTML entity equivalents
 		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
-		// Replace newline characters with <br/>
-		return formatted.replace("\n", "<br/>");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br />");
 	}
 
 	/**
