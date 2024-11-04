@@ -1461,9 +1461,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param messageCode
 	 * @param params
 	 */
+	//#25037-START
 	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
+	//#25037-END
 
 	/**
 	 * Return success message by message code. Navigate to acknowledgment page
@@ -1473,8 +1475,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param params
 	 * @param isAcknowledgeRequired
 	 */
-	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
-	// 25037 - end
+	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -2841,6 +2842,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(smSupplier.getRegNo());
 			ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+			//#29582
+			ssmReqDTO.setSmSupp(smSupplier);
 			//27329
 			ssmReqDTO.setPreRegistration(true);
 			//ssmReqDTO.setCheckOnly(true);
@@ -2868,6 +2871,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					this.getManagedBean().setStatusDescFromSSM(sb.toString());
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
+				}// #29582-start
+				else if (ssmResDTO.getSmPersonnelAll() != null && ssmResDTO.getSmPersonnelAll().size() > 0) {
+					SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
+				// #29582- end
 				}else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
 					//START NEW CHANGES POPUP OWNER UPDATE ROLE		
 					SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(postRegBean.getSmSupplier().getSupplierId(), "N");
