@@ -3800,7 +3800,14 @@ public class TemplateSpecBackingBean extends
 	}
 	// #28784 -end-
 	
-	
+	// #36248_haziq - start
+	/**
+	 * #36248 To validate Wieghtage input value
+	 * 
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
 	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
 		BigDecimal weightage = (BigDecimal) value;
 
@@ -3811,5 +3818,5 @@ public class TemplateSpecBackingBean extends
 		}
 
 	}
-	
+	//#36248_haziq - End
 }
