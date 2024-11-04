@@ -172,14 +172,14 @@
     			<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:600px"/>
      		 	</h:panelGroup>
      		 		
      			<c:if test="#{suspensionBackingBean.managedBean.supplierOffer ne null}">    		 		
      		 		<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(suspensionBackingBean.managedBean.supplierOffer,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
      		 		</h:panelGroup>      		 				
      			</c:if>
@@ -187,7 +187,7 @@
      				<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
      		 		</h:panelGroup> 
      			</c:if>     		   	
@@ -196,7 +196,7 @@
      		 		<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(suspensionBackingBean.managedBean.newOfferSpec,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{suspensionBackingBean.managedBean.newOfferSpec}" escape="false" style="float:left;font-weight:bold;display:block; word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
      		 		</h:panelGroup>      		 				 			
      			</c:if>
@@ -204,7 +204,7 @@
      				<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
      		 		</h:panelGroup> 
      			</c:if>
@@ -224,7 +224,7 @@
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
 					<!-- #31558 start - Aligning the title to the center but the content to the left -->
 					<h:outputText value="#{item}" rows="5" escape="false"
-						style="float:left;text-align:left; width: 60%; word-wrap: break-word;"
+						style="float:left;text-align:left; display:block;word-wrap: break-word; width:450px"
 						autoResize="false" disabled="true"
 						rendered="#{suspensionBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
 					<h:outputText rows="5" style="resize:none;text-align:left;"
