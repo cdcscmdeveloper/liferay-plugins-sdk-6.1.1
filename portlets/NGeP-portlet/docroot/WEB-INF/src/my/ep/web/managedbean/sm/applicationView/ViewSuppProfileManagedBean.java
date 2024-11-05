@@ -198,7 +198,6 @@ public class ViewSuppProfileManagedBean extends
 	private Map<Long, String> tempCategoryLs; //#34209
 	// #28895_35501 Start - AUDIT TRAIL SM
 	private SmAppl oldSmAppl;
-	private SmDisciplinaryAction oldSmDisciplinaryAction;
 	private List<SmSupplierCategory> oldApprovedCategoryList;
 	private String oldPoApprOverlappedRemark;
 	private String oldApproverRemark;
@@ -1039,14 +1038,6 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setOldSmAppl(SmAppl oldSmAppl) {
 		this.oldSmAppl = oldSmAppl;
-	}
-
-	public SmDisciplinaryAction getOldSmDisciplinaryAction() {
-		return oldSmDisciplinaryAction;
-	}
-
-	public void setOldSmDisciplinaryAction(SmDisciplinaryAction oldSmDisciplinaryAction) {
-		this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
 	}
 
 	public List<SmSupplierCategory> getOldApprovedCategoryList() {
