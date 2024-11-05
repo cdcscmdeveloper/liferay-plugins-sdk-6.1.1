@@ -12885,7 +12885,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				&& addr.getStateId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setStateId(addr.getStateId());
 			if(!addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
-				getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(new PmDivision());
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(null);
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 			}
 		}
 		//#36483 - END
