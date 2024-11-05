@@ -221,14 +221,14 @@
 					<ui:remove>9019 Reopen #note-289 - add validation for required</ui:remove>
 					<ui:remove>9019 skipmenuvalidation,skipsaveclonevalidation added for #note-378</ui:remove>
 				<td colspan="3"><p:inputTextarea id="title1"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly}"
 						label="#{lbl['lbl.sc.title']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isProcurementTitleMandatory(scQt) or not empty param['skipmenuvalidation'] or not empty param['skipsaveclonevalidation']}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
 						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
 						onkeyup="limitTextArea(this,1000);"
 						onkeydown="limitTextArea(this,1000);"
 						onmouseout="limitTextArea(this,1000);"
-						style=" margin-bottom:5px; width: 714px;" maxlength="1000"><ui:remove>#29472</ui:remove>
+						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
 						<!-- #34163  Changed maxlength to 1000 Vinod -->
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
@@ -297,9 +297,11 @@
 											value="#{scQt.tmpExpectedIntendedPrice}" required="#{not empty param['skipsubmitvalidation']}"
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											</p:ajax>
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -972,9 +974,9 @@
 										maxlength="3" placeHolder=""
 										label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{not empty param['skipsubmitvalidation']}"
 										value="#{scQt.publishPeriod}"
-										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
 										valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
-										style="text-align:right; width:195px;"><ui:remove>#29472</ui:remove>
+										style="text-align:right; width:195px;">
 										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@this, @(.amendButton)"
 											listener="#{createQtBB.handlePublishClosingDate}" />
@@ -997,9 +999,9 @@
 										maxlength="5" placeHolder=""
 										label="#{lbl['lbl.sc.qt.proposal.validity']}" required="#{not empty param['skipsubmitvalidation']}"
 										value="#{scQt.qtValidityPeriod}"
-										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
+										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
 										valueChangeListener="#{createQtBB.proposalValidityChanged}"
-										style="text-align:right; width:200px;"><ui:remove>#29472</ui:remove>
+										style="text-align:right; width:200px;">
 										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@form, @(.amendButton)"
 											listener="#{createQtBB.handleProposalValidityDate}" /><ui:remove>#21692</ui:remove>
@@ -1015,48 +1017,6 @@
 				<ui:remove>#21692</ui:remove>
 				<ui:fragment id="responsePeriodId" rendered="#{qtStatusIsProposalValidPeriodExtApproval and (createQtBB.managedBean.isProposalValidityChangeValue()
 					or isReadOnly)}">
-				<c:choose>
-				<c:when test="#{!approvalBackingBean.isEPVLatestStatusApprove(scQt.qtId)}">
-				<tr>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td>
-							<table>
-								<tr>
-									<td>
-							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true"
-							rendered="#{!approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}">
-							</p:inputText>
-							<p:inputMask id="responsePeriod" mask="9?9999"
-									maxlength="3" placeHolder=""
-									label="#{lbl['lbl.sc.qt.response.period']}" required="#{empty param['skipvalidation']}"
-									value="#{scQt.responsePeriod}"
-									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"
-									style="text-align:right; width:200px;"
-									rendered="#{approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}">
-							</p:inputMask>
-							<td><p:message id="responsePeriodMsg"
-								for="responsePeriod" display="icon"
-								rendered="#{approvalBackingBean.isEPVWorkflowStatusNull(scQt.qtId)}"/></td>
-							</td>
-									<td colspan="2">
-										<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip1']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity.extension.response.due.date']}" />
-						</td>
-						<td>
-							<p:inputText value="#{lbl['lbl.sc.no.available']}" style="width:200px;" disabled="true" >
-							</p:inputText>
-						</td>
-					</tr>
-				</c:when>
-				<c:otherwise>
 				<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.accept.response.period']}" /> 
@@ -1099,8 +1059,6 @@
 						</c:if>
 						</td>
 					</tr>
-				</c:otherwise>
-				</c:choose>
 				</ui:fragment>
 				<ui:remove>#21692</ui:remove>
 			</c:if>

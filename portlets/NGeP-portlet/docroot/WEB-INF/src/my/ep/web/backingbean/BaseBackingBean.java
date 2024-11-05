@@ -171,6 +171,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -1137,9 +1138,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
+			//#25790 - start
+			Locale localeMY = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+					CommonConstants.DEFAULT_COUNTRY_CODE);
+			
+			Locale localeEN = new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			//#25790 - end
 			for (PmStatusDesc statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName());
+				//#25790 - start
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc
+						.getStatusName()
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeMY), StringUtils.EMPTY)
+						.replace(
+								ResourceBundleUtils.getMessage("lbl.txt.error",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeEN), StringUtils.EMPTY));
+				//#25790 - end
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1503,21 +1518,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//25638 - End
 
+	// 25037 - start
 	/**
-	 * Success message.
+	 * Return success message by message code.
 	 * 
 	 * @param messageCode
-	 *            the message code
-	 * @param String
-	 *            [] params
+	 * @param params
 	 */
-	//#25037-START
-	public void successMessage(String messageCode, String [] params){
+	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
-	//#25037-END
 
-	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
+	/**
+	 * Return success message by message code. Navigate to acknowledgment page
+	 * if required.
+	 * 
+	 * @param messageCode
+	 * @param params
+	 * @param isAcknowledgeRequired
+	 */
+	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
+	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -1526,13 +1547,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								params,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		//#25037-START
+		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
-		//#25037-END
-
+		// 25037 - end
 	}
 
 	/**
@@ -2479,8 +2499,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+			// 25037 - start
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
-			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());//25037
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
+			// 25037 - end
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2495,23 +2517,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param outComes the out comes
 	 * @return the string[]
 	 */
-	private String[] sortOutcomes(String[] outComes) {
-		outComes = outComes==null ? new String[]{} : outComes;//29253-start
-		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
+	private String[] sortOutcomes(String[] outcomes) {
+		// 25037(29253) - start
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY;
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
 		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[]{
-					BpmOutcomeConst.BPM_ENDORSE, 
-					BpmOutcomeConst.BPM_CANCEL}; 
-			//last index will appear on the far right, 
-			//if outcome not ranked, order come as is,
-			//existed ordered outcome will take precedent
+			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
+			// last index will appear on the far right,
+			// if outcome not ranked, order come as is,
+			// existed ordered outcome will take precedent
 			List<String> sortOrder = Arrays.asList(orderedAction);
+
+			@Override
 			public int compare(String s1, String s2) {
 				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
 			}
-		});//29253-end
-		outComes = new String[bpmActions.size()];
-		return bpmActions.toArray(outComes);
+		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
+		// 25037(29253) - end
 	}
 
 	/**
@@ -4161,8 +4187,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		// Replace < and > with their HTML entity equivalents
 		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
-		// Replace newline characters with <br/>
-		return formatted.replace("\n", "<br/>");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br />");
 	}
 
 	/**

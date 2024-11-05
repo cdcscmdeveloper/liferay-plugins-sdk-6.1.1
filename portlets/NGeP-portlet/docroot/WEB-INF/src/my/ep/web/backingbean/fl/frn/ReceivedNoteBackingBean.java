@@ -171,7 +171,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				
 				// 36247-Start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					validatePOCOCurrentStatus(action);// 36361
+					validatePOCOCurrentStatus(action, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());// 36361
 				}
 				// 36247-End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
@@ -737,7 +737,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		// 36361 - start
 		if (outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
-			validatePOCOCurrentStatus(outcome);
+			validatePOCOCurrentStatus(outcome, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 		}
 		// 36361 - end
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
@@ -1179,7 +1179,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 				getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
@@ -1890,10 +1891,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	/**
 	 * validate current POCO work flow status
 	 * @param action 
+	 * @param deliveryOrderId
 	 * @throws EpException if not allow to proceed
 	 * 
 	 */
-	private void validatePOCOCurrentStatus(String action) {// 36361
+	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {// 36361
 		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -1903,6 +1905,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 		reqDTO.setActionCode(action);// 36361
+		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
 		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
 
 		Boolean allowToProceed = resDTO.isFlag();
