@@ -63,8 +63,9 @@
 		</p:panel>					
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
-						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+						rendered="#{receivedNoteBackingBean.managedBean.taskId==null
+						or receivedNoteBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
 						action="#{receivedNoteBackingBean.backAction}" /></td>
 				<td colspan="4" style="text-align: right">
 					<c:if test='#{receivedNoteBackingBean.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
@@ -177,7 +178,7 @@
 					onclick="cancelConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>	
-		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplineVOs}" 
+		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplineVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
 	</ui:define>
 </ui:composition>

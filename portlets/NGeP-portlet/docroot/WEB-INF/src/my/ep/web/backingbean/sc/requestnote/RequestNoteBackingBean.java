@@ -1170,17 +1170,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// #29693 start
 		// More than 1000 plus request note details data
-		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
-			String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
+		if (getManagedBean().getCurrentStatusId() != null
+				&& (getManagedBean().getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) || getManagedBean()
+						.getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL))) {
+			for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
+				String fulfilmentType = requestNoteDtl.getFulfilmentType().getParameterCode();
 
-			if ((getManagedBean().getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_APPROVAL) || getManagedBean()
-							.getCurrentStatusId().equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL))
-					&& (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || fulfilmentType
-							.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
-				approvalNotification();
-				break;
+				if (fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+						|| fulfilmentType.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+					approvalNotification();
+					break;
+				}
 			}
-
 		}
 		// #29693 end
 
@@ -1322,7 +1323,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) { //#36467
+				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { //#36467 & #36362
 					// 36362 - start
 					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
 					// 36362 - end
@@ -4180,6 +4181,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		IRequestNoteSO requestNoteSO = null; 
 		List<ScRequestNoteDtl> rndtls = null;
 		//#36119 - end
+		//Start: #35492#58
+		boolean audit = false;
+		PurchaseRequestResDTO auditResponse = null;
+		//End: #35492#58
 		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
@@ -4222,29 +4227,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setRequestNoteDtls(rndtls);
 					PurchaseRequestResDTO response = purchaseRequestSO.updateCancelCodifyPR(reqDTO);
-								
+					auditResponse = response; //#35492#58
+					
 					if(getManagedBean().isSourcingDpNewBpmVer()){
 						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
 						if(getManagedBean().getSupplierId() != null && getManagedBean().getRequestNote() != null){
 							rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
 							rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
 							requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+							
+							//tracking diary
+							ScRequestNote requestNote = getManagedBean().getRequestNote();
+							rnReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+							rnReqDTO.setPmUser(facesScopes.getUserSessionBean());
+							rnReqDTO.setOutcome(BpmOutcomeConst.BPM_COMPLETE);
+							rnReqDTO.setUserLocale(facesScopes.getUserLocale());
+							requestNote.setRequestNoteDtls(rndtls);
+							rnReqDTO.setRequestNote(requestNote);
+							rnReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+							getRequestNoteSO().prepareTrackingDiaryDPM(rnReqDTO, getManagedBean().getSelectedPrDtls());
 						}				
 					}
 					//#36119 - end
 					
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1], (String) prObj[3], Boolean.TRUE);
-//						/************ AUDIT #28895_35492 *************/
-//						IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
-//								ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-//
-//						AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
-//						if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
-//							getManagedBean().setPurchaseRequestResDTO(response);
-//							auTemplate.auditSaveData(getManagedBean(), requestNoteReqDTO.getLogKey().getUserId());
-//						}
-//						/************ END AUDIT #28895_35492 *************/
+						audit = true;//#35492#58
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
@@ -4265,6 +4273,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				log.error(this.getClass().getName()
 						+ ".cancelPendingItemCodificationDPM(): receipeints not found to send a notification");
 			}
+			
+			//START - #35492#58
+			if (audit) {
+				// /************ AUDIT #28895_35492 *************/
+				IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+
+				AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
+				if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
+					getManagedBean().setPurchaseRequestResDTO(auditResponse);
+					auTemplate.auditSaveData(getManagedBean(), getUserIdSessionFromLoginId());//#35492#58
+				}
+				// /************ END AUDIT #28895_35492 *************//
+			}
+			//END - #35492#58
+			
 			facesScopes.removeFromSession("directPurchaseManagedBean");
 			super.renewSesionObject();
 		}
