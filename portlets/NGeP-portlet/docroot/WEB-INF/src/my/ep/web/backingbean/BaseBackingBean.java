@@ -1020,23 +1020,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
-			//#25790 - start
-			Locale localeMY = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
-					CommonConstants.DEFAULT_COUNTRY_CODE);
-			
-			Locale localeEN = new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
-			//#25790 - end
 			for (PmStatusDesc statusDesc : statusDescs) {
-				//#25790 - start
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc
-						.getStatusName()
-						.replace(
-								ResourceBundleUtils.getMessage("lbl.txt.error",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeMY), StringUtils.EMPTY)
-						.replace(
-								ResourceBundleUtils.getMessage("lbl.txt.error",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeEN), StringUtils.EMPTY));
-				//#25790 - end
+				//start - 36615 - revert to previous code
+				items[i++] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+				//end - end
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -1091,6 +1079,51 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	
+	// start - 36615
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param docTypes
+	 *            the documents type
+	 * @param searchBean
+	 *            the SearchBean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValuesBySearchBean(String moduleCode, List<SelectItem> docTypes,
+			SearchBean<PmStatusDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		List<PmStatusDesc> combinedStatusDescs = new ArrayList<>();
+
+		try {
+			for (SelectItem item : docTypes) {
+				if (item.getValue() != null) {
+					List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode,
+							item.getValue().toString(), searchBean);
+					combinedStatusDescs.addAll(statusDescs);
+				}
+			}
+
+			items = new SelectItem[combinedStatusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDesc : combinedStatusDescs) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+
+	// end - 36615
+
 	/**
 	 * Get Status description by status id.
 	 * 
