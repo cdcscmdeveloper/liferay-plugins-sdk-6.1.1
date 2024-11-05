@@ -18169,6 +18169,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#28777 - END
 	//#36587 START
+	/**
+	 * To auto-populate po remark to approver remark
+	 * when po reject the category
+	 * @param cat
+	 * @return void
+	 */
 	private void setApproverRemark(SmSupplierCategory cat){
 		if(cat.getPoDecFlg().equals(0)){
 			cat.setApproverRemarks(cat.getPoRemarks() != null ? cat.getPoRemarks() : null);
