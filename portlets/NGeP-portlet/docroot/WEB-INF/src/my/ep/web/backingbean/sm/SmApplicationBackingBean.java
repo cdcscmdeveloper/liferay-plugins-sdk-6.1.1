@@ -13166,7 +13166,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	private void setDefaultApproverReviewSection() {
 		//#Enhancement #11765
-		if(!alreadyExecute && SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){ //#36576
+		if(!alreadyExecute && SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){ //#36576
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
 					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
 					.isApproverUser());
