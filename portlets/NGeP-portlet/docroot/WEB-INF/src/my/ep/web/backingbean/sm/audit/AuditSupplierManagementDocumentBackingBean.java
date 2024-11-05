@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
-import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.dto.sm.audit.AuditSupplierManagementResDTO;
 import my.ep.util.SLAUtils;

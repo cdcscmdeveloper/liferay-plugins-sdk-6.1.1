@@ -2425,8 +2425,7 @@ public class SmPersonnelBackingBean extends
 			log.info("Result:" + resDTO.isSuccessful());
 			if (resDTO.isSuccessful()) {
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailSO.class);
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
@@ -2895,8 +2894,7 @@ public class SmPersonnelBackingBean extends
 
 		if (resDTO.isSuccessful()) {
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-					IAuditTrailSO.class);
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
 				auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());

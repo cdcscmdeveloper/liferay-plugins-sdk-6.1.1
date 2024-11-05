@@ -324,7 +324,7 @@ public class SmSideMenuIconUtil {
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditBank(false);
-				//#28895_35501 - AUDIT TRAIL SM
+				// #28895_35501 - AUDIT TRAIL SM
 				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSmAppl())) {
@@ -338,7 +338,7 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
-				//#28895_35501 - AUDIT TRAIL SM
+				// #28895_35501 - AUDIT TRAIL SM
 				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {
@@ -354,7 +354,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
-				//#28895_35501 - AUDIT TRAIL SM
+				// #28895_35501 - AUDIT TRAIL SM
 				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestAppl(),
 						bean.getSupplierAppl())) {

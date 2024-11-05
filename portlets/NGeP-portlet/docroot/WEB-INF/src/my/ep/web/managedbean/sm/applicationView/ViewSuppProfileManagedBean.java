@@ -34,8 +34,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
-//#28895_35501 - AUDIT TRAIL SM
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -201,7 +199,6 @@ public class ViewSuppProfileManagedBean extends
 	private List<SmSupplierCategory> oldApprovedCategoryList;
 	private String oldPoApprOverlappedRemark;
 	private String oldApproverRemark;
-	private List<SmPersonnel> oldOwnerAndDirectorList; 
 	// #28895_35501 End
 	
 	public ViewSuppProfileManagedBean() {
@@ -1062,14 +1059,6 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setOldApproverRemark(String oldApproverRemark) {
 		this.oldApproverRemark = oldApproverRemark;
-	}
-
-	public List<SmPersonnel> getOldOwnerAndDirectorList() {
-		return oldOwnerAndDirectorList;
-	}
-
-	public void setOldOwnerAndDirectorList(List<SmPersonnel> oldOwnerAndDirectorList) {
-		this.oldOwnerAndDirectorList = oldOwnerAndDirectorList;
 	}
 	// #28895_35501 End
 }

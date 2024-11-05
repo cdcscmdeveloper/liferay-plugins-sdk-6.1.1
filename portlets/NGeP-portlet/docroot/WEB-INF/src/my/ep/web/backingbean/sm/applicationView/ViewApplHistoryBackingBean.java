@@ -194,13 +194,13 @@ public class ViewApplHistoryBackingBean extends
 					// #28895_35501 Start - AUDIT TRAIL SM
 				} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getManagedBean().getAccountType())) {
 					initAuditTab();
-				} 
+				}
 			} else if (outputTab == 5) {
 				initAuditTab();
-			} 
+			}
 		} else if (outputTab == 8) {
 			initAuditTab();
-		} 
+		}
 		// #28895_35501 End
 		// 25792 - end
 	}
