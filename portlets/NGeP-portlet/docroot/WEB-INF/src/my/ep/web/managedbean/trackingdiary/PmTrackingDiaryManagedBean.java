@@ -1046,13 +1046,12 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
- 
+
 			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
-			
-			if (isSearchBeanEmpty) {
-				
-				if (isFilterBySupplier()) {
-					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true);
+
+			if (isSearchBeanEmpty) {  
+				if (isFilterBySupplier() ) { 
+					PmOrgProfile pmOrgProfile = getOrgProfileByLoginUser(true); 
 					if (ParameterConst.ORG_TYPE_SUPPLIER.equals(pmOrgProfile.getOrgTypeCode().getParameterCode())) {
 						//START- Bug #29861 
 						if(ParameterConst.DOCTYPE_SUPPLIER_APPLICATION.equalsIgnoreCase(getSelectedDocType())){
@@ -1069,16 +1068,14 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					}
 				}
 				reqDTO.setSearchBean(searchBean);
-				
+
 				TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 				try {
-					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
-							.getInstance().getServiceObject("cc",
-									ITrackingDiarySO.class);
-					
-					resDTO = trackingDiarySO
-							.retrieveTrackingDiaryBySearchBean(reqDTO);
-					
+					ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance()
+							.getServiceObject("cc", ITrackingDiarySO.class);
+
+					resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
+
 					// #25396 - Start
 					ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
 					HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
