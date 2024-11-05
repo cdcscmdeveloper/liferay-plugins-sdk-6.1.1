@@ -397,9 +397,16 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 						getManagedBean().getSearchDocumentType());
 			}
 		}else{
-			return super.getStatusDropdownValues(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-					getManagedBean().getSearchDocumentType());
+			//start - 36615
+			if(StringUtils.isNotBlank(getManagedBean().getSearchDocumentType())){
+				return super.getStatusDropdownValues(
+						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+						getManagedBean().getSearchDocumentType());
+			}
+				return super.getStatusDropdownValuesBySearchBean(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
+						getManagedBean().getDocumentTypes(),
+						null);
+			//end - 36615
 		}
 	}
 
