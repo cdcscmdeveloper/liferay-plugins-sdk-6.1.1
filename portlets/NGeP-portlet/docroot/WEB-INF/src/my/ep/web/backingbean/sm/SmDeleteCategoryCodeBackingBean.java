@@ -12,6 +12,7 @@ import javax.faces.event.ComponentSystemEvent;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -20,9 +21,11 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
+import my.ep.dto.sm.search.SupplierCategoryReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -44,14 +47,15 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 
-// TODO: Auto-generated Javadoc
 @ManagedBean(name = "deleteCategoryCodeBB")
 @RequestScoped
-public class SmDeleteCategoryCodeBackingBean extends
-		BaseBackingBean<SmDeleteCategoryCodeManagedBean> implements Cloneable {
+public class SmDeleteCategoryCodeBackingBean extends BaseBackingBean<SmDeleteCategoryCodeManagedBean> implements Cloneable {
 
-	public static Logger log = Logger
-			.getLogger(SmDeleteCategoryCodeBackingBean.class);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static Logger log = Logger.getLogger(SmDeleteCategoryCodeBackingBean.class);
 
 	/**
 	 * Instantiates a new sm delete category code backing bean.
@@ -293,6 +297,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 					selCat.setChangedBy(loginSessionUserId);
 					log.info("**** User ID for ChangedBy (Delete Category Code) After *************"+loginSessionUserId);
 					/*#28404 - End*/
+					//#30766 & #34209 - START
+					updateDelCodesInAllRejApplNewerThanLatestAppl();
+					//#30766 & #34209 - END
 				}
 				//this.getManagedBean().getSmAppl().setQuestionnaire(false);
 				this.getManagedBean().setSmAppl(updateSmAppl(this.getManagedBean().getSmAppl()));
@@ -536,4 +543,45 @@ public class SmDeleteCategoryCodeBackingBean extends
 			throw new EpException(MessageConst.ERROR_722542);
 		}
 	}
+	
+	//#30766 & #34209 - START
+	public void updateDelCodesInAllRejApplNewerThanLatestAppl(){
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",IMofRegistrationSO.class);
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierCategorySO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		List<SmAppl> rejectedApplsAfterLatestAppl = mofRegistrationSO.retrieveSupplierRejectedApplNewerThanLatestAppl(this.getManagedBean().getSmAppl()).getApplList();
+		Long loginSessionUserId = 1L;
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(getFacesScopes().getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+		}
+		else{
+			loginSessionUserId = pmUser.getUserId();
+		}
+		
+		
+		for(SmAppl rejectedAppl : rejectedApplsAfterLatestAppl){
+			SupplierCategoryReqDTO supplierCategoryReqDTO = new SupplierCategoryReqDTO();
+			supplierCategoryReqDTO.setApplId(rejectedAppl.getApplId());
+			rejectedAppl.setSmSupplierCategories(supplierCategorySO.retrieveCategoryByApplId(supplierCategoryReqDTO).getSupplierCategoryList());
+			for(SmSupplierCategory rejectedApplCat : rejectedAppl.getSmSupplierCategories()){
+				for(SmSupplierCategory selCat : getManagedBean().getSelectedCategories()) {
+					if(rejectedApplCat.getCategoryL1Name().equals(selCat.getCategoryL1Name()) && 
+					   rejectedApplCat.getCategoryL2Name().equals(selCat.getCategoryL2Name()) && 
+					   rejectedApplCat.getCategoryL3Name().equals(selCat.getCategoryL3Name())){
+						rejectedApplCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						rejectedApplCat.setCancelledDate(new Date());
+						rejectedApplCat.setChangedBy(loginSessionUserId);
+						rejectedApplCat.setRemarks(selCat.getRemarks());
+					}
+				}
+			}
+			MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+			mofRegistrationReqDTO.setSmAppl(rejectedAppl);
+			mofRegistrationSO.updateSmAppl(mofRegistrationReqDTO);
+		}
+	}
+	//#30766 & #34209 - END
 }
