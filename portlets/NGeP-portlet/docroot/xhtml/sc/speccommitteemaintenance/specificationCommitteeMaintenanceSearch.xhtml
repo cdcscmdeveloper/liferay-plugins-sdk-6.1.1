@@ -80,10 +80,32 @@
 					<ui:param name="statusId" value="#{scQt.qtStatus.statusId}"/>
 					<p:column headerText="#{lbl['lbl.sc.action']}"
 						style="width:6%;text-align: center;">
-						<!-- 1873 note 125 -start- -->						
-						<p:commandLink id="editSMIcon" action="#{specMaintenanceBB.editSpecificationMaintenance(scQt,true)}" style="margin-right:20px;"
-							partialSubmit="true" process="@this" rendered="#{specMaintenanceBB.renderIcon(scQt)}">
-						<!-- 1873 note 125 -end- -->
+						<ui:remove><!-- 25037 - start - note 510--></ui:remove>
+						<p:dialog id="inactiveSCMembersPopupId#{scQt.qtId}"
+							widgetVar="inactiveSCMembersPopup#{scQt.qtId}" resizable="false"
+							style="max-width: 400px !important; border: 0 !important"
+							closable="false">
+							<table>
+								<tr>
+									<td align="center" style="border: 0 !important"><p:outputLabel
+											style="padding: 0 !important; text-align:justify !important;white-space: break-spaces !important; color: red !important;"
+											value="#{specMaintenanceBB.managedBean.inactiveSCMemberStr.concat(' ').concat(lbl['lbl.sc.popup.spec.confirmCheckInactive'])}" /></td>
+								</tr>
+							</table>
+							<p:spacer height="1" />
+							<div class="ppRightBtn">
+								<p:commandButton value="#{lbl['lbl.btn.ok']}"
+									action="#{specMaintenanceBB.editSpecificationMaintenance(scQt, true)}"
+									partialSubmit="true" process="@this" />
+							</div>
+						</p:dialog>
+						<!-- 1873 note 125 -start- -->
+						<p:commandLink id="editSMIcon"
+							action="#{specMaintenanceBB.editSpecificationMaintenance(scQt, true, true)}"
+							style="margin-right:20px;" partialSubmit="true" update="@form"
+							rendered="#{specMaintenanceBB.renderIcon(scQt)}">
+							<!-- 1873 note 125 -end- -->
+						<ui:remove><!-- 25037 - end - note 510--></ui:remove>
 							<h:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 								styleClass="tasklist_title1"
