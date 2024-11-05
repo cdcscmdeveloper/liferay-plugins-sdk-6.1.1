@@ -67,6 +67,12 @@
 			<p:inputText value="#{bb.dataForSigning}" id="signBeforeText" />
 		</h:panelGrid>
 		
+		<p:selectOneRadio value="#{bb.signOn}" id="signRadio">
+			<f:selectItem itemLabel="Sign ON" itemValue="1" />
+			<f:selectItem itemLabel="Sign OFF" itemValue="0" />
+			<p:ajax event="change" update="@form" partialSubmit="true"/>
+		</p:selectOneRadio>
+		
 		<p:commandButton value="#{lbl['lbl.btn.sign']}" action="#{bb.sign()}" update="@form"/>
 		
 		<p:commandButton value="#{lbl['lbl.btn.change.question']}" action="#{bb.changeChallengeQuestions}" update="@form"/>

@@ -48,6 +48,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	private String epNo;
 	private String email;
 	private String dataForSigning;
+	private String signOn = "1";
 	private String code = "Code: ";
 	
 	
@@ -116,6 +117,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	 * Sign
 	 */
 	public void sign(){
+		log.info("weeeee   "+signOn);
 		log.info("testSPKI-sign:\t_"+idNo+"_\t_"+epNo+"_\t_"+getPassword()+"_\t_"
 				+getChallengeQues1()+"_\t_"+getChallengeAns1()+"_\t_"+dataForSigning);
 		try {
@@ -382,5 +384,13 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 
 	public void setDataForSigning(String dataForSigning) {
 		this.dataForSigning = dataForSigning;
+	}
+
+	public String getSignOn() {
+		return signOn;
+	}
+
+	public void setSignOn(String signOn) {
+		this.signOn = signOn;
 	}
 }
