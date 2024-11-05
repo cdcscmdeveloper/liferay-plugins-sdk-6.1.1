@@ -306,7 +306,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public String determineIcon(CtAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
 		String fileExtension = "";
-
+		
+		// #25956 - Start
+		// Handle null attachment
+		if (attachment == null) {
+			return imageFileName;
+		}
+		// #25956 - End
+		
 		String fileName = attachment.getFileName();
 
 		// Retrieve the file extension base on filename
@@ -4257,7 +4264,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	            getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
 	            getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
 	        } else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-	            itemSpecList.add(itemSpecOffer.getItemSpec());
+	        	itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
 	        }
 	    }
 	    getManagedBean().setItemSpecification(itemSpecList);
