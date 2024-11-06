@@ -111,8 +111,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
+								<!-- #34392 - Start -->
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{sdoReviewBackingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 						            			action="#{sdoReviewBackingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
@@ -125,6 +126,7 @@
 										<br />
 									</ui:repeat>
 								</p:column>
+								<!-- #34392 - End -->
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
@@ -171,8 +173,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width : 56%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
 									<h:outputText value="#{inquirytbl.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</p:column>
+								<!-- #34392 - Start -->
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width : 12%;" rendered="#{!inquirytbl.pmDocument.mandatory and sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile" value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFile" value="#{sdoReviewBackingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}" rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"  ajax="false"
 							            		action="#{sdoReviewBackingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
@@ -185,6 +188,7 @@
 										<br />
 									</ui:repeat>
 								</p:column>
+								<!-- #34392 - End -->
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
 								</p:column>
