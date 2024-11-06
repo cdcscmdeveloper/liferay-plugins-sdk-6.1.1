@@ -24,14 +24,11 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -545,6 +542,24 @@ public class ViewSuppProfileBackingBean extends
 		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
 	}
 	//#29482 - End
+	
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 	
 	//31033 start
 	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {

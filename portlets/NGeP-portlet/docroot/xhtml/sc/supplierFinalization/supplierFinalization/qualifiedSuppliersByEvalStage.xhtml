@@ -54,8 +54,6 @@
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;">
 				<h:outputText value="#{qualifiedSupp.totalScore}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
-												CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
 

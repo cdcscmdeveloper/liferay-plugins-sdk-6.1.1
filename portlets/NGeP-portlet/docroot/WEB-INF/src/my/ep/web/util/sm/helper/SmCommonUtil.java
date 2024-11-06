@@ -189,7 +189,6 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
-import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -4363,8 +4362,10 @@ public class SmCommonUtil {
 			//set default parameter
 			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
+			PmParameter permanentResidenceType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES_SSM, ParameterConst.PERMANENT_RESIDENCE_TYPES); //#30064
 			ssmReqDTO.setPmParameter(identificationType);
 			ssmReqDTO.setPmParameterIdTypeP(passportType);
+			ssmReqDTO.setPmParameterIdTypePR(permanentResidenceType); //#30064
 			String regNo = ssmReqDTO.getRegNo();
 			ssmReqDTO.setDigitNo(ssmReqDTO.getRegNo().substring(ssmReqDTO.getRegNo().length()-1));
 			regNo = regNo.substring(0, regNo.length() - 2);
@@ -4619,17 +4620,17 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
-			if (per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
-				PmParameter ic = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+			//29582,35300 start
+			PmParameter ic = retrieveParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+			if (per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				per.setIdentificationTypeId(ic.getParameterId());
 				per.setIdentificationType(ic);
+			} else if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) && per.isPermanentResident()) {
+				per.setIdentificationType(per.getIdentificationType());
+				per.setIdentificationType(ic);
+				//29582,35300 end
 			} else {
-				PmParameter passport = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
-						StringUtils.EMPTY);
+				PmParameter passport = retrieveParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, "P", StringUtils.EMPTY);
 				per.setIdentificationTypeId(passport.getParameterId());
 				per.setIdentificationType(passport);
 			}
@@ -4644,49 +4645,37 @@ public class SmCommonUtil {
 	 * @param String
 	 *            gstRegNo
 	 */
-	public static void validateGstRegNoUniqueness(String bussRegNo,
-			String gstRegNo) {
+	public static void validateGstRegNoUniqueness(String bussRegNo, String gstRegNo) {
 		if (!StringUtils.isBlank(gstRegNo)) {
 			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
 			reqDTO.setBussRegNo(bussRegNo);
 			reqDTO.setGstRegNo(gstRegNo);
-			if (SmServiceLookup.getSupplierGstSO()
-					.checkIsGstRegNoAlreadyExist(reqDTO)
-					.isGstRegNoAlreadyExist()) {
-				throw new EpException(MessageConst.ERROR_722641,
-						new String[] { gstRegNo });
+			if (SmServiceLookup.getSupplierGstSO().checkIsGstRegNoAlreadyExist(reqDTO).isGstRegNoAlreadyExist()) {
+				throw new EpException(MessageConst.ERROR_722641, new String[] { gstRegNo });
 			}
 		}
 	}
 
 	// harris sst saletaxregno
-	public static void validateSstRegNoUniqueness(String bussRegNo,
-			String sstRegNo) {
+	public static void validateSstRegNoUniqueness(String bussRegNo, String sstRegNo) {
 		if (!StringUtils.isBlank(sstRegNo)) {
 			SupplierSstReqDTO reqDTO = new SupplierSstReqDTO();
 			reqDTO.setBussRegNo(bussRegNo);
 			reqDTO.setSalestaxregno(sstRegNo);
-			if (SmServiceLookup.getSupplierSstSO()
-					.checkIsSstRegNoAlreadyExist(reqDTO)
-					.isSstRegNoAlreadyExist()) {
-				throw new EpException(MessageConst.ERROR_722641,
-						new String[] { sstRegNo });
+			if (SmServiceLookup.getSupplierSstSO().checkIsSstRegNoAlreadyExist(reqDTO).isSstRegNoAlreadyExist()) {
+				throw new EpException(MessageConst.ERROR_722641, new String[] { sstRegNo });
 			}
 		}
 	}
 
 	// harris sst servtaxregno
-	public static void validateSstServRegNoUniqueness(String bussRegNo,
-			String sstServRegNo) {
+	public static void validateSstServRegNoUniqueness(String bussRegNo, String sstServRegNo) {
 		if (!StringUtils.isBlank(sstServRegNo)) {
 			SupplierSstReqDTO reqDTO = new SupplierSstReqDTO();
 			reqDTO.setBussRegNo(bussRegNo);
 			reqDTO.setServtaxregno(sstServRegNo);
-			if (SmServiceLookup.getSupplierSstSO()
-					.checkIsSstRegNoAlreadyExist(reqDTO)
-					.isSstRegNoAlreadyExist()) {
-				throw new EpException(MessageConst.ERROR_722641,
-						new String[] { sstServRegNo });
+			if (SmServiceLookup.getSupplierSstSO().checkIsSstRegNoAlreadyExist(reqDTO).isSstRegNoAlreadyExist()) {
+				throw new EpException(MessageConst.ERROR_722641, new String[] { sstServRegNo });
 			}
 		}
 	}
@@ -4703,8 +4692,7 @@ public class SmCommonUtil {
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(statusId);
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		StatusResDTO resDTO = SmServiceLookup.getStatusSO()
-				.retrieveStatusDescById(reqDTO);
+		StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 			retVal = resDTO.getPmStatusDesc();
 		}
@@ -4719,19 +4707,16 @@ public class SmCommonUtil {
 	 * @return String
 	 * @throws Exception
 	 */
-	public static String generateToPdf(String vm, VelocityContext context,
-			String fileNamePath) throws Exception {
+	public static String generateToPdf(String vm, VelocityContext context, String fileNamePath) throws Exception {
 		File tempFile1 = new File(fileNamePath);
 		OutputStream os1 = new FileOutputStream(tempFile1);
-		DocumentGenerator.getInstance().generatePdfFromVelocity(vm, context,
-				os1);
+		DocumentGenerator.getInstance().generatePdfFromVelocity(vm, context, os1);
 		os1.flush();
 		os1.close();
 		return fileNamePath;
 	}
 
-	public static void combinePdf(List<File> pdfs, String fileName)
-			throws Exception {
+	public static void combinePdf(List<File> pdfs, String fileName) throws Exception {
 		List<InputStream> list = new ArrayList<InputStream>();
 		for (File pdf : pdfs) {
 			list.add(new FileInputStream(pdf));
@@ -4746,8 +4731,7 @@ public class SmCommonUtil {
 		combined.close();
 	}
 
-	public static void doMerge(List<InputStream> list, OutputStream outputStream)
-			throws DocumentException, IOException {
+	public static void doMerge(List<InputStream> list, OutputStream outputStream) throws DocumentException, IOException {
 		Document document = new Document();
 		PdfWriter writer = PdfWriter.getInstance(document, outputStream);
 		document.open();
@@ -5625,32 +5609,24 @@ public class SmCommonUtil {
 	 *            supplierType, String applType, String categoryType
 	 * @return PmUser
 	 */
-	public Integer retrievePoJobTypeWeight(String supplierType,
-			String applType, String categoryType) {
+	public Integer retrievePoJobTypeWeight(String supplierType, String applType, String categoryType) {
 		PoJobTypeRatioReqDTO reqDTO = new PoJobTypeRatioReqDTO();
-		ISearchBean<PmPoJobTypeRatio> searchBean = constructJobWeightSearchBean(
-				supplierType, applType, categoryType);
+		ISearchBean<PmPoJobTypeRatio> searchBean = constructJobWeightSearchBean(supplierType, applType, categoryType);
 		reqDTO.setSearchBean(searchBean);
 
-		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IPoJobTypeRatioSO.class);
+		IPoJobTypeRatioSO reqSO = (IPoJobTypeRatioSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, 
+				IPoJobTypeRatioSO.class);
 		PoJobTypeRatioResDTO resDTO = reqSO.retrieveJobTypeRatioList(reqDTO);
 
 		if (resDTO.getResultBean().getResultList().size() > 0) {
-			return resDTO.getResultBean().getResultList().get(0)
-					.getPoJobWeight().getWeightValue();
+			return resDTO.getResultBean().getResultList().get(0).getPoJobWeight().getWeightValue();
 		} else {
-			ISearchBean<PmPoJobTypeRatio> retrySearchBean = constructJobWeightSearchBean(
-					supplierType, applType, null);
+			ISearchBean<PmPoJobTypeRatio> retrySearchBean = constructJobWeightSearchBean(supplierType, applType, null);
 			reqDTO.setSearchBean(retrySearchBean);
 
-			PoJobTypeRatioResDTO secResDTO = reqSO
-					.retrieveJobTypeRatioList(reqDTO);
+			PoJobTypeRatioResDTO secResDTO = reqSO.retrieveJobTypeRatioList(reqDTO);
 			if (secResDTO.getResultBean().getResultList().size() > 0) {
-				return secResDTO.getResultBean().getResultList().get(0)
-						.getPoJobWeight().getWeightValue();
+				return secResDTO.getResultBean().getResultList().get(0).getPoJobWeight().getWeightValue();
 			} else {
 				throw new EpException(MessageConst.ERROR_721119);
 			}
@@ -5661,9 +5637,7 @@ public class SmCommonUtil {
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryCode(countryCode);
 		reqDTO.setZoneName(zoneName);
-		List<PmState> stateList = SmServiceLookup.getStateSO()
-				.retriveStatesListByCountryCodeWithZoneName(reqDTO)
-				.getStateList();
+		List<PmState> stateList = SmServiceLookup.getStateSO().retriveStatesListByCountryCodeWithZoneName(reqDTO).getStateList();
 
 		return stateList;
 
@@ -5674,14 +5648,11 @@ public class SmCommonUtil {
 			StateReqDTO reqDTO = new StateReqDTO();
 			ISearchBean<PmState> searchBean = new SearchBean<PmState>();
 
-			SearchFilterBean countrySearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			SearchFilterBean stateSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
+			SearchFilterBean countrySearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+			SearchFilterBean stateSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 			countrySearchBean.setSearchField("pmCountry.countryCode");
-			countrySearchBean
-					.setSearchValue(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			countrySearchBean.setSearchValue(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			searchBean.getDataFilterBeans().add(countrySearchBean);
 
 			stateSearchBean.setSearchField("stateCode");
@@ -5690,9 +5661,7 @@ public class SmCommonUtil {
 
 			reqDTO.setStateSearchBean(searchBean);
 
-			List<PmState> stateList = SmServiceLookup.getStateSO()
-					.searchStateData(reqDTO).getStateResultBean()
-					.getResultList();
+			List<PmState> stateList = SmServiceLookup.getStateSO().searchStateData(reqDTO).getStateResultBean().getResultList();
 
 			if (stateList.size() > 0) {
 				return stateList.get(0);
@@ -5714,17 +5683,10 @@ public class SmCommonUtil {
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
 		reqDTO.setSupplierId(supplier.getSupplierId());
 
-		ComplaintResDTO resDTO = SmServiceLookup.getComplaintSO()
-				.checkSupplierIsSuspendedTerminated(reqDTO);
+		ComplaintResDTO resDTO = SmServiceLookup.getComplaintSO().checkSupplierIsSuspendedTerminated(reqDTO);
 
-		if (resDTO.getComplReview() != null
-				&& !StringUtils.isBlank(resDTO.getComplReview()
-						.getDecisionTaken())) {
-			if (resDTO
-					.getComplReview()
-					.getDecisionTaken()
-					.equalsIgnoreCase(
-							DisciplinaryActionConst.JKTT_DECISION_TERMINATE)) {
+		if (resDTO.getComplReview() != null && !StringUtils.isBlank(resDTO.getComplReview().getDecisionTaken())) {
+			if (resDTO.getComplReview().getDecisionTaken().equalsIgnoreCase(DisciplinaryActionConst.JKTT_DECISION_TERMINATE)) {
 				retVal = SupplierManagementConst.TERMINATED;
 			} else {
 				retVal = SupplierManagementConst.SUSPENDED;
@@ -5749,14 +5711,12 @@ public class SmCommonUtil {
 		SmRemarksReqDTO remarkReqDTO = new SmRemarksReqDTO();
 		remarkReqDTO.setDocId(appl.getApplId());
 		remarkReqDTO.setDocType(appl.getApplType());
-		SmRemaksResDTO remarkResDTO = SmServiceLookup.getSmRemarksSO()
-				.retrieveSmRemarksByDocument(remarkReqDTO);
+		SmRemaksResDTO remarkResDTO = SmServiceLookup.getSmRemarksSO().retrieveSmRemarksByDocument(remarkReqDTO);
 
 		SmAttachmentReqDTO attReqDTO = new SmAttachmentReqDTO();
 		attReqDTO.setDocId(appl.getApplId());
 		attReqDTO.setDocType("KC");
-		SmAttachmentResDTO attachResDTO = SmServiceLookup.getSmAttachmentSO()
-				.retrieveSmAttachmentByDocIdAndType(attReqDTO);
+		SmAttachmentResDTO attachResDTO = SmServiceLookup.getSmAttachmentSO().retrieveSmAttachmentByDocIdAndType(attReqDTO);
 
 		if (attachResDTO.getAttachment() != null) {
 			cancelVO.setAttch(attachResDTO.getAttachment());
@@ -5827,8 +5787,7 @@ public class SmCommonUtil {
 	public List<Long> getStateIdLsByZoneId(Long zoneId) {
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		reqDTO.setZoneId(zoneId);
-		ZoneResDTO resDTO = SmServiceLookup.getZoneSO()
-				.retrieveZoneStateByZoneId(reqDTO);
+		ZoneResDTO resDTO = SmServiceLookup.getZoneSO().retrieveZoneStateByZoneId(reqDTO);
 		PmZone pmZone = resDTO.getPmZone();
 
 		List<Long> zstateLs = new ArrayList<Long>();
@@ -5847,8 +5806,7 @@ public class SmCommonUtil {
 	public PmZone getUserZone() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		// getManagedBean().setStateLs(null);
-		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser
-				.getUserId());
+		List<PmUserOrg> activeOrg = PmCommonUtil.retrieveActiveOrg(pmUser.getUserId());
 		if (activeOrg.size() > 0) {
 			PmUserOrg userOrg = activeOrg.get(0);
 			PmZone pmZone = userOrg.getPmOrgProfile().getPmZone();
@@ -5873,9 +5831,7 @@ public class SmCommonUtil {
 	}
 
 	public boolean isDateHoliday(Calendar checkedDate, Long stateId) {
-		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICalendarSO.class);
+		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICalendarSO.class);
 		CalendarReqDTO reqDTO = new CalendarReqDTO();
 		reqDTO.setStateId(stateId);
 		reqDTO.setDate(checkedDate.getTime());
@@ -5896,8 +5852,7 @@ public class SmCommonUtil {
 	 * @return PmCountry object
 	 */
 	public static PmCountry retrievePmCountryByCountryCodeSSM(String countryCodeSSM) {
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm", ICountrySO.class);
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCodeSSM(countryCodeSSM);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCodeSSM(reqDTO);
@@ -5954,6 +5909,7 @@ public class SmCommonUtil {
 		return verifyWithMyIdentity(name,identificationNo,
 				postCode,type) ;
 	}
+	
 	//SSM INTEGRATION
 	public void verifyOwnerWithMyIdentity(String name, String identificationNo,
 			String postCode, String type, String supplierType,boolean showSSMError) {
@@ -5961,6 +5917,7 @@ public class SmCommonUtil {
 		verifyOwnerWithMyIdentity(name, identificationNo,
 				postCode, type, supplierType);
 	}
+	
 	//SSM Integration
 	public static void ssmError(SsmResDTO resDTO){
 		//27382
@@ -6012,11 +5969,9 @@ public class SmCommonUtil {
 		}
 	}
 	
-//13220-Start
+	//13220-Start
 	public static List<SelectItem> getDistrictListByID(Long divisionId) {
-		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDistrictSO.class);
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setDivisionId(divisionId);
 		DistrictResDTO resDTO = districtSO.retriveDistrictListByDivision(reqDTO);
@@ -6029,15 +5984,61 @@ public class SmCommonUtil {
 		}
 		return districtList;
 	}
-		public PmDivision getDivisionByUsingId(Long divisionId) {
-			if (divisionId != null) {
-				DivisionReqDTO reqDTO = new DivisionReqDTO();
-				reqDTO.setDivisionId(divisionId);
-				return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
-						.getPmDivision();
-			} else {
-				return null;
+	
+	public PmDivision getDivisionByUsingId(Long divisionId) {
+		if (divisionId != null) {
+			DivisionReqDTO reqDTO = new DivisionReqDTO();
+			reqDTO.setDivisionId(divisionId);
+			return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
+					.getPmDivision();
+		} else {
+			return null;
+		}
+	}
+	//13320-End
+		
+	// #29582- start
+	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
+		if (resDTO.getSmPersonnelAll() != null) {
+			boolean hasMykadOwnerOrDirector = false;
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+
+			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
+				if (per.getIdentificationTypeSsm() != null) {
+					String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+					if (ssmTypeDesc == null) {
+						ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+					}
+
+					sb.append("<br/>");
+					sb.append(++i + ". ");
+					sb.append(per.getName() + " ");
+					sb.append("(" + ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationNo() + ", ");
+					sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationTypeSsm() + " = ");
+					sb.append(ssmTypeDesc + ")");
+					sb.append("<br/>");
+				}
+
+				// Check for MYKAD owner/director and break if found
+				if (per.getIdentificationTypeSsm() != null && per.getIdentificationType().equals(ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
+					hasMykadOwnerOrDirector = true;
+					break;
+				}
+			}
+
+			// Handle error based on application type
+			if (hasMykadOwnerOrDirector) {
+				if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())) {
+					throw new EpException(MessageConst.ERROR_775196);
+				} else {
+					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+				}
 			}
 		}
-		//13320-End
+	}// #29582- end
 }
