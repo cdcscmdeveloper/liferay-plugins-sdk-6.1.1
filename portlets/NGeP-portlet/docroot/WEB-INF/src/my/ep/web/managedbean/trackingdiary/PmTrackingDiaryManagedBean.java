@@ -1076,7 +1076,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 
-					// #25790 - Start (revert)
+					// #25396 - Start
 					ISearchResultBean<PmTrackingDiary> tempResultBean = resDTO.getResultBean();
 					HashMap<Long, PmTrackingDiary> tempPmTrackingDiary = new HashMap<Long, PmTrackingDiary>();
 					if (isUseViewAsOption()) {
@@ -1094,7 +1094,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 							resDTO.setResultBean(tempResultBean);
 						}
 					}
-					// #25790 - End
+					// #25396 - end
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -1168,14 +1168,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:PmTrackingDiaryManagedBean.SearchTrackingDiaryPagingDataModel]");
 	}
-	
-	// CR 25790 - Start
-	public boolean isReqOrApprover() {
-		FacesScopes fc = new FacesScopes();
-		return (fc.hasRoleUser(RoleCode.REQUISITIONER.value()) || fc.hasRoleUser(RoleCode.RN_APPROVER.value()) || fc
-				.hasRoleUser(RoleCode.BPK_AUDITOR.value())|| fc.hasRoleUser(RoleCode.DESK_OFFICER.value()));
-	}
-	// CR 25790 - End
 	
 	//START- Bug #29861
 	private List<String> getAllSupplierRoleForSM(){
