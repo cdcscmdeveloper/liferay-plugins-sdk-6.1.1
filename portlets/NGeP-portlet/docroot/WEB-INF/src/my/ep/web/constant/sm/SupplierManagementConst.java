@@ -717,7 +717,7 @@ public class SupplierManagementConst {
 
 	public static final int MAX_PAYMENT_BANK = 35;
 
-	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dihapuskan kerana dikenakan Tindakan Tatatertib"; // 26238, 32332
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION;// 26238, 32332
 	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
 
 	// EXTERNAL CONTEXT SESSION KEY MAP
@@ -735,7 +735,7 @@ public class SupplierManagementConst {
 	//28775 - Site Visit Grouping Enhancement - 28775
 	public static final long STATE_SELANGOR = 11L;
 	public static final long STATE_KL = 15L;
-	public static List<Long> KLANG_VALLEY = Arrays.asList(STATE_SELANGOR, STATE_KL);
+	public static final List<Long> KLANG_VALLEY = Collections.unmodifiableList(Arrays.asList(STATE_SELANGOR, STATE_KL));
 
 	//9569
 	public static final String EPROLE_DELETED = "Delete";

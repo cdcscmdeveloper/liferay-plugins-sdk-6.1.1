@@ -4039,16 +4039,18 @@ public class SpecificationBackingBean extends
 				}
 			}
 
-			//#25037-start
+			// 25037 - start
 			ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
-			ScCommittee committee = qtCommittee!=null ? qtCommittee.getScCommittee(): null;
-			List<ScCommitteeMember> memberList = committee!=null ? committee.getScCommitteeMembers(): new ArrayList<ScCommitteeMember>();
-			if(CollectionUtils.isNotEmpty(memberList) && CollectionUtils.isNotEmpty(committeeActivities)){
+			ScCommittee committee = qtCommittee != null ? qtCommittee.getScCommittee() : null;
+			List<ScCommitteeMember> memberList = committee != null ? committee.getScCommitteeMembers()
+					: new ArrayList<ScCommitteeMember>();
+			if (CollectionUtils.isNotEmpty(memberList) && CollectionUtils.isNotEmpty(committeeActivities)) {
 				qtCommittee = committeeActivities.get(0).getScQtCommittee();
-				Map<Object, Object> map = CustomUtils.listToMap(committeeActivities, "getScCommitteeMember.getCommitteeMemberId");
-				List<ScQtCommitteeActivity> missingActivities = new ArrayList<ScQtCommitteeActivity>();
+				Map<Object, Object> map = CustomUtils.listToMap(committeeActivities,
+						"getScCommitteeMember.getCommitteeMemberId");
+				List<ScQtCommitteeActivity> missingActivities = new ArrayList<>();
 				for (ScCommitteeMember member : memberList) {
-					if(map.get(member.getCommitteeMemberId())==null){
+					if (map.get(member.getCommitteeMemberId()) == null) {
 						ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 						activity.setScQtCommittee(qtCommittee);
 						activity.setScCommitteeMember(member);
@@ -4058,15 +4060,19 @@ public class SpecificationBackingBean extends
 				}
 				committeeActivities.addAll(missingActivities);
 				Collections.sort(committeeActivities, new Comparator<ScQtCommitteeActivity>() {
-					List<String> sortOrder = Arrays.asList("C", "S", "M");
+					List<String> sortOrder = Arrays.asList(SourcingConstants.COMMITTEE_ROLE_SORT_ORDER);
+
+					@Override
 					public int compare(ScQtCommitteeActivity o1, ScQtCommitteeActivity o2) {
-						return Integer.valueOf(sortOrder.indexOf(o1.getScCommitteeMember().getMemberRole().getParameterCode()))
+						return Integer.valueOf(
+								sortOrder.indexOf(o1.getScCommitteeMember().getMemberRole().getParameterCode()))
 								.compareTo(
-										Integer.valueOf(sortOrder.indexOf(o2
-												.getScCommitteeMember().getMemberRole().getParameterCode())));
+										Integer.valueOf(sortOrder.indexOf(o2.getScCommitteeMember().getMemberRole()
+												.getParameterCode())));
 					}
 				});
-			}			//#25037-end
+			}
+			// 25037 - end
 			this.getManagedBean().setCommitteeActivities(committeeActivities);
 
 		} finally {
@@ -17444,14 +17450,14 @@ if (null != checklist && !checklist.isEmpty()) {
 		log.debug("start submitSpecMaintenanceDtls" + action);
 		this.getManagedBean().setLocalOutCome(action);
 		log.debug("end submitSpecMaintenanceDtls" + action);
-		//25037 - start - note 510
-		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt());//#25037
-		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
+		// 25037 - start
+		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt(), true);// 25037
+		if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
 			this.qtChecklistTabChange(10);
 			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			return;
 		}
-		//25037 - end - note 510
+		// 25037 - end
 		//1873 - start - note 52
 		boolean popupShown = assertPendingFinancialSubmission(); 
 		//#28784 - checking for pending spec before submit
@@ -18429,7 +18435,7 @@ if (null != checklist && !checklist.isEmpty()) {
 							//20210205@haziq- Bug #30046 - End
 							if (null != estimatedCost) {
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
-										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
+										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 							}
 							//20201217@haziq- Bug #29806 - End
 							/*}*/
@@ -18481,7 +18487,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					}//32134-End
 				}
 				//Bug #29808
-				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 			}
 			// Check Intended Price
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
@@ -18526,7 +18532,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					}
 				}
 				
-				newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
+				newTotalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 				if (newTotalSpecEstimatedAmount
 								.compareTo(indPriceThreshold) > 0) {
 					throw new EpException(MessageConst.ERROR_760504,
@@ -20812,51 +20818,50 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 }
-	//#25037-start
-	public void submitAction(String outcome){
+
+	// 25037 - start
+	/**
+	 * Submit action based on outcome.
+	 * @param outcome
+	 */
+	public void submitAction(String outcome) {
 		assertConcurrentComittteeChangesApproval();
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			//1873 - start - note 52
-			if(!assertPendingFinancialSubmission()){ 
-				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()"); 
-			} 
-			//1873 - end - note 52
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			// 1873 - start - note 52
+			if (!assertPendingFinancialSubmission()) {
+				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
+			}
+			// 1873 - end - note 52
 		} else {
 			specCommitteBpmTask(outcome);
 		}
 	}
 
-	private void assertConcurrentComittteeChangesApproval(){
+	private void assertConcurrentComittteeChangesApproval() {
 		String taskName = this.getManagedBean().getTaskName();
-		taskName = StringUtils.isNotEmpty(taskName) ? taskName: "";
-		String[] scoringTaskNames = new String[] {
-				SCProcessNameConst.FINALISE_SCORING,
-				SCProcessNameConst.ENDORSE_SCORING,
-				SCProcessNameConst.SIGNOFF_SCORING };
-		String[] approvalTaskName = new String[]{
-				SCProcessNameConst.APPROVE_COMMITTEE,
-				SCProcessNameConst.REVISE_COMMITTEE
-		};
+		taskName = StringUtils.isNotEmpty(taskName) ? taskName : "";
+		String[] scoringTaskNames = new String[] { SCProcessNameConst.FINALISE_SCORING,
+				SCProcessNameConst.ENDORSE_SCORING, SCProcessNameConst.SIGNOFF_SCORING };
+		String[] approvalTaskName = new String[] { SCProcessNameConst.APPROVE_COMMITTEE,
+				SCProcessNameConst.REVISE_COMMITTEE };
 
-		if(Arrays.asList(scoringTaskNames).contains(taskName)){
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
+		if (Arrays.asList(scoringTaskNames).contains(taskName)) {
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			ScQt qt = this.getManagedBean().getQt();
 			bpmReqDTO.setDocNumber(qt.getQtNo());
 			bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
 			BpmResponseDTO resDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-			for(WorklistItemVO currentVO: resDTO.getWorklistVO().getWorklistItem()){
-				if(StringUtils.isNotBlank(currentVO.getTaskName())){
-					if(Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())){
-						throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
-					}
+			for (WorklistItemVO currentVO : resDTO.getWorklistVO().getWorklistItem()) {
+				if (StringUtils.isNotBlank(currentVO.getTaskName())
+						&& Arrays.asList(approvalTaskName).contains(currentVO.getTaskName())) {
+					throw new EpException(getMessage("lbl.sc.popup.cannotSubmitWaitingCMT", null));
 				}
-			 }
-		}	
+			}
+		}
 	}
-	
-	//#25037-end
+
+	// 25037 - end
 	
 	//#1873-start
 	private String buildQuestionCompareString(TplSpecQuestion question){
@@ -22654,12 +22659,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 			TreeNode rootNode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_ROOT, null);
 			Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode = new HashMap<>();
-			for (PmCategoryL1 pmCategoryL1 : BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class)
-					.retrieveCategoryL1List().getCategoryL1List()) {
+			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+			List<PmCategoryL1> categoryL1List = categoryCodeSO.retrieveCategoryL1List().getCategoryL1List();
+			for (PmCategoryL1 pmCategoryL1 : categoryL1List) {
 				Map<Long, String> l1Map = new HashMap<>();
 				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
-				for (PmCategoryL2 pmCategoryL2 : pmCategoryL1.getPmCategoryL2s()) {
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				Long l1Id = pmCategoryL1.getCategoryL1Id();
+				reqDTO.setCategoryL1Id(l1Id);
+				List<PmCategoryL2> categoryL2List = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO)
+						.getCategoryL2List();
+				for (PmCategoryL2 pmCategoryL2 : categoryL2List) {
 					Map<Long, Map<Long, String>> l2Map = new HashMap<>();
 					l2Map.put(pmCategoryL2.getCategoryL2Id(), l1Map);
 					addCategoryL3ForMap(pmCategoryL1, pmCategoryL2, l2Map, mapCatCode, rootNode);
@@ -22677,7 +22688,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	private void addCategoryL3ForMap(PmCategoryL1 pmCategoryL1, PmCategoryL2 pmCategoryL2,
 			Map<Long, Map<Long, String>> l2Map, Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode,
 			TreeNode rootNode) {
-		for (PmCategoryL3 pmCategoryL3 : pmCategoryL2.getPmCategoryL3s()) {
+		ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		Long l2Id = pmCategoryL2.getCategoryL2Id();
+		reqDTO.setCategoryL2Id(l2Id);
+		List<PmCategoryL3> categoryL3List = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO).getCategoryL3List();
+		for (PmCategoryL3 pmCategoryL3 : categoryL3List) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
 			TreeNode catCode = new DefaultTreeNode(TreeNodeConstants.DEFAULT_TREE_NODE_CATCODE,
 					pmCategoryL1.getCategoryL1Code() + pmCategoryL2.getCategoryL2Code()
@@ -22709,11 +22726,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		TreeNode selectedTreeNode = event.getTreeNode();
 		selectedTreeNode.setSelected(true);
 		List<String> selectedCatCodes = new ArrayList<>();
-		String code=(String) selectedTreeNode.getData();
-		if(getManagedBean().getSelectedCategories()!=null 
-			&& !getManagedBean().getSelectedCategories().isEmpty())  
-				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
-			
+		String code = (String) selectedTreeNode.getData();
+		if (getManagedBean().getSelectedCategories() != null && !getManagedBean().getSelectedCategories().isEmpty()) {
+			selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+		}
+
 		if (!selectedCatCodes.isEmpty()) {
 			if (!selectedCatCodes.contains(code)) {
 				selectedCatCodes.add(code);
@@ -22736,8 +22753,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		List<String> selectedCatCodes = new ArrayList<>();
 			
 		if(getManagedBean().getSelectedCategories()!=null 
-			&& !getManagedBean().getSelectedCategories().isEmpty())  
-				selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+			&& !getManagedBean().getSelectedCategories().isEmpty()){
+			selectedCatCodes.addAll(getManagedBean().getSelectedCategories());
+		}
 			
 		if(!selectedCatCodes.isEmpty()){
 			selectedCatCodes.remove((String) selectedTreeNode.getData());

@@ -679,50 +679,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 						}
 						//32851 - end
-						
-
-						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-						
-//						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
-//						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
-//						
-//						personneleqDTO.setIdentificationNo(suppOwner.getIdentificationNo());
-//						PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelByIdNo(personneleqDTO);
-//						
-//						if(personnelResDTO != null && personnelResDTO.getSmPersonnelList().size() > 0){
-//							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-//								
-//								if(null != personnel.getSmAppl()){
-//									
-//									SmAppl latestAppl = new SmAppl();
-//									latestAppl.setSmSupplier(personnel.getSmAppl().getSmSupplier());
-//									
-//									SmSupplier supplier = latestAppl.getSmSupplier();
-//									
-//									//27876: Disciplinary Action - start - <27876>
-//									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-//									//27876: Disciplinary Action - end - <27876>
-//									
-//									//CR 27382: Static Code Analysis
-//									//if(discList != null && discList.size() > 0){ asal
-//									if(discList != null && !discList.isEmpty()){
-//										for(SmDisciplinaryAction disc : discList){
-//											//27861:  Disciplinary Action - start - 28798
-//											//32851
-//											if(//( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
-//													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ) ||
-//													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isSuspendRegistration() ) ){
-//												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
-//												
-//											}
-//											//27861:  Disciplinary Action - end - 28798
-//										}
-//									}
-//								}
-//							}
-//						}
-						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-						
 					}
 				}
 			}
@@ -941,6 +897,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setContactPerson(SupplierManagementConst.FIRST_USER_CONT_PERSON);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
 		
 		if(!smPersonnel.getPmCountry().getCountryCode().
 				equalsIgnoreCase(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
@@ -1599,7 +1556,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
-					auditSmBackingBean.saveAuditData(getManagedBean(), reqDTO.getLogKey().getUserId());
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
 				// #28895_35501 End
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
@@ -2352,11 +2309,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmResAdd().getPmCity().setCityId(null);
-				//#34159 - START
-				if(this.getManagedBean().getSmResAdd().getPmDivision() != null && this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId() != null){
-					//this.getManagedBean().getSmResAdd().getPmDivision().setDivisionId(null);
-				}
-				//#34159 - END
+				this.getManagedBean().getSmResAdd().setPmDivision(null); //#34159
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
 			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
@@ -2405,13 +2358,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		} else if (typeAdd.equals("permenant")) {
 			//13320
 			if(reset){
+				getManagedBean().getSmPermenantAdd().setPmDivision(null); //#34159 
 				getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
-				//#34159 - START
-				if(this.getManagedBean().getSmPermenantAdd().getPmDivision() != null && this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId() != null){
-					//this.getManagedBean().getSmPermenantAdd().getPmDivision().setDivisionId(null);
-				}
-				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId()));
 			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
