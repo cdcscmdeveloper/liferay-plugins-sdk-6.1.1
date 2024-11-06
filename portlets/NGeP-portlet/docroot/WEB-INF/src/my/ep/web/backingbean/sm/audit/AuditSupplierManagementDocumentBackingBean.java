@@ -71,9 +71,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
 					"generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
 		}
-
 		Workbook wb = new XSSFWorkbook();
-
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)
 				|| getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_BANK_INFO, getManagedBean().getBankInfoList());
@@ -89,7 +87,6 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_USER_PROFILE, getManagedBean().getUserInfoList());
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DEACTIVE_REPLACE_SUPPLIER_ADMIN, getManagedBean().getAdminInfoList());
 		}
-
 		// Export to Excel
 		exportExcelReportAudit(wb);
 	}
@@ -134,7 +131,6 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 				break;
 			default:
 				break;
-
 			}
 		}
 	}
@@ -146,7 +142,6 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 	 */
 	public void generateRptExcelForAuditTrailDetails(AuSmSearchBean auSmSearchBean) {
 		List<AuditSupplierManagementResDTO> rsltReportList = new ArrayList<>();
-
 		try {
 			IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 					IAuditSupplierManagementSO.class);
@@ -160,20 +155,15 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
 					"AuditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
 		}
-
 		Workbook wb = new XSSFWorkbook();
-
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)) {
 			generateBasicSupplierSheet(wb, rsltReportList);
 		} else if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT)) {
 			generateG2GSupplierSheet(wb, rsltReportList);
-
 		} else if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)
 				|| getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)) {
 			generateMOFSupplierSheet(wb, rsltReportList);
-
 		}
-
 		// Export to Excel
 		exportExcelReportAudit(wb);
 	}
@@ -218,27 +208,19 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 	private void createSheetLayout(Workbook wb, String tabName, List<AuditSupplierManagementResDTO> rsltReportList) {
 		Sheet sheetRptAudit = wb.createSheet(tabName);
-
 		// Setting Report - Populate Table Header Cell Value
 		String[] colHeaderDataTableRpt = ReportExcelAuditConstant.ColHeaderListType3;
-
 		CellStyle cellStyleTitleRpt = new ExcelCellStyleBuilder(wb).buildTitleReportCellStyle();
-
 		// Section - Setting Table Header Cell Style for each cell
 		CellStyle colHeaderDataTableRptStyle = new ExcelCellStyleBuilder(wb).setHAlignment(HorizontalAlignment.CENTER)
 				.setVAlignment(VerticalAlignment.CENTER).buildHeaderCellStyle();
-
 		// Section - Setting Cell Style for No Records Found message.
 		CellStyle noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
-
 		// Cell Format: String
 		CellStyle cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
-
 		// Cell Format: DateTime
 		CellStyle cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
-
 		// End Section - Setting Cell Style for each cell
-
 		// Create Row/Cell - Report Title
 		Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
 		Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
@@ -248,7 +230,6 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		cellTitleRow.setCellStyle(cellStyleTitleRpt);
 		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
 																			// Cell
-
 		// Create Row/Cell - Report Header Datatable
 		Row titleHeaderRow = sheetRptAudit.createRow(3);
 		for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
@@ -256,50 +237,39 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			cell.setCellValue(colHeaderDataTableRpt[i]);
 			cell.setCellStyle(colHeaderDataTableRptStyle);
 		}
-
 		// Section: Populate Audit Trail Details Record for Request Note.
 		// Create Row/Cell - Audit Trail Details
 		int rowIndex = sheetRptAudit.getLastRowNum() + 1;
 		if (!rsltReportList.isEmpty()) {
 			for (int a = 0; a < rsltReportList.size(); a++) {
 				Row currRow = sheetRptAudit.createRow(rowIndex++);
-
 				Cell cellActionDate = currRow.createCell(1);
 				cellActionDate.setCellValue(rsltReportList.get(a).getActionDate());
 				cellActionDate.setCellStyle(cellStyleDateTime);
-
 				Cell cellActionType = currRow.createCell(2);
 				cellActionType.setCellValue(rsltReportList.get(a).getActionType());
 				cellActionType.setCellStyle(cellStyleString);
-
 				Cell cellActionBy = currRow.createCell(3);
 				cellActionBy.setCellValue(rsltReportList.get(a).getActionBy());
 				cellActionBy.setCellStyle(cellStyleString);
-
 				Cell cellOrg = currRow.createCell(4);
 				cellOrg.setCellValue(rsltReportList.get(a).getOrg());
 				cellOrg.setCellStyle(cellStyleString);
-
 				Cell cellRole = currRow.createCell(5);
 				cellRole.setCellValue(rsltReportList.get(a).getRole());
 				cellRole.setCellStyle(cellStyleString);
-
 				Cell cellDocType = currRow.createCell(6);
 				cellDocType.setCellValue(rsltReportList.get(a).getDocType());
 				cellDocType.setCellStyle(cellStyleString);
-
 				Cell cellDocNo = currRow.createCell(7);
 				cellDocNo.setCellValue(rsltReportList.get(a).getDocNo());
 				cellDocNo.setCellStyle(cellStyleString);
-
 				Cell cellSubDocNo = currRow.createCell(8);
 				cellSubDocNo.setCellValue(rsltReportList.get(a).getFieldName());
 				cellSubDocNo.setCellStyle(cellStyleString);
-
 				Cell cellFieldName = currRow.createCell(9);
 				cellFieldName.setCellValue(rsltReportList.get(a).getOldValue());
 				cellFieldName.setCellStyle(cellStyleString);
-
 				Cell cellOldValue = currRow.createCell(10);
 				cellOldValue.setCellValue(rsltReportList.get(a).getNewValue());
 				cellOldValue.setCellStyle(cellStyleString);
@@ -307,7 +277,6 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		} else {
 			createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
 		}
-
 		// Set column width
 		setExlSheetColumnWidth(colHeaderDataTableRpt.length, sheetRptAudit);
 	}
@@ -330,18 +299,15 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		try {
 			PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
-
 			response.setContentType("application/ms-excel");
 			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition", ReportExcelAuditConstant.RPT_FILE_CONTENT_DISPOSITION);
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.flushBuffer();
-
 			OutputStream outStream = response.getOutputStream();
 			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			wb.write(outByteStream);// Write into file
 			byte[] outArray = outByteStream.toByteArray();
-
 			outStream.write(outArray);
 			outStream.flush();
 			outStream.close();
@@ -355,12 +321,14 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 	/**
 	 * Generate report for all tab in PDF format.
+	 * 
+	 * @param auSmSearchBean
 	 */
 	public void generateRptPdfForAuditTrailDetailsAll(AuSmSearchBean auSmSearchBean) {
 		try {
 			Map<String, String> paramMap = new HashMap<>();
 			paramMap.put(AuditReportConst.PARAM_DOC_ID, auSmSearchBean.getDocId().toString());
-			paramMap.put(AuditReportConst.PARAM_DOC_TYPE, auSmSearchBean.getDocType().toString());
+			paramMap.put(AuditReportConst.PARAM_DOC_TYPE, auSmSearchBean.getDocType());
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_SM, paramMap);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
@@ -371,12 +339,14 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 	/**
 	 * Generate report for single tab in PDF format.
+	 * 
+	 * @param auSmSearchBean
 	 */
 	public void generateRptPdfForAuditTrailDetails(AuSmSearchBean auSmSearchBean) {
 		try {
 			Map<String, String> paramMap = new HashMap<>();
 			paramMap.put(AuditReportConst.PARAM_DOC_ID, auSmSearchBean.getDocId().toString());
-			paramMap.put(AuditReportConst.PARAM_DOC_TYPE, auSmSearchBean.getDocType().toString());
+			paramMap.put(AuditReportConst.PARAM_DOC_TYPE, auSmSearchBean.getDocType());
 			paramMap.put(AuditReportConst.PARAM_GROUP_SECTION_ID, auSmSearchBean.getAuGroupSection().toString());
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_SM, paramMap);
 		} catch (Exception e) {
