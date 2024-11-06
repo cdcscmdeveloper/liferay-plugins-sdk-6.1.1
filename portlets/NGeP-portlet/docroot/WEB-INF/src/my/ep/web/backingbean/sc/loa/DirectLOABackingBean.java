@@ -125,7 +125,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -3918,7 +3917,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().setAgreementReqChange(false);
 				getManagedBean().getScLoa().setScLoaAttachment(null);
 				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
-			}else if (isPK7){
+			}else {
 				getManagedBean().setBondReqSelectedVal(null);
 		    	getManagedBean().setAgreemetSelectedVal(null);
 		    	getManagedBean().getScLoa().setBondReq(false);
