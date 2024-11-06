@@ -442,9 +442,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			getManagedBean().setPasswordPolicy(null);
 			generatePasswordPolicy();
 			// #28895_35501 Start - AUDIT TRAIL SM
-			if(isSmAuditUser()){
-				this.getManagedBean().setOldSelectedUser(
-						(PmUser) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSelectedUser()));
+			if (isSmAuditUser()) {
+				this.getManagedBean().setOldSelectedUser((PmUser) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSelectedUser()));
 			}
 			// #28895_35501 End
 
@@ -945,8 +944,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailSO.class);
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF) && isSmAuditUser()) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
@@ -1868,9 +1866,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	} // #28720 - End
 	// #28895_35501 Start - AUDIT TRAIL SM
 	private boolean isSmAuditUser() {
-		String[] roles = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(),
-				RoleCode.G2G_SUPPLIER_USER.value(), RoleCode.G2G_SUPPLIER_ADMIN.value(),
-				RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value() };
+		String[] roles = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(), RoleCode.G2G_SUPPLIER_USER.value(),
+				RoleCode.G2G_SUPPLIER_ADMIN.value(), RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value() };
 		boolean auditUser = false;
 		for (String role : roles) {
 			if (getFacesScopes().hasRoleUser(role)) {

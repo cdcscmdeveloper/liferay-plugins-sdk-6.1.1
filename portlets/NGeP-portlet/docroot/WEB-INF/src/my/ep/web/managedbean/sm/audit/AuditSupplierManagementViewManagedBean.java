@@ -86,17 +86,15 @@ public class AuditSupplierManagementViewManagedBean extends BaseManagedBean {
 		 * @return ISearchResultBean<AuditSupplierManagementResDTO>
 		 */
 		@Override
-		public ISearchResultBean<AuditSupplierManagementResDTO> pageChangeListener(
-				ISearchBean<AuditSupplierManagementResDTO> searchBean) {
+		public ISearchResultBean<AuditSupplierManagementResDTO> pageChangeListener(ISearchBean<AuditSupplierManagementResDTO> searchBean) {
 			try {
-				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT, IAuditSupplierManagementSO.class);
-				return auditSmSo.searchAuditSupplierManagementView(auSmSearchBean.getLanguage(),
-						auSmSearchBean.getDocId(), auSmSearchBean.getDocType(), auSmSearchBean.getAuGroupSection(),
-						searchBean);
+				IAuditSupplierManagementSO auditSmSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IAuditSupplierManagementSO.class);
+				return auditSmSo.searchAuditSupplierManagementView(auSmSearchBean.getLanguage(), auSmSearchBean.getDocId(),
+						auSmSearchBean.getDocType(), auSmSearchBean.getAuGroupSection(), searchBean);
 			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve",
-						auSmSearchBean.getDocId().toString(), "IAuditSupplierManagementSO", logKey.getUserId(), e);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", auSmSearchBean.getDocId().toString(),
+						"IAuditSupplierManagementSO", logKey.getUserId(), e);
 				throw new EpException(MessageConst.ERROR_000001);
 			}
 		}
