@@ -348,4 +348,43 @@ public class VmUtil {
 		return checkProtege;
 		// 35295 - end
 	}
+
+	// #29007 - note 724 Vinod start
+	/**
+	* This method will replace following special characters from the string to HTML keys
+	* '<' to "&#60;" , '>' to "&#62;" and  '\r\n' to "<br />"
+	* to avoid errors and achieve line spacing in VM report.
+	* 
+	* @param key
+	* @return updated String
+	*/
+	public String replaceAllSpecialCharactersToHTML(String key) {
+		if (key == null || key == "") {
+			return key;
+		}
+		String localKey = key;
+
+		if (localKey.contains(TemplateSpecConst.LESS_THEN_SYMBOL)) {
+			localKey = localKey.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+					TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		}
+		if (localKey.contains(TemplateSpecConst.GREATER_THEN_SYMBOL)) {
+			localKey = localKey.replaceAll(
+					TemplateSpecConst.GREATER_THEN_SYMBOL,
+					TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		}
+		if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER)) {
+			localKey = localKey.replaceAll(
+					TemplateSpecConst.NEW_LINE_CHARACTER,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER_R)) {
+			localKey = localKey.replaceAll(
+					TemplateSpecConst.NEW_LINE_CHARACTER_R,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+
+		return localKey;
+	}
+	// #29007 - note 724 Vinod End
 }
