@@ -306,7 +306,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		Object returnObj = null;
 		//#36605
 		//PIN must be 8 chars long, contain only letters, numbers, and at least 1 alphabet and 1 number
-		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")){
+		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")
+				&& "true".equalsIgnoreCase(getSpkiEnabledProperty())){
 			throw new EpException(MessageConst.ERROR_776060, null);
 		}
 
