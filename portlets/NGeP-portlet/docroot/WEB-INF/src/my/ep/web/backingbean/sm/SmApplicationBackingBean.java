@@ -7046,7 +7046,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getPmParameterById(worker.getIdentificationTypeId()));
 			if(worker.getIdentificationType().getParameterCode().equals(
 					SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-				if(worker.getIdentificationNo().length() != 12){
+				if(worker.getIdentificationNo().length() != SupplierManagementConst.IC_NO_LENGTH){
 					throw new EpException(MessageConst.ERROR_722532,
 							new String[] { worker.getIdentificationNo() });
 				}

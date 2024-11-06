@@ -330,10 +330,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		setFlagShowButtonSubmit(selectedSmAppl.getSmSupplier(), mofStatus);
 		
 		// #28895_35501 Start - AUDIT TRAIL SM
-		this.getManagedBean().setOldSmAppl(
-				(SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
-		this.getManagedBean().setOldApprovedCategoryList(
-				CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getApprovedCategoryList()));
+		this.getManagedBean().setOldSmAppl((SmAppl) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSmAppl()));
+		this.getManagedBean()
+				.setOldApprovedCategoryList(CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getApprovedCategoryList()));
 		this.getManagedBean().setOldPoApprOverlappedRemark(this.getManagedBean().getPoApprOverlappedRemark());
 		this.getManagedBean().setOldApproverRemark(this.getManagedBean().getApproverRemark());
 		// #28895_35501 End
@@ -670,9 +669,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmMofAccount(resDTO.getSmMofAccount());
 			// #28895_35501 Start - AUDIT TRAIL SM
-			if(resDTO.isSuccessful()){
-				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailSO.class);
+			if (resDTO.isSuccessful()) {
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
@@ -684,6 +682,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
 			}
+			// #28895_35501 End
 			
 			//Untick after save
 			//#26238
