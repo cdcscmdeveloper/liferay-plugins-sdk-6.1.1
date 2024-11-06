@@ -138,7 +138,8 @@
 				</p:commandLink>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
+			<ui:remove>#29007 Added word-break Vinod</ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;word-break:break-all;">
 				<ui:remove>Bug #34757, 29007 -start-</ui:remove>
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.itemName}"
 					rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}" />
