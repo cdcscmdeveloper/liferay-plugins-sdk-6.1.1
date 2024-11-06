@@ -71,41 +71,10 @@ public class AuditSupplierManagementApprovedCategoryCodesBackingBean extends Aud
 
 		auditDeletedData(oldApprovedCategories, auDetails);
 
-		SmDisciplinaryAction oldDisciplinaryAction = mBean.getOldSmDisciplinaryAction();
-		if (oldDisciplinaryAction == null) {
-			oldDisciplinaryAction = new SmDisciplinaryAction();
-		}
-		SmDisciplinaryAction newDisciplinaryAction = mBean.getDisciplineVO().getSmDiscplinaryAction();
-
-		if (getCancelCategory(oldDisciplinaryAction, newDisciplinaryAction)
-				|| getManufacturerCancel(oldDisciplinaryAction, newDisciplinaryAction)) {
-			ListIterator<SmSupplierCategory> selectedApprovedCategories = mBean.getSelectedApprovedCategories()
-					.listIterator();
-			auditDeletedData(selectedApprovedCategories, auDetails);
-		}
-
 		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
 				AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVE_CATEGORY_CODES, loginUserId);
 
 		return auObj;
-	}
-
-	private Boolean getManufacturerCancel(SmDisciplinaryAction oldDisciplinaryAction,
-			SmDisciplinaryAction newDisciplinaryAction) {
-		if (oldDisciplinaryAction.isCancelCategory() != newDisciplinaryAction.isCancelCategory()
-				&& newDisciplinaryAction.isCancelCategory()) {
-			return true;
-		}
-		return false;
-	}
-
-	private Boolean getCancelCategory(SmDisciplinaryAction oldDisciplinaryAction,
-			SmDisciplinaryAction newDisciplinaryAction) {
-		if (oldDisciplinaryAction.isManufacturerCancel() != newDisciplinaryAction.isManufacturerCancel()
-				&& newDisciplinaryAction.isManufacturerCancel()) {
-			return true;
-		}
-		return false;
 	}
 
 	private void checkOtherDesc(List<AuditSupplierManagementDetailDTO> auDetails,
