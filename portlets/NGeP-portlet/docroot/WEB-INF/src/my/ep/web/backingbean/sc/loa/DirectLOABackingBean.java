@@ -11713,7 +11713,8 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				Map<Long, String> l1Map = new HashMap<>();
 				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setCategoryL1Id(pmCategoryL1.getCategoryL1Id());
+				Long l1Id = pmCategoryL1.getCategoryL1Id();
+				reqDTO.setCategoryL1Id(l1Id);
 				List<PmCategoryL2> categoryL2List = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO)
 						.getCategoryL2List();
 				for (PmCategoryL2 pmCategoryL2 : categoryL2List) {
@@ -11738,7 +11739,8 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL1Id(pmCategoryL2.getCategoryL2Id());
+		Long l2Id = pmCategoryL2.getCategoryL2Id();
+		reqDTO.setCategoryL2Id(l2Id);
 		List<PmCategoryL3> categoryL3List = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO).getCategoryL3List();
 		for (PmCategoryL3 pmCategoryL3 : categoryL3List) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();
@@ -11824,6 +11826,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		String template = (String) event.getComponent().getAttributes().get(QTConstants.TEMPLATE_CHANGE_VALUE);
 		this.resetTemplate();
 		this.getManagedBean().setStandardTemplate(template);
+		this.getManagedBean().setTemplateSpecCreate(null);
 		PmParameter procCat = this.getManagedBean().getScLoa().getScQt().getPmProcurementCategory();
 
 		if (null != procCat) {

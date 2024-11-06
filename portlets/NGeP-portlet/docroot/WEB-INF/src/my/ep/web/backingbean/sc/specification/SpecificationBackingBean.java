@@ -22673,7 +22673,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				Map<Long, String> l1Map = new HashMap<>();
 				l1Map.put(pmCategoryL1.getCategoryL1Id(), null);
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-				reqDTO.setCategoryL1Id(pmCategoryL1.getCategoryL1Id());
+				Long l1Id = pmCategoryL1.getCategoryL1Id();
+				reqDTO.setCategoryL1Id(l1Id);
 				List<PmCategoryL2> categoryL2List = categoryCodeSO.retrieveCategoryL2ListByL1Id(reqDTO)
 						.getCategoryL2List();
 				for (PmCategoryL2 pmCategoryL2 : categoryL2List) {
@@ -22697,7 +22698,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL1Id(pmCategoryL2.getCategoryL2Id());
+		Long l2Id = pmCategoryL2.getCategoryL2Id();
+		reqDTO.setCategoryL2Id(l2Id);
 		List<PmCategoryL3> categoryL3List = categoryCodeSO.retrieveCategoryL3ListByL2Id(reqDTO).getCategoryL3List();
 		for (PmCategoryL3 pmCategoryL3 : categoryL3List) {
 			Map<Long, Map<Long, Map<Long, String>>> l3Map = new HashMap<>();

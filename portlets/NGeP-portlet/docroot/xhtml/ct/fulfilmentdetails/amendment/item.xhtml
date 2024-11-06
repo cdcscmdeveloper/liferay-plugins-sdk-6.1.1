@@ -663,14 +663,14 @@
     			<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}" escape="false" style="float:left;font-weight:bold;display:block;width:600px"/>
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:600px"/>
      		 	</h:panelGroup>
      		 		
      			<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">    		 		
      		 		<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(ctBackingBean.managedBean.supplierOffer,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
      		 		</h:panelGroup>      		 				
      			</c:if>
@@ -678,7 +678,7 @@
      				<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"/>
      		 		</h:panelGroup> 
      			</c:if>     		   	
@@ -687,7 +687,7 @@
      		 		<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{fn:replace(ctBackingBean.managedBean.newOfferSpec,'\\n','&lt;br/&gt;')}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{ctBackingBean.managedBean.newOfferSpec}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
      		 		</h:panelGroup>      		 				 			
      			</c:if>
@@ -695,26 +695,35 @@
      				<h:panelGroup>
      		 			<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}" escape="false" style="float:left;font-weight:bold;display:block;width:125px"/>     		 			
      		 		 	<h:outputText value=":&#160;" escape="false" style="float:left;font-weight:bold"/>
-     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;width:400px"/>
+     		 		 	<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}" escape="false" style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px"/>
      		 		 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
      		 		</h:panelGroup> 
      			</c:if>
      			<!-- #31558 end -->     					
      		</h:panelGrid>
-     		     		
-  			<p:dataTable id="itemSpec" var="item" value="#{ctBackingBean.managedBean.itemSpecification}"
-			classStyle="TableHeader" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" style="margin-bottom: 30px;"
-			rows="5" paginator="true" paginatorPosition="bottom"
-            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-            currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
-				<p:column styleClass="column-align-center"  style="white-space:normal;">
-					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>				
-					<!-- #31558 start - Aligning the title to the center but the content to the left -->								
-					<h:outputText value="#{item}" rows="5" style="float:left;text-align:left;resize:none;;display:block;width:600px" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>      					
-      				<h:outputText rows="5" style="resize:none;text-align:left;" autoResize="false" disabled="true" rendered="#{ctBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>
+
+			<p:dataTable id="itemSpec" var="item"
+				value="#{ctBackingBean.managedBean.itemSpecification}"
+				classStyle="TableHeader"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				style="margin-bottom: 30px;" rows="5" paginator="true"
+				paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
+				<p:column styleClass="column-align-center"
+					style="white-space:normal; width: 100%;">
+					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
+					<!-- #31558 start - Aligning the title to the center but the content to the left -->
+					<h:outputText value="#{item}" rows="5" escape="false"
+						style="float:left;text-align:left; display:block;word-wrap: break-word; width:450px"
+						autoResize="false" disabled="true"
+						rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
+					<h:outputText rows="5" style="resize:none;text-align:left;"
+						autoResize="false" disabled="true"
+						rendered="#{ctBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>
 					<!-- #31558 end -->
-					</p:column>		
-			</p:dataTable>			
+				</p:column>
+			</p:dataTable>
 		</h:panelGroup>
 		
 		<h:panelGroup rendered="#{(ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeQuotation) or (ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeTender) or (ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego)}">				

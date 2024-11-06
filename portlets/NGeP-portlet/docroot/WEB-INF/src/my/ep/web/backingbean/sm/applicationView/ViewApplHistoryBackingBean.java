@@ -56,6 +56,7 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
@@ -702,26 +703,15 @@ public class ViewApplHistoryBackingBean extends
 		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
 
 		// if more than 1 Cert on a same appl_id, need reorder it and means
-		// there is duplicate, sort cert by desc order
+		// there is duplicate, sort cert by asc order
 		if (cert.size() > 1) {
-			Collections.sort(cert, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
-				}
-			});
+			sortCertsListByAsc(cert);
 		}
 
 		// if more than 1 bumiCert on a same appl_id, need reorder it and means
-		// there is duplicate, Sort bumiCert by descending order
+		// there is duplicate, Sort bumiCert by asc order
 		if (bumiCert.size() > 1) {
-			Collections.sort(bumiCert, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert2.getCreatedDate().compareTo(cert1.getCreatedDate());
-				}
-			});
-
+			sortCertsListByAsc(bumiCert);
 		}
 
 		if (cert.size() > 1 || bumiCert.size() > 1) {
@@ -739,7 +729,18 @@ public class ViewApplHistoryBackingBean extends
 
 		return mofCerts;
 	}
-
+	/**
+	 * To sort list of smMofCert by asc
+	 * @param smMofCert
+	 */
+	public void sortCertsListByAsc(List<SmMofCert> smMofCert) {
+		Collections.sort(smMofCert, new Comparator<SmMofCert>() {
+			@Override
+			public int compare(SmMofCert cert1, SmMofCert cert2) {
+				return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+			}
+		});
+	}
 	// #36401 - End
 
 	/**
@@ -751,6 +752,7 @@ public class ViewApplHistoryBackingBean extends
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		for (SmApplSectionReview sectionReview : getManagedBean().getSmAppl()
 				.getSmApplSectionReviews()) {
+			saveSmApplSectionReview(sectionReview);//alter #35759
 			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 			SmWorkflowStatus poWorkflowStatus = workFlowStatusSO.retrieveWorkflowStatusWhenApplicationPendingPOReview(reqDTO)
 					.getWorkflowStatus();
@@ -1836,36 +1838,8 @@ public class ViewApplHistoryBackingBean extends
 			}
 
 		}
-
-		if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())){
-			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
-				@Override
-				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
-					if(doc1.getPmDocument().getDisplaySeq() == null){
-						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
-					}
-					if(doc2.getPmDocument().getDisplaySeq() == null){
-						return -1;
-					}
-					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
-				}
-			});
-		}
-		
-		if(!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())){
-			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
-				@Override
-				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
-					if(doc1.getPmDocument().getDisplaySeq() == null){
-						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
-					}
-					if(doc2.getPmDocument().getDisplaySeq() == null){
-						return -1;
-					}
-					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
-				}
-			});
-		}
+		sortMandatoryDocsInquiry();
+		sortNonMandatoryDocsInquiry();
 		//#34392 - end
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
@@ -1881,9 +1855,46 @@ public class ViewApplHistoryBackingBean extends
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm",
 				ISupportingDocInquirySO.class);
 
-		return reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
+	}
+	
+	public void sortMandatoryDocsInquiry() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())) {
+			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>() {
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if (doc1.getPmDocument().getDisplaySeq() == null) {
+						return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+					}
+					if (doc2.getPmDocument().getDisplaySeq() == null) {
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq()
+							.compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
 	}
 
+	public void sortNonMandatoryDocsInquiry() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())) {
+			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>() {
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if (doc1.getPmDocument().getDisplaySeq() == null) {
+						return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+					}
+					if (doc2.getPmDocument().getDisplaySeq() == null) {
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq()
+							.compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+	}
 	// #34392 - end
 	
 	//#31248 - START

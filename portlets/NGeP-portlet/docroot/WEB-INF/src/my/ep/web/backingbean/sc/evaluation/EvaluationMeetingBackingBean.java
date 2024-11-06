@@ -2438,12 +2438,16 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
-			List<AuditTrailReqDTO> newCommitteeList = insertCommitteeAuditTrail(auditResDTO,newCommitteeMembers
-					,QTAuditConstant.AU_TYPE_CREATE,qtAuditTrailSO);
-			List<AuditTrailReqDTO> deleteCommitteeList = insertCommitteeAuditTrail(auditResDTO,deletedCommitteeMembers
-					,QTAuditConstant.AU_TYPE_DELETE,qtAuditTrailSO);		
-			auditReqList.addAll(newCommitteeList);
-			auditReqList.addAll(deleteCommitteeList);
+			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
+				List<AuditTrailReqDTO> newCommitteeList = insertCommitteeAuditTrail(auditResDTO,newCommitteeMembers
+						,QTAuditConstant.AU_TYPE_CREATE,qtAuditTrailSO);
+				auditReqList.addAll(newCommitteeList);
+			}
+			if (CollectionUtils.isNotEmpty(deletedCommitteeMembers)) {
+				List<AuditTrailReqDTO> deleteCommitteeList = insertCommitteeAuditTrail(auditResDTO,deletedCommitteeMembers
+						,QTAuditConstant.AU_TYPE_DELETE,qtAuditTrailSO);
+				auditReqList.addAll(deleteCommitteeList);
+			}
 
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		}
