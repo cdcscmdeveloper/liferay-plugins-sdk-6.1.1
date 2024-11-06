@@ -3574,34 +3574,40 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            (String Samplechange)
 	 */
 	public void sampleChange(AjaxBehaviorEvent event) {
-		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
+		Boolean type = (Boolean) event.getComponent().getAttributes()
+				.get("value");
 		this.getManagedBean().getQt().setSampleReq(type);
-		
-		List<ScQtCheckList> st2technicalproposalList = getManagedBean().getScQtCheckSt2techProposal();
+		List<ScQtCheckList> st2technicalproposalList = getManagedBean()
+				.getScQtCheckSt2techProposal();
 
 		if (null == st2technicalproposalList) {
-			st2technicalproposalList = new ArrayList<ScQtCheckList>();
+			st2technicalproposalList = new ArrayList<>();
+
 		}
-		
-		if (type == true) {
+		if (type) {
 			this.getManagedBean().getQt().setPartial(Boolean.FALSE);
 		} else {
-			if (getManagedBean().getMarkDeletedTechChecklist() == null) {
-				getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
+			this.getManagedBean().getQt().setDemoNotificationCheck(null);
+			List<ScQtCheckList> deltechnicalproposalList = getManagedBean()
+					.getMarkDeletedTechChecklist();
+			if (deltechnicalproposalList == null) {
+				deltechnicalproposalList = new ArrayList<>();
 			}
-
-			if (null == st2technicalproposalList || CollectionUtils.isEmpty(st2technicalproposalList)) {
+			if (null == st2technicalproposalList
+					|| CollectionUtils.isEmpty(st2technicalproposalList)) {
 				SpecificationBackingBean spBB = new SpecificationBackingBean();
 				spBB.retriveTechnicalCheckList();
-				
-				st2technicalproposalList = this.getManagedBean().getScQtCheckSt2techProposal();
+				st2technicalproposalList = this.getManagedBean()
+						.getScQtCheckSt2techProposal();
 			}
-
 			if (CollectionUtils.isNotEmpty(st2technicalproposalList)) {
 				for (ScQtCheckList checklist : st2technicalproposalList) {
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist.getDefinationType()
-							.getParameterCode())) {
-						getManagedBean().getMarkDeletedTechChecklist().add(checklist);
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+							.equalsIgnoreCase(checklist.getDefinationType()
+									.getParameterCode())) {
+						deltechnicalproposalList.add(checklist);
+						getManagedBean().setMarkDeletedTechChecklist(
+								deltechnicalproposalList);
 						st2technicalproposalList.remove(checklist);
 						break;
 					}
@@ -3615,8 +3621,8 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * check portlet is specpreparation or not
 	 */
 	public boolean isSpecScreen() {
-		boolean screen = QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-		return screen;
+		return QTConstants.PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #11104 -end-
 
@@ -3625,8 +3631,10 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * check portlet is specmaintennace or not
 	 */
 	public boolean isSpecEndorsmentScreen() {
-		boolean screen=QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-		return screen;
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// #11104-end
 

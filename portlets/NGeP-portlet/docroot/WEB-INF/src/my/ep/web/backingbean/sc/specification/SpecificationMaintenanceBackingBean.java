@@ -519,18 +519,22 @@ private class SpecMaintenanceSearchQtDataModel extends
 		if (null != scQt_.getFulfilmentType()) {
 			this.getManagedBean().setFulfilmentType(scQt_.getFulfilmentType().getParameterCode());
 		}
-
-		specBB.retriveTechnicalCheckList(); // #11104, #1873
-
-		List<ScQtCheckList> technicalChekclist = this.getManagedBean().getScQtCheckSt2techProposal();
-
-		if (null != technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)) {
+		specBB.retriveTechnicalCheckList();// #11104, #1873
+		//11104_start
+		List<ScQtCheckList> technicalChekclist = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		boolean isSampleWip = specBB
+				.checkSampleRadioShowHideInSpecPrepareAndMaintenance();
+		if (null != technicalChekclist
+				&& CollectionUtils.isNotEmpty(technicalChekclist)) {
 			for (ScQtCheckList checkList : technicalChekclist) {
-
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode())) {
 					scQt_.setSampleReq(Boolean.TRUE);
-
+					checkList.setSampleWip(isSampleWip);
 					break;
+
 				}
 			}
 		}
@@ -594,7 +598,9 @@ private class SpecMaintenanceSearchQtDataModel extends
 		if (redirect|| checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
-
+		// 11104_Start
+		this.getManagedBean().setSampleShowHide(isSampleWip);
+		// 11104_end
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, renderPage);
 		// 29464-end
 	}

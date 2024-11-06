@@ -1659,28 +1659,48 @@ public class QTDetailBackingBean extends
 								scAddress.setPmDivision(null);
 								
 								// 11104-start
-								if (null != briefingsamplebean && null != briefingsamplebean.getDivisionId()) {
-									scAddress.setPmDivision(retrievePmDivsById(briefingsamplebean.getDivisionId()));
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getDivisionId()) {
+									scAddress
+											.setPmDivision(retrievePmDivsById(briefingsamplebean
+													.getDivisionId()));
 								}
 								// 11104-End
 							}
 							
 							// 11104-start
-							if (null != scAddress.getPmState() && scAddress.getPmState().getStateId() == null) {
-								if (null != briefingsamplebean && null != briefingsamplebean.getStateId()) {
-									scAddress.setPmState(retrievePmStateById(briefingsamplebean.getStateId()));
+							if (null != scAddress.getPmState()
+									&& scAddress.getPmState().getStateId() == null) {
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getStateId()) {
+									scAddress
+											.setPmState(retrievePmStateById(briefingsamplebean
+													.getStateId()));
 								}
 							}
 
-							if (null != scAddress.getPmDistrict() && scAddress.getPmDistrict().getDistrictId() == null) {
-								if (null != briefingsamplebean && null != briefingsamplebean.getDistrictid()) {
-									scAddress.setPmDistrict(retrievePmDistById(briefingsamplebean.getDistrictid()));
+							if (null != scAddress.getPmDistrict()
+									&& scAddress.getPmDistrict()
+											.getDistrictId() == null) {
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getDistrictid()) {
+									scAddress
+											.setPmDistrict(retrievePmDistById(briefingsamplebean
+													.getDistrictid()));
 								}
 							}
 
-							if (null != scAddress.getPmCity() && scAddress.getPmCity().getCityId() == null) {
-								if (null != briefingsamplebean && null != briefingsamplebean.getCityId()) {
-									scAddress.setPmCity(retrievePmCityById(briefingsamplebean.getCityId()));
+							if (null != scAddress.getPmCity()
+									&& scAddress.getPmCity().getCityId() == null) {
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getCityId()) {
+									scAddress
+											.setPmCity(retrievePmCityById(briefingsamplebean
+													.getCityId()));
 								}
 							}
 							// 11104-End
@@ -10853,11 +10873,12 @@ public class QTDetailBackingBean extends
 	 * @return PmState object
 	 */
 	public static PmState retrievePmStateById(Long stateId) {
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IStateSO.class);
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setStateId(stateId);
-		
+
 		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
 
 		return resDTO.getPmState();
@@ -10873,11 +10894,12 @@ public class QTDetailBackingBean extends
 	 * @return PmCity object
 	 */
 	public static PmCity retrievePmCityById(Long cityId) {
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ICitySO.class);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
 		CityReqDTO reqDTO = new CityReqDTO();
 		reqDTO.setCityId(cityId);
-		
+
 		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
 
 		return resDTO.getPmCity();
@@ -10893,11 +10915,12 @@ public class QTDetailBackingBean extends
 	 * @return PmDistrict object
 	 */
 	public static PmDistrict retrievePmDistById(Long distId) {
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setDistrictId(distId);
-		
+
 		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
 
 		return resDTO.getPmDistrict();
@@ -10905,12 +10928,18 @@ public class QTDetailBackingBean extends
 	// 11104 -end-
 	
 	// 11104 -start-
+	/**
+	 * Retrieve pm division by id.
+	 * @param divnId
+	 * @return pmdivision.
+	 */
 	public static PmDivision retrievePmDivsById(Long divnId) {
-		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
 		DivisionReqDTO reqDTO = new DivisionReqDTO();
 		reqDTO.setDivisionId(divnId);
-		
+
 		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
 
 		return resDTO.getPmDivision();
