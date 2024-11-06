@@ -736,6 +736,7 @@ public class SupplierManagementConst {
 	public static final long STATE_SELANGOR = 11L;
 	public static final long STATE_KL = 15L;
 	public static final List<Long> KLANG_VALLEY = Collections.unmodifiableList(Arrays.asList(STATE_SELANGOR, STATE_KL));
+	public static final int IC_NO_LENGTH = 12;
 
 	//9569
 	public static final String EPROLE_DELETED = "Delete";
