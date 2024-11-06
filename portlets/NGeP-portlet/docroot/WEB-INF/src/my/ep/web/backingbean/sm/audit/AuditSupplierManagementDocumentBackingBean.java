@@ -224,9 +224,12 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		// Create Row/Cell - Report Title
 		Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
 		Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
-		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value
+		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
+																		// Cell
+																		// Value
 		cellTitleRow.setCellStyle(cellStyleTitleRpt);
-		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Cell
+		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
+																			// Cell
 		// Create Row/Cell - Report Header Datatable
 		Row titleHeaderRow = sheetRptAudit.createRow(3);
 		for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
