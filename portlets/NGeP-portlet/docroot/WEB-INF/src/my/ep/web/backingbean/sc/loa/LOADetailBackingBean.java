@@ -2283,8 +2283,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// ##25025 #509 -start
-		fileNo = fileNo.trim().replaceAll("ï¿½", SSTConstant.PROTEGE_LOWERCASE_E);
-		fileNo = fileNo.trim().replaceAll("ï¿½", SSTConstant.PROTEGE_UPPERCASE_E);
+		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
+		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		// ##25025 #509 -end		context.put("loaNo", scLoa.getLoaNo());
 
@@ -2353,8 +2353,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
 		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
 		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
-		title = title.replaceAll("ï¿½", SSTConstant.PROTEGE_LOWERCASE_E);
-		title = title.replaceAll("ï¿½", SSTConstant.PROTEGE_UPPERCASE_E);
+		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		// 25025 - note 436- end
 		context.put("loaTitle", title);
 
