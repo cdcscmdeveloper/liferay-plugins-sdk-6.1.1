@@ -6716,8 +6716,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void validateTierQuantityExceedMaxQuantity(ScRequestNoteDtl requestNoteDtl) {
 		if (requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_TIER_STANDARD)
 				|| requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_ZONAL_TIER_STANDARD)){
-			validateFromSQ(requestNoteDtl);
-			validateFromCatalogue(requestNoteDtl);
+			
+			if (requestNoteDtl.getRequestItem().getTplSpecQuestion() != null){
+				validateFromSQ(requestNoteDtl);
+			}else{
+				validateFromCatalogue(requestNoteDtl);
+			}
 		}
 	}
 
@@ -6726,7 +6730,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNoteDtl
 	 */
 	private void validateFromSQ(ScRequestNoteDtl requestNoteDtl) {
-		if (requestNoteDtl.getRequestItem().getTplSpecQuestion() != null && requestNoteDtl.getRequestItem().getQuantity()
+		if (requestNoteDtl.getRequestItem().getQuantity()
 						.compareTo(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClQuantity()) > 0) {
 			// Note for 29557, need to change this error message when merge.
 			// Dev -> MessageConst.ERROR_760527
