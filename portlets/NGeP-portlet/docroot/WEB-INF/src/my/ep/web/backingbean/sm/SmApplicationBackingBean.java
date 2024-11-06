@@ -4943,7 +4943,8 @@ public class SmApplicationBackingBean extends
 			//log.info("***** APPROVER DECISION SELECTED **** "
 					//+ category.getApprvrDecFlg());
 			//#36587
-			if(category.getApprvrDecFlg().equals(0)){
+			if(category.getPoDecFlg().equals(0)
+					&& category.getApprvrDecFlg().equals(0)){
 				category.setApproverRemarks(category.getPoRemarks());
 			}else{
 				category.setApproverRemarks(null);
@@ -15362,7 +15363,7 @@ public class SmApplicationBackingBean extends
 						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
 								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
-					suppCategory.setApproverRemarks(suppCategory.getPoRemarks() != null ? suppCategory.getPoRemarks() : null); //#36587
+					setApproverRemark(suppCategory); //#36587
 				}
 			}
 		}
@@ -17797,4 +17798,17 @@ public class SmApplicationBackingBean extends
 		return supplierList;
 	}
 	//#28777 - END
+	//#36587 START
+	/**
+	 * To auto-populate po remark to approver remark
+	 * when po reject the category
+	 * @param cat
+	 * @return void
+	 */
+	private void setApproverRemark(SmSupplierCategory cat){
+		if(cat.getPoDecFlg().equals(0)){
+			cat.setApproverRemarks(cat.getPoRemarks() != null ? cat.getPoRemarks() : null);
+		}
+	}
+	//#36587 END
 }
