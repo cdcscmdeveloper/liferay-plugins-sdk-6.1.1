@@ -188,6 +188,9 @@ public class VmUtil {
 			
 			newChopString = validateGreaterThanBracket(newChopString);
 			
+			newChopString = validateProtegeCharacterUpperCase(newChopString); //35295 #93 @zaim
+			
+			newChopString = validateProtegeCharacterLowerCase(newChopString); //35295 #93 @zaim
 			return newChopString;
 		}
 
@@ -198,13 +201,16 @@ public class VmUtil {
 		private String validateGreaterThanBracket(String newChopString) {
 			String checkBracket = newChopString;
 			if (checkBracket.contains("&#<br />62;")) {
-				checkBracket = checkBracket.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL);
-			}else if (checkBracket.contains("&#62<br />;")){
-				checkBracket = checkBracket.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL);
-			}else if (checkBracket.contains("&#6<br />2;")){
-				checkBracket = checkBracket.replaceAll("&#6<br />2;", SSTConstant.GREATER_THAN_SYMBOL);
-			}else if (checkBracket.contains("&<br />#62;")){
-				checkBracket = checkBracket.replaceAll("&<br />#62;", SSTConstant.GREATER_THAN_SYMBOL);
+				checkBracket = checkBracket.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkBracket.contains("&#62<br />;")){
+				checkBracket = checkBracket.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkBracket.contains("&#6<br />2;")){
+				checkBracket = checkBracket.replaceAll("&#6<br />2;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkBracket.contains("&<br />#62;")){
+				checkBracket = checkBracket.replaceAll("&<br />#62;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 			}
 			return checkBracket;
 		}
@@ -216,13 +222,16 @@ public class VmUtil {
 		private String validateLessThanBracket(String newChopString) {
 			String checkBracket = newChopString;
 			if (checkBracket.contains("&#<br />60;")) {
-				checkBracket = checkBracket.replaceAll("&#<br />60;", SSTConstant.LESS_THAN_SYMBOL);
-			}else if (checkBracket.contains("&#60<br />;")){
-				checkBracket = checkBracket.replaceAll("&#60<br />;", SSTConstant.LESS_THAN_SYMBOL);
-			}else if (checkBracket.contains("&#6<br />0;")){
-				checkBracket = checkBracket.replaceAll("&#6<br />0;", SSTConstant.LESS_THAN_SYMBOL);
-			}else if (checkBracket.contains("&<br />#60;")){
-				checkBracket = checkBracket.replaceAll("&<br />#60;", SSTConstant.LESS_THAN_SYMBOL);
+				checkBracket = checkBracket.replaceAll("&#<br />60;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
+			}
+			if (checkBracket.contains("&#60<br />;")){
+				checkBracket = checkBracket.replaceAll("&#60<br />;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
+			}
+			if (checkBracket.contains("&#6<br />0;")){
+				checkBracket = checkBracket.replaceAll("&#6<br />0;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
+			}
+			if (checkBracket.contains("&<br />#60;")){
+				checkBracket = checkBracket.replaceAll("&<br />#60;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
 			}
 			return checkBracket;
 		}
@@ -235,11 +244,14 @@ public class VmUtil {
 			String checkBreakLine = newChopString;
 			if (checkBreakLine.contains("<br<br /> />")){
 				checkBreakLine = checkBreakLine.replaceAll("<br<br />/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-			}else if (checkBreakLine.contains("<b<br />r />")){
+			}
+			if (checkBreakLine.contains("<b<br />r />")){
 				checkBreakLine = checkBreakLine.replaceAll("<b<br />r/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-			}else if (checkBreakLine.contains("<b<br />r")){
+			}
+			if (checkBreakLine.contains("<b<br />r")){
 				checkBreakLine = checkBreakLine.replaceAll("<b<br />r", "<br");
-			}else if (checkBreakLine.contains("<<br />br")){
+			}
+			if (checkBreakLine.contains("<<br />br")){
 				checkBreakLine = checkBreakLine.replaceAll("<<br />br", "<br");
 			}
 			return checkBreakLine;
@@ -261,8 +273,100 @@ public class VmUtil {
 			if (s.contains(SSTConstant.GREATER_THAN_SYMBOL)){
 				newMaxlength = newMaxlength+SSTConstant.GREATER_THAN_SYMBOL.length();
 			}
+			//35295 - start
+			if (s.contains(SSTConstant.PROTEGE_LOWERCASE_E)){
+				newMaxlength = newMaxlength+(SSTConstant.PROTEGE_LOWERCASE_E.length() * 2);
+			}
+			if (s.contains(SSTConstant.PROTEGE_UPPERCASE_E)){
+				newMaxlength = newMaxlength+(SSTConstant.PROTEGE_UPPERCASE_E.length() * 2);
+			}
+			//35295 - end
+			
+			
 			return newMaxlength;
 		}
 		//36122 - end
+		
+		//35295 - start
+		private String validateProtegeCharacterUpperCase(String newChopString){
+			String checkProtege = newChopString;
+			if (checkProtege.contains("&<br />#201;")){
+				checkProtege = checkProtege.replaceAll("&<br />#201;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#<br />201;")){
+				checkProtege = checkProtege.replaceAll("&#<br />201;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#2<br />01;")){
+				checkProtege = checkProtege.replaceAll("&#2<br />01;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#20<br />1;")){
+				checkProtege = checkProtege.replaceAll("&#20<br />1;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#201<br />;")){
+				checkProtege = checkProtege.replaceAll("&#201<br />;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			
+			return checkProtege;
+			
+		}
+		
+		private String validateProtegeCharacterLowerCase(String newChopString){
+			String checkProtege = newChopString;
+			if (checkProtege.contains("&<br />#233;")){
+				checkProtege = checkProtege.replaceAll("&<br />#233;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#<br />233;")){
+				checkProtege = checkProtege.replaceAll("&#<br />233;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#2<br />33;")){
+				checkProtege = checkProtege.replaceAll("&#2<br />33;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#23<br />3;")){
+				checkProtege = checkProtege.replaceAll("&#23<br />3;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (checkProtege.contains("&#233<br />;")){
+				checkProtege = checkProtege.replaceAll("&#233<br />;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			
+			return checkProtege;
+			//35295 - end
+		}
+		// #29007 - note 724 Vinod start
+		/**
+		* This method will replace following special characters from the string to HTML keys
+		* '<' to "&#60;" , '>' to "&#62;" and  '\r\n' to "<br />"
+		* to avoid errors and achieve line spacing in VM report.
+		* 
+		* @param key
+		* @return updated String
+		*/
+		public String replaceAllSpecialCharactersToHTML(String key) {
+			if (key == null || key == "") {
+				return key;
+			}
+			String localKey = key;
+
+			if (localKey.contains(TemplateSpecConst.LESS_THEN_SYMBOL)) {
+				localKey = localKey.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+						TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+			}
+			if (localKey.contains(TemplateSpecConst.GREATER_THEN_SYMBOL)) {
+				localKey = localKey.replaceAll(
+						TemplateSpecConst.GREATER_THEN_SYMBOL,
+						TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+			}
+			if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER)) {
+				localKey = localKey.replaceAll(
+						TemplateSpecConst.NEW_LINE_CHARACTER,
+						TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+			if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER_R)) {
+				localKey = localKey.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,
+						TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
+
+			return localKey;
+		}
+		// #29007 - note 724 Vinod End
 	
 }
