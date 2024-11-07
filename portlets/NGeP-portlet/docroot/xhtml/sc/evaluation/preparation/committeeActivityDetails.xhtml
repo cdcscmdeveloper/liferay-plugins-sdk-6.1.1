@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- 25037 -start- -->
 	<style>
 		.evalCommitteeDtlTblCl th, .evalCommitteeDtlTblCl td{
 			width: auto;
@@ -21,47 +22,72 @@
 			text-align: center !important;
 		}
 	</style>
-
+	<!-- 25037 -end- -->
 
 	<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 		toggleable="true">
 
+		<!-- 25037 -start- -->
 		<p:dataTable id="evaluationpreparecommittee" var="activity"
 			styleClass="evalCommitteeDtlTblCl"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rows="10"
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}"
 			rowIndexVar="index">
+			<!-- 25037 -end- -->
 			<ac:paginator for="evaluationpreparecommittee" />
 
+			<!-- 25037 -start- -->
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{activity.scCommitteeMember.memberName}"></h:outputText>
+				<h:outputText value="#{activity.scCommitteeMember.memberName}">
+					<!-- 25037 -end- -->
+				</h:outputText>
 			</p:column>
-
+			<!-- 25037 -start- -->
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-				<h:outputText value="#{activity.scCommitteeMember.icPassport}"></h:outputText>
+				<h:outputText value="#{activity.scCommitteeMember.icPassport}">
+					<!-- 25037 -end- -->
+				</h:outputText>
 			</p:column>
+			<!-- 25037 -start- -->
 			<p:column headerText="#{lbl['lbl.sc.designation']}">
-				<h:outputText value="#{activity.scCommitteeMember.designation}"></h:outputText>
+				<h:outputText value="#{activity.scCommitteeMember.designation}">
+					<!-- 25037 -end- -->
+				</h:outputText>
 			</p:column>
+			<!-- 25037 -start- -->
 			<p:column headerText="#{lbl['lbl.sc.email']}">
-				<h:outputText value="#{activity.scCommitteeMember.email}"></h:outputText>
+				<h:outputText value="#{activity.scCommitteeMember.email}">
+					<!-- 25037 -end- -->
+				</h:outputText>
 			</p:column>
+			<!-- 25037 -start- -->
 			<p:column headerText="#{lbl['lbl.sc.grade']}">
-				<h:outputText value="#{activity.scCommitteeMember.grade}"></h:outputText>
+				<h:outputText value="#{activity.scCommitteeMember.grade}">
+					<!-- 25037 -end- -->
+				</h:outputText>
 			</p:column>
+			<!-- 25037 -start- -->
 			<p:column style="min-width: 50px !important;">
+				<!-- 25037 -end- -->
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 					<ac:iconTooltip id="pnp#{index}OC"
 						value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
+				<!-- 25037 -start- -->
 				<h:outputText
-					value="#{lbl[activity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
+					value="#{lbl[activity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}">
+					<!-- 25037 -end- -->
+				</h:outputText>
 			</p:column>
+			<!-- 25037 -start- -->
 			<p:column headerText="#{lbl['lbl.sc.role']}">
 				<h:outputText
-					value="#{evaluationBackingBean.getParameterDesc(activity.scCommitteeMember.memberRole)}"></h:outputText>
+					value="#{evaluationBackingBean.getParameterDesc(activity.scCommitteeMember.memberRole)}">
+					<!-- 25037 -end- -->
+				</h:outputText>
 			</p:column>
+			<!-- 25037 -start- -->
 			<p:column style="min-width: 100px !important;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.lbl.attendandendorse']}" />
@@ -71,10 +97,14 @@
 				<p:selectBooleanCheckbox
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					value="#{activity.attended}" />
+				<!-- 25037 -end- -->
 			</p:column>
 		</p:dataTable>
+
+		<!-- 25037 -start- -->
 		<ui:param name="meetingBB"
 			value="#{evaluationBackingBean.managedBean.meetingBB}"></ui:param>
+
 		<div align="right">
 			<ui:param name="actionBtnLbl"
 				value="#{evaluationBackingBean.evaluateEndorseSignoffTask(evaluationBackingBean.managedBean.taskName) ? lbl['lbl.sc.btn.view.committee']: lbl['lbl.sc.btn.update.committee']}" />
@@ -88,6 +118,7 @@
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="evaluationMeetingBackingBean.navigateToUpdateMember('update')"
 			content="#{lbl['lbl.sc.popup.savebeforechange']}" />
+		<!-- 25037 -end- -->
 	</p:panel>
 
 	<ac:scRemarkAndAttachment

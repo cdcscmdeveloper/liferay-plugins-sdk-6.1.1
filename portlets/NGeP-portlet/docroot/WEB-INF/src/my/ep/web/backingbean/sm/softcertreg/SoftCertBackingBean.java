@@ -975,6 +975,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void setDisableFlUserRowSelection(List<SmPersonnel> personnels) {
 		if (!getManagedBean().isAllAuthSuppUserAlreadyRequested()) {
 			for (SmPersonnel personnel : personnels) {
+				log.info("name: " + personnel.getName());
 				if (!StringUtils.isBlank(personnel.getEpRole())
 						&& personnel.getEpRole().equals(
 								RoleCode.FL_USER.value())) {

@@ -1025,7 +1025,7 @@ public class CreateQtBackingBean extends
 			}
 
 			// Start Reopen 9019 #note-289
-			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())) {
+			//#35061 - remove to allow show the the panel 
 				// #9019 note-289 -end-
 				// 25729#174 start
 				// Bug #35061 - asyrafhaziq -start-
@@ -1042,7 +1042,7 @@ public class CreateQtBackingBean extends
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
 				// 25729#174 end
-			} // 9019 #note-289
+			 // 9019 #note-289
 		} finally {
 			parameterSo = null;
 		}
