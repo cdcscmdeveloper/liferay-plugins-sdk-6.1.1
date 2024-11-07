@@ -1573,6 +1573,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getNewScCommitteeMemberAuditTrailList());
 				committeReqDTO.setToBeRemovedCommitteeMemberAuditTrailList(this.getManagedBean()
 						.getDeletedScCommitteeMemberAuditTrailList());
+				committeReqDTO.setLoginUserOrgProfileId(this.getPTJOrgProfileByLoginUser().getOrgProfileId()); //adli
 				//#28895 - 35500 end
 				committeReqDTO.setCommitteeTypes(committeeTypes);
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
@@ -3102,6 +3103,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#28895-35500 start
 		reqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
 		reqDTO.setDoaaList(this.getManagedBean().getNewDoaList());
+		reqDTO.setLoginUserOrgProfileId(this.getPTJOrgProfileByLoginUser().getOrgProfileId()); //adli
 		//#28895-35500 end
 		ScQtAppRequestRemark remark = reqDTO.getRequestRemark();
 		String remarkStr = remark == null ? "" : remark.getRemark();
@@ -3820,7 +3822,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 
-		auditResDTO.setOrganizationProfileId(scQt.getOrgProfileId());
+		auditResDTO.setOrganizationProfileId(this.getPTJOrgProfileByLoginUser().getOrgProfileId()); //adli
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());

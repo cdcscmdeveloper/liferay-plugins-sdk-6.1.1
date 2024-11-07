@@ -2359,7 +2359,7 @@ if (CollectionUtils.isNotEmpty(
 			
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 
-			auditResDTO.setOrganizationProfileId(this.getManagedBean().getScQt().getOrgProfileId());
+			auditResDTO.setOrganizationProfileId(this.getPTJOrgProfileByLoginUser().getOrgProfileId()); //adli
 			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
