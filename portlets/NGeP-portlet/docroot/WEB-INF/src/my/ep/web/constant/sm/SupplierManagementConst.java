@@ -1454,6 +1454,10 @@ public class SupplierManagementConst {
 	}
 	// #34392 - End
 	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
+		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
+	}
+	
 	public String getAuTabIdBankInfo() {
 		return AU_TAB_ID_BANK_INFO;
 	}
