@@ -37,7 +37,7 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
-//#28895_35501 - AUDIT TRAIL SM
+//#28895_35501_DA - AUDIT TRAIL SM DA
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 
 @ManagedBean(name = "viewSuppProfileMB")
@@ -203,6 +203,10 @@ public class ViewSuppProfileManagedBean extends
 	private String oldPoApprOverlappedRemark;
 	private String oldApproverRemark;
 	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	private SmDisciplinaryAction oldSmDisciplinaryAction;
+	private List<SmPersonnel> oldOwnerAndDirectorList; 
+	// #28895_35501_DA End
 		
 	public ViewSuppProfileManagedBean() {
 
@@ -1057,4 +1061,21 @@ public class ViewSuppProfileManagedBean extends
 		this.oldApproverRemark = oldApproverRemark;
 	}
 	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public SmDisciplinaryAction getOldSmDisciplinaryAction() {
+		return oldSmDisciplinaryAction;
+	}
+
+	public void setOldSmDisciplinaryAction(SmDisciplinaryAction oldSmDisciplinaryAction) {
+		this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
+	}
+
+	public List<SmPersonnel> getOldOwnerAndDirectorList() {
+		return oldOwnerAndDirectorList;
+	}
+
+	public void setOldOwnerAndDirectorList(List<SmPersonnel> oldOwnerAndDirectorList) {
+		this.oldOwnerAndDirectorList = oldOwnerAndDirectorList;
+	}
+	// #28895_35501_DA End
 }
