@@ -14990,64 +14990,24 @@ if (null != checklist && !checklist.isEmpty()) {
 	//function to check and update fulfilment type in specQuestion.
 	private void checkAndupdateFulfilmentType(List<ScQtCheckList> allCheckLists,ScQtCheckList finChecklist, boolean isTechInsert, boolean isSample){//11104-778&25726
 		log.info("checkAndupdateFulfilmentType");	
-	   String financialDoccategory=	finChecklist.getDocCategory();//11104-778&25726	
-		PmParameter clFulfilmentTypeCode =this.getManagedBean().getQt().getFulfilmentType();
-		List<ScQtCheckList> technicalCheckList = this.getManagedBean()
-				.getScQtCheckSt2techProposal();
-		
-		if (null == technicalCheckList
-				|| technicalCheckList.isEmpty()) {
-			retriveTechnicalCheckList();
-			technicalCheckList = this.getManagedBean()
-					.getScQtCheckSt2techProposal();
-		}
-		
-		if (null != technicalCheckList
-				&& !technicalCheckList.isEmpty() && !isTechInsert) {
-			
+		String financialDocCategory = finChecklist.getDocCategory();// 11104-778&25726
+		PmParameter clFulfilmentTypeCode = this.getManagedBean().getQt().getFulfilmentType();
+		List<ScQtCheckList> technicalCheckList = retrieveTechnicalCheckList();
+
+		if (!isTechInsert) {
 			for (ScQtCheckList technicalchecklist : technicalCheckList) {
-				String checklistTitle = (technicalchecklist.getTitle() + "_" + (technicalchecklist.getDefinationType() != null ? technicalchecklist.getDefinationType()
-						.getParameterId() : "")).trim().replaceAll("\\s", "");
+				String checklistTitle = (technicalchecklist.getTitle() + "_" + (technicalchecklist.getDefinationType() != null ? technicalchecklist
+						.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");
 				String finChecklistTitle = (finChecklist.getTitle() + "_" + (finChecklist.getDefinationType() != null ? finChecklist
-							.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");
-					
-				if (finChecklistTitle.equals(checklistTitle)) {	
+						.getDefinationType().getParameterId() : "")).trim().replaceAll("\\s", "");
+
+				if (finChecklistTitle.equals(checklistTitle)) {
 					allCheckLists.add(technicalchecklist);
 					break;
 				}
 			}
 		}
-		
-		
-		if (null != allCheckLists
-				&& !allCheckLists.isEmpty()) {
-			
-			for (ScQtCheckList checklist : allCheckLists) {
-			String technicalDoccategory=	checklist.getDocCategory();//11104-778&25726
-				if (QTConstants.TEMPLETE_SPEC_CODE
-						.equalsIgnoreCase(checklist.getDefinationType()
-								.getParameterCode()) &&
-								checklist.getScQtDoc() != null) {
-				boolean isDatafetch=SourcingConstants.TECHNICAL_DOCTYPE.equals(technicalDoccategory) &&  SourcingConstants.FINANCIAL_DOCTYPE.equals(financialDoccategory) && isSample;//11104-778&25726
-				if(isDatafetch){
-					this.setTemplateSpecMaster(checklist);
-				}//11104-778&25726
-					TplSpecMaster specSpecMaster = checklist.getScQtDoc().getTplSpecMaster();
-					
-					if(CollectionUtils.isNotEmpty(specSpecMaster.getTplSpecQuestions())){
-						for (TplSpecQuestion specQuestion : specSpecMaster.getTplSpecQuestions()) {
-							if (TemplateSpecConst.QUESTION_TYPE_ITEM
-									.equalsIgnoreCase(specQuestion.getQuestionType())) {
-								String questionFulfilmentcode =  specQuestion.getClFulfilmentTypeCode().getParameterCode();
-								if (!questionFulfilmentcode.equals(clFulfilmentTypeCode.getParameterCode())){
-									specQuestion.setClFulfilmentTypeCode(clFulfilmentTypeCode);
-								}
-							}							
-						 }
-					}	
-				}				
-			}
-		}
+		updateFulfilmentTypes(allCheckLists, clFulfilmentTypeCode, financialDocCategory, isSample);
 	}
 	
 	private List<ScQtCheckList> validateDuplicateFinancialSpecs(
