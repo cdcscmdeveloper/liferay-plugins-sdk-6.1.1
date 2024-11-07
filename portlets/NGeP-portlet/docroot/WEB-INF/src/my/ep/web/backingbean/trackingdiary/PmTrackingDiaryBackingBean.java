@@ -70,6 +70,14 @@ import org.apache.log4j.Logger;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
+/**
+ * @author malkan
+ *
+ */
+/**
+ * @author malkan
+ *
+ */
 @ManagedBean(name = "pmTrackingDiaryBackingBean")
 @ViewScoped
 public class PmTrackingDiaryBackingBean extends
@@ -386,6 +394,21 @@ public class PmTrackingDiaryBackingBean extends
 		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
 	}
 
+	/**
+	 * Fix - #36608
+	 * Add docNo / circular no for data from circular
+	 * @param docType
+	 * @param docId
+	 * @param docNo
+	 * @throws IOException
+	 * @throws PortalException
+	 * @throws SystemException
+	 */
+	public void redirectToTrackingDiaryForCircularContract(String docType, Long docId, String docNo)  throws IOException,PortalException, SystemException{
+		getManagedBean().setSelectedDocNo(docNo);
+		redirectToSupplierTrackingDiary(docType, docId, false);
+	}
+	
 	public void redirectToTrackingDiary(String docType, Long docId)  throws IOException,PortalException, SystemException{
 		redirectToSupplierTrackingDiary(docType, docId, false);
 	}
