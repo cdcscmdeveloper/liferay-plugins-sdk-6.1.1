@@ -759,6 +759,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
 	// #28895_35501 End
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
@@ -1512,5 +1514,10 @@ public class SupplierManagementConst {
 		return AU_TAB_ID_ADMIN_INFO;
 	}
 	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public String getAuTabIdDisciplinaryActionInfo() {
+		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
+	}
+	// #28895_35501_DA End
 
 }
