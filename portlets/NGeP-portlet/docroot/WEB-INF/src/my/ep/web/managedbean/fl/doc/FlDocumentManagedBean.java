@@ -431,11 +431,25 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentRecevingOfficer()) {
-											orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
-										} else if(isAcknowledgeOfficer()) {
-											orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+										// 36386-start
+										if (getSearchFunctionType() != null) {
+											if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+												if (isFlFulfilmentRecevingOfficer()) {
+													orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
+												} else if (isAcknowledgeOfficer()) {
+													orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+												}
+											} else if (getSearchFunctionType().equalsIgnoreCase(
+													ParameterConst.ORG_TYPE_SUPPLIER)
+													&& isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+											}
+										} else {
+											if (isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+											}
 										}
+										// 36386-end
 									}
 								}
 							}
@@ -760,6 +774,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); //36386
 			}
 			//29550-start
 			if(isFactoringUser()){
@@ -809,6 +824,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST); //36386
 			}
 			//29550-start
 			if(isFactoringUser()){
