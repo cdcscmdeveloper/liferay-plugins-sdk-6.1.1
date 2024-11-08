@@ -179,6 +179,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
+import my.ep.util.CustomUtils;	//Bug #36438@Syazani - 24/10/2024
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -5113,11 +5114,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// and before space) length for data 'ITEM'.
 			String[] words = clItem.split(" "); // get array of words
 			StringBuilder sb = new StringBuilder();
-			StringBuilder subSb = new StringBuilder();// this is for perfomance
+			StringBuilder subSb; //Bug #36438@Syazani - 24/10/2024
 			for (String word : words) // affect each word in string
 			{
 				int length = word.length();
 				if (length >= 20) {
+					// subSb reset here due to redundant text issue
+					subSb = new StringBuilder();	//Bug #36438@Syazani - 24/10/2024
 					String subWord;
 					for (int i = 0; i < length; i += 20) {
 						subWord = word.substring(i, Math.min(length, i + 20));
@@ -5260,13 +5263,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
 
 			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
-				// #26130 #97 - End
-				for (ScQtCheckList scQtCheckList : scQtCheckLists) {
-					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+				loopScQtCheckListsConstructSupplierSpecificationAndRemarks(scQtCheckLists, masters, scLoa, dafaltValue);	// Bug #36438@Syazani - 24/10/2024
+			}
 
-					TplSpecMaster master = null;
-					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
+			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
+			context.put("serviceScope", getDefaultValue());
+			context.put("masters", masters);
+			context.put("bean", this);
+		} finally {
+			specSO = null;
+		}
+	}
 
+	// #26130 -end-
+	
+	// Bug #36438@Syazani - 24/10/2024 -- Start
+		private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
+				List<TplSpecMaster> masters, ScLoa scLoa, String dafaltValue) {
+			// Bug #36438@Syazani - 24/10/2024 -- End
+			// #26130 #97 - End
+			for (ScQtCheckList scQtCheckList : scQtCheckLists) {
+				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
+				TplSpecMaster master = null;
+				// Bug #36438@Syazani - 24/10/2024 -- Start
+				// Making sure it didn't impact original value
+				if (null != scQtCheckList.getScQtDoc() && null != scQtCheckList.getScQtDoc().getTplSpecMaster()) {
+					master = (TplSpecMaster) scQtCheckList.getScQtDoc().getTplSpecMaster().cloneEntity();
+				}
+				// Bug #36438@Syazani - 24/10/2024 -- End
+
+				if (master != null) { // Bug #36438@Syazani - 24/10/2024
 					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
 						if (validateTplSpecMaster(scLoa, master)) {
 							constructSpecData(scLoa, master, question);
@@ -5291,19 +5318,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					master.setTplSpecQuestions(newTplSpecQuestionsList);
 
 					masters.add(master);
-				}
+				}	// Bug #36438@Syazani - 24/10/2024
 			}
-
-			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
-			context.put("serviceScope", getDefaultValue());
-			context.put("masters", masters);
-			context.put("bean", this);
-		} finally {
-			specSO = null;
-		}
-	}
-
-	// #26130 -end-
+		}	// Bug #36438@Syazani - 24/10/2024
 
 	// #26130 -start-
 	/**
@@ -5312,7 +5329,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param specMasters
 	 */
 	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa,
-			List<TplSpecMaster> specMasters) {
+			List<TplSpecMaster> specMastersParam) {	//Bug #36438@Syazani - 24/10/2024
+		//Making sure it didn't impact original value
+		List<TplSpecMaster> specMasters = CustomUtils.getInstance().deepCopyArrayList(specMastersParam);	//Bug #36438@Syazani - 24/10/2024
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 
 		String dafaltValue = "T/B";
