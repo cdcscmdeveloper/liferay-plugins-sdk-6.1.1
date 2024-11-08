@@ -440,6 +440,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		} catch (NullPointerException nex) {
 			throw new EpException(nex.getMessage());
 		}
+		// #28895_35501_DA Start - AUDIT TRAIL SM DA
+		IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+			AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+			auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+		}
+		// #28895_35501_DA End			
 		getManagedBean().setDisplaySearchPage(true);
 		//27437 : Disciplinary Action
 		FacesContext fc = FacesContext.getCurrentInstance();
