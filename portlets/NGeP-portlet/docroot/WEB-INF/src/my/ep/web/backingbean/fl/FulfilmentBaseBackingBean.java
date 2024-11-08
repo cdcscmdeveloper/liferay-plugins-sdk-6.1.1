@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -822,29 +823,19 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return true, if user has Government User Role
 	 */
 	public boolean hasFlGovernmentUserRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()))
-			return Boolean.TRUE;
-		else if (getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
-			return Boolean.TRUE;
-		else if (getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value()))
-			return Boolean.TRUE;
-		else if (getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value()))
-			return Boolean.TRUE;		
-		else if (getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value()))
-			return Boolean.TRUE;	
-		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
-			return Boolean.TRUE;		
-		else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()))
-			return Boolean.TRUE;	
-		else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()))
-			return Boolean.TRUE;	
-		else if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()))
-			return Boolean.TRUE;	
-		else if (getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value()))
-			return Boolean.TRUE;
-		else
-			return Boolean.FALSE;
+		List<String> roles = Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.FL_APPROVER.value(),
+				RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(), RoleCode.PAY_OFFICER.value(),
+				RoleCode.BPK_APPROVER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(),
+				RoleCode.AUDITOR_INTERNAL.value(), RoleCode.SYS_ADMIN.value());
+
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
 	}
+
 	
 	/**
 	 * Determines whether the PRCR link can be viewed based on user roles.
@@ -853,7 +844,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 */
 	public boolean canViewPRCRLink() {
 		
-		if ((hasSupplierRole() || hasFactoringUserRole())) {
+		if (hasSupplierRole() || hasFactoringUserRole()) {
 			if(hasGovtSellerRole() && hasFlGovernmentUserRole()){
 				return Boolean.TRUE;
 			}
