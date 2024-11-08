@@ -18091,38 +18091,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	}
 	// #11104 -end-
 
-	/****
-	 * 11104-start display scoresetting dropdown values in sample screen.
-	 * 
-	 * @param scoreTyp
-	 * @return( SelectItem[])
-	 */
-	public SelectItem[] getDropDownSampleScoreType(String scoreTyp) {
-		List<String> ScoreTypes = new ArrayList<String>();
-		ScoreTypes.add(ParameterConst.ANSWER_TYPE_TEXT);
-		SelectItem[] items = null;
-		
-		try {
-			items = new SelectItem[ScoreTypes.size()];
-			int i = 0;
-			
-			for (String scoreType : ScoreTypes) {
-				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.ANSWER_TYPE);
-				
-				for (PmParameterDesc paramDesc : localParamDesc) {
-					if (paramDesc.getPmParameter().getParameterCode().equals(scoreType)) {
-						items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterId(),
-								paramDesc.getCodeName());
-					}
-				}
-			}
-		} finally {
-
-		}
-		
-		return items;
-	}
-	// #11104 -end-
 
 	/***
 	 * 11104-start sample required checkbox selection for sample item.
