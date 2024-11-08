@@ -139,6 +139,7 @@ import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -1180,6 +1181,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(requestNoteDtl.getProcurementTypeCategory() != null && null == requestNoteDtl.getProcurementTypeCategory().getParameterId()){
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
+				
+				// #36362 - start
+				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { 
+					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
+				}
+				// #36362 - end
 				
 				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
@@ -5396,4 +5403,82 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// #28789 - end
+	// 36362 - start
+	/**
+	 * To validate quantity not exceed tier max quantity
+	 * 
+	 * @param requestNoteDtl
+	 */
+	private void validateTierQuantityExceedMaxQuantity(ScRequestNoteDtl requestNoteDtl) {
+		if (requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_TIER_STANDARD)
+				|| requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_ZONAL_TIER_STANDARD)) {
+
+			if (requestNoteDtl.getRequestItem().getTplSpecQuestion() != null) {
+				validateFromSQ(requestNoteDtl);
+			} else {
+				validateFromCatalogue(requestNoteDtl);
+			}
+		}
+	}
+
+	/**
+	 * To validate tier quantity change during RN Creation from SQ
+	 * 
+	 * @param requestNoteDtl
+	 */
+	private void validateFromSQ(ScRequestNoteDtl requestNoteDtl) {
+		if (requestNoteDtl.getRequestItem().getQuantity()
+				.compareTo(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClQuantity()) > 0) {
+			// Note for 29557, need to change this error message when merge.
+			// Dev -> MessageConst.ERROR_760527
+			// Prod -> MessageConst.ERROR_760399
+			throw new EpException(MessageConst.ERROR_760399, new String[] { requestNoteDtl.getRequestItem()
+					.getItemName() });
+		}
+	}
+
+	/**
+	 * To validate tier quantity change during RN Creation from Catalogue
+	 * 
+	 * @param requestNoteDtl
+	 */
+	private void validateFromCatalogue(ScRequestNoteDtl requestNoteDtl) {
+		if (requestNoteDtl.getScRequestSupplierItem().getCmSupplierItem() != null
+				&& requestNoteDtl.getScRequestSupplierItem().getCmSupplierItem().getCmPricings() != null) {
+			// from catalogue
+			List<CmPricing> cmPricings = requestNoteDtl.getScRequestSupplierItem().getCmSupplierItem().getCmPricings();
+
+			if (cmPricings != null && !cmPricings.isEmpty()) {
+				// Get the last element directly
+				sortTierToQtyValueAscending(cmPricings);
+				CmPricing lastCmPricing = cmPricings.get(cmPricings.size() - 1);
+				BigDecimal lastToQty = new BigDecimal(lastCmPricing.getToQty());
+
+				if (requestNoteDtl.getRequestItem().getQuantity().compareTo(lastToQty) > 0) {
+					throw new EpException(MessageConst.ERROR_760399, new String[] { requestNoteDtl.getRequestItem()
+							.getItemName() });
+				}
+			}
+		}
+	}
+
+	/**
+	 * Sort toQty value from CmPricing to make sure the last value toQty is the
+	 * largest.
+	 * 
+	 * @param cmPricings
+	 */
+	private void sortTierToQtyValueAscending(List<CmPricing> cmPricings) {
+		Collections.sort(cmPricings, new Comparator<CmPricing>() {
+			@Override
+			public int compare(CmPricing p1, CmPricing p2) {
+				// Convert to BigDecimal for proper comparison
+				BigDecimal toQty1 = (p1.getToQty() != null) ? new BigDecimal(p1.getToQty()) : BigDecimal.ZERO;
+				BigDecimal toQty2 = (p2.getToQty() != null) ? new BigDecimal(p2.getToQty()) : BigDecimal.ZERO;
+				return toQty1.compareTo(toQty2);
+			}
+		});
+	}
+
+	// 36362 - end
 }
