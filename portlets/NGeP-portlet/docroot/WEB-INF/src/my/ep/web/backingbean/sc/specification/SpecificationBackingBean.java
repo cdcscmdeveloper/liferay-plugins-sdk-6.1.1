@@ -1297,7 +1297,7 @@ public class SpecificationBackingBean extends
 			}
 			List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 			ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-					.getRecommendationPackageScore();
+					.getRecommendationSharingScoreItemPackage();
 			if (null != packageScoreSetting
 					&& packageScoreSetting.getSettingType() == 4) {
 				scoreSetting.add(packageScoreSetting);
@@ -1305,7 +1305,7 @@ public class SpecificationBackingBean extends
 			}
 
 			ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-					.getRecommendationScore();
+					.getRecommendationSharingScoreItemPackage();
 			if (null != itemScoreSetting
 					&& itemScoreSetting.getSettingType() == 5) {
 				scoreSetting.add(itemScoreSetting);
@@ -1559,8 +1559,8 @@ public class SpecificationBackingBean extends
 			financialItemScoreCalculate(this.getManagedBean()
 					.getFinacialItemScoreSetting());
 			calculateRecommendationPackageAndItemScores(this.getManagedBean()
-					.getRecommendationPackageScore(), this.getManagedBean()
-					.getRecommendationScore());
+					.getRecommendationSharingScoreItemPackage(), this.getManagedBean()
+					.getRecommendationSharingScoreItemPackage());
 			validateTechnicalUserScoringAttachment(this.getManagedBean()
 					.isTechnicalUserScoringSchema());
 
@@ -3163,8 +3163,8 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
-			if (null == this.getManagedBean().getRecommendationPackageScore()
-					&& null == this.getManagedBean().getRecommendationScore()) {
+			if (null == this.getManagedBean().getRecommendationSharingScoreItemPackage()
+					&& null == this.getManagedBean().getRecommendationSharingScoreItemPackage()) {
 
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				reqDTO.setScQt(this.getManagedBean().getQt());
@@ -3186,22 +3186,22 @@ public class SpecificationBackingBean extends
 								.isEmpty()) {
 
 					if (null == this.getManagedBean()
-							.getRecommendationPackageScore()) {
+							.getRecommendationSharingScoreItemPackage()) {
 						ScQtScoreSetting pkgScoreSetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE);
 						BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 						pkgScoreSetting.setOverallTechnical(passingScore);
 						int financial = 100 - passingScore.intValue();
 						pkgScoreSetting
 								.setOverallFin(new BigDecimal(financial));
-						this.getManagedBean().setRecommendationPackageTotal(
+						this.getManagedBean().setRecommendationSharingScoreItemPackageTotal(
 								new BigDecimal(100));
 
-						this.getManagedBean().setRecommendationPackageScore(
+						this.getManagedBean().setRecommendationSharingScoreItemPackage(
 								pkgScoreSetting);
 					}
-					if (null == this.getManagedBean().getRecommendationScore()) {
+					if (null == this.getManagedBean().getRecommendationSharingScoreItemPackage()) {
 						ScQtScoreSetting itemScoreSetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM);
-						this.getManagedBean().setRecommendationScore(
+						this.getManagedBean().setRecommendationSharingScoreItemPackage(
 								itemScoreSetting);
 					}
 
@@ -3212,19 +3212,19 @@ public class SpecificationBackingBean extends
 
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE) {
 							this.getManagedBean()
-									.setRecommendationPackageScore(
+									.setRecommendationSharingScoreItemPackage(
 											recommnendationSetting);
 							calculateTotalPackage(this.getManagedBean()
-									.getRecommendationPackageScore(), false);
+									.getRecommendationSharingScoreItemPackage(), false);
 						}
 
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
-							this.getManagedBean().setRecommendationScore(
+							this.getManagedBean().setRecommendationSharingScoreItemPackage(
 									recommnendationSetting);
 							calculateRecommendtechnicalScore(this
-									.getManagedBean().getRecommendationScore());
+									.getManagedBean().getRecommendationSharingScoreItemPackage());
 							calculateRecommendFinancialScore(this
-									.getManagedBean().getRecommendationScore());
+									.getManagedBean().getRecommendationSharingScoreItemPackage());
 						}
 
 					}
@@ -8608,11 +8608,11 @@ public class SpecificationBackingBean extends
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));
-			this.getManagedBean().setRecommendationPackageScore(technical);
+			this.getManagedBean().setRecommendationSharingScoreItemPackage(technical);
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallFin().intValue();
 
-			this.getManagedBean().setRecommendationPackageTotal(
+			this.getManagedBean().setRecommendationSharingScoreItemPackageTotal(
 					new BigDecimal(local));
 		} finally {
 
@@ -11776,7 +11776,7 @@ public class SpecificationBackingBean extends
 			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-				.getRecommendationPackageScore();
+				.getRecommendationSharingScoreItemPackage();
 		if (null != packageScoreSetting
 				&& packageScoreSetting.getSettingType() == 4) {
 			
@@ -11806,7 +11806,7 @@ public class SpecificationBackingBean extends
 		}
 
 		ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-				.getRecommendationScore();
+				.getRecommendationSharingScoreItemPackage();
 		if (null != itemScoreSetting && itemScoreSetting.getSettingType() == 5) {
 			
 			/*
@@ -12400,7 +12400,7 @@ public class SpecificationBackingBean extends
 				ScQt delivery = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-						.getRecommendationPackageScore();
+						.getRecommendationSharingScoreItemPackage();
 				if (null != packageScoreSetting
 						&& packageScoreSetting.getSettingType() == 4) {
 					scoreSetting.add(packageScoreSetting);
@@ -12408,7 +12408,7 @@ public class SpecificationBackingBean extends
 				}
 
 				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-						.getRecommendationScore();
+						.getRecommendationSharingScoreItemPackage();
 				if (null != itemScoreSetting
 						&& itemScoreSetting.getSettingType() == 5) {
 					scoreSetting.add(itemScoreSetting);
@@ -14085,8 +14085,9 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setTechnicalItemScoreSetting(null);
 		// #21695 START FARID
 		this.getManagedBean().setFinacialItemScoreSetting(null);
-		this.getManagedBean().setRecommendationPackageScore(null);
-		this.getManagedBean().setRecommendationScore(null);
+//		this.getManagedBean().setRecommendationPackageScore(null);
+//		this.getManagedBean().setRecommendationScore(null);
+		this.getManagedBean().setRecommendationSharingScoreItemPackage(null);
 		//remove #29732
 		//this.getManagedBean().setQtCategoryList(null);
 		this.getManagedBean().setQtSupplierList(null);
@@ -17670,8 +17671,8 @@ public class SpecificationBackingBean extends
 			financialItemScoreCalculate(this.getManagedBean()
 					.getFinacialItemScoreSetting());
 			calculateRecommendationPackageAndItemScores(this.getManagedBean()
-					.getRecommendationPackageScore(), this.getManagedBean()
-					.getRecommendationScore());
+					.getRecommendationSharingScoreItemPackage(), this.getManagedBean()
+					.getRecommendationSharingScoreItemPackage());
 			validateTechnicalUserScoringAttachment(this.getManagedBean()
 					.isTechnicalUserScoringSchema());
 
@@ -17797,7 +17798,6 @@ public class SpecificationBackingBean extends
 		retrieveStatusByTypeAndId(scQt);
 		// Bug #33661@Syazani 06/10/2022 -- End
 		
-		Long statusId = scQt != null ? scQt.getQtStatus().getStatusId():null;//#29732(#232)
 		//#15391 - start
 		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
 		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
