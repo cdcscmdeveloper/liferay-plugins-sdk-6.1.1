@@ -246,7 +246,7 @@
                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                 currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
 				scrollable="true" scrollHeight="200" liveScroll="true">   
-   					<p:column styleClass="column-align-center" style="white-space:normal;">    						  				
+   					<p:column styleClass="column-align-center" style="white-space:normal; vertical-align: top; width: 33%;">    						  				
       					<f:facet name = "header">#{lbl['lbl.ct.specification']}</f:facet>      					
       					<!-- #31558 start - Aligning the content to the left -->
       					<h:outputText
@@ -256,7 +256,7 @@
 						</h:outputText> 									
    						<!-- #31558 end -->
    					</p:column>   
-   					<p:column styleClass="column-align-center" style="white-space:normal;">
+   					<p:column styleClass="column-align-center" style="white-space:normal; vertical-align: top; width: 33%;">
      					<f:facet name = "header">#{lbl['lbl.ct.supp.offer']}
      					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.qt.supplieroffer']}"/>
      					</f:facet>     					
@@ -268,7 +268,7 @@
 						</h:outputText>     																											
    						<!-- #31558 end -->
    					</p:column>   
-   					<p:column styleClass="column-align-center" style="white-space:normal;">
+   					<p:column styleClass="column-align-center" style="white-space:normal; vertical-align: top; width: 33%;">
       					<f:facet name = "header">#{lbl['lbl.ct.new.offer.spec']}
       					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"/>
       					</f:facet>     					
