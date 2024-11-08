@@ -9,6 +9,7 @@ import my.ep.dto.sm.audit.AuditSupplierManagementDTO;
 import my.ep.dto.sm.audit.AuditSupplierManagementDetailDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.CommonUtils;
@@ -51,7 +52,7 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 
 		cancelRegistration(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
-		blackListOwner(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
+		blackListOwner(oldDisciplinaryAction, newDisciplinaryAction, auDetails, mBean);
 
 		bumiCancel(oldDisciplinaryAction, newDisciplinaryAction, auDetails);
 
@@ -107,12 +108,37 @@ public class AuditSupplierManagementDisciplinaryActionBackingBean extends AuditS
 	}
 
 	private void blackListOwner(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
-			List<AuditSupplierManagementDetailDTO> auDetails) {
+			List<AuditSupplierManagementDetailDTO> auDetails, ViewSuppProfileManagedBean mBean) {
 		if (!oldDisciplinaryAction.isBlacklistOwner() && newDisciplinaryAction.isBlacklistOwner()) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_PUNISHMENT_TYPE, null, getLabel("lbl.sm.disciplinary.jktt.blacklist.owner"), null,
 					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_PUNISHMENT_TYPE));
+			List<SmPersonnel> selectedOwnerAndDirectorList = mBean.getSelectedOwnerAndDirectorList();
+			for (SmPersonnel owner : selectedOwnerAndDirectorList) {
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_NAME,
+						null, owner.getName(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_NAME));
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_IDENTIFICATION_NO, null, owner.getIdentificationNo(), null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_IDENTIFICATION_NO));
+				auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_ADD,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_ID_ROLE_IN_COMPANY, null, getRoleCompany(owner), null, null,
+						AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_ROLE_IN_COMPANY));
+			}
 		}
+	}
+
+	private String getRoleCompany(SmPersonnel owner) {
+		String role = "";
+		if (owner.isEquityOwner()) {
+			role += getLabel("lbl.sm.person.equiOwner");
+		}
+		if (owner.isDirector()) {
+			role += role.isEmpty() ? getLabel("lbl.sm.person.dir") : ", " + getLabel("lbl.sm.person.dir");
+		}
+		if (owner.isContractSigner()) {
+			role += role.isEmpty() ? getLabel("lbl.sm.contract.signer") : ", " + getLabel("lbl.sm.contract.signer");
+		}
+		return role;
 	}
 
 	private void bumiCancel(SmDisciplinaryAction oldDisciplinaryAction, SmDisciplinaryAction newDisciplinaryAction,
