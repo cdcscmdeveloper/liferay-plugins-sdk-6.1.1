@@ -1800,6 +1800,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 
+	
+	//#25426 - Start
+	private boolean firstViewPageCAUsers = false; 
+	//#25426 - End
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -11272,4 +11277,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.demoSpecialCase = demoSpecialCase;
 	}
 	// #28784 - end
+	
+	//#25426 - Start
+	public boolean isFirstViewPageCAUsers() {
+		return firstViewPageCAUsers;
+	}
+
+	public void setFirstViewPageCAUsers(boolean firstViewPageCAUsers) {
+		this.firstViewPageCAUsers = firstViewPageCAUsers;
+	}
+	//#25426 - End
+
 }
