@@ -773,7 +773,7 @@
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
 					<p:column styleClass="column-align-center"
-						style="white-space:normal;">
+						style="white-space:normal; vertical-align: top; width: 33%;">
 						<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
 						<!-- #31558 start - Aligning the content to the left -->
 						<h:outputText value="#{item.itemSpec}"
@@ -786,7 +786,7 @@
 						<!-- #31558 end -->
 					</p:column>
 					<p:column styleClass="column-align-center"
-						style="white-space:normal;">
+						style="white-space:normal; vertical-align: top; width: 33%;">
 						<f:facet name="header">#{lbl['lbl.ct.supp.offer']}
      					<ac:iconTooltip
 								value="#{lbl['lbl.ct.tooltip.qt.supplieroffer']}" />
@@ -802,7 +802,7 @@
 						<!-- #31558 end -->
 					</p:column>
 					<p:column styleClass="column-align-center"
-						style="white-space:normal;">
+						style="white-space:normal; vertical-align: top; width: 33%;">
 						<f:facet name="header">#{lbl['lbl.ct.new.offer.spec']}
       					<ac:iconTooltip
 								value="#{lbl['lbl.ct.tooltip.newofferedspecification']}" />
