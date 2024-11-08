@@ -5082,7 +5082,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			log.info("***** APPROVER DECISION SELECTED **** "
 					+ category.getApprvrDecFlg());
 			//#36587
-			if(category.getApprvrDecFlg().equals(0)){
+			if(category.getPoDecFlg().equals(0)
+					&& category.getApprvrDecFlg().equals(0)){
 				category.setApproverRemarks(category.getPoRemarks());
 			}else{
 				category.setApproverRemarks(null);
@@ -7045,7 +7046,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getPmParameterById(worker.getIdentificationTypeId()));
 			if(worker.getIdentificationType().getParameterCode().equals(
 					SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
-				if(worker.getIdentificationNo().length() != 12){
+				if(worker.getIdentificationNo().length() != SupplierManagementConst.IC_NO_LENGTH){
 					throw new EpException(MessageConst.ERROR_722532,
 							new String[] { worker.getIdentificationNo() });
 				}
@@ -12814,6 +12815,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.isShowStorePanel(), getManagedBean()
 						.isShowWorkShopPanel());
 	}
+	
+	//#36483 - START
+	public void onChangeAddress(SmAddress addr, String addrLine, String panelName){
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			if(addrLine.equals("Addr1")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress1(addr.getAddress1());
+			}
+			if(addrLine.equals("Addr2")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress2(addr.getAddress2());
+			}
+			if(addrLine.equals("Addr3")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress3(addr.getAddress3());
+			}
+		}
+	}
+	//#36483 - END
 
 	/**
 	 * Ajax call when select country to populate states
@@ -12840,6 +12857,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
 		setRoleStaffAddrReqd();
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
+		}
+		//#36483 - END
 	}
 
 	/**
@@ -12873,6 +12895,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		addr.setPmDistrict(null);
 		addr.setPmCity(null);
 		setRoleStaffAddrReqd();
+		
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getStateId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setStateId(addr.getStateId());
+			if(!addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(null);
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
+			}
+		}
+		//#36483 - END
 		
 		/*//13320-start
 		Long stateId = addr.getStateId();
@@ -12921,6 +12955,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getDistrictId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
+		}
+		//#36483 - END
 	}
 
 	/**
@@ -12933,6 +12974,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void onChangeCity(SmAddress addr, String panelName) {
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getCityId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
+		}
+		//#36483 - END
 	}
 
 	/**
@@ -15591,7 +15639,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
 								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
-					suppCategory.setApproverRemarks(suppCategory.getPoRemarks() != null ? suppCategory.getPoRemarks() : null); //#36587
+					setApproverRemark(suppCategory); //#36587
 				}
 			}
 		}
@@ -16623,6 +16671,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		setRoleStaffAddrReqd();
 		//#13320 - SmCommonUtil change method
 		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getDivisionId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
+		}
+		//#36483 - END
 	}
 	//13320-End	
 	
@@ -18167,4 +18222,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return supplierList;
 	}
 	//#28777 - END
+	//#36587 START
+	/**
+	 * To auto-populate po remark to approver remark
+	 * when po reject the category
+	 * @param cat
+	 * @return void
+	 */
+	private void setApproverRemark(SmSupplierCategory cat){
+		if(cat.getPoDecFlg().equals(0)){
+			cat.setApproverRemarks(cat.getPoRemarks() != null ? cat.getPoRemarks() : null);
+		}
+	}
+	//#36587 END
 }

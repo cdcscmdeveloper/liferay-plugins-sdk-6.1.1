@@ -75,24 +75,20 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 	public void loadAuditInfo(String tabName) {
 		switch (tabName) {
 		case SupplierManagementConst.AU_TAB_ID_BANK_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(
-					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_BANK_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_USER_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(
-					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_ADMIN_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(
-					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_ADMIN_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_SUPPLIER_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(
-					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_SUPPLIER_INFO));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_SUPPLIER_INFO));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_APPROVER_REMARK_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(
-					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVER_REMARKS));
+			getManagedBean().getAuSmSearchBean()
+					.setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_APPROVER_REMARKS));
 			break;
 		case SupplierManagementConst.AU_TAB_ID_OVERLAPPING_REMARK_INFO:
 			getManagedBean().getAuSmSearchBean().setAuGroupSection(

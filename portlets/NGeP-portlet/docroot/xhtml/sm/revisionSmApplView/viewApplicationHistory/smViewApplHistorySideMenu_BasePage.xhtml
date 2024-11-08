@@ -404,7 +404,7 @@
 					</c:if>
 					<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5 and 
-					viewSmApplBackingBean.managedBean.smSupplier.businessType ne SupplierMgmtConst.smSupplierBusinessTypeIndividual}">
+							viewSmApplBackingBean.managedBean.smSupplier.businessType ne SupplierMgmtConst.smSupplierBusinessTypeIndividual}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step13ViewAuditTrailInfo.xhtml" />
 					</c:if>
 					<ui:remove>#28895_35501 End</ui:remove>
