@@ -462,6 +462,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			stopInstrBB.getManagedBean().setSelectedTabIndex(0);
 			stopInstrBB.populateStopInstrItem();
 			stopInstrBB.populateChargeLineData();
+			stopInstrBB.getManagedBean().setSearchFunctionType(getManagedBean().getSearchFunctionType());//36386
 			if(isFlFulfilmentApprover()){
 				stopInstrBB.checkCogstr();
 			}
