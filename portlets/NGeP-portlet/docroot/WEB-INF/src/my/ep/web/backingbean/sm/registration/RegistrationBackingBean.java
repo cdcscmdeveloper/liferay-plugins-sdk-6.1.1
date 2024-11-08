@@ -1552,8 +1552,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//		null,
 				//		MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailSO.class);
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
@@ -3206,8 +3205,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 										
 					// #28895_35501 Start - AUDIT TRAIL SM
 					this.getManagedBean().setOldBanks(
-							CustomUtils.getInstance().deepCopyArrayList(
-									this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
+							CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
 					// #28895_35501 End
 					StringBuilder sb = new StringBuilder();
 					for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
