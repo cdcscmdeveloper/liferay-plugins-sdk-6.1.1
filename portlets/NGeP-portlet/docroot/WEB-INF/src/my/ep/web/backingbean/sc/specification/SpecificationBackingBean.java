@@ -1297,7 +1297,7 @@ public class SpecificationBackingBean extends
 			}
 			List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 			ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-					.getRecommendationSharingScoreItemPackage();
+					.getRecommendationPackageScore();
 			if (null != packageScoreSetting
 					&& packageScoreSetting.getSettingType() == 4) {
 				scoreSetting.add(packageScoreSetting);
@@ -1305,7 +1305,7 @@ public class SpecificationBackingBean extends
 			}
 
 			ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-					.getRecommendationSharingScoreItemPackage();
+					.getRecommendationScore();
 			if (null != itemScoreSetting
 					&& itemScoreSetting.getSettingType() == 5) {
 				scoreSetting.add(itemScoreSetting);
@@ -1559,8 +1559,8 @@ public class SpecificationBackingBean extends
 			financialItemScoreCalculate(this.getManagedBean()
 					.getFinacialItemScoreSetting());
 			calculateRecommendationPackageAndItemScores(this.getManagedBean()
-					.getRecommendationSharingScoreItemPackage(), this.getManagedBean()
-					.getRecommendationSharingScoreItemPackage());
+					.getRecommendationPackageScore(), this.getManagedBean()
+					.getRecommendationScore());
 			validateTechnicalUserScoringAttachment(this.getManagedBean()
 					.isTechnicalUserScoringSchema());
 
@@ -3163,8 +3163,8 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
-			if (null == this.getManagedBean().getRecommendationSharingScoreItemPackage()
-					&& null == this.getManagedBean().getRecommendationSharingScoreItemPackage()) {
+			if (null == this.getManagedBean().getRecommendationPackageScore()
+					&& null == this.getManagedBean().getRecommendationScore()) {
 
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				reqDTO.setScQt(this.getManagedBean().getQt());
@@ -3186,22 +3186,22 @@ public class SpecificationBackingBean extends
 								.isEmpty()) {
 
 					if (null == this.getManagedBean()
-							.getRecommendationSharingScoreItemPackage()) {
+							.getRecommendationPackageScore()) {
 						ScQtScoreSetting pkgScoreSetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE);
 						BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 						pkgScoreSetting.setOverallTechnical(passingScore);
 						int financial = 100 - passingScore.intValue();
 						pkgScoreSetting
 								.setOverallFin(new BigDecimal(financial));
-						this.getManagedBean().setRecommendationSharingScoreItemPackageTotal(
+						this.getManagedBean().setRecommendationPackageTotal(
 								new BigDecimal(100));
 
-						this.getManagedBean().setRecommendationSharingScoreItemPackage(
+						this.getManagedBean().setRecommendationPackageScore(
 								pkgScoreSetting);
 					}
-					if (null == this.getManagedBean().getRecommendationSharingScoreItemPackage()) {
+					if (null == this.getManagedBean().getRecommendationScore()) {
 						ScQtScoreSetting itemScoreSetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM);
-						this.getManagedBean().setRecommendationSharingScoreItemPackage(
+						this.getManagedBean().setRecommendationScore(
 								itemScoreSetting);
 					}
 
@@ -3212,19 +3212,19 @@ public class SpecificationBackingBean extends
 
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE) {
 							this.getManagedBean()
-									.setRecommendationSharingScoreItemPackage(
+									.setRecommendationPackageScore(
 											recommnendationSetting);
 							calculateTotalPackage(this.getManagedBean()
-									.getRecommendationSharingScoreItemPackage(), false);
+									.getRecommendationPackageScore(), false);
 						}
 
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
-							this.getManagedBean().setRecommendationSharingScoreItemPackage(
+							this.getManagedBean().setRecommendationScore(
 									recommnendationSetting);
 							calculateRecommendtechnicalScore(this
-									.getManagedBean().getRecommendationSharingScoreItemPackage());
+									.getManagedBean().getRecommendationScore());
 							calculateRecommendFinancialScore(this
-									.getManagedBean().getRecommendationSharingScoreItemPackage());
+									.getManagedBean().getRecommendationScore());
 						}
 
 					}
@@ -8608,11 +8608,11 @@ public class SpecificationBackingBean extends
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));
-			this.getManagedBean().setRecommendationSharingScoreItemPackage(technical);
+			this.getManagedBean().setRecommendationPackageScore(technical);
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallFin().intValue();
 
-			this.getManagedBean().setRecommendationSharingScoreItemPackageTotal(
+			this.getManagedBean().setRecommendationPackageTotal(
 					new BigDecimal(local));
 		} finally {
 
@@ -11776,7 +11776,7 @@ public class SpecificationBackingBean extends
 			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-				.getRecommendationSharingScoreItemPackage();
+				.getRecommendationPackageScore();
 		if (null != packageScoreSetting
 				&& packageScoreSetting.getSettingType() == 4) {
 			
@@ -11806,7 +11806,7 @@ public class SpecificationBackingBean extends
 		}
 
 		ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-				.getRecommendationSharingScoreItemPackage();
+				.getRecommendationScore();
 		if (null != itemScoreSetting && itemScoreSetting.getSettingType() == 5) {
 			
 			/*
@@ -12400,7 +12400,7 @@ public class SpecificationBackingBean extends
 				ScQt delivery = constructSpecCommitteDtls(null,false).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-						.getRecommendationSharingScoreItemPackage();
+						.getRecommendationPackageScore();
 				if (null != packageScoreSetting
 						&& packageScoreSetting.getSettingType() == 4) {
 					scoreSetting.add(packageScoreSetting);
@@ -12408,7 +12408,7 @@ public class SpecificationBackingBean extends
 				}
 
 				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-						.getRecommendationSharingScoreItemPackage();
+						.getRecommendationScore();
 				if (null != itemScoreSetting
 						&& itemScoreSetting.getSettingType() == 5) {
 					scoreSetting.add(itemScoreSetting);
@@ -14085,9 +14085,8 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setTechnicalItemScoreSetting(null);
 		// #21695 START FARID
 		this.getManagedBean().setFinacialItemScoreSetting(null);
-//		this.getManagedBean().setRecommendationPackageScore(null);
-//		this.getManagedBean().setRecommendationScore(null);
-		this.getManagedBean().setRecommendationSharingScoreItemPackage(null);
+		this.getManagedBean().setRecommendationPackageScore(null);
+		this.getManagedBean().setRecommendationScore(null);
 		//remove #29732
 		//this.getManagedBean().setQtCategoryList(null);
 		this.getManagedBean().setQtSupplierList(null);
@@ -17671,8 +17670,8 @@ public class SpecificationBackingBean extends
 			financialItemScoreCalculate(this.getManagedBean()
 					.getFinacialItemScoreSetting());
 			calculateRecommendationPackageAndItemScores(this.getManagedBean()
-					.getRecommendationSharingScoreItemPackage(), this.getManagedBean()
-					.getRecommendationSharingScoreItemPackage());
+					.getRecommendationPackageScore(), this.getManagedBean()
+					.getRecommendationScore());
 			validateTechnicalUserScoringAttachment(this.getManagedBean()
 					.isTechnicalUserScoringSchema());
 
