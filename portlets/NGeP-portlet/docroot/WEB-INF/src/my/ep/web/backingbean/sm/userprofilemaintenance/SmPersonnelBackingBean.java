@@ -93,7 +93,6 @@ import org.primefaces.context.RequestContext;
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementPersonnelBackingBean;
@@ -4198,10 +4197,9 @@ public class SmPersonnelBackingBean extends
 			oldRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
 		}
 		getManagedBean().setOldRole(oldRole);
-		LogKey logKey = new LogKey();
 		PmOrgProfile orgProfile = new PmOrgProfile();
-		if (logKey.getUserId() != null) {
-			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(logKey.getUserId());
+		if (getUserIdSessionFromLoginId() != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(getUserIdSessionFromLoginId());
 			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
 			}
