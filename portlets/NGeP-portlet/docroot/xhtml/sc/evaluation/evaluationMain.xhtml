@@ -39,20 +39,37 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-				<ui:remove> #28834 - start </ui:remove>
+				<ui:remove> 25037,28834 - start </ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					rendered="#{validityDaysExpiredQt and bpmAction != 'REVISEBP'}"
+					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@all" partialSubmit="true"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
-				<ui:remove> #28834 - end </ui:remove>
+				<ui:remove> 25037,28834 - end </ui:remove>
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
+					oncomplete="confirmUpdateAsAttendPopup.show();"
+					style="float:right;" />
 			</ui:repeat>
 		</ui:fragment>
-		<p:commandButton value="#{lbl['lbl.btn.save']}"
+		<ui:remove> 25037 -start- </ui:remove>
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex ne 5}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified}"
+				style="float:right;" process="@form" update="@form"
+				action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
+		</ui:fragment>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}"
+			disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
+			styleClass="ui-button"
+			action="#{evaluationMeetingBackingBean.submitMettingDetails()}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			disabled="#{evaluationBackingBean.managedBean.readOnly}"
-			style="float:right;" process="@form" update="@form"
-			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
+			style="float:right;" process="@all" partialSubmit="true">
+		</p:commandButton>
+		<ui:remove> 25037 -end- </ui:remove>
 
 		<!-- 25638 -start- -->
 		<p:dialog id="reviseApprovalDlgs" widgetVar="reviseApprovalDlgs"

@@ -31,15 +31,88 @@
 		</p:panel>
 	</c:if>
 	
-	<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
-		<c:forEach var="tabBean" varStatus="status"
-			items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
-			<p:menuitem value="#{tabBean.titleName}"
-				action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
-				partialSubmit="true"
-				update="@form"
-				process="@form" />
-		</c:forEach>
-	</p:tabMenu>
-	<ui:include src="committeeApprovalTab.xhtml" />
+	<!-- 25037 start -->
+	<p:panel header="#{lbl['lbl.sc.lbl.prevCommittee']}"
+		rendered="#{approvalBackingBean.managedBean.committeeUpdateFlow}"
+		toggleable="true" id="prevCommitteeId">
+		<p:tabMenu
+			activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
+			<c:forEach var="tabBean" varStatus="status"
+				items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
+				<p:menuitem value="#{tabBean.titleName}"
+					action="#{qTDetailBB.committeTabChangeAction(status.index)}"
+					partialSubmit="true" update="@form" process="@form" />
+			</c:forEach>
+		</p:tabMenu>
+		<p:panel>
+			<p:dataTable id="historyMemberTableId" styleClass=""
+				value="#{approvalBackingBean.managedBean.memberHistoryList}"
+				var="member" rowIndexVar="index"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+					<h:outputText value="#{member.memberName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+					<h:outputText value="#{member.identificationNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.designation']}"
+					style="white-space: normal;">
+					<h:outputText value="#{member.designation}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					<h:outputText value="#{member.email}" style="white-space: normal;" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 10%">
+					<h:outputText value="#{member.grade}" />
+				</p:column>
+				<p:column style="width: 6%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+						<ac:iconTooltip id="pnpTT#{index}"
+							value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{lbl[ member.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+				</p:column>
+				<p:column style="width: 13%">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.role']}" />
+					</f:facet>
+					<h:outputText
+						value="#{qTDetailBB.getParameterDesc('CR', member.memberRole)}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</p:panel>
+	<c:choose>
+		<c:when test="#{approvalBackingBean.managedBean.committeeUpdateFlow}">
+			<p:panel header="#{lbl['lbl.sc.lbl.newCommittee']}" toggleable="true"
+				id="newCommitteeId">
+				<p:tabMenu
+					activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
+					<c:forEach var="tabBean" varStatus="status"
+						items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
+						<p:menuitem value="#{tabBean.titleName}"
+							action="#{qTDetailBB.committeTabChangeAction(status.index)}"
+							partialSubmit="true" update="@form" process="@form" />
+					</c:forEach>
+				</p:tabMenu>
+				<ui:include src="committeeApprovalTab.xhtml" />
+			</p:panel>
+		</c:when>
+		<c:otherwise>
+			<p:tabMenu
+				activeIndex="#{approvalBackingBean.managedBean.selectedCommitteeTabIndex}">
+				<c:forEach var="tabBean" varStatus="status"
+					items="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
+					<p:menuitem value="#{tabBean.titleName}"
+						action="#{qTDetailBB.committeTabChangeAction(status.index)}"
+						partialSubmit="true" update="@form" process="@form" />
+				</c:forEach>
+			</p:tabMenu>
+			<ui:include src="committeeApprovalTab.xhtml" />
+		</c:otherwise>
+	</c:choose>
+	<!-- 25037 end -->
 </ui:composition>
