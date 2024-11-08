@@ -303,6 +303,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public String determineIcon(CtAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
 		String fileExtension = "";
+		
+		// #25956 - Start
+		// Handle null attachment
+		if (attachment == null) {
+			return imageFileName;
+		}
+		// #25956 - End
 
 		String fileName = attachment.getFileName();
 
@@ -2343,6 +2350,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		checkPerformanceBondExceedDate();
 		
 		if(CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+			long noOfDays = 0;
 			for(CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
 				bondStartDate = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate();
 				bondEndDate = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate();
@@ -2370,6 +2378,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					//date range overlaps with history entry
 	 				throw new EpException(MessageConst.ERROR_750067);
 				}
+				noOfDays += findDifference(entryBondStartDate, entryBondEndDate);
+			}
+			
+			getManagedBean().setDisableDeferment(noOfDays >= 60?true:false);
+			if((findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(),
+					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) +
+					noOfDays) > 60){
+				throw new EpException(MessageConst.ERROR_750082);
 			}
 		}
 		RequestContext.getCurrentInstance().execute("addPBConfirmDlg.show()");
@@ -2378,6 +2394,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * method to set the latest waiver and attachment into history table 
 	 * and still maintain the latest waiver.
+	 * 
+	 * @exception SLAUtils
 	 */
 	public void saveBondWaiverToTable(){
 		long noOfDays = 0;
@@ -2415,28 +2433,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for(CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
 				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 			}
-				
-			if(noOfDays >= 60){
-				getManagedBean().setDisableDeferment(true);
-			} else {
-				getManagedBean().setDisableDeferment(false);
-			}
+			getManagedBean().setDisableDeferment(noOfDays >= 60?true:false);
+			
 		} catch (Exception e) {
-			log.error(e.toString(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "saveBondWaiverToTable", 
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "saveBondWaiverToTable", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
 		
 	/**
-	 * method to check differences between two days
+	 * method to check differences between two days for bond deferment
 	 * 
 	 * @param startDate
 	 * @param endDate
-	 * @return differenceInDays
+	 * @return differenceInDays (include the start date)
 	 * 
 	 */
 	public long findDifference(Date startDate, Date endDate){
-		return TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
+		return TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS)+1;
 	}
 		
 	/**
@@ -2455,6 +2470,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					.compareTo(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 0) {
 				throw new EpException(MessageConst.ERROR_750080);
 			}
+		}
+	}
+	
+	/**
+	 * method to delete bond exemption document when the bond exemp is unclicked
+	 * 
+	 * @exception SLAUtils
+	 */
+	public void bondExempDocReset(){
+		try{
+			if(!getManagedBean().getCtContractAmount().isBondExempted()){
+				delBondExemptedDoc();
+			}
+		}catch(Exception e){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "bondExempReset", 
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "bondExempReset", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	//Enhancement 13847 - end
@@ -2718,7 +2749,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			
 		} catch (Exception e) {
-			log.error(e.toString(), e); //#35642
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaiverAction", 
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaiverAction", getUserIdSessionFromLoginId(), e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		
@@ -3059,25 +3091,38 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * list, user allow to enter the bond details and attachment. 
 	 */
 	public void addBondDetails() {
-		CtPerformanceBond newBond = new CtPerformanceBond();
-		newBond.setFinancialOrg(new PmFinancialOrg());
-		newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		cal.add(Calendar.YEAR, 1); 
-		newBond.setExpDate(cal.getTime());
-		//#24333 - Start
-		if(isContractExtendOrIsBond()){
-			newBond.setBondNew(true);
-			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
-		}else{
-			newBond.setBondNew(false);
-			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(newBond);
-			getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
-		}
-		//#24333 - End
-	}		    
+	    CtPerformanceBond newBond = new CtPerformanceBond();
+	    newBond.setFinancialOrg(new PmFinancialOrg());
+	    newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+	    
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+	    cal.add(Calendar.YEAR, 1); 
+	    newBond.setExpDate(cal.getTime());
+	    
+	    //#24333,#36491 - Start
+	    // Decide bond type and add to the right collections
+	    boolean isExtendedOrNewBond = isContractExtendOrIsBond();
+	    newBond.setBondNew(isExtendedOrNewBond);
+	    
+	    addBondToCollections(newBond, isExtendedOrNewBond);
+	    //#24333,#36491 - End
+	}
+
+	//#24333,#36491 - Start
+	/**
+	 * Helper method to add the bond to specific collections based on bond type.
+	 * @param bond The performance bond to add.
+	 * @param isExtendedOrNewBond True if bond is new or extended, false if original.
+	 */
+	private void addBondToCollections(CtPerformanceBond bond, boolean isExtendedOrNewBond) {
+	    if (isExtendedOrNewBond) {
+	        getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(bond);
+	    } else {
+	        getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(bond);
+	    }
+	}
+	//#24333,#36491 - End		    
 
 	/**
 	 * The method used to upload performance bond file.
@@ -4186,7 +4231,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
 				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
 			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-				itemSpecList.add(itemSpecOffer.getItemSpec());
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
 			}
 		}
 		getManagedBean().setItemSpecification(itemSpecList);
@@ -4204,13 +4249,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
 		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
-		Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator();
+																		
 
-		while (iterator.hasNext()) {
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator(); iterator.hasNext();) {
 			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
-			if (itemSpecOffer.getNewOfferSpec() != null) {
-				itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-			}
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
 			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
 				iterator.remove();
 			}
@@ -4218,8 +4267,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
 	}
-
 	// #28854 - End
+
+
 
 	/**
 	 * The method used to set  bond 
@@ -4891,20 +4941,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	// End Fix - #35202
 	
-	//#35137 - Start
+	// #35137,#24333 - Start
 	/**
 	 * Method to Checking Amendment process
 	 * 
 	 * @return boolean
 	 */
 	public boolean isAlreadyAmendment() {
-		if(getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null){
-			if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
+		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null) {
+			if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0, 2)
+					.equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
 				getManagedBean().setDisableOriginalBond(true);
 				return true;
-			}				
+			}
 		}
 		return false;
 	}
-	//#35137 - End
+	// #35137,#24333 - End
 }

@@ -75,6 +75,7 @@
 	or purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
 						action="#{purchaseRequestBackingBean.backToPervious}"  /></td>
 				<td colspan="4" style="text-align: right">
+			<c:if test='#{not empty purchaseRequestBackingBean.managedBean.outComes}'><ui:remove>#36624 - Start</ui:remove>
 			<c:choose>
 			<c:when test="#{purchaseRequestBackingBean.managedBean.isPidValidityExpired()}">
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
@@ -102,6 +103,7 @@
 					</ui:repeat>
 			</c:otherwise>
 			</c:choose>
+			</c:if><ui:remove>#36624 - End</ui:remove>
 				</td>
 				
 				<c:if

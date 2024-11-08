@@ -360,6 +360,10 @@ public class VmUtil {
 						TemplateSpecConst.NEW_LINE_CHARACTER,
 						TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 			}
+			if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER_R)) {
+				localKey = localKey.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,
+						TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			}
 
 			return localKey;
 		}

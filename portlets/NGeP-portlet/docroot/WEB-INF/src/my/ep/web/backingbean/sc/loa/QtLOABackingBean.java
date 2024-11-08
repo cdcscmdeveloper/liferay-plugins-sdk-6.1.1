@@ -541,6 +541,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					&& isValidFor21692
 					) ? true : false;
 		}
+		getManagedBean().setAbleToCancelLOA(supplierStatus);//#36339, #21692
 		
 		return supplierStatus;
 	}
