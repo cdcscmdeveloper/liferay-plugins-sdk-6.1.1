@@ -774,7 +774,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-//				flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); //36386
+				flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); //36386
 			}
 			//29550-start
 			if(isFactoringUser()){
@@ -824,7 +824,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-//				flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST); //36386
+				flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST); //36386
 			}
 			//29550-start
 			if(isFactoringUser()){
