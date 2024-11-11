@@ -70,9 +70,11 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -418,8 +420,11 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(!EntityHelper.isCollectionEmpty(getManagedBean().getOwnerAndDirectorList())){
 				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
 			}
+			//#26238
 			List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<>();
-			listSmTrackingDiary.add(setDisciplinaryAction(reqDTO, null));
+			if (getManagedBean().isEditDisciplinaryAction()) {
+				listSmTrackingDiary.add(setDisciplinaryAction(reqDTO, null));
+			}
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
 			//27906: Disciplinary Action - start - 
 			// set portalPath
@@ -433,8 +438,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			setBasicSupplierPostSubmit();
 			//26238 - Disciplinary Action - 28798 - end
 			
-		} catch (NullPointerException nex) {
-			throw new EpException(nex.getMessage());
+		} catch (NullPointerException e) {
+			SLAUtils.getInstance().logSLAError("SM", "basic", getManagedBean().getSmAppl().getApplNo(),
+					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
 		}
 		getManagedBean().setDisplaySearchPage(true);
 		//27437 : Disciplinary Action
@@ -689,15 +695,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setEditDisciplinaryAction(false);
 			setMOFSupplierPostSubmit();
 
-		} catch (OptimisticLockException opt) {
-			throw new EpException(opt.getMessage());
-		} catch (PersistenceException pers) {
-			throw new EpException(pers.getMessage());
-		} catch (NullPointerException nex) {
-			throw new EpException(nex.getMessage());
-		} catch (RuntimeException re) {
-			throw new EpException(re.getMessage());
-				}
+		} catch (RuntimeException e) {
+			SLAUtils.getInstance().logSLAError("SM", "supplier", getManagedBean().getSmAppl().getApplNo(),
+					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
+		}
 		getManagedBean().setWarningExist(false);
 		getManagedBean().setDisplaySearchPage(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -759,6 +760,29 @@ public class SupplierDataMaintenanceBackingBean extends
 		//Fix 26238 -08/04/2021- start - checking if active appl  != null
 		SmAppl appl = activeAppl != null ? activeAppl : getManagedBean().getSmAppl();
 		return assignTrackingDairyValues(appl, getTrackingActionDesc(reqDTO,"DA"));
+	}
+	
+	private void validateUpdateDisciplinaryAction(SmDisciplinaryAction da){
+		if (da.getDisciplinaryActionId() == null){
+			return;
+		}
+		SmDisciplinaryAction oldDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionByDisciplinaryId(
+				da.getDisciplinaryActionId());
+		if (oldDA == null || oldDA.getStartDate() == null || oldDA.getEndDate() == null){
+			return;
+		}
+		boolean isSameDates = oldDA.getStartDate().toString().contentEquals(da.getStartDate().toString()) 
+				&& oldDA.getEndDate().toString().contentEquals(da.getEndDate().toString());
+		boolean isSameType = getManagedBean().isWarning() == oldDA.isWarning();
+		isSameType &= getManagedBean().isSuspendRegistration() == oldDA.isSuspendRegistration();
+		isSameType &= getManagedBean().isCancelRegistration() == oldDA.isCancelRegistration();
+		isSameType &= getManagedBean().isBlacklistOwnerOrDirector() == oldDA.isBlacklistOwner();
+		isSameType &= getManagedBean().isCancelCategoryCode() == oldDA.isCancelCategory();
+		isSameType &= getManagedBean().isManufacturerStatusCancel() == oldDA.isManufacturerCancel();
+		isSameType &= getManagedBean().isBumiputeraStatusCancel() == oldDA.isBumiputeraCancel();
+		if (isSameDates && isSameType){
+			throw new EpException(MessageConst.ERROR_100045);
+		}
 	}
 	
 	//#26238 - start
@@ -1055,6 +1079,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void showConfirmDialog() {
 		//27460 : Disciplinary Action, //32827
+		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
 		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
