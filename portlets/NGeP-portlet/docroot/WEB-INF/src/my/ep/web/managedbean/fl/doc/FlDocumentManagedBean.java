@@ -774,7 +774,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); //36386
 			}
 			//29550-start
 			if(isFactoringUser()){
@@ -824,7 +823,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST); //36386
 			}
 			//29550-start
 			if(isFactoringUser()){
@@ -845,6 +843,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			}
 			// 35508-end
 		}
+		
+		//36386 -Start
+		if(getSearchFunctionType() !=null && getSearchFunctionType().equalsIgnoreCase("ParameterConst.ORG_TYPE_SUPPLIER")){
+			flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); 
+		}
+		//36386 -End
 		
 		return flDocTypes;
 	}
