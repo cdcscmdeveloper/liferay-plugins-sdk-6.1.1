@@ -81,7 +81,7 @@ public class AuditPMRoleBackingBean {
 				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
 				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -89,9 +89,9 @@ public class AuditPMRoleBackingBean {
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
 				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
 				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
-		
+
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -99,9 +99,9 @@ public class AuditPMRoleBackingBean {
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
 				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
 				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
-		
+
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -110,7 +110,6 @@ public class AuditPMRoleBackingBean {
 				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
 				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
 	}
-		
 
 	/**
 	 * @return
@@ -128,5 +127,13 @@ public class AuditPMRoleBackingBean {
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
 				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
 				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
+	}
+
+	/**
+	 * @return
+	 */
+	public String roleSysParam() {
+		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
+				.hasRoleUser(RoleCode.EP_ADMIN_1.value()) ? RoleCode.EP_ADMIN_1.value() : null;
 	}
 }

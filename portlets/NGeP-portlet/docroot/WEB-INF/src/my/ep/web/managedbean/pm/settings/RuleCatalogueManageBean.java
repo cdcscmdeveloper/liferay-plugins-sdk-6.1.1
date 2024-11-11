@@ -17,7 +17,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.orgprofile.PtjSpecialApprovalResDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -35,8 +39,6 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.apache.log4j.Logger;
 
 /**
  * Managed Bean for Rule Catalogue
@@ -123,7 +125,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Integer deleteRowIndex;
 	private List<PmPtjSpecialApproval> mainPtjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> cloneMainPtjSpecialApprovalList;
-    private List<PmPtjSpecialApproval> ptjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> ptjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> newPtjSpecialApprovalList;
 	private Long selectedMinistryId;
@@ -134,19 +136,32 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String ptjCodeNameSearchValues;
 	private List<PmOrgProfile> ptjList;
 	private BigDecimal qtLimit;
-	private Date minDate = null; //[#22119]
-	private String ruleType;  //#22113
+	private Date minDate = null; // [#22119]
+	private String ruleType; // #22113
 	private boolean LOPOSelected;
 	/* 27827 - START */
 	private List<PmZone> zoneList;
 	private Long selectedZoneId;
+	private FeeExemptionResDTO resDTO;
+	private FeeExemptionResDTO resDTOOld;
+	private List<PmPtjSpecialApproval> auditEffDateMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditEffDateCloneMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditExpDateMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditExpDateCloneMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditAmtMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalListNewVal;
+	private List<PmPtjSpecialApproval> auditDeletedMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditCloneMainPtjSpecialApprovalList;
+	private PtjSpecialApprovalResDTO qtValuesResDTO;
 	/* 27827 - END */
-	//#34397, #34398
+	// #34397, #34398
 	private List<PmZone> mainZones;
 
 	public RuleCatalogueManageBean() {
 
 	}
+
 	/**
 	 * @return the tomorrow
 	 */
@@ -165,7 +180,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.tomorrow = tomorrow;
 	}
 
-	
 	/**
 	 * @return the feeExemptionsForOrgAndItem
 	 */
@@ -180,8 +194,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param feeExemptionsForOrgAndItem
 	 *            the feeExemptionsForOrgAndItem to set
 	 */
-	public void setFeeExemptionsForOrgAndItem(
-			List<PmFeeExemption> feeExemptionsForOrgAndItem) {
+	public void setFeeExemptionsForOrgAndItem(List<PmFeeExemption> feeExemptionsForOrgAndItem) {
 		this.feeExemptionsForOrgAndItem = feeExemptionsForOrgAndItem;
 	}
 
@@ -199,8 +212,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param feeExemptionsForComodity
 	 *            the feeExemptionsForComodity to set
 	 */
-	public void setFeeExemptionsForComodity(
-			List<PmFeeExemption> feeExemptionsForComodity) {
+	public void setFeeExemptionsForComodity(List<PmFeeExemption> feeExemptionsForComodity) {
 		this.feeExemptionsForComodity = feeExemptionsForComodity;
 	}
 
@@ -218,11 +230,10 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param feeExemptionsForContract
 	 *            the feeExemptionsForContract to set
 	 */
-	public void setFeeExemptionsForContract(
-			List<PmFeeExemption> feeExemptionsForContract) {
+	public void setFeeExemptionsForContract(List<PmFeeExemption> feeExemptionsForContract) {
 		this.feeExemptionsForContract = feeExemptionsForContract;
 	}
-	
+
 	/**
 	 * @return the deletedOrgAndItemFeeExemptions
 	 */
@@ -237,8 +248,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param deletedOrgAndItemFeeExemptions
 	 *            the deletedOrgAndItemFeeExemptions to set
 	 */
-	public void setDeletedOrgAndItemFeeExemptions(
-			List<PmFeeExemption> deletedOrgAndItemFeeExemptions) {
+	public void setDeletedOrgAndItemFeeExemptions(List<PmFeeExemption> deletedOrgAndItemFeeExemptions) {
 		this.deletedOrgAndItemFeeExemptions = deletedOrgAndItemFeeExemptions;
 	}
 
@@ -256,8 +266,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param deletedComodityFeeExemptions
 	 *            the deletedComodityFeeExemptions to set
 	 */
-	public void setDeletedComodityFeeExemptions(
-			List<PmFeeExemption> deletedComodityFeeExemptions) {
+	public void setDeletedComodityFeeExemptions(List<PmFeeExemption> deletedComodityFeeExemptions) {
 		this.deletedComodityFeeExemptions = deletedComodityFeeExemptions;
 	}
 
@@ -275,8 +284,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param deletedContractFeeExemptions
 	 *            the deletedContractFeeExemptions to set
 	 */
-	public void setDeletedContractFeeExemptions(
-			List<PmFeeExemption> deletedContractFeeExemptions) {
+	public void setDeletedContractFeeExemptions(List<PmFeeExemption> deletedContractFeeExemptions) {
 		this.deletedContractFeeExemptions = deletedContractFeeExemptions;
 	}
 
@@ -294,8 +302,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param deletedOrgTypeFeeExemptions
 	 *            the deletedOrgTypeFeeExemptions to set
 	 */
-	public void setDeletedOrgTypeFeeExemptions(
-			List<PmFeeExemption> deletedOrgTypeFeeExemptions) {
+	public void setDeletedOrgTypeFeeExemptions(List<PmFeeExemption> deletedOrgTypeFeeExemptions) {
 		this.deletedOrgTypeFeeExemptions = deletedOrgTypeFeeExemptions;
 	}
 
@@ -305,9 +312,11 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		}
 		return deletedYepProcessingFeeExemptions;
 	}
+
 	public void setDeletedYepProcessingFeeExemptions(List<PmFeeExemption> deletedYepProcessingFeeExemptions) {
 		this.deletedYepProcessingFeeExemptions = deletedYepProcessingFeeExemptions;
 	}
+
 	/**
 	 * @return the thresholds
 	 */
@@ -361,7 +370,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedOrgProfile(PmOrgProfile selectedOrgProfile) {
 		this.selectedOrgProfile = selectedOrgProfile;
 	}
-
 
 	/**
 	 * @return the taxableItems
@@ -578,8 +586,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.selectedDaValidity = selectedDaValidity;
 	}
 
-	public void setDeletedDaValidityList(
-			List<PmDaValidity> deletedDaValidityList) {
+	public void setDeletedDaValidityList(List<PmDaValidity> deletedDaValidityList) {
 		this.deletedDaValidityList = deletedDaValidityList;
 	}
 
@@ -602,7 +609,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deletedTaxableItemsForDA the deletedTaxableItemsForDA to set
+	 * @param deletedTaxableItemsForDA
+	 *            the deletedTaxableItemsForDA to set
 	 */
 	public void setDeletedTaxableItemsForDA(List<PmGstItem> deletedTaxableItemsForDA) {
 		this.deletedTaxableItemsForDA = deletedTaxableItemsForDA;
@@ -622,8 +630,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param deletedTaxableItemsForDA
 	 *            the deletedTaxableItemsForDA to set
 	 */
-	public void setDeletedTaxableItemsDorDA(
-			List<PmGstItem> deletedTaxableItemsForDA) {
+	public void setDeletedTaxableItemsDorDA(List<PmGstItem> deletedTaxableItemsForDA) {
 		this.deletedTaxableItemsForDA = deletedTaxableItemsForDA;
 	}
 
@@ -749,8 +756,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @param deletedTaxableItemsForG2G
 	 *            the deletedTaxableItemsForG2G to set
 	 */
-	public void setDeletedTaxableItemsForG2G(
-			List<PmGstItem> deletedTaxableItemsForG2G) {
+	public void setDeletedTaxableItemsForG2G(List<PmGstItem> deletedTaxableItemsForG2G) {
 		this.deletedTaxableItemsForG2G = deletedTaxableItemsForG2G;
 	}
 
@@ -807,19 +813,17 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public Date tomorrowDate() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-				calendar.get(Calendar.DATE), 0, 0, 0);
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
 		Calendar c1 = Calendar.getInstance();
 		c1.add(Calendar.DATE, 1);
 
 		return c1.getTime();
 	}
-	
+
 	public Date AfterTomorrowDate() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-				calendar.get(Calendar.DATE), 0, 0, 0);
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
 		Calendar c1 = Calendar.getInstance();
 		c1.add(Calendar.DATE, 2);
 
@@ -866,8 +870,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		return feeExemptionsForOrgType;
 	}
 
-	public void setFeeExemptionsForOrgType(
-			List<PmFeeExemption> feeExemptionsForOrgType) {
+	public void setFeeExemptionsForOrgType(List<PmFeeExemption> feeExemptionsForOrgType) {
 		this.feeExemptionsForOrgType = feeExemptionsForOrgType;
 	}
 
@@ -877,9 +880,11 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		}
 		return feeExemptionsForYepProcessing;
 	}
+
 	public void setFeeExemptionsForYepProcessing(List<PmFeeExemption> feeExemptionsForYepProcessing) {
 		this.feeExemptionsForYepProcessing = feeExemptionsForYepProcessing;
 	}
+
 	/**
 	 * @return the maxDate
 	 */
@@ -936,7 +941,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param today the today to set
+	 * @param today
+	 *            the today to set
 	 */
 	public void setToday(Date today) {
 		this.today = today;
@@ -950,7 +956,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tabActiveIndex the tabActiveIndex to set
+	 * @param tabActiveIndex
+	 *            the tabActiveIndex to set
 	 */
 	public void setTabActiveIndex(Integer tabActiveIndex) {
 		this.tabActiveIndex = tabActiveIndex;
@@ -964,7 +971,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param feeExemptionIndex the feeExemptionIndex to set
+	 * @param feeExemptionIndex
+	 *            the feeExemptionIndex to set
 	 */
 	public void setFeeExemptionIndex(Integer feeExemptionIndex) {
 		this.feeExemptionIndex = feeExemptionIndex;
@@ -978,7 +986,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedConfigGeneral the selectedConfigGeneral to set
+	 * @param selectedConfigGeneral
+	 *            the selectedConfigGeneral to set
 	 */
 	public void setSelectedConfigGeneral(PmConfigGeneral selectedConfigGeneral) {
 		this.selectedConfigGeneral = selectedConfigGeneral;
@@ -992,7 +1001,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedRuleValue the selectedRuleValue to set
+	 * @param selectedRuleValue
+	 *            the selectedRuleValue to set
 	 */
 	public void setSelectedRuleValue(PmConfigRuleValue selectedRuleValue) {
 		this.selectedRuleValue = selectedRuleValue;
@@ -1006,7 +1016,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedDocumentType the selectedDocumentType to set
+	 * @param selectedDocumentType
+	 *            the selectedDocumentType to set
 	 */
 	public void setSelectedDocumentType(String selectedDocumentType) {
 		this.selectedDocumentType = selectedDocumentType;
@@ -1020,7 +1031,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedFeeExemption the selectedFeeExemption to set
+	 * @param selectedFeeExemption
+	 *            the selectedFeeExemption to set
 	 */
 	public void setSelectedFeeExemption(PmFeeExemption selectedFeeExemption) {
 		this.selectedFeeExemption = selectedFeeExemption;
@@ -1034,7 +1046,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedSmSupplier the selectedSmSupplier to set
+	 * @param selectedSmSupplier
+	 *            the selectedSmSupplier to set
 	 */
 	public void setSelectedSmSupplier(SmSupplier selectedSmSupplier) {
 		this.selectedSmSupplier = selectedSmSupplier;
@@ -1048,7 +1061,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedCtContractItem the selectedCtContractItem to set
+	 * @param selectedCtContractItem
+	 *            the selectedCtContractItem to set
 	 */
 	public void setSelectedCtContractItem(CtContractItem selectedCtContractItem) {
 		this.selectedCtContractItem = selectedCtContractItem;
@@ -1062,7 +1076,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param thresholdIndex the thresholdIndex to set
+	 * @param thresholdIndex
+	 *            the thresholdIndex to set
 	 */
 	public void setThresholdIndex(Integer thresholdIndex) {
 		this.thresholdIndex = thresholdIndex;
@@ -1076,7 +1091,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param orgProfileList the orgProfileList to set
+	 * @param orgProfileList
+	 *            the orgProfileList to set
 	 */
 	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
 		this.orgProfileList = orgProfileList;
@@ -1090,7 +1106,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param threshold the threshold to set
+	 * @param threshold
+	 *            the threshold to set
 	 */
 	public void setThreshold(PmThreshold threshold) {
 		this.threshold = threshold;
@@ -1104,7 +1121,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param unplannedThreshold the unplannedThreshold to set
+	 * @param unplannedThreshold
+	 *            the unplannedThreshold to set
 	 */
 	public void setUnplannedThreshold(Number unplannedThreshold) {
 		this.unplannedThreshold = unplannedThreshold;
@@ -1118,7 +1136,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param budgetThreshold the budgetThreshold to set
+	 * @param budgetThreshold
+	 *            the budgetThreshold to set
 	 */
 	public void setBudgetThreshold(Number budgetThreshold) {
 		this.budgetThreshold = budgetThreshold;
@@ -1132,7 +1151,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param unplannedThresholdList the unplannedThresholdList to set
+	 * @param unplannedThresholdList
+	 *            the unplannedThresholdList to set
 	 */
 	public void setUnplannedThresholdList(List<PmThreshold> unplannedThresholdList) {
 		this.unplannedThresholdList = unplannedThresholdList;
@@ -1146,7 +1166,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param budgetThresholdList the budgetThresholdList to set
+	 * @param budgetThresholdList
+	 *            the budgetThresholdList to set
 	 */
 	public void setBudgetThresholdList(List<PmThreshold> budgetThresholdList) {
 		this.budgetThresholdList = budgetThresholdList;
@@ -1160,7 +1181,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedComodity the selectedComodity to set
+	 * @param selectedComodity
+	 *            the selectedComodity to set
 	 */
 	public void setSelectedComodity(CmUnspsc selectedComodity) {
 		this.selectedComodity = selectedComodity;
@@ -1174,7 +1196,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedCmItem the selectedCmItem to set
+	 * @param selectedCmItem
+	 *            the selectedCmItem to set
 	 */
 	public void setSelectedCmItem(CmItem selectedCmItem) {
 		this.selectedCmItem = selectedCmItem;
@@ -1188,7 +1211,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param cmItemName the cmItemName to set
+	 * @param cmItemName
+	 *            the cmItemName to set
 	 */
 	public void setCmItemName(String cmItemName) {
 		this.cmItemName = cmItemName;
@@ -1202,10 +1226,10 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param thresholdIdToS2UnplannedMap the thresholdIdToS2UnplannedMap to set
+	 * @param thresholdIdToS2UnplannedMap
+	 *            the thresholdIdToS2UnplannedMap to set
 	 */
-	public void setThresholdIdToS2UnplannedMap(
-			Map<String, Integer> thresholdIdToS2UnplannedMap) {
+	public void setThresholdIdToS2UnplannedMap(Map<String, Integer> thresholdIdToS2UnplannedMap) {
 		this.thresholdIdToS2UnplannedMap = thresholdIdToS2UnplannedMap;
 	}
 
@@ -1217,35 +1241,41 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param thresholdIdToBudgetSpentMap the thresholdIdToBudgetSpentMap to set
+	 * @param thresholdIdToBudgetSpentMap
+	 *            the thresholdIdToBudgetSpentMap to set
 	 */
-	public void setThresholdIdToBudgetSpentMap(
-			Map<String, Integer> thresholdIdToBudgetSpentMap) {
+	public void setThresholdIdToBudgetSpentMap(Map<String, Integer> thresholdIdToBudgetSpentMap) {
 		this.thresholdIdToBudgetSpentMap = thresholdIdToBudgetSpentMap;
 	}
+
 	/**
 	 * @return the configRuleDescList
 	 */
 	public List<PmConfigRuleDesc> getConfigRuleDescList() {
-		if(configRuleDescList == null){
+		if (configRuleDescList == null) {
 			configRuleDescList = new ArrayList<PmConfigRuleDesc>();
 		}
 		return configRuleDescList;
 	}
+
 	/**
-	 * @param configRuleDescList the configRuleDescList to set
+	 * @param configRuleDescList
+	 *            the configRuleDescList to set
 	 */
 	public void setConfigRuleDescList(List<PmConfigRuleDesc> configRuleDescList) {
 		this.configRuleDescList = configRuleDescList;
 	}
+
 	/**
 	 * @return the selectedRuleDescType
 	 */
 	public PmConfigRuleDesc getSelectedRuleDescType() {
 		return selectedRuleDescType;
 	}
+
 	/**
-	 * @param selectedRuleDescType the selectedRuleDescType to set
+	 * @param selectedRuleDescType
+	 *            the selectedRuleDescType to set
 	 */
 	public void setSelectedRuleDescType(PmConfigRuleDesc selectedRuleDescType) {
 		this.selectedRuleDescType = selectedRuleDescType;
@@ -1255,204 +1285,239 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 * @return the deletedPtjSpecialApprovalList
 	 */
 	public List<PmPtjSpecialApproval> getDeletedPtjSpecialApprovalList() {
-		if(deletedPtjSpecialApprovalList == null){
+		if (deletedPtjSpecialApprovalList == null) {
 			deletedPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
 		}
 		return deletedPtjSpecialApprovalList;
 	}
+
 	/**
-	 * @param deletedPtjSpecialApprovalList the deletedPtjSpecialApprovalList to set
+	 * @param deletedPtjSpecialApprovalList
+	 *            the deletedPtjSpecialApprovalList to set
 	 */
-	public void setDeletedPtjSpecialApprovalList(
-			List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList) {
+	public void setDeletedPtjSpecialApprovalList(List<PmPtjSpecialApproval> deletedPtjSpecialApprovalList) {
 		this.deletedPtjSpecialApprovalList = deletedPtjSpecialApprovalList;
 	}
-	
+
 	/**
 	 * @return the ministryProfileId
 	 */
 	public Long getMinistryProfileId() {
 		return ministryProfileId;
 	}
+
 	/**
-	 * @param ministryProfileId the ministryProfileId to set
+	 * @param ministryProfileId
+	 *            the ministryProfileId to set
 	 */
 	public void setMinistryProfileId(Long ministryProfileId) {
 		this.ministryProfileId = ministryProfileId;
 	}
+
 	/**
 	 * @return the jabatanProfileId
 	 */
 	public Long getJabatanProfileId() {
 		return jabatanProfileId;
 	}
+
 	/**
-	 * @param jabatanProfileId the jabatanProfileId to set
+	 * @param jabatanProfileId
+	 *            the jabatanProfileId to set
 	 */
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
 	}
+
 	/**
 	 * @return the ptjCodeName
 	 */
 	public String getPtjCodeName() {
 		return ptjCodeName;
 	}
+
 	/**
-	 * @param ptjCodeName the ptjCodeName to set
+	 * @param ptjCodeName
+	 *            the ptjCodeName to set
 	 */
 	public void setPtjCodeName(String ptjCodeName) {
 		this.ptjCodeName = ptjCodeName;
 	}
+
 	/**
 	 * @return the ptjCodeNameSearchValues
 	 */
 	public String getPtjCodeNameSearchValues() {
 		return ptjCodeNameSearchValues;
 	}
+
 	/**
-	 * @param ptjCodeNameSearchValues the ptjCodeNameSearchValues to set
+	 * @param ptjCodeNameSearchValues
+	 *            the ptjCodeNameSearchValues to set
 	 */
 	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
 		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
 	}
+
 	/**
 	 * @return the ptjList
 	 */
 	public List<PmOrgProfile> getPtjList() {
-		if(ptjList == null){
+		if (ptjList == null) {
 			ptjList = new ArrayList<PmOrgProfile>();
 		}
 		return ptjList;
 	}
+
 	/**
-	 * @param ptjList the ptjList to set
+	 * @param ptjList
+	 *            the ptjList to set
 	 */
 	public void setPtjList(List<PmOrgProfile> ptjList) {
 		this.ptjList = ptjList;
 	}
+
 	/**
 	 * @return the selectedMinistryId
 	 */
 	public Long getSelectedMinistryId() {
 		return selectedMinistryId;
 	}
+
 	/**
-	 * @param selectedMinistryId the selectedMinistryId to set
+	 * @param selectedMinistryId
+	 *            the selectedMinistryId to set
 	 */
 	public void setSelectedMinistryId(Long selectedMinistryId) {
 		this.selectedMinistryId = selectedMinistryId;
 	}
+
 	/**
 	 * @return the qtLimit
 	 */
 	public BigDecimal getQtLimit() {
 		return qtLimit;
 	}
+
 	/**
-	 * @param qtLimit the qtLimit to set
+	 * @param qtLimit
+	 *            the qtLimit to set
 	 */
 	public void setQtLimit(BigDecimal qtLimit) {
 		this.qtLimit = qtLimit;
 	}
+
 	/**
 	 * @return the disabledSelectedMinistryId
 	 */
 	public boolean isDisabledSelectedMinistryId() {
 		return disabledSelectedMinistryId;
 	}
+
 	/**
-	 * @param disabledSelectedMinistryId the disabledSelectedMinistryId to set
+	 * @param disabledSelectedMinistryId
+	 *            the disabledSelectedMinistryId to set
 	 */
 	public void setDisabledSelectedMinistryId(boolean disabledSelectedMinistryId) {
 		this.disabledSelectedMinistryId = disabledSelectedMinistryId;
 	}
+
 	/**
 	 * @return the newPtjSpecialApprovalList
 	 */
 	public List<PmPtjSpecialApproval> getNewPtjSpecialApprovalList() {
-		if(newPtjSpecialApprovalList == null){
+		if (newPtjSpecialApprovalList == null) {
 			newPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
 		}
 		return newPtjSpecialApprovalList;
 	}
+
 	/**
-	 * @param newPtjSpecialApprovalList the newPtjSpecialApprovalList to set
+	 * @param newPtjSpecialApprovalList
+	 *            the newPtjSpecialApprovalList to set
 	 */
-	public void setNewPtjSpecialApprovalList(
-			List<PmPtjSpecialApproval> newPtjSpecialApprovalList) {
+	public void setNewPtjSpecialApprovalList(List<PmPtjSpecialApproval> newPtjSpecialApprovalList) {
 		this.newPtjSpecialApprovalList = newPtjSpecialApprovalList;
 	}
+
 	/**
 	 * @return the mainPtjSpecialApprovalList
 	 */
 	public List<PmPtjSpecialApproval> getMainPtjSpecialApprovalList() {
-		if(mainPtjSpecialApprovalList == null){
+		if (mainPtjSpecialApprovalList == null) {
 			mainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
 		}
 		return mainPtjSpecialApprovalList;
 	}
+
 	/**
-	 * @param mainPtjSpecialApprovalList the mainPtjSpecialApprovalList to set
+	 * @param mainPtjSpecialApprovalList
+	 *            the mainPtjSpecialApprovalList to set
 	 */
-	public void setMainPtjSpecialApprovalList(
-			List<PmPtjSpecialApproval> mainPtjSpecialApprovalList) {
+	public void setMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> mainPtjSpecialApprovalList) {
 		this.mainPtjSpecialApprovalList = mainPtjSpecialApprovalList;
 	}
+
 	/**
 	 * @return the ptjSpecialApprovalList
 	 */
 	public List<PmPtjSpecialApproval> getPtjSpecialApprovalList() {
-		if(ptjSpecialApprovalList == null){
+		if (ptjSpecialApprovalList == null) {
 			ptjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
 		}
 		return ptjSpecialApprovalList;
 	}
+
 	/**
-	 * @param ptjSpecialApprovalList the ptjSpecialApprovalList to set
+	 * @param ptjSpecialApprovalList
+	 *            the ptjSpecialApprovalList to set
 	 */
 	public void setPtjSpecialApprovalList(List<PmPtjSpecialApproval> ptjSpecialApprovalList) {
 		this.ptjSpecialApprovalList = ptjSpecialApprovalList;
 	}
+
 	/**
 	 * @return the cloneMainPtjSpecialApprovalList
 	 */
 	public List<PmPtjSpecialApproval> getCloneMainPtjSpecialApprovalList() {
-		if(cloneMainPtjSpecialApprovalList == null){
+		if (cloneMainPtjSpecialApprovalList == null) {
 			cloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
 		}
 		return cloneMainPtjSpecialApprovalList;
 	}
+
 	/**
-	 * @param cloneMainPtjSpecialApprovalList the cloneMainPtjSpecialApprovalList to set
+	 * @param cloneMainPtjSpecialApprovalList
+	 *            the cloneMainPtjSpecialApprovalList to set
 	 */
-	public void setCloneMainPtjSpecialApprovalList(
-			List<PmPtjSpecialApproval> cloneMainPtjSpecialApprovalList) {
+	public void setCloneMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> cloneMainPtjSpecialApprovalList) {
 		this.cloneMainPtjSpecialApprovalList = cloneMainPtjSpecialApprovalList;
 	}
+
 	public Date getAftertomorrow() {
-		
+
 		if (aftertomorrow == null) {
 			aftertomorrow = AfterTomorrowDate();
 		}
 		return aftertomorrow;
 	}
+
 	public void setAftertomorrow(Date aftertomorrow) {
 		this.aftertomorrow = aftertomorrow;
 	}
-	
+
 	public Date getMinDate() {
 		if (minDate == null) {
-			//get current date
+			// get current date
 			minDate = Calendar.getInstance().getTime();
 		}
 		return minDate;
 	}
-	
+
 	public void setMinDate(Date minDate) {
 		this.minDate = minDate;
 	}
-	
+
 	public String getRuleType() {
 		return ruleType;
 	}
@@ -1460,7 +1525,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setRuleType(String ruleType) {
 		this.ruleType = ruleType;
 	}
-	
+
 	public boolean isLOPOSelected() {
 		return LOPOSelected;
 	}
@@ -1468,7 +1533,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setLOPOSelected(boolean LOPOSelected) {
 		this.LOPOSelected = LOPOSelected;
 	}
-	
+
 	public List<PmZone> getZoneList() {
 		return zoneList;
 	}
@@ -1476,7 +1541,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setZoneList(List<PmZone> zoneList) {
 		this.zoneList = zoneList;
 	}
-	
+
 	public Long getSelectedZoneId() {
 		return selectedZoneId;
 	}
@@ -1484,13 +1549,144 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedZoneId(Long selectedZoneId) {
 		this.selectedZoneId = selectedZoneId;
 	}
-	
+
 	public List<PmZone> getMainZones() {
 		return mainZones;
 	}
-	
+
 	public void setMainZones(List<PmZone> mainZones) {
 		this.mainZones = mainZones;
+	}
+
+	public FeeExemptionResDTO getResDTO() {
+		if (resDTO == null) {
+			resDTO = new FeeExemptionResDTO();
+		}
+		return resDTO;
+	}
+
+	public void setResDTO(FeeExemptionResDTO resDTO) {
+		this.resDTO = resDTO;
+	}
+
+	public FeeExemptionResDTO getResDTOOld() {
+		if (resDTOOld == null) {
+			resDTOOld = new FeeExemptionResDTO();
+		}
+		return resDTOOld;
+	}
+
+	public void setResDTOOld(FeeExemptionResDTO resDTOOld) {
+		this.resDTOOld = resDTOOld;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditEffDateMainPtjSpecialApprovalList() {
+		if (auditEffDateMainPtjSpecialApprovalList == null) {
+			auditEffDateMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditEffDateMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditEffDateMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditEffDateMainPtjSpecialApprovalList) {
+		this.auditEffDateMainPtjSpecialApprovalList = auditEffDateMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditEffDateCloneMainPtjSpecialApprovalList() {
+		if (auditEffDateCloneMainPtjSpecialApprovalList == null) {
+			auditEffDateCloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditEffDateCloneMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditEffDateCloneMainPtjSpecialApprovalList(
+			List<PmPtjSpecialApproval> auditEffDateCloneMainPtjSpecialApprovalList) {
+		this.auditEffDateCloneMainPtjSpecialApprovalList = auditEffDateCloneMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditExpDateMainPtjSpecialApprovalList() {
+		if (auditExpDateMainPtjSpecialApprovalList == null) {
+			auditExpDateMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditExpDateMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditExpDateMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditExpDateMainPtjSpecialApprovalList) {
+		this.auditExpDateMainPtjSpecialApprovalList = auditExpDateMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditExpDateCloneMainPtjSpecialApprovalList() {
+		if (auditExpDateCloneMainPtjSpecialApprovalList == null) {
+			auditExpDateCloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditExpDateCloneMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditExpDateCloneMainPtjSpecialApprovalList(
+			List<PmPtjSpecialApproval> auditExpDateCloneMainPtjSpecialApprovalList) {
+		this.auditExpDateCloneMainPtjSpecialApprovalList = auditExpDateCloneMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditAmtMainPtjSpecialApprovalList() {
+		if (auditAmtMainPtjSpecialApprovalList == null) {
+			auditAmtMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditAmtMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditAmtMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditAmtMainPtjSpecialApprovalList) {
+		this.auditAmtMainPtjSpecialApprovalList = auditAmtMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditDeletedMainPtjSpecialApprovalList() {
+		if (auditDeletedMainPtjSpecialApprovalList == null) {
+			auditDeletedMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditDeletedMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditDeletedMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditDeletedMainPtjSpecialApprovalList) {
+		this.auditDeletedMainPtjSpecialApprovalList = auditDeletedMainPtjSpecialApprovalList;
+	}
+
+	public PtjSpecialApprovalResDTO getQtValuesResDTO() {
+		return qtValuesResDTO;
+	}
+
+	public void setQtValuesResDTO(PtjSpecialApprovalResDTO qtValuesResDTO) {
+		this.qtValuesResDTO = qtValuesResDTO;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditMainPtjSpecialApprovalList() {
+		if (auditMainPtjSpecialApprovalList == null) {
+			auditMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalList) {
+		this.auditMainPtjSpecialApprovalList = auditMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditCloneMainPtjSpecialApprovalList() {
+		if (auditCloneMainPtjSpecialApprovalList == null) {
+			auditCloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditCloneMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditCloneMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditCloneMainPtjSpecialApprovalList) {
+		this.auditCloneMainPtjSpecialApprovalList = auditCloneMainPtjSpecialApprovalList;
+	}
+
+	public List<PmPtjSpecialApproval> getAuditMainPtjSpecialApprovalListNewVal() {
+		if (auditMainPtjSpecialApprovalListNewVal == null) {
+			auditMainPtjSpecialApprovalListNewVal = new ArrayList<PmPtjSpecialApproval>();
+		}
+		return auditMainPtjSpecialApprovalListNewVal;
+	}
+
+	public void setAuditMainPtjSpecialApprovalListNewVal(List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalListNewVal) {
+		this.auditMainPtjSpecialApprovalListNewVal = auditMainPtjSpecialApprovalListNewVal;
 	}
 
 }

@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.audit;
 
 import java.io.Serializable;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
@@ -60,7 +61,8 @@ public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseMan
 
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
-		if (auditPMReqDTO.getObjList() != null) {
+		if (CollectionUtils.isNotEmpty(auditPMReqDTO.getObjList())) {
+			log.error("TESTING FOR SYS PARAM TAB YEP !!!! ");
 			auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
 		} else {
 			log.error("PM Audit Template ERROR >>> ::: " + MessageConst.ERROR_810000);
