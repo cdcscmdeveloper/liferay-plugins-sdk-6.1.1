@@ -7898,11 +7898,11 @@ public class SmApplicationUtil {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			//26671 - Site Visit Grouping Enhancement -28775 - start
-			boolean statusOk = cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
+			boolean validStatus = cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
 					|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
 					|| isActiveCategoryAfterApproval(cat, managedBean.getSmAppl().getApplId());
 			
-			if (cat.getPmCategoryL3().getCategoryTypeCode() != null	&& statusOk	&& !isCategoryRejected(cat)) {
+			if (cat.getPmCategoryL3().getCategoryTypeCode() != null	&& validStatus	&& !isCategoryRejected(cat)) {
 				//26671 - Site Visit Grouping Enhancement -28775 - end
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
 				
@@ -10869,12 +10869,12 @@ public class SmApplicationUtil {
 		List<SelectItem> categoryTypeItems = new ArrayList<>();
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				boolean statusOk = cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+				boolean validStatus = cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
 						//26671 - Site Visit Grouping Enhancement -28775
 						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
 						|| isActiveCategoryAfterApproval(cat, appl.getApplId()); //#32008 - after approval bug
-				statusOk &= !isCategoryRejected(cat);
-				if (statusOk && cat.getPmCategoryL3() != null
+				validStatus &= !isCategoryRejected(cat);
+				if (validStatus && cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
 								.asList(my.ep.constant.sm.SupplierManagementConst.SM_CAT_TYPE_MACHINERY)
