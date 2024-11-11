@@ -161,12 +161,12 @@
 		</p:dataTable>
 	</p:panel>
 	
-	 <!-- #28854 start - Display item specification as defined in LOA -->
+	<!-- #28854 start - Display item specification as defined in LOA -->
 	<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg"
 		header="#{lbl['lbl.ct.specification']}"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		styleClass="pop_up_top" modal="true" width="auto" height="auto"
-		style="max-height: 700px; max-width: 800px;" resizable="false">
+		style="max-height: 700px; max-width: 900px;" resizable="false">
 
 		<h:panelGroup
 			rendered="#{(suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase)}">
@@ -181,7 +181,7 @@
 					<h:outputText
 						value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}"
 						escape="false"
-						style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:600px" />
+						style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:450px" />
 				</h:panelGroup>
 
 				<c:if
@@ -191,11 +191,17 @@
 							style="float:left;font-weight:bold;display:block;width:125px" />
 						<h:outputText value=":&#160;" escape="false"
 							style="float:left;font-weight:bold" />
-						<h:outputText
-							value="#{suspensionBackingBean.managedBean.supplierOffer}"
-							escape="false"
-							style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px" />
-						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}" />
+						<div style="display: flex; align-items: flex-start;">
+							<div
+								style="overflow-y: auto; overflow-x: hidden; max-height: 150px; display: inline-block; position: relative;">
+								<h:outputText
+									value="#{suspensionBackingBean.managedBean.supplierOffer}"
+									escape="false"
+									style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 200px; width:450px" />
+							</div>
+							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"
+								style="position: absolute; left: 470px; top: 0;" />
+						</div>
 					</h:panelGroup>
 				</c:if>
 				<c:if
@@ -220,12 +226,18 @@
 							style="float:left;font-weight:bold;display:block;width:125px" />
 						<h:outputText value=":&#160;" escape="false"
 							style="float:left;font-weight:bold" />
-						<h:outputText
-							value="#{suspensionBackingBean.managedBean.newOfferSpec}"
-							escape="false"
-							style="float:left;font-weight:bold;display:block; word-wrap: break-word; width:400px" />
-						<ac:iconTooltip
-							value="#{lbl['lbl.ct.tooltip.newofferedspecification']}" />
+						<div style="display: flex; align-items: flex-start;">
+							<div
+								style="overflow-y: auto; overflow-x: hidden; max-height: 150px; display: inline-block; position: relative;">
+								<h:outputText
+									value="#{suspensionBackingBean.managedBean.newOfferSpec}"
+									escape="false"
+									style="float:left;font-weight:bold;display:block; word-wrap: break-word; max-height: 200px; width:450px" />
+							</div>
+							<ac:iconTooltip
+								value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"
+								style="position: absolute; left: 470px; top: 0;" />
+						</div>
 					</h:panelGroup>
 				</c:if>
 				<c:if
@@ -284,7 +296,7 @@
 					classStyle="TableHeader"
 					style="margin: 0; max-height: 700px; overflow-y: auto;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rows="5" paginator="true" paginatorPosition="bottom"
+					height="auto" rows="5" paginator="true" paginatorPosition="bottom"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
 					scrollable="true" scrollHeight="200" liveScroll="true">
@@ -338,4 +350,5 @@
 			</div>
 		</f:facet>
 	</p:dialog>
+	<!-- #28854 end - Display item specification as defined in LOA -->
 </ui:composition>
