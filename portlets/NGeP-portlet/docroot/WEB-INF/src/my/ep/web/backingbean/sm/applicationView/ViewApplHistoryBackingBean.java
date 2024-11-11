@@ -110,8 +110,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
-//#28895_35501 - AUDIT TRAIL SM
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
+
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 public class ViewApplHistoryBackingBean extends
@@ -191,17 +190,11 @@ public class ViewApplHistoryBackingBean extends
 								.equalsIgnoreCase(getManagedBean()
 										.getSmSupplier().getBusinessType())) {
 					initFifthTabInfo();
-					// #28895_35501 Start - AUDIT TRAIL SM
-				} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getManagedBean().getAccountType())) {
-					initAuditTab();
 				}
-			} else if (outputTab == 5) {
-				initAuditTab();
+
 			}
-		} else if (outputTab == 8) {
-			initAuditTab();
+			
 		}
-		// #28895_35501 End
 		// 25792 - end
 	}
 
@@ -2154,12 +2147,5 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END
-	// #28895_35501 Start - AUDIT TRAIL SM
-	private void initAuditTab() {
-		SmAppl suppAppl = getManagedBean().getSmAppl();
-		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		auSmView.initAuditTab(suppAppl);
-	}
-	// #28895_35501 End
 	
 }
