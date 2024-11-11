@@ -18,7 +18,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -1415,41 +1414,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQtCommittee> committeeQTDataModel) {
 		this.committeeQTDataModel = committeeQTDataModel;
 	}
-	
-	//TODO revert to previous settings once all old QT's with not one to one FC committee ends.
-		/**
-		 * @return the isCommitteeRecordStatusActive
-		 */
-		public boolean isCommitteeRecordStatusActive() {
-
-			if (this.getScCommittee().getCommitteeType().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| this.getScCommittee()
-							.getCommitteeType()
-							.getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					|| this.getScCommittee()
-							.getCommitteeType()
-							.getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)
-					|| this.getScCommittee()
-							.getCommitteeType()
-							.getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
-					|| this.getScCommittee()
-							.getCommitteeType()
-							.getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
-					|| this.getScCommittee()
-							.getCommitteeType()
-							.getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-				return true;
-			} else {
-				return this.getScCommittee().isRecordStatus();
-			}
-
-		}
 
 		public Paginator getHistoryPaginator() {
 			return historyPaginator;

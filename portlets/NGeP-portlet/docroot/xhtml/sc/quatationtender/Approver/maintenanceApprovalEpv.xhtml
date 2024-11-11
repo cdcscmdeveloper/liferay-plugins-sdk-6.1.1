@@ -17,7 +17,7 @@
 			value="#{qTDetailBB.getExtensionResponseDueDate(scQt.qtId, scQt.responsePeriod)}" />
 		<ui:param name="validityDaysExpiredQt"
 			value="#{suppFinalizationBackingBean.checkProposalValidityDateReach(
-			suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+			qTDetailBB.managedBean.qt.proposalValidityEndDate)}" />
 		<ui:param name="renderMOF"
 			value="#{qTDetailBB.handleChmnFinalizationDate(validityDaysExpiredQt)}" />
 
@@ -85,6 +85,7 @@
 							cols="170" rows="3" style=" margin-bottom:5px; width:866px;"
 							disabled="true" /></td>
 				</tr>
+				<c:if test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType != null}">
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.qt.old.validity.days']}" /></td>
@@ -100,11 +101,14 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 						</p:inputText></td>
 				</tr>
+				</c:if>
 			</table>
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true"
 			id="requestDetailsId">
+			<c:choose>
+			<c:when test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType != null}">
 			<table
 				style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
 
@@ -128,8 +132,7 @@
 				</tr>
 				<tr>
 					<td style="width: 235px;"><p:outputLabel
-							value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /></td>
 					<td><p:calendar
 							label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
 							disabled="true"
@@ -146,10 +149,9 @@
 								pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText> <p:message id="approvalDateChairpersonMsg"
 							for="approvalDateChairperson" display="icon" /></td>
-					<c:if test="#{renderMOF eq true}">
+					<c:if test="#{renderMOF eq true and qTDetailBB.managedBean.scQtApprovalRequest.mofDate != null}">
 						<td style="width: 235px;"><p:outputLabel
-								value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
+								value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /></td>
 						<td><p:calendar
 								label="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}"
 								disabled="true"
@@ -186,9 +188,14 @@
 						<h:outputText value="#{lbl['lbl.sc.to.value']}" />
 					</th>
 					<th
-						style="width: 50%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
-						<h:outputText value="* " styleClass="mandatory" /> <h:outputText
+						style="width: 20%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+						<h:outputText
 							value="#{lbl['lbl.sc.decision']}" />
+					</th>
+					<th
+						style="width: 30%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+						<h:outputText
+							value="#{lbl['lbl.fl.attach.files']}" />
 					</th>
 				</tr>
 				<c:if
@@ -222,17 +229,29 @@
 								</c:if></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 									id="decisiontypeid"
-									value="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType.parameterId}"
+									value="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType.parameterId}"
 									label="#{lbl['lbl.sc.decision']}" disabled="true"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:panelGroup
+									id="epvAttachmentEV2">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV1Id"
+										popupWidgetVar="epvAttachmentEV1UploadDlg"
+										attachment="#{qTDetailBB.managedBean.scQtApprovalRequest.epvApprovalReqAttachmentR1}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="true">
+										<f:setPropertyActionListener for="actionEvent"
+											value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest1)}"
+											target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup></td>
 						</tr>
 					</c:if>
 					<c:if
-						test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true}">
+						test="#{renderMOF eq true}">
 						<tr style="text-align: left; font-size: 12px; text-indent: 0.1em;">
 							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
 									value="#{approvalBackingBean.getParameterDesc(ParameterConst.epvTypeRequest2, ParameterConst.approvalRequestExtendProposalValidityPeriod)}" />
@@ -268,6 +287,18 @@
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest2)}" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq2" for="decisiontypeidRq2"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:panelGroup
+									id="epvAttachmentEV3">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV2Id"
+										popupWidgetVar="epvAttachmentEV2UploadDlg"
+										attachment="#{qTDetailBB.managedBean.scQtApprovalRequest.epvApprovalReqAttachmentR2}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="true">
+										<f:setPropertyActionListener for="actionEvent"
+											value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest2)}"
+											target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup></td>
 						</tr>
 						<c:if
 							test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionCertPBM != null and
@@ -301,7 +332,7 @@
 									</c:if></td>
 								<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 										id="decisiontypeidRq3"
-										value="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType.parameterId}"
+										value="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType.parameterId}"
 										label="#{lbl['lbl.sc.decision']}"
 										disabled="true"
 										style="width: 178px;margin-bottom: 5px;">
@@ -309,6 +340,18 @@
 											value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
 									</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
 										display="icon" /></td>
+								<td style="padding: 5px; border: 1px solid #dddddd;"><h:panelGroup
+										id="epvAttachmentEV2">
+										<ac:scSingleFileUploadButton id="epvAttachmentEV3Id"
+											popupWidgetVar="epvAttachmentEV3UploadDlg"
+											attachment="#{qTDetailBB.managedBean.scQtApprovalRequest.epvApprovalReqAttachmentR3}"
+											deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+											readonly="true">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest3)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+										</ac:scSingleFileUploadButton>
+									</h:panelGroup></td>
 							</tr>
 						</c:if>
 					</c:if>
@@ -345,6 +388,39 @@
 						</p:inputText></td>
 				</tr>
 			</table>
+			</c:when>
+				<c:otherwise>
+					<table
+						style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
+						<tr
+							style="background-color: #F0EFEF; text-align: left; font-size: 12px; text-indent: 0.5em;">
+							<th
+								style="width: 28%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+								<h:outputText value="#{lbl['lbl.sc.qt.type.reqdtls']}" />
+							</th>
+							<th
+								style="width: 11%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+								<h:outputText value="#{lbl['lbl.sc.from.value']}" />
+							</th>
+							<th
+								style="width: 11%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+								<h:outputText value="#{lbl['lbl.sc.to.value']}" />
+							</th>
+						</tr>
+						<tr>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{approvalBackingBean.getParameterDesc(qTDetailBB.managedBean.scQtApprovalRequest.approvalType)}" />
+							</td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{qTDetailBB.managedBean.scQtApprovalRequest.originalValue}" />
+							</td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{qTDetailBB.managedBean.scQtApprovalRequest.changedValue}" />
+							</td>
+						</tr>
+					</table>
+				</c:otherwise>
+			</c:choose>
 		</p:panel>
 	</ui:define>
 </ui:composition>

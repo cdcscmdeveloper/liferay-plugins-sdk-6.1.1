@@ -36,8 +36,13 @@ private static final long serialVersionUID = 1L;
 	
 	public SumForPoCancellationReasonRptBackingBean() {
 		if(getManagedBean().getMinistry() == null){
-			defaultPtjAndMinistryValues();
+			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+				defaultPtjGrpAndPtjValues();
+			}else{
+				defaultPtjAndMinistryValues();
+			}
 		}
+		
 		if(getManagedBean().getFromDate() == null){
 			setDefaultDateFromAndDateTo();
 		}
@@ -105,11 +110,18 @@ private static final long serialVersionUID = 1L;
 	 * reset action
 	 */
 	public void resetAction(){
-		if( getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
-				getManagedBean().setMinistry(null);
-				getManagedBean().setPtjGroup(null);
-				getManagedBean().setPtj(null);
+			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+			}else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
 		}
 		
 		resetSearchCriteriaValues();

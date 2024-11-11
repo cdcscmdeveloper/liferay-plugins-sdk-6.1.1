@@ -56,6 +56,7 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
@@ -303,8 +304,9 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				orgProfileIds.add(pmOrgProfile.getOrgProfileId());
 			}
 			
-			PmOrgProfile OwnerPmOrgProfile = getManagedBean().getQt().getOwnerOrgProfile();			
-			if (OwnerPmOrgProfile != null && pmOrgProfile.getOrgProfileId() != OwnerPmOrgProfile.getOrgProfileId()) {
+			PmOrgProfile OwnerPmOrgProfile = getManagedBean().getQt().getOwnerOrgProfile();	
+			//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
+			if (OwnerPmOrgProfile != null && pmOrgProfile != null &&pmOrgProfile.getOrgProfileId() != OwnerPmOrgProfile.getOrgProfileId()) {
 				orgProfileIds.add(OwnerPmOrgProfile.getOrgProfileId());	
 			}
 			
@@ -428,13 +430,24 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
-
+		//#28895 - 35500 start
+		List<ScQtContactPerson> deletedContactList = new ArrayList<ScQtContactPerson>();
+		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
+		//#28895 - 35500 end
+		
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
 		} else {
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
+				deletedContactList.add(contactPerson);
+				//#28895-35500 start
+				if (newDoaList != null && newDoaList.contains(contactPerson)){
+					newDoaList.remove(contactPerson);
+				}
 			}
+			this.getManagedBean().setPmuserDeletedContactpersonList(deletedContactList);
+			//#28895 - 35500 end
 		}
 		this.getManagedBean().setSelectedpmuserContactpersonList(null);
 	}
@@ -486,7 +499,14 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			contactPerson.setFaxNo(newUser.getFaxNo());
 			contactPerson.setUser(newUser);
 		}
-
+		
+		//28895 - 35500 start
+		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
+		newDoaList = newDoaList == null ? new ArrayList<ScQtContactPerson>() : newDoaList;
+		newDoaList.add(contactPerson);
+		this.getManagedBean().setNewDoaList(newDoaList);
+		//#28895-35500 end
+		
 //		if (list != null) {
 //			for (PmUser user : list) {
 //				if (user.getUserId().equals(contactPerson.getUserId())) {
@@ -659,10 +679,52 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 		if (chmnFinalizationDate != null) {
 			scQt.setChmnFinalizationDate(DateUtils.setDefaultDateTime(chmnFinalizationDate));
 		}
+		//#21692 attachment - Start
+		Boolean oldApprovalPBM = scQt.isApprovalPBM();
 		Boolean enableDateMOF = enableApprovalDateMOF(validityDaysExpiredQt);
+		if (!enableDateMOF) {
+			scQt.setMofDate(null);
+		}
 		scQt.setApprovalPBM(enableDateMOF);
 		resetDecisionCertPBM(enableDateMOF);
+		if ((oldApprovalPBM && !enableDateMOF)
+				|| (!oldApprovalPBM && enableDateMOF)) {
+			deleteEpvAttachments();
+		}
+		//#21692 attachment - End
 	}
+	//#21692 attachment - Start
+	/**
+	 * delete existing attachment and reset decision
+	 */
+	public void deleteEpvAttachments() {
+		ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
+		
+		List<ScQtEpvApprovalReqAttachment> deletedAttachment = new ArrayList<>();
+		List<ScQtEpvApprovalReqAttachment> attachmentList = apprvRequest.getEpvApprovalReqAttachment();
+		
+		for (ScQtEpvApprovalReqAttachment att : attachmentList) {
+			deletedAttachment.add(att);
+		}
+		
+		if (CollectionUtils.isNotEmpty(deletedAttachment)) {
+			attachmentList.removeAll(deletedAttachment);
+		}
+		apprvRequest.setEpvApprovalReqAttachment(attachmentList);
+		apprvRequest.setDecisionCertPBM(null);
+		apprvRequest.setDecisionType(null);
+		
+		ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
+		
+		List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
+		if (this.getManagedBean().getQt().isApprovalPBM()) {
+			apprvReq.setDecisionCertPBM(new PmParameter());
+		}
+		apprvReq.setDecisionType(new PmParameter());
+		newApprovalReqList.add(apprvReq);
+		this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
+	}
+	//#21692 attachment - End
 
 	private void resetDecisionCertPBM(Boolean enableDateMOF) {
 		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();
@@ -693,7 +755,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 
 				long days = DateUtils.getDaysDifference(proposalValidityEndDate, chmnFinalizationDate);
 				int day = (int) days;
-				if (day >= 0) {
+				if (day > 0) {//#21692
 					return Boolean.TRUE;
 				}
 			}

@@ -936,7 +936,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 					.getScBidItem().getQty());
 		}
 		if (newPriceTotal != null
-				&& (newPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
+				&& (newPriceTotal.compareTo(BigDecimal.valueOf(0.0d)) > 0)) { //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			return nf.format(newPriceTotal);
 		} else {
 			return null;
@@ -961,7 +961,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 									.getQty());
 		}
 		if (lastBidPriceTotal != null
-				&& (lastBidPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
+				&& (lastBidPriceTotal.compareTo(BigDecimal.valueOf(0.0d)) > 0)) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			return nf.format(lastBidPriceTotal);
 		} else {
 			return null;
@@ -986,7 +986,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 									.getQty());
 		}
 		if (lastStartPriceTotal != null
-				&& (lastStartPriceTotal.compareTo(new BigDecimal(0.0d)) == 1)) {
+				&& (lastStartPriceTotal.compareTo(BigDecimal.valueOf(0.0d)) > 0)) {//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 			return nf.format(lastStartPriceTotal);
 		} else {
 			return null;

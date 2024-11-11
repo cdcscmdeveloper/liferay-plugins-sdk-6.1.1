@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div align="left" class="header-info">
 	
@@ -103,6 +104,8 @@
 	<c:if test="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
 		<br />
 		<div align="left">
+			<!-- #34099 - start -->
+			<!--
 			<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
 				<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('P')}" 
 					process="@this" partialSubmit="true" update=":form" target="_blank"
@@ -111,9 +114,27 @@
 			<h:commandLink action="#{backingBean.redirectToRevisionSupplierProfilePage('O')}" 
 					process="@this" partialSubmit="true" update=":form" target="_blank"
 					value="#{lbl['lbl.sm.view.original.appl']}"/>&#160;&#160;
-					
-			<h:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}" action="#{backingBean.redirectToViewSSMInfo()}" target="_blank"
-					value="#{lbl['lbl.sm.view.ssm.infomation']}"/>
+			-->
+			<c:if test="#{!(backingBean.managedBean.smAppl.applType eq 'N')}">
+				<p:commandLink value="#{lbl['lbl.sm.view.previous.appr.appl']}"
+						action="#{backingBean.initRevisionDialog('N')}" process="@this"
+						partialSubmit="true" update=":#{p:component('revisionViewDlg')}"
+						onclick="blockWidget.show()" 
+						oncomplete="blockWidget.hide()"/>&#160;&#160;
+			</c:if>
+			<p:commandLink value="#{lbl['lbl.sm.view.original.appl']}"
+					action="#{backingBean.initRevisionDialog('O')}" process="@this"
+					partialSubmit="true" update=":#{p:component('revisionViewDlg')}" 
+					onclick="blockWidget.show()" 
+					oncomplete="blockWidget.hide()"/>&#160;&#160;
+			<!-- #34099 - end -->
+			<!-- #31269 - start -->
+			<p:commandLink rendered="#{backingBean.managedBean.smAppl.applValidWithSsm}"
+					action="#{backingBean.redirectToViewSSMInfo(backingBean.managedBean.smAppl)}" 
+					value="#{lbl['lbl.sm.view.ssm.infomation']}"
+					update=":#{p:component('viewssminfoDlg')}" process="@this"
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			<!-- #31269 - end -->
 		</div>
 		<br /><br />
 	</c:if>
@@ -148,5 +169,20 @@
 			</tr>
 		</p:outputPanel>
 	</table>
+	<!-- #31269 -->
+	<ac:viewSsmInformation bBean="#{backingBean}" dialogId="viewssminfoDlg" />
+	<!-- #34099 - start -->
+	<p:dialog id="revisionViewDlg" widgetVar="revisionViewDlg"
+		header="#{lbl['lbl.sm.view.revision']}"
+		height="600" width="1200" resizable="false" modal="true">
+		<!-- #32008 -->
+		<f:subview id="revViewDlg">
+		<c:if test="#{viewSmApplBackingBean.managedBean.smAppl != null}">
+			<ui:include 
+				src="/xhtml/sm/revisionSmApplView/dialog/smViewDialogSideMenu_Page.xhtml" />
+		</c:if>
+		</f:subview>
+	</p:dialog>
+	<!-- #34099 - end -->
 	
 </ui:composition>

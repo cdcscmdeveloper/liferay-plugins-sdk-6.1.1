@@ -2438,6 +2438,38 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<portlet>
+		<portlet-name>scNoticeBoardDetail</portlet-name>
+		<display-name>Notice Board Detail</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/noticeboard/resultview/preRenderNBDetailView.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Notice Board Detail</title>
+			<short-title>Notice Board Detail</short-title>
+
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 
 <portlet>
 		<portlet-name>BusinessOwner</portlet-name>
@@ -5983,7 +6015,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/pm/notify/prerenderPmNotify.xhtml
+				/xhtml/pm/notify/notify.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -7199,7 +7231,9 @@
 		
 		<portlet>
 			<portlet-name>ctReports</portlet-name>
-			<display-name>CT Reports</display-name>
+			<!-- #32675 - shaqimi start -->
+			<display-name>Contract Reports</display-name>
+			<!-- #32675 - shaqimi end -->
 			<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
@@ -7211,9 +7245,11 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>CT Reports</title>
-				<short-title>CT Reports</short-title>
+			<!-- #32675 - shaqimi start -->
+				<title>Contract Reports</title>
+				<short-title>Contract Reports</short-title>
 				<keywords></keywords>
+			<!-- #32675 - shaqimi end -->
 			</portlet-info>
 			<security-role-ref>
 				<role-name>administrator</role-name>
@@ -11202,4 +11238,70 @@
 		</security-role-ref>
 	</portlet>
 	
+	<!--#27827-start-->
+	<portlet>
+		<portlet-name>pmApproveAuthority</portlet-name>
+		<display-name>MOF Approve Authority List</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/pm/approveauthority/preRenderApproveAuthority.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>MOF Approving Authority List</title>
+			<short-title>MOF Approve Authority</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!--#27827-end-->
+	<portlet>
+		<portlet-name>testSpki</portlet-name>
+		<display-name>Test SPKI</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/testSpki/testSpki.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Test SPKI</title>
+			<short-title>Test SPKI</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 </portlet-app>

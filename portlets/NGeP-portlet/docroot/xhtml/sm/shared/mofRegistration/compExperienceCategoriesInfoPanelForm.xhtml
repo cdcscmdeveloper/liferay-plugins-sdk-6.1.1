@@ -16,8 +16,10 @@
 			<p:column style="width:2%">
 				<ac:paginator for="suppExpCatCodesDtWidVar" />
 				<f:facet name="header">
+					<!-- Disable for UPS 32008 - START -->
 					<p:selectBooleanCheckbox
-						value="#{backingBean.managedBean.selectedAll}">
+						value="#{backingBean.managedBean.selectedAll}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}">
 						<p:ajax partialSubmit="true" process="@this"
 							update="@([id$=suppExpCatCodesDtWidVar])"
 							listener="#{backingBean.selectAllCompanyExperinceCategories}" />
@@ -25,7 +27,8 @@
 				</f:facet>
 
 				<p:selectBooleanCheckbox
-					value="#{backingBean.managedBean.selected}">
+					value="#{backingBean.managedBean.selected}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"
 						listener="#{backingBean.selectedCompanyExperinceCategory(index)}" />
 				</p:selectBooleanCheckbox>
@@ -38,12 +41,13 @@
 					label="#{lbl['lbl.sm.projDtls.mainCat']}"
 					id="consultProjParCatCode"
 					value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
-					style="width: 207px;margin-bottom: 5px;">
+					style="width: 207px;margin-bottom: 5px;"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{backingBean.managedBean.supplierParentCatList}"
-						var="parent" itemLabel="#{parent.categoryL1Code} - #{parent.categoryName}"
-						itemValue="#{parent.categoryL1Id}" />
+						var="parent" itemLabel="#{parent.categoryL1Code} - #{backingBean.getCompanyExpCatName(parent)}"
+						itemValue="#{parent.categoryL1Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceChildCategoryByParent(expCategoryBean.pmCategoryL1.categoryL1Id,
 								expCategoryBean.pmCategoryL2,
@@ -60,12 +64,13 @@
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.subCat']}"
 					value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
-					id="conslChild" style="width: 207px;margin-bottom: 5px;">
+					id="conslChild" style="width: 207px;margin-bottom: 5px;"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL2.pmCategoryL2s}"
-						var="conslChild" itemLabel="#{conslChild.categoryL2Code} - #{conslChild.categoryName}"
-						itemValue="#{conslChild.categoryL2Id}" />
+						var="conslChild" itemLabel="#{conslChild.categoryL2Code} - #{backingBean.getCompanyExpCatName(conslChild)}"
+						itemValue="#{conslChild.categoryL2Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.populateExperienceSubChildCategoryByChild(expCategoryBean.pmCategoryL2.categoryL2Id,expCategoryBean.pmCategoryL3)}"
 						update="conslSubChild" />
@@ -79,12 +84,13 @@
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 					value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
-					id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
+					id="conslSubChild" style="width: 207px;margin-bottom: 5px;"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{expCategoryBean.pmCategoryL3.pmCategoryL3s}"
-						var="conslSubChild" itemLabel="#{conslSubChild.categoryL3Code} - #{conslSubChild.categoryName}"
-						itemValue="#{conslSubChild.categoryL3Id}" />
+						var="conslSubChild" itemLabel="#{conslSubChild.categoryL3Code} - #{backingBean.getCompanyExpCatName(conslSubChild)}"
+						itemValue="#{conslSubChild.categoryL3Id}" /> <!-- #28175 -->
 					<p:ajax event="change"
 						listener="#{backingBean.checkDuplicateCategoryForProject(expCategoryBean,backingBean.managedBean.selectedCompanyExperience)}"
 						update="conslSubChild" />
@@ -97,15 +103,18 @@
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}" id="addCatcodeExpId"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				action="#{backingBean.assignCategoryForCompExperience(backingBean.managedBean.selectedCompanyExperience)}"
 				update=":form:tt:suppExpCatCodesDtWidVar,deleteCatcodeExpId" partialSubmit="true"
 				process=":form:tt:compExpCatPanHdr" />
 
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deleteCatcodeExpId"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				disabled="#{empty backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}"
 				action="#{backingBean.deleteSelectedCategoryFromCompanyExperience(backingBean.managedBean.selectedCompanyExperience)}"
 				update=":form:tt:suppExpCatCodesDtWidVar,@this" partialSubmit="true"
 				process="@this" />
+			<!-- Disable for UPS 32008 - END -->
 
 		</div>
 

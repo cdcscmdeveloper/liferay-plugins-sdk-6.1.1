@@ -85,7 +85,8 @@
 				<h:panelGroup id="financialChecklistTitleHeader">
 					<p:inputText value="#{stageTwofunctional.title}" size="35" rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1}"
 						maxlength="1000" required="true" id="finChecklistTitle"
-						label="#{lbl['lbl.sc.spec.checklist.title']}">
+						label="#{lbl['lbl.sc.spec.checklist.title']}"
+						validator="#{specificationBackingBean.isContentExistUnicode}">
 						<p:ajax event="change" process="@this,financialChecklistTitleHeader" partialSubmit="true"
 							update="financialCheckListtitle"
 							listener="#{specificationBackingBean.financialCheckListTitleChange(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>

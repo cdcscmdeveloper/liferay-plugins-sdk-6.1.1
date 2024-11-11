@@ -15,7 +15,6 @@
 
 		<table style="border: 0px; width: 100%; align: center">
 			<tr>
-				<td>
 				<td width="100%" align="left" valign="top"><p:messages
 						id="confirmMeeting" showDetail="true" showSummary="false"
 						autoUpdate="true" closable="true" severity="error, info" />
@@ -170,7 +169,14 @@
 								<ac:paginator for="memberListTbl" />
 								<p:column headerText="#{lbl['lbl.sc.name']}"
 									style="white-space:normal;">
-									<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+									<!-- #12471 Start -->
+									<p:commandLink
+										actionListener="#{suppFinalMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										update="@form">
+										<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+									</p:commandLink>
+									<!-- #12471 End -->
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.identification.no']}">
@@ -209,6 +215,10 @@
 									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(committeeMember.representativeType)}" />							
 								</p:column>
 							</p:dataTable>
+							<!-- #12471 Start -->
+							<ac:qtCommitteMemberInfoPopup
+								bBean="#{suppFinalMeetingBackingBean}" widget="memberInfoPopUp" />
+							<!-- #12471 End -->
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" styleClass="BtnSpacing" action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" 
 									/>
@@ -219,7 +229,6 @@
 						remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
 						showAttachment="false" /> 
 					</td>
-				</td>
 			</tr>
 		</table>
 		<ac:confirmationPopup id="confirmSubmitMeetingId"

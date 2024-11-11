@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sm.applicationView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -36,6 +37,8 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -173,9 +176,6 @@ public class ViewSuppProfileManagedBean extends
 	private boolean disableDeleteButtonAprrovedCategoryCodePanel;
 	//End - 27815
 	
-	//28281
-	private List<Long> bumiCodeList;
-	
 	// Start 27815
 	private boolean disabledApprovedCategories;
 	// End 27815
@@ -192,6 +192,17 @@ public class ViewSuppProfileManagedBean extends
 	// #26238 start
 	private boolean cancelMofAccount;
 	// #26238 eend
+	
+	private boolean hasActiveDA; //#34626
+	
+	private Map<Long, String> tempCategoryLs; //#34209
+	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmAppl oldSmAppl;
+	private List<SmSupplierCategory> oldApprovedCategoryList;
+	private String oldPoApprOverlappedRemark;
+	private String oldApproverRemark;
+	// #28895_35501 End
 		
 	public ViewSuppProfileManagedBean() {
 
@@ -951,14 +962,6 @@ public class ViewSuppProfileManagedBean extends
 		this.divisionBox = divisionBox;
 	}
 
-	public List<Long> getBumiCodeList() {
-		return bumiCodeList;
-	}
-
-	public void setBumiCodeList(List<Long> bumiCodeList) {
-		this.bumiCodeList = bumiCodeList;
-	}
-
 	public boolean isDisabledApprovedCategories() {
 		return disabledApprovedCategories;
 	}
@@ -1003,5 +1006,55 @@ public class ViewSuppProfileManagedBean extends
 		this.cancelMofAccount = cancelMofAccount;
 	}
 	// #26238 end
+	//#34626 - start
+	public boolean isHasActiveDA() {
+		return hasActiveDA;
+	}
+
+	public void setHasActiveDA(boolean hasActiveDA) {
+		this.hasActiveDA = hasActiveDA;
+	}
+	//#34626 - end
 	
+	public Map<Long, String> getTempCategoryLs() {
+		return tempCategoryLs;
+	}
+
+	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
+		this.tempCategoryLs = tempCategoryLs;
+	}
+	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
+
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
+
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
+
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
+
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
+
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
+
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
+
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
+	}
+	// #28895_35501 End
 }

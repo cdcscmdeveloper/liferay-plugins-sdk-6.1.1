@@ -164,7 +164,8 @@ BaseBackingBean<AccessApplActivationManagedBean>{
 					}
 					
 					long applDateInMilis = latestApproved.getTime();
-					long dayInMilis = 1000 * 60 * 60 * 24;
+					//SONARQUBE PM BUG MINOR G50
+					long dayInMilis = (long) 1000 * 60 * 60 * 24; 
 
 					Date expiryDate = new Date(applDateInMilis + (activationPeriod * dayInMilis));
 					log.info("----Activation Access Appl ID----" + accessAppl.getAccessApplId());

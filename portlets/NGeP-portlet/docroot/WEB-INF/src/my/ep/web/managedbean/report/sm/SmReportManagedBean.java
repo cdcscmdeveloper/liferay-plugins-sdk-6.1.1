@@ -11,6 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.VBasicAccountWithMof;
+import my.ep.persistence.entity.sm.VMofAccount;
+import my.ep.persistence.entity.sm.VSupplierPerformance;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 import my.ep.web.vo.CategoryRptVO;
 
@@ -75,13 +78,41 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	
 	// #29712, #32564 - start
 	private SmSupplier selectedSupplier;
+	
+	private VBasicAccountWithMof selectedBasicAccount;
 	// #29712, #32564 - end
+	
+	//#36125
+	private VSupplierPerformance selectedSupplierPerformance;
+
+	public VBasicAccountWithMof getSelectedBasicAccount() {
+		return selectedBasicAccount;
+	}
+
+	public void setSelectedBasicAccount(VBasicAccountWithMof selectedBasicAccount) {
+		this.selectedBasicAccount = selectedBasicAccount;
+	}
+
+	// #30824 - START
+	private VMofAccount selectedMofAccount;
+
+	public VMofAccount getSelectedMofAccount() {
+		return selectedMofAccount;
+	}
+
+	public void setSelectedMofAccount(VMofAccount selectedMofAccount) {
+		this.selectedMofAccount = selectedMofAccount;
+	}
+
+	// #30824 - END
 
 	//#32521 - START
 	private PmUser selectedUser;
 	private String disciplinaryActionStatus;
 	//#32521 - END
-		
+	//#33783
+	private Boolean isCLBG;
+	
 	public String getDocumentType() {
 		return documentType;
 	}
@@ -509,5 +540,23 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 		this.disciplinaryActionStatus = disciplinaryActionStatus;
 	}
 	//#32521 - END
+	//#33783 - start
+	public Boolean getIsCLBG() {
+		return isCLBG;
+	}
 
+	public void setIsCLBG(Boolean isCLBG) {
+		this.isCLBG = isCLBG;
+	}
+	//#33783 - end
+
+	//#36125 - START
+	public VSupplierPerformance getSelectedSupplierPerformance() {
+		return selectedSupplierPerformance;
+	}
+
+	public void setSelectedSupplierPerformance(VSupplierPerformance selectedSupplierPerformance) {
+		this.selectedSupplierPerformance = selectedSupplierPerformance;
+	}
+	//#36125 - END
 }

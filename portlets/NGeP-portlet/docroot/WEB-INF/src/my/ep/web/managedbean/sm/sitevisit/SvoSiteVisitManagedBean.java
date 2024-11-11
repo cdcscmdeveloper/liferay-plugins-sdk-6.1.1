@@ -43,7 +43,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private int activeIndex;
 	private SmSvTask smSvTask;
 	private SmSvAddress selectedSmSvAddress;
-	//private Map<String,SmSvTemplate> smSvTemplateMap;
 	private Map<String,List<SmSvAddress>> smSvAddressMap;
 	private Map<String,SmFacility> smSvFacilityMap;
 	private SmSvTemplate selectedSvTemplate;
@@ -75,30 +74,22 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private int cheqNonBumi;
 	private int cheqNonMalaysian;
 	
-//	private List<SmSvEquipment> dockyardEquipMain;
-//	private List<SmSvEquipment> dockyardEquipBeating;
-//	private Map<Long,PmParameterDesc> dockyardEquipmentMap;
-//	private Map<Long,PmParameterDesc> dockWorkLicenseInsMap;
-	
 	private List<SmSvEquipment> workshopEquipMain;
 	private List<SmSvEquipment> workshopEquipBeating;
 	private Map<Long,PmParameterDesc> workshopEquipmentMap;
 	
 	private SmMachineDtl[] selectedDockyardMachine;
 	private SmMachineDtl[] selectedWorkshopMachine;
-	
-	//private Map<Long, PmParameterDesc> printingParamMap;
-	//private Map<Long, String> printingCategoryCodeMap;
+
 	private SmSvPrintwork[] selectedPrintWorks;
 	
 	private List<SmSupplierCategory> categoryApplicable;
-	//private Map<Integer,SmSvTemplate> indexPageMap;
 	private SmPersonnel contactPerson;
 	
 	private Integer lastIndex;
 
-	private List<String> higherManagementNames = new ArrayList<String>();
-	private List<String> managementNames = new ArrayList<String>();
+	private List<String> higherManagementNames = new ArrayList<>();
+	private List<String> managementNames = new ArrayList<>();
 	
 	private SmSvAdtMachine selectedAdtMachine;
 	private SmSvMachine selectedSvMachine;
@@ -110,7 +101,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private String attachmentDeleteMsg;
 	private boolean viewMode;
 	
-	//private SmSvAdtMachine oriAdtMachine;
 	private Object oriSelectedMachine;
 	private Long svTaskId;
 	private SmAppl smAppl;
@@ -204,14 +194,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedSmSvAddress = selectedSmSvAddress;
 	}
 
-/*	public Map<String, SmSvTemplate> getSmSvTemplateMap() {
-		return smSvTemplateMap;
-	}
-
-	public void setSmSvTemplateMap(Map<String, SmSvTemplate> smSvTemplateMap) {
-		this.smSvTemplateMap = smSvTemplateMap;
-	}*/
-
 	public SmSvTemplate getSelectedSvTemplate() {
 		return selectedSvTemplate;
 	}
@@ -219,16 +201,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setSelectedSvTemplate(SmSvTemplate selectedSvTemplate) {
 		this.selectedSvTemplate = selectedSvTemplate;
 	}
-
-//	public List<SmSvInterviewee> getSelectedIntervieweeLs() {
-//		if(selectedIntervieweeLs == null)
-//			selectedIntervieweeLs = new ArrayList<SmSvInterviewee>();
-//		return selectedIntervieweeLs;
-//	}
-//
-//	public void setSelectedIntervieweeLs(List<SmSvInterviewee> selectedIntervieweeLs) {
-//		this.selectedIntervieweeLs = selectedIntervieweeLs;
-//	}
 
 	public int getTotalBOD() {
 		return totalBOD;
@@ -382,32 +354,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.cheqNonMalaysian = cheqNonMalaysian;
 	}
 
-//	public List<SmSvEquipment> getDockyardEquipMain() {
-//		return dockyardEquipMain;
-//	}
-//
-//	public void setDockyardEquipMain(List<SmSvEquipment> dockyardEquipMain) {
-//		this.dockyardEquipMain = dockyardEquipMain;
-//	}
-
-/*	public Map<Long, PmParameterDesc> getDockyardEquipmentMap() {
-		return dockyardEquipmentMap;
-	}
-
-	public void setDockyardEquipmentMap(
-			Map<Long, PmParameterDesc> dockyardEquipmentMap) {
-		this.dockyardEquipmentMap = dockyardEquipmentMap;
-	}
-
-	public Map<Long, PmParameterDesc> getDockWorkLicenseInsMap() {
-		return dockWorkLicenseInsMap;
-	}
-
-	public void setDockWorkLicenseInsMap(
-			Map<Long, PmParameterDesc> dockWorkLicenseInsMap) {
-		this.dockWorkLicenseInsMap = dockWorkLicenseInsMap;
-	}*/
-
 	public SmMachineDtl[] getSelectedDockyardMachine() {
 		return selectedDockyardMachine;
 	}
@@ -415,14 +361,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setSelectedDockyardMachine(SmMachineDtl[] selectedDockyardMachine) {
 		this.selectedDockyardMachine = selectedDockyardMachine;
 	}
-
-//	public List<SmSvEquipment> getDockyardEquipBeating() {
-//		return dockyardEquipBeating;
-//	}
-//
-//	public void setDockyardEquipBeating(List<SmSvEquipment> dockyardEquipBeating) {
-//		this.dockyardEquipBeating = dockyardEquipBeating;
-//	}
 
 	public List<SmSvEquipment> getWorkshopEquipMain() {
 		return workshopEquipMain;
@@ -473,14 +411,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 			SmSvManufacturingDoc[] selectedAddFinancialDoc) {
 		this.selectedAddFinancialDoc = selectedAddFinancialDoc;
 	}
-	
-	/*public Map<Long, String> getPrintingCategoryCodeMap() {
-		return printingCategoryCodeMap;
-	}
-
-	public void setPrintingCategoryCodeMap(Map<Long, String> printingCategoryCodeMap) {
-		this.printingCategoryCodeMap = printingCategoryCodeMap;
-	}*/
 
 	public SmSvPrintwork[] getSelectedPrintWorks() {
 		return selectedPrintWorks;
@@ -497,14 +427,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setCategoryApplicable(List<SmSupplierCategory> categoryApplicable) {
 		this.categoryApplicable = categoryApplicable;
 	}
-
-	/*public Map<Integer, SmSvTemplate> getIndexPageMap() {
-		return indexPageMap;
-	}
-
-	public void setIndexPageMap(Map<Integer, SmSvTemplate> indexPageMap) {
-		this.indexPageMap = indexPageMap;
-	}*/
 
 	public SmPersonnel getContactPerson() {
 		return contactPerson;
@@ -618,14 +540,6 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setViewMode(boolean viewMode) {
 		this.viewMode = viewMode;
 	}
-
-/*	public SmSvAdtMachine getOriAdtMachine() {
-		return oriAdtMachine;
-	}
-
-	public void setOriAdtMachine(SmSvAdtMachine oriAdtMachine) {
-		this.oriAdtMachine = oriAdtMachine;
-	}*/
 
 	public Long getSvTaskId() {
 		return svTaskId;

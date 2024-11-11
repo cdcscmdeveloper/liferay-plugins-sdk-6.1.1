@@ -36,8 +36,13 @@ private static final long serialVersionUID = 1L;
 	
 	public SumForPoCancellationReasonRptBackingBean() {
 		if(getManagedBean().getMinistry() == null){
-			defaultPtjAndMinistryValues();
+			if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+				defaultPtjGrpAndPtjValues();
+			}else{
+				defaultPtjAndMinistryValues();
+			}
 		}
+		
 		if(getManagedBean().getFromDate() == null){
 			setDefaultDateFromAndDateTo();
 		}
@@ -95,6 +100,10 @@ private static final long serialVersionUID = 1L;
 	public void resetAction(){
 		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
 			getManagedBean().setMinistry(null);
+			getManagedBean().setPtjGroup(null);
+			getManagedBean().setPtj(null);
+			}else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
 			getManagedBean().setPtjGroup(null);
 			getManagedBean().setPtj(null);
 		}

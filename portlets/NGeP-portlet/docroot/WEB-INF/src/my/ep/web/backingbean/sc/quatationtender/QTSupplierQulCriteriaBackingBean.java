@@ -1029,7 +1029,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					}
 				}
 				
-				if (CollectionUtils.isNotEmpty(treeZoneLocs)) {
+				if (treeZoneLocs != null && CollectionUtils.isNotEmpty(treeZoneLocs)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 					for (TplSpecZoneLoc treeZoneLoc : treeZoneLocs) {
 						treeZoneLoc.setZonalLocation(false);
 						

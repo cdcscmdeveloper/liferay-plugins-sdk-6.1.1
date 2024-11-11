@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- 20230111@Haziq - #12487 -->
+<cc:interface>
+	<cc:attribute name="okAction" required="false" default="" />
+	<cc:attribute name="update" required="false" default="@this" />
+	<cc:attribute name="orgTypeParamCode" required="true" />
+	<cc:attribute name="id" required="true" />
+</cc:interface>
+
+<cc:implementation>
+	<style>
+		
+		.ui-selectonemenu.userPtjPopupSomWidth {
+			width: 400px !important;
+		}
+		.ui-selectonemenu.userPtjPopupSomWidth label{
+			width: 400px !important;
+			max-width:400% !important;
+		}
+	</style>
+	<p:dialog id="userPtjPopup"
+		header="#{lbl['lbl.lov.listing']} -  #{userOrganisationSearchBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, cc.attrs.orgTypeParamCode)}"
+		widgetVar="userPtjPopup" modal="true" width="680" position="top">
+
+		<p:messages id="userPtjPopupMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"  />
+       
+		<h:panelGroup id="userOrgPnlGrp">
+			<p:panel id="userOrgPnlId" header="#{lbl['lbl.pm.header.general.org.search']}" toggleable="true"  >
+              <h:panelGrid columns="3" id="userOrgPg">
+                 <p:inputText id="itMin"  disabled="true" style="width:170px" 
+                	 value="#{lbl['lbl.pm.org.ptj.search.ministry']}"/>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="somMinistry" styleClass="userPtjPopupSomWidth"  
+                 	disabled="#{userOrganisationSearchBackingBean.managedBean.disabledMinistry}"
+                      value="#{userOrganisationSearchBackingBean.managedBean.ministryProfileId}" >
+            	   <f:selectItems value="#{userOrganisationSearchBackingBean.getMinistryDropdown()}"/>
+            	   <p:ajax event="change" process="@this" partialSubmit="true" update=":form:#{cc.attrs.id}:somJabatan,:form:#{cc.attrs.id}:searcbBtnId" />
+                 </p:selectOneMenu>
+                 
+               
+                 <p:inputText id="somJab" disabled="true" style="width:170px"
+                 	rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}" 
+                 	value="#{lbl['lbl.pm.org.ptj.search.jabatan']}"/>
+                 <p:spacer height="1" rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"/>
+                 <p:selectOneMenu id="somJabatan" styleClass="userPtjPopupSomWidth"
+                 	  disabled="#{userOrganisationSearchBackingBean.managedBean.disabledJabatan}"
+                 	  rendered="#{ParameterConst.orgTypePtj eq cc.attrs.orgTypeParamCode}"
+                      value="#{userOrganisationSearchBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{userOrganisationSearchBackingBean.getJabatanDropdown()}"/>
+            	    <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
+                 </p:selectOneMenu>
+                
+                 <p:selectOneMenu for="somPtjCodeName"  style="width:180px"
+                    value="#{userOrganisationSearchBackingBean.managedBean.ptjCodeName}" >
+                      <f:selectItems
+							value="#{userOrganisationSearchBackingBean.getPtjOrKptjDropDown(cc.attrs.orgTypeParamCode)}" />
+            	      <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
+                 </p:selectOneMenu>
+				 <p:spacer height="1"/>
+                 <p:inputText id="itPtjCodeValue"  style="width:97%"
+                 	onkeypress="if (event.keyCode == 13) { userPtjSearchBtnWV.jq.click(); return false; }"
+                     value="#{userOrganisationSearchBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                     <p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/></p:inputText>
+                  <p:selectOneMenu for="somUserCodeName"  style="width:180px"
+                    value="#{userOrganisationSearchBackingBean.managedBean.userCodeName}" >
+                      <f:selectItems
+							value="#{userOrganisationSearchBackingBean.getUserDropDown()}" />
+            	      <p:ajax event="change" process="@this" partialSubmit="true" update="@this"/>
+                 </p:selectOneMenu>
+				 <p:spacer height="1"/>
+                 <p:inputText id="itUserCodeValue"  style="width:97%"
+                 	onkeypress="if (event.keyCode == 13) { userPtjSearchBtnWV.jq.click(); return false; }"
+                     value="#{userOrganisationSearchBackingBean.managedBean.userCodeNameSearchValues}" >
+                     <p:ajax event="blur" process="@this" partialSubmit="true" update="@this"/></p:inputText>
+                
+                     
+			  </h:panelGrid>
+			  	<div class="ppRightBtn">
+       		         <p:commandButton id="searcbBtnId" 
+       		         	widgetVar="userPtjSearchBtnWV" value="#{lbl['lbl.btn.search']}" 
+       		         	update=":form:#{cc.attrs.id}:dtUserOrg"  
+       		            action="#{userOrganisationSearchBackingBean.searchUserOrgs(cc.attrs.orgTypeParamCode)}" 
+       		            process="userOrgPnlId" />
+       		            
+       		      <p:commandButton
+							value="#{lbl['lbl.btn.reset']}"
+							action="#{userOrganisationSearchBackingBean.resetUserOrg()}"
+							partialSubmit="true"
+							process="userOrgPnlId"
+							update="userOrgPnlId resultPanel">
+						</p:commandButton> 
+			         
+		       </div>
+		       </p:panel>
+		       <p:panel id="userOrgResultPnlId" header="#{lbl['lbl.pm.organisation.result']}" 
+					toggleable="true">
+					<h:panelGroup id="resultPanel" style="width:100%;">
+					<p:dataTable id="dtUserOrg" var="userOrg" rows="10"
+						value="#{userOrganisationSearchBackingBean.userOrgDataModel}"
+						selection="#{userOrganisationSearchBackingBean.managedBean.selectedUser}"
+						selectionMode="single"
+						rowIndexVar="index" lazy="true">
+						<ac:paginator for="dtUserOrg"></ac:paginator>
+						<p:ajax event="rowUnselect" update="dtUserOrg" process="@this" partialSubmit="true"/>
+						<p:ajax event="rowSelect" update="dtUserOrg" process="@this" partialSubmit="true"/>
+						<p:ajax event="toggleSelect" update="dtUserOrg" process="@this" partialSubmit="true"/>
+						<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}"
+							style="width :15%">
+							<h:outputText value="#{userOrg.pmOrgProfile.pmOrgValidity.orgCode}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}"
+							style="width :60%">
+							<h:outputText value="#{userOrg.pmOrgProfile.pmOrgValidity.orgName}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}"
+							style="width :15%">
+							<h:outputText value="#{userOrg.pmUser.salutationCode.salutationName.concat(' ').concat(userOrg.pmUser.userName)}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.useric']}"
+							style="width :60%">
+							<h:outputText value="#{userOrg.pmUser.identificationNo}" />
+						</p:column>
+					</p:dataTable>
+					</h:panelGroup>
+					<table style="width: 100%;">
+				<tr>
+					<TD style="text-align: right;"><p:commandButton id="slbtn"
+							value="#{lbl['lbl.btn.select']}" partialSubmit="true"
+							action="#{userOrganisationSearchBackingBean.okAction(cc.attrs.okAction)}"
+							process="@this" update="#{cc.attrs.update}" styleClass="BtnSpacing" /> 
+						<p:commandButton
+							value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
+							process="@this" update="@this"
+							oncomplete="userPtjPopup.hide()"  styleClass="BtnSpacing" /></TD>
+				</tr>
+			</table>
+				</p:panel>
+		</h:panelGroup>
+		
+		</p:dialog>
+		<p:defaultCommand target="searcbBtnId" scope="userOrgPnlGrp"></p:defaultCommand>
+</cc:implementation>
+</ui:composition>

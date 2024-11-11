@@ -617,7 +617,14 @@
 		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
 		<css-class-wrapper>noticeBoard-portlet</css-class-wrapper>
 	</portlet>
-
+	<portlet>
+		<portlet-name>scNoticeBoardDetail</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<css-class-wrapper>noticeBoard-portlet</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>scSpecificationBusinessOwner</portlet-name>
 		<icon>/icon.png</icon>
@@ -3559,6 +3566,29 @@
 		<css-class-wrapper>myGPKIPOC-portlet</css-class-wrapper>
 	</portlet>
 	
+	<!-- #27827 - start -->
+	<portlet>
+		<portlet-name>pmApproveAuthority</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pmApproveAuthority-portlet</css-class-wrapper>
+	</portlet>
+	<!-- #27827 - end -->
+	
+	<portlet>	<!-- #36451 -->
+		<portlet-name>testSpki</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>icon-portlet</css-class-wrapper>
+	</portlet>
 		
 	<role-mapper>
 		<role-name>administrator</role-name>

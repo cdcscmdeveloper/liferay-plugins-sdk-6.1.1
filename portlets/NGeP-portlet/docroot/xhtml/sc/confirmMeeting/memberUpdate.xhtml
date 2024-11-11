@@ -13,17 +13,25 @@
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<ui:param name="meetingBB" value="#{(empty evaluationBackingBean.managedBean.meetingBB) ? (evaluationMeetingBackingBean): (evaluationBackingBean.managedBean.meetingBB)}"/>
+		<ui:param name="taskName" value="#{meetingBB.managedBean.taskName}"/>
+		<ui:param name="isCommitteeUpdatable" value="#{meetingBB.isCommitteeEditable(taskName)}"/>
 		<p:messages id="evaluationMeeting" showDetail="true"
 			autoUpdate="#{meetingBB.managedBean.autoUpdate}"
 			closable="true" severity="error,info" showSummary="false" />
-		<div align="left">
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				onclick="blockWidget.show();"
-				oncomplete="blockWidget.hide();" 
-				process="@this" 
-				styleClass="BtnSpacing"
-				action="#{meetingBB.navigateToUpdateMember('back')}" />
-		</div>
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" onclick="blockWidget.show();"
+						oncomplete="blockWidget.hide();" process="@this"
+						style="float:left;"
+						action="#{meetingBB.navigateToUpdateMember('back')}" /> <p:commandButton
+						style="float: right;" process="@this"
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+						value="#{lbl['lbl.btn.update']}"
+						disabled="#{!isCommitteeUpdatable}"
+						action="#{meetingBB.validateCommitteeChanges()}" /></td>
+			</tr>
+		</table>
 		<ui:param name="filteredRoles" value="#{fn:split('S',',')}"/>
 		<div align="left" class="header-info header-spacing">
 			<table style="width: 100%">
@@ -57,8 +65,6 @@
 			</table>
 		</div>
 
-		<ui:param name="taskName" value="#{meetingBB.managedBean.taskName}"/>
-		<ui:param name="isCommitteeUpdatable" value="#{meetingBB.isCommitteeEditable(taskName)}"/>
 		<p:panel id="committeeHistoryId" header="#{lbl['lbl.sc.header.committeelist']}" toggleable="true">
 			<ac:committeeHistoryPanel
 				historyPaginator="#{meetingBB.managedBean.historyPaginator}"
@@ -95,7 +101,14 @@
 				</p:column>
 				<p:column style="width:29%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.name']}">
-					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					<!-- #12471 Start -->
+					<p:commandLink
+						actionListener="#{evaluationMeetingBackingBean.onClickMemberInfo(committeeMember.pmUser)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						process="@this" update="@([id$=memberInfoPopup])">
+						<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+					</p:commandLink>
+					<!-- #12471 End -->
 				</p:column>
 				<p:column style="width:15%;white-space: normal;"
 					headerText="#{lbl['lbl.sc.identification.no']}">
@@ -152,6 +165,10 @@
 					</ui:fragment>
 				</p:column>
 			</p:dataTable>
+			<!-- #12471 Start -->
+			<ac:qtCommitteMemberInfoPopup bBean="#{evaluationMeetingBackingBean}"
+				widget="memberInfoPopUp" />
+			<!-- #12471 End -->
 			<ui:fragment rendered="#{isCommitteeUpdatable}">
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
@@ -184,9 +201,6 @@
 			instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}" 
 			showAttachment="false" readonly="#{!isCommitteeUpdatable}"
 			/>
-		<div align="right">
-			<p:commandButton process="@this" onclick="blockWidget.show();" oncomplete="blockWidget.hide();" value="#{lbl['lbl.btn.update']}" disabled="#{!isCommitteeUpdatable}" action="#{meetingBB.validateCommitteeChanges()}" />
-		</div>
 		<ui:include src="addexistingcommittee.xhtml" />
 		<ui:param name="sendToCommitteeStr" value="#{fn:containsIgnoreCase(meetingBB.managedBean.taskName, 'COORDINATE') ? lbl['lbl.sc.popup.needcommitteeapprover']: lbl['lbl.sc.popup.needcommitteeapproverEval']}"></ui:param><ui:remove><!-- 25037 - note 510--></ui:remove>
 		<ac:confirmationPopup id="confirmChangeMemberListId"

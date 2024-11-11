@@ -12,8 +12,7 @@
 		<p:dataTable id="dtIntRepTbl" var="interviewee" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
-		<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
-		<p:column selectionMode="multiple" style="width:2%" rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvInterviewees}" />
+		<p:column selectionMode="multiple" style="width:2%" rendered="#{not empty svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}" />
 		
 		<p:ajax event="rowSelectCheckbox" update=":#{p:component('btnIntervieweeRemove')}" />
 		<p:ajax event="rowUnselectCheckbox" update=":#{p:component('btnIntervieweeRemove')}" />
@@ -26,12 +25,7 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.sm.person.composition.name']}" />
 			</f:facet>
-			<!-- #34166 - Start  -->
-			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" validator="#{svoSiteVisitBackingBean.validatorRequired}" >
-			<f:attribute name="param" value="#{lbl['lbl.sm.person.composition.name']}" />
-			<f:ajax event="blur" execute="@this" />
-			</p:inputText>
-			<!-- #34166 - End  -->
+			<p:inputText value="#{interviewee.name}" label="#{lbl['lbl.sm.person.composition.name']}" id="intName"  maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" />
 		</p:column>
 		
 		<p:column>	
@@ -39,13 +33,8 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.sm.userprofile.designation']}" />
 			</f:facet>
-			<!-- #34166 - Start  -->
 			<p:inputText value="#{interviewee.designation}" label="#{lbl['lbl.sm.userprofile.designation']}" id="intDesignation"  
-			maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" validator="#{svoSiteVisitBackingBean.validatorRequired}">
-			<f:attribute name="param" value="#{lbl['lbl.sm.userprofile.designation']}" />
-			<f:ajax event="blur" execute="@this" />
-			</p:inputText>
-			<!-- #34166 - End  -->
+			maxlength="50" size="55"  required="#{!empty param['disabledValidation']}" />
 		</p:column>
 		
 		</p:dataTable>

@@ -404,10 +404,10 @@
 										width="140px" height="160px" />
 
 									<div align="left">
+										<!-- #34527 defect start -->
 										<p:commandButton
 											value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
-											oncomplete="dlImageUpload.show();" immediate="true" />
-										<!-- #34527 defect start -->
+											oncomplete="dlImageUpload.show();" immediate="true" update=":form:dlImageUpload" />
 										<p:commandButton
 											value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
 											action="#{profileManagementBackingBean.deletePortrait}"
