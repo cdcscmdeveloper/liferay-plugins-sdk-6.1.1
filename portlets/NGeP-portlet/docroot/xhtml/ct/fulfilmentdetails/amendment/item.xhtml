@@ -733,7 +733,7 @@
      			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" style="float:left;margin-bottom: 20px;margin-top: 10px;font-weight:bold;">: #{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}</p:outputLabel>
      	
      			<p:dataTable var="item" value="#{ctBackingBean.managedBean.scRequestItemSpecOfferList}" classStyle="TableHeader" style="margin: 0; max-height: 700px; overflow-y: auto;" emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}"
-     			rows="5" paginator="true" paginatorPosition="bottom"
+     			height="auto" rows="5" paginator="true" paginatorPosition="bottom"
                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                 currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
                 scrollable="true" scrollHeight="200" liveScroll="true">   
