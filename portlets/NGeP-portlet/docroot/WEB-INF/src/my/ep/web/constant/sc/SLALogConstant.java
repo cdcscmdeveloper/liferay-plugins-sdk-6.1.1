@@ -23,6 +23,9 @@ public class SLALogConstant {
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
 	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
 	// 25037 - end
+	//#25426 - start
+	public static final String QT_SUPPLIER_FINALIZATION_BACKINGBEAN = "SupplierFinalizationBackingBean";
+	//#25426 - end
 	/*
 	 * METHOD_NAME
 	 */
