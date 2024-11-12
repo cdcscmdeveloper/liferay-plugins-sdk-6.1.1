@@ -29,7 +29,7 @@
 									<td><p:outputLabel value="#{lbl['lbl.sc.name']}" />
 									    <p:outputLabel value="*" styleClass="mandatory" /></td>
 									<td colspan="3"><p:inputText maxlength="50" onkeypress="if (event.keyCode == 13) { coordinateMeetingaddSearch.jq.click(); return false; }"
-											style="margin-bottom: 5px;"
+											style="margin-bottom: 5px;width:90%;"
 											value="#{evaluationMeetingBackingBean.managedBean.name}"
 											size="47" id="name1" label="#{lbl['lbl.sc.name']}" required="#{evaluationMeetingBackingBean.managedBean.nameRequired}"/>
 											<p:message id="name1Msg" for="name1" display="icon" /></td>
@@ -51,7 +51,7 @@
 											value="#{lbl['lbl.sc.identification.no']}" /></td>
 									<td><p:inputText maxlength="20" onkeypress="if (event.keyCode == 13) { coordinateMeetingaddSearch.jq.click(); return false; }"
 											value="#{evaluationMeetingBackingBean.managedBean.identificationNo}"
-											size="47" /></td>
+											size="47" style="width:90%;"/></td>
 									<td />
 									<td />
 								</tr>

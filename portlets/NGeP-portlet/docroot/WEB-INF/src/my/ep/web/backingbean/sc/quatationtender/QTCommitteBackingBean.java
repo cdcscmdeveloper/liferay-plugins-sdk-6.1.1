@@ -2434,8 +2434,9 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 
 	// 25037 - start
 	private boolean isEligibleStatusForBtns(Long statusId, String commType) {
-		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId))
+		if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)) {
 			return true;
+		}
 		if (commType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
 			boolean specCheck = Arrays.asList(QTStatusConst.QT_SPEC_COMM_UPDATE_GROUP).contains(statusId)
 					&& this.getManagedBean().isValidFor25037();
@@ -2675,15 +2676,18 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 			Long status = getCurrentQtStatusId();
 			status = status == null ? new Long(0L) : status;
 			if (committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
-				if (status.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-						|| status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT)) {
-					return Arrays.asList(new String[] { "C", "M" }).contains(role.getParameterCode());
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT).contains(status)) {
+					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
+							ParameterConst.COMMITTEE_ROLE_MEMBER).contains(role.getParameterCode());
 				} else if (status.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)) {
-					return Arrays.asList(new String[] { "C" }).contains(role.getParameterCode());
+					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON).contains(role.getParameterCode());
 				}
 			} else {
 				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)) {
-					return Arrays.asList(new String[] { "C", "M" }).contains(role.getParameterCode());
+					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
+							ParameterConst.COMMITTEE_ROLE_MEMBER).contains(role.getParameterCode());
 				} else if (status.equals(QTStatusConst.QT_RE_EVALUATION) && getManagedBean().getQt() != null) {
 					ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(committeeType, getManagedBean().getQt()
 							.getQtId());
@@ -2691,7 +2695,8 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 						Long cstatus = wfStatus.getPmStatus().getStatusId();
 						if (Arrays.asList(QTStatusConst.QT_EVAL_PREPARATION_GROUP).contains(cstatus)
 								|| Arrays.asList(QTStatusConst.QT_EVAL_FINALIZATION_GROUP).contains(cstatus)) {
-							return Arrays.asList(new String[] { "C", "M" }).contains(role.getParameterCode());
+							return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
+									ParameterConst.COMMITTEE_ROLE_MEMBER).contains(role.getParameterCode());
 						}
 					}
 				}
