@@ -4206,43 +4206,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	// #28854 - Start
 	/**
-	 * Processes the given String value by replacing newline characters with
-	 * HTML line break tags and encoding the < and > characters to their HTML
-	 * entity equivalents.
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null or empty, it returns null.
 	 * 
 	 * @param value
-	 *            the string to be processed
+	 *            the string to be processed; may be null
 	 * @return the processed string value with newline characters replaced by
 	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
-	 *         respectively
+	 *         respectively; {@code null} if the input is null or empty
 	 */
-	public String encodeHtmlString(String value) {
-		if (value == null) {
-			return "";
+	public String encodeHtmlStringOrNull(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
 		}
 		// Replace < and > with their HTML entity equivalents
 		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
 		// Replace any newline characters (\r\n or \n) with <br/>
 		return formatted.replaceAll("(\r\n|\n)", "<br />");
-	}
-
-	/**
-	 * Encodes the given string as HTML if it is not null or empty.
-	 * 
-	 * <p>
-	 * This method checks if the input string is neither null nor empty. If the
-	 * string is valid, it is passed to the {@link #encodeHtmlString(String)}
-	 * method for encoding. If the string is null or empty, the method returns
-	 * null.
-	 * </p>
-	 * 
-	 * @param value
-	 *            the string to encode; may be null
-	 * @return the HTML-encoded string if {@code value} is not null or empty;
-	 *         {@code null} otherwise
-	 */
-	public String encodeHtmlStringOrNull(String value) {
-		return (value != null && !value.isEmpty()) ? encodeHtmlString(value) : null;
 	}
 	// #28854 - End
 }
