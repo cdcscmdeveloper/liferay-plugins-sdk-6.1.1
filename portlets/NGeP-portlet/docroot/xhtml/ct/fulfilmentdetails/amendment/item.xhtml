@@ -660,7 +660,7 @@
 		header="#{lbl['lbl.ct.specification']}"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		styleClass="pop_up_top" modal="true" width="auto" height="auto"
-		style="max-height: 700px; max-width: 900px;" resizable="false">
+		style="max-height: 800px; max-width: 900px;" resizable="false">
 
 		<h:panelGroup
 			rendered="#{ctBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase}">
@@ -676,6 +676,7 @@
 						value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}"
 						escape="false"
 						style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:450px" />
+					<br />
 				</h:panelGroup>
 
 				<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">
@@ -694,6 +695,7 @@
 							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"
 								style="position: absolute; left: 470px; top: 0;" />
 						</div>
+						<br />
 					</h:panelGroup>
 				</c:if>
 				<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">
@@ -727,6 +729,7 @@
 								value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"
 								style="position: absolute; left: 470px; top: 0;" />
 						</div>
+						<br />
 					</h:panelGroup>
 				</c:if>
 				<c:if test="#{ctBackingBean.managedBean.newOfferSpec eq null}">
@@ -750,21 +753,20 @@
 				value="#{ctBackingBean.managedBean.itemSpecification}"
 				classStyle="TableHeader"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				style="margin-bottom: 30px; max-height: 400px; overflow-y: auto;"
-				rows="5" paginator="true" paginatorPosition="bottom"
+				height="auto"
+				style="margin: 0; max-height: 300px; overflow-y: auto;" rows="5"
+				paginator="true" paginatorPosition="bottom"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
+				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
+				scrollable="true" scrollHeight="200" liveScroll="true">
 				<p:column styleClass="column-align-center"
 					style="white-space:normal; width: 100%;">
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
 					<!-- #31558 start - Aligning the title to the center but the content to the left -->
-					<div
-						style="overflow-y: auto; overflow-x: hidden; max-height: 150px;">
-						<h:outputText value="#{item}" rows="5" escape="false"
-							style="float:left;text-align:left; display:block;word-wrap: break-word; width:450px"
-							autoResize="false" disabled="true"
-							rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
-					</div>
+					<h:outputText value="#{item}" rows="5" escape="false"
+						style="float:left;text-align:left; display:block;word-wrap: break-word; width:400px"
+						autoResize="false" disabled="true"
+						rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
 					<h:outputText rows="5" style="resize:none;text-align:left;"
 						autoResize="false" disabled="true"
 						rendered="#{ctBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>
@@ -836,7 +838,9 @@
 				</p:dataTable>
 			</h:panelGrid>
 		</h:panelGroup>
+
 		<!-- #28854 end -->
+
 		<f:facet name="footer">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
