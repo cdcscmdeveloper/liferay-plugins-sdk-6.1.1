@@ -2345,7 +2345,7 @@ public class EvaluationMeetingBackingBean extends
 	 * Determine the popup that should appear upon submission.
 	 */
 	public void resolveSubmitMeetingDialog() {
-		if (isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity())) {
+		if (isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()) && this.getManagedBean().isValidFor25037()) {
 			RequestContext.getCurrentInstance().execute("confirmSubmitToApproverPopup.show();");
 		} else {
 			RequestContext.getCurrentInstance().execute("confirmSubmitMeetingPopup.show();");
