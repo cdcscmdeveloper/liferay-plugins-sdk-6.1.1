@@ -4418,7 +4418,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		List<ScQtApproval> scQtApprovals = this.getManagedBean().getQt().getScQtApprovals();
 		//#30477 Start Vinod
-		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod
 			boolean isCmtPendingRevision = false;
 			
@@ -4439,10 +4440,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				boolean valConditionOthers = !approval.getApprovalCategory().getParameterCode()
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
-						&& (CollectionUtils.isEmpty(approval.getApproverSettings()) && this.getManagedBean()
-								.isFirstViewPageCAUsers());
-
-				if (valCondition || valConditionOthers) {
+						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
+				
+				if ((valCondition && approval.getApprovalCategory().getParameterCode()
+						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
+						|| valConditionOthers) {
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174);
 					// #11299 End Vinod
@@ -13632,16 +13634,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	//12471 - end
-	
-	// 29732 start
-	private boolean isQTRoleMaintenanceValidation() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
-	}
-	// 29732 end
 
 	
 	/**
@@ -13649,23 +13641,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * 
 	 */
 	public void checkRolesToAuditView() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		if (CollectionUtils.isNotEmpty(roleDesc)) {
-			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				if (pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.EP_ADMIN.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_INTERNAL.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value())) {
-					this.getManagedBean().setAuditViewRole(true);
-				}
-
-			}
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value())) {
+			this.getManagedBean().setAuditViewRole(true);
 		}
 	}
 	

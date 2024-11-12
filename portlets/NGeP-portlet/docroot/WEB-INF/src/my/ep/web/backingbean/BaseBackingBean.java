@@ -1020,23 +1020,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
-			//#25790 - start
-			Locale localeMY = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
-					CommonConstants.DEFAULT_COUNTRY_CODE);
-			
-			Locale localeEN = new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
-			//#25790 - end
 			for (PmStatusDesc statusDesc : statusDescs) {
-				//#25790 - start
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc
-						.getStatusName()
-						.replace(
-								ResourceBundleUtils.getMessage("lbl.txt.error",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeMY), StringUtils.EMPTY)
-						.replace(
-								ResourceBundleUtils.getMessage("lbl.txt.error",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeEN), StringUtils.EMPTY));
-				//#25790 - end
+				//start - 36615 - revert to previous code
+				items[i++] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+				//end - end
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -1091,6 +1079,52 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	
+	// start - 36615
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param moduleCode
+	 *            the module code
+	 * @param docTypes
+	 *            the documents type
+	 * @param searchBean
+	 *            the SearchBean instance
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValuesBySearchBean(String moduleCode, List<SelectItem> docTypes,
+			SearchBean<PmStatusDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+		List<PmStatusDesc> combinedStatusDescs = new ArrayList<>();
+
+		try {
+			for (SelectItem item : docTypes) {
+				if (item.getValue() != null) {
+					List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode,
+							item.getValue().toString(), searchBean);
+					combinedStatusDescs.addAll(statusDescs);
+				}
+			}
+
+			items = new SelectItem[combinedStatusDescs.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmStatusDesc statusDesc : combinedStatusDescs) {
+				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
+					"", SLALogConstant.COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+
+	// end - 36615
+
 	/**
 	 * Get Status description by status id.
 	 * 
@@ -4368,26 +4402,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		generateReport(report, paramMap);
 	}
 	
-	//#28854,#25000 - Start
+	// #28854,#25000 - Start
 	/**
-	 * Processes the given string by replacing newline characters with HTML line break tags
-	 * and encoding the < and > characters to their HTML entity equivalents. If the string
-	 * is null or empty, it returns null.
-	 *
-	 * @param value the string to be processed; may be null
-	 * @return the processed string value with newline characters replaced by &lt;br/&gt;
-	 *         and <, > characters encoded to &lt; and &gt; respectively; {@code null} if the input is null or empty
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null or empty, it returns null.
+	 * 
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
 	 */
 	public String encodeHtmlStringOrNull(String value) {
-	    if (value == null || value.isEmpty()) {
-	        return null;
-	    }
-	    // Replace < and > with their HTML entity equivalents
-	    String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
-	    // Replace newline characters with <br/>
-	    return formatted.replace("\n", "<br/>");
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br />");
 	}
-	//#28854,#25000 - End
+	// #28854,#25000 - End
 	
 	// #25000 - Start
 	/**
