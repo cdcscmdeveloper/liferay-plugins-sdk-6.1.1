@@ -6410,5 +6410,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return committeeNames;
 	}
+	
+	/**
+	 * Sort outcomes.
+	 *
+	 * @param outcomes
+	 * @return the string[]
+	 */
+	public String[] sortQtOutcomes(String[] outcomes) {
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY; 
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[] {BpmOutcomeConst.BPM_REVISE};
+			List<String> sortOrder = Arrays.asList(orderedAction);
+
+			@Override
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
+	}
 	// 25037 - end
 }
