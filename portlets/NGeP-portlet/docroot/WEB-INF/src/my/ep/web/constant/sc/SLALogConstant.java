@@ -11,7 +11,8 @@ public class SLALogConstant {
 	 * MODULE
 	 */
 	public static final String QT_MODULE = "QT"; // #29007
-
+	public static final String COMMON_MODULE = "COMMON"; //#28895#35492
+	
 	/*
 	 * CLASS_NAME
 	 */
