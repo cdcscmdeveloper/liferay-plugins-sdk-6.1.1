@@ -2545,35 +2545,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
+	private String[] sortOutcomes(String[] outComes) {
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
 
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
-	private String[] sortOutcomes(String[] outcomes) {
-		// 25037(29253) - start
-		if (null == outcomes) {
-			return ArrayUtils.EMPTY_STRING_ARRAY;
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
 		}
-		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
-			// last index will appear on the far right,
-			// if outcome not ranked, order come as is,
-			// existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
 
-			@Override
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});
-		String[] bpmOutcomes = new String[bpmActions.size()];
-		return bpmActions.toArray(bpmOutcomes);
-		// 25037(29253) - end
+		outComes = new String[bpmActions.size()];
+		return bpmActions.toArray(outComes);
 	}
+
 
 	/**
 	 * Get Rule Type Description by rule type
