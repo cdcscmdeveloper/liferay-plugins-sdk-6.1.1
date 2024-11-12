@@ -674,6 +674,7 @@
 						value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}"
 						escape="false"
 						style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:450px" />
+						<br/>
 				</h:panelGroup>
 
 				<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">
@@ -691,6 +692,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}" 
 						style="position: absolute; left: 470px; top: 0;" />
 						</div>
+						<br/>
 					</h:panelGroup>
 				</c:if>
 				<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">
@@ -723,6 +725,7 @@
 							value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"
 							style="position: absolute; left: 470px; top: 0;" />
 						</div>
+						<br/>
 					</h:panelGroup>
 				</c:if>
 				<c:if test="#{ctBackingBean.managedBean.newOfferSpec eq null}">
