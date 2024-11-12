@@ -261,21 +261,19 @@
 				value="#{suspensionBackingBean.managedBean.itemSpecification}"
 				classStyle="TableHeader"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				style="margin-bottom: 30px; max-height: 400px; overflow-y: auto;"
+				height="auto" style="margin: 0; max-height: 300px; overflow-y: auto;"
 				rows="5" paginator="true" paginatorPosition="bottom"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
+				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
+				scrollable="true" scrollHeight="200" liveScroll="true">
 				<p:column styleClass="column-align-center"
 					style="white-space:normal; width: 100%;">
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
 					<!-- #31558 start - Aligning the title to the center but the content to the left -->
-					<div
-						style="overflow-y: auto; overflow-x: hidden; max-height: 150px;">
 						<h:outputText value="#{item}" rows="5" escape="false"
-							style="float:left;text-align:left; display:block;word-wrap: break-word; width:450px"
+							style="float:left;text-align:left; display:block;word-wrap: break-word; width:400px"
 							autoResize="false" disabled="true"
 							rendered="#{suspensionBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
-					</div>
 					<h:outputText rows="5" style="resize:none;text-align:left;"
 						autoResize="false" disabled="true"
 						rendered="#{suspensionBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>
