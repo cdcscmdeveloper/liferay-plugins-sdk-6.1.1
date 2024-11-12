@@ -33,6 +33,7 @@
 			gpkiBlockWidget.show();
 			const textBeforeSign = $("[id='#{textBeforeSign.clientId}']").val();
 			postSignOTP([ {name: 'textBeforeSign', value: textBeforeSign},
+			              {name: 'signedText', value: textBeforeSign},
 			              {name: 'skipBtn', value: 'true'},
 			              {name: 'dialog', value: widgetVar}, ]);
 		}

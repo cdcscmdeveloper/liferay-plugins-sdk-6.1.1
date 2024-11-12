@@ -4622,7 +4622,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 
 			if (ruleResDTO.isSuccessful()) {
-				if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
+				//#35061 - Start
+				if(ruleResDTO.getRuleValueList()!=null && !ruleResDTO.getRuleValueList().isEmpty()) {
+				//#35061 - End
 					indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
 					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
