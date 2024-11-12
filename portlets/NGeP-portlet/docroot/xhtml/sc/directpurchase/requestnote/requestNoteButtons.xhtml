@@ -91,12 +91,21 @@
 				</p:confirmDialog>
 			</c:if>
 		</c:if>
-
-		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-			style="float:right;"
-			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
-			immediate="true" 
-			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
+		<div class="ppRightBtn">
+			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
+				style="float:right;"
+				action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
+				immediate="true" 
+				rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
+			&#160;
+			<ui:remove>START : #28895#35492</ui:remove>
+			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+				action="#{auditSearchDPRequestNoteBackingBean.redirectToAudittrailView(requestNoteBackingBean.managedBean.requestNote.requestNoteId)}"
+				immediate="true"
+				rendered="#{auditSearchDPRequestNoteBackingBean.getRoleCode() and requestNoteBackingBean.managedBean.trackingDairyView}" />
+			&#160;
+			<ui:remove>END : #28895#35492</ui:remove>
+		</div>
 	</div>
 	<h:panelGroup
 		rendered="#{!isViewOnly}">
