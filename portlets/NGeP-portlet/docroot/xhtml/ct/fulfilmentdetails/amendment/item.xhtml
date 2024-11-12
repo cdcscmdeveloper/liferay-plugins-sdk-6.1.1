@@ -760,13 +760,10 @@
 					style="white-space:normal; width: 100%;">
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
 					<!-- #31558 start - Aligning the title to the center but the content to the left -->
-						<h:outputText value="#{item}" rows="5" escape="false"
+						<h:outputText value="#{empty item ? lbl['lbl.sc.qt.item.spec.null'] : item}" rows="5" escape="false"
 							style="float:left;text-align:left; display:block;word-wrap: break-word; max-width: 600px;"
-							autoResize="false" disabled="true"
-							rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
-					<h:outputText rows="5" style="resize:none;text-align:left;"
-						autoResize="false" disabled="true"
-						rendered="#{ctBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>
+							disabled="true">
+						</h:outputText>					
 					<!-- #31558 end -->
 				</p:column>
 			</p:dataTable>	
