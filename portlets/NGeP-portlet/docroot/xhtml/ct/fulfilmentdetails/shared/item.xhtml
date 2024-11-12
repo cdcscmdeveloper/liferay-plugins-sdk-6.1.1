@@ -1185,7 +1185,7 @@
 						value="#{ctBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}"
 						escape="false"
 						style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:450px" />
-					<br />
+						<br/>
 				</h:panelGroup>
 
 				<c:if test="#{ctBackingBean.managedBean.supplierOffer ne null}">
@@ -1195,16 +1195,15 @@
 						<h:outputText value=":&#160;" escape="false"
 							style="float:left;font-weight:bold" />
 						<div style="display: flex; align-items: flex-start;">
-							<div
-								style="overflow-y: auto; overflow-x: hidden; max-height: 150px; display: inline-block; position: relative;">
-								<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}"
-									escape="false"
-									style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 200px; width:450px" />
-							</div>
-							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"
-								style="position: absolute; left: 470px; top: 0;" />
+						<div style="overflow-y: auto; overflow-x: hidden; max-height: 100px; display: inline-block; position: relative;">
+						<h:outputText value="#{ctBackingBean.managedBean.supplierOffer}"
+							escape="false"
+							style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 150px; width:450px" />
 						</div>
-						<br />
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}" 
+						style="position: absolute; left: 470px; top: 0;" />
+						</div>
+						<br/>
 					</h:panelGroup>
 				</c:if>
 				<c:if test="#{ctBackingBean.managedBean.supplierOffer eq null}">
@@ -1228,17 +1227,16 @@
 						<h:outputText value=":&#160;" escape="false"
 							style="float:left;font-weight:bold" />
 						<div style="display: flex; align-items: flex-start;">
-							<div
-								style="overflow-y: auto; overflow-x: hidden; max-height: 150px; display: inline-block; position: relative;">
-								<h:outputText value="#{ctBackingBean.managedBean.newOfferSpec}"
-									escape="false"
-									style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 200px; width:450px" />
-							</div>
-							<ac:iconTooltip
-								value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"
-								style="position: absolute; left: 470px; top: 0;" />
+						<div style="overflow-y: auto; overflow-x: hidden; max-height: 100px; display: inline-block; position: relative;">
+						<h:outputText value="#{ctBackingBean.managedBean.newOfferSpec}"
+							escape="false"
+							style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 150px; width:450px" />
 						</div>
-						<br />
+						<ac:iconTooltip
+							value="#{lbl['lbl.ct.tooltip.newofferedspecification']}" 
+							style="position: absolute; left: 470px; top: 0;" />
+						</div>
+						<br/>
 					</h:panelGroup>
 				</c:if>
 				<c:if test="#{ctBackingBean.managedBean.newOfferSpec eq null}">
@@ -1262,20 +1260,19 @@
 				value="#{ctBackingBean.managedBean.itemSpecification}"
 				classStyle="TableHeader"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				height="auto"
-				style="margin: 0; max-height: 300px; overflow-y: auto;" rows="5"
-				paginator="true" paginatorPosition="bottom"
+				height="auto" style="margin: 0; max-height: 250px; max-width: 600px; overflow-y: auto;" rows="5" paginator="true"
+				paginatorPosition="bottom" 
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
-				scrollable="true" scrollHeight="200" liveScroll="true">
+				scrollable="true" scrollHeight="150" liveScroll="true">
 				<p:column styleClass="column-align-center"
 					style="white-space:normal;">
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
 					<!-- #31558 start - Aligning the title to the center but the content to the left -->
-					<h:outputText value="#{item}" rows="5" escape="false"
-						style="float:left;text-align:left; display:block;word-wrap: break-word; width:400px"
-						disabled="true"
-						rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
+						<h:outputText value="#{item}" rows="5" escape="false"
+							style="float:left;text-align:left; display:block;word-wrap: break-word; max-width: 600px;"
+							disabled="true"
+							rendered="#{ctBackingBean.managedBean.itemSpecification ne null}"></h:outputText>
 					<h:outputText rows="5" style="resize:none;text-align:left;"
 						autoResize="false" disabled="true"
 						rendered="#{ctBackingBean.managedBean.itemSpecification eq null}">#{lbl['lbl.sc.qt.item.spec.null']}</h:outputText>
