@@ -15614,13 +15614,14 @@ public class SmApplicationUtil {
 	 *  can edit Bank Information only
 	 * @param bean
 	 */
-	public static void enableBankSectionOnly(SmApplicationManagedBean bean){
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean, List<SmDisciplinaryAction> daList){
 		if(bean.getEditVO() != null){
 			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
 				bean.getEditVO().setDisciplinary(false);
 				return;
 			}
-			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			List<SmDisciplinaryAction> activeDA = EntityHelper.isCollectionEmpty(daList) ?
+					retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()) : daList;
 			if(EntityHelper.isCollectionEmpty(activeDA)){
 				return;
 			}
@@ -15631,7 +15632,11 @@ public class SmApplicationUtil {
 		}
 	}	
 	
-	private static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
+	/**
+	 * @param daList
+	 * @return true if suspend/cancel registration, blacklist owner DA exists
+	 */
+	public static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
 		for(SmDisciplinaryAction da : daList){
 			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
 				return true;
