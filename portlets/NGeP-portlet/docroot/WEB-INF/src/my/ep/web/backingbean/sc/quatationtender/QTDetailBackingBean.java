@@ -1292,7 +1292,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			// #29732 Start
 			//qtmaintenance from audit search ,ADD ISREADONLY
-			//add !isdeskofficer, DO suppose not to show alert message
 			if ((this.getManagedBean().getQt().getQtStatus().getStatusId()
 							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) && !this.getManagedBean().isReadOnly()) {
 				if(isQTRoleMaintenanceValidation()){
