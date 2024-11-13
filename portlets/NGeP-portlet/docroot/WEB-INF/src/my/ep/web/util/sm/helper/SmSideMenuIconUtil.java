@@ -18,7 +18,6 @@ import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -283,12 +282,9 @@ public class SmSideMenuIconUtil {
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
 			if (bean.isSupplierUser()) {
 				
-                // #27883 - Define param
-				boolean flagSmDisciplinaryActionIsCancelCategory = false;
 				bean.getEditVO().setSuppEditCategory(false);
 				
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl()) 
-						&& !flagSmDisciplinaryActionIsCancelCategory) {
+				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				// used to check got changes to display supporting doc
@@ -1720,19 +1716,7 @@ public class SmSideMenuIconUtil {
 		}
 		
 		bean.getEditVO().setSuppEditCategory(false);
-		boolean flagSmDisciplinaryActionIsCancelCategory = false;
-		List<SmDisciplinaryAction> activeDisc = 
-				SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
-		if (activeDisc != null){
-			for(SmDisciplinaryAction disc : activeDisc){
-				if(disc.isCancelCategory()){
-					flagSmDisciplinaryActionIsCancelCategory = true;
-					break;
-				}
-			}
-		}
-		if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl()) 
-					&& !flagSmDisciplinaryActionIsCancelCategory) {
+		if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl())) {
 			bean.getEditVO().setSuppEditCategory(true);
 		}
 		
