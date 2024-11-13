@@ -154,6 +154,7 @@ import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
@@ -497,6 +498,46 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 			// #27797 - end
+			// #34915 idham @01/08/2023 - Start
+			// sort by scLoiLoaItem.getTplSpecZoneDtl() and scLoiLoaItem..getTplSpecTierQty()
+			if (null != this.getManagedBean().getScLoa()
+					&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
+							.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
+					&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa()
+							.getScLoiLoaItems())) {
+				if(this.getManagedBean().getScLoa().getScQt()!=null && this.getManagedBean().getScLoa().getScQt().isZonal()){
+					Collections.sort(this.getManagedBean().getScLoa()
+							.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
+						@Override
+						public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+							if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
+									&& null != s1.getTplSpecZoneDtl() && null != s2.getTplSpecZoneDtl()) {
+								return new CompareToBuilder().append(s1.getTplSpecZoneDtl().getSpecZoneId(), s2.getTplSpecZoneDtl().getSpecZoneId())
+										.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
+							} else {
+								return Long.compare(s1.getTplSpecZoneDtl().getSpecZoneId(),
+										s2.getTplSpecZoneDtl().getSpecZoneId());
+							}
+						}
+					});
+				}else{
+					Collections.sort(this.getManagedBean().getScLoa()
+							.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
+						@Override
+						public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+							if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
+									&& null != s1.getScRequestItem() && null != s2.getScRequestItem()) {
+								return new CompareToBuilder().append(s1.getScRequestItem().getRequestNoteItemId(), s2.getScRequestItem().getRequestNoteItemId())
+										.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
+							} else {
+								return Long.compare(s1.getScRequestItem().getRequestNoteItemId(),
+										s2.getScRequestItem().getRequestNoteItemId());
+							}
+						}
+					});
+				}
+			}
+			// #34915 idham @01/08/2023 - End
 
 		} finally {
 			//qtAwardSO = null;
@@ -10472,6 +10513,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// #29007 -end-
 
 	// #29007 -start-
+	/**
+	 * generate LampiranA3Pdf From Velocity
+	 * @param attachment
+	 * @param scLoa
+	 * @return 
+	 */
 	private void generateLampiranA3PdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
@@ -10485,26 +10532,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		VelocityContext context = new VelocityContext();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
 		String dafaltValue = "T/B";
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+		FacesScopes facesScopes = new FacesScopes();
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (ReportConst.ENG_LANGUAGE_CODE.equals(pmUser.getPreferredLanguage())) {
 			dafaltValue = "T/B";//29007
 		}
 		
 		
 		if (!scLoa.getScLoiLoaItems().isEmpty()) {
 			scLoiLoaItemsList = new ArrayList<>();
-			
-			if (scLoa.getScLoiLoaItems().size() > 1) {
-				checkItemSorting(scLoa.getScLoiLoaItems());
-			}
-
 			for (ScLoiLoaItem scLoiLoaItemOld : scLoa.getScLoiLoaItems()) {
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoiLoaItem(scLoiLoaItemOld);
 
 				AwardSupplierResDTO resDTO = iQTAwardSO.searchLoiLoaItemDetails(reqDTO);
 				ScLoiLoaItem scLoiLoaItem = resDTO.getScLoiLoaItem();
-				FacesScopes facesScopes = new FacesScopes();
-				PmUser pmUser = facesScopes.getUserSessionBean();
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 				String date = df.format(scLoiLoaItem.getChangedDate());
 				StringBuilder finalMsg = new StringBuilder();
@@ -10543,24 +10588,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						date = df.format(scLoiLoaItem.getLatestChangedDate());
 					}
 				}
-
+				if (scLoiLoaItem.getScRequestItem() != null
+						&& scLoiLoaItem.getScRequestItem().getItemName() != null
+						&& StringUtils.isNotBlank(scLoiLoaItem.getScRequestItem().getItemName())
+						&& StringUtils.isNotEmpty(scLoiLoaItem.getScRequestItem().getItemName())) {
+					String itemName = VmUtil.getInstance()
+							.replaceAllSpecialCharactersToHTML(scLoiLoaItem.getScRequestItem().getItemName());
+					scLoiLoaItem.setItemNameForVelocity(VmUtil.getInstance()
+							.addLineBreaks(itemName, 60));
+				}
 				if (scLoiLoaItem.getLoaSpecJustification() != null
 						&& StringUtils.isNotBlank(scLoiLoaItem.getLoaSpecJustification())
 						&& StringUtils.isNotEmpty(scLoiLoaItem.getLoaSpecJustification())) {
-					finalMsg.append("Dikemas kini atas sebab      ");
-					finalMsg.append(scLoiLoaItem.getLoaSpecJustification());
-					
-					String labelLampiranA3 = StringUtils.EMPTY;
-					labelLampiranA3 = date;
-//					log.info("=======labelLampiranA3======" + labelLampiranA3);
-					
-					finalMsg.append("          " + labelLampiranA3);
-					
-					String finalMessage = finalMsg.toString().replaceAll(QTConstants.LESS_THEN,
-							QTConstants.HTML_LESS_THEN);
-					finalMessage = finalMessage.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
-
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(finalMessage);
+					finalMsg.append(QTConstants.LAMPIRAN_A3_JUSTIFICATION
+							+ scLoiLoaItem.getLoaSpecJustification() + " "
+							+ date);
+					String finalMessage = VmUtil.getInstance()
+							.replaceAllSpecialCharactersToHTML(
+									finalMsg.toString());
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(VmUtil
+							.getInstance().addLineBreaks(finalMessage, 60));
 				}
 
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
@@ -10573,7 +10620,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				if (null != templateSpecResDTO && null != templateSpecResDTO.getSpecAnswerList()
 						&& CollectionUtils.isNotEmpty(templateSpecResDTO.getSpecAnswerList())) {
 					boolean newOfferedSpecification = false;
-
+					List<Long> replacedQuestionIds = new ArrayList<>();
 					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
 						String feedback = null;
 						
@@ -10594,29 +10641,29 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						if(specAnswer.getNewSupplierOffer() != null 
 								&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer()) 
 								&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())){
-							String newSupplierOffered=specAnswer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
-							newSupplierOffered=newSupplierOffered.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
-
-							specAnswer.setNewSupplierOffer(newSupplierOffered);
-
 							newOfferedSpecification=true;
+							String newSupplierOffered=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getNewSupplierOffer());
+							specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,25));
+						} else if (specAnswer.getTplSpecQuestion().getClSpecDetail()!=null && StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())){
+							String spec=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClSpecDetail());
+							specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec,25));
 						}
-
-						if(specAnswer.getTplSpecQuestion() != null 
-								&& specAnswer.getTplSpecQuestion().getClItem() !=null 
-								&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem()) 
-								&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())){
-							String itemName=specAnswer.getTplSpecQuestion().getClItem().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
-							itemName=itemName.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
-							specAnswer.getTplSpecQuestion().setClItem(itemName);
+						boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
+								|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
+										.getSpecQuestionId());
+						boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
+								&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
+								&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
+						if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {
+							String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+									specAnswer.getTplSpecQuestion().getClItem());
+							specAnswer.getTplSpecQuestion().setClItem(
+									VmUtil.getInstance().addLineBreaks(itemName, 30));
+							replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 						}
-
-						if(specAnswer.getAnswerRemark() != null 
-								&& StringUtils.isNotBlank(specAnswer.getAnswerRemark()) 
-								&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
-							String ansRemark=specAnswer.getAnswerRemark().replaceAll(QTConstants.LESS_THEN, QTConstants.HTML_LESS_THEN);
-							ansRemark=ansRemark.replaceAll(QTConstants.GREATER_THEN, QTConstants.HTML_GREATER_THEN);
-							specAnswer.setAnswerRemark(ansRemark);
+						if(specAnswer.getAnswerRemark() != null && StringUtils.isNotBlank(specAnswer.getAnswerRemark()) && StringUtils.isNotEmpty(specAnswer.getAnswerRemark())){
+							String ansRemark=VmUtil.getInstance().replaceAllSpecialCharactersToHTML(specAnswer.getAnswerRemark());
+							specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark,25));
 						}
 					}
 					
@@ -10633,10 +10680,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scLoiLoaItemsList.add(scLoiLoaItem);
 					itemIds.add(scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
 				}
-			}
-			
-			if (this.getManagedBean().getScQt().isZonal() && scLoiLoaItemsList.size() > 1) {
-				checkItemSortingLatest(scLoiLoaItemsList);
 			}
 		}
 
@@ -10958,6 +11001,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	/* #29007 End Vinod */
 	
+	/* #29007 Start Vinod */
+	/**
+	 * replace all special characters and next line characters to html codes.
+	 * @param str
+	 * @return updatedStr
+	 */
+	public String replaceAllSpecialCharactersAndNewline(String str) {
+		String updatedStr = str.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		return updatedStr;
+	}
+	/*#29007 End Vinod*/
+	
 	/*
 	 * 29007 Start sorting LoiItems
 	 */
@@ -11068,18 +11126,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// #29007 -end-
 
 	// #29007 -start-
+	/**
+	 * this method to display N/A or T/B based on language for Supplier remark.
+	 * 
+	 * @param supplierRemarks
+	 * @return updated string
+	 */
 	public String supplierRemarks(String supplierRemarks) {
 		String remarks = "T/B";
-		
 		if (null != supplierRemarks && StringUtils.isNotBlank(supplierRemarks)
 				&& StringUtils.isNotEmpty(supplierRemarks)) {
-			return supplierRemarks;
-		} else {
-			if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-				remarks = "N/A";
-			}
+			return this.replaceAllSpecialCharactersAndNewline(supplierRemarks);
 		}
-		
+		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
+			remarks = "N/A";
+		}
 		return remarks;
 	}
 	// #29007 -end-
