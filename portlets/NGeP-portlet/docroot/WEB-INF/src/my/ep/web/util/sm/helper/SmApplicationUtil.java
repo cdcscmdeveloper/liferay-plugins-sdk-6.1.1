@@ -15609,10 +15609,11 @@ public class SmApplicationUtil {
 	//#34483 END
 	
 	//#26238
-	 /**
+	/**
 	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
 	 *  can edit Bank Information only
 	 * @param bean
+	 * @param daList
 	 */
 	public static void enableBankSectionOnly(SmApplicationManagedBean bean, List<SmDisciplinaryAction> daList){
 		if(bean.getEditVO() != null){
