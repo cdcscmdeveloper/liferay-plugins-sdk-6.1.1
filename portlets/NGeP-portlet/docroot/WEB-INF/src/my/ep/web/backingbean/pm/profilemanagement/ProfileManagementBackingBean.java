@@ -80,6 +80,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.SLAUtils; //#36489
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -1177,7 +1178,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	}
     
-	// #36489 - Start
+	//#36489 - Start
 	/**
 	 * check if user still have:
 	 * 1) pending task (BPM)
@@ -1187,7 +1188,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void orgUnitStatusChange() {
 		logger.info("orgUnitStatusChange");
-		if (isCheckUserOrg()) {
+		if (validateUserOrg()) {
 			int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
 			if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				EpException ex;
@@ -1196,8 +1197,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770167);
-				} else if ((ex = isAnyPendingDocForUserRole(
-						isCheckUserOrgandRole(), this.getManagedBean().getSelectedUser().getUserId())) != null) {
+				} else if ((ex = isAnyPendingDocForUserRole(validateUserOrgandRole(), this.getManagedBean()
+						.getSelectedUser().getUserId())) != null) {
 					// revert it to active
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					// hit error and exit
@@ -1205,7 +1206,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				} else if (isActiveUserGroupUser() != null) {
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
-				} else if (this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()) {
+				} else if (validateUserOrgProfileAndStatus()) {
 					checkIsActiveGovtSellerUser();
 				} else {
 					// if inactive set expire Date to SyetemDate
@@ -1217,7 +1218,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			//#35489 - End
 		}
 	}
-	// #36489 - End
+	//#36489 - End
 
 	public void userStatusChange() {
 		logger.info("userStatusChange");
@@ -3199,101 +3200,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	}
 
+	//#36489 and SonarLint Fixing - Start
 	/**
 	 * Validation for PmUser's fields
 	 * 
 	 * @param user
+	 * @param pmUserOrg
 	 */
 	private void validateUser(PmUser user, PmUserOrg pmUserOrg) {
-		logger.info("validateUser");
-		if (StringUtils.isBlank(user.getLoginId())) {
-			throw new EpException(MessageConst.ERROR_770030);
-		}
-		if (user.getSalutationCode().getSalutationId() == null) {
-			throw new EpException(MessageConst.ERROR_770031);
-		}
-		if (StringUtils.isBlank(user.getUserName())) {
-			throw new EpException(MessageConst.ERROR_770032);
-		}
-		if (StringUtils.isBlank(user.getIdentificationCode().getParameterCode())) {
-			throw new EpException(MessageConst.ERROR_770033);
-		}
-		if (StringUtils.isBlank(user.getIdentificationNo())) {
-			throw new EpException(MessageConst.ERROR_770034);
-		}
+	    logger.info("validateUser");
 
-		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
-			throw new EpException(MessageConst.ERROR_770090);
-		}
-		if (user.isNotifyBySms() && (pmUserOrg.getMobileTelcoId() == null)) {
-			throw new EpException(MessageConst.ERROR_770250);
-		}
+	    validateBasicUserDetails(user);
+	    validateIdentification(user);
+	    validateEmailAndNotificationPreferences(user, pmUserOrg);
+	    validateOrgProfile(pmUserOrg);
+	    validateExistingUserOrg(user, pmUserOrg);
 
-		// Validate if org profile not chosen.
-		if (ParameterConst.ORG_TYPE_FACTORING.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-			if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null
-					|| pmUserOrg.getPmOrgProfile().getPmFinancialOrg() == null
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName())) {
-				throw new EpException(MessageConst.ERROR_770175);
-			}
-		} else if (ParameterConst.ORG_TYPE_SUPPLIER
-				.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-			if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null
-					|| pmUserOrg.getPmOrgProfile().getSmSupplier() == null
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName())
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getRegNo())) {
-				throw new EpException(MessageConst.ERROR_770175);
-			}
-		} else {
-			if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null
-					|| pmUserOrg.getPmOrgProfile().getPmOrgValidity() == null
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode())
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName())) {
-				throw new EpException(MessageConst.ERROR_770175);
-			}
-		}
-
-		if (!ParameterConst.ORG_TYPE_SUPPLIER.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())
-				&& StringUtils.isBlank(pmUserOrg.getDesignation())) {
-			throw new EpException(MessageConst.ERROR_770108);
-		}
-		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
-			throw new EpException(MessageConst.ERROR_770036);
-		}
-
-		if (user.getUserId() != null && DbValueConst.RECORD_STATUS_ACTIVE == pmUserOrg.getRecordStatusFlg()) {
-			// validate if the user contains any active user orgs (exclude
-			// supplier type and own org profile)
-			IUserSO userSO = null;
-			try {
-				UserReqDTO userOrgReqDTO = new UserReqDTO();
-				userOrgReqDTO.setUserId(user.getUserId());
-				userOrgReqDTO.setExcludeOrgType(OrganizationType.SUPPLIER.value());
-				userOrgReqDTO.setUserOrgChecking(true);
-				if(!pmUserOrg.isBrandNew() && pmUserOrg.getUserOrgId() != null){
-					userOrgReqDTO.setUserOrgId(pmUserOrg.getUserOrgId());
-					userOrgReqDTO.setExcludeOrgProfileId(pmUserOrg.getPmOrgProfile().getOrgProfileId());
-				}
-
-				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-				UserResDTO resDTO = userSO.retrieveAllUserOrgListByUserId(userOrgReqDTO);
-				if (resDTO.getUserOrgList() != null && !resDTO.getUserOrgList().isEmpty()) {
-					PmOrgProfile orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
-					throw new EpException(MessageConst.ERROR_770155,
-							new String[] { orgProfile.getOrgName(), orgProfile.getOrgCode() });
-				}
-			} finally {
-				userSO = null;
-			}
-		}
-		//#36489 - Start
-		if (this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()) {
-			checkIsActiveGovtSellerUser();
-		}
-		//#36489 - End
+	    if (validateUserOrgProfileAndStatus()) {
+	        checkIsActiveGovtSellerUser();
+	    }
 	}
-
+	//#36489 and SonarLint Fixing - End
+	
 	/**
 	 * Validation for PmUser
 	 * 
@@ -3527,7 +3455,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		IUserSO userSO = null;
 		PmUser user = null;
 		PmUserOrg userOrg = null;
-		// boolean addressEntered = false;
 		boolean isNewUser = this.getManagedBean().getSelectedUser().isBrandNew();
 		logger.info("..............saveUserProfile.................isNewUser=" + isNewUser);
 
@@ -3548,10 +3475,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				//Redmine Bug #32423 & #32032 - END
 			}
 			validateUser(user, userOrg);
-			// addressEntered = validateUserAddress(this.getManagedBean()
-			// .getUserAddress());
-			// validateResponsibleOrg(user);
-			// oneActiveResponsibleOrg(user);
 			validatePreference(user);
 			validateRoles(userOrg);
 
@@ -3559,23 +3482,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
 			reqDTO.setServerPort(getFacesScopes().getRequest().getServerPort());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-
-			/*
-			 * no need check as assumed user have logged in
-			 * if(!StringUtils.isBlank(user.getConfirmPassword()) &&
-			 * !StringUtils.isBlank(user.getPassword())){
-			 * //!StringUtils.isBlank(user.getOldPassword()) && isChangePwd =
-			 * true; }
-			 * 
-			 * 
-			 * if(isChangePwd){ if(!checkOldPassword(user)){ throw new
-			 * EpException("Old Password is invalid."); } }
-			 */
-			// if (this.getManagedBean().getSelectedUser().isOrgAddress()) {
-			// cloneUserAddress(user);
-			// } else {
-			// loadUserAddress(user, addressEntered);
-			// }
 
 			loadUserOrgType(user, userOrg);
 			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();// always
@@ -3701,13 +3607,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.setSupplierUser(true);
 			}
 			
-			// #36489 - Start
-			if (ParameterConst.ORG_TYPE_PTJ.equals(user.getOrgTypeCode().getParameterCode())
-					&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()
+			//#36489 - Start
+			if (validateUserOrgProfileAndStatus()
+					&& ParameterConst.ORG_TYPE_PTJ.equals(user.getOrgTypeCode().getParameterCode())
 					&& this.getManagedBean().isSuppGovSellerUser()) {
 				reqDTO.setSuppGovSeller(true);
 			}
-			// #36489 - End
+			//#36489 - End
 			
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
@@ -3715,10 +3621,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 				uploadAttachments();
 				deleteAttachments();
-				/*
-				 * if(user.getPortrait()!=null){
-				 * uploadPortrait(resDTO.getPmUser()); }
-				 */
+
 				if (!isNewUser) {
 					if (!userOrg.isBrandNew()) {
 						loadUserProfile(resDTO.getPmUser().getUserId(), userOrg.getUserOrgId());
@@ -3758,8 +3661,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-			// throw new EpException(MessageConst.ERROR_770059, new
-			// String[]{e.getMessage(),e.getMessage()});
 		} finally {
 			userSO = null;
 		}
@@ -5209,7 +5110,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	// #35769 - End // fixing null pointer after inactive user
 	
-	// #36489 - Start
+	//#36489 and SonarLint Fixing - Start
 	/**
 	 * Check if user active at Supplier User Appointment in Org Profile
 	 * Maintenance
@@ -5233,6 +5134,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if (this.getManagedBean().getSelectedUser().getIdentificationNo()
 						.compareToIgnoreCase(user.getIdentificationNo()) == 0) {
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					this.getManagedBean().setSuppGovSellerUser(false);
 					throw new EpException(MessageConst.ERROR_775219);
 				}
 			}
@@ -5276,14 +5178,131 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
-	private boolean isCheckUserOrg() {
+	private boolean validateUserOrg() {
 		return this.getManagedBean().getSelectedUserOrg() != null
 				&& this.getManagedBean().getSelectedUserOrg().getUserOrgId() != null;
 	}
 
-	private List<PmUserRole> isCheckUserOrgandRole() {
+	private List<PmUserRole> validateUserOrgandRole() {
 		return this.getManagedBean().getSelectedUserOrg() != null ? this.getManagedBean().getSelectedUserOrg()
 				.getPmUserRoles() : null;
 	}
-	// #36489 - End
+
+	private boolean validateUserOrgProfileAndStatus() {
+		return DbValueConst.RECORD_STATUS_ACTIVE != this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg()
+				&& this.getManagedBean().getPmUserOrgOriginal() != null
+				&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile() != null
+				&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller();
+	}
+	
+	private void validateBasicUserDetails(PmUser user) {
+		if (StringUtils.isBlank(user.getLoginId())) {
+			throw new EpException(MessageConst.ERROR_770030);
+		}
+		if (user.getSalutationCode().getSalutationId() == null) {
+			throw new EpException(MessageConst.ERROR_770031);
+		}
+		if (StringUtils.isBlank(user.getUserName())) {
+			throw new EpException(MessageConst.ERROR_770032);
+		}
+	}
+
+	private void validateIdentification(PmUser user) {
+		if (StringUtils.isBlank(user.getIdentificationCode().getParameterCode())) {
+			throw new EpException(MessageConst.ERROR_770033);
+		}
+		if (StringUtils.isBlank(user.getIdentificationNo())) {
+			throw new EpException(MessageConst.ERROR_770034);
+		}
+	}
+
+	private void validateEmailAndNotificationPreferences(PmUser user, PmUserOrg pmUserOrg) {
+		if (StringUtils.isBlank(user.getIdentificationNo())) {
+			throw new EpException(MessageConst.ERROR_770034);
+		}
+
+		if (user.isNotifyBySms()) {
+			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+				throw new EpException(MessageConst.ERROR_770090);
+			}
+			if (pmUserOrg.getMobileTelcoId() == null) {
+				throw new EpException(MessageConst.ERROR_770250);
+			}
+		}
+	}
+
+	private void validateOrgProfile(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+
+		String orgType = pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode();
+		if (ParameterConst.ORG_TYPE_FACTORING.equals(orgType)) {
+			validateFactoringOrg(pmUserOrg);
+		} else if (ParameterConst.ORG_TYPE_SUPPLIER.equals(orgType)) {
+			validateSupplierOrg(pmUserOrg);
+		} else {
+			validateOtherOrg(pmUserOrg);
+		}
+
+		if (!ParameterConst.ORG_TYPE_SUPPLIER.equals(orgType) && StringUtils.isBlank(pmUserOrg.getDesignation())) {
+			throw new EpException(MessageConst.ERROR_770108);
+		}
+	}
+
+	private void validateFactoringOrg(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile().getPmFinancialOrg() == null
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName())) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+	}
+
+	private void validateSupplierOrg(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile().getSmSupplier() == null
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName())
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getRegNo())) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+	}
+
+	private void validateOtherOrg(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile().getPmOrgValidity() == null
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode())
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName())) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+	}
+
+	private void validateExistingUserOrg(PmUser user, PmUserOrg pmUserOrg) {
+		if (user.getUserId() != null && DbValueConst.RECORD_STATUS_ACTIVE == pmUserOrg.getRecordStatusFlg()) {
+			// validate if the user contains any active user orgs (exclude
+			// supplier type and own org profile)
+			IUserSO userSO = null;
+			try {
+				UserReqDTO userOrgReqDTO = new UserReqDTO();
+				userOrgReqDTO.setUserId(user.getUserId());
+				userOrgReqDTO.setExcludeOrgType(OrganizationType.SUPPLIER.value());
+				userOrgReqDTO.setUserOrgChecking(true);
+
+				if (!pmUserOrg.isBrandNew() && pmUserOrg.getUserOrgId() != null) {
+					userOrgReqDTO.setUserOrgId(pmUserOrg.getUserOrgId());
+					userOrgReqDTO.setExcludeOrgProfileId(pmUserOrg.getPmOrgProfile().getOrgProfileId());
+				}
+
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveAllUserOrgListByUserId(userOrgReqDTO);
+
+				if (resDTO.getUserOrgList() != null && !resDTO.getUserOrgList().isEmpty()) {
+					PmOrgProfile orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+					throw new EpException(MessageConst.ERROR_770155, new String[] { orgProfile.getOrgName(),
+							orgProfile.getOrgCode() });
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+						"ProfileManagementBackingBean.validateExistingUserOrg", null, e);
+			}
+		}
+	}
+	//#36489 and SonarLint Fixing - End
 }
