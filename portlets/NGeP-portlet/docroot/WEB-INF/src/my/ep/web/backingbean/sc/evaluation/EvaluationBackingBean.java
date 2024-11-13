@@ -10907,6 +10907,11 @@ private void retriveCommitteeRemarksList(){
 
 		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(
 				SCEvaluationDataType.class, null);
+		// 25037 - start
+		String[] outcomes = this.getManagedBean().getOutComes();
+		this.getManagedBean().setOutComes(this.sortQtOutcomes(outcomes));
+		// 25037 - end
+
 		FacesScopes facesScopes = new FacesScopes();
 
 		// FacesScopes facesScopes = new FacesScopes();
