@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -11,20 +12,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
-
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
@@ -32,13 +32,17 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMSoftCertBackingBean;
 import my.ep.web.managedbean.sm.softcertprovider.SoftCertProviderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RuleConfigHelper;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.log4j.Logger;
+import org.springframework.util.ObjectUtils;
 
 @ManagedBean(name = "softCertProviderBB")
 @RequestScoped
@@ -97,9 +101,36 @@ public class SoftCertProviderBackingBean extends BaseBackingBean<SoftCertProvide
 			List<PmConfigRule> configRuleLs = new ArrayList<PmConfigRule>();
 			configRuleLs.add(getManagedBean().getConfigRule());
 			reqDTO.setRuleTypeList(configRuleLs);
-			SmServiceLookup.getRuleSO().updateRuleValueList(reqDTO);
+
+			/************ AUDIT *************/
 			
+			getUserIdSessionFromLoginId();
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMSoftCertBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SOFT_CERT) && !ObjectUtils.isEmpty(getManagedBean().getConfigRule().getConfigRuleValues().toArray())) {
+				List<PmConfigRuleValue> oldRuleValue = SmServiceLookup.getRuleSO().getExistingRuleValue(RuleTypeConst.SOFT_CERT_PROVIDER);
+				
+				getManagedBean().setExistingConfigValueMap(new HashMap<Long,PmConfigRuleValue>());
+				
+				if(!ObjectUtils.isEmpty(oldRuleValue.toArray())){
+					for(PmConfigRuleValue ruleValue : oldRuleValue){
+						PmConfigRuleValue currentRuleValue = (PmConfigRuleValue)ruleValue.cloneEntity(); 
+						getManagedBean().getExistingConfigValueMap().put(currentRuleValue.getRuleValueId(), currentRuleValue);
+					}
+				}
+			}
+			/************ AUDIT *************/
 			
+			RuleResDTO resDto = SmServiceLookup.getRuleSO().updateRuleValueList(reqDTO);
+			
+			/************ AUDIT *************/
+			this.getManagedBean().setNewRuleValue(resDto.getNewRuleTypeList().get(0).getConfigRuleValues());
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SOFT_CERT)) {
+				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SOFT_CERT);
+			}
+			/************ AUDIT *************/
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(
 					null,

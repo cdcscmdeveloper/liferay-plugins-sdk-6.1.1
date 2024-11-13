@@ -22,10 +22,12 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -51,6 +53,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMReasonMaintenanceBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ReasonSearchBean;
@@ -59,7 +63,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.pm.helper.ReasonHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -719,13 +722,32 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				getManagedBean().getSelectedReason().getRecordStatusFlg().intValue()){
 			validateRejectionDesc();
 		}
+		/************ AUDIT *************/
 		
+//		getUserIdSessionFromLoginId();
+		AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean(); 
+		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAuditPMSO.class);
+		PmReason selectedPmReason = this.getManagedBean().getSelectedReason();
+		
+		if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON) && selectedPmReason.getReasonId() != null) {
+			PmReason oldPmReason = retrieveReasonObjById(selectedPmReason.getReasonId());
+			getManagedBean().setOldPmReason(oldPmReason);
+		}
+		/************ AUDIT *************/	
 		if(this.getManagedBean().getSelectedReason().isBrandNew()){
 			returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
 		}else{
 			returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
 		}
 		log.info("saveRejectReason - End");
+		log.info("saveRejectReason - End");
+		/************ AUDIT *************/
+		if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON)) {
+			auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_REASON);
+		}
+		/************ AUDIT *************/
+		
 		return returnPage;
 //		if(isSuccess){
 //			return this.redirectToSearchReason();

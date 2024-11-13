@@ -50,6 +50,12 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private Integer reasonCategory;
 	//#8411 - END
 	
+	private PmReason oldPmReason;
+	private PmReason newPmReason;
+	private List <PmSupplierReason> auditDeleteAppTypeRestrictions;
+	private List <PmSupplierReason> auditDeleteComTypeRestrictions;
+	private List <PmSupplierReason> auditDeleteSuppTypeRestrictions;
+	
 	public RejectionReasonManagedBean(){}
 	
 	/**
@@ -313,4 +319,43 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	}
 	//#8411 - END
 	
+	public PmReason getOldPmReason() {
+		return oldPmReason;
+	}
+
+	public void setOldPmReason(PmReason oldPmReason) {
+		this.oldPmReason = oldPmReason;
+	}
+
+	public PmReason getNewPmReason() {
+		return newPmReason;
+	}
+
+	public void setNewPmReason(PmReason newPmReason) {
+		this.newPmReason = newPmReason;
+	}
+
+	public List<PmSupplierReason> getAuditDeleteAppTypeRestrictions() {
+		return auditDeleteAppTypeRestrictions;
+	}
+
+	public void setAuditDeleteAppTypeRestrictions(List<PmSupplierReason> auditDeleteAppTypeRestrictions) {
+		this.auditDeleteAppTypeRestrictions = auditDeleteAppTypeRestrictions;
+	}
+
+	public List<PmSupplierReason> getAuditDeleteComTypeRestrictions() {
+		return auditDeleteComTypeRestrictions;
+	}
+
+	public void setAuditDeleteComTypeRestrictions(List<PmSupplierReason> auditDeleteComTypeRestrictions) {
+		this.auditDeleteComTypeRestrictions = auditDeleteComTypeRestrictions;
+	}
+
+	public List<PmSupplierReason> getAuditDeleteSuppTypeRestrictions() {
+		return auditDeleteSuppTypeRestrictions;
+	}
+
+	public void setAuditDeleteSuppTypeRestrictions(List<PmSupplierReason> auditDeleteSuppTypeRestrictions) {
+		this.auditDeleteSuppTypeRestrictions = auditDeleteSuppTypeRestrictions;
+	}
 }

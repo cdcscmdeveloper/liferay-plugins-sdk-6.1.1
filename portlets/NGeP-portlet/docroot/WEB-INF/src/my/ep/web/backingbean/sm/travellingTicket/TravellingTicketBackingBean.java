@@ -13,10 +13,12 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.travel.ITravellingTicketSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -33,6 +35,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMEquipmentMachineBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.sm.MachineSearchBean;
@@ -285,6 +289,17 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 			PmMachineSection pmMachineSection = this.getManagedBean().getPmMachineSection();
 			machineReqDTO.setPmMachineSection(pmMachineSection);
 			machineCategoryValidationMsg(pmMachineSection);
+
+			/************ AUDIT *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMEquipmentMachineBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_MACHINE) && pmMachine.getMachineId() != null) {
+				PmMachine oldPmMachine = travelTicketSO.retrieveTravelTicketByMachineId(machineReqDTO).getPmMachine();
+				getManagedBean().setOldPmMachine(oldPmMachine);
+			}
+			/************ AUDIT *************/
 			
 			MachineResDTO machineResDTO = travelTicketSO.saveOrUpdateTravelTicket(machineReqDTO);
 			
@@ -297,6 +312,13 @@ public class TravellingTicketBackingBean extends BaseBackingBean<TravellingTicke
 						this.getManagedBean().getPmMachine()
 						.getMachineDesc()};
 				machineId = getManagedBean().getPmMachine().getMachineId();
+				/************ AUDIT *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_MACHINE)) {
+					this.getManagedBean().setUpdatedPmMachine(machineResDTO.getPmMachine());
+					this.getManagedBean().setPmMachineSection(machineResDTO.getPmMachineSection());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_MACHINE);
+				}
+				/************ AUDIT *************/
 				
 			}
 			
