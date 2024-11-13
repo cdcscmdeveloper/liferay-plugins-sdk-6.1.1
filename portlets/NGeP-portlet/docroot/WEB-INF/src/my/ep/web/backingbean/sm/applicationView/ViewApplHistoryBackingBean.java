@@ -104,7 +104,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
@@ -1813,10 +1812,6 @@ public class ViewApplHistoryBackingBean extends
 		
 		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
 		Boolean button = false;
-		//#26238 - START
-		boolean cancelCategoryCode = this.getManagedBean().isCancelCategoryCode();
-		List<DisciplinaryActionCategoryVO> cancelCategoryCodeList = this.getManagedBean().getCategoryCodeList();
-		//#26238 - END
 		if(smWorkFlowStatusResDTO != null 
 				&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
 				&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
@@ -1838,9 +1833,6 @@ public class ViewApplHistoryBackingBean extends
 						 && checkStatusMofNoBySupplierId(smAppl)== false){
 					button = false;
 				}//#32002 - end
-				else if(cancelCategoryCode && cancelCategoryCodeList.size() > 0){ //#26238
-					button = false;
-				}
 			}
 			//#26238
 			if(getManagedBean().isCancelCategoryCode() && 
