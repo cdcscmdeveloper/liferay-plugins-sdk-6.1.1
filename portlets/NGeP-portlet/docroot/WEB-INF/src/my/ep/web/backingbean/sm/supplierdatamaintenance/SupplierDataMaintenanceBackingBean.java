@@ -56,7 +56,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -114,12 +113,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	private static final long serialVersionUID = 3781591594455061750L;
 	//26238 - start
 	private static Map<Long, Object> identityType; 
-	private boolean gmapDisabled;
 	private static String defaultAccPurpose = "P";
 	private static String addrPermanent = "permenant";
 	private static String addrBusiness = "business";
 	private static String addrResidential = "residential";
-	//26238 - end
 	//26238 -  Disciplonary action - 28146
 	/**
 	 * Pre-render and redirect to Search Page
@@ -543,6 +540,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			// set active status for newly added category
 			setActiveStatusForNewAddedCategories();
+			reqDTO.setSupplier(getManagedBean().getSmSupplier());
 			reqDTO.setListRegCategories(getManagedBean().getSmAppl().getSmSupplierCategories());
 			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
@@ -2568,31 +2566,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 
 		return null;
-	}
-	
-	public boolean isGmapDisabled() {
-		gmapDisabled = false;
-		
-		if(getManagedBean().getSmBusinessAdd() != null){
-			SmAddress bizAddress = getManagedBean().getSmBusinessAdd();
-
-			if(bizAddress.getPmCountry() == null || bizAddress.getPmDistrict() == null || 
-					bizAddress.getPmState() == null || bizAddress.getPmCity() == null || 
-					bizAddress.getAddress1() == null ){
-					gmapDisabled = true;
-			}else{
-				if(StringUtils.isBlank(bizAddress.getAddress1()) || bizAddress.getPmCountry().getCountryId() == null ||
-						bizAddress.getPmDistrict().getDistrictId() == null || bizAddress.getPmState().getStateId() == null ||
-						bizAddress.getPmCity().getCityId() == null){
-					gmapDisabled = true;
-				}
-
-			}
-		}else{
-			gmapDisabled = true;
-		}
-
-		return gmapDisabled;
 	}
 	
 	public void initGstInfo(SmSupplier sup,
