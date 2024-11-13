@@ -1772,15 +1772,11 @@ public class ViewApplHistoryBackingBean extends
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
 		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
 		// #34392 - start
-		getManagedBean().setMandatoryDocsInquiry(
-				new ArrayList<SmApplSupportDocInquiry>());
-		getManagedBean().setNonMandatoryDocsInquiry(
-				new ArrayList<SmApplSupportDocInquiry>());
+		getManagedBean().setMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
+		getManagedBean().setNonMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
 
-		if (applInquiry.getSmApplSupportDocInquiries() != null
-				&& !applInquiry.getSmApplSupportDocInquiries().isEmpty()) {
-			for (SmApplSupportDocInquiry doc : applInquiry
-					.getSmApplSupportDocInquiries()) {
+		if (applInquiry.getSmApplSupportDocInquiries() != null && !applInquiry.getSmApplSupportDocInquiries().isEmpty()) {
+			for (SmApplSupportDocInquiry doc : applInquiry.getSmApplSupportDocInquiries()) {
 				doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
 				if (doc.getPmDocument().isMandatory()) {
 					getManagedBean().getMandatoryDocsInquiry().add(doc);
@@ -1882,22 +1878,7 @@ public class ViewApplHistoryBackingBean extends
 	}
 	// #32424 - end
 	
-	// #35336 - START
-	private boolean isValidDateComparison(SmAppl latestRegisteredAppl, SmAppl latestRejectedAppl) {
-		return latestRegisteredAppl != null && latestRegisteredAppl.getChangedDate() != null
-			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
-	}
-
-	private void showErrorAdminHasBeenReplace() {
-		FacesContext.getCurrentInstance().addMessage(
-			null,
-			new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
-				MessageConst.ERROR_721099, MessageUtils.BUNDLE_COMMON_MESSAGES,
-				new FacesScopes().getUserLocale())));
-	}
-	// #35336 - END
-	
-	//#34209 - START
+	//#30766 & #34209 - START
 	public void rePopulateApplFacilitiesList()
 	{
 		getManagedBean().setDockYardFacilitiesVOList(new ArrayList<PmCategoryL3>());
@@ -1924,7 +1905,21 @@ public class ViewApplHistoryBackingBean extends
 	public void rePopulateMachine(){
 		getManagedBean().getSmAppl().setSmMachineDtls(getManagedBean().getAllMachineDtls());
 	}
-	//#34209 - END
+	//#30766 & #34209 - END
+	// #35336 - START
+	private boolean isValidDateComparison(SmAppl latestRegisteredAppl, SmAppl latestRejectedAppl) {
+		return latestRegisteredAppl != null && latestRegisteredAppl.getChangedDate() != null
+			&& latestRejectedAppl != null && latestRejectedAppl.getCreatedDate() != null;
+	}
+
+	private void showErrorAdminHasBeenReplace() {
+		FacesContext.getCurrentInstance().addMessage(
+			null,
+			new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", MessageUtils.getMessage(
+				MessageConst.ERROR_721099, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale())));
+	}
+	// #35336 - END
 	
 	//#35759 --START
 	private void saveSmApplSectionReview(SmApplSectionReview smApplSecReview) {

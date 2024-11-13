@@ -79,7 +79,7 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
-				
+
 				/*//#32008
 				if (step1CompanyBasicHasDifference(bean.getSupplierAppl(),
 						bean.getPoAppl())) {
@@ -162,6 +162,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
+
+				log.info("31230 Check if PO edit personnel");
 
 				/*//#32008
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
@@ -256,7 +258,7 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
-				
+
 				/*//#32008
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
@@ -271,7 +273,7 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
-				
+
 				/*//#32008
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
@@ -304,7 +306,7 @@ public class SmSideMenuIconUtil {
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
-				
+
 				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
@@ -580,8 +582,6 @@ public class SmSideMenuIconUtil {
 						//to check, if data not exist no need to auto check
 						if(bean.isPoUser() && isAllCatcodeVerified &&(bean.getActiveCategoryList()==null || bean.getActiveCategoryList().size()<=0) ){
 							//#31043 start
-							// #26528 - start
-							// Checkbox 'Registered Category' section not ticked for Renewal MOF application
 							if(applCurrentStatus.getStatusId() != Long.parseLong(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION)){
 								if (bean.getApprovedCategoryList()!=null) {
 									isAllCatcodeVerified = true;
@@ -590,7 +590,6 @@ public class SmSideMenuIconUtil {
 									isAllCatcodeVerified = false;
 								}
 							}
-							// #26528 - end
 							//#31043 end
 						}
 						
@@ -628,9 +627,8 @@ public class SmSideMenuIconUtil {
 				}
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
-				//24964 & 31043 - start
-				//retVal = ICON_UNTICK; 
-				
+
+				//31043 - start
 				boolean mandatoryDocVerified = false; 
 				boolean nonMandatoryDocVerified = true; 
 				boolean licenseMandatoryDocVerified = true; 
@@ -671,56 +669,56 @@ public class SmSideMenuIconUtil {
 										.isApproverUser())) {
 					retVal = ICON_TICK;
 				}
-				//#31043 start
-					int countDocs = 0;
-					int countVerifiedDocs = 0;
-					if (!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())) {
-						for (SmApplSupportDoc doc : bean.getMandatoryDocs()) {
-							countDocs++;
-							if(bean.isPoUser()){
-								if(doc.getVerifiedFlg() != null){
-									if(doc.getVerifiedFlg() == 1)
-										countVerifiedDocs++;
-								}
-							}
-							else if(bean.isApproverUser()){
-								if(doc.getApproverVerifiedFlg() != null){
-									if(doc.getApproverVerifiedFlg() == 1)
-										countVerifiedDocs++;
-									}
+				
+				int countDocs = 0;
+				int countVerifiedDocs = 0;
+				if (!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())) {
+					for (SmApplSupportDoc doc : bean.getMandatoryDocs()) {
+						countDocs++;
+						if(bean.isPoUser()){
+							if(doc.getVerifiedFlg() != null){
+								if(doc.getVerifiedFlg() == 1)
+									countVerifiedDocs++;
 							}
 						}
-						log.info("No of docs: "+countDocs);
-						log.info("No of docs verified "+countVerifiedDocs);
-						if(countDocs != 0 && countVerifiedDocs != 0)
-							if(countVerifiedDocs == countDocs)
-								mandatoryDocVerified = true;
-							else
-								mandatoryDocVerified = false;
-					}
-					
-					if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
-						for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
-							if(doc.getSmApplDocFiles() != null){
-								for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
-									if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
-											|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
-										nonMandatoryDocVerified = false;
-										break;
-									}
-									if(bean.isApproverUser() && !(" ").equals(docFile.getFilePath()) && doc.getApproverVerifiedFlg() != null 
-											&& doc.getApproverVerifiedFlg() == 0){
-										nonMandatoryDocVerified = false;
-										break;
-									}
+						else if(bean.isApproverUser()){
+							if(doc.getApproverVerifiedFlg() != null){
+								if(doc.getApproverVerifiedFlg() == 1)
+									countVerifiedDocs++;
 								}
-								if(!nonMandatoryDocVerified){
+						}
+					}
+					log.info("No of docs: "+countDocs);
+					log.info("No of docs verified "+countVerifiedDocs);
+					if(countDocs != 0 && countVerifiedDocs != 0)
+						if(countVerifiedDocs == countDocs)
+							mandatoryDocVerified = true;
+						else
+							mandatoryDocVerified = false;
+				}
+				
+				if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
+					for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
+						if(doc.getSmApplDocFiles() != null){
+							for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
+								if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+										|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
+									nonMandatoryDocVerified = false;
+									break;
+								}
+								if(bean.isApproverUser() && !(" ").equals(docFile.getFilePath()) && doc.getApproverVerifiedFlg() != null 
+										&& doc.getApproverVerifiedFlg() == 0){
+									nonMandatoryDocVerified = false;
 									break;
 								}
 							}
+							if(!nonMandatoryDocVerified){
+								break;
+							}
 						}
 					}
-				
+				}
+			
 				if(mandatoryDocVerified){
 					retVal = ICON_TICK;
 					if(!licenseMandatoryDocVerified || !nonMandatoryDocVerified){
@@ -729,11 +727,8 @@ public class SmSideMenuIconUtil {
 				}else{
 					retVal = ICON_UNTICK;
 				}
-				//24964 & 31043 - end
-
-			//#31043 - start
-			} else if (sectionType
-					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)){
+			
+			} else if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV) && rev.isSitevisitVerified()) {
 				retVal = ICON_UNTICK;
 				if(rev.isSitevisitVerified())
 					retVal = ICON_TICK;

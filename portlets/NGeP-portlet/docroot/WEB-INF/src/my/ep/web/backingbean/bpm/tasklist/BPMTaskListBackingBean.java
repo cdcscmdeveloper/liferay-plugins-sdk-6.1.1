@@ -647,6 +647,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(SCProcessNameConst.START_QUOTATION_TENDER_CREATION + SCProcessNameConst.SUBMIT_QUOTATION_TENDER,
 					SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			// #9019-END
+			// 25037 - start
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
+					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
+			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.GENERIC_APPROVAL_REVISE,
+					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
+			// 25037 - end
 
 			log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"]");
 			temp.put(getProcessNameRemoveSpace("UNSPSC Code Request"), "review-unspsc-code");
@@ -1167,7 +1173,12 @@ BaseBackingBean<BPMTaskListManagedBean> {
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.START_QUOTATION_TENDER_CREATION)
 					+ SCProcessNameConst.SUBMIT_QUOTATION_TENDER, SourcingConstants.NAV_PAGE_PREPARE_QT_DETAILS);
 			// #9019-END
-
+			// 25037 - start
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME)
+					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME)
+					+ SCProcessNameConst.GENERIC_APPROVAL_REVISE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
+			// 25037 - end
 			this.getManagedBean().setBpmMap(temp);
 		}
 

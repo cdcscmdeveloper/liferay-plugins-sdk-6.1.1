@@ -319,10 +319,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.supportingDocMode = supportingDocMode;
 	}
 	//28771- end
-	
-	//#34209, #32008
+		
+	//#30766 & #34209 - START, #32008
 	private boolean poApprUnClaimTask;
 	private List<SmMachineDtl> allMachineDtls;
+	//#30766 & #34209 - END
 	
 	//#34099 - start
 	private SmApplInquiry selectedInquiryResponse;
@@ -2073,11 +2074,11 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public boolean isPoApprUnClaimTask() {
 		return poApprUnClaimTask;
 	}
-	
+
 	public void setPoApprUnClaimTask(boolean poApprUnClaimTask) {
 		this.poApprUnClaimTask = poApprUnClaimTask;
 	}
-	
+
 	//#34099 - start
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;
@@ -2095,7 +2096,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.tabActiveDlg = tabActiveDlg;
 	}
 	//#34099 - end
-	
+
 	//#32008 - start
 	public SmAppl getLatestAppl() {
 		return latestAppl;
@@ -2255,8 +2256,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setRevisionDialog(boolean isRevisionDialog) {
 		this.isRevisionDialog = isRevisionDialog;
-	}
-	
+	}	
 	//#32008 - end
 	
 	//#35086 - start
@@ -2276,8 +2276,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.latestChequeSignPersonnelName = latestChequeSignPersonnelName;
 	}
 	//#35086 - end
-
-	//#34209 - START
+	
+	//#30766 & #34209 - START
 	public List<SmMachineDtl> getAllMachineDtls() {
 		return allMachineDtls;
 	}
@@ -2285,5 +2285,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setAllMachineDtls(List<SmMachineDtl> allMachineDtls) {
 		this.allMachineDtls = allMachineDtls;
 	}
-	//#34209 - END
+	//#30766 & #34209 - END
+		
 }

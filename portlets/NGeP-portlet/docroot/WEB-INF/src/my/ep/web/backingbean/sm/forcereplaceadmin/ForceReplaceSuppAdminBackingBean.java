@@ -1400,6 +1400,21 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 	
+	//16052019 - SSM INTEGRATION CR
+	public void listenerChangeRole(){
+		if(this.getManagedBean().getNewAdmin() !=null){
+			if(this.getManagedBean().getNewAdmin().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(true);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			}else if(!this.getManagedBean().getNewAdmin().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);				
+			}else if(this.getManagedBean().getNewAdmin().isClerical()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);
+			}
+		}
+	}
 	//#28765 - Start
 	public void confirmDeclare(){
 		RequestContext.getCurrentInstance().execute("groupDeleteConfirm.show()"); 
@@ -1619,6 +1634,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 										.getIdentificationNo() });
 					}
 				}
+		listenerChangeRole();
 		
 		SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
 				RoleCode.SUPPLIER_TEMP.value(), getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels(),
