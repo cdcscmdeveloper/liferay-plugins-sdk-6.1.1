@@ -90,7 +90,7 @@ public class SupplierManagementConst {
 	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
 	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 13; //#31043 start
-	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17; //#31043 end
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;  //#31043 end
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
@@ -143,7 +143,7 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
 	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
 	//#34711 - END
-
+		
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
@@ -469,10 +469,7 @@ public class SupplierManagementConst {
 	// #12483 - START
 	public static final String PM_STATUS_PENDING_REVISE_APPLICATION = "20398";
 	// #12483 - END
-	// #34392 - Start
-	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
-	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
-	// #34392 - End
+
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
@@ -539,10 +536,15 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_357_0_SEQ = "SM_MOF_357_0_SEQ";
 	public static final String SM_MOF_357_2_SEQ = "SM_MOF_357_2_SEQ";
 	public static final String SM_MOF_357_3_SEQ = "SM_MOF_357_3_SEQ";
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
-	public static final int RECORD_STATUS_ACTIVE = 1; //34209
+	public static final int RECORD_STATUS_ACTIVE = 1; //#30766 & #34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";

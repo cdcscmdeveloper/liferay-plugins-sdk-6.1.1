@@ -155,7 +155,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private String labelDataTable;
 	private boolean divisionBox=true;//13320
 	private Long divisionId;//13320
-	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); // #27691
 	private String regIcCheckSSM;
 	//#30829 Start
 	private boolean disableHigherManagement = false;
@@ -164,10 +163,11 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean disableSemiProf=false;
 	//#30829 end
 	
-	// 27691 - Add/Delete Supplier Owner
-	private List<SmSupplierOwner> selectedSuppOwners = new ArrayList<SmSupplierOwner>();
-	
 	private boolean showOwnerPersonnel = false;
+	// 27691 - Add/Delete Supplier Owner
+	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); 
+	
+	private List<SmSupplierOwner> selectedSuppOwners = new ArrayList<SmSupplierOwner>();
 	
 	private boolean allOwnerSelected;
 	
@@ -948,16 +948,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setPermenantDivisionLs(List<SelectItem> permenantDivisionLs) {
 		this.permenantDivisionLs = permenantDivisionLs;
 	}
-	
-	// #27691 - Start
-	public List<SmSupplierOwner> getSupplierOwnerls() {
-		return supplierOwnerls;
-	}
-
-	public void setSupplierOwnerls(List<SmSupplierOwner> supplierOwnerls) {
-		this.supplierOwnerls = supplierOwnerls;
-	}
-	// #27691 - End
 
 	//#30829 Start
 	public boolean isDisableManagement() {
@@ -993,12 +983,13 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	}
 	//#30829 End
 
-	public boolean isAllOwnerSelected() {
-		return allOwnerSelected;
+	//#27691 START
+	public List<SmSupplierOwner> getSupplierOwnerls() {
+		return supplierOwnerls;
 	}
 
-	public void setAllOwnerSelected(boolean allOwnerSelected) {
-		this.allOwnerSelected = allOwnerSelected;
+	public void setSupplierOwnerls(List<SmSupplierOwner> supplierOwnerls) {
+		this.supplierOwnerls = supplierOwnerls;
 	}
 
 	public List<SmSupplierOwner> getSelectedSuppOwners() {
@@ -1007,6 +998,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSelectedSuppOwners(List<SmSupplierOwner> selectedSuppOwners) {
 		this.selectedSuppOwners = selectedSuppOwners;
+	}
+
+	public boolean isAllOwnerSelected() {
+		return allOwnerSelected;
+	}
+
+	public void setAllOwnerSelected(boolean allOwnerSelected) {
+		this.allOwnerSelected = allOwnerSelected;
 	}
 
 	public List<SmSupplierOwner> getAddSuppOwnerLs() {
@@ -1024,6 +1023,5 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setDelSuppOwnerLs(List<SmSupplierOwner> delSuppOwnerLs) {
 		this.delSuppOwnerLs = delSuppOwnerLs;
 	}
-	
-	
+	//#27691 END
 }

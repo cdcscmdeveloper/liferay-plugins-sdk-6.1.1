@@ -105,7 +105,7 @@
 				<p:inputTextarea id="otherDesc" maxlength="100"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{catBean.otherDesc}" rows="5" cols="20"
-					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}"
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" ><!-- #36289 -->
 					disabled="#{backingBean.managedBean.upsCannotEdit}" ><!-- #32008 -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"

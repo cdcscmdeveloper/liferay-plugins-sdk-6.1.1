@@ -48,6 +48,7 @@
 			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="500" width="1400">
 				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
 					<table>
+					<!-- #34392 Start -->
 					<c:if
 						test="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
 						<tr>
@@ -58,7 +59,7 @@
 								value="#{backingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
 						</tr>
 					</c:if>
-					
+					<!-- #34392 End -->
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>
 					</tr>
@@ -118,7 +119,6 @@
 										<br />
 									</ui:repeat>
 								</p:column>
-								<!-- #34392 End -->
 								<!-- #34392 Start -->
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.sdoRemarks != null}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>
@@ -188,7 +188,6 @@
 										<br />
 									</ui:repeat>
 								</p:column>
-								<!-- #34392 End -->
 								<!-- #34392 Start -->
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 30%;" rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.sdoRemarks != null}">
 									<h:inputTextarea value="#{inquirytbl.sdoRemarks}" style="float:left; white-space:normal; width:97%;" disabled="true"/>

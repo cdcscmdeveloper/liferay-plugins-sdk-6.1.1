@@ -49,7 +49,7 @@
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;"
-								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
+								action="#{specificationBackingBean.submitAction(bpmAction)}"/>
 						</ui:fragment>
 					</ui:repeat>
 					<ui:fragment
@@ -199,7 +199,25 @@
 					onclick="revicespecMaintenanceEndorsmentDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-
+		
+		<ui:remove><!-- 25037 - start - note 510--></ui:remove>
+		<p:dialog id="inactiveSCMembersPopupId" widgetVar="inactiveSCMembersPopup"
+			resizable="false"
+			style="max-width: 400px !important; border: 0 !important"
+			closable="false" modal="true">
+			<table>
+				<tr>
+					<td align="center" style="border: 0 !important"><p:outputLabel style="padding: 0 !important; text-align:justify !important;white-space: break-spaces !important; color: red !important;"
+							value="#{specificationBackingBean.managedBean.inactiveSCMemberStr.concat(' ').concat(lbl['lbl.sc.popup.spec.confirmCheckInactive'])}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" oncomplete="inactiveSCMembersPopup.hide();"/>
+			</div>
+		</p:dialog>
+		<ui:remove><!-- 25037 - end - note 510--></ui:remove>
+		
 		<!-- //1873 - note 52,149 -start- -->
 		<p:dialog id="alertFinancialTemplateIncompleteId" widgetVar="alertFinancialTemplateIncompletePopup"
 			header="#{lbl['lbl.sc.confirmation']}" modal="true"

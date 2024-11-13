@@ -601,10 +601,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
-	// 31043 START
-	private boolean showFacilityMachine;
-	// 31043 END
-	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
@@ -635,9 +631,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String personnelRoleMsg; 
 	//#30762-end 
 	
-	//#31043 START
+	//32008
+	private boolean upsCannotEdit;
+	// 31043 START
+	private boolean showFacilityMachine;
+	
 	private boolean allowedToSiteVisit;
-	//#31043 END
+	// 31043 END
 	
 	// #34392 - start
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
@@ -646,10 +646,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDoc> missinDocsNonMandatory;
 	private boolean inquirySiteVisitAfter;
 	//#34392 - end
-	
-	//32008
-	private boolean upsCannotEdit;
-	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4650,16 +4646,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	//#32968 END
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
-
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
-
 	//31130-start
 	public boolean isPoApproverPersonnelErr() {
 		return poApproverPersonnelErr;
@@ -4703,8 +4689,26 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
 	//30762-End 
-	
-	//#31043 START
+
+	//Start 32008
+	public boolean isUpsCannotEdit() {
+		return upsCannotEdit;
+	}
+
+	public void setUpsCannotEdit(boolean upsCannotEdit) {
+		this.upsCannotEdit = upsCannotEdit;
+	}
+	//end 32008
+		
+	//#31043 START	
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
+
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+
 	public boolean isAllowedToSiteVisit() {
 		return allowedToSiteVisit;
 	}
@@ -4743,8 +4747,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return missinDocsNonMandatory;
 	}
 
-	public void setMissinDocsNonMandatory(
-			List<SmApplSupportDoc> missinDocsNonMandatory) {
+	public void setMissinDocsNonMandatory(List<SmApplSupportDoc> missinDocsNonMandatory) {
 		this.missinDocsNonMandatory = missinDocsNonMandatory;
 	}
 	
@@ -4756,14 +4759,4 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
 	}
 	//#34392 - end
-
-	//Start 32008
-	public boolean isUpsCannotEdit() {
-		return upsCannotEdit;
-	}
-
-	public void setUpsCannotEdit(boolean upsCannotEdit) {
-		this.upsCannotEdit = upsCannotEdit;
-	}
-	//end 32008
 }

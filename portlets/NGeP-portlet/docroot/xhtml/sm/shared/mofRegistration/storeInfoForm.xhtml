@@ -282,13 +282,15 @@
 			</table>
 			<br />
 			<div align="right">
-			<!-- #34303 Start -->
-				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
+				<!-- #34303 Start -->
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateStoreToSmApplNew}"
 					partialSubmit="true" process="storeDialog"
-					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
+					onclick="storeBlockWidget.show();"
+					oncomplete="storeBlockWidget.hide();"
 					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" />
-			<!-- #34303 End -->
+				<!-- #34303 End -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelStoreSaveorUpdate}"
