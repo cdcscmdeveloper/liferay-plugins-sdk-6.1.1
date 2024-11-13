@@ -322,6 +322,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private ScQt checkCategoryCodeQt;//#29466
 	
+	//#30008 - start
+	private boolean notReachAgrm;
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2583,5 +2586,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.lastSelectedItem = lastSelectedItem;
 	}
 	//35157 - end
+
+	public boolean isNotReachAgrm() {
+		return notReachAgrm;
+	}
+
+	public void setNotReachAgrm(boolean notReachAgrm) {
+		this.notReachAgrm = notReachAgrm;
+	}
+
 }
 // ***25201

@@ -31,7 +31,7 @@
 		autoUpdate="#{DOMaintenanceBackingBean.managedBean.autoUpdate}"
 		closable="true" showSummary="false" severity="error, info" />
 		
-	<ac:gpkiPopup beforeSignText="#{DOMaintenanceBackingBean.textBeforeSign}"
+	<ac:gpkiPopup textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
 				postSignAction="#{DOMaintenanceBackingBean.postGPKISignAction(gpkiBackingBean.pmDigiSign)}"
 				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
 				
@@ -114,7 +114,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.quotation.tender.deskofficermaintenance.newDO']}" /></td>
 					<td>
-						<ac:lov id="lovUser" lovId="PM_USER_ID" size="135"
+						<ac:lov id="lovUser" lovId="PM_USER_ORI" size="135"
 							update="@form"
 							headerText="#{lbl['lbl.pm.ta.user.lov']}"
 							selectionMode="single"

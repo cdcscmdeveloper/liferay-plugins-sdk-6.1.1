@@ -13,9 +13,9 @@
 		<ac:paginator for="catDtR" />
 		<p:columnGroup type="header">
 
-			<p:row>
+			<p:row> <!-- #32008 -->
 				<p:column selectionMode="multiple" style="width:2%" 
-					rendered="#{!backingBean.managedBean.approverUser}"/>
+					rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 					style="width : 2%;" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal" />
@@ -35,8 +35,9 @@
 				<!-- 30766 END - adjust width to be dynamic -->
 			</p:row>
 		</p:columnGroup>
+		<!-- #32008 -->
 		<p:column selectionMode="multiple" style="width:2%"
-			rendered="#{!backingBean.managedBean.approverUser}"/>
+			rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 		<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 			style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
@@ -56,7 +57,7 @@
 			<p:inputTextarea id="otherDescR" maxlength="100"
 				label="#{lbl['lbl.sm.catCodes.othDesc']}"
 				value="#{catBeanR.otherDesc}" style="width : auto;" rows="5"
-				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}" disabled="#{backingBean.managedBean.upsCannotEdit}">
+				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}" > <!-- #36289 -->
 				<p:ajax event="blur" process="@this" partialSubmit="true"
 					listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
 					update=":form:tt:catCodeInfPan" />
@@ -355,8 +356,9 @@
 					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}"
 					special="#{backingBean.managedBean.smAppl.supplierType}" />
 			<!-- 30865 End -->
-			
+			<!-- #32008 -->
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				oncomplete="addtnlCatCodeRenewDeletePopUp.show()"
 				update=":form:tt:catCodeInfPan" partialSubmit="true"
 				process=":form:tt:catCodeInfPan">

@@ -153,6 +153,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	//#32304 - start
 	private List<SmAppl> cancelledBumiApplLs;
 	private PagingDataModel<SmAppl> bumiListDataModel = new BumiPagingDataModel();
+	private Boolean showCancelledBumiApplList;
 	//#32304 - end
 
 	public List<WorklistItemVO> getTaskList() {
@@ -878,12 +879,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								 if (worklistItemVO.getDocStatus() != null && worklistItemVO.getDocStatus().intValue() == DPStatusConstants.RN_PENDING_ITEM_CODIFICATION.intValue()){
 									 IRequestNoteSO rnSO = BusinessDelegate.getInstance().getServiceObject(
 												ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-									 RequestNoteReqDTO NotereqDTO = new RequestNoteReqDTO();
+									//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+									RequestNoteReqDTO noteReqDTO = new RequestNoteReqDTO();
 									if (worklistItemVO.getDocNumber() != null && !worklistItemVO.getDocNumber().isEmpty()) {
-										NotereqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+										noteReqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
 									}
-									RequestNoteResDTO resDTO = rnSO.getRequestNote(NotereqDTO);
-
+									RequestNoteResDTO resDTO = rnSO.getRequestNote(noteReqDTO);
+									//[End] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 									if (resDTO.getRequestNoteDetail() != null) {
 										if (resDTO.getRequestNoteDetail().getRequestNoteDtls() != null
 												&& !resDTO.getRequestNoteDetail().getRequestNoteDtls().isEmpty()) {
@@ -2097,7 +2099,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	public void setBumiListDataModel(PagingDataModel<SmAppl> bumiListDataModel) {
 		this.bumiListDataModel = bumiListDataModel;
 	}
-	
+
+	public Boolean getShowCancelledBumiApplList() {
+		return showCancelledBumiApplList;
+	}
+
+	public void setShowCancelledBumiApplList(Boolean showCancelledBumiApplList) {
+		this.showCancelledBumiApplList = showCancelledBumiApplList;
+	}
+
 	private class BumiPagingDataModel extends PagingDataModel<SmAppl> {
 		private static final long serialVersionUID = 1L;
 		

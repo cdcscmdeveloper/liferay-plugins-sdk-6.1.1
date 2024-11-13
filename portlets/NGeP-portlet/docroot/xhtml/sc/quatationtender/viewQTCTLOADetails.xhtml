@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<ui:param name="isQtDirectNego"
+			value="#{qTDetailBB.managedBean.viewTrackingDiaryQTDL.procurementMode.parameterCode == ParameterConst.procurementModeDirectNego}" />
+
+		<table style="width: 100%;" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						immediate="true"
+						action="#{qTDetailBB.backToPreviousQtAuditORMaintenance()}"
+						partialSubmit="true" process="@this" update="@this" /></td>
+			</tr>
+		</table>
+
+		<p:panel header="#{lbl['lbl.sc.qt.loa.search.results']}"
+			toggleable="true" id="qtsearchCtLoaTrackingdtlsid">
+
+			<p:dataTable id="qtCtLoa" var="scQtTrack"
+				value="#{qTDetailBB.managedBean.qtTrackingdiaryView}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowIndexVar="index" rowKey="#{scQtTrack}">
+
+				<p:columnGroup type="header">
+
+					<p:row>
+
+						<p:column headerText="#{lbl['lbl.sc.document.type']}"
+							style="width:10%;text-align: center">
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:10%;">
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.title']}"
+							style="width:50%;text-align: center;white-space:normal;">
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.status']}"
+							style="width:30%;white-space: normal;">
+						</p:column>
+
+					</p:row>
+
+				</p:columnGroup>
+
+				<p:column style="width:10%;text-align: left;">
+					<h:outputText
+						value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.documentTypes,ParameterConst.doctypeQuotation)}"></h:outputText>
+				</p:column>
+
+				<p:column style="width:10%;">
+					<p:commandLink process="@this" partialSubmit="true"
+						rendered="#{!isQtDirectNego}"
+						action="#{qTDetailBB.editQuationTenderDetails(scQtTrack, false, true, view.viewId)}">
+						<h:outputText value="#{scQtTrack.qtNo}" escape="false" />
+					</p:commandLink>
+
+					<p:commandLink process="@this" partialSubmit="true"
+						rendered="#{isQtDirectNego}"
+						action="#{qTDetailBB.viewDirectLOADetails(scQtTrack, view.viewId)}">
+						<h:outputText value="#{scQtTrack.qtNo}" escape="false" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column style="width:50%;text-align: left;">
+					<h:outputText value="#{scQtTrack.qtTitle}"
+						style="white-space: normal;word-wrap: break-word;" />
+				</p:column>
+
+				<p:column style="width:30%;white-space: normal;">
+					<h:outputText
+						value="#{qTDetailBB.getStatusDescById(scQtTrack.qtStatus.statusId)}" />
+
+				</p:column>
+
+			</p:dataTable>
+
+			<br />
+			<br />
+			<br />
+
+			<p:dataTable id="ctLoaId"
+				value="#{qTDetailBB.managedBean.viewQtDlLoaContractTrackingDtls}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				var="scLoaTracking" rows="10" lazy="true" rowIndexVar="rowIndex"
+				rowKey="#{scLoaTracking}">
+				<ac:paginator for="ctLoaId" />
+
+				<p:column style="width:5%;text-align:center;"
+					headerText="#{lbl['lbl.sc.qt.loa.seq.number']}">
+				#{rowIndex+1}
+			    </p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.qt.view.loiloa.loa.no']}"
+					style="width:10%;white-space: normal;">
+					<p:commandLink process="@this" partialSubmit="true"
+						action="#{qTDetailBB.viewNormalLoaTrackingDetailsPage(qTDetailBB.managedBean.viewTrackingDiaryQTDL, scLoaTracking, view.viewId)}"
+						rendered="#{!isQtDirectNego}">
+						<h:outputText value="#{scLoaTracking.loaNo}" escape="false" />
+					</p:commandLink>
+
+					<p:commandLink process="@this" partialSubmit="true"
+						rendered="#{isQtDirectNego}"
+						action="#{qTDetailBB.viewDirectLOADetails(qTDetailBB.managedBean.viewTrackingDiaryQTDL, view.viewId)}">
+						<h:outputText value="#{scLoaTracking.loaNo}" escape="false" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.status']}"
+					style="width:20%;white-space: normal;">
+					<h:outputText
+						value="#{qTDetailBB.getStatusDescById(qTDetailBB.getLoaStatusIdToDisplay(scLoaTracking.scLoaWorkFlowStatuses))}" />
+				</p:column>
+
+				<ui:param name="vCtContract"
+					value="#{qTDetailBB.retrieveContractDtlsByLoa(scLoaTracking)}"></ui:param>
+				<p:column headerText="#{lbl['lbl.ct.contract.no']}"
+					style="width:10%;" styleClass="column-align-center">
+					<p:commandLink process="@this" partialSubmit="true"
+						action="#{qTDetailBB.viewLoaContractDetailsPage(vCtContract,view.viewId)}">
+						<h:outputText value="#{vCtContract.contractNo}" escape="false" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ct.contract.status']}"
+					style="width:10%; white-space:normal;">
+					<h:outputText
+						value="#{qTDetailBB.getContractStatusDesc(vCtContract.contractStatus)}"
+						style="text-align:left; float:left;" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ct.fulfilment.details.status']}"
+					style="width:15%; white-space:normal;">
+					<h:outputText
+						value="#{qTDetailBB.chkContractStatusType(vCtContract.contractNo,vCtContract.fdStatus)}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ct.agreement.status']}"
+					style="width:15%; white-space:normal;">
+					<h:outputText
+						value="#{qTDetailBB.chkContractStatusType(vCtContract.contractNo,vCtContract.agStatus)}" />
+				</p:column>
+
+				<p:column style="width:15%; white-space:normal;"
+					headerText="#{lbl['lbl.ct.doc.contract.status']}">
+					<h:outputText
+						value="#{qTDetailBB.chkContractStatusType(vCtContract.contractNo,vCtContract.status)}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+
+	</ui:define>
+
+</ui:composition>

@@ -9,7 +9,8 @@
 
 	<!-- #32304 - start -->
 	<ac:smBumiApplCancelledList bBean="#{bpmTasklistBackingBean}" id="cancelledBumiList"
-		applList="#{bpmTasklistBackingBean.managedBean.bumiListDataModel}" />
+		applList="#{bpmTasklistBackingBean.managedBean.bumiListDataModel}" 
+		rendered="#{bpmTasklistBackingBean.showCancelledBumiApplList()}"/>
 	<!-- #32304 - end -->
 	<h:panelGroup id="taskListID">
 

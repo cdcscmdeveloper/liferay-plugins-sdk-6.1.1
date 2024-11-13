@@ -1185,7 +1185,7 @@ public class CreateQtBackingBean extends
 			}
 			
 			//Start Reopen 9019 #note-289 remove the alert message while save
-			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+			//#35061 - remove to allow show the the panel
 				// 25729#174 start
 				//BugBug #35061 - asyrafhaziq
 				// get total indicative price threshold validation value
@@ -1201,7 +1201,7 @@ public class CreateQtBackingBean extends
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
 				// 25729#174 end
-			}
+		
 			//End Reopen 9019 #note-289 remove the alert message while save
 			
 		} finally {
@@ -1435,6 +1435,8 @@ public class CreateQtBackingBean extends
 		 */try {
 			Long type = (Long) event.getComponent().getAttributes()
 					.get("value");
+			// Reopen 25726 note 271- Issue 4 
+			PmParameter previousFulfilmentType = this.getManagedBean().getQt().getFulfilmentType();		
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
@@ -1480,11 +1482,18 @@ public class CreateQtBackingBean extends
 
 			}
 			// #25726 END
+			// Reopen 25726 note 271- Issue 4 
+			PmParameter newFulfilmentType = this.getManagedBean().getQt().getFulfilmentType	();
+		    boolean isUpdatefulfillment = updatefullfillmentDetails (newFulfilmentType, previousFulfilmentType);
+						
 			this.getManagedBean().getQt().setScQtSchedules(null);
 			this.getManagedBean().getQt().setScQtProgressivePayments(null);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
-
+			// Reopen 25726 note 271- Issue 4 
+			if (!isUpdatefulfillment){
+			  removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			}
+			
 			//20210615@asyrafahaziq - Bug #30891 - Start
 //			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
 //				 ContractPeriodChange();
@@ -1549,6 +1558,35 @@ public class CreateQtBackingBean extends
 					new ArrayList<ScQtProgressivePayment>());
 		}
 
+	}
+	// Reopen 25726 note 271- Issue 4 
+	/**
+	 * this method is used to update fulfillment details objects in fulfillment
+	 * details side menu.
+	 * 
+	 * @Param String(String scheduleType).
+	 * 
+	 */
+	private boolean updatefullfillmentDetails(PmParameter newFulfilmentType,PmParameter previousFulfilmentType ) {
+		
+		if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()) || 
+			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()))&&
+			(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) || 
+			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()))){
+			
+			List<ScQtSchedule> scheduleList = this.getManagedBean()
+					.getScheduleList();
+
+			if (CollectionUtils.isNotEmpty(scheduleList)) {
+				
+				for (ScQtSchedule qtSchedule : scheduleList) {
+						qtSchedule.setScheduleType(newFulfilmentType);
+				}
+			}
+			 return true;
+		}
+		
+      return false;
 	}
 	
 	
