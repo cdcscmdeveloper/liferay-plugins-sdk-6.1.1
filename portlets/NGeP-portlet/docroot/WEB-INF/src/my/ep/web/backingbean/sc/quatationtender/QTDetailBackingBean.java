@@ -13550,16 +13550,10 @@ public void retrieveDemoQtDetails(Long qtId) {
 	//9019 - End (Harun)
 
 	//29732 start
-	private boolean isQTRoleMaintenanceValidation() {
-		FacesScopes facesScopes = new FacesScopes();
-		return 
-//				facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
-//				|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())
-//				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value())
-//				|| 
-				facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
+    private boolean isQTRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
 	}
-
     //29732 end
 
 }
