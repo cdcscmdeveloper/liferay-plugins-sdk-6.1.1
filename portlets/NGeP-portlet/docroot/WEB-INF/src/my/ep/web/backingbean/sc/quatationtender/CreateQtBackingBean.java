@@ -4086,7 +4086,9 @@ public class CreateQtBackingBean extends
 				.getScQtCheckSt2techProposal();
 
 		if (null == st2technicalproposalList) {
-			st2technicalproposalList = new ArrayList<ScQtCheckList>();
+			// 11104-start
+			st2technicalproposalList = new ArrayList<>();
+			// 11104-end
 
 		}
 		if(type == true){
