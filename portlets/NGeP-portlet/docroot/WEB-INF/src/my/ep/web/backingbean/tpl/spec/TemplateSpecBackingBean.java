@@ -28,9 +28,11 @@ import java.util.TreeMap;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -251,6 +253,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 				// #21695 - Farid
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
@@ -2262,14 +2265,14 @@ public class TemplateSpecBackingBean extends
 
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
-								.getAnswerNumeric()).setScale(2, BigDecimal.ROUND_UP);
+								.getAnswerNumeric()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						
 					}
 				}
 
 				if (tplSpecAnswer.getAmountPerYear() != null) {
 					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
-							.getAmountPerYear()).setScale(2, BigDecimal.ROUND_UP);
+							.getAmountPerYear()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 					
 				}
 			}
@@ -2964,10 +2967,9 @@ public class TemplateSpecBackingBean extends
 	
 	public String replaceWithBR(String specDetails) {
 		// 35521 @zaim - start
-		String spec = specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); //36103 @zaim
 		spec = spec.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //36103 @zaim
 		return spec;
 		// 35521 @zaim - end
 	}
@@ -3159,7 +3161,7 @@ public class TemplateSpecBackingBean extends
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						totalEstAmount = totalEstAmount.add(specEstimation
-										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+										.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
 					}
 				}
 				else {
@@ -3180,7 +3182,7 @@ public class TemplateSpecBackingBean extends
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
 						totalEstAmount = totalEstAmount.add(specEstimation
-								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 		}
@@ -3226,7 +3228,7 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 			}
 			else {
 				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
@@ -3234,7 +3236,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 				}
 				else {
 					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
@@ -3244,7 +3246,7 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+								.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					}
 				}
 			}
@@ -5507,33 +5509,12 @@ public class TemplateSpecBackingBean extends
 		}
 		return false;
 	}
-//#21695 Farid end 2/4/2021
-	
-	//#28784 - Start
-	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
-		ITemplateSpecSO templateSpecSO = null;
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean
-					.getSelectedSpecQuestion();
-			List<TplSpecScoring> specScorings = selectedSpecQuestion
-					.getTplSpecScorings();
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-			BigDecimal demoScore = templateSpecSO.validateScoring(
-					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
-			if(demoScore != null && demoScore.equals(new BigDecimal(0))){
-				throw new EpException(MessageConst.ERROR_760476);
-			}
-			if (demoScore != null) {
-				selectedSpecQuestion.setDemoScore(demoScore);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-		templateSpecBean.setSelectedSpecQuestion(null);
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
-	}
+//#21695 Farid end 2/4/2021	
 
+	/**
+	 * #28784 - Demo scoring cancle
+	 * @param templateSpecBean
+	 */
 	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
@@ -5805,4 +5786,23 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	// #29187 End Vinod
+	
+	/**
+	 * To validate Wieghtage input value
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
+		BigDecimal weightage = (BigDecimal) value;
+
+		if (weightage.compareTo(BigDecimal.valueOf(100)) > 0) {
+			String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+	}
+	
+
+	
 }

@@ -28,7 +28,10 @@
 				</p:column>
 	
 				<p:column headerText="#{lbl['lbl.sm.enquiry.po.inquiry']}" style="width : 35%;white-space : normal;word-break: break-all">
-					<h:outputText value="#{inqHistVar.inquiryText}" />
+				<!-- #34392 - Start -->
+					<h:outputText value="N/A" rendered="#{inqHistVar.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}"/>
+					<h:outputText value="#{inqHistVar.inquiryText}" rendered="#{inqHistVar.inquirySubject eq 'INQUIRY_PO_SUPPLIER'}"/>
+				<!-- #34392 - End -->
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.enquiry.supplier.respond']}" style="width : 35%;white-space : normal">
@@ -52,14 +55,17 @@
 			<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}"
 				id="pnlInquiryId">
 				<table>
-					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
-					</tr>
-					<tr>
-						<td><p:inputText size="50" id="resInquirySubId"
-								disabled="true"
-								value="#{backingBean.managedBean.poToSupplierInquiry.inquiryText}" /></td>
-					</tr>
+					<c:if
+						test="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+						<tr>
+							<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
+						</tr>
+						<tr>
+							<td><p:inputText size="50" id="resInquirySubId"
+									disabled="true"
+									value="#{backingBean.managedBean.poToSupplierInquiry.inquirySubject}" /></td>
+						</tr>
+					</c:if>
 
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.inquirydate']}</td>
@@ -125,17 +131,17 @@
 									style="width : 12%;"
 									rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 									<ui:repeat var="applDocsFile"
-										value="#{inquirytbl.smApplInquiryDocFiles}">
+										value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}"
-												rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"
+												rendered="#{not empty applDocsFile.fileName and applDocsFile.fileName ne ' '}"
 												ajax="false"
 												action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
 												<p:fileDownload value="#{sdoReviewBackingBean.file}" />
 											</p:commandLink>
 										</ui:remove>
 										<h:panelGroup
-											rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
+											rendered="#{not empty applDocsFile.fileName and applDocsFile.fileName ne ' '}">
 											<a
 												href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{backingBean.getShortFileName(applDocsFile.fileName)}</a>
 										</h:panelGroup>
@@ -145,9 +151,14 @@
 								<p:column headerText="#{lbl['lbl.sm.remarks']}"
 									style="width : 30%;"
 									rendered="#{inquirytbl.pmDocument.mandatory}">
+									<!-- #34392 - Start -->
 									<h:inputTextarea value="#{inquirytbl.poRemarks}"
 										style="float:left; white-space:normal; width:97%;"
-										disabled="true" />
+										disabled="true" rendered="#{not empty inquirytbl.poRemarks}" />
+									<h:inputTextarea value="#{inquirytbl.sdoRemarks}"
+										style="float:left; white-space:normal; width:97%;"
+										disabled="true" rendered="#{not empty inquirytbl.sdoRemarks}" />
+									<!-- #34392 - End -->
 								</p:column>
 							</p:dataTable> <!-- datatable for mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyMandatory" value="" id="mandatoryEmpty"
@@ -224,20 +235,20 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 									style="width : 12%;"
 									rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-									<ui:repeat var="applDocsFile"
-										value="#{inquirytbl.smApplInquiryDocFiles}">
+									<ui:repeat var="applDocsFileNonMandatory"
+										value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
-											<p:commandLink value="#{applDocsFile.fileName}"
-												rendered="#{not empty inquirytbl.smApplInquiryDocFiles}"
+											<p:commandLink value="#{applDocsFileNonMandatory.fileName}"
+												rendered="#{not empty applDocsFileNonMandatory.fileName and applDocsFileNonMandatory.fileName ne ' '}"
 												ajax="false"
-												action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
+												action="#{backingBean.downloadSuppDoc(applDocsFileNonMandatory.fileName,applDocsFileNonMandatory.filePath)}">
 												<p:fileDownload value="#{sdoReviewBackingBean.file}" />
 											</p:commandLink>
 										</ui:remove>
 										<h:panelGroup
-											rendered="#{not empty inquirytbl.smApplInquiryDocFiles}">
+											rendered="#{not empty applDocsFileNonMandatory.fileName and applDocsFileNonMandatory.fileName ne ' '}">
 											<a
-												href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{backingBean.getShortFileName(applDocsFile.fileName)}</a>
+												href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFileNonMandatory.filePath}#{applDocsFileNonMandatory.fileName}">#{backingBean.getShortFileName(applDocsFileNonMandatory.fileName)}</a>
 										</h:panelGroup>
 										<br />
 									</ui:repeat>
@@ -245,9 +256,14 @@
 								<p:column headerText="#{lbl['lbl.sm.remarks']}"
 									style="width : 30%;"
 									rendered="#{!inquirytbl.pmDocument.mandatory}">
+									<!-- #34392 - Start -->
 									<h:inputTextarea value="#{inquirytbl.poRemarks}"
 										style="float:left; white-space:normal; width:97%;"
-										disabled="true" />
+										disabled="true" rendered="#{not empty inquirytbl.poRemarks}" />
+									<h:inputTextarea value="#{inquirytbl.sdoRemarks}"
+										style="float:left; white-space:normal; width:97%;"
+										disabled="true" rendered="#{not empty inquirytbl.sdoRemarks}" />
+									<!-- #34392 - End -->
 								</p:column>
 							</p:dataTable> <!-- datatable for non-mandatory support doc with no record to display(fix primeface version bug when no record found) -->
 							<p:dataTable var="emptyNonMandatory" value=""
