@@ -403,9 +403,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
 						getManagedBean().getSearchDocumentType());
 			}
-				return super.getStatusDropdownValuesBySearchBean(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
-						getManagedBean().getDocumentTypes(),
-						null);
+				return null;
 			//end - 36615
 		}
 	}
