@@ -304,7 +304,7 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		//#36605
 		//PIN must be 8 chars long, contain only letters, numbers, and at least 1 alphabet and 1 number
 		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")){
-			String cert = getCertIssuer(identificationNo);
+			String cert = StringUtils.isEmpty(identificationNo) ? getCertIssuer() : getCertIssuer(identificationNo);
 			boolean checkTG = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && !"true".equals(trustgateEnabled);
 			boolean checkDG = cert.equals(SupplierManagementConst.CERT_DIGICERT) && !"true".equals(digicertEnabled);
 			if (checkTG || checkDG || !"true".equalsIgnoreCase(getSpkiEnabledProperty())){
