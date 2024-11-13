@@ -3229,10 +3229,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			throw new EpException(MessageConst.ERROR_770250);
 		}
 
-		// if (user.getPmCountry().getCountryId() == null) {
-		// throw new EpException(MessageConst.ERROR_770035);
-		// }
-
 		// Validate if org profile not chosen.
 		if (ParameterConst.ORG_TYPE_FACTORING.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
 			if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null
@@ -3291,70 +3287,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				userSO = null;
 			}
 		}
-		// if(StringUtils.isBlank(user.getPreferredLanguage())){
-		// throw new EpException(MessageConst.ERROR_770037);
-		// }
-		// if(user.getNotifyRemovalDay()==null
-		// || (user.getNotifyRemovalDay()!=null
-		// && user.getNotifyRemovalDay()==0)){
-		// throw new EpException(MessageConst.ERROR_770038);
-		// }
-		// if(!StringUtils.isBlank(user.getConfirmPassword()) &&
-		// !StringUtils.isBlank(user.getPassword()) &&
-		// StringUtils.isBlank(user.getOldPassword())){
-		// throw new EpException("Old Password is mandatory.");
-		// }
+		//#36489 - Start
+		if (this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()) {
+			checkIsActiveGovtSellerUser();
+		}
+		//#36489 - End
 	}
-
-	// /**
-	// * Validation for PmAddress's fields
-	// *
-	// * @param pmAddress
-	// * @return boolean
-	// */
-	// private boolean validateUserAddress(PmAddress pmAddress) {
-	// logger.info("validateUserAddress");
-	// boolean addressEntered = false;
-	// if (!this.getManagedBean().getSelectedUser().isOrgAddress()) {
-	// // address is optional
-	// if (pmAddress.getPmCountry().getCountryId() != null
-	// || !StringUtils.isBlank(pmAddress.getAddress1())
-	// || !StringUtils.isBlank(pmAddress.getPostcode())
-	// || pmAddress.getPmState().getStateId() != null
-	// || pmAddress.getPmDistrict().getDistrictId() != null
-	// || pmAddress.getPmDivision().getDivisionId() != null) {
-	// addressEntered = true;
-	// }
-	// if (addressEntered) {
-	// if (pmAddress.getPmCountry().getCountryId() == null) {
-	// throw new EpException(MessageConst.ERROR_770039);
-	// }
-	//
-	// if (StringUtils.isBlank(pmAddress.getAddress1())) {
-	// throw new EpException(MessageConst.ERROR_770040);
-	// }
-	//
-	// if (StringUtils.isBlank(pmAddress.getPostcode())) {
-	// throw new EpException(MessageConst.ERROR_770041);
-	// }
-	//
-	// if (pmAddress.getPmState().getStateId() == null) {
-	// throw new EpException(MessageConst.ERROR_770042);
-	// }
-	//
-	// if (pmAddress.getPmDistrict().getDistrictId() == null) {
-	// throw new EpException(MessageConst.ERROR_770043);
-	// }
-	//
-	// if (this.getManagedBean().isDivisionFlagC()) {
-	// if (pmAddress.getPmDivision().getDivisionId() == null) {
-	// throw new EpException(MessageConst.ERROR_770044);
-	// }
-	// }
-	// }
-	// }
-	// return addressEntered;
-	// }
 
 	/**
 	 * Validation for PmUser
@@ -3367,11 +3305,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (StringUtils.isBlank(pmUser.getPreferredLanguage())) {
 				throw new EpException(MessageConst.ERROR_770046);
 			}
-
-			// if (pmUser.getNotifyRemovalDay() == null
-			// || pmUser.getNotifyRemovalDay() <= 0) {
-			// throw new EpException(MessageConst.ERROR_770047);
-			// }
 		}
 	}
 

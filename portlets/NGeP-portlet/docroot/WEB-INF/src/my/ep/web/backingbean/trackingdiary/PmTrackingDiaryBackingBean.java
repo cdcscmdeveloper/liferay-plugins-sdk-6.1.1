@@ -450,9 +450,6 @@ public class PmTrackingDiaryBackingBean extends
 	public void redirectToRnContinuityTrackingDiary(String docType, Long docId, boolean isFilterBySupplier,
 			List<Map<String, String>> purchaseRequestMapList) {
 
-		log.info("redirectToSupplierTrackingDiary - start:docType=" + docType + " docId=" + docId
-				+ " isFilterBySupplier=" + isFilterBySupplier);
-
 		linkRnWithPrTrackingDiary(docType, docId, purchaseRequestMapList);
 		setTrackingDiaryParam(docType, docId, isFilterBySupplier);
 
@@ -490,15 +487,62 @@ public class PmTrackingDiaryBackingBean extends
 			TrackingDiaryResDTO trackDiaryResDTO = trackingDiarySO.retrieveByDocNoAndStatusIdAndRoleCode(trackDiaryReqDTO);
 			if (trackDiaryResDTO.getPmTrackingDiary() != null && trackDiaryResDTO.isSuccessful()) {
 				PmTrackingDiary trackDiary = trackDiaryResDTO.getPmTrackingDiary();
-
-				if (trackDiary.getGroupDocType() == null && trackDiary.getGroupId() == null) {
-					trackDiary.setGroupDocType(docType);
-					trackDiary.setGroupId(docId);
-					trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
-					trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
-				}
+				trackDiary.setGroupDocType(docType);
+				trackDiary.setGroupId(docId);
+				trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
+				trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
 			}
 		}
+	}
+	
+	/**
+	 * Redirects to the Tracking Diary page after linking PO to the purchase request and setting tracking parameters.
+	 * 
+	 * @param docType Type of document (e.g., "PO").
+	 * @param docId Document ID.
+	 * @param purchaseRequestNo Purchase request number.
+	 */	
+	public void redirectToPoContinuityTrackingDiary(String docType, Long docId, String purchaseRequestNo) {
+
+		linkPoWithPrTrackingDiary(docType, docId, purchaseRequestNo);
+		setTrackingDiaryParam(docType, docId, false);
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		log.info("fc.getViewRoot().getViewId()=" + fc.getViewRoot().getViewId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/trackingdiary/trackingDiaryView.xhtml");
+	}
+	
+	/**
+	 * Links a purchase order (PO) to a purchase request in the Tracking Diary.
+	 * Retrieves the tracking diary entry for the given purchase request number and updates it with the provided 
+	 * PO document type and ID if a valid entry is found.
+	 * 
+	 * @param docType The type of document (e.g., "PO").
+	 * @param docId The ID of the document to link.
+	 * @param purchaseRequestNo The purchase request number to associate with the PO in the Tracking Diary.
+	 */	
+	private void linkPoWithPrTrackingDiary(String docType, Long docId, String purchaseRequestNo) {
+		ITrackingDiarySO trackingDiarySO = BusinessDelegate.getInstance().getServiceObject("cc",
+				ITrackingDiarySO.class);
+
+			TrackingDiaryReqDTO trackDiaryReqDTO = new TrackingDiaryReqDTO();
+			trackDiaryReqDTO.setStatusId(new BigDecimal(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION));
+			trackDiaryReqDTO.setRoleCode(null);
+			trackDiaryReqDTO.setDocNo(purchaseRequestNo);
+
+			TrackingDiaryResDTO trackDiaryResDTO = trackingDiarySO.retrieveByDocNoAndStatusIdAndRoleCode(trackDiaryReqDTO);
+			if (trackDiaryResDTO.getPmTrackingDiary() != null && trackDiaryResDTO.isSuccessful()) {
+				PmTrackingDiary trackDiary = trackDiaryResDTO.getPmTrackingDiary();
+				trackDiary.setGroupDocType(docType);
+				trackDiary.setGroupId(docId);
+				trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
+				trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
+			}
+
 	}
 	//#25790 - end
 
