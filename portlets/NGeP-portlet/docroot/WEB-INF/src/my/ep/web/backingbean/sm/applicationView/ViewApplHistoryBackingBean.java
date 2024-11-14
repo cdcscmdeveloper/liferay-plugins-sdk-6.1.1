@@ -112,8 +112,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
-//#28895_35501 - AUDIT TRAIL SM
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
+
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 //#29759 - Searching application status supporting doc loading
@@ -201,11 +200,6 @@ public class ViewApplHistoryBackingBean extends
 			
 		}
 		// 25792 - end
-		// #28895_35501 Start - AUDIT TRAIL SM
-		if(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL.equalsIgnoreCase(outputPageType)){
-			initAuditTab();
-		}
-		// #28895_35501 End
 	}
 
 	/**
@@ -2022,30 +2016,4 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END	
-	// #28895_35501 Start - AUDIT TRAIL SM
-	/**
-	 * Checks if the current user has audit access.
-	 *
-	 * @return true if the user has access; false otherwise.
-	 */
-	public boolean isAuditUser() {
-		FacesScopes facesScopes = new FacesScopes();
-		String[] roles = { RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(), RoleCode.AUDITOR_INTERNAL.value(),
-				RoleCode.SYS_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
-		boolean auditUser = false;
-		for (String role : roles) {
-			if (facesScopes.hasRoleUser(role)) {
-				auditUser = true;
-				break;
-			}
-		}
-		return auditUser;
-	}
-	
-	private void initAuditTab() {
-		SmAppl suppAppl = getManagedBean().getSmAppl();
-		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		auSmView.initAuditTab(suppAppl);
-	}
-	// #28895_35501 End
 }
