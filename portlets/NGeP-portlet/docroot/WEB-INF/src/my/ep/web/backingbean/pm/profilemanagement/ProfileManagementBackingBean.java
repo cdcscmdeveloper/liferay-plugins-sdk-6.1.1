@@ -267,10 +267,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	public void getListOfAssignedRoles(PmUserOrg org) {
 		if (org != null) {
-			this.getManagedBean().setActiveUserOrg(org);// not
-														// active
-														// only
-														// TODO
+			this.getManagedBean().setActiveUserOrg(org);// not active only
 			this.getManagedBean().setActiveUserRoleFor(new ArrayList<PmUserRole>());
 			for (PmUserRole pmUserRole : this.getManagedBean().getActiveUserOrg().getPmUserRoles()) {
 				this.getManagedBean().getActiveUserRoleFor().add(pmUserRole);
@@ -291,10 +288,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				UserOrgResDTO resDto = userSO.retrieveUserOrgByUserOrgId(userOrgReqDTO);
 				
 				if (resDto != null && resDto.isSuccessful()) {
-					this.getManagedBean().setActiveUserOrg(resDto.getPmUserOrg());// not
-																// active
-																// only
-																// TODO
+					this.getManagedBean().setActiveUserOrg(resDto.getPmUserOrg());//not active only
 					this.getManagedBean().setActiveUserRoleFor(new ArrayList<PmUserRole>());
 					for (PmUserRole pmUserRole : this.getManagedBean().getActiveUserOrg().getPmUserRoles()) {
 						this.getManagedBean().getActiveUserRoleFor().add(pmUserRole);
@@ -519,17 +513,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				getManagedBean().setActiveUser(true);
 			}
 
-			for (PmUserRole userRole : pmUserOrg.getPmUserRoles()) {// put
-																	// letterNo
-																	// and
-																	// approvalLimit
-																	// in maps
-																	// to check
-																	// later
-																	// changes
-																	// for
-																	// tracking
-																	// diary
+			for (PmUserRole userRole : pmUserOrg.getPmUserRoles()) {//put letterNo and approvalLimit in maps to check later changes for tracking diary
 				if (userRole.getPmRole().getRoleCode().equals("FL_APPROVER")) {
 					this.getManagedBean().getRoleCodeToLetterNoMap().put(userRole.getPmRole().getRoleCode(),
 							userRole.getLetterNo());
@@ -565,12 +549,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().setDeletePmUserAttachments(null);
 			this.getManagedBean().setDeletePortrait(false);
 			this.getManagedBean().setFileEventMapper(new HashMap<PmUserAttachment, FileUploadEvent>());
-			this.getManagedBean().setSelectedUserOrg(pmUserOrg);// TODO
-																// retrive
-																// userORg
-																// with
-																// relations
-																// again
+			this.getManagedBean().setSelectedUserOrg(pmUserOrg); //retrive userORg with relations again
 			showReceivingAddress();
 			this.getManagedBean().setIsNewUser(false);
 			// set org category
@@ -2873,28 +2852,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 
 	}
-
-	//#36489 and SonarLint Fixing - Start
-	/**
-	 * Validation for PmUser's fields
-	 * 
-	 * @param user
-	 * @param pmUserOrg
-	 */
-	private void validateUser(PmUser user, PmUserOrg pmUserOrg) {
-	    logger.info("validateUser");
-
-	    validateBasicUserDetails(user);
-	    validateIdentification(user);
-	    validateEmailAndNotificationPreferences(user, pmUserOrg);
-	    validateOrgProfile(pmUserOrg);
-	    validateExistingUserOrg(user, pmUserOrg);
-
-	    if (validateUserOrgProfileAndStatus()) {
-	        checkIsActiveGovtSellerUser();
-	    }
-	}
-	//#36489 and SonarLint Fixing - End
 	
 	/**
 	 * Validation for PmUser
@@ -2933,14 +2890,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		String oldDesignation = user.getDesignation();
 		String newDesignation = userOrg.getDesignation();
-		if (oldDesignation != null && !oldDesignation.equalsIgnoreCase(newDesignation)) {// if
-																							// designation
-																							// was
-																							// modified
+		if (oldDesignation != null && !oldDesignation.equalsIgnoreCase(newDesignation)) {//if designation was modified
 			logger.info("oldDesignation : " + oldDesignation);
 			logger.info("newDesignation : " + newDesignation);
 			isProfileDetailsChanged = true;
-
 		}
 		String oldEmail = user.getEmail();
 		String newEmail = userOrg.getEmail();
@@ -3158,14 +3111,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 
 			loadUserOrgType(user, userOrg);
-			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();// always
-																		// will
-																		// have
-																		// one
-																		// org
-																		// for
-																		// each
-																		// user
+			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();//always will have one org for each user
 			
 			// Bug #26766 - START
 			Long loginSessionUserId = 1L;
@@ -4415,6 +4361,26 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller();
 	}
 	
+	/**
+	 * Validation for PmUser's fields
+	 * 
+	 * @param user
+	 * @param pmUserOrg
+	 */
+	private void validateUser(PmUser user, PmUserOrg pmUserOrg) {
+	    logger.info("validateUser");
+
+	    validateBasicUserDetails(user);
+	    validateIdentification(user);
+	    validateEmailAndNotificationPreferences(user, pmUserOrg);
+	    validateOrgProfile(pmUserOrg);
+	    validateExistingUserOrg(user, pmUserOrg);
+
+	    if (validateUserOrgProfileAndStatus()) {
+	        checkIsActiveGovtSellerUser();
+	    }
+	}
+	
 	private void validateBasicUserDetails(PmUser user) {
 		if (StringUtils.isBlank(user.getLoginId())) {
 			throw new EpException(MessageConst.ERROR_770030);
@@ -4495,8 +4461,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	private void validateExistingUserOrg(PmUser user, PmUserOrg pmUserOrg) {
 		if (user.getUserId() != null && DbValueConst.RECORD_STATUS_ACTIVE == pmUserOrg.getRecordStatusFlg()) {
-			// validate if the user contains any active user orgs (exclude
-			// supplier type and own org profile)
+			// validate if the user contains any active user orgs (exclude supplier type and own org profile)
 			IUserSO userSO = null;
 			try {
 				UserReqDTO userOrgReqDTO = new UserReqDTO();
