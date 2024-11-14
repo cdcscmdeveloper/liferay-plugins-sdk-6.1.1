@@ -1496,6 +1496,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			log.info("end - PID validity process");
 			checkDisciplinaryAction(); //26279
+			checkSupplierDeleteBranch(); //29728
 		}
 		log.info("start - initializePRBeans");
 		initializePRBeans();
@@ -1557,16 +1558,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
-			// 29728 - start
-			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
-					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
-							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
-				getManagedBean().setBranchNeedToBeChanged(true);
-
-				getManagedBean().setBranchCode(
-						getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
-			}
-			// 29728 - end
 		}
 	}
 
@@ -1606,7 +1597,44 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		}
 	}
 	// 26279 - End
+	
+	// 29728 - start
+	/**
+	 * Checks if the current PR's status is one of the pending statuses
+	 * 
+	 * @return true if the PR's status is one of the pending statuses, false for
+	 *         otherwise statuses
+	 */
+	private boolean isSupplierDeleteBranchPRPendingStatus() {
+		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
+		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
+				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
+				FulfilmentStatusConst.PR_PENDING_REVISION, FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL,
+				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
+		return pendingStatusIds.contains(statusId);
+	}
 
+	/**
+	 * Checks if the supplier's branch is deleted and needs to be changed.
+	 * 
+	 * If the branch is marked for deletion and is currently in a pending
+	 * status, this method sets the branch as needing a change and updates the
+	 * branch code.
+	 */
+	private void checkSupplierDeleteBranch() {
+		if (isSupplierDeleteBranchPRPendingStatus()) {
+			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
+					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
+							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+				getManagedBean().setBranchNeedToBeChanged(true);
+
+				getManagedBean().setBranchCode(
+						getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
+			}
+		}
+	}
+	// 29728 - End
+	
 	/**
 	 * Calculate sub total based on quantity
 	 *

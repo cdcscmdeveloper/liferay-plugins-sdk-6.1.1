@@ -2280,12 +2280,21 @@ public class SmApplicationUtil {
 					// #30718 - start
 					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null && (per.getPmCountry().getCountryId() == 131L))
 					// #30718 - end
-					//31130
-					|| per.getPmRace() == null || per.getTitle() == null) {
+					//#31130 --START 12/11/24
+					|| per.getPmRace() == null || per.getTitle() == null
+					|| per.getDesignation() == null 
+					|| per.getPmCountry() == null || per.getIdentificationNo() == null
+					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
+					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(
+									SupplierManagementConst.STYPE_CONSULTANT)) 
+					|| ((per.getMobileArea() == null || per.getMobileNo() == null|| per.getMobileTelcoId() == null)
+											&& per.isAuthorized() == true)
+					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
+			}//#31130 --END 12/11/24
+			/*} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			}
+			}*/ //Commented for #31130
 			//31130-start
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
@@ -15609,18 +15618,20 @@ public class SmApplicationUtil {
 	//#34483 END
 	
 	//#26238
-	 /**
+	/**
 	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
 	 *  can edit Bank Information only
 	 * @param bean
+	 * @param daList
 	 */
-	public static void enableBankSectionOnly(SmApplicationManagedBean bean){
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean, List<SmDisciplinaryAction> daList){
 		if(bean.getEditVO() != null){
 			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
 				bean.getEditVO().setDisciplinary(false);
 				return;
 			}
-			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			List<SmDisciplinaryAction> activeDA = EntityHelper.isCollectionEmpty(daList) ?
+					retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()) : daList;
 			if(EntityHelper.isCollectionEmpty(activeDA)){
 				return;
 			}
@@ -15631,7 +15642,11 @@ public class SmApplicationUtil {
 		}
 	}	
 	
-	private static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
+	/**
+	 * @param daList
+	 * @return true if suspend/cancel registration, blacklist owner DA exists
+	 */
+	public static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
 		for(SmDisciplinaryAction da : daList){
 			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
 				return true;
