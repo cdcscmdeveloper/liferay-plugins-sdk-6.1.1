@@ -13652,10 +13652,10 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 */
 	public void checkRolesToAuditView() {
 		FacesScopes facesScopes = new FacesScopes();
-		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
-				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value())) {
+		if (isQTSearchScreen() && facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+				|| isQTSearchScreen() &&  facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				|| isQTSearchScreen() &&  facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| isQTSearchScreen() &&  facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value())) {
 			this.getManagedBean().setAuditViewRole(true);
 		}
 	}
