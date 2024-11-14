@@ -1196,54 +1196,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-	
-	// start - 36615
-	/**
-	 * Get status select items by module and doc type for dropdown.
-	 * 
-	 * @param moduleCode
-	 *            the module code
-	 * @param docTypes
-	 *            the documents type
-	 * @param searchBean
-	 *            the SearchBean instance
-	 * @return array of SelectItem
-	 */
-	public SelectItem[] getStatusDropdownValuesBySearchBean(String moduleCode, List<SelectItem> docTypes,
-			SearchBean<PmStatusDesc> searchBean) {
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
-		List<PmStatusDesc> combinedStatusDescs = new ArrayList<>();
 
-		try {
-			for (SelectItem item : docTypes) {
-				if (item.getValue() != null) {
-					List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode,
-							item.getValue().toString(), searchBean);
-					combinedStatusDescs.addAll(statusDescs);
-				}
-			}
-
-			items = new SelectItem[combinedStatusDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			int i = 1;
-			for (PmStatusDesc statusDesc : combinedStatusDescs) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
-					"", SLALogConstant.COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-
-		return items;
-	}
-
-	// end - 36615
-
-	
 	/**
 	 * Get Status description by status id.
 	 * 

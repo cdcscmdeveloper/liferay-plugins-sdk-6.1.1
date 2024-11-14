@@ -1205,7 +1205,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				} else if (isActiveUserGroupUser() != null) {
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
-				} else if (this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()) {
+				} else if (this.getManagedBean().getPmUserOrgOriginal() != null
+						&& this.getManagedBean().getPmUserOrgOriginal()
+								.getPmOrgProfile() != null
+						&& this.getManagedBean().getPmUserOrgOriginal()
+								.getPmOrgProfile().isGovtSeller()) {
 					checkIsActiveGovtSellerUser();
 				} else {
 					// if inactive set expire Date to SyetemDate
@@ -3296,7 +3300,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 		//#36489 - Start
-		if (this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()) {
+		if (this.getManagedBean().getPmUserOrgOriginal() != null
+				&& this.getManagedBean().getPmUserOrgOriginal()
+						.getPmOrgProfile() != null
+				&& this.getManagedBean().getPmUserOrgOriginal()
+						.getPmOrgProfile().isGovtSeller()) {
 			checkIsActiveGovtSellerUser();
 		}
 		//#36489 - End
@@ -3714,8 +3722,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 			
 			// #36489 - Start
-			if (ParameterConst.ORG_TYPE_PTJ.equals(user.getOrgTypeCode().getParameterCode())
-					&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()
+			if (this.getManagedBean().getPmUserOrgOriginal() != null
+					&& this.getManagedBean().getPmUserOrgOriginal()
+							.getPmOrgProfile() != null
+					&& ParameterConst.ORG_TYPE_PTJ.equals(user.getOrgTypeCode()
+							.getParameterCode())
+					&& this.getManagedBean().getPmUserOrgOriginal()
+							.getPmOrgProfile().isGovtSeller()
 					&& this.getManagedBean().isSuppGovSellerUser()) {
 				reqDTO.setSuppGovSeller(true);
 			}
