@@ -1235,14 +1235,14 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
 				// #11104-start
 				for (ScQtSampleItem sampleItem : sampleCompliance) {
-					PmParameter sampleSubStatus = sampleItem.getSubmissionStatus();
-					
+					PmParameter sampleSubStatus = sampleItem
+							.getSubmissionStatus();
 					if (null != sampleSubStatus.getParameterId()
-							&& ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE.equals(sampleSubStatus
-									.getParameterCode())) {
+							&& ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE
+									.equals(sampleSubStatus.getParameterCode())) {
 						String sampleItemRemark = sampleItem.getRemark();
-						
-						if (StringUtils.isBlank(sampleItemRemark) || StringUtils.isEmpty(sampleItemRemark)) {
+						if (StringUtils.isBlank(sampleItemRemark)
+								|| StringUtils.isEmpty(sampleItemRemark)) {
 							throw new EpException(MessageConst.ERROR_760545);
 						}
 					}
@@ -5122,13 +5122,16 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				if (resDTO.getItemResultBean().getTotalRecord() > 0) {
 					this.getManagedBean().setSampleItemList(
 							resDTO.getItemResultBean().getResultList());
-
+					
 					// #11104-start
-					if (null != resDTO.getItemResultBean().getResultList().get(0).getScRequestItem()
-							.getTplSpecQuestion().getParentSpecQuestion()) {
+					if (null != resDTO.getItemResultBean().getResultList()
+							.get(0).getScRequestItem().getTplSpecQuestion()
+							.getParentSpecQuestion()) {
 						getManagedBean().setItemSampleReq(
-								resDTO.getItemResultBean().getResultList().get(0).getScRequestItem()
-										.getTplSpecQuestion().getParentSpecQuestion().isSampleReq());
+								resDTO.getItemResultBean().getResultList()
+										.get(0).getScRequestItem()
+										.getTplSpecQuestion()
+										.getParentSpecQuestion().isSampleReq());// #11104
 					}
 					// #11104_End
 				}
@@ -7617,36 +7620,44 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
 						// #25638 - End.
 						) {
-					int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
-					int lcaloutputTab=Integer.MIN_VALUE;
-					if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex && outputTab>=QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX){//35148-33
+					int complianceIndex = this.getManagedBean()
+							.getComplianceActiveIndex();// 35148&11104-start
+					int lcaloutputTab = Integer.MIN_VALUE;
+					if (this.getManagedBean().getScQt().isSampleReq()
+							&& QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX > complianceIndex
+							&& outputTab >= QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX) {// 35148&11104-33
 						retriveComplianceSample();
-						outputTab=QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
-					}
-					else{
-				 lcaloutputTab=retriveFinancialChecklistStatusCheck();
-					}//35148-End
+						outputTab = QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
+					} else {
+						lcaloutputTab = retriveFinancialChecklistStatusCheck();
+					}// 35148&11104-End
 				if(lcaloutputTab>0){
 					outputTab=lcaloutputTab;
 					if(outputTab==7){
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
-							this.getManagedBean().setComplianceActiveIndex(
-									QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);//35148-start
-							if(QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX==complianceIndex){
-			                 	throw new EpException(MessageConst.ERROR_760239);	
-								}//35148-End
-							//return outputTab=7;
+								this.getManagedBean()
+										.setComplianceActiveIndex(
+												QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);// 35148&11104-start
+								if (QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX == complianceIndex) {
+									throw new EpException(
+											MessageConst.ERROR_760239);
+								}// 35148&11104-End
 						} else {
-							if(this.getManagedBean().getScQt().isSampleReq() && QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX>complianceIndex){//35148-start
-								this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);
-							}
-							else{
-							this.getManagedBean().setComplianceActiveIndex(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX);
-							if(QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX==complianceIndex){//35148-start
-			                 	throw new EpException(MessageConst.ERROR_760239);	
-								}//35148-End
-							}//35148-End
-							//return outputTab=7;
+								if (this.getManagedBean().getScQt()
+										.isSampleReq()
+										&& QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX > complianceIndex) {// 35148&11104-start
+									this.getManagedBean()
+											.setComplianceActiveIndex(
+													QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX);
+								} else {
+									this.getManagedBean()
+											.setComplianceActiveIndex(
+													QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX);
+									if (QTConstants.COMPLIANCE_FINANCIAL_ACTIVE_INDEX == complianceIndex) {// 35148&11104-start
+										throw new EpException(
+												MessageConst.ERROR_760239);
+									}// 35148&11104-End
+								}// 35148&11104-End
 						}
 					}
 				}
@@ -7795,6 +7806,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 								EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 								this.getManagedBean().getScQt()
 										.setTecEvaluationCheck(1);
+								this.getManagedBean().getScQt()
+								.setDemoNotificationCheck(null);//11104
 								reqDTO.setScQt(this.getManagedBean().getScQt());
 								evalResDTO = evaluationSo
 										.saveReportDtls(reqDTO);
@@ -7854,6 +7867,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 							this.getManagedBean().getScQt()
 									.setTecEvaluationCheck(1);
+							this.getManagedBean().getScQt()
+							.setDemoNotificationCheck(null);//11104
 							reqDTO.setScQt(this.getManagedBean().getScQt());
 							evalResDTO = evaluationSo.saveReportDtls(reqDTO);
 							this.getManagedBean().setScQt(evalResDTO.getScQt());
@@ -8767,11 +8782,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			}
 
 			if (getManagedBean().getTempTab() < outputTab) {
-				if(outputTab==QTConstants.EVALUATION_MAIN_ACTIVE_INDEX){//35148-33
-					outputTab=QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX;
-				}else{
-				getManagedBean().setTempTab(outputTab);
-				}//35148-33
+				if (outputTab == QTConstants.EVALUATION_MAIN_ACTIVE_INDEX) {// 35148&11104-33
+					outputTab = QTConstants.COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX;// 35148&11104-33
+				} else {// 35148&11104-33
+					getManagedBean().setTempTab(outputTab);
+				}// 35148&11104-33
 			}
 			getManagedBean().setTabActiveIndex(outputTab);
 			//6906 - start
@@ -8803,9 +8818,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			// #35286, #10542 -end-
 			
 			 if(currentTab==1){
-				 int complianceIndex=this.getManagedBean().getComplianceActiveIndex();//35148-start
+				int complianceIndex = this.getManagedBean()
+						.getComplianceActiveIndex();// 35148&11104-start
 				retriveComplianceTechnical();
-				this.getManagedBean().setComplianceActiveIndex(complianceIndex);//35148-start
+				this.getManagedBean().setComplianceActiveIndex(complianceIndex);// 35148&11104-start
 			}
 			else if(currentTab==2){
 				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -9953,10 +9969,11 @@ private void retriveCommitteeRemarksList(){
 
 			// #11104-start
 			if (this.getManagedBean().isItemSampleReq()) {
-				List<ScQtSampleItem> sampleItemlist = this.getManagedBean().getSampleItemList();
+				List<ScQtSampleItem> sampleItemlist = this.getManagedBean()
+						.getSampleItemList();
 
 				for (ScQtSampleItem item : sampleItemlist) {
-					
+
 				}
 
 				reqDtO.setSampleComplianceList(sampleItemlist);
@@ -14862,19 +14879,21 @@ private void retriveCommitteeRemarksList(){
 					}
 				}
 			}
-		}else{//35148-start
-			for (ScQtCheckList techCheckList : this.getManagedBean()
-					.getCompliancefinancialCheckList()) {
-				if (null != techCheckList.getPmEvalStatus() && QTStatusConst.TS_PENDING_SUBMISSION
-						.equals(techCheckList
-								.getPmEvalStatus().getStatusId())) {
-					int count = checkProposalSubmittedForCompliance(techCheckList);
-					if (count > 0) {
-							return outputTab=QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
+		}
+ else {// 35148 && 11104-start
+				for (ScQtCheckList techCheckList : this.getManagedBean()
+						.getCompliancefinancialCheckList()) {
+					if (null != techCheckList.getPmEvalStatus()
+							&& QTStatusConst.TS_PENDING_SUBMISSION
+									.equals(techCheckList.getPmEvalStatus()
+											.getStatusId())) {
+						int count = checkProposalSubmittedForCompliance(techCheckList);
+						if (count > 0) {
+							return outputTab = QTConstants.EVALUATION_MAIN_ACTIVE_INDEX;
 						}
 					}
 				}
-			}//35148-End
+			}// 35148 && 11104-End
 		}finally{
 			evaluationSO=null;
 		}
@@ -16165,8 +16184,9 @@ private void retriveCommitteeRemarksList(){
 	
 				// #11104-start
 				if (null == qtSampleLable.getSampleLableStatus()
-						|| QTStatusConst.TS_PENDING_SUBMISSION.equals(qtSampleLable.getSampleLableStatus()
-								.getStatusId())) {
+						|| QTStatusConst.TS_PENDING_SUBMISSION
+								.equals(qtSampleLable.getSampleLableStatus()
+										.getStatusId())) {
 					statusCompleted = false;
 				}
 				// #11104-End
@@ -16856,29 +16876,32 @@ private void retriveCommitteeRemarksList(){
 	 *            (String sampleType)
 	 * @return SelectItem[].
 	 */
-	public SelectItem[] getSampleSubmissionDropDownValues(String sampleType, ScQtSampleItem sampleItem) {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		
+	public SelectItem[] getSampleSubmissionDropDownValues(String sampleType,
+			ScQtSampleItem sampleItem) {// 11104
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
 		List<String> sampleList = new ArrayList<String>();
 		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_COMPLIANCE);
 		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_COMPLIANCE);
 		sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_SUBMIT);
-		
-		if (null != sampleItem && null != sampleItem.getScRequestItem()
+
+		if (null != sampleItem
+				&& null != sampleItem.getScRequestItem()
 				&& null != sampleItem.getScRequestItem().getTplSpecQuestion()
-				&& null != sampleItem.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion()
-				&& !sampleItem.getScRequestItem().getTplSpecQuestion().getParentSpecQuestion().isSampleReq()) {
-			sampleList.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_APPLICABLE);
-		}
-		
+				&& null != sampleItem.getScRequestItem().getTplSpecQuestion()
+						.getParentSpecQuestion()
+				&& !sampleItem.getScRequestItem().getTplSpecQuestion()
+						.getParentSpecQuestion().isSampleReq()) {
+			sampleList
+					.add(ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_APPLICABLE);
+		}// 11104-End
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), sampleList));
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), sampleList));
 
-		SelectItem[] sampleData = getDropdownValuesBySearchBean(ParameterTypeConst.SAMPLE_SUBMISSION_STATUS, searchBean);
-
+		SelectItem[] sampleData = getDropdownValuesBySearchBean(
+				ParameterTypeConst.SAMPLE_SUBMISSION_STATUS, searchBean);
 		searchBean = null;
 		sampleList = null;
-		
 		return sampleData;
 	}
 	// #11104 -end-
@@ -16889,15 +16912,15 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void sampleScoreCalculate() {
 		BigDecimal sampleScore = BigDecimal.valueOf(0);
-		List<ScQtSampleItem> itemList = this.getManagedBean().getSampleItemList();
-		
+		List<ScQtSampleItem> itemList = this.getManagedBean()
+				.getSampleItemList();
 		for (ScQtSampleItem item : itemList) {
 			if (null != item.getUserScore()) {
 				sampleScore = sampleScore.add(item.getUserScore());
 			}
 		}
-		
-		this.getManagedBean().getNoOfContractsProposalScore().setUserScore(sampleScore);
+		this.getManagedBean().getNoOfContractsProposalScore()
+				.setUserScore(sampleScore);
 	}
 	// #11104_End
 
