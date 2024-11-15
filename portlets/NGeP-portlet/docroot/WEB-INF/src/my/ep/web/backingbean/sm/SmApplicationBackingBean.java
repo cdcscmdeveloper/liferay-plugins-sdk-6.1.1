@@ -15555,9 +15555,10 @@ public class SmApplicationBackingBean extends
 	 * inquiry row select
 	 */
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
-		resetSmApplSupportDocInquiries(applInquiry);
-		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
 		// #34392 - START
+//		resetSmApplSupportDocInquiries(applInquiry);
+		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		
 		getManagedBean().setMandatoryDocsInquiry(
 				new ArrayList<SmApplSupportDocInquiry>());
 		getManagedBean().setNonMandatoryDocsInquiry(
