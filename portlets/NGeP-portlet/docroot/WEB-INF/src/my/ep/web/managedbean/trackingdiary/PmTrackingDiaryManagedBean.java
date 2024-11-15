@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map; //#25790
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -120,7 +121,11 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private boolean viewAsPTJ;
 	private boolean viewAsSupplier;
 	private String supplierRole;
-	//end - #25396	
+	//end - #25396
+	
+	// #25790 - start
+	private transient List<Map<String, String>> purchaseRequestMapList;
+	// #25790 - end
 
 	public String getBackURL() {
 		return backURL;
@@ -1219,4 +1224,25 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 	
 	//end - #25396
+	// #25790 - start
+	/**
+	 * @return the purchaseRequestMapList
+	 */
+	public List<Map<String, String>> getPurchaseRequestMapList() {
+		if (purchaseRequestMapList == null) {
+			purchaseRequestMapList = new ArrayList<>();
+		}
+		return purchaseRequestMapList;
+	}
+
+	/**
+	 * Sets the purchase Request Map List.
+	 * 
+	 * @param purchaseRequestMapList
+	 *            the purchase Request Map List
+	 */
+	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
+		this.purchaseRequestMapList = purchaseRequestMapList;
+	}
+	// #25790 - end
 }
