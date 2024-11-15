@@ -4403,8 +4403,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 
 	private void validateEmailAndNotificationPreferences(PmUser user, PmUserOrg pmUserOrg) {
-		if (StringUtils.isBlank(user.getIdentificationNo())) {
-			throw new EpException(MessageConst.ERROR_770034);
+		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
+			throw new EpException(MessageConst.ERROR_770036);
 		}
 
 		if (user.isNotifyBySms()) {
