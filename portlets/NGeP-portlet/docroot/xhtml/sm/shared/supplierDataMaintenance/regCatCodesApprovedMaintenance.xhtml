@@ -84,7 +84,7 @@
 	</p:dataTable>
 	
 	<div align="right">
-		<!-- #34209 - START - add component to update -->
+		<!-- #30766 & #34209 - START - add component to update -->
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
 			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.selectedApprovedCategories or 
 				!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
@@ -93,7 +93,7 @@
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			process="@this">
 		</p:commandButton>
-		<!-- #34209 - END -->
+		<!-- #30766 & #34209 - END -->
 	</div>
 
 </ui:composition>

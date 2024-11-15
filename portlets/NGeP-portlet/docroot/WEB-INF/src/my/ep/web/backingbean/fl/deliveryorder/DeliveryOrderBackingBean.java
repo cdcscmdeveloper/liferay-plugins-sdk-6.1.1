@@ -1589,7 +1589,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		getManagedBean().setSubmittedDoList(submittedDoList);
 	}
 	
-	
 	// 36247-Start
 	/**
 	 * 

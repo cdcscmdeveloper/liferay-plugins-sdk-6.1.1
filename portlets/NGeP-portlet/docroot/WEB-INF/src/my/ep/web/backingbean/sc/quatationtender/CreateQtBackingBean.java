@@ -1026,15 +1026,25 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			// Start Reopen 9019 #note-289
-			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())) {
-				// #9019 note-289 -end-
-				// 25729#174 start
-				if ((!isPanel && enable.length > 0)
-						&& (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
-					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
-				}
-				// 25729#174 end
-			} // 9019 #note-289
+			//#35061 - remove to allow show the the panel 
+			// #9019 note-289 -end-
+			// 25729#174 start
+			// Bug #35061 - asyrafhaziq -start-
+			// get total indicative price threshold validation value
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+			if ((!isPanel && enable.length > 0) && (amount.compareTo(indPriceThreshold) <= 0)) {
+				// set message
+				String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE,
+						new String[] { String.valueOf(indPriceThreshold).trim() });
+				// SONARQUBE QT 2023 - haziq
+				this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
+				// Bug #35061 -end-
+				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+			}
+			// 25729#174 end
+		 // 9019 #note-289
+
 		} finally {
 			parameterSo = null;
 		}
@@ -2521,7 +2531,12 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// Start - 25729
 			if (null != amount) {
 				// 25729#174 Change 1 line code
-				if (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0) {
+				// Bug #35061 - asyrafhaziq -start-
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+				if (amount.compareTo(indPriceThreshold) <= 0) {
+					// Bug #35061 -end-
 					setProcurementMode(scQt, amount, "Y");
 				} else {
 					setProcurementMode(scQt, amount);

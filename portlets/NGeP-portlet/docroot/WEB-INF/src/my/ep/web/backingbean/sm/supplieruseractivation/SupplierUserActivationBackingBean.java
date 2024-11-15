@@ -554,7 +554,7 @@ public class SupplierUserActivationBackingBean extends
 				if (createdTime.compareTo(activationDate
 						.getTime()) != 0) {
 					retVal = false;
-				}//#32040 END
+				} //#32040 END
 			}
 		} catch (Exception ex) {
 		}
