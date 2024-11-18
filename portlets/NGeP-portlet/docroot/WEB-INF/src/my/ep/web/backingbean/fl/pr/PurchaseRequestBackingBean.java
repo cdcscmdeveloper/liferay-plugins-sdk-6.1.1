@@ -1496,6 +1496,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			log.info("end - PID validity process");
 			checkDisciplinaryAction(); //26279
+			checkSupplierDeleteBranch(); //29728
 		}
 		log.info("start - initializePRBeans");
 		initializePRBeans();
@@ -1553,20 +1554,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsg(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
-			// 29728 - start
-			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
-					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
-							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
-				getManagedBean().setBranchNeedToBeChanged(true);
-
-				getManagedBean().setBranchCode(
-						getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
-			}
-			// 29728 - end
 		}
 	}
 
@@ -1584,29 +1575,45 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
 		return pendingStatusIds.contains(statusId);
 	}
+	// 26279 - End
+	
+	// 29728 - start
+	/**
+	 * Checks if the current PR's status is one of the pending statuses
+	 * 
+	 * @return true if the PR's status is one of the pending statuses, false for
+	 *         otherwise statuses
+	 */
+	private boolean isSupplierDeleteBranchPRPendingStatus() {
+		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
+		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
+				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
+				FulfilmentStatusConst.PR_PENDING_REVISION, FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL,
+				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
+		return pendingStatusIds.contains(statusId);
+	}
 
 	/**
-	 * Sets the disciplinary action message
+	 * Checks if the supplier's branch is deleted and needs to be changed.
 	 * 
-	 * @param smDisciplinaryAction
+	 * If the branch is marked for deletion and is currently in a pending
+	 * status, this method sets the branch as needing a change and updates the
+	 * branch code.
 	 */
-	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+	private void checkSupplierDeleteBranch() {
+		if (isSupplierDeleteBranchPRPendingStatus()) {
+			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
+					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
+							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+				getManagedBean().setBranchNeedToBeChanged(true);
+
+				getManagedBean().setBranchCode(
+						getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
+			}
 		}
 	}
-	// 26279 - End
-
+	// 29728 - End
+	
 	/**
 	 * Calculate sub total based on quantity
 	 *
@@ -3987,16 +3994,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		//36560-Start
-		Map<String, BigDecimal> extensionCodeCache = new HashMap<>();
-		double thresoldAmt;
-
-		FlItemSummaryReqDTO paidPaReq = new FlItemSummaryReqDTO();
-		List<Long> flFulfilmentRequestList;
-		paidPaReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-		paidPaReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
-		flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(paidPaReq);
-		// 36560-end
+		double thresoldAmt = 0;
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
@@ -4004,20 +4002,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			
-			// 36560-Start
-			String extensionCode = requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8);
-			summReq.setExtensionCode(extensionCode);
-
-			BigDecimal sumAmt;
-
-			if (extensionCodeCache.containsKey(extensionCode)) {
-				sumAmt = extensionCodeCache.get(extensionCode);
-			} else {
-				sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
-				extensionCodeCache.put(extensionCode, sumAmt);
-			}
-			// 36560-End
+			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
+			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
+			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
 			
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
@@ -5046,20 +5033,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
 	//24893 - start

@@ -1237,7 +1237,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				//#28895-35500 start
 				if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 					auditResDTO.setRoleCode(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())? RoleCode.COMMITTEE_APPROVER.value():RoleCode.DESK_OFFICER.value());
-					auditResDTO.setOrganizationProfileId(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId());
 					auditResDTO.setDocTypeId(qt.getProcurementMode().getParameterId());
 					auditResDTO.setDocNo(qt.getQtNo());
 					auditResDTO.setDocId(qt.getQtId());
@@ -1539,7 +1538,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 		AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 
 		auditResDTO.setRoleCode(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value()) ? RoleCode.COMMITTEE_APPROVER.value() : RoleCode.DESK_OFFICER.value());
-		auditResDTO.setOrganizationProfileId(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId());
 		auditResDTO.setDocTypeId(this.getManagedBean().getCurrentApproval().getScQt().getProcurementMode().getParameterId());
 		auditResDTO.setDocNo(this.getManagedBean().getCurrentApproval().getScQt().getQtNo());
 		auditResDTO.setDocId(this.getManagedBean().getCurrentApproval().getScQt().getQtId());

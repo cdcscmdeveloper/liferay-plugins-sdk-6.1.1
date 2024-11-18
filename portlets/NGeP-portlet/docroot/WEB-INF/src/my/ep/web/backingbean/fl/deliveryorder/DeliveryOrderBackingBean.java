@@ -859,7 +859,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsg(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
@@ -879,28 +879,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL));
 		return pendingStatusIds.contains(statusId);
 	}
-
-	/**
-	 * Sets the disciplinary action message
-	 * 
-	 * @param smDisciplinaryAction
-	 */
-	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		}
-	}
-
 	// 26279 - End
 
 	/**
@@ -1708,20 +1686,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+
+			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
 	// 26279 - end
@@ -1842,23 +1818,26 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 
 		for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
-			for (FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+			if (flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				for (FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+					if (itemAddr.getDeliveredQty().doubleValue() > 0) {
+						FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 
-				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+						reqDTO.setFlFulfilmentItemAddr(itemAddr.getFulfilmentItemAddrId());
+						reqDTO.setFulfilmentItemId(itemAddr.getFlFulfilmentItem().getFulfilmentItemId());
 
-				reqDTO.setFlFulfilmentItemAddr(itemAddr.getFulfilmentItemAddrId());
-				reqDTO.setFulfilmentItemId(itemAddr.getFlFulfilmentItem().getFulfilmentItemId());
+						FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
+						sumDeliveredQty = resDTO.getTotalDelOrderQty();
 
-				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
-				sumDeliveredQty = resDTO.getTotalDelOrderQty();
+						remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
+						if (itemAddr.getDeliveredQty() == null) {
+							itemAddr.setDeliveredQty(new BigDecimal(0));
+						}
 
-				remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
-				if (itemAddr.getDeliveredQty() == null) {
-					itemAddr.setDeliveredQty(new BigDecimal(0));
-				}
-
-				if (itemAddr.getDeliveredQty().doubleValue() > remainingQty.doubleValue()) {
-					throw new EpException(MessageConst.ERROR_740071);
+						if (itemAddr.getDeliveredQty().doubleValue() > remainingQty.doubleValue()) {
+							throw new EpException(MessageConst.ERROR_740071);
+						}
+					}
 				}
 			}
 		}

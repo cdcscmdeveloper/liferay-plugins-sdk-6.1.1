@@ -920,8 +920,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 		}
@@ -4136,8 +4135,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 // #29732 End - reOpen Fix
@@ -8023,7 +8021,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.equals(QTStatusConst.SE_COMPLETED);
 			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 			//29732
@@ -8044,8 +8042,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//end #25037
 			//28895 - 35500 start
 			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
-			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			
-			//28895 - 35500 end
+			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			//28895 - 35500 end
 			// 25037 - end
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
@@ -13668,10 +13665,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 */
 	public void checkRolesToAuditView() {
 		FacesScopes facesScopes = new FacesScopes();
-		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
-				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value())) {
+		if (isQTSearchScreen()
+				&& (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value()) || facesScopes
+							.hasRoleUser(RoleCode.EP_ADMIN.value()))) {
 			this.getManagedBean().setAuditViewRole(true);
 		}
 	}
