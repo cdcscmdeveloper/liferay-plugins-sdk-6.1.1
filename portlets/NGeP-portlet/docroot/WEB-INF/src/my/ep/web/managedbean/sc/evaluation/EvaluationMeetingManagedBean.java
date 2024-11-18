@@ -145,24 +145,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private boolean nameRequired;
 	
 	private boolean hasPreviousMeeting; //#29473, #31675
-
-	// 25037 - start
-	private Paginator historyPaginator;
-	private Paginator memberHistoryPaginator;
-	private ScCommitteeMemberHistory selectedCommitteeHistory;
-	private String currentCommitteeType;
-	private List<ScCommitteeMember> tempCommitteeMembers;
-	private String currentOutcome;
-	private boolean committeeModified;
-	private ScQtApproval qtApproval;
-	private List<ScQtApprovalRemark> scQtApprovalRemarks;
-	private EvaluationBackingBean evalBB;
-	private boolean committeeUpdateEnabled;
-	private List<QtCommitteeMemberBean> prevCommitteeMembers;
-	private ScQtApprovalRemark tempScQtApprovalRemark;
-
-	// 25037 - end
-
 	
 	// 25037 - start
 	private Paginator historyPaginator;
@@ -853,112 +835,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 	// #29473, #31675 -End
 	
-	// 25037 - start
-	public Paginator getHistoryPaginator() {
-		return historyPaginator;
-	}
-
-	public void setHistoryPaginator(Paginator historyPaginator) {
-		this.historyPaginator = historyPaginator;
-	}
-
-	public Paginator getMemberHistoryPaginator() {
-		return memberHistoryPaginator;
-	}
-
-	public void setMemberHistoryPaginator(Paginator memberHistoryPaginator) {
-		this.memberHistoryPaginator = memberHistoryPaginator;
-	}
-
-	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
-		return selectedCommitteeHistory;
-	}
-
-	public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
-		this.selectedCommitteeHistory = selectedCommitteeHistory;
-	}
-
-	public String getCurrentCommitteeType() {
-		return currentCommitteeType;
-	}
-
-	public void setCurrentCommitteeType(String currentCommitteeType) {
-		this.currentCommitteeType = currentCommitteeType;
-	}
-
-	public List<ScCommitteeMember> getTempCommitteeMembers() {
-		return tempCommitteeMembers;
-	}
-
-	public void setTempCommitteeMembers(List<ScCommitteeMember> tempCommitteeMembers) {
-		this.tempCommitteeMembers = tempCommitteeMembers;
-	}
-
-	public String getCurrentOutcome() {
-		return currentOutcome;
-	}
-
-	public void setCurrentOutcome(String currentOutcome) {
-		this.currentOutcome = currentOutcome;
-	}
-
-	public boolean isCommitteeModified() {
-		return committeeModified;
-	}
-
-	public void setCommitteeModified(boolean committeeModified) {
-		this.committeeModified = committeeModified;
-	}
-
-	public ScQtApproval getQtApproval() {
-		return qtApproval;
-	}
-
-	public void setQtApproval(ScQtApproval qtApproval) {
-		this.qtApproval = qtApproval;
-	}
-
-	public List<ScQtApprovalRemark> getScQtApprovalRemarks() {
-		return scQtApprovalRemarks;
-	}
-
-	public void setScQtApprovalRemarks(List<ScQtApprovalRemark> scQtApprovalRemarks) {
-		this.scQtApprovalRemarks = scQtApprovalRemarks;
-	}
-
-	public EvaluationBackingBean getEvalBB() {
-		return evalBB;
-	}
-
-	public void setEvalBB(EvaluationBackingBean evalBB) {
-		this.evalBB = evalBB;
-	}
-
-	public boolean isCommitteeUpdateEnabled() {
-		return committeeUpdateEnabled;
-	}
-
-	public void setCommitteeUpdateEnabled(boolean committeeUpdateEnabled) {
-		this.committeeUpdateEnabled = committeeUpdateEnabled;
-	}
-
-	public List<QtCommitteeMemberBean> getPrevCommitteeMembers() {
-		return prevCommitteeMembers;
-	}
-
-	public void setPrevCommitteeMembers(List<QtCommitteeMemberBean> prevCommitteeMembers) {
-		this.prevCommitteeMembers = prevCommitteeMembers;
-	}
-
-	public ScQtApprovalRemark getTempScQtApprovalRemark() {
-		return tempScQtApprovalRemark;
-	}
-
-	public void setTempScQtApprovalRemark(ScQtApprovalRemark tempScQtApprovalRemark) {
-		this.tempScQtApprovalRemark = tempScQtApprovalRemark;
-	}
-	// 25037 - end
-
 	// 25037 - start
 	public Paginator getHistoryPaginator() {
 		return historyPaginator;

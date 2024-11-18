@@ -370,16 +370,12 @@ public void specCommitteeMaintenancereset() {
 		try {
 			mb = (QTDetailManagedBean) BeanUtils.cloneBean(this.getManagedBean());
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -393,8 +389,8 @@ public void specCommitteeMaintenancereset() {
 	public void switchToOrigManagedBean() {
 		// boolean setOtherActiveIndex = false;
 		FacesScopes fs = new FacesScopes();
-		QTDetailManagedBean mb1 = (QTDetailManagedBean) fs.getSessionScope(getManagedBeanName());
-		QTDetailManagedBean mb2 = (QTDetailManagedBean) fs.getSessionScope(getTempManagedBeanName());
+		//QTDetailManagedBean mb1 = (QTDetailManagedBean) fs.getSessionScope(getManagedBeanName());
+		//QTDetailManagedBean mb2 = (QTDetailManagedBean) fs.getSessionScope(getTempManagedBeanName());
 
 		fs.setSessionScope(getManagedBeanName(), (QTDetailManagedBean) fs.getSessionScope(getTempManagedBeanName()));
 		fs.removeFromSession(getTempManagedBeanName());
@@ -438,33 +434,6 @@ public void specCommitteeMaintenancereset() {
 		/*** 25692#95 ** -end- */
 	}
 	
-	/**
-	 * The method used to get the specificationMaintenance edit details.
-	 * 
-	 * @param scQt
-	 * @param isEditable
-	 * @param popup
-	 */
-	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
-		editSpecificationMaintenance(scQt, isEditable, true, false, null);
-		if (popup) {
-			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
-			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
-				SpecificationBackingBean specBB = new SpecificationBackingBean();
-				// temporary while awaiting #29474 close in SIT -start-
-				// remove when #29474 ready for UAT
-				specBB.qtChecklistTabChange(9);
-				// temporary while awaiting #29474 close in SIT -end-
-
-				// use this when #29474 ready for UAT -start-
-				// specBB.qtChecklistTabChange(10);
-				// use this when #29474 ready for UAT -end-
-				// RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
-			}
-		}
-	// 25037 - end - note 510
-	}
-
 	/**
 	 * The method used to get the specificationMaintenance edit details.
 	 * 
