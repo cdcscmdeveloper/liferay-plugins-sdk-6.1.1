@@ -73,6 +73,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
+import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
@@ -139,6 +140,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 	private String agreementZipFileName = null;
 	private String agreementZipFilePath = null;
+
+	//26686 start
+	private String contractAmtChange = null;
+	private String gstAmtChange = null;
+	private String sTaxAmtChange = null;	
+	//26686 end
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -1063,8 +1070,20 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { 
 				reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 			}
-			reqDTO.setApprovalLimit(getContractAmt().add(getGstAmt().add(getStaxAmt())));
+			
+			//#26686 - start 
+			BigDecimal approvalLimit;
+			if (getManagedBean().getCtAgreement().getCtAmendment() != null && (getManagedBean().getCtAgreement().getCtAmendment().isValueChange()
+					|| getManagedBean().getCtAgreement().getCtAmendment().isValueChangeByGst() || getManagedBean().getCtAgreement().getCtAmendment().isValueChangeByStax())) {
+				setContractSignerChanges();					
+				approvalLimit = setLimitContractSigner();
+			} else {
+				approvalLimit = getContractAmt().add(getGstAmt().add(getStaxAmt()));
+			}					
+			
+			reqDTO.setApprovalLimit(approvalLimit);
 			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			//#26686 - end
 
 			List<PmUser> list = resDTO.getUserList();
 			items = new SelectItem[list.size() + 1];
@@ -1077,6 +1096,11 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			userSO = null;
 			reqDTO = null;
 			resDTO = null;
+			//#26686 start- reset value from global variable
+			contractAmtChange = null;
+			gstAmtChange = null;
+			sTaxAmtChange = null;
+			//#26686 end
 		}
 		return items;
 	}
@@ -2628,4 +2652,103 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 
 		commonDownloadUtil(filePath.toString(), ContractConst.DOCNAME_AGREEMENT_GUIDELINE);
 	}
+	
+	//#26686 - start
+	
+	public void setContractSignerChanges() {
+		CtContractAmount ctContractAmt = null;
+		if(getManagedBean().getContractVer().getCtContractAmounts() != null && getManagedBean().getContractVer().getCtContractAmounts().size() >= 2){
+			List<CtContractAmount> listContractAmounts = getManagedBean().getContractVer().getCtContractAmounts();
+			sortContractAmount(listContractAmounts);
+			ctContractAmt = listContractAmounts.get(listContractAmounts.size() - 2);
+		}else{
+			ctContractAmt = getManagedBean().getContractVer().getCtContractAmounts().get(0);
+		}
+		if(ctContractAmt.getGstAmount()== null){
+			ctContractAmt.setGstAmount(BigDecimal.ZERO);
+		}
+		if(ctContractAmt.getStaxAmount()== null){
+			ctContractAmt.setStaxAmount(BigDecimal.ZERO);
+		}
+
+		// Determine the type of changes
+		if (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().compareTo(BigDecimal.ZERO) > 0) {
+			contractAmtChange = new String(ContractConst.ADD_AMOUNT);
+		} else if (getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount().compareTo(BigDecimal.ZERO) < 0) {
+			contractAmtChange = new String(ContractConst.DEDUCT_AMOUNT);
+		} else {
+			contractAmtChange = new String(ContractConst.NO_CHANGE_AMOUNT);
+		} 
+
+		if (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().compareTo(ctContractAmt.getGstAmount()) > 0) {
+			gstAmtChange = new String(ContractConst.ADD_AMOUNT);
+		} else if (getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount().compareTo(ctContractAmt.getGstAmount()) < 0) {
+			gstAmtChange = new String(ContractConst.DEDUCT_AMOUNT);
+		} else {
+			gstAmtChange = new String(ContractConst.NO_CHANGE_AMOUNT);
+		} 
+
+		if (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount().compareTo(ctContractAmt.getStaxAmount()) > 0) {
+			sTaxAmtChange = new String(ContractConst.ADD_AMOUNT);
+		} else if (getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount().compareTo(ctContractAmt.getStaxAmount()) < 0) {
+			sTaxAmtChange = new String(ContractConst.DEDUCT_AMOUNT);
+		} else {
+			sTaxAmtChange = new String(ContractConst.NO_CHANGE_AMOUNT);
+		} 		
+	}
+	
+	public BigDecimal setLimitContractSigner() {
+		// Calculation of new Contract Signer limit bases on the changes
+		CtContractAmount ctContractAmount = null;
+		BigDecimal result = BigDecimal.ZERO;
+		BigDecimal newAdditionAmt = BigDecimal.ZERO;
+		BigDecimal newAdditionGst = BigDecimal.ZERO;
+		BigDecimal newAdditionSst = BigDecimal.ZERO;
+		BigDecimal additionGst = getManagedBean().getCtAgreement().getCtAmendment().getNewGstAmount();
+		BigDecimal additionSst = getManagedBean().getCtAgreement().getCtAmendment().getNewStaxAmount();
+		BigDecimal additionContract = getManagedBean().getCtAgreement().getCtAmendment().getAdditionalAmount();
+		
+		if(getManagedBean().getContractVer().getCtContractAmounts() != null && getManagedBean().getContractVer().getCtContractAmounts().size() >= 2){
+			List<CtContractAmount> listContractAmounts = getManagedBean().getContractVer().getCtContractAmounts();
+			sortContractAmount(listContractAmounts);
+			ctContractAmount = listContractAmounts.get(listContractAmounts.size() - 2);
+		}else{
+			ctContractAmount = getManagedBean().getContractVer().getCtContractAmounts().get(0);
+		}
+
+		if (contractAmtChange.equals(ContractConst.ADD_AMOUNT)) {
+			newAdditionAmt = additionContract;
+
+		}else if(contractAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+		
+			newAdditionAmt = ctContractAmount.getContractAmount().add(additionContract);
+		}
+		
+		if (gstAmtChange.equals(ContractConst.ADD_AMOUNT)) {
+			newAdditionGst = additionGst.subtract(ctContractAmount.getGstAmount());
+		}else if(gstAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+			newAdditionGst = additionGst;
+		}
+		
+		if (sTaxAmtChange.equals(ContractConst.ADD_AMOUNT)) {
+			newAdditionSst = additionSst.subtract(ctContractAmount.getStaxAmount());
+		}else if(sTaxAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
+			newAdditionSst = additionSst;
+		}
+
+		// Addition in contract and tax
+		return result = newAdditionAmt.add(newAdditionGst.add(newAdditionSst));
+			
+	}
+
+	public void sortContractAmount (List<CtContractAmount> list){
+		if(list!=null){
+			Collections.sort(list, new Comparator<CtContractAmount>() {	
+				public int compare(CtContractAmount l1, CtContractAmount l2) {
+					return l1.getExpDate().compareTo(l2.getExpDate());
+				}
+			});
+		}
+	}
+	//#26686 - end
 }
