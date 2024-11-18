@@ -5026,10 +5026,13 @@ public class SmApplicationUtil {
 						}
 						if (applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							int renewalNotice = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl("");
-							if (diffDays > renewalNotice) { //#36391
+							//#36594 - Start
+							int renewMinTime = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl("");
+							int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+							if (diffDays > renewMinTime) { //#36391
 								result = true;
-								throw new EpException(MessageConst.ERROR_722501);
+								throw new EpException(MessageConst.ERROR_722501, new String[] { String.valueOf(renewalPeriod), String.valueOf(renewMinTime)});
+							//#36594 - End
 							} else if (diffDays < -365) {
 								result = true;
 								throw new EpException(MessageConst.ERROR_722502);
@@ -15413,4 +15416,69 @@ public class SmApplicationUtil {
 		return true;
 	}
 	//#34483 END
+	
+	//#36594 - Start
+	public static String changeNumberToWord(int number) {
+
+		if (number == 0) {
+			return "zero";
+		}
+		
+		String[] units = { "",
+				SmCommonUtil.getMessage("lbl.sm.words.one", null),
+				SmCommonUtil.getMessage("lbl.sm.words.two", null),
+				SmCommonUtil.getMessage("lbl.sm.words.three", null),
+				SmCommonUtil.getMessage("lbl.sm.words.four", null),
+				SmCommonUtil.getMessage("lbl.sm.words.five", null),
+				SmCommonUtil.getMessage("lbl.sm.words.six", null),
+				SmCommonUtil.getMessage("lbl.sm.words.seven", null),
+				SmCommonUtil.getMessage("lbl.sm.words.eight", null),
+				SmCommonUtil.getMessage("lbl.sm.words.nine", null) };
+
+		StringBuilder words = new StringBuilder();
+
+		// Handle hundreds
+		if (number >= 100) {			
+			words.append(units[number / 100]).append(" hundred ");
+			number %= 100;
+		}
+
+		// Handle tens and teens
+		if (number >= 20) {
+			String[] tens = { "", "",
+					SmCommonUtil.getMessage("lbl.sm.words.twenty", null),
+					SmCommonUtil.getMessage("lbl.sm.words.thirty", null),
+					SmCommonUtil.getMessage("lbl.sm.words.forty", null),
+					SmCommonUtil.getMessage("lbl.sm.words.fifty", null),
+					SmCommonUtil.getMessage("lbl.sm.words.sixty", null),
+					SmCommonUtil.getMessage("lbl.sm.words.seventy", null),
+					SmCommonUtil.getMessage("lbl.sm.words.eighty", null),
+					SmCommonUtil.getMessage("lbl.sm.words.ninety", null) };
+			
+			words.append(tens[number / 10]).append(" ");
+			number %= 10;
+		} else if (number >= 10) {
+			String[] teens = { "",
+					SmCommonUtil.getMessage("lbl.sm.words.ten", null),
+					SmCommonUtil.getMessage("lbl.sm.words.eleven", null),
+					SmCommonUtil.getMessage("lbl.sm.words.twelve", null),
+					SmCommonUtil.getMessage("lbl.sm.words.thirteen", null),
+					SmCommonUtil.getMessage("lbl.sm.words.fourteen", null),
+					SmCommonUtil.getMessage("lbl.sm.words.fifteen", null),
+					SmCommonUtil.getMessage("lbl.sm.words.sixteen", null),
+					SmCommonUtil.getMessage("lbl.sm.words.eighteen", null),
+					SmCommonUtil.getMessage("lbl.sm.words.nineteen", null) };
+			
+			words.append(teens[number - 10]).append(" ");
+			return words.toString().trim();
+		}
+
+		// Handle units
+		if (number > 0) {
+			words.append(units[number]).append(" ");
+		}
+
+		return words.toString().trim();
+	}
+	//#36594 - End
 }

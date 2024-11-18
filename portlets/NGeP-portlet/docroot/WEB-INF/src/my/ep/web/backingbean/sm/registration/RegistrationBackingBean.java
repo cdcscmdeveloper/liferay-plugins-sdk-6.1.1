@@ -5709,4 +5709,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
         return false;
     }
 	//#35581 END
+	
+	//#36594 - Start
+	/**
+	 * Set terms and condition message with parameter.
+	 * 
+	 * @return String
+	 */
+	public String setRenewalTnc() {
+		int renewalPeriod = SmServiceLookup.getSmRuleSO()
+				.retrieveRenewalPeriodForAppl(
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+
+		String word = SmApplicationUtil.changeNumberToWord(renewalPeriod);
+		
+		return ResourceBundleUtils.getMessage("lbl.sm.basic.account.mof.tnc",
+				new String[] { word, String.valueOf(renewalPeriod) },
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+	//#36594 - End
 }
