@@ -1237,7 +1237,6 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 				//#28895-35500 start
 				if (auditTrailSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 					auditResDTO.setRoleCode(getFacesScopes().hasRoleUser(RoleCode.COMMITTEE_APPROVER.value())? RoleCode.COMMITTEE_APPROVER.value():RoleCode.DESK_OFFICER.value());
-					//auditResDTO.setOrganizationProfileId(this.getManagedBean().getDoMaintenanceSearchBean().getPtjProfile().getOrgProfileId()); //adli
 					auditResDTO.setDocTypeId(qt.getProcurementMode().getParameterId());
 					auditResDTO.setDocNo(qt.getQtNo());
 					auditResDTO.setDocId(qt.getQtId());
