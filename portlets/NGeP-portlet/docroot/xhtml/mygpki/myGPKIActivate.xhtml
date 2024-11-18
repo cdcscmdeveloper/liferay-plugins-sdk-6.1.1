@@ -54,14 +54,7 @@ textarea {
 	text-align: right !important;
 }
 </style>
-		<!-- # RnD URL -->
-		<p:remoteCommand name="getUrlAll" action="#{myGpkiBackingBean.getUrlAll()}"/>
-		<script type="text/javascript">
-			$(document).ready( function(){
-				getUrlAll();
-			});
-		</script>
-		
+
 		<p:blockUI block="myGPKIActivate" widgetVar="gpkiBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>

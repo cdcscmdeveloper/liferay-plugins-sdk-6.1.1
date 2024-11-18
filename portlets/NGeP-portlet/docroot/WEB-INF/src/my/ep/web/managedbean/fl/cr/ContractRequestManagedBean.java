@@ -316,7 +316,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<String> availableNoList;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplineVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//24893 - start
@@ -360,9 +360,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int deleteOverallItem;
   //11076 - end
     private boolean bondIncomplete = false;//35024
-    
-    private String backToNtf; //35357
-    
+        
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3140,12 +3138,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplineVO() {
+		return disciplineVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
+		this.disciplineVO = disciplineVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -3412,13 +3410,5 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		}
 		
 		//35024-End		
-		//35357-Start
-		public String getBackToNtf() {
-			return backToNtf;
-		}
-
-		public void setBackToNtf(String backToNtf) {
-			this.backToNtf = backToNtf;
-		}
-		//35357-Start
+		
 }

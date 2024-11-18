@@ -378,6 +378,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.country']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />	
 					</td>
+					<!-- #34159 - START - add update division panel -->
 					<td id="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}" 
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId}"
@@ -389,8 +390,10 @@
 								itemValue="#{counLs.countryId}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateStateByAddType('permenant',false)}"
-								update="cmbPermState,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
-						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
+								update="cmbPermState,divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
+						</p:selectOneMenu> 
+						<!-- #34159 - END -->
+						<p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
 							display="icon" /></td>
 				</tr>
 

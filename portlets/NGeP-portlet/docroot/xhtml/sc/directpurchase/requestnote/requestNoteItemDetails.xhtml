@@ -5,6 +5,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style>
+		.command-link {
+			display: inline-block;
+			/* Ensures the command link is treated like an inline element */
+			color: #009ae5 !important; /* Ensures the link color is applied */
+			text-decoration: none; /* Removes the underline */
+		}
+	</style>
 
 	<p:panel id="requestNoteItemDetails" toggleable="true"
 		toggleSpeed="500">
@@ -52,11 +60,13 @@
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}"
 					style="white-space: normal;">
 					<p:commandLink value="#{requestNoteDtl.requestItem.itemName}"
+						styleClass="command-link"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						update=":form:itemDtlPopup" partialSubmit="true" process="@this"
 						oncomplete="itemDtlPopup.show();" />
 					<p:spacer width="2px;" />
 					<p:commandLink partialSubmit="true" process="@this"
+						styleClass="command-link"
 						actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}"
 						rendered="#{!empty requestNoteDtl.requestItem.purchaseInDefault}">
 						<p:graphicImage value="/css/images/design/ico-view.png"
@@ -65,6 +75,7 @@
 					<p:spacer width="2px;" />
 					<h:panelGroup rendered="#{requestNoteDtl.showPurchaseInquiry}">
 						<p:commandLink partialSubmit="true" process="@this"
+							styleClass="command-link"
 							id="prInquiryResponse"
 							actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}">
 							<p:graphicImage value="/css/images/design/ico-view.png"
@@ -85,6 +96,7 @@
 					<ui:fragment
 						rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A' or requestNoteDtl.procurementType.parameterCode eq 'P'}">
 						<p:commandLink value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,requestNoteDtl.procurementType.parameterCode)}"
+							styleClass="command-link"
 							partialSubmit="true" process="@this" update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
@@ -156,6 +168,7 @@
 							<p:column styleClass="ppPanelGrid"
 								style="border:none !important; padding-left: 1px;padding-right: 0px;vertical-align: super;width:12%;">
 								<p:commandLink
+									styleClass="command-link"
 									action="#{requestNoteBackingBean.supplierViewAction}"
 									partialSubmit="true" process="@this" id="supplierViewId"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -181,7 +194,7 @@
 						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
 					</f:facet>	
 					<h:panelGroup rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}">
-						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" styleClass="command-link"
 							rendered="#{requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
 							action="#{requestNoteBackingBean.supplierDisciplinaryActionInfo(requestNoteDtl.scRequestSupplierItem.smSupplier)}" 
 							process="@this" partialSubmit="true" update=":form">
@@ -213,6 +226,7 @@
 							rendered="#{requestNoteBackingBean.checkPriceOffered(requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode)}">
 							<div style="text-align: center;">
 								<p:commandLink partialSubmit="true" update=":form:pricingPopup"
+									styleClass="command-link"
 									process="@this"
 									actionListener="#{requestNoteBackingBean.showPricing(requestNoteDtl)}"
 									oncomplete="pricingPopup.show();">

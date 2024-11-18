@@ -509,6 +509,9 @@
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@this, menuItems,agreementReqPG, expDateLabel, effDateLabel, contractDurationLabel, @([id$=uploadApprovalLetterPg])"
 												listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
+												
+											<p:ajax event="change" 
+												listener="#{directLOABackingBean.changeResetValuePK7FullfilmentType()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
 																							
 											<p:ajax event="change"
 												listener="#{directLOABackingBean.isPbDropDown()}"
@@ -587,6 +590,7 @@
 		<!-- 20230111@Haziq - #12487&29693 - start  -->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.resp.period']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td><table>
 					<tr>
@@ -595,12 +599,14 @@
 						<c:when test="#{isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 							<p:inputText id="ContractAmtId2"
 								value="#{directLOABackingBean.managedBean.scLoa.loaResponsePeriod}"
-								style="text-align:right;" partialSubmit="true" size="2" >
+								label="#{lbl['lbl.sc.resp.period']}"
+								style="text-align:right;" partialSubmit="true" size="2" required="true">
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.validateResponsePeriod(directLOABackingBean.managedBean.scLoa.loaResponsePeriod)}"
 									partialSubmit="true" process="@this"
 									update="@([id$=ContractAmtId3])" />
-							</p:inputText> 	
+							</p:inputText> 
+							<p:message id="ContractAmtId2Msg" for="ContractAmtId2" display="icon" />	
 						</c:when>
 						<c:otherwise>
 						    <p:inputText id="ContractAmtId2"
@@ -672,7 +678,7 @@
 							<td>
 								<h:panelGroup id="bondReqPG">
 									<c:choose>
-										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and !directLOABackingBean.managedBean.readOnly}">
+										<c:when test="#{!directLOABackingBean.isPbDropDown() and !directLOABackingBean.isPerformanceBondRequired(directLOABackingBean.managedBean.overallContractAmt, null) and isEditableStatus and !directLOABackingBean.managedBean.readOnly}">
 											<c:choose>
 												<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 													<p:selectOneMenu id="bondReqPk7Per" required="true"
@@ -1018,6 +1024,9 @@
 														<!-- #25726 START -->
 														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
 														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														 
+														 <p:ajax event="change" 
+														 listener="#{directLOABackingBean.changeResetRequiredAgreement()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
 														<!-- #25726 END -->
 													</p:selectOneMenu>
 												</c:when>
@@ -1122,7 +1131,7 @@
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
 						<!-- #25726 START -->													
-						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision) and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
 						required="true">
 						<!-- #25726 END -->
 							<table>
@@ -1156,7 +1165,7 @@
 			 	 				</tr>
 			 	 			</table>			 	 				
 			 	 		</h:panelGroup>
-			 	 		<h:panelGroup  rendered="#{!(StatusLOASubmission or StatusLOARevision)  and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+			 	 		<h:panelGroup  rendered="#{!(StatusLOASubmission or StatusLOARevision or StatusLOAApproval)  and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
 							<table>
 								<tr>
 									<td width="300">
