@@ -5,8 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
+	
+	<ui:remove> #11104 - start </ui:remove>
+	<ui:param name="isSampleExist"
+		value="#{qTScheduleDetailBackingBean.checkISSampleExistWIPChecklist(supplierProposalDetailBackingBean.managedBean.qt)}"></ui:param>
+	<ui:remove> #11104 - end </ui:remove>
+	
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 
@@ -39,11 +43,12 @@
 					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.scAddress)}" />
 			</p:column>
 			<ui:remove> #11104 - start </ui:remove>
-			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}">
+			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}" rendered="#{isSampleExist}">
 				<p:outputLabel style="float : left;white-space: normal;"
 					value="#{samplesubmissiondtl.scAddress.contactPerson}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}">
+			<p:column
+				headerText="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" rendered="#{isSampleExist}">
 				<p:outputLabel style="float : left"
 					value="#{samplesubmissiondtl.scAddress.contactMobileNo}" />
 			</p:column>
@@ -63,13 +68,13 @@
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
 				<td>
-					<!-- 11104 -start- --> 
+					<ui:remove> #11104 - start </ui:remove> 
 					<p:commandButton
 						value="#{lbl['lbl.sc.sp.printlabel']}"
 						update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
 						partialSubmit="true" process="@this" />
-						<!-- 11104 -end- -->
+						<ui:remove> #11104 - end </ui:remove>
 				</td>
 				<td />
 			</tr>
@@ -99,31 +104,32 @@
 				<td />
 				<td />
 			</tr>
+			
+            <ui:remove> #11104 - start </ui:remove>
+            <ui:fragment rendered="#{isSampleExist}">
 			<tr>
-			<ui:remove> #11104 - start </ui:remove>
-					<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" /></td>
-								<td>
-					<p:inputText style="margin-top:5px;"							
-								disabled="true"
-								readonly="true"
-								value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactPerson}"
-								size="30"  /> </td>
-								<td />
-				                <td />
-		</tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" /></td>
+				<td><p:inputText style="margin-top:5px;" disabled="true"
+						readonly="true"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactPerson}"
+						size="30" /></td>
+				<td />
+				<td />
+			</tr>
 			<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" /></td>
-								<td>
-					<p:inputText 	style="margin-top:5px;"					
-								disabled="true"
-								readonly="true"
-								value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactMobileNo}"
-								size="30"  /> </td>
-								<td />
-				                <td />
-		</tr>		                
-			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" /></td>
+				<td><p:inputText style="margin-top:5px;" disabled="true"
+						readonly="true"
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.scAddress.contactMobileNo}"
+						size="30" /></td>
+				<td />
+				<td />
+			</tr>
+			</ui:fragment>
 			<ui:remove> #11104 - end </ui:remove>
+
+			<tr>
 				<td colspan="4"><br /> <h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
 				</td>
@@ -134,12 +140,12 @@
 						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 						size="30" disabled="true" readonly="true" /></td>
 				<td>
-					<!-- 11104 -start- --> 
+					<ui:remove> #11104 - start </ui:remove> 
 					<p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}"
 						update="@([id$=supplierSampleLabelDlg])"
 						action="#{supplierProposalDetailBackingBean.printLabelAction}"
 						partialSubmit="true" process="@this" /> 
-					<!-- 11104 -end- -->
+					<ui:remove> #11104 - end </ui:remove>
 				</td>
 				<td />
 			</tr>
@@ -157,6 +163,7 @@
 					value="#{supplierProposalDetailBackingBean.replaceWithBR(sampleitemdtl.scRequestItem.itemName)}"
 					escape="false" style="white-space: normal;word-wrap: break-word;" />
 			</p:column>
+			<ui:remove> #11104 - start </ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
 				style="width:15%;">
 				<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}"
@@ -165,21 +172,29 @@
 					value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}"
 					rendered="#{sampleitemdtl.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}" style="width:15%;">
-					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
-				</p:column >
-				<p:column style="width:15%;">
-					<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sc.qt.sample.quantity.proposal']}" />
-							&#160;
-							<p:graphicImage id="pnpImg" value="/css/images/design/ico-tooltips.png" />
-							<p:tooltip id="pnptt" for="pnpImg">
-								<p:outputLabel escape="false" value="#{lbl['lbl.sc.qt.sample.quantity.proposal.tooltip']}"  />
-							</p:tooltip>
-						</f:facet>
-				<h:outputText value="#{sampleitemdtl.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleQuantity}"></h:outputText>
 			<ui:remove> #11104 - end </ui:remove>
+			<ui:remove> #11104 - start </ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}"
+				style="width:15%;">
+					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
 				</p:column>
+			<ui:remove> #11104 - end </ui:remove>
+			<ui:remove> #11104 - start </ui:remove>
+			<p:column style="width:15%;" rendered="#{isSampleExist}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.qt.sample.quantity.proposal']}" />
+							&#160;
+							<p:graphicImage id="pnpImg"
+						value="/css/images/design/ico-tooltips.png" />
+					<p:tooltip id="pnptt" for="pnpImg">
+						<p:outputLabel escape="false"
+							value="#{lbl['lbl.sc.qt.sample.quantity.proposal.tooltip']}" />
+					</p:tooltip>
+				</f:facet>
+				<h:outputText
+					value="#{sampleitemdtl.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleQuantity}"></h:outputText>
+				<ui:remove> #11104 - end </ui:remove>
+			</p:column>
 		</p:dataTable>
 	</p:panel>
 
