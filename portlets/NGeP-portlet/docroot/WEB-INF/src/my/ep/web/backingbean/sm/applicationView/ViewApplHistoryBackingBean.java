@@ -112,8 +112,10 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
-//#28895_35501 - AUDIT TRAIL SM
+//#28895_35501 Start - AUDIT TRAIL SM
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
+import javax.servlet.http.HttpServletRequest;
+//#28895_35501 End
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 //#29759 - Searching application status supporting doc loading
@@ -2041,6 +2043,8 @@ public class ViewApplHistoryBackingBean extends
 	}
 
 	private boolean checkFromAudit() {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		log.info("#28895_35501 - AUDIT TRAIL SM - Breadcrumbs : "+PortalUtil.getPortletBreadcrumbs(request));
 		return true;
 	}
 	
