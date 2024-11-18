@@ -4027,32 +4027,99 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//#21387 - End
 	
-	//#28175 - start
+	//#28175 - start, 29380 - Site Visit Grouping Enhancement -28775
+	//28175 Refactor start
 	/**
+	 * Returns the supplier category name based on the provided parameters.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
 	 * @param isSupplierProfile
-	 * @return latest or old category code description
+	 *            whether it's a supplier profile
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the supplier category name
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile){
-		if(catL3 == null){
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName) {
+		if (catL3 == null) {
 			return null;
 		}
+
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
-				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
-			return catL3.getCategoryName();
+		String categoryName = getCategoryName(catL3, isFullName);
+
+		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			return categoryName;
 		}
-		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
-				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
-		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
+
+		SmSupplierCategory supplierCategory = getSupplierCategory(appl, catL3);
+		if (supplierCategory == null) {
+			return categoryName;
+		}
+
+		return isFullName ? getFullSupplierCategoryName(supplierCategory) : supplierCategory.getCategoryL3Name();
 	}
-	
+
 	/**
+	 * Returns the category name based on the provided PmCategoryL3 object and
+	 * whether to return the full name.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the category name
+	 */
+	private String getCategoryName(PmCategoryL3 catL3, boolean isFullName) {
+		String categoryName = catL3.getCategoryName();
+		if (isFullName) {
+			categoryName = String.format("%s / %s / %s", catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName(),
+					catL3.getPmCategoryL2().getCategoryName(), categoryName);
+		}
+		return categoryName;
+	}
+
+	/**
+	 * Returns the SmSupplierCategory object based on the provided SmAppl object
+	 * and PmCategoryL3 object.
+	 * 
+	 * @param appl
+	 *            the SmAppl object
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @return the SmSupplierCategory object
+	 */
+	private SmSupplierCategory getSupplierCategory(SmAppl appl, PmCategoryL3 catL3) {
+		return (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(),
+				appl.getSmSupplierCategories(), "pmCategoryL3");
+	}
+
+	/**
+	 * Returns the full supplier category name based on the provided
+	 * SmSupplierCategory object.
+	 * 
+	 * @param supplierCategory
+	 *            the SmSupplierCategory object
+	 * @return the full supplier category name
+	 */
+	private String getFullSupplierCategoryName(SmSupplierCategory supplierCategory) {
+		return String.format("%s / %s / %s", supplierCategory.getCategoryL1Name(),
+				supplierCategory.getCategoryL2Name(), supplierCategory.getCategoryL3Name());
+	}
+	//28175 Refactor end
+	/**
+	 * @param cat
+	 * @param appl
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3){
-		return getSupplierCategoryName(catL3, false);
+	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		String catName1 = cat.getPmCategoryL1().getCategoryName();
+		String catName2 = cat.getPmCategoryL2().getCategoryName();
+		String catName3 = cat.getPmCategoryL3().getCategoryName();
+		return isLatestCatCodeDesc(false, appl) ?  
+				String.format("%s / %s / %s",catName1,catName2,catName3)
+				: getFullSupplierCategoryName(cat);
 	}
 	
 	/**
@@ -4069,15 +4136,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
-		if(appl == null || appl.getPmStatus() == null){
+		if(appl == null){
 			return false;
+		}
+		if (appl.getPmStatus() == null) {
+			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
 		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
 	}
-	//#28175 - end
+	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){

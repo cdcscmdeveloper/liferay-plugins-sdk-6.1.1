@@ -11,31 +11,43 @@
 			<tr>
 				<td valign="top" width="35%"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
 				<td>
+					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+					<!-- #34166 - Start  -->
 					<p:inputTextarea rows="8" id="commentId"  style="width:70%;" autoResize="false"  label="#{lbl['lbl.sm.comments']}"
-					maxlength="5000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.officerComment}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}" validator="#{svoSiteVisitBackingBean.validateText}" >
+						maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.officerComment}" 
+						disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}" validator="#{svoSiteVisitBackingBean.validateText}" >
 						<f:attribute name="param" value="#{lbl['lbl.sm.comments']}" />
 						<f:ajax event="blur" execute="@this" />
-						<f:validateLength maximum="5000" />
+						<f:validateLength maximum="4000" />
 					</p:inputTextarea>
+					<!-- #34166 - End  -->
 				</td>
 			</tr>
 			
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+			<ui:remove>
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
 				<td>
-					<p:inputTextarea rows="8" id="compInfoId"  style="width:70%;" autoResize="false" label="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}"
-					 maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}" validator="#{svoSiteVisitBackingBean.validateText}">
+				<!-- #34166 - Start -->
+					<p:inputTextarea rows="8" id="compInfoId"  style="width:70%;" autoResize="false" 
+						label="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}"
+						maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" 
+						disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}" validator="#{svoSiteVisitBackingBean.validateText}">
 							<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" />
 							<f:ajax event="blur" execute="@this" />
 							<f:validateLength maximum="1000" />
 						</p:inputTextarea>
+				<!-- #34166 - End -->
 				</td>
 			</tr>
+			</ui:remove>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
-					<p:selectOneRadio id="recommendationId" label="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" required="#{!empty param['disableValidation']}"
+					<p:selectOneRadio id="recommendationId" label="#{lbl['lbl.sm.sitevisit.recommdeclaration']}" 
+					required="#{!empty param['disableValidation']}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.recommended}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}">
 			            <f:selectItem itemLabel="#{lbl['lbl.sm.sitevisit.approve']}" itemValue="true" />
 			            <f:selectItem itemLabel="#{lbl['lbl.sm.sitevisit.reject']}" itemValue="false" />
@@ -43,6 +55,8 @@
 				</td>
 			</tr>
 			
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+			<ui:remove>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.sitevisit.bumirecommend']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
@@ -53,6 +67,8 @@
 			        </p:selectOneRadio>
 				</td>
 			</tr>
+			</ui:remove>
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 		</table>
 	</p:panel>
 	

@@ -15,11 +15,21 @@
 		
 		<ui:repeat var="factoryCatVar" value="#{viewSmApplBackingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 			<table style="width: 100%;">
+				<!-- 29380  - Site Visit Grouping Enhancement -28775 - Start -->
 				<tr>
-					<td style="white-space: nowrap; float: left;">
-					    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.categoryName})" />
+					<td>
+						<p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(factoryCatVar, false, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 					</td>
 				</tr>
+				<tr>
+					<td style="white-space: nowrap; float: left;">
+						<p:outputLabel value="#{viewSmApplBackingBean.getCategoryCodeOtherDesc(factoryCatVar)}" 
+							style="text-indent: 10px;"/>
+					</td>
+				</tr>
+				<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
 			</table>
 			<br />
 			
@@ -82,8 +92,8 @@
 							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{catFac.pmCategoryL3.categoryName})" 
-								styleClass="outputLabel-view" /><br />
+									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, false, false)})" 
+								styleClass="outputLabel-view" /><br /><!-- 29380 - Site Visit Grouping Enhancement -28775 -->
 						</ui:repeat>
 					</td>
 				</tr>
