@@ -2,44 +2,27 @@ package my.ep.web.backingbean.pm.cc;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.net.ssl.SSLContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.logging.LogKey;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
-import org.apache.axis.encoding.Base64;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.ssl.SSLContexts;
-import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -57,23 +40,34 @@ public class gpkiBackingBean implements Serializable {
 	private String signedText;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
 	private Exception nonSigningException;
+	//#35488 - start
+	private boolean isMediumTypeOTP = false;
+	private String nric = "";
+	private static String gpkiEnabled = EpPropertiesUtils.getInstance().getProperty("gpki.enabled");
+	private static String gpkiNewRoaming = EpPropertiesUtils.getInstance().getProperty("mygpki.new.roaming");
+	private static String modeUsed = EpPropertiesUtils.getInstance().getProperty("mygpki.modeUsed");
+	private static String appCode = EpPropertiesUtils.getInstance().getProperty("mygpki.appCode");
+	private static String agencyId = EpPropertiesUtils.getInstance().getProperty("mygpki.agencyid");
+	private static String signType = EpPropertiesUtils.getInstance().getProperty("mygpki.signType");
+	private static String saluran = EpPropertiesUtils.getInstance().getProperty("mygpki.saluran");
+	private static String otpExp = EpPropertiesUtils.getInstance().getProperty("mygpki.otpExpiry");
+	private static String hostOTP = EpPropertiesUtils.getInstance().getProperty("mygpki.hostOTP");
+	private static String hostBroker = EpPropertiesUtils.getInstance().getProperty("mygpki.hostBroker");
+	private static boolean disableBtn = false;
+	private static String serialNumber = "SERIALNUMBER";
+	private static String sn = "SN";
+	private static String surname = "SURNAME";
+	private static String nonce = "gpkiNonce";
+	private static String nonceTime = "nonceTime";
+	//#35488 - end
 
 	public gpkiBackingBean() {
 
 	}
-
-	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
-		}
-		log.info(message);
-	}
-
+	
+	//#35488
 	public String getGpkiEnabledProperty() {
-		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-		System.out.println("getGpkiEnabledProperty :"
-				+ prop.getProperty("gpki.enabled"));
-		return prop.getProperty("gpki.enabled");
+		return gpkiEnabled;
 	}
 
 	public String getSignedText() {
@@ -92,82 +86,40 @@ public class gpkiBackingBean implements Serializable {
 		this.pmDigiSign = pmDigiSign;
 	}
 
-	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
+	/**
+	 * Post Signing Token (old function)
+	 * @param postSignActionMtdExpr
+	 * @param enableAutoUpdateMtdExpr
+	 * @return
+	 */
+	public String gpkiSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr, 
+			ContextualCompositeMethodExpression enableAutoUpdateMtdExpr) {
 		long startTime = System.currentTimeMillis();
-		log.info("gpkiBackingBean.gpkiSignAction(): startTime in milli seconds is: " + startTime);
-		log.info("ContextualCompositeMethodExpression");
-		
 		String textBeforeSign = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("textBeforeSign");
-		log.info("W/O TOken : enter function--"+textBeforeSign);
-		String signedText = FacesContext.getCurrentInstance()
+		signedText = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
 				.get("signedText");
-		String serialNo = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("serialNo");
 		String subjectDN = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("subjectDN");
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId(); 
-		log.info("gpkiBackingBean.gpkiSignAction(): userId is: " + userId);
-		// Long userId = (Long) MDC.get(LogKey.USER_ID);
+		Long userId = getUserIdSessionFromLoginId(); 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		System.out.println("getUserSessionBean().getUserId();=====================================: "
-				+ facesScope.getUserSessionBean().getUserId());
-		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(IUserSO.class);
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);	//#35488
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
-		userSO.retrieveUserByUserId(reqDTO);
-		UserResDTO resDTO = new UserResDTO();
-		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		log.info("serialNo====================================: " + serialNo);
-		log.info("subjectDN====================================: "+ subjectDN);
-		log.info("getIdentificationNo=====================================: "
-				+ resDTO.getPmUser().getIdentificationNo());
-		log.info("ContextualCompositeMethodExpression  2");
-		log.info("postSignActionMtdExpr=====================================: "
-				+ postSignActionMtdExpr);
-		log.info("enableAutoUpdateMtdExpr=====================================: "
-				+ enableAutoUpdateMtdExpr);
+		UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);	//#35488
 		Object returnObj = null;
-		log.info("textBeforeSign:"+textBeforeSign);
-		log.info("signedText:"+signedText);
 		
 		try {
 			this.setNonSigningException(null);
-			log.info("getGpkiEnabledProperty()====================================: " + getGpkiEnabledProperty());
-			if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
-				log.info("getGpkiEnabledProperty()====================================:Enter ON ");
-				String[] split = subjectDN.split(",");
-				String icNo = "";
-				String snicNo = "";
-				String surnameIcNo = "";
-				
-				for(int i =0; i<split.length; i++){
-					if(split[i].contains("SERIALNUMBER")){
-						System.out.println(""+split[i]);
-						String icno = split[i];
-						log.info(""+icno.substring(icno.indexOf("=")+1, icno.length()));	
-						icNo = icno.substring(icno.indexOf("=")+1, icno.length());
-					}
-					
-					if(split[i].contains("SN")){
-						System.out.println(""+split[i]);
-						String snicno = split[i];
-						log.info(""+snicno.substring(snicno.indexOf("=")+1, snicno.length()));	
-						snicNo = snicno.substring(snicno.indexOf("=")+1, snicno.length());
-					}
-					
-					if(split[i].contains("SURNAME")){
-						System.out.println(""+split[i]);
-						String surnameIcno = split[i];
-						log.info(""+surnameIcno.substring(surnameIcno.indexOf("=")+1, surnameIcno.length()));	
-						surnameIcNo = surnameIcno.substring(surnameIcno.indexOf("=")+1, surnameIcno.length());
-					}
-	
-				}
+			if ("true".equalsIgnoreCase(getGpkiEnabledProperty())) {
+				//#35488 - start
+				Map<String, String> dnMap = splitSubjectDN(subjectDN);
+				String icNo = dnMap.get(serialNumber);
+				String snicNo = dnMap.get(sn);
+				String surnameIcNo = dnMap.get(surname);
+				//#35488 - end
 				 
 				if (icNo.equals(resDTO.getPmUser().getIdentificationNo()) || 
 						snicNo.equals(resDTO.getPmUser().getIdentificationNo()) ||
@@ -176,7 +128,6 @@ public class gpkiBackingBean implements Serializable {
 					pmDigiSign.setCreatedDate(date);
 					pmDigiSign.setOriginalData(textBeforeSign);
 					pmDigiSign.setGpkiSignedData(signedText);
-					log.info("=================================Same IC No");
 					
 					returnObj = postSignActionMtdExpr.invoke(
 							FacesContext.getCurrentInstance().getELContext(),
@@ -200,28 +151,22 @@ public class gpkiBackingBean implements Serializable {
 											"Token's certificate not match with signer identity."));
 				}
 			} else {
-				log.info("getGpkiEnabledProperty()====================================:Enter OFF ");
-				log.info("W/O TOken : textBeforeSign--"+textBeforeSign);
 				pmDigiSign.setCreatedBy(userId);
 				pmDigiSign.setCreatedDate(date);
 				pmDigiSign.setOriginalData(textBeforeSign);
 				pmDigiSign.setGpkiSignedData(signedText);
-				log.info("W/O TOken : set data success--");
 				returnObj = postSignActionMtdExpr.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
 						new Object[] { pmDigiSign });
-				log.info("W/O TOken : postSignActionMtdExpr success--"+enableAutoUpdateMtdExpr);
 				if (enableAutoUpdateMtdExpr != null) {
 					enableAutoUpdateMtdExpr.invoke(
 							FacesContext.getCurrentInstance().getELContext(),
 							new Object[] {});
 				}
-				log.info("W/O TOken : enableAutoUpdateMtdExpr success--");
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 				
 			}
 		} catch (Exception e) {
-			log.info("W/O TOken : enableAutoUpdateMtdExpr Error setRunGPKIEnableAutoUpdate--");
 			RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");	
 			if (enableAutoUpdateMtdExpr != null) {
 				enableAutoUpdateMtdExpr.invoke(
@@ -241,23 +186,23 @@ public class gpkiBackingBean implements Serializable {
 		}
 
 	}
-
+	
+	//#35488
+	/**
+	 * Show error
+	 */
 	public void showError() {
-		String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
-		String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
-		String extMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("extMsg");
-
-		System.out.println("statusMsg:" + statusMsg);
-		System.out.println("extMsg:" + extMsg);
-
-		String errorMsg = "";
+		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String statusMsg = map.get("statusMsg");
+		String extMsg = map.get("extMsg");
+		String field = map.get("field");
 		if (extMsg != null && extMsg.trim().length() > 0) {
-			errorMsg = extMsg;
-		} else {
-			errorMsg = statusMsg;
+			statusMsg = extMsg;
 		}
-
-		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMsg));
+		if(field != null){
+			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
+		}
+		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
 	public void onDialogCloseAction() throws Exception {
@@ -273,171 +218,191 @@ public class gpkiBackingBean implements Serializable {
 	public void setNonSigningException(Exception nonSigningException) {
 		this.nonSigningException = nonSigningException;
 	}
+
+	//#35488 - start
+	public boolean isMediumTypeOTP(){
+		return isMediumTypeOTP;
+	}
 	
-//	20221005 @Nasim - #33986 MyGPKI POC START
-	String myGPKIBaseUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.MYGPKI_BASE_URL);
-	String myGPKIEpIssuerCode = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.MYGPKI_EP_ISSUER_CODE);
-	@SuppressWarnings("unused")
-	public String nexusSignAction(ContextualCompositeMethodExpression postSignActionMtdExpr,
-			ContextualCompositeMethodExpression enableAutoUpdateMtdExpr, String pin) {
-		long startTime = System.currentTimeMillis();
-		log.info("gpkiBackingBean.gpkiSignAction(): startTime in milli seconds is: " + startTime);
-		log.info("ContextualCompositeMethodExpression");
-		
-		String textBeforeSign = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("textBeforeSign");
-		log.info("Nexus Smart ID : enter function--"+textBeforeSign);
-		String signedText = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("signedText");
-		String serialNo = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("serialNo");
-		String subjectDN = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("subjectDN");
-		FacesScopes facesScope = new FacesScopes();
-		Long userId = facesScope.getUserSessionBean().getUserId(); 
-		log.info("gpkiBackingBean.nexusSignAction(): userId is: " + userId);
-		// Long userId = (Long) MDC.get(LogKey.USER_ID);
-		Timestamp date = new Timestamp(System.currentTimeMillis());
-		System.out.println("getUserSessionBean().getUserId();=====================================: "
-				+ facesScope.getUserSessionBean().getUserId());
-		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(userId);
-		userSO.retrieveUserByUserId(reqDTO);
-		UserResDTO resDTO = new UserResDTO();
-		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		log.info("serialNo====================================: " + serialNo);
-		log.info("subjectDN====================================: "+ subjectDN);
-		log.info("getIdentificationNo=====================================: "
-				+ resDTO.getPmUser().getIdentificationNo());
-		log.info("ContextualCompositeMethodExpression  2");
-		log.info("postSignActionMtdExpr=====================================: "
-				+ postSignActionMtdExpr);
-		log.info("enableAutoUpdateMtdExpr=====================================: "
-				+ enableAutoUpdateMtdExpr);
-		Object returnObj = null;
-		log.info("textBeforeSign:"+textBeforeSign);
-		log.info("signedText:"+signedText);
-
-
-		try {
-			this.setNonSigningException(null);
-			if (pin == null || pin.isEmpty() || pin == "") {
-				FacesContext.getCurrentInstance().addMessage(
-						"gpki",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "OTP number is empty"));
-				
-				return null;
-			}
-					
-			String contentType = "application/x-www-form-urlencoded";
-			String ic = resDTO.getPmUser().getIdentificationNo();
-
-			HttpHost target = new HttpHost(myGPKIBaseUrl, 443, "https");
-			HttpPost post = new HttpPost("/ServerSigning/sign_otp?");
-			CloseableHttpClient httpclient = getHttpClient();
-			String dataBase64 = Base64.encode(textBeforeSign.getBytes());
-			log.info("textBeforeSign in Base64 : " + dataBase64);
-			
-
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("ic", ic));
-			params.add(new BasicNameValuePair("otp_issuer_code", myGPKIEpIssuerCode));
-			params.add(new BasicNameValuePair("otp", pin));
-			params.add(new BasicNameValuePair("data", dataBase64));
-
-			post.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
-
-			CloseableHttpResponse response = httpclient.execute(target, post);
-
-			HttpEntity entity = response.getEntity();
-			String output = EntityUtils.toString(entity);
-			EntityUtils.consume(entity);
-
-			response.close();
-			
-			log.info("MyGPKI User IC : " + ic);
-			log.info("MyGPKI Output : " + output);
-
-			JSONObject json = (JSONObject) JSONSerializer.toJSON(output);
-			String statusCode = json.getString("statusCode");
-
-			if (statusCode.equalsIgnoreCase("901")) {
-				String signedData = json.getString("signature");
-				pmDigiSign.setCreatedBy(userId);
-				pmDigiSign.setCreatedDate(date);
-				pmDigiSign.setOriginalData(textBeforeSign);
-				pmDigiSign.setGpkiSignedData(signedData);
-				log.info("================================= Nexus Smart Id Verified");
-
-				returnObj = postSignActionMtdExpr.invoke( FacesContext.getCurrentInstance().getELContext(), new Object[] { pmDigiSign });
-				if (enableAutoUpdateMtdExpr != null) {
-					enableAutoUpdateMtdExpr.invoke( FacesContext.getCurrentInstance().getELContext(), new Object[] {});
-				}
-				log.info("MyGPKI - Signing OTP  :  success");
-				this.setNonSigningException(null);
-				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-								
-			} else {
-				String errorDesc = "";
-				if (statusCode.equalsIgnoreCase("805")) {
-					errorDesc = " - Wrong pin entered";
-				} else if (statusCode.equalsIgnoreCase("902")) {
-					errorDesc = " - Parameter incomplete";
-				} else if (statusCode.equalsIgnoreCase("800")) {
-					errorDesc = " - Operation failed";
-				}
-				FacesContext.getCurrentInstance().addMessage(
-						"gpki",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "OTP verification failed. Error : "
-								+ statusCode + errorDesc));
-			}
-
-		} catch (Exception e) {
-			RequestContext.getCurrentInstance().execute("setRunGPKIEnableAutoUpdate(true);");	
-			if (enableAutoUpdateMtdExpr != null) {
-				enableAutoUpdateMtdExpr.invoke(
-						FacesContext.getCurrentInstance().getELContext(),
-						new Object[] {});
-			}
-			nonSigningException = e;
-			FacesContext.getCurrentInstance().addMessage(
-					"gpki",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", nonSigningException.getMessage()));
-			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+	/**
+	 * Set medium type, roaming OTP or token -
+	 * id 2: softcert, 3: roaming, 4: token, 5: roaming OTP
+	 */
+	public void setMediumType(){
+		String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("mediumTypeId");
+		isMediumTypeOTP = "5".equals(id);
+	}
+	
+	
+	public void getUserDetails(){
+		nric = "";
+		String email = "";
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if(user != null){
+			nric = user.getIdentificationNo().trim();
+			email = user.getEmail().trim();
 		}
-
-		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
-		log.info("gpkiBackingBean.gpkiSignAction(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime));
-		if (returnObj != null) {
-			return returnObj.toString();
-		} else {
+		RequestContext.getCurrentInstance().addCallbackParam("nric", nric);
+		RequestContext.getCurrentInstance().addCallbackParam("email", email);
+		RequestContext.getCurrentInstance().addCallbackParam("modeUsed", modeUsed);
+		RequestContext.getCurrentInstance().addCallbackParam("appCode", appCode);
+		RequestContext.getCurrentInstance().addCallbackParam("agencyId", agencyId);
+		RequestContext.getCurrentInstance().addCallbackParam("signType", signType);
+		RequestContext.getCurrentInstance().addCallbackParam("saluran", saluran);
+		RequestContext.getCurrentInstance().addCallbackParam("otpExp", otpExp);
+		RequestContext.getCurrentInstance().addCallbackParam("hostOTP", hostOTP);
+		RequestContext.getCurrentInstance().addCallbackParam("hostBroker", hostBroker);
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		try {
+			String gpkiNonce = (String) map.get(nonce);
+			if(gpkiNonce != null){
+				RequestContext.getCurrentInstance().addCallbackParam(nonce, gpkiNonce);
+			}
+			Long requestTime = (Long) map.get(nonceTime);
+			if(requestTime != null){
+				RequestContext.getCurrentInstance().addCallbackParam(nonceTime, requestTime);
+			}
+		} catch (Exception e){
+			log.error(e);
+		}
+	}
+	
+	/**
+	 * Post Signing OTP/Token
+	 * @param postSignMtd
+	 * @param enableAutoUpdateMtd
+	 * @return pmDigiSign
+	 */
+	public String postSignActionOTP(ContextualCompositeMethodExpression postSignMtd, 
+			ContextualCompositeMethodExpression enableAutoUpdateMtd){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
+		if(!isValidNric(map)){
+			fc.addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+					"Token's certificate not match with signer identity."));
 			return null;
 		}
-
+		pmDigiSign.setCreatedBy(getUserIdSessionFromLoginId());
+		pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		pmDigiSign.setOriginalData(map.get("textBeforeSign"));
+		pmDigiSign.setGpkiSignedData(map.get("signedText"));
+		
+		Object returnObj = null;
+		try {
+			returnObj = postSignMtd.invoke(fc.getELContext(), new Object[] { pmDigiSign });
+		} catch (Exception e){
+			nonSigningException = e;
+			log.error(e);
+		}
+		if (enableAutoUpdateMtd != null) {
+			enableAutoUpdateMtd.invoke(fc.getELContext(), new Object[] {});
+		}
+		String dialog = map.get("dialog") == null ? "gpki_dlg2" : map.get("dialog");
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		return returnObj != null ? returnObj.toString() : null;
 	}
 	
-	public CloseableHttpClient getHttpClient() {
-		CloseableHttpClient httpclient = null;
-		SSLContext sslcontext = SSLContexts.createSystemDefault();
-		SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslcontext,
-				new String[] { "TLSv1", "SSLv3", "TLSv1.1", "TLSv1.2" }, null,
-				SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-
-		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create()
-				.register("http", PlainConnectionSocketFactory.INSTANCE).register("https", sslConnectionSocketFactory)
-				.build();
-		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-
-		httpclient = HttpClients.custom().setSSLSocketFactory(sslConnectionSocketFactory).setConnectionManager(cm)
-				.build();
-
-		return httpclient;
+	/**
+	 * Validate IC when GPKI is on & click from the Sign button
+	 * @param map
+	 * @return
+	 */
+	private boolean isValidNric(Map<String, String> requestMap){
+		if(!isGpkiNewRoaming() || requestMap.get("skipBtn") != null){
+			return true;
+		}
+		Map<String, String> dnMap = splitSubjectDN(requestMap.get("subjectDN"));
+		return dnMap.get(serialNumber).equals(nric) || dnMap.get(sn).equals(nric)
+				|| dnMap.get(surname).equals(nric);
 	}
 	
-//	20221005 @Nasim - #33986 MyGPKI POC END
-
+	/**
+	 * @param subjectDN from GPKI response
+	 * @return map of serial number, sn and surname
+	 */
+	private Map<String, String> splitSubjectDN(String subjectDN){
+		Map<String, String> map = new HashMap<>(3);
+		map.put(serialNumber, "");
+		map.put(sn, "");
+		map.put(surname, "");
+		if(subjectDN == null){
+			return map;
+		}
+		for(String s : subjectDN.split(",")){
+			try {
+				if(s.contains(serialNumber)){
+					map.put(serialNumber, s.substring(s.indexOf('=')+1));
+				}
+				if(s.contains(sn)){
+					map.put(sn, s.substring(s.indexOf('=')+1));
+				}
+				if(s.contains(surname)){
+					map.put(surname, s.substring(s.indexOf('=')+1));
+				}
+			} catch (IndexOutOfBoundsException e){
+				log.error(e);
+			}
+		}
+		return map;
+	}
+	
+	public boolean isGpkiNewRoaming(){
+		return gpkiNewRoaming != null && gpkiNewRoaming.length() > 0 
+				&& gpkiNewRoaming.charAt(0) == '1';
+	}
+	
+	public boolean getBtn(){
+		return disableBtn;
+	}
+	
+	/**
+	 * Enable Re-send OTP button
+	 */
+	public static void enableBtn(){
+		disableBtn = false;
+	}
+	
+	/**
+	 * Disable Re-send OTP button
+	 */
+	public static void disableBtn(){
+		disableBtn = true;
+	}
+	
+	/**
+	 * Copied from BaseBackingBean - 
+	 * Method to return current session userId from user screenName(loginId)
+	 * @return userId
+	 */
+	public Long getUserIdSessionFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		Long userIdSession = 1L;
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		
+		if (pmUser == null) {
+			userIdSession = facesScopes.getUserSessionBean().getUserId();
+		} else {
+			userIdSession = pmUser.getUserId();
+		}
+		
+		new LogKey(userIdSession);
+		return userIdSession;
+	}
+	
+	public void saveNonce(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
+		fc.getExternalContext().getSessionMap().put(nonce, map.get(nonce));
+		fc.getExternalContext().getSessionMap().put(nonceTime, System.currentTimeMillis());
+	}
+	
+	public String getNotes(){
+		return SmCommonUtil.getMessage("lbl.gpki.otp.notes", new String[] {otpExp});
+	}
+	//#35488 - end
 }

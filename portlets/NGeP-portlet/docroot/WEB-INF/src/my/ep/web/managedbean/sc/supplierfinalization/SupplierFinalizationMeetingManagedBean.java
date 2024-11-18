@@ -55,6 +55,11 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingMember> previousCommitteeMembers;
 	/* Enhancement #21694 END*/
 	
+	//28895-35500 Start
+	private List<ScCommitteeMember> removeCommitteeAuditTrailList;
+	private List<ScCommitteeMember> newCommitteeAuditTrailList;
+	//28895 - 35500 END
+	
 	private List<SelectItem> selections;
 	private String tabTitle;
 	private String name = null;
@@ -98,40 +103,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
 	private List<ScQtApprovalRemark> cmtAppointmentApprovalRemarks;	//25037 note 284
 	//#25037-END
-	// #12471 Start
-	/** The popup member name. */
-	private String memberName;
- 
-	/** The popup member ministry or organization. */
-	private String memberMinOrg;
- 
-	/** The popup member ptj or organization code. */
-	private String memberPtjOrgCode;
- 
-	/** The popup member ptj or organization name. */
-	private String memberPtjOrgName;
- 
-	/** The organization category ptj constant. */
-	private String orgCatPTJ;
- 
-	/** The organization category others constant. */
-	private String orgCatOther;
- 
-	/** The ministry dropdown list. */
-	private SelectItem[] ministryDDList;
- 
-	/** The ptj group dropdown list. */
-	private SelectItem[] ptjGroupDDList;
- 
-	/** The ptj dropdown list. */
-	private SelectItem[] ptjDDList;
- 
-	/** The organization type dropdown list. */
-	private SelectItem[] orgTypeDDList;
- 
-	/** The organization name dropdown list. */
-	private SelectItem[] orgNameDDList;
-	// #12471 End
 
 	/** 
 	 *  Enhancement #21694 
@@ -721,214 +692,23 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.cmtAppointmentApprovalRemarks = cmtAppointmentApprovalRemarks;
 	}
 	//25037 note 284 - end
-	// #12471 Start
-	/**
-	 * Gets the member name.
-	 * 
-	 * @return the member name.
-	 */
-	public String getMemberName() {
-		return memberName;
+
+	public List<ScCommitteeMember> getRemoveCommitteeAuditTrailList() {
+		return removeCommitteeAuditTrailList;
 	}
 
-	/**
-	 * Sets the member name.
-	 * 
-	 * @param memberName
-	 *            the new member name.
-	 */
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
+	//#28895 - 35500 start
+	public void setRemoveCommitteeAuditTrailList(List<ScCommitteeMember> removeCommitteeAuditTrailList) {
+		this.removeCommitteeAuditTrailList = removeCommitteeAuditTrailList;
 	}
 
-	/**
-	 * Gets the member ministry or organization.
-	 * 
-	 * @return the member ministry or organization.
-	 */
-	public String getMemberMinOrg() {
-		return memberMinOrg;
+	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
+		return newCommitteeAuditTrailList;
 	}
 
-	/**
-	 * Sets the member ministry or organization.
-	 * 
-	 * @param memberMinOrg
-	 *            the new member ministry or organization.
-	 */
-	public void setMemberMinOrg(String memberMinOrg) {
-		this.memberMinOrg = memberMinOrg;
+	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
+		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
 	}
+	//#28895 - 35500 end
 
-	/**
-	 * Gets the member ptj or organization code.
-	 * 
-	 * @return the member ptj or organization code.
-	 */
-	public String getMemberPtjOrgCode() {
-		return memberPtjOrgCode;
-	}
-
-	/**
-	 * Sets the member ptj or organization code.
-	 * 
-	 * @param memberPtjOrgCode
-	 *            the new member ptj or organization code.
-	 */
-	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
-		this.memberPtjOrgCode = memberPtjOrgCode;
-	}
-
-	/**
-	 * Gets the member ptj or organization name.
-	 * 
-	 * @return the member ptj or organization name.
-	 */
-	public String getMemberPtjOrgName() {
-		return memberPtjOrgName;
-	}
-
-	/**
-	 * Sets the member ptj or organization name.
-	 * 
-	 * @param memberPtjOrgName
-	 *            the new member ptj or organization name.
-	 */
-	public void setMemberPtjOrgName(String memberPtjOrgName) {
-		this.memberPtjOrgName = memberPtjOrgName;
-	}
-
-	/**
-	 * Gets the organization category ptj constant.
-	 * 
-	 * @return the organization category ptj constant.
-	 */
-	public String getOrgCatPTJ() {
-		return orgCatPTJ;
-	}
-
-	/**
-	 * Sets the organization category ptj constant.
-	 * 
-	 * @param orgCatPTJ
-	 *            the new organization category ptj constant.
-	 */
-	public void setOrgCatPTJ(String orgCatPTJ) {
-		this.orgCatPTJ = orgCatPTJ;
-	}
-
-	/**
-	 * Gets the organization category others.
-	 * 
-	 * @return the organization category others.
-	 */
-	public String getOrgCatOther() {
-		return orgCatOther;
-	}
-
-	/**
-	 * Sets the organization category others.
-	 * 
-	 * @param orgCatOther
-	 *            the new organization category others.
-	 */
-	public void setOrgCatOther(String orgCatOther) {
-		this.orgCatOther = orgCatOther;
-	}
-
-	/**
-	 * Gets the ministry dropdown list.
-	 * 
-	 * @return the ministry dropdown list.
-	 */
-	public SelectItem[] getMinistryDDList() {
-		return ministryDDList;
-	}
-
-	/**
-	 * Sets the ministry dropdown list.
-	 * 
-	 * @param ministryDDList
-	 *            the new ministry dropdown list.
-	 */
-	public void setMinistryDDList(SelectItem[] ministryDDList) {
-		this.ministryDDList = ministryDDList;
-	}
-
-	/**
-	 * Gets the ptj group dropdown list.
-	 * 
-	 * @return the ptj group dropdown list.
-	 */
-	public SelectItem[] getPtjGroupDDList() {
-		return ptjGroupDDList;
-	}
-
-	/**
-	 * Sets the ptj group dropdown list.
-	 * 
-	 * @param ptjGroupDDList
-	 *            the new ptj group dropdown list.
-	 */
-	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
-		this.ptjGroupDDList = ptjGroupDDList;
-	}
-
-	/**
-	 * Gets the ptj dropdown list.
-	 * 
-	 * @return the ptj dropdown list.
-	 */
-	public SelectItem[] getPtjDDList() {
-		return ptjDDList;
-	}
-
-	/**
-	 * Sets the ptj dropdown list.
-	 * 
-	 * @param ptjDDList
-	 *            the new ptj dropdown list.
-	 */
-	public void setPtjDDList(SelectItem[] ptjDDList) {
-		this.ptjDDList = ptjDDList;
-	}
-
-	/**
-	 * Gets the organization type dropdown list.
-	 * 
-	 * @return the organization type dropdown list.
-	 */
-	public SelectItem[] getOrgTypeDDList() {
-		return orgTypeDDList;
-	}
-
-	/**
-	 * Sets the organization type dropdown list.
-	 * 
-	 * @param orgTypeDDList
-	 *            the new organization type dropdown list.
-	 */
-	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
-		this.orgTypeDDList = orgTypeDDList;
-	}
-
-	/**
-	 * Gets the organization name dropdown list.
-	 * 
-	 * @return the organization name dropdown list.
-	 */
-	public SelectItem[] getOrgNameDDList() {
-		return orgNameDDList;
-	}
-
-	/**
-	 * Sets the organization name dropdown list.
-	 * 
-	 * @param orgNameDDList
-	 *            the new organization name dropdown list.
-	 */
-	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
-		this.orgNameDDList = orgNameDDList;
-	}
-	// #12471 End
 }

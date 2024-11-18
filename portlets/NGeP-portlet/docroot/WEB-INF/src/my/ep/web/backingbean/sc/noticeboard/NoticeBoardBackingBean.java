@@ -105,6 +105,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -112,6 +113,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -864,8 +866,37 @@ public class NoticeBoardBackingBean extends
 		//managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
 		
+		//#28777 & #29729 - Start
+		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_760522, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		//#28777 & #29729 - End
+		
 		return BSV_SUPP_REGISTRATION_PAGE;
 	}
+	
+    //#28777 & #29729 - Start
+	/**
+	* Method to return true, if branch in supplier has been deleted
+	* @param qtId
+	* @param supplierId
+	* @return true or false
+	**/
+	public Boolean checkValidationSupplierBranchDeleted(Long qtId, Long supplierId){
+		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTNoticeBoardSO.class);
+		NoticeBoardReqDTO supplierReqDTO = new NoticeBoardReqDTO();
+		supplierReqDTO.setSupplierId(supplierId);
+		supplierReqDTO.setQtId(qtId);
+		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
+		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
+		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
+			return Boolean.TRUE;
+	    }
+		return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
 
 	
 	/**
@@ -3446,28 +3477,31 @@ public class NoticeBoardBackingBean extends
 		return isRenderRigisterBtn;
 	}
 	
-		//#30447 - start
-		public String supplierSalutation(String identificationNo){
-			PmSalutation salutation = null;
-			String salutationName = null;
-			IQTNoticeBoardSO supplierSO = null;		
-			
-			try{
-			supplierSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTNoticeBoardSO.class);			
-			salutation = supplierSO
-					.retrieveUserByIdentificationNo(identificationNo);
-			
-			if(salutation!=null){
+	/**
+	 * #30447 - Retrieve supplier Salutation by identification No
+	 * @param identificationNo
+	 * @return salutationName
+	 */
+	public String supplierSalutation(String identificationNo) {
+		PmSalutation salutation = null;
+		String salutationName = null;
+		IQTNoticeBoardSO supplierSO = null;
+
+		try {
+			supplierSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTNoticeBoardSO.class);
+			salutation = supplierSO.retrieveUserByIdentificationNo(identificationNo);
+
+			if (salutation != null) {
 				salutationName = salutation.getSalutationName();
 			}
-			}finally {
-				supplierSO = null;
-			}
-			return salutationName;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "supplierSalutation",
+					this.getManagedBean().getScQt().getQtId().toString(), "supplierSalutation",
+					getUserIdSessionFromLoginId(), e);
 		}
-		//#30447 - end
+		return salutationName;
+	}//#30447 - end
 
 		// #29732 Start
 		public void onClickHistoryIcon(String catCode, String catCodeLevel,

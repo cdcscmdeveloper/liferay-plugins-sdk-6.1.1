@@ -82,8 +82,8 @@ public class SumForTotalNumAndValOfPoByStatRptBackingBean extends FlReportBackin
 		if (StringUtils.isNotBlank(getManagedBean().getContractNo())) {
 			params.put(FlReportConst.FL_RPT_CONTRACT_NO, getManagedBean().getContractNo());
 		}
-		if (StringUtils.isNotBlank(getManagedBean().getPurchaseOrderStatus())) {
-			params.put(FlReportConst.FL_RPT_PO_STATUS, getManagedBean().getPurchaseOrderStatus());
+		if (StringUtils.isNotBlank(getManagedBean().getGroupStatus())) {
+			params.put(FlReportConst.FL_RPT_PURCHASE_GROUP_STATUS, getManagedBean().getGroupStatus());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getPhysicalContractNo())) {
 			params.put(FlReportConst.FL_RPT_PHY_CONTRACT_NO, getManagedBean().getPhysicalContractNo());

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Arrays;	//#34397, #34398
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -162,7 +162,6 @@ public class RuleCatalogueBackingBean extends
 
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
-	private static final String VALUE_LBL = "lbl.pm.value";		//#34397, #34398
 
 	public String getDupplicateOrgTypeName() {
 		return dupplicateOrgTypeName;
@@ -1206,8 +1205,13 @@ public class RuleCatalogueBackingBean extends
 				if (ruleTypeDesc.getRuleType().getRangeType() != 1
 						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
 					if (baseValueToCompare.isErrorExpDate()) {
-						if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
+						//#34397, #34398 - start
+						if (isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())) {
+							throw new EpException(MessageConst.ERROR_770257, 
+									new String[] {ruleTypeDesc.getRuleDesc(), getZoneName(baseValueToCompare.getZoneId())});
+						} else if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
 								.equals(ruleTypeDesc.getRuleType().getRuleType())) {
+						//#34397, #34398 - end
 							throw new EpException(MessageConst.ERROR_770111,
 									new String[] { ruleTypeDesc.getRuleDesc() });
 						} else {
@@ -2708,11 +2712,6 @@ public class RuleCatalogueBackingBean extends
 		
 		// #30672, #29669 - start 29/01/2023
 		if (ruleValue.getEffDate() != null && ruleValue.getExpDate() != null) {
-			//#34397, #34398 - start
-			if (isRenewTypes(configRuleType.getRuleType())) {
-				validateRenewMOFDate(ruleValue, ruleValue, getManagedBean().getSelectedRuleDescType().getRuleDesc());
-			}
-			//#34397, #34398 - end
 			if (configRuleType.getRangeType() != 1 || (configRuleType.getRangeType() == 1 && ruleValue.isShowFlag())) {
 				if (ruleValue.getEffDate().after(ruleValue.getExpDate())) {
 					ruleValue.setErrorExpDate(true);
@@ -5016,27 +5015,9 @@ public class RuleCatalogueBackingBean extends
 			|| RuleTypeConst.RENEW_PERIOD.equals(type);
 	}
 	
-	/**
-	 * @param value
-	 * @return required message error
-	 */
-	public String getRequiredMsgValue(PmConfigRuleValue value){
-		PmConfigRuleDesc rDesc = getManagedBean().getSelectedRuleDescType();
-		if (isRenewTypes(rDesc.getRuleType().getRuleType())) {
-			String zone = getZoneName(value.getZoneId());
-			if (!zone.isEmpty()) {
-				return getLabel("lbl.pm.settings.value.required.zone", 
-						new String[]{getLabel(VALUE_LBL), rDesc.getRuleDesc(), zone});
-			}
-			return getLabel("lbl.pm.settings.value.required.rule", 
-					new String[]{getLabel(VALUE_LBL), rDesc.getRuleDesc()});
-		}
-		return getLabel("lbl.pm.settings.value.required");
-	}
-	
-	public String getRequiredMsgZone(){
-		return getLabel("lbl.pm.settings.value.required.rule", new String[]{
-				getLabel("lbl.pm.zone"), getManagedBean().getSelectedRuleDescType().getRuleDesc()});
+	public List<PmZone> getZones() {
+		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
+				getManagedBean().getMainZones() : getManagedBean().getZoneList();
 	}
 	
 	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
@@ -5046,7 +5027,7 @@ public class RuleCatalogueBackingBean extends
 						new String[] {getLabel("lbl.pm.zone"), ruleDesc.getRuleDesc()});
 			} else if (val.getRuleValue() == null) {
 				throw new EpException(MessageConst.ERROR_770254,
-						new String[] {getLabel(VALUE_LBL), ruleDesc.getRuleDesc(), getZoneName(val.getZoneId())});
+						new String[] {getLabel("lbl.pm.value"), ruleDesc.getRuleDesc(), getZoneName(val.getZoneId())});
 			}
 		}
 	}
@@ -5069,7 +5050,7 @@ public class RuleCatalogueBackingBean extends
 			throw new EpException(MessageConst.ERROR_770256,
 					new String[] {desc, getZoneName(value.getZoneId())});
 		}
-		if (baseVal != value && baseExp > valEff) {
+		if (baseExp > valEff) {
 			throw new EpException(MessageConst.ERROR_770257,
 					new String[] {desc, getZoneName(value.getZoneId())});
 		}

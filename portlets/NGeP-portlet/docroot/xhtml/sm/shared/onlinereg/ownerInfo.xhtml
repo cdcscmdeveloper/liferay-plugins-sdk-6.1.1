@@ -67,10 +67,10 @@
 			
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<c:if test="#{not empty varOwner.nationality and varOwner.nationality.countryCode != 'MY'}">
+					<c:if test="#{not empty varOwner.nationality and varOwner.nationality.countryCode != 'MY' and varOwner.identificationType.parameterCode != 'I'}">
 						<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
 					</c:if>
-					<c:if test="#{empty varOwner.nationality or varOwner.nationality.countryCode eq 'MY'}">
+					<c:if test="#{empty varOwner.nationality or varOwner.nationality.countryCode eq 'MY' or varOwner.identificationType.parameterCode eq 'I'}">
 						<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
 					</c:if>
 				</f:facet>
@@ -93,7 +93,9 @@
 				<p:selectOneMenu 
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.nationality.origin']}" 
 					value="#{varOwner.tempCountryId}"
-					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or (!varOwner.nationalityNull and varOwner.tempCountryId ne 0)or varOwner.disableNationality}">
+					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or 
+					(varOwner.identificationType.parameterCode eq ParameterConst.identificationTypesIc and !varOwner.disableNationality) and
+					(!varOwner.nationalityNull and varOwner.tempCountryId ne 0 )}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />

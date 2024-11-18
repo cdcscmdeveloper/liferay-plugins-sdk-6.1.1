@@ -38,30 +38,29 @@
 						partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
 						update=":form:tt:approverAppDialog"
-						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
-						action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approverAppDialog')}" /> <!-- 29727 -->
+						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
+						action="#{backingBean.validateBeforeSubmitDialog('approverAppDialog')}" /> <!-- 29727, 32304 -->
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
 						process="@this" onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
-					<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
-					<c:if test="#{!backingBean.managedBean.showFacilityMachine}">
-					<!-- #12483 - START -->
+					<!-- #12483 - START --> 
+					<!-- #31043 - START --> 
 						<ui:repeat var="bpmAction" value="#{backingBean.managedBean.bpmActions}">
 							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.revise']}"
 								update=":form:tt:approverRevDialog" partialSubmit="true"
+								disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								process="@this" onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignFinalApproveOrReject('approverRevDialog')}" />
 							</h:panelGroup>	
 						</ui:repeat>
+					<!-- #31043 - END --> 
 					<!-- #12483 - END -->
-					</c:if>
-					<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
 				</div> <c:if
-					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}">
+					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
 					<table style="width: 100%">
 						<tr>
 							<td><h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
@@ -143,22 +142,10 @@
 					<p:separator />
 					<div>
 						<TABLE style="width: 100%">
-						<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
-						<c:choose>
-							<c:when test="#{backingBean.managedBean.showFacilityMachine}">
-								<tr>
-									<td><h:outputText value="#{lbl['lbl.sm.apprvr.splNotes1']}"
-											styleClass="splNotesFonts" escape="false" /></td>
-								</tr>
-							</c:when>
-							<c:otherwise>
-								<tr>
-									<td><h:outputText value="#{lbl['lbl.sm.apprvr.splNotes']}"
-											styleClass="splNotesFonts" escape="false" /></td>
-								</tr>
-							</c:otherwise>
-						</c:choose>
-						<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
+							<tr>
+-								<td><h:outputText value="#{lbl['lbl.sm.apprvr.splNotes']}" 
+										styleClass="splNotesFonts" escape="false" /></td>
+-							</tr>
 						</TABLE>
 
 					</div>
@@ -252,8 +239,9 @@
 		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{backingBean.managedBean.deleteBranchMsg}" 
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approverAppDialog"/>
+	
 	<!-- END #29727 -->
 	<!-- 13362 START -->
 	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>

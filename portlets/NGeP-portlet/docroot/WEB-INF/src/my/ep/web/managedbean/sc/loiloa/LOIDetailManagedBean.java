@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
@@ -423,7 +424,18 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#30008 - end
 	
 	
+	//#12487 start
+    private Map<String, Object> loiObj;
+    private PmUserOrg selectedUserPtj;
+    private PmOrgProfile ministryOrgProfile;
+	//#12487 end
+    
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+
+	private boolean ableToCancelLOI;//#36339, #21692
+
+	
+	
 	
     /**
      * Gets the spki backing bean.
@@ -2426,5 +2438,44 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.decisionCode = decisionCode;
 	}
 	//#30008 - end
+	
+	//#12487 start
+	public Map <String, Object> getLoiObj() {
+		return loiObj;
+	}
+
+	public void setLoiObj(Map <String, Object> loiObj) {
+		this.loiObj = loiObj;
+	}
+	
+
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
+	//#12487 end
+
+	//#36339, #21692 - Start
+	public boolean isAbleToCancelLOI() {
+		return ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#36339, #21692 - Start
+	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
+		this.ableToCancelLOI = ableToCancelLOI;
+	}
+	//#36339, #21692 - End
 	
 }

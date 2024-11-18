@@ -593,6 +593,7 @@ public class TaskReassignmentBackingBean extends
 
 			}
 		} catch (Exception e) {
+			log.error("[getRoleList] 20240214 Exception: ", e);
 			throw new EpException(e.getMessage());
 		} finally {
 			userSO = null;
@@ -708,6 +709,7 @@ public class TaskReassignmentBackingBean extends
 			}
 			
 		} catch (Exception e) {
+			log.error("[setReassigneeRoleList] 20240214 Exception: ", e);
 			throw new EpException(e.getMessage());
 		} finally {
 			userSO = null;
@@ -776,6 +778,7 @@ public class TaskReassignmentBackingBean extends
 				}
 			}
 		} catch (Exception e) {
+			log.error("[constuctConditionFields] 20240214 Exception: ", e);
 			throw new EpException(e.getMessage());
 		} finally {
 			statusSO = null;
@@ -933,6 +936,12 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getReassigneeList().isEmpty()) {
+			// #35325 Start
+			// Workaround to reset already loaded data and error messages since  
+			// existing handling is throwing exception before performing other actions
+			reloadAllTaskList();
+			checkPendingTaskRemove();
+			// #35325 End
 			throw new EpException(MessageConst.ERROR_770208);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
@@ -1840,6 +1849,7 @@ public class TaskReassignmentBackingBean extends
 				getManagedBean().setRemarkRequired(false);
 			}			
 		} catch (Exception e) {
+			log.error("[redirectToBulkTasksReassign] 20240214 Exception: ", e);
 			throw new EpException(e.getMessage());
 		}
 		log.info("redirectToBulkTasksReassign - End");
@@ -2133,6 +2143,7 @@ public class TaskReassignmentBackingBean extends
 					
 				}
 			}catch(Exception e){
+				log.error("[retrievePMTaskReassignmentDetail] 20240214 Exception: ", e);
 				throw new EpException(e.getMessage());
 			}finally{
 				accessApplSO = null;
@@ -3286,6 +3297,7 @@ public class TaskReassignmentBackingBean extends
 			statusDesc = resDTO.getPmStatusDesc();		    
 		
 		} catch (Exception e) {
+			log.error("[retrieveStatusDesc] 20240214 Exception: ", e);
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		} finally {
@@ -3944,6 +3956,7 @@ public class TaskReassignmentBackingBean extends
 			}
 
 		} catch (Exception e) {
+			log.error("[retrieveStatusIdsForInvalidBulkTask] 20240214 Exception: ", e);
 			throw new EpException(e.getMessage());
 		}
 		log.info("retrieveStatusIdsForInvalidBulkTask - End");
@@ -4032,6 +4045,7 @@ public class TaskReassignmentBackingBean extends
 				return false;
 			}			
 		} catch (Exception e) {
+			log.error("[validateTaskForRole] 20240214 Exception: ", e);
 			throw new EpException(e.getMessage());
 		}
 		//log.info("validateTaskForRole - End");
@@ -4096,6 +4110,7 @@ public class TaskReassignmentBackingBean extends
 				return false;
 			}
 		} catch (Exception e) {
+			log.error("[validateDocTypeAndStatus] 20240214 Exception: ", e);
 			throw new EpException(e.getMessage());
 		}
 		//log.info("validateDocTypeAndStatus - End");		

@@ -79,6 +79,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -99,6 +100,7 @@ import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
@@ -127,7 +129,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
-import my.ep.persistence.entity.sm.SmMachineCategory;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
@@ -176,6 +177,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -295,9 +297,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			 */
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			managedBean = facesContext.getApplication().evaluateExpressionGet(
-					facesContext, "#{" + managedBeanName + "}",
-					managedBeanClazz);
+			managedBean = facesContext.getApplication().evaluateExpressionGet(facesContext, "#{" + managedBeanName + "}", managedBeanClazz);
 
 			log.info("managedBean:" + managedBean);
 		}
@@ -344,11 +344,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public boolean compareUserName(String username) {
 		FacesScopes facesScopes = new FacesScopes();
+		/*
 		if (username != null && username.equals(facesScopes.getUserScreenName())) {
 			return true;
 		} else {
 			return false;
 		}
+		*/
+		return (username != null && username.equals(facesScopes.getUserScreenName()));
 	}
 
 	/**
@@ -356,7 +359,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public void claimBpmTask() {
 
-		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(ContractConst.TASK_ID);
 
 		claimTaskByTaskId(taskId);
 
@@ -367,8 +370,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 */
 	public void claimBpmTaskGroup(String taskId) {
 
-		
-		log.info("Group**********taskId="+taskId);
+		log.info("Group**********taskId=" + taskId);
 
 		claimTaskByTaskId(taskId);
 
@@ -378,7 +380,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * Release bpm task.
 	 */
 	public void releaseBpmTask() {
-		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(ContractConst.TASK_ID);
 		releaseTaskByTaskId(taskId);
 	}
 
@@ -389,8 +391,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            taskId
 	 */
 	public void claimTaskByTaskId(String taskId) {
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 
@@ -407,8 +408,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            taskId
 	 */
 	public void releaseTaskByTaskId(String taskId) {
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		FacesScopes face = new FacesScopes();
 		Object token = face.getBPMAuthenticationCtxToken();
 
@@ -425,8 +425,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param selected the selected
 	 * @param list the list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected,
-			List<ENTITY_CLASS> list) {
+	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected, List<ENTITY_CLASS> list) {
 		if (list != null) {
 			for (ENTITY_CLASS entity : list) {
 				entity.setSelected(selected);
@@ -440,8 +439,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param <ENTITY_CLASS> the generic type
 	 * @param list the list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(
-			List<ENTITY_CLASS> list) {
+	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(List<ENTITY_CLASS> list) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteSelectedRowsAction");
 		}
@@ -474,8 +472,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param toBeRemoved the to be removed
 	 */
-	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list,
-			ENTITY_CLASS toBeRemoved) {
+	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, ENTITY_CLASS toBeRemoved) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
@@ -492,8 +489,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param toBeRemovedList the to be removed list
 	 */
-	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list,
-			List<ENTITY_CLASS> toBeRemovedList) {
+	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
@@ -510,8 +506,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param list the list
 	 * @param markDeletedList the mark deleted list
 	 */
-	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(
-			List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
+	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> markDeletedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("markDeleteSelectedRowsAction");
 		}
@@ -549,11 +544,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the component id.
 	 * @return ISearchBean instance.
 	 */
-	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(
-			Class<RETURN_CLASS> classz, String componentId) {
-		return new SearchBean<RETURN_CLASS>(
-				EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
-				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
+	protected <RETURN_CLASS> ISearchBean<RETURN_CLASS> createSearchBean(Class<RETURN_CLASS> classz, String componentId) {
+		return new SearchBean<RETURN_CLASS>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()), SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
 	}
 
 	/**
@@ -577,29 +569,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType,
-			ISearchBean<Object[]> searchBean) {
+	public SelectItem[] getDropdownObjectValuesBySearchBean(String parameterType, ISearchBean<Object[]> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<Object[]> objects = ParameterHelper
-					.getInstance().getParameterDescListDDBySearchBean(
-							parameterType, searchBean);
+			List<Object[]> objects = ParameterHelper.getInstance().getParameterDescListDDBySearchBean(parameterType, searchBean);
 
 			items = new SelectItem[objects.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (Object[] object : objects) {
-				items[i++] = new SelectItem((Long)object[1],(String)object[0]);
+				items[i++] = new SelectItem((Long) object[1], (String) object[0]);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -612,19 +596,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		try {
 			items = new SelectItem[pmUsers.size() + 1];
 
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmUser pmUser : pmUsers) {
 				items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
+	
 	/**
 	 * Get parameter id select items by parameter type and search bean for
 	 * dropdown.
@@ -635,35 +618,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownValuesBySearchBean(String parameterType,
-			ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper
-					.getInstance().getParameterDescListBySearchBean(
-							parameterType, searchBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(parameterType, searchBean);
 
 			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterId(), parameterDesc.getCodeName());
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
 	}
-/** #21695 FARID START*/	
+	
+	/** #21695 FARID START*/	
 	/**
 	 * Get parameter id select items by parameter type and search bean for
 	 * dropdown disable/hide sample when partial offer true.
@@ -674,30 +649,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownValuesBySearchBeanForPartial(String parameterType,
-			ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownValuesBySearchBeanForPartial(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper
-					.getInstance().getParameterDescListBySearchBean(
-							parameterType, searchBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(parameterType, searchBean);
 
 			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterId(), parameterDesc.getCodeName());
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			//Sonarqube issues #21695
-			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
-					"", SLALogConstant.QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL, getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			// Sonarqube issues #21695
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN, "", SLALogConstant.QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL,
+					getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -716,24 +684,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		try {
-			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance()
-					.getReasonDescList(categoryCode);
+			List<PmReasonDesc> reasonDescs = ReasonHelper.getInstance().getReasonDescList(categoryCode);
 
 			items = new SelectItem[reasonDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmReasonDesc reasonDesc : reasonDescs) {
-				items[i++] = new SelectItem(reasonDesc.getPmReason()
-						.getReasonCode(), reasonDesc.getReasonDesc());
+				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonCode(), reasonDesc.getReasonDesc());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
@@ -747,12 +708,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the parameter code
 	 * @return the PmParameter instance
 	 */
-	public PmReason getReasonByCategoryAndCode(String categoryCode,
-			String reasonCode) {
-		PmParameter reasonCategory = getParameterByTypeAndCode(
-				ParameterTypeConst.REASON_CATEGORY, categoryCode);
-		return ReasonHelper.getInstance().getReasonByCategoryAndCode(
-				reasonCategory.getParameterId(), reasonCode);
+	public PmReason getReasonByCategoryAndCode(String categoryCode, String reasonCode) {
+		PmParameter reasonCategory = getParameterByTypeAndCode(ParameterTypeConst.REASON_CATEGORY, categoryCode);
+		return ReasonHelper.getInstance().getReasonByCategoryAndCode(reasonCategory.getParameterId(), reasonCode);
 	}
 
 	/**
@@ -775,32 +733,23 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType,
-			ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper
-					.getInstance().getParameterDescListBySearchBean(
-							parameterType, searchBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(parameterType, searchBean);
 
 			items = new SelectItem[parameterDescs.size() + 1];
 
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter()
-						.getParameterCode(), parameterDesc.getCodeName());
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return items;
@@ -860,7 +809,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1072,11 +1021,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					face.getUserLocale()));
 			int i = 1;
 			for (PmStatusDesc statusDesc : statusDescs) {
+				//start - 36615 - revert to previous code
 				items[i++] = new SelectItem(statusDesc.getPmStatus()
 						.getStatusId(), statusDesc.getStatusName());
+				//end - end
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1118,7 +1069,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			log.error(e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1127,7 +1078,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-	
+
 	/**
 	 * Get Status description by status id.
 	 * 
@@ -1161,11 +1112,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getRadioButtonCodeValues(String parameterType) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null);
 	}
-/** #21695 Farid start */	
+	
+	/** #21695 Farid start */	
 	public SelectItem[] getRadioButtonCodeValuesForPartial(String parameterType,String disabled) {
 		return getRadioButtonCodeValuesBySearchBeanForPartial(parameterType, null, disabled);
 	}
-/** #21695  END*/
+	/** #21695  END*/
 
 	/**
 	 * Gets the radio button code values by search bean.
@@ -1267,7 +1219,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -1348,7 +1300,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			log.info("docInputStream===" + docInputStream);
 			log.info("Error found while downloading file " + filePath + " : " + e);
 			log.error(e);
-			e.printStackTrace();
+			log.error(e.getMessage());
 
 		}
 
@@ -1442,36 +1394,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//25638 - End
 
+	// 25037 - start
 	/**
-	 * Success message.
+	 * Return success message by message code.
 	 * 
 	 * @param messageCode
-	 *            the message code
-	 * @param String
-	 *            [] params
+	 * @param params
 	 */
-	//#25037-START
-	public void successMessage(String messageCode, String [] params){
+	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
-	//#25037-END
 
-	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
+	/**
+	 * Return success message by message code. Navigate to acknowledgment page
+	 * if required.
+	 * 
+	 * @param messageCode
+	 * @param params
+	 * @param isAcknowledgeRequired
+	 */
+	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
+	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								params,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		//#25037-START
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageCode, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
-		//#25037-END
-
+		// 25037 - end
 	}
 
 	/**
@@ -1495,8 +1448,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			
 			log.info("finalFileName: " + finalFileName);
 
-			//BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(uploadDir + "/" + finalFileName));
-
 			bufferedOutputStream.write(file.getContents());
 
 			if (bufferedOutputStream != null) {
@@ -1517,42 +1468,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param paramMap the param map
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void generateReport(String reportFile,
-			Map<String, String> paramMap) throws IOException {
+	protected void generateReport(String reportFile, Map<String, String> paramMap) throws IOException {
 		String reportUrl = generateReportURL(reportFile, paramMap);
 
 		HttpURLConnection urlConnection = null;
 		URL obj = new URL(reportUrl);
 		urlConnection = (HttpURLConnection) obj.openConnection();
 
-		BufferedInputStream buf = new BufferedInputStream(
-				urlConnection.getInputStream());
+		BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
 
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = PortalUtil
-				.getHttpServletResponse(portletResponse);
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
 		int position = reportFile.lastIndexOf(".jsp");
 		if (position != -1) {
 			reportFile = reportFile.substring(0, position);
 		}
 
-		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
-			res.setHeader("Content-Disposition",
-					"attachment; filename=\"" + reportFile + "_"
-							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ".rtf\"");//
+		if (paramMap.containsKey(ReportConst.DOC_TYPE_RTF)) {
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".rtf\"");//
 			res.setContentType("application/octet-stream");
-		}else{
-			res.setHeader("Content-Disposition",
-					"attachment; filename=\"" + reportFile + "_"
-							+ ReportConst.REPORT_DATE_TIME.format(new Date())
-							+ ".pdf\"");//
+		} else {
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + ".pdf\"");//
 			res.setContentType("application/pdf");
 		}
-		
+
 		res.setHeader("Content-Transfer-Encoding", "binary");
-		
+
 		res.flushBuffer();
 
 		OutputStream out = res.getOutputStream();
@@ -1562,8 +1503,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		while ((size = buf.read(b, 0, b.length)) != -1) {
 			out.write(b, 0, size);
 		}
+		
 		buf.close();
 		out.close();
+		urlConnection.disconnect();
 	}
 
 	/**
@@ -1574,19 +1517,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return the string
 	 * @throws IOException 
 	 */
-	protected String generateReportURL(String reportFile,
-			Map<String, String> paramMap) throws IOException {
+	protected String generateReportURL(String reportFile, Map<String, String> paramMap) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
-		String excPrevUrl = propertiesUtils
-				.getProperty(EpPropertiesConst.EXC_PREV_URL);
-		String excNextUrl = propertiesUtils
-				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
-		
-		if(paramMap.containsKey(ReportConst.DOC_TYPE_RTF)){
-			excNextUrl = propertiesUtils
-					.getProperty(EpPropertiesConst.EXC_NEXT_URL_RTF);
+		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+
+		if (paramMap.containsKey(ReportConst.DOC_TYPE_RTF)) {
+			excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL_RTF);
 		}
-		
+
 		if (paramMap.containsKey(ReportConst.PARAM_REPORT_OUTPUT_FORMAT)) {
 			int fromIndex = excNextUrl.indexOf(ReportConst.PARAM_REPORT_OUTPUT_FORMAT);
 			int endIndex = excNextUrl.indexOf(ReportConst.PARAM_SEPARATOR, fromIndex);
@@ -1594,7 +1533,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if (fromIndex >= 0 && endIndex >= 0) {
 				excEndUrl = excNextUrl.substring(endIndex);
 			}
-			excNextUrl = excNextUrl.substring(0, fromIndex-1) + excEndUrl;
+			excNextUrl = excNextUrl.substring(0, fromIndex - 1) + excEndUrl;
 		}
 
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
@@ -1604,7 +1543,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reportUrl.append(reportFile);
 
 		for (Entry<String, String> params : paramMap.entrySet()) {
-			if(!params.getKey().equals(ReportConst.DOC_TYPE_RTF)){
+			if (!params.getKey().equals(ReportConst.DOC_TYPE_RTF)) {
 				reportUrl.append(ReportConst.PARAM_SEPARATOR);
 				reportUrl.append(params.getKey());
 				reportUrl.append(ReportConst.VALUE_SEPARATOR);
@@ -2329,7 +2268,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(facesScopes.getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 
-			taskId = originalServletRequest.getParameter("taskId");
+			taskId = originalServletRequest.getParameter(ContractConst.TASK_ID);
 			taskIdPair = originalServletRequest.getParameter("taskIdPair"); // #31422-basri 190821
 		} else {
 			taskId = theTaskId;
@@ -2405,8 +2344,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+			// 25037 - start
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
-			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());// 25037
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
+			// 25037 - end
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2414,28 +2355,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
 	private String[] sortOutcomes(String[] outComes) {
-		outComes = outComes==null ? new String[]{} : outComes;//29253-start
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[]{
-					BpmOutcomeConst.BPM_ENDORSE, 
-					BpmOutcomeConst.BPM_CANCEL}; 
-			//last index will appear on the far right, 
-			//if outcome not ranked, order come as is,
-			//existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});//29253-end
+
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
+		}
+
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
 	}
@@ -2491,7 +2421,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				items[i++] = new SelectItem(y, String.valueOf(y));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -2925,6 +2855,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 						PersonnelResDTO resDTO = personnelSO.retrievePersonnelById(reqDTO);
 						String[] copyEquityOwner = {"equityOwner","director","clerical","higherManagement","management"};
 						EntityHelper.copyEntityPropertiesOnly(personnel,resDTO.getSmPersonnel(),copyEquityOwner);
+						resDTO.getSmPersonnel().setSsmData(false);
+						resDTO.getSmPersonnel().setEquityOwnerSsm(false); //#29956
+						resDTO.getSmPersonnel().setDirectorSsm(false); //#29956
 						reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
 						//update latest data to active supplier admin
 						resDTO = personnelSO.savePersonnelRecord(reqDTO);
@@ -3022,6 +2955,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(smSupplier.getRegNo(),smSupplier.getBusinessType())){
 				//checking with ssm
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
+				//#29582
+				ssmReqDTO.setSmSupp(smSupplier);
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
 				//27329
@@ -3106,7 +3041,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								}
 							}
 							
-							if(personnelsRole != null && personnelsRole.size() > 0) {
+							if(personnelsRole.size() > 0) {
 								postRegBean.setDontGetSsmData(false);
 								postRegBean.setSmSupplierSsm(postRegBean.getSmSupplier());	
 								postRegBean.setShowPopup(true);
@@ -3272,6 +3207,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			this.getManagedBean().setSmSupplierSsm(new SmSupplier());
+			//#24819 - START
+			if(this.getManagedBean().getSmSupplier() == null){
+				this.getManagedBean().setSmSupplier(new SmSupplier());
+				this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
+			}
+			//#24819 - END
 			/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
 					.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
 					: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
@@ -3472,7 +3413,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		return retVal;
-	}	
+	}
+	
+	//29956 START
+	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
+		Boolean retVal = false;
+		if (supplier != null && supplier.getSupplierId() != null) {
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
+		}
+		return retVal;
+	}
+	//29956 END
 
 	public static void checkEquityOwnerUpdateAllowance(BaseManagedBean managedBean) {
 		// #27165
@@ -3843,47 +3796,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//12492 - END
-	//29380  - Site Visit Grouping Enhancement -28775 - Start
-	public boolean checkOtherDescDockyard(PmCategoryL3 dockyardCatVar, SmSupplierCategory categoryVar){
-		boolean result=false;
-		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
-			return result;
-		}
-		if(dockyardCatVar.getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) ){
-			if( dockyardCatVar.getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) ){
-				result=true;
-			}	
-			if(dockyardCatVar.getFullCatcode().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_L2_L3_220701) &&
-					categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
-					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)){
-				result=true;
-			}
-		}
-		return result;
-	}
-	
-	public boolean checkOtherDescMachinery(SmMachineCategory catFac, SmSupplierCategory categoryVar){
-		boolean result=false;
-		if(categoryVar == null || categoryVar.getPmCategoryL3() == null){
-			log.info("NUll Here");
-			return result;
-		}
-		if( (catFac.getPmCategoryL3().getCategoryL3Id().equals(categoryVar.getPmCategoryL3().getCategoryL3Id()) &&
-				(catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99) && 
-				categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_99)) ||
-				(catFac.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
-				catFac.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
-				catFac.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01)) && 
-				(categoryVar.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L1_22) &&
-					categoryVar.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L2_07) &&
-					categoryVar.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(SupplierManagementConst.CATEGORY_CODE_L3_01))) ){
-			result=true;
-		}
-		return result;
-	}
-	//29380  - Site Visit Grouping Enhancement -28775 - End
 	
 	//#29594 - START
 	public String retrieveMinistryCodeNameByOrgProfileId(Long orgProfileId) {
@@ -3945,62 +3857,56 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param paramMap the param map
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void generateReportPDF(String contractNo, List<String> reportFiles,
-			Map<String, Map<String, String>> paramMaps) throws IOException { 
-		
-		PortletResponse portalresponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse response = PortalUtil
-				.getHttpServletResponse(portalresponse);
+	protected void generateReportPDF(String contractNo, List<String> reportFiles, Map<String, Map<String, String>> paramMaps) throws IOException {
+
+		PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(portalresponse);
 		response.setContentType("Content-type: text/zip");
-		response.setHeader("Content-Disposition",
-				"attachment; filename="+ contractNo + "_Amendment Update.zip");
-		
+		response.setHeader("Content-Disposition", "attachment; filename=" + contractNo + "_Amendment Update.zip");
+
 		Map<String, String> paramMap;
-		
-		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-				response.getOutputStream()));
-		
-		for(String reportFile : reportFiles){
+
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()));
+
+		for (String reportFile : reportFiles) {
 			String fileType = "";
 
 			paramMap = paramMaps.get(reportFile);
-			
-			if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL)){
+
+			if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL)) {
 				fileType = "_Amendment Detail";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE)) {
 				fileType = "_Zone";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY)) {
 				fileType = "_Agency";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL) ||
-					reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL) || reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL)) {
 				fileType = "_Item";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION)) {
 				fileType = "_Deduction";
-			} else if(reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE)){
+			} else if (reportFile.equals(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE)) {
 				fileType = "_Schedule";
 			}
-			
+
 			zos.putNextEntry(new ZipEntry(contractNo + fileType + ".pdf"));
-			
+
 			String reportUrl = generateReportURL(reportFile, paramMap);
-	
+
 			HttpURLConnection urlConnection = null;
 			URL obj = new URL(reportUrl);
 			urlConnection = (HttpURLConnection) obj.openConnection();
-	
-			BufferedInputStream buf = new BufferedInputStream(
-					urlConnection.getInputStream());
-			
+
+			BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
+
 			int size = 0;
 			while ((size = buf.read()) != -1) {
 				zos.write(size);
 			}
 			buf.close();
+			urlConnection.disconnect();
 		}
 		zos.closeEntry();
 		zos.close();
-		response.flushBuffer();		
+		response.flushBuffer();
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	//Enhancement 29418 - end
@@ -4018,8 +3924,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getCategoryTypeDropdownValuesBySearchBean(Integer reasonCategory, String parameterType, 
-																  ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getCategoryTypeDropdownValuesBySearchBean(Integer reasonCategory, String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 		List<PmParameterDesc> parameterDescs = ParameterHelper
@@ -4059,7 +3964,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -4157,13 +4062,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param scQt
 	 * @return wip flag 
 	 */
-	public boolean evaluateWIP(ScQt scQt){
+	public boolean evaluateWIP(ScQt scQt) {
 		Integer maxScoreSetting = this.getManagedBean().getWipStatusMax();
-		if(maxScoreSetting == null){
+		if (maxScoreSetting == null) {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			maxScoreSetting = evaluationSO.checkWipScoreSettingMax(reqDTO);
 			this.getManagedBean().setWipStatusMax(maxScoreSetting);
 		}
@@ -4192,12 +4096,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param reqDTO
 	 * @return resDTO 
 	 */
-
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public BpmResponseDTO claimBpmTaskGroupByDocNo(BpmRequestDTO reqDTO) {
 		BpmResponseDTO resDTO = new BpmResponseDTO();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		try {
 
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
@@ -4210,38 +4112,105 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			return resDTO;
 		} catch (Exception e) {
 			resDTO.setSuccessful(false);
-			e.printStackTrace();
+			log.error(e.getMessage());
 			throw new EpException(e.getMessage());
 		}
 	}
 	//#21387 - End
 	
-	//#28175 - start
+	//#28175 - start, 29380 - Site Visit Grouping Enhancement -28775
+	//28175 Refactor start
 	/**
+	 * Returns the supplier category name based on the provided parameters.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
 	 * @param isSupplierProfile
-	 * @return latest or old category code description
+	 *            whether it's a supplier profile
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the supplier category name
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile){
-		if(catL3 == null){
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName) {
+		if (catL3 == null) {
 			return null;
 		}
+
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
-				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
-			return catL3.getCategoryName();
+		String categoryName = getCategoryName(catL3, isFullName);
+
+		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			return categoryName;
 		}
-		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
-				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
-		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
+
+		SmSupplierCategory supplierCategory = getSupplierCategory(appl, catL3);
+		if (supplierCategory == null) {
+			return categoryName;
+		}
+
+		return isFullName ? getFullSupplierCategoryName(supplierCategory) : supplierCategory.getCategoryL3Name();
 	}
-	
+
 	/**
+	 * Returns the category name based on the provided PmCategoryL3 object and
+	 * whether to return the full name.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the category name
+	 */
+	private String getCategoryName(PmCategoryL3 catL3, boolean isFullName) {
+		String categoryName = catL3.getCategoryName();
+		if (isFullName) {
+			categoryName = String.format("%s / %s / %s", catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName(),
+					catL3.getPmCategoryL2().getCategoryName(), categoryName);
+		}
+		return categoryName;
+	}
+
+	/**
+	 * Returns the SmSupplierCategory object based on the provided SmAppl object
+	 * and PmCategoryL3 object.
+	 * 
+	 * @param appl
+	 *            the SmAppl object
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @return the SmSupplierCategory object
+	 */
+	private SmSupplierCategory getSupplierCategory(SmAppl appl, PmCategoryL3 catL3) {
+		return (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(),
+				appl.getSmSupplierCategories(), "pmCategoryL3");
+	}
+
+	/**
+	 * Returns the full supplier category name based on the provided
+	 * SmSupplierCategory object.
+	 * 
+	 * @param supplierCategory
+	 *            the SmSupplierCategory object
+	 * @return the full supplier category name
+	 */
+	private String getFullSupplierCategoryName(SmSupplierCategory supplierCategory) {
+		return String.format("%s / %s / %s", supplierCategory.getCategoryL1Name(),
+				supplierCategory.getCategoryL2Name(), supplierCategory.getCategoryL3Name());
+	}
+	//28175 Refactor end
+	/**
+	 * @param cat
+	 * @param appl
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3){
-		return getSupplierCategoryName(catL3, false);
+	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		String catName1 = cat.getPmCategoryL1().getCategoryName();
+		String catName2 = cat.getPmCategoryL2().getCategoryName();
+		String catName3 = cat.getPmCategoryL3().getCategoryName();
+		return isLatestCatCodeDesc(false, appl) ?  
+				String.format("%s / %s / %s",catName1,catName2,catName3)
+				: getFullSupplierCategoryName(cat);
 	}
 	
 	/**
@@ -4258,40 +4227,65 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
-		if(appl == null || appl.getPmStatus() == null){
+		if(appl == null){
 			return false;
+		}
+		if (appl.getPmStatus() == null) {
+			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
 		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
 	}
-	//#28175 - end
+	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
 		getManagedBean().getPersonnelsRole().clear();
 		getManagedBean().setDowngradeRole(false);
+		getManagedBean().setDisAllowOwnerEdit(false);
+		
+		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
+		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-		if(!resDto.getSmPersonnelList().isEmpty() && resDto.getSmPersonnelList() != null){
+		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
 			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
 				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 				
-				if(!isMofAccEffDatePassedCurrDate(supplier) 
-						&& isPersonnelAdminRole(personnel)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				} else if(isMofAccEffDatePassedCurrDate(supplier)
-						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				
+				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
+				
+				if(isPersonnelAdminRole
+						&& !isMofAccEffDatePassed6MonthCurrDate
+						&& !isBasicAccount){
+					getManagedBean().setDisAllowOwnerEdit(true);
+				}
+				
+//				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
+//						&& isPersonnelAdminRole(personnel)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
+//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
+//					getManagedBean().getPersonnelsRole().add(personnel);
+//				}
 			}
 		}
-		if(!getManagedBean().getPersonnelsRole().isEmpty()){
+		if(getManagedBean().getPersonnelsRole() != null 
+				&& !getManagedBean().getPersonnelsRole().isEmpty()){
+			
 			getManagedBean().setDowngradeRole(true);
 			
 			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
@@ -4320,6 +4314,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//END #29956
 	
+	//#12487 start
+	/**
+	 * To retrieve PTJ code by org profile ID and created date
+	 * @param orgProfileId
+	 * @param tranDate
+	 * @return Organization Code
+	 */
+	public String retrievePTJCodeByOrgProfileId(Long orgProfileId, Date tranDate) {
+		IOrgProfileSO profileSO =  BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setCreateDate(tranDate);
+		PmOrgProfile orgProfile = profileSO.retrieveOrgProfileByProfileId(
+				reqDTO).getPmOrgProfile();
+		if (orgProfile != null) {
+			return orgProfile.getOrgCode();
+		}
+			
+		return null;
+	}
+	
+	//#12487 end
+
 	//#32304
 	/**
 	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
@@ -4327,7 +4347,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @throws IOException
 	 */
 	public void downloadCancelledBumiAppl(boolean isSVC) throws IOException{
-		Map<String, String> paramMap = new HashMap<String, String>();
+		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(ReportConst.PARAM_REPORT_ID, isSVC ? "SM_100" : "SM_099");
 		paramMap.put(ReportConst.PARAM_USER_ID, new FacesScopes().getUserSessionBean().getUserId().toString());
 		paramMap.put("PLANGUANGE", "ms");
@@ -4335,4 +4355,43 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		generateReport(report, paramMap);
 	}
+	
+	// #28854,#25000 - Start
+	/**
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null or empty, it returns null.
+	 * 
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br />");
+	}
+	// #28854,#25000 - End
+	
+	// #25000 - Start
+	/**
+	 * A utility method to format a date.
+	 * 
+	 * @param date
+	 *            the Date object to format
+	 * @return the formatted date string, or an empty string if the date is null
+	 */
+	public String formatDate(Date date) {
+		SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		return date != null ? dateformat.format(date) : "";
+	}
+	// #25000 - End
+	
 }
+

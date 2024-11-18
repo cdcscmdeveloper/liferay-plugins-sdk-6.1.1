@@ -93,6 +93,7 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		// #29712 & #30824, #32564 - start
 		this.getManagedBean().setSelectedSupplier(null);
 		this.getManagedBean().setSelectedMofAccount(null);
+		this.getManagedBean().setSelectedBasicAccount(null);
 		// #29712 & #30824, #32564 - end
 	}
 	
@@ -107,9 +108,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 
 		if (StringUtils.isNotEmpty(getManagedBean().getRegType()) || getManagedBean().getRegType() != null) {
 			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
-				sb.append("recordStatus^1");
-				sb.append("|pmOrgValidity.recordStatus^1");
-				sb.append("|orgTypeCode.parameterType^");
+//				sb.append("recordStatus^1");  -- #30824
+//				sb.append("|pmOrgValidity.recordStatus^1"); -- #30824
+				sb.append("orgTypeCode.parameterType^");
 				sb.append(ParameterTypeConst.ORGANISATION_TYPES);
 
 				if (this.getManagedBean().getOrgTypeCode() != null) {

@@ -182,6 +182,7 @@
 			</tr>
 			<!-- 12852 End -->
 			<!-- 7465, 29822 start -->
+			<!-- 35325 start -->
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
@@ -199,7 +200,7 @@
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 						/>
 						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
-							onclick="cbSearchTask.disable();cbResetTask.disable();" 
+							onclick="cbSearchTask.disable();cbResetTask.disable();dtGroupTaskTableWidget.unselectAllRows();dtOthersTaskListTableWidget.unselectAllRows();" 
 							onstart="taskReassignconfirmPopupBlockWidget.show()"
 			  				oncomplete="cbSearchTask.enable();cbResetTask.enable();taskReassignconfirmPopupBlockWidget.hide();"
 							value="#{lbl['lbl.btn.reset']}" 
@@ -211,6 +212,7 @@
 					</div>
 				</td>
 			</tr>
+			<!-- 35325 end -->
 			<!-- 7465,29822 end -->
 		</table>
 		

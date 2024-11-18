@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
@@ -46,6 +48,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -1819,6 +1822,52 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		getManagedBean().setBusinessRegNo(supplDataLst.getSmSupplier().getRegNo());
 		getManagedBean().setEpNo(supplDataLst.getSmSupplier().getEpNo());
 		getManagedBean().setMofNo(supplDataLst.getMofNo());
+	}
+	
+	/**
+	 * #29550 fix
+	 * Get status group select items for dropdown.
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getGroupStatusDropdown() {		
+		
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			
+			items = new SelectItem[5];
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 1:Status Before Pending Invoice: 41000,41002,41005,41010,41500,41505,41510
+			items[1] = new SelectItem("1", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.beforePendingInv", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 2:Status Pending Payment Match: 41025,41525
+			items[2] = new SelectItem("2", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.pendingPaymentMatch", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 3:Status Pending Payment and Closed: 41030,41035,41530,41535
+			items[3] = new SelectItem("3", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.pendingPaymentClosed", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 4:Status Cancelled: 41400,41900
+			items[4] = new SelectItem("4", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.cancelledLabel", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			
+		} catch (Exception e) {
+			log.info(e.toString());
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 	
 	//Enhancement 29550 - end
