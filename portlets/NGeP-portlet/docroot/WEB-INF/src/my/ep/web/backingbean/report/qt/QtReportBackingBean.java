@@ -845,28 +845,26 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public List<SelectItem> retrieveDescOfficerByAgency() {
 		List<SelectItem> scDescOfficerList = new ArrayList<>();
-		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
-			if (isDeskOfficer()) {
-				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
-				selectItem.setValue(getUserIdSessionFromLoginId());
-				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
-				scDescOfficerList.add(selectItem);
-			} else {
-				ScQt qt = findScQtByQuotationNumber();
-				
-				if (qt != null) {
-					Long orgProfileId = qt.getOrgProfileId();
-					List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
-							new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
-					if (CollectionUtils.isNotEmpty(reqLst)) {
-						for (Object[] object : reqLst) {
-							SelectItem selectItem = new SelectItem();
-							selectItem.setLabel(object[0].toString());
-							selectItem.setValue(object[1]);
-							scDescOfficerList.add(selectItem);
-						}
-					}
+		if (isDeskOfficer()) {
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
+			selectItem.setValue(getUserIdSessionFromLoginId());
+			getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
+			scDescOfficerList.add(selectItem);
+		} else {
+			//#21692 - Start
+			Long orgProfileId = getManagedBean().getScReportSearchBean().getPtjProfile() != null ?
+					getManagedBean().getScReportSearchBean().getPtjProfile().getOrgProfileId() : null;
+			
+			List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+					new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+			//#21692 - End
+			if (CollectionUtils.isNotEmpty(reqLst)) {
+				for (Object[] object : reqLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scDescOfficerList.add(selectItem);
 				}
 			}
 		}
@@ -1008,7 +1006,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+		//#21692 - Start
+		boolean procurementBoardSecUser = facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()) && 
+				!(procurementBoardSecUser);
+		//#21692 - End
 	}
 	
 	/**
