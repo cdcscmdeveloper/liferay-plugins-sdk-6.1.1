@@ -1836,6 +1836,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		String newSupplierDoRef = null;
 		String oldSupplierDoRef = null;
 		String fieldAuditCode = null;
+		String roleCode = null;
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 			// audit fl supplier
@@ -1846,6 +1847,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			orgName = fldo.getFlRequest().getSmSupplier().getCompanyName();
 			statusId = FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL;
 			fieldAuditCode = AuditFLConst.FL_AU_DO_NO_FIELDLABELCODE;
+			roleCode = getUserRole();
 		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			// audit fl approver
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1862,12 +1864,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			orgName = pmOrgAudit.getOrgName();
 			statusId = FulfilmentStatusConst.DO_SUBMITTED;
 			fieldAuditCode = null;
+			roleCode = RoleCode.FL_APPROVER.value();
 		}
 		// insert for DO audit
 		if (orgProfileId != null) {
 			FlAuditTrail auFLSPDTO = new FlAuditTrail();
 			auFLSPDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-			auFLSPDTO.setRoleCode(getUserRole());
+			auFLSPDTO.setRoleCode(roleCode);
 			auFLSPDTO.setOrgProfileId(orgProfileId);
 			auFLSPDTO.setOrgName(orgName);
 			auFLSPDTO.setDocId(fldo.getDeliveryOrderId());
