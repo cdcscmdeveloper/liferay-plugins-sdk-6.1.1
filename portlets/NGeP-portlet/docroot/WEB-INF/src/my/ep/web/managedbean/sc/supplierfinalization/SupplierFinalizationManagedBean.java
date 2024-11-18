@@ -244,7 +244,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean ktReportGenerated;
 	private boolean disableJustifications;
 	// 28834 end
-
+	
 	// 25037 - start
 	private List<ScCommitteeMember> deletedMemberList;
 	private SupplierFinalizationMeetingBackingBean meetingBB;
@@ -2175,7 +2175,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableJustifications = disableJustifications;
 	}
 	// 28834 end
-
+	
 	// 25037 - start
 	public List<ScCommitteeMember> getDeletedMemberList() {
 		return deletedMemberList;

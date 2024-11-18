@@ -3480,7 +3480,7 @@
 		<css-class-wrapper>
 			cataloguemaintenancetemp-portlet
 		</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

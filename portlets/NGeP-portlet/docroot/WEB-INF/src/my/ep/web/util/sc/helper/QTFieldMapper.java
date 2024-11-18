@@ -128,10 +128,9 @@ public class QTFieldMapper {
 				
 		// QT_PENDING_BPK_APPROVAL
 		// 25037 - start
-		QT_PENDING_BPK_APPROVAL(QTStatusConst.QT_PENDING_BPK_APPROVAL, merge(
-				new String[] { QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT,  
-					QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER}, // #11104
-		QT_PENDING_PB_APPROVAL.value())),// #11104
+		QT_PENDING_BPK_APPROVAL(QTStatusConst.QT_PENDING_BPK_APPROVAL, merge(new String[] { 
+			QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT, QTFieldConst.FIELD_QT_SCHEDULE_COORDINATE_OFFICER}, // #11104
+			QT_PENDING_PB_APPROVAL.value())),// #11104
 		// 25037 - end
 				
         // Pending QT publication Approval
@@ -444,7 +443,5 @@ public class QTFieldMapper {
 			}
 			return null;
 		}
-
 	}
-
 }

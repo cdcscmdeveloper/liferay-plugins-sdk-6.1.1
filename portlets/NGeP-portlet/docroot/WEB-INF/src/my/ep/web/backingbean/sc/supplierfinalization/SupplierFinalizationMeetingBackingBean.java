@@ -1471,6 +1471,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void submitAction(String outCome, String navigateTo) {
 	// 25037 - end
+
 		IQTMeetingSO meetingSO = null;
 		try {
 			FacesScopes facesScopes = new FacesScopes();
@@ -1509,6 +1510,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());
 			// 25037 - end
+			
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -1850,6 +1852,7 @@ if (CollectionUtils.isNotEmpty(
 		}
 
 	}
+	
 	// 25037 - start
 	private ICommitteSO getCommitteeSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);

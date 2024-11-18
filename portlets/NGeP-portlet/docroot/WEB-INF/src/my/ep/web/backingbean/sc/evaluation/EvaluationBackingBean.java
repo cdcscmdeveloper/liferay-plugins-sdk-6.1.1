@@ -11824,6 +11824,15 @@ private void retriveCommitteeRemarksList(){
 					.getComplianceSampleItemListDM().getList();
 
 			if (null != sampleCompliance && !sampleCompliance.isEmpty()) {
+				for (ScQtSampleItem sampleItem : sampleCompliance) {
+					if (null == sampleItem.getSubmissionStatus()
+							|| null == sampleItem.getSubmissionStatus()
+									.getParameterId()) {
+						throw new EpException(MessageConst.ERROR_760363);
+
+					}
+				}
+
 				reqDTO.setSampleComplianceList(sampleCompliance);
 			}
 
@@ -12480,10 +12489,18 @@ private void retriveCommitteeRemarksList(){
 		} finally {
 			evaluationSO = null;
 		}
-
+		
 	}
 	
 	//Enhancement #26339 -start-
+	/**
+	* Gets the local goods radio values.
+	* 
+	* @param itemType
+	* the item type
+	* @return the Status values
+	*/
+	@SuppressWarnings("unused")
 	public SelectItem[] statusDropdownCodeValues(String itemType,ScQtProposalChecklistAttachment scQtProposalChecklistAttachment) {
 		List<Integer> types = new ArrayList<Integer>();
 	
@@ -12610,10 +12627,11 @@ private void retriveCommitteeRemarksList(){
 		try {
 			if (null != qtSampleLable) {
 				boolean statusCompleted = true;
-			if(null==qtSampleLable.getSampleLableStatus() || QTStatusConst.TS_PENDING_SUBMISSION.equals(qtSampleLable.getSampleLableStatus().getStatusId()) ){
+				if(null==qtSampleLable.getSampleLableStatus() || QTStatusConst.TS_PENDING_SUBMISSION.equals(qtSampleLable.getSampleLableStatus().getStatusId()) ){
 					statusCompleted = false;	
-			}//#11104-End
-			return statusCompleted;
+				}//#11104-End
+				
+				return statusCompleted;
 			}
 		} catch (Exception e) {
 			log.error(this.getClass().getName() + ".sampleChecklistCompleted(): Error while checking status for label ID: " + qtSampleLable.getSampleLableId());

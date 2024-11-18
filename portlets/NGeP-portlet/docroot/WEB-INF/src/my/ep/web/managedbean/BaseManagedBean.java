@@ -894,12 +894,12 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayReviseInstrn = displayReviseInstrn;
 	}
 	// #25638 - End
-
+	
 	// 25037 - start
 	public String getCurrentTaskDocType() {
 		return currentTaskDocType;
 	}
-
+	
 	public void setCurrentTaskDocType(String currentTaskDocType) {
 		this.currentTaskDocType = currentTaskDocType;
 	}
@@ -936,7 +936,7 @@ public abstract class BaseManagedBean implements Serializable {
 		this.currentTaskCreatedDate = currentTaskCreatedDate;
 	}
 	// 25037 - end
-
+	
 	// 28767
 	public List<SmPersonnel> getPersonnelDirectorManager() {
 		return personnelDirectorManager;

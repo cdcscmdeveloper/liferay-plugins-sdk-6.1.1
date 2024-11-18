@@ -1667,7 +1667,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#11104-End
 	
 	private boolean isSampleShowHide;//11104wip
-
+	
 	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
@@ -10457,7 +10457,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
-	
 	/**11104-start
 	 * @return the sampleCheckList
 	 */
@@ -10570,7 +10569,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSampleShowHide(boolean isSampleShowHide) {
 		this.isSampleShowHide = isSampleShowHide;
 	}//11104-End
-
+	
 	// 25037 - start
 	public boolean isShowHistory() {
 		return showHistory;

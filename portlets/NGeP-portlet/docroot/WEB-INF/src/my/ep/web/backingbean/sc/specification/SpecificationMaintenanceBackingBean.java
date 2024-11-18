@@ -466,6 +466,33 @@ public void specCommitteeMaintenancereset() {
 	}
 
 	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 * @param popup
+	 */
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
+		editSpecificationMaintenance(scQt, isEditable, true, false, null);
+		if (popup) {
+			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
+			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
+				SpecificationBackingBean specBB = new SpecificationBackingBean();
+				// temporary while awaiting #29474 close in SIT -start-
+				// remove when #29474 ready for UAT
+				specBB.qtChecklistTabChange(9);
+				// temporary while awaiting #29474 close in SIT -end-
+
+				// use this when #29474 ready for UAT -start-
+				// specBB.qtChecklistTabChange(10);
+				// use this when #29474 ready for UAT -end-
+				// RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			}
+		}
+		// 25037 - end - note 510
+	}
+
+	/**
 	 * The method  used to get the specificationMaintenance edit details.
 	 * @param ScQt scQt.
 	 * @param Boolean true/false.

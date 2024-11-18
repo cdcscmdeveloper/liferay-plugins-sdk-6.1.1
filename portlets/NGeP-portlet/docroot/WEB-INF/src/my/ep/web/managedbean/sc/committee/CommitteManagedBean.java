@@ -250,7 +250,7 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	/** Flag to indicate selection of all committee members **/
 	private boolean selectAllMembers;
-    
+ 
 	// 25037 - start
 	private Paginator historyPaginator;
 	private Paginator memberHistoryPaginator;

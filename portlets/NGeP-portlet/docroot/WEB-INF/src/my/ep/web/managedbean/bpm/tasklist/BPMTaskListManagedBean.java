@@ -1882,7 +1882,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							worklistItemVO.getTaskName().split(" ")[0]), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 		}
-		// 25037 - end
+		// 25037 - end  
 	}
  	// end #24968
     
