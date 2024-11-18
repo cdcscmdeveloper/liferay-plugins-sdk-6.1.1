@@ -4841,7 +4841,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		String contractNo = agreement.getCtContract().getContractNo();
 		
 		try {
-			Long prvContractVerId = caSO.getPrvContractVerIdByContractId(contractId, agreement.getCtAmendment().getCtContractVer().getContractVerId());
+			Long prvContractVerId = caSO.getPrevContractVerIdByContractId(contractId, agreement.getCtAmendment().getCtContractVer().getContractVerId());
 			Long currContractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId();
 			
 			reports = caSO.callAmendmentReportSP(currContractVerId, prvContractVerId);
