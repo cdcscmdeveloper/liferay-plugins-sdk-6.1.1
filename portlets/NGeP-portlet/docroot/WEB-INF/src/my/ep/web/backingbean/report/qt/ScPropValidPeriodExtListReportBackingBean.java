@@ -75,6 +75,10 @@ public class ScPropValidPeriodExtListReportBackingBean extends QtReportBackingBe
 		if (StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())) {
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());
 		}
+		
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationTitle())) {
+			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getQuotationTitle());
+		}
 
 		return params;
 	}
