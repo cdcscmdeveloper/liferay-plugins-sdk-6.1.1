@@ -849,15 +849,15 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
 				scDescOfficerList.add(selectItem);
 			} else {
-				ScQt scQt = findScQtByQuotationNumber();
-				
+				//#21692 - Start
 				Long orgProfileId = null;
-				if (scQt != null) {
-					orgProfileId = scQt.getOrgProfileId();
+				if (getManagedBean().getScReportSearchBean().getPtjProfile() != null) {
+					orgProfileId = getManagedBean().getScReportSearchBean().getPtjProfile().getOrgProfileId();
 				}
 				
 				List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
 						new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+				//#21692 - End
 				if (CollectionUtils.isNotEmpty(reqLst)) {
 					for (Object[] object : reqLst) {
 						SelectItem selectItem = new SelectItem();
@@ -1006,7 +1006,9 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()) && 
+				!(facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+						|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()));
 	}
 	
 	/**
