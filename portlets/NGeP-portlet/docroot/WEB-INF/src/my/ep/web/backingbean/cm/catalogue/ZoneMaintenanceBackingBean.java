@@ -947,8 +947,6 @@ BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 			if (disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
 		}
 	}
 	// [#26282] and SonarLint Fixing - End
