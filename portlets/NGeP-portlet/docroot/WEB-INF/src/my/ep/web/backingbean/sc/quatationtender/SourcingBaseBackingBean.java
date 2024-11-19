@@ -4427,10 +4427,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															answerRemark = answerRemark.replaceAll(
 																	QTConstants.NEW_LINE_CHARACTER,
 																	TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-															//#35295 #61 - start
-															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-															//#35295 #61 - end
 															map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 														}
 													}
@@ -4475,10 +4471,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																		QTConstants.NEW_LINE_CHARACTER,
 																		TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 																
-																//#35295 #61 - start
-																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-																//#35295 #61 - end
 																map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 																break;
 															}
@@ -4493,10 +4485,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															SSTConstant.GREATER_THAN_SYMBOL);
 													specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
 															TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
-													//#35295 #61 - start
-													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-													//#35295 #61 - start
 													map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
 													map.put(SSTConstant.questionType, q.getQuestionType());
 													listPRQuestion.add(map);
@@ -4564,10 +4552,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														answerRemark = answerRemark.replaceAll(
 																QTConstants.NEW_LINE_CHARACTER,
 																TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-														//#35295 #61 - start
-														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-														//#35295 #61 - start
 														map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 													}
 												}
@@ -4591,10 +4575,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
 														TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 												
-												//#35295 #61 - start
-												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-												//#35295 #61 - start
 												map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
 												map.put(SSTConstant.questionType, q.getQuestionType());
 												listPRQuestion.add(map);
@@ -6141,8 +6121,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public List<ScQtCommitteRemarks> omitLatestRemarkForDisplay(List<ScQtCommitteRemarks> remarks) {
 		List<ScQtCommitteRemarks> omittedList = new ArrayList<>();
-		if (CollectionUtils.isEmpty(remarks))
+		if (CollectionUtils.isEmpty(remarks)){
 			return omittedList;
+		}
 
 		for (ScQtCommitteRemarks r : remarks) {
 			if (StringUtils.isNotEmpty(r.getRemark())) {
@@ -6172,25 +6153,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		@SuppressWarnings("unchecked")
 	public List<QtCommitteeMemberBean> getMemberHistoryList(ScCommittee scCommittee) {
 		List<QtCommitteeMemberBean> list = new ArrayList<>();
-		try {
-			if (scCommittee != null) {
-				List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
+		if (scCommittee != null) {
+			List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
 
-				if (CollectionUtils.isNotEmpty(histories)) {
-					Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
-						@Override
-						public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
-							return o2.getCreatedDate().compareTo(o1.getCreatedDate());
-						}
-					});
+			if (CollectionUtils.isNotEmpty(histories)) {
+				Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
+					@Override
+					public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
+						return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+					}
+				});
 
-					ScCommitteeMemberHistory h = histories.get(0);
-					list = (List<QtCommitteeMemberBean>) (Object) h.deserializeList(h.getCommitteeMembers());
-					CustomUtils.sortQtCommitteeMemberRole(list);
-				}
+				ScCommitteeMemberHistory h = histories.get(0);
+				list = (List<QtCommitteeMemberBean>) (Object) h.deserializeList(h.getCommitteeMembers());
+				CustomUtils.sortQtCommitteeMemberRole(list);
 			}
-		} catch (Exception e) {
-			log.debug(e);
 		}
 		return list;
 
@@ -6243,9 +6220,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
 		boolean pendingApproval = false;// 25037 note 629
-		if (null == qtCommittee || null == qtCommittee.getScCommittee())
+		if (null == qtCommittee || null == qtCommittee.getScCommittee()) {
 			return;
-
+		}
 		ScCommittee scCommittee = qtCommittee.getScCommittee();
 		if (validateCommitteeApproval) {
 			Long statusId = scCommittee.getCommitteStatus().getStatusId();
@@ -6264,7 +6241,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		// 25037 - start - note 629
 		List<QtCommitteeMemberBean> memberList = new ArrayList<>();
-		final List<String> sortOrder = Arrays.asList("M", "C", "S");
+		final List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_MEMBER,
+				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY);
+
 		if (pendingApproval) {
 			if (CollectionUtils.isNotEmpty(scCommittee.getScCommitteeMemberHistories())) {
 				List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
@@ -6322,12 +6301,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						DbValueConst.RECORD_STATUS_ACTIVE));
 
 		Map<String, String> roleMap = new HashMap<>();
-		roleMap.put(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, "_CHAIRPERSON");
-		roleMap.put(ParameterConst.COMMITTEE_ROLE_MEMBER, "_MEMBER");
+		roleMap.put(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, SourcingConstants.CONCAT_STRING_CHAIRPERSON);
+		roleMap.put(ParameterConst.COMMITTEE_ROLE_MEMBER, SourcingConstants.CONCAT_STRING_MEMBER);
 		for (QtCommitteeMemberBean member : memberList) {
 			String memberRoleCode = member.getMemberRole();
-			if (memberRoleCode.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY))
+			if (memberRoleCode.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)){
 				continue;
+			}
 
 			String memberRole = ResourceBundleUtils.getMessage("lbl.sc.committee.role.".concat(memberRoleCode),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -6786,6 +6766,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		return committeeNames;
+	}
+	
+	/**
+	 * Sort outcomes.
+	 * 
+	 * @param outcomes
+	 * @return the string[]
+	 */
+	public String[] sortQtOutcomes(String[] outcomes) {
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY;
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_REVISE };
+			List<String> sortOrder = Arrays.asList(orderedAction);
+
+			@Override
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
 	}
 	//25037 - end
 	

@@ -80,6 +80,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.SLAUtils; //#36489
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -260,36 +261,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	public void updateSearchCriteriaForOrgName(BaseEntity entity) {
 		logger.info("updateSearchCriteriaForOrgName");
-		// if (this.getManagedBean().getSelectedOrgProfile().getPmOrgValidity()
-		// != null) {
-		// String orgName = this.getManagedBean().getSelectedOrgProfile()
-		// .getPmOrgValidity().getOrgName();
-		//
-		// this.getManagedBean().getUserProfileSearchBean()
-		// .setUserOrganizationName(orgName);
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
 		this.getManagedBean().getUserProfileSearchBean().setSelectedOrgProfileId(orgProfile.getOrgProfileId());
-		// get OrgTypeCode from selected orgProfile
-		// this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
-		// .getParameterId();
-		// }
-
 	}
 
 	public void getListOfAssignedRoles(PmUserOrg org) {
-		// find the userOrg
-		// List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveAllUserOrg(userId);
 		if (org != null) {
-			this.getManagedBean().setActiveUserOrg(org);// not
-														// active
-														// only
-														// TODO
+			this.getManagedBean().setActiveUserOrg(org);// not active only
 			this.getManagedBean().setActiveUserRoleFor(new ArrayList<PmUserRole>());
 			for (PmUserRole pmUserRole : this.getManagedBean().getActiveUserOrg().getPmUserRoles()) {
-				// if (pmUserRole.getRecordStatusFlg() ==
-				// DbValueConst.RECORD_STATUS_ACTIVE) {
 				this.getManagedBean().getActiveUserRoleFor().add(pmUserRole);
-				// }
 			}
 		}
 	}
@@ -307,16 +288,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				UserOrgResDTO resDto = userSO.retrieveUserOrgByUserOrgId(userOrgReqDTO);
 				
 				if (resDto != null && resDto.isSuccessful()) {
-					this.getManagedBean().setActiveUserOrg(resDto.getPmUserOrg());// not
-																// active
-																// only
-																// TODO
+					this.getManagedBean().setActiveUserOrg(resDto.getPmUserOrg());//not active only
 					this.getManagedBean().setActiveUserRoleFor(new ArrayList<PmUserRole>());
 					for (PmUserRole pmUserRole : this.getManagedBean().getActiveUserOrg().getPmUserRoles()) {
-						// if (pmUserRole.getRecordStatusFlg() ==
-						// DbValueConst.RECORD_STATUS_ACTIVE) {
 						this.getManagedBean().getActiveUserRoleFor().add(pmUserRole);
-						// }
 					}
 				}
 			} finally {
@@ -515,12 +490,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("loadUserProfile - userId=" + userId);
 		logger.info("loadUserProfile - selectedOrg=" + userOrgId);
 		try {
-			// initialUserProfile();
 			if (userId == null) {
 				throw new EpException(MessageConst.ERROR_770015);
 			}
 			// load user
-			// PmUser pmUser = PmCommonUtil.retrieveUserById(id, true);
 			PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, userOrgId);
 			logger.info("pmUserOrg=" + pmUserOrg);
 			pmUserOrg.setPMP(pmUserOrg.isPMP() ? true : false);
@@ -540,17 +513,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				getManagedBean().setActiveUser(true);
 			}
 
-			for (PmUserRole userRole : pmUserOrg.getPmUserRoles()) {// put
-																	// letterNo
-																	// and
-																	// approvalLimit
-																	// in maps
-																	// to check
-																	// later
-																	// changes
-																	// for
-																	// tracking
-																	// diary
+			for (PmUserRole userRole : pmUserOrg.getPmUserRoles()) {//put letterNo and approvalLimit in maps to check later changes for tracking diary
 				if (userRole.getPmRole().getRoleCode().equals("FL_APPROVER")) {
 					this.getManagedBean().getRoleCodeToLetterNoMap().put(userRole.getPmRole().getRoleCode(),
 							userRole.getLetterNo());
@@ -561,11 +524,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 
 			}
-			// pmUser.setOrgTypeCode(pmUser.getOrgTypeCode() == null ? new
-			// PmParameter()
-			// : pmUser.getOrgTypeCode());
-
-			// populateUserAddress(pmUser);
 
 			// load preference
 			PmCommonUtil.loadPmUserPreference(pmUser);
@@ -591,15 +549,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().setDeletePmUserAttachments(null);
 			this.getManagedBean().setDeletePortrait(false);
 			this.getManagedBean().setFileEventMapper(new HashMap<PmUserAttachment, FileUploadEvent>());
-			// for the initial load
-			// if (pmUser.getPmUserOrgs() != null
-			// && !pmUser.getPmUserOrgs().isEmpty()) {
-			this.getManagedBean().setSelectedUserOrg(pmUserOrg);// TODO
-																// retrive
-																// userORg
-																// with
-																// relations
-																// again
+			this.getManagedBean().setSelectedUserOrg(pmUserOrg); //retrive userORg with relations again
 			showReceivingAddress();
 			this.getManagedBean().setIsNewUser(false);
 			// set org category
@@ -610,8 +560,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					.contains(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
 				getManagedBean().setOrgCategory(OTHERS);
 			}
-			// }
-			// addressEntered();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
@@ -638,10 +586,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						pmUser.getIdentificationCode() == null ? new PmParameter() : pmUser.getIdentificationCode());
 				pmUser.setSalutationCode(
 						pmUser.getSalutationCode() == null ? new PmSalutation() : pmUser.getSalutationCode());
-				// pmUser.setOrgTypeCode(pmUser.getOrgTypeCode() == null ? new
-				// PmParameter()
-				// : pmUser.getOrgTypeCode());
-				// // for the initial load
 				
 				// #35562- Start
 				if (!pmUser.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
@@ -732,8 +676,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info(
 				".........this.getManagedBean().getSelectedUserOrg()=" + this.getManagedBean().getSelectedUserOrg());
 
-		// pmUser.setOrgTypeCode(new PmParameter());
-		// pmUser.setOrgAddress(ProfileManagementConst.DEFAULT_IS_SAME_ORG_ADDR);
 		pmUser.setNotifyByEmail(ProfileManagementConst.DEFAULT_IS_NOTIFY_BY_EMAIL);
 
 		// initial preference
@@ -744,7 +686,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		// load password
 		pmUser.setPassword(null);
-		// pmUser.setOldPassword(null);
 		pmUser.setConfirmPassword(null);
 		pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
 
@@ -793,7 +734,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public List<PmSalutation> salutationOptions() {
 		logger.info("salutationOptions");
 		return PmCommonUtil.retrievePmSalutationList();
-		// return getDropdownValues(ParameterTypeConst.SALUTATIONS);
 	}
 
 	/**
@@ -875,20 +815,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	public void addressEntered() {
 		logger.info("addressEntered");
-		// if (!this.getManagedBean().getSelectedUser().isOrgAddress()) {
-		// PmAddress pmAddress = this.getManagedBean().getUserAddress();
-		// // address is optional
-		// if (pmAddress.getPmCountry().getCountryId() != null
-		// || !StringUtils.isBlank(pmAddress.getAddress1())
-		// || !StringUtils.isBlank(pmAddress.getPostcode())
-		// || pmAddress.getPmState().getStateId() != null
-		// || pmAddress.getPmDistrict().getDistrictId() != null
-		// || pmAddress.getPmDivision().getDivisionId() != null) {
-		// this.getManagedBean().setAddressEntered(true);
-		// } else {
-		// this.getManagedBean().setAddressEntered(false);
-		// }
-		// }
 		logger.info("addressEntered: " + this.getManagedBean().isAddressEntered());
 	}
 
@@ -1061,27 +987,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return dateStr;
 	}
 
-	//
-	// /**
-	// * Retrieve Org. Type from PM
-	// * @return List<PmParameterDesc>
-	// */
-	// public List<PmParameterDesc> getOrgTypeList() {
-	// logger.info("getOrgTypeList");
-	// List<PmParameterDesc> parameterDescs =
-	// PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES
-	// , new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE))
-	// , null);
-	//
-	// orgTypeMapper = new HashMap<Long,Object>();
-	// for(PmParameterDesc pmDesc: parameterDescs){
-	// orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(),
-	// pmDesc.getPmParameter());
-	// }
-	//
-	// return parameterDescs;
-	// }
-
 	/**
 	 * To add new item to Responsible Org. Unit list
 	 */
@@ -1090,14 +995,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (this.getManagedBean().getSelectedUser().getPmUserOrgs() == null) {
 			this.getManagedBean().getSelectedUser().setPmUserOrgs(new ArrayList<PmUserOrg>());
 		}
-		// if(!this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
-		// for(PmUserOrg pmUserOrg:
-		// this.getManagedBean().getSelectedUser().getPmUserOrgs()){
-		// if(pmUserOrg.getExpDate()==null){
-		// throw new EpException(MessageConst.ERROR_770018);
-		// }
-		// }
-		// }
 
 		PmUserOrg pmUserOrg = new PmUserOrg();
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
@@ -1177,7 +1074,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	}
     
-	// #36489 - Start
+	//#36489 - Start
 	/**
 	 * check if user still have:
 	 * 1) pending task (BPM)
@@ -1187,7 +1084,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void orgUnitStatusChange() {
 		logger.info("orgUnitStatusChange");
-		if (isCheckUserOrg()) {
+		if (validateUserOrg()) {
 			int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
 			if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
 				EpException ex;
@@ -1196,8 +1093,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770167);
-				} else if ((ex = isAnyPendingDocForUserRole(
-						isCheckUserOrgandRole(), this.getManagedBean().getSelectedUser().getUserId())) != null) {
+				} else if ((ex = isAnyPendingDocForUserRole(validateUserOrgandRole(), this.getManagedBean()
+						.getSelectedUser().getUserId())) != null) {
 					// revert it to active
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					// hit error and exit
@@ -1205,7 +1102,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				} else if (isActiveUserGroupUser() != null) {
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
-				} else if (this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()) {
+				} else if (validateUserOrgProfileAndStatus()) {
 					checkIsActiveGovtSellerUser();
 				} else {
 					// if inactive set expire Date to SyetemDate
@@ -1217,7 +1114,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			//#35489 - End
 		}
 	}
-	// #36489 - End
+	//#36489 - End
 
 	public void userStatusChange() {
 		logger.info("userStatusChange");
@@ -1282,10 +1179,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId() != null) {
 			PmParameter pmParameter = (PmParameter) orgTypeMapper.get(
 					this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId());
-			// this.getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-			// .getOrgTypeCode()
-			// .setParameterCode(pmParameter.getParameterCode());
-			//
 			PmOrgProfile orgProfile = new PmOrgProfile();
 			orgProfile.setPmOrgValidity(new PmOrgValidity());
 			orgProfile.setPmFinancialOrg(new PmFinancialOrg());
@@ -1319,12 +1212,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	public void clearOrgNameAndRoleLovSearchFields() {
 		logger.info("clearOrgNameAndRoleLovSearchFields");
-		// if (this.getManagedBean().getSelectedOrgProfile() != null) {
-		// this.getManagedBean().getSelectedOrgProfile()
-		// .setPmOrgValidity(new PmOrgValidity());
-		// // this.getManagedBean().getSelectedUserOrg()
-		// // .setPmUserRoles(new ArrayList<PmUserRole>());
-		// }
+
 		getManagedBean().setSelectedOrgProfile(null);
 		getManagedBean().setSelectedRoleDesc(null);
 		getManagedBean().getUserProfileSearchBean().setUserRole(null);
@@ -1414,48 +1302,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return isExist;
 	}
 
-	// /**
-	// * 9 Dec 2014
-	// * Add new selected roles (multiple) to user role list
-	// */
-	// public void confirmRoles(){
-	// logger.info("confirmRoles");
-	// String orgType =
-	// this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode();
-	// if(this.getManagedBean().getSelectedRoles()!=null &&
-	// !this.getManagedBean().getSelectedRoles().isEmpty()){
-	// if(this.getManagedBean().getSelectedUserOrg()!=null){
-	// //Validation for unique roles added to list
-	// if(isUniqueRoles()){
-	// List <String> uniqueRoles = new
-	// ArrayList(Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
-	// for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
-	// if(uniqueRoles.contains(pmRoleDesc.getPmRole().getRoleCode())){
-	// if(checkUniqueRole(orgType, pmRoleDesc.getPmRole().getRoleCode(),
-	// false)){
-	// throw new EpException(MessageConst.ERROR_770106, new
-	// String[]{pmRoleDesc.getRoleName()});
-	// }
-	// }
-	//
-	// PmUserRole pmUserRole = new PmUserRole();
-	// pmUserRole.setPmRole(pmRoleDesc.getPmRole());
-	// this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
-	// }
-	// this.getManagedBean().getSelectedRoles().clear();
-	// updateReceivingAddressFlag();
-	// }else{
-	// throw new EpException(MessageConst.ERROR_770020);
-	// }
-	// }else{
-	// throw new EpException(MessageConst.ERROR_770021);
-	// }
-	// }else{
-	// throw new EpException(MessageConst.ERROR_770022);
-	// }
-	// RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
-	//
-	// }
 	/*
 	 * Add new selected role (single) to user role list
 	 */
@@ -1487,28 +1333,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (this.getManagedBean().getSelectedUserOrg() == null) {
 			throw new EpException(MessageConst.ERROR_770021);
 		}
-
-		// Validation for unique roles added to list (front end handle this
-		// already)
-		// if(!isUniqueRoles()){
-		// throw new EpException(MessageConst.ERROR_770020);
-		// }
-
-		// String orgType = this.getManagedBean().getSelectedUserOrg()
-		// .getPmOrgProfile().getOrgTypeCode().getParameterCode();
-
-		// Check unique org role
-		// List<String> uniqueRoles = new ArrayList<String>(
-		// Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
-		// if (uniqueRoles.contains(this.getManagedBean().getSelectedRole()
-		// .getPmRole().getRoleCode())) {
-		// if (checkUniqueRole(orgType, this.getManagedBean()
-		// .getSelectedRole().getPmRole().getRoleCode(), false)) {
-		// throw new EpException(MessageConst.ERROR_770106,
-		// new String[] { this.getManagedBean().getSelectedRole()
-		// .getRoleName() });
-		// }
-		// }
 
 		// Check single role for all users
 		if (this.getManagedBean().getSelectedRole().getPmRole().isSingleRole()) {
@@ -1640,10 +1464,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() == null) {
 				this.getManagedBean().getSelectedUserOrg().setPmUserRoles(new ArrayList<PmUserRole>());
 			}
-			// if(this.getManagedBean().getDeleteUserRoles().size() ==
-			// this.getManagedBean().getSelectedUserOrg().getPmUserRoles().size()){
-			// throw new EpException(MessageConst.ERROR_770022);
-			// }
 			for (PmUserRole userRole : this.getManagedBean().getDeleteUserRoles()) {
 				if (userRole.isBrandNew()) {
 					this.getManagedBean().getSelectedUserOrg().getPmUserRoles().remove(userRole);
@@ -2091,38 +1911,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("handleFileUpload - END");
 	}
 
-	// /**
-	// * Delete attachment
-	// *
-	// * @param attachment
-	// * @throws FileNotFoundException
-	// * @throws IOException
-	// */
-	// public void deleteAttachment(PmUserAttachment attachment)
-	// throws FileNotFoundException, IOException {
-	// logger.info("deleteAttachment - START");
-	// try {
-	// if (attachment != null) {
-	// if (this.getManagedBean().getDeletePmUserAttachments() == null) {
-	// this.getManagedBean().setDeletePmUserAttachments(
-	// new ArrayList<PmUserAttachment>());
-	// }
-	// if (!attachment.isBrandNew()) {
-	// this.getManagedBean().getDeletePmUserAttachments()
-	// .add(attachment);
-	// }
-	// this.getManagedBean().getSelectedUser().getPmUserAttachments()
-	// .remove(attachment);
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// throw new EpException(MessageConst.ERROR_770054,
-	// new String[] { e.getMessage() });
-	//
-	// }
-	// logger.info("deleteAttachment - END");
-	// }
-
 	/**
 	 * Delete attachment
 	 * 
@@ -2171,46 +1959,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("downloadAttachment - END");
 	}
 
-//	/**
-//	 * Download attachment from server
-//	 * 
-//	 * @param filePath
-//	 * @param fileName
-//	 * @throws IOException
-//	 */
-//	private void downloadFile(String filePath, String fileName) throws IOException {
-//		logger.info("Inside downloadFile start");
-//		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
-//				.getResponse();
-//		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-//		res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");//
-//		res.setHeader("Content-Transfer-Encoding", "binary");
-//		res.setContentType("application/octet-stream");
-//		res.flushBuffer();
-//		OutputStream out = res.getOutputStream();
-//		if (filePath != null) {
-//			InputStream input = null;
-//			try {
-//				URLConnection uc = new URL(filePath).openConnection();
-//				input = new BufferedInputStream(uc.getInputStream());
-//			} catch (Exception e) {
-//				// Cannot open connection, maybe local file
-//				input = new FileInputStream(filePath);
-//			}
-//			byte[] buffer = new byte[4096];
-//			int bytesRead;
-//			while ((bytesRead = input.read(buffer)) != -1) {
-//				out.write(buffer, 0, bytesRead);
-//				buffer = new byte[4096];
-//			}
-//			input.close();
-//		}
-//		out.flush();
-//		out.close();
-//		FacesContext.getCurrentInstance().responseComplete();
-//		logger.info("Inside downloadFile end");
-//	}
-
 	public String getUsername(Long userId) {
 		return PmCommonUtil.retriveUserName(userId);
 	}
@@ -2230,24 +1978,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("currentOrgTypeId " + currentOrgTypeId);
 		List<String> selectedRolesToExclude = new ArrayList<String>();
 		if (currentOrgTypeId != null) {
-			// SearchFilterBean orgBean = new SearchFilterBean(
-			// SearchOperator.OPERATOR_EQUALS.value());
-			// orgBean.setSearchField("pmRole.pmOrgRoles.orgType.parameterId");
-			// orgBean.setSearchValue(currentOrgTypeId);
-			// searchBean.getDataFilterBeans().add(orgBean);
-			//
 			SearchFilterBean statusBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 			statusBean.setSearchField("pmRole.recordStatusFlg");
 			statusBean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(statusBean);
-
-			// // remove parent role as children were selected
-			// SearchFilterBean approverBean = new SearchFilterBean(
-			// SearchOperator.OPERATOR_NOT_EQUALS.value());
-			// approverBean.setSearchField("pmRole.roleCode");
-			// approverBean
-			// .setSearchValue(ProfileManagementConst.ROLE_APPROVER);
-			// searchBean.getDataFilterBeans().add(approverBean);
 
 			// remove selected roles (if any)
 			if (getManagedBean().getSelectedUserOrg() != null
@@ -2293,23 +2027,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			statusBean.setSearchValue(null);
 			searchBean.getDataFilterBeans().add(statusBean);
 		}
-		// // remove admin user role from list if current user had the role
-		//
-		// if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-		// selectedRolesToExclude.add(RoleCode.MINISTRY_ADMIN.value());
-		// } else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()))
-		// {
-		// selectedRolesToExclude.add(RoleCode.PTJ_ADMIN.value());
-		// } else if
-		// (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
-		// selectedRolesToExclude.add(RoleCode.JABATAN_ADMIN.value());
-		// } else if (getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value()))
-		// {
-		// selectedRolesToExclude.add(RoleCode.BPK_ADMIN.value());
-		// } else if
-		// (getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())) {
-		// selectedRolesToExclude.add(RoleCode.SUPPORT_ADMIN.value());
-		// }
+
 		if (!selectedRolesToExclude.isEmpty()) {
 			logger.info("remove selected roles");
 			SearchFilterBean selectedRole = new SearchFilterBean(SearchOperator.OPERATOR_NOT_IN.value());
@@ -2375,7 +2093,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			IRoleSO roleSO = null;
 
 			try {
-				// boolean isApprover = false;
 				Long currentOrgTypeId = getCurrentOrgTypeId();
 				ISearchBean<PmRoleDesc> searchBeanData = getRoleBeanData(searchBean, currentOrgTypeId);
 				RoleReqDTO roleReqDTO = new RoleReqDTO();
@@ -2392,26 +2109,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				RoleResDTO resDto = roleSO.retrieveRoleDecsFromRoleMatrix(roleReqDTO);
 
 				if (resDto != null && resDto.isSuccessful()) {
-					/*
-					 * List <PmRoleDesc> roleResults =
-					 * resDto.getSearchRoleResultBean().getResultList();
-					 * for(PmRoleDesc roleDesc: roleResults){
-					 * if(ProfileManagementConst
-					 * .ROLE_APPROVER.equals(roleDesc.getPmRole
-					 * ().getRoleCode())){ isApprover = true; break; } }
-					 * if(isApprover){ searchBeanData =
-					 * getRoleBeanData(searchBean,
-					 * ProfileManagementConst.ROLE_APPROVER); resDto =
-					 * roleSO.retrieveRoleDecsBySearchBean(roleReqDTO);
-					 * System.out
-					 * .println("with parent "+resDto.getSearchRoleResultBean
-					 * ().getTotalRecord()); }
-					 */
-					// getManagedBean().setAvailableRoles(resDto.getSearchRoleResultBean().getResultList());
-
-					// disabled selected roles
-					// markupRoleResult(resDto.getSearchRoleResultBean());
-
 					return resDto.getSearchRoleResultBean();
 				}
 			} catch (Exception e) {
@@ -2639,12 +2336,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_SUSPENDED))));
 		}
 
-		// Not Equals to Login User
-		//Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
-
-		//searchBean.getDataFilterBeans().add(
-			//	new SearchFilterBean("pmUser.userId", SearchOperator.OPERATOR_NOT_EQUALS.value(), loginSessionUserId));
-
 		// Authorisation
 		if (StringUtils.isNotBlank(getRoleCode())) {
 			if (upSearchBean.getSelectedOrgProfileId() == null && getManagedBean().getSelectedOrgType() != null
@@ -2713,7 +2404,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						IUserSO.class);
 				UserOrgResDTO resDto = userSO.searchUserAndUserOrgProfileMaintenance(userOrgReqDTO);
 				if (resDto != null && resDto.isSuccessful()) {
-					//markupUserResult(resDto.getUserOrgResultBean());
 					return resDto.getUserOrgMaintenanceResultBean();
 				}
 			} finally {
@@ -2850,8 +2540,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								}
 							} else {
 								logger.info("update address (remove)");
-								// remove address because org doesn't have an
-								// address
+								// remove address because org doesn't have an address
 								addressTypeObj.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 							}
 							isUserAddressExist = true;
@@ -2904,15 +2593,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void loadUserOrgType(PmUser user, PmUserOrg userOrg) {
 		logger.info("loadUserOrgType");
 		if (userOrg != null && userOrg.getPmOrgProfile().getOrgTypeCode() != null) {
-			// for (PmUserOrg userOrg : user.getPmUserOrgs()) {
-			// if (userOrg.getRecordStatusFlg() ==
-			// DbValueConst.RECORD_STATUS_ACTIVE) {
-			// if (checkEffDate(userOrg)) {
 			user.setOrgTypeCode(userOrg.getPmOrgProfile().getOrgTypeCode());
-			// break;
-			// }
-			// }
-			// }
 		} else {
 			throw new EpException(MessageConst.ERROR_770026);
 		}
@@ -2938,7 +2619,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					isChanged = true;
 				}
 				if (pmUserOrg.isBrandNew() || pmUserOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-					// if (checkEffDate(pmUserOrg)) {
 					activeUserOrgId = pmUserOrg.getUserOrgId() != null ? pmUserOrg.getUserOrgId() : 0;
 					for (PmUserRole pmUserRole : pmUserOrg.getPmUserRoles()) {
 						if (pmUserRole.isBrandNew() || (isUserRoleModified(pmUserRole)
@@ -2962,13 +2642,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							logger.info("pmUserOrg : RECORD_STATUS_SUSPENDED DELETE OLD: " + role.getPmRole().getRoleCode());
 						}
 					}
-					//deleteRoleList.addAll(pmUserOrg.getPmUserRoles());
 				}
 			}
 			if (activeUserOrgId > 0 || isChanged) {
-				// retrieve previous active org list
-				// List<PmUserOrg> pmUserOrgs = PmCommonUtil
-				// .retrieveActiveOrg(user.getUserId());
 				logger.info("size " + user.getPmUserOrgs().size());
 				for (PmUserOrg pmUserOrg : user.getPmUserOrgs()) {
 					if (pmUserOrg.getUserOrgId() != null && pmUserOrg.getUserOrgId() != activeUserOrgId) {
@@ -3063,13 +2739,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							}
 						}
 					}
-					// else {
-					// // make sure it is currently active if only one item
-					// if (!checkEffDate(user.getPmUserOrgs().get(index1))) {
-					// throw new
-					// EpException("Active Responsible Org. Unit is required.");
-					// }
-					// }
 				}
 			}
 		}
@@ -3128,7 +2797,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		List<PmUserRole> userRoleList = null;
 		if (userOrg != null) {
-			// for (PmUserOrg userOrg : user.getPmUserOrgs()) {
 			if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				userRoleList = userOrg.getPmUserRoles();
 				for (PmUserRole userRole : userOrg.getPmUserRoles()) {
@@ -3169,20 +2837,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							}
 						}
 					}
-					// check if contains unique role
-					// if (uniqueRoles
-					// .contains(userRole.getPmRole().getRoleCode())) {
-					// String orgType = userOrg.getPmOrgProfile()
-					// .getOrgTypeCode().getParameterCode();
-					// if (checkUniqueRole(orgType, roleCode, true)) {
-					// throw new EpException(
-					// MessageConst.ERROR_770106,
-					// new String[] { getRoleDescByRoleCode(roleCode) });
-					// }
-					// }
-
-					// check if one role is active for user org active status
-					// only
+					// check if one role is active for user org active status only
 					if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()) {
 						activeRole = true;
 					}
@@ -3190,7 +2845,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			} else {
 				activeRole = true;
 			}
-			// }
 		}
 
 		if (!activeRole) {
@@ -3198,164 +2852,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 
 	}
-
-	/**
-	 * Validation for PmUser's fields
-	 * 
-	 * @param user
-	 */
-	private void validateUser(PmUser user, PmUserOrg pmUserOrg) {
-		logger.info("validateUser");
-		if (StringUtils.isBlank(user.getLoginId())) {
-			throw new EpException(MessageConst.ERROR_770030);
-		}
-		if (user.getSalutationCode().getSalutationId() == null) {
-			throw new EpException(MessageConst.ERROR_770031);
-		}
-		if (StringUtils.isBlank(user.getUserName())) {
-			throw new EpException(MessageConst.ERROR_770032);
-		}
-		if (StringUtils.isBlank(user.getIdentificationCode().getParameterCode())) {
-			throw new EpException(MessageConst.ERROR_770033);
-		}
-		if (StringUtils.isBlank(user.getIdentificationNo())) {
-			throw new EpException(MessageConst.ERROR_770034);
-		}
-
-		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
-			throw new EpException(MessageConst.ERROR_770090);
-		}
-		if (user.isNotifyBySms() && (pmUserOrg.getMobileTelcoId() == null)) {
-			throw new EpException(MessageConst.ERROR_770250);
-		}
-
-		// if (user.getPmCountry().getCountryId() == null) {
-		// throw new EpException(MessageConst.ERROR_770035);
-		// }
-
-		// Validate if org profile not chosen.
-		if (ParameterConst.ORG_TYPE_FACTORING.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-			if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null
-					|| pmUserOrg.getPmOrgProfile().getPmFinancialOrg() == null
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName())) {
-				throw new EpException(MessageConst.ERROR_770175);
-			}
-		} else if (ParameterConst.ORG_TYPE_SUPPLIER
-				.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
-			if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null
-					|| pmUserOrg.getPmOrgProfile().getSmSupplier() == null
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName())
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getRegNo())) {
-				throw new EpException(MessageConst.ERROR_770175);
-			}
-		} else {
-			if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null
-					|| pmUserOrg.getPmOrgProfile().getPmOrgValidity() == null
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode())
-					|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName())) {
-				throw new EpException(MessageConst.ERROR_770175);
-			}
-		}
-
-		if (!ParameterConst.ORG_TYPE_SUPPLIER.equals(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())
-				&& StringUtils.isBlank(pmUserOrg.getDesignation())) {
-			throw new EpException(MessageConst.ERROR_770108);
-		}
-		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
-			throw new EpException(MessageConst.ERROR_770036);
-		}
-
-		if (user.getUserId() != null && DbValueConst.RECORD_STATUS_ACTIVE == pmUserOrg.getRecordStatusFlg()) {
-			// validate if the user contains any active user orgs (exclude
-			// supplier type and own org profile)
-			IUserSO userSO = null;
-			try {
-				UserReqDTO userOrgReqDTO = new UserReqDTO();
-				userOrgReqDTO.setUserId(user.getUserId());
-				userOrgReqDTO.setExcludeOrgType(OrganizationType.SUPPLIER.value());
-				userOrgReqDTO.setUserOrgChecking(true);
-				if(!pmUserOrg.isBrandNew() && pmUserOrg.getUserOrgId() != null){
-					userOrgReqDTO.setUserOrgId(pmUserOrg.getUserOrgId());
-					userOrgReqDTO.setExcludeOrgProfileId(pmUserOrg.getPmOrgProfile().getOrgProfileId());
-				}
-
-				userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-				UserResDTO resDTO = userSO.retrieveAllUserOrgListByUserId(userOrgReqDTO);
-				if (resDTO.getUserOrgList() != null && !resDTO.getUserOrgList().isEmpty()) {
-					PmOrgProfile orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
-					throw new EpException(MessageConst.ERROR_770155,
-							new String[] { orgProfile.getOrgName(), orgProfile.getOrgCode() });
-				}
-			} finally {
-				userSO = null;
-			}
-		}
-		// if(StringUtils.isBlank(user.getPreferredLanguage())){
-		// throw new EpException(MessageConst.ERROR_770037);
-		// }
-		// if(user.getNotifyRemovalDay()==null
-		// || (user.getNotifyRemovalDay()!=null
-		// && user.getNotifyRemovalDay()==0)){
-		// throw new EpException(MessageConst.ERROR_770038);
-		// }
-		// if(!StringUtils.isBlank(user.getConfirmPassword()) &&
-		// !StringUtils.isBlank(user.getPassword()) &&
-		// StringUtils.isBlank(user.getOldPassword())){
-		// throw new EpException("Old Password is mandatory.");
-		// }
-	}
-
-	// /**
-	// * Validation for PmAddress's fields
-	// *
-	// * @param pmAddress
-	// * @return boolean
-	// */
-	// private boolean validateUserAddress(PmAddress pmAddress) {
-	// logger.info("validateUserAddress");
-	// boolean addressEntered = false;
-	// if (!this.getManagedBean().getSelectedUser().isOrgAddress()) {
-	// // address is optional
-	// if (pmAddress.getPmCountry().getCountryId() != null
-	// || !StringUtils.isBlank(pmAddress.getAddress1())
-	// || !StringUtils.isBlank(pmAddress.getPostcode())
-	// || pmAddress.getPmState().getStateId() != null
-	// || pmAddress.getPmDistrict().getDistrictId() != null
-	// || pmAddress.getPmDivision().getDivisionId() != null) {
-	// addressEntered = true;
-	// }
-	// if (addressEntered) {
-	// if (pmAddress.getPmCountry().getCountryId() == null) {
-	// throw new EpException(MessageConst.ERROR_770039);
-	// }
-	//
-	// if (StringUtils.isBlank(pmAddress.getAddress1())) {
-	// throw new EpException(MessageConst.ERROR_770040);
-	// }
-	//
-	// if (StringUtils.isBlank(pmAddress.getPostcode())) {
-	// throw new EpException(MessageConst.ERROR_770041);
-	// }
-	//
-	// if (pmAddress.getPmState().getStateId() == null) {
-	// throw new EpException(MessageConst.ERROR_770042);
-	// }
-	//
-	// if (pmAddress.getPmDistrict().getDistrictId() == null) {
-	// throw new EpException(MessageConst.ERROR_770043);
-	// }
-	//
-	// if (this.getManagedBean().isDivisionFlagC()) {
-	// if (pmAddress.getPmDivision().getDivisionId() == null) {
-	// throw new EpException(MessageConst.ERROR_770044);
-	// }
-	// }
-	// }
-	// }
-	// return addressEntered;
-	// }
-
+	
 	/**
 	 * Validation for PmUser
 	 * 
@@ -3367,11 +2864,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (StringUtils.isBlank(pmUser.getPreferredLanguage())) {
 				throw new EpException(MessageConst.ERROR_770046);
 			}
-
-			// if (pmUser.getNotifyRemovalDay() == null
-			// || pmUser.getNotifyRemovalDay() <= 0) {
-			// throw new EpException(MessageConst.ERROR_770047);
-			// }
 		}
 	}
 
@@ -3398,14 +2890,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		String oldDesignation = user.getDesignation();
 		String newDesignation = userOrg.getDesignation();
-		if (oldDesignation != null && !oldDesignation.equalsIgnoreCase(newDesignation)) {// if
-																							// designation
-																							// was
-																							// modified
+		if (oldDesignation != null && !oldDesignation.equalsIgnoreCase(newDesignation)) {//if designation was modified
 			logger.info("oldDesignation : " + oldDesignation);
 			logger.info("newDesignation : " + newDesignation);
 			isProfileDetailsChanged = true;
-
 		}
 		String oldEmail = user.getEmail();
 		String newEmail = userOrg.getEmail();
@@ -3594,7 +3082,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		IUserSO userSO = null;
 		PmUser user = null;
 		PmUserOrg userOrg = null;
-		// boolean addressEntered = false;
 		boolean isNewUser = this.getManagedBean().getSelectedUser().isBrandNew();
 		logger.info("..............saveUserProfile.................isNewUser=" + isNewUser);
 
@@ -3615,10 +3102,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				//Redmine Bug #32423 & #32032 - END
 			}
 			validateUser(user, userOrg);
-			// addressEntered = validateUserAddress(this.getManagedBean()
-			// .getUserAddress());
-			// validateResponsibleOrg(user);
-			// oneActiveResponsibleOrg(user);
 			validatePreference(user);
 			validateRoles(userOrg);
 
@@ -3627,32 +3110,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			reqDTO.setServerPort(getFacesScopes().getRequest().getServerPort());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 
-			/*
-			 * no need check as assumed user have logged in
-			 * if(!StringUtils.isBlank(user.getConfirmPassword()) &&
-			 * !StringUtils.isBlank(user.getPassword())){
-			 * //!StringUtils.isBlank(user.getOldPassword()) && isChangePwd =
-			 * true; }
-			 * 
-			 * 
-			 * if(isChangePwd){ if(!checkOldPassword(user)){ throw new
-			 * EpException("Old Password is invalid."); } }
-			 */
-			// if (this.getManagedBean().getSelectedUser().isOrgAddress()) {
-			// cloneUserAddress(user);
-			// } else {
-			// loadUserAddress(user, addressEntered);
-			// }
-
 			loadUserOrgType(user, userOrg);
-			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();// always
-																		// will
-																		// have
-																		// one
-																		// org
-																		// for
-																		// each
-																		// user
+			List<PmUserOrg> userOrgList = new ArrayList<PmUserOrg>();//always will have one org for each user
 			
 			// Bug #26766 - START
 			Long loginSessionUserId = 1L;
@@ -3768,13 +3227,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.setSupplierUser(true);
 			}
 			
-			// #36489 - Start
-			if (ParameterConst.ORG_TYPE_PTJ.equals(user.getOrgTypeCode().getParameterCode())
-					&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller()
+			//#36489 - Start
+			if (validateUserOrgProfileAndStatus()
+					&& ParameterConst.ORG_TYPE_PTJ.equals(user.getOrgTypeCode().getParameterCode())
 					&& this.getManagedBean().isSuppGovSellerUser()) {
 				reqDTO.setSuppGovSeller(true);
 			}
-			// #36489 - End
+			//#36489 - End
 			
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
@@ -3782,10 +3241,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 				uploadAttachments();
 				deleteAttachments();
-				/*
-				 * if(user.getPortrait()!=null){
-				 * uploadPortrait(resDTO.getPmUser()); }
-				 */
+
 				if (!isNewUser) {
 					if (!userOrg.isBrandNew()) {
 						loadUserProfile(resDTO.getPmUser().getUserId(), userOrg.getUserOrgId());
@@ -3825,8 +3281,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-			// throw new EpException(MessageConst.ERROR_770059, new
-			// String[]{e.getMessage(),e.getMessage()});
 		} finally {
 			userSO = null;
 		}
@@ -4110,14 +3564,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
 
-						// loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser().setHasActiveOrg(true);
 						PmOrgProfile orgProfile = pmUserOrgs.get(0).getPmOrgProfile();
-						// logger.info("orgProfile.getPmFinancialOrg().getFinOrgName()="+orgProfile.getPmFinancialOrg().getFinOrgName());
 						if (orgProfile.getOrgName() == null || orgProfile.getOrgCode() == null) {
 							String param1 = null;
-							// logger.info("orgProfile.getOrgTypeCode().getParameterCode()="+orgProfile.getOrgTypeCode().getParameterCode());
 							if (orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode()
 									.getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
 								param1 = orgProfile.getSmSupplier().getCompanyName();
@@ -4127,8 +3578,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								param1 = orgProfile.getPmFinancialOrg().getFinOrgName();
 
 							}
-							// logger.info("param1="+param1);
-
 							throw new EpException(MessageConst.ERROR_770215, new String[] { param1 });
 						}
 						throw new EpException(MessageConst.ERROR_770155,
@@ -4219,14 +3668,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
 
-						// loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser().setHasActiveOrg(true);
 						PmOrgProfile orgProfile = pmUserOrgs.get(0).getPmOrgProfile();
-						// logger.info("orgProfile.getPmFinancialOrg().getFinOrgName()="+orgProfile.getPmFinancialOrg().getFinOrgName());
 						if (orgProfile.getOrgName() == null || orgProfile.getOrgCode() == null) {
 							String param1 = null;
-							// logger.info("orgProfile.getOrgTypeCode().getParameterCode()="+orgProfile.getOrgTypeCode().getParameterCode());
 							if (orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode()
 									.getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
 								param1 = orgProfile.getSmSupplier().getCompanyName();
@@ -4236,8 +3682,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								param1 = orgProfile.getPmFinancialOrg().getFinOrgName();
 
 							}
-							// logger.info("param1="+param1);
-
 							throw new EpException(MessageConst.ERROR_770215, new String[] { param1 });
 						}
 						throw new EpException(MessageConst.ERROR_770155,
@@ -4363,401 +3807,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	//Bug #31509 - Start 
 
-	/*
-	 * private boolean checkOldPassword(PmUser pmUser) throws PortalException,
-	 * SystemException{ logger.info("checkOldPassword"); boolean result = false;
-	 * long status = 0; long companyId =
-	 * Long.parseLong(EpPropertiesUtils.getInstance
-	 * ().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID)); String loginId =
-	 * pmUser.getLoginId(); String pwd = pmUser.getOldPassword();
-	 * logger.info("loginId: " + loginId); logger.info("pwd: " + pwd);
-	 * logger.info("companyId: " + companyId); status =
-	 * UserLocalServiceUtil.authenticateForBasic(companyId,
-	 * CompanyConstants.AUTH_TYPE_SN, loginId, pwd); if(status>0){ result =
-	 * true; } return result; }
-	 */
-
-	// /**
-	// * delete portrait
-	// * @throws Exception
-	// */
-	// public void deletePortrait() throws Exception{
-	// logger.info("deletePortrait - START");
-	// this.getManagedBean().getSelectedUser().setPortrait(null);
-	// this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-	// this.getManagedBean().setDeletePortrait(true);
-	// logger.info("deletePortrait - END");
-	// }
-	//
-	//
-	//
-	//
-
-	// /**
-	// * fix the remote updatePortrait
-	// * @param pmUser
-	// * @throws Exception
-	// */
-	// private void uploadPortrait(PmUser pmUser) throws Exception{
-	// logger.info("uploadPortrait - START");
-	// long imageMaxSize =
-	// PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-	// long companyId =
-	// Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-	// byte[] bytes = pmUser.getPortrait();
-	// long userId;
-	// logger.info("imageMaxSize: " + imageMaxSize);
-	// logger.info("companyId: " + companyId);
-	// logger.info("bytes: " + bytes);
-	// logger.info("pmUser.getLoginId(): " + pmUser.getLoginId());
-	// if(bytes!=null){
-	// User user = UserServiceUtil.getUserByScreenName(companyId,
-	// pmUser.getLoginId());
-	// if(user!=null){
-	// logger.info("user id" + user.getUserId());
-	// }else{
-	// logger.info("user null");
-	// }
-	// userId = user.getUserId();
-	// logger.info("userId: " + userId);
-	// UserServiceUtil.updatePortrait(user.getUserId(), bytes);
-	// }
-	// logger.info("uploadPortrait - END");
-	// }
-	//
-	// /**
-	// * Get user portrait
-	// * @param event
-	// * @throws Exception
-	// */
-	// public void handleFileUpload1() throws Exception{
-	// try{
-	// logger.info("handleFileUpload - START - UserServiceUtil");
-	// byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
-	// long imageMaxSize =
-	// PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-	// logger.info("size = " + imageMaxSize);
-	// logger.info("bytes.length = " + bytes.length);
-	// logger.info("screen name = " +
-	// this.getManagedBean().getSelectedUser().getLoginId());
-	// logger.info("identity no = " +
-	// this.getManagedBean().getSelectedUser().getIdentificationNo());
-	// String screenName =
-	// this.getManagedBean().getSelectedUser().getLoginId()==null
-	// ? this.getManagedBean().getSelectedUser().getIdentificationNo()
-	// : this.getManagedBean().getSelectedUser().getLoginId();
-	// long companyId =
-	// Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-	// User user = UserServiceUtil.getUserByScreenName(companyId , screenName);
-	// if(user!=null){
-	// logger.info("user id" + user.getUserId());
-	// }else{
-	// logger.info("user null");
-	// }
-	// long userId = user.getUserId();
-	// UserServiceUtil.updatePortrait(userId, bytes);
-	// }catch(Exception e){
-	// e.printStackTrace();
-	// throw e;
-	// }
-	// logger.info("handleFileUpload - END");
-	// }
-	//
-	// /**
-	// * Get user portrait
-	// * @param event
-	// * @throws Exception
-	// */
-	// public void handleFileUpload2() throws Exception{
-	// logger.info("handleFileUpload2 - START - Remote");
-	// byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
-	// long imageMaxSize =
-	// PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-	// logger.info("size = " + imageMaxSize);
-	// logger.info("bytes.length = " + bytes.length);
-	// logger.info("screen name = " +
-	// this.getManagedBean().getSelectedUser().getLoginId());
-	// logger.info("identity no = " +
-	// this.getManagedBean().getSelectedUser().getIdentificationNo());
-	//
-	// IUserSO userSO = null;
-	// UserReqDTO reqDTO = new UserReqDTO();
-	// try {
-	// PmUser pmUser = this.getManagedBean().getSelectedUser();
-	// reqDTO.setPmUser(pmUser);
-	// userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-	// ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	// UserResDTO resDTO = userSO.updatePortrait(reqDTO); //saveuser2
-	// if(resDTO!=null && resDTO.isSuccessful()){
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_INFO,
-	// null, "Delete Portrait Successfull for Login ID: "
-	// + resDTO.getPmUser().getLoginId()));
-	//
-	// }
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-	// e.getMessage()));
-	// } finally {
-	// userSO = null;
-	// }
-	// logger.info("handleFileUpload - END");
-	// }
-	//
-
-	//
-	//
-	// // to create new profiles into database
-	// public void createNewProfiles(PmUser user) {
-	//
-	// IUserSO userSO;
-	// user.getOrgTypeCode().setParameterId(166L);
-	// try {
-	// userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-	// ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	// UserReqDTO reqDTO = new UserReqDTO();
-	// reqDTO.setPmUser(this.getManagedBean().getUser());
-	//
-	// UserResDTO resDTO = userSO.saveMyProfile(reqDTO);
-	//
-	// if (resDTO.isSuccessful()) {
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_INFO,
-	// "Record save successfully", "User ID: "
-	// + resDTO.getPmUser().getUserId()));
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-	// e.getMessage()));
-	// } finally {
-	// userSO = null;
-	// }
-	// }
-	/*
-	 * // to add roles names datatables public void addRolesNames() {
-	 * 
-	 * // getManagedBean().setSelectedRolesList(new PmRoleDesc());
-	 * 
-	 * // getManagedBean().getSelectedRolesList().setPmRole( //
-	 * getManagedBean().getRoles());
-	 * 
-	 * }
-	 * 
-	 * 
-	 * 
-	 * public void addSelectedRole() { debugLogger("addSelectedRole");
-	 * List<PmRoleDesc> roledescList = this.getManagedBean()
-	 * .getSelectedUserRole(); if (roledescList == null) { roledescList = new
-	 * ArrayList<PmRoleDesc>(); } PmRoleDesc roledesc = new PmRoleDesc();
-	 * this.getManagedBean().setSelectUserRole(roledesc);
-	 * getManagedBean().setSelectedUserRole(roledescList); }
-	 * 
-	 * public void acceptRoleListAction() { debugLogger("acceptRoleListAction");
-	 * 
-	 * List<PmRoleDesc> roleList = getManagedBean() .getSelectedUserRole();
-	 * 
-	 * if (null == roleList) { roleList = new ArrayList<PmRoleDesc>(); }
-	 * 
-	 * 
-	 * PmRoleDesc name = new PmRoleDesc();
-	 * name.setRoleName(getManagedBean().getSelectUserRole() .getRoleName());
-	 * 
-	 * roleList.add(name);
-	 * 
-	 * }
-	 * 
-	 * public void addRecevingAddress() { debugLogger("addRecevingAddress");
-	 * List<PmAddressType> addressTypeList = this.getManagedBean()
-	 * .getPmRecevingAddressList(); if (addressTypeList == null) {
-	 * addressTypeList = new ArrayList<PmAddressType>(); } PmAddressType
-	 * addressname = new PmAddressType();
-	 * this.getManagedBean().setSelectRecevingAddress(addressname);
-	 * getManagedBean().setPmRecevingAddressList(addressTypeList); }
-	 */
-
-	// logger.info("handleFileUploadTest - start");
-	// UploadedFile item = event.getFile();
-	//
-	// logger.info("login ID: " +
-	// this.getManagedBean().getSelectedUser().getLoginId());
-	// logger.info("username: " +
-	// this.getManagedBean().getSelectedUser().getUserName());
-	//
-	// this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
-	//
-	// logger.info("login ID: " +
-	// this.getManagedBean().getSelectedUser().getLoginId());
-	// logger.info("username: " +
-	// this.getManagedBean().getSelectedUser().getUserName());
-	// IUserSO userSO = null;
-	// try {
-	// userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-	// ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	// UserReqDTO reqDTO = new UserReqDTO();
-	// reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
-	//
-	// UserResDTO resDTO = userSO.updatePortrait(reqDTO);
-	//
-	// if (resDTO.isSuccessful()) {
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_INFO,
-	// null, "Record save successfully for Login ID: "
-	// + resDTO.getPmUser().getLoginId()));
-	// this.preLoadingUserProfile();
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-	// e.getMessage()));
-	// } finally {
-	// userSO = null;
-	// }
-	//
-	// FacesMessage msg = new FacesMessage("Succesful", event.getFile()
-	// .getFileName() + " is uploaded.");
-	// FacesContext.getCurrentInstance().addMessage(null, msg);
-	//
-	// logger.info("handleFileUploadTest - end");
-	// }
-
-	// private List<PmRoleDesc> getChildRoles(String parentCode){
-	// List<PmRoleDesc> childList = new ArrayList<PmRoleDesc>();
-	// try{
-	// if(parentCode!=null){
-	// RoleReqDTO roleReqDTO = new RoleReqDTO();
-	// roleReqDTO.setParentRole(parentCode);
-	// roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-	// IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
-	// ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
-	// RoleResDTO resDto = roleSO.searchRoleNameList(roleReqDTO);
-	// if(resDto!=null && resDto.isSuccessful()){
-	// childList = resDto.getRoleList();
-	// }
-	//
-	// }
-	// }catch(Exception e){
-	// e.printStackTrace();
-	// }
-	// return childList;
-	// }
-	//
-
-	/*
-	 * private void dummyUser(PmUser pmUser){ logger.info("dummyUser");
-	 * 
-	 * //dummy a role here if(!pmUser.isBrandNew()){
-	 * logger.info("dummy user not brand new ");
-	 * if(pmUser.getPmUserOrgs()==null){
-	 * logger.info("dummy user empty pmUserOrgs"); pmUser.setPmUserOrgs(new
-	 * ArrayList<PmUserOrg>()); //pmUserOrg PmUserOrg pmUserOrg = new
-	 * PmUserOrg();
-	 * 
-	 * 
-	 * //pmUserOrg.pmOrgProfile PmOrgProfile pmOrgProfile = new PmOrgProfile();
-	 * pmOrgProfile.setOrgProfileId(1L);
-	 * 
-	 * //pmOrgProfile.orgTypeCode PmParameter pmParameter = new PmParameter();
-	 * pmParameter.setParameterId(166L);
-	 * pmOrgProfile.setOrgTypeCode(pmParameter);
-	 * pmOrgProfile.setBrandNew(false); pmUserOrg.setPmOrgProfile(pmOrgProfile);
-	 * 
-	 * //pmUserOrg.pmUserRole.pmRole PmRole pmRole = new PmRole();
-	 * pmRole.setRoleCode("BUDGET_APPROVER");
-	 * 
-	 * PmRole pmRole2 = new PmRole(); pmRole2.setRoleCode("CD_OFFICER");
-	 * 
-	 * //pmUserOrg.pmUserRole PmUserRole pmUserRole = new PmUserRole();
-	 * pmUserRole.setPmRole(pmRole);
-	 * 
-	 * PmUserRole pmUserRole2 = new PmUserRole();
-	 * pmUserRole2.setPmRole(pmRole2);
-	 * 
-	 * pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
-	 * 
-	 * pmUserOrg.addPmUserRole(pmUserRole);
-	 * pmUserOrg.addPmUserRole(pmUserRole2);
-	 * 
-	 * pmUser.addPmUserOrg(pmUserOrg);
-	 * 
-	 * 
-	 * }else{ //ADD PmUserOrg tempUserOrg = pmUser.getPmUserOrgs().get(0);
-	 * PmUserRole pmUserRole = new PmUserRole(); //pmUserOrg.pmUserRole.pmRole
-	 * PmRole pmRole = new PmRole(); pmRole.setRoleCode("CD_COMMITTEE");
-	 * pmUserRole.setPmRole(pmRole); tempUserOrg.setPmUserRoles(new
-	 * ArrayList<PmUserRole>()); tempUserOrg.addPmUserRole(pmUserRole);
-	 * 
-	 * }
-	 * 
-	 * }else{ pmUser.getSalutationCode().setSalutationId(454L);
-	 * pmUser.getIdentificationCode().setParameterId(70L);
-	 * pmUser.setLoginId(pmUser.getIdentificationNo());
-	 * pmUser.setDesignation("test"); pmUser.setGrade("test");
-	 * pmUser.setFaxNo("1234567890"); pmUser.setMobileNo("1234567890");
-	 * pmUser.setPhoneNo("1234567890"); pmUser.setEmail(pmUser.getUserName() +
-	 * "@test.com"); pmUser.getOrgTypeCode().setParameterId(166L);
-	 * 
-	 * pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>()); //pmUserOrg PmUserOrg
-	 * pmUserOrg = new PmUserOrg();
-	 * 
-	 * 
-	 * //pmUserOrg.pmOrgProfile PmOrgProfile pmOrgProfile = new PmOrgProfile();
-	 * pmOrgProfile.setOrgProfileId(1L);
-	 * 
-	 * //pmOrgProfile.orgTypeCode PmParameter pmParameter = new PmParameter();
-	 * pmParameter.setParameterId(166L);
-	 * pmOrgProfile.setOrgTypeCode(pmParameter);
-	 * pmOrgProfile.setBrandNew(false); pmUserOrg.setPmOrgProfile(pmOrgProfile);
-	 * pmUserOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
-	 * //pmUserOrg.pmUserRole.pmRole PmRole pmRole1 = new PmRole();
-	 * pmRole1.setRoleCode("BUDGET_APPROVER");
-	 * 
-	 * PmRole pmRole2 = new PmRole(); pmRole2.setRoleCode("CD_OFFICER");
-	 * 
-	 * //pmUserOrg.pmUserRole PmUserRole pmUserRole1 = new PmUserRole();
-	 * pmUserRole1.setPmRole(pmRole1);
-	 * 
-	 * PmUserRole pmUserRole2 = new PmUserRole();
-	 * pmUserRole2.setPmRole(pmRole2);
-	 * 
-	 * pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
-	 * 
-	 * pmUserOrg.addPmUserRole(pmUserRole1);
-	 * pmUserOrg.addPmUserRole(pmUserRole2);
-	 * 
-	 * pmUser.addPmUserOrg(pmUserOrg);
-	 * 
-	 * }
-	 * 
-	 * 
-	 * }
-	 * 
-	 * 
-	 * private void dummyTestUpdateRole(UserReqDTO reqDTO){ //ADD List
-	 * <PmUserRole> newUserRoles = new ArrayList<PmUserRole>(); PmUserRole
-	 * pmUserRole1 = new PmUserRole(); PmRole pmRole1 = new PmRole();
-	 * pmRole1.setRoleCode("CD_COMMITTEE"); pmUserRole1.setPmRole(pmRole1);
-	 * newUserRoles.add(pmUserRole1);
-	 * 
-	 * List <PmUserRole> delUserRoles = new ArrayList<PmUserRole>(); PmUserRole
-	 * pmUserRole2 = new PmUserRole(); PmRole pmRole2 = new PmRole();
-	 * pmRole2.setRoleCode("BUDGET_APPROVER"); pmUserRole2.setPmRole(pmRole2);
-	 * delUserRoles.add(pmUserRole2);
-	 * 
-	 * reqDTO.setNewRoleList(newUserRoles);
-	 * reqDTO.setRemoveRoleList(delUserRoles); }
-	 */
 	/**
 	 * The method used for generating a list of available display type of org
 	 * type as selection.
@@ -4772,20 +3821,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			searchBean = getUserOrgTypeObjectSearchBean("somOtherOrgType");
 		}
 
-		// if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-		// || getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value()))
-		// {
-		// if (this.getManagedBean().getCurrentActiveOrg() != null) {
-		// SearchFilterBean orgTypeBean = new SearchFilterBean();
-		// orgTypeBean
-		// .setSearchOperator(SearchOperator.OPERATOR_EQUALS
-		// .value());
-		// orgTypeBean.setSearchField("pmParameter.parameterCode");
-		// orgTypeBean.setSearchValue(this.getManagedBean()
-		// .getCurrentActiveOrg().getOrgCode());
-		// searchBean.getDataFilterBeans().add(orgTypeBean);
-		// }
-		// }
 		SelectItem[] items = null;
 		if (searchBean != null) {
 			searchBean.getSortColumns();
@@ -4815,21 +3850,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				searchBean.getDataFilterBeans().add(bean);
 			}
 		}
-
-		// if (getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-		// || getFacesScopes().hasRoleUser(RoleCode.PROCUREMENT_ADMIN.value()))
-		// {
-		// if (this.getManagedBean().getCurrentActiveOrg() != null) {
-		// SearchFilterBean orgTypeBean = new SearchFilterBean();
-		// orgTypeBean
-		// .setSearchOperator(SearchOperator.OPERATOR_EQUALS
-		// .value());
-		// orgTypeBean.setSearchField("pmParameter.parameterCode");
-		// orgTypeBean.setSearchValue(this.getManagedBean()
-		// .getCurrentActiveOrg().getOrgCode());
-		// searchBean.getDataFilterBeans().add(orgTypeBean);
-		// }
-		// }
 
 		SelectItem[] items = null;
 		if (searchBean != null) {
@@ -4873,16 +3893,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return orgName;
 	}
 
-	// public void deleteUserRole(int rowIndex) {
-	// List<PmUserRole> userRoles =
-	// getManagedBean().getSelectedUserOrg().getPmUserRoles();
-	// PmUserRole removeUserRole = userRoles.get(rowIndex);
-	// userRoles.remove(removeUserRole);
-	// getManagedBean().getSelectedUserOrg().setPmUserRoles(userRoles);
-	// updateReceivingAddressFlag();
-	// getManagedBean().setRoleTabActiveIndex(0);
-	// }
-
 	public void deleteUserRole() {
 		List<PmUserRole> userRoles = getManagedBean().getSelectedUserOrg().getPmUserRoles();
 		PmUserRole removeUserRole = getManagedBean().getSelectedDeleteUserRole();
@@ -4891,16 +3901,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		updateReceivingAddressFlag();
 		getManagedBean().setRoleTabActiveIndex(0);
 	}
-
-	// public void deleteUserReceivingAddr(int rowIndex){
-	// List<PmAddressType> addressTypes =
-	// getManagedBean().getSelectedReceivingAddrTypes();
-	// PmAddressType removeAddressType = addressTypes.get(rowIndex);
-	// addressTypes.remove(removeAddressType);
-	// getManagedBean().setSelectedReceivingAddrTypes(addressTypes);
-	// updateReceivingAddressFlag();
-	// getManagedBean().setRoleTabActiveIndex(1);
-	// }
 
 	public void deleteUserReceivingAddr() {
 		List<PmAddressType> addressTypes = getManagedBean().getSelectedReceivingAddrTypes();
@@ -5276,7 +4276,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	// #35769 - End // fixing null pointer after inactive user
 	
-	// #36489 - Start
+	//#36489 and SonarLint Fixing - Start
 	/**
 	 * Check if user active at Supplier User Appointment in Org Profile
 	 * Maintenance
@@ -5300,6 +4300,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if (this.getManagedBean().getSelectedUser().getIdentificationNo()
 						.compareToIgnoreCase(user.getIdentificationNo()) == 0) {
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					this.getManagedBean().setSuppGovSellerUser(false);
 					throw new EpException(MessageConst.ERROR_775219);
 				}
 			}
@@ -5343,14 +4344,150 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
-	private boolean isCheckUserOrg() {
+	private boolean validateUserOrg() {
 		return this.getManagedBean().getSelectedUserOrg() != null
 				&& this.getManagedBean().getSelectedUserOrg().getUserOrgId() != null;
 	}
 
-	private List<PmUserRole> isCheckUserOrgandRole() {
+	private List<PmUserRole> validateUserOrgandRole() {
 		return this.getManagedBean().getSelectedUserOrg() != null ? this.getManagedBean().getSelectedUserOrg()
 				.getPmUserRoles() : null;
 	}
-	// #36489 - End
+
+	private boolean validateUserOrgProfileAndStatus() {
+		return DbValueConst.RECORD_STATUS_ACTIVE != this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg()
+				&& this.getManagedBean().getPmUserOrgOriginal() != null
+				&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile() != null
+				&& this.getManagedBean().getPmUserOrgOriginal().getPmOrgProfile().isGovtSeller();
+	}
+	
+	/**
+	 * Validation for PmUser's fields
+	 * 
+	 * @param user
+	 * @param pmUserOrg
+	 */
+	private void validateUser(PmUser user, PmUserOrg pmUserOrg) {
+	    logger.info("validateUser");
+
+	    validateBasicUserDetails(user);
+	    validateIdentification(user);
+	    validateEmailAndNotificationPreferences(user, pmUserOrg);
+	    validateOrgProfile(pmUserOrg);
+	    validateExistingUserOrg(user, pmUserOrg);
+
+	    if (validateUserOrgProfileAndStatus()) {
+	        checkIsActiveGovtSellerUser();
+	    }
+	}
+	
+	private void validateBasicUserDetails(PmUser user) {
+		if (StringUtils.isBlank(user.getLoginId())) {
+			throw new EpException(MessageConst.ERROR_770030);
+		}
+		if (user.getSalutationCode().getSalutationId() == null) {
+			throw new EpException(MessageConst.ERROR_770031);
+		}
+		if (StringUtils.isBlank(user.getUserName())) {
+			throw new EpException(MessageConst.ERROR_770032);
+		}
+	}
+
+	private void validateIdentification(PmUser user) {
+		if (StringUtils.isBlank(user.getIdentificationCode().getParameterCode())) {
+			throw new EpException(MessageConst.ERROR_770033);
+		}
+		if (StringUtils.isBlank(user.getIdentificationNo())) {
+			throw new EpException(MessageConst.ERROR_770034);
+		}
+	}
+
+	private void validateEmailAndNotificationPreferences(PmUser user, PmUserOrg pmUserOrg) {
+		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
+			throw new EpException(MessageConst.ERROR_770036);
+		}
+
+		if (user.isNotifyBySms()) {
+			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+				throw new EpException(MessageConst.ERROR_770090);
+			}
+			if (pmUserOrg.getMobileTelcoId() == null) {
+				throw new EpException(MessageConst.ERROR_770250);
+			}
+		}
+	}
+
+	private void validateOrgProfile(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+
+		String orgType = pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode();
+		if (ParameterConst.ORG_TYPE_FACTORING.equals(orgType)) {
+			validateFactoringOrg(pmUserOrg);
+		} else if (ParameterConst.ORG_TYPE_SUPPLIER.equals(orgType)) {
+			validateSupplierOrg(pmUserOrg);
+		} else {
+			validateOtherOrg(pmUserOrg);
+		}
+
+		if (!ParameterConst.ORG_TYPE_SUPPLIER.equals(orgType) && StringUtils.isBlank(pmUserOrg.getDesignation())) {
+			throw new EpException(MessageConst.ERROR_770108);
+		}
+	}
+
+	private void validateFactoringOrg(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile().getPmFinancialOrg() == null
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmFinancialOrg().getFinOrgName())) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+	}
+
+	private void validateSupplierOrg(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile().getSmSupplier() == null
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getCompanyName())
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getSmSupplier().getRegNo())) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+	}
+
+	private void validateOtherOrg(PmUserOrg pmUserOrg) {
+		if (pmUserOrg.getPmOrgProfile().getPmOrgValidity() == null
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode())
+				|| StringUtils.isBlank(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName())) {
+			throw new EpException(MessageConst.ERROR_770175);
+		}
+	}
+
+	private void validateExistingUserOrg(PmUser user, PmUserOrg pmUserOrg) {
+		if (user.getUserId() != null && DbValueConst.RECORD_STATUS_ACTIVE == pmUserOrg.getRecordStatusFlg()) {
+			// validate if the user contains any active user orgs (exclude supplier type and own org profile)
+			IUserSO userSO = null;
+			try {
+				UserReqDTO userOrgReqDTO = new UserReqDTO();
+				userOrgReqDTO.setUserId(user.getUserId());
+				userOrgReqDTO.setExcludeOrgType(OrganizationType.SUPPLIER.value());
+				userOrgReqDTO.setUserOrgChecking(true);
+
+				if (!pmUserOrg.isBrandNew() && pmUserOrg.getUserOrgId() != null) {
+					userOrgReqDTO.setUserOrgId(pmUserOrg.getUserOrgId());
+					userOrgReqDTO.setExcludeOrgProfileId(pmUserOrg.getPmOrgProfile().getOrgProfileId());
+				}
+
+				userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+				UserResDTO resDTO = userSO.retrieveAllUserOrgListByUserId(userOrgReqDTO);
+
+				if (resDTO.getUserOrgList() != null && !resDTO.getUserOrgList().isEmpty()) {
+					PmOrgProfile orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+					throw new EpException(MessageConst.ERROR_770155, new String[] { orgProfile.getOrgName(),
+							orgProfile.getOrgCode() });
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+						"ProfileManagementBackingBean.validateExistingUserOrg", null, e);
+			}
+		}
+	}
+	//#36489 and SonarLint Fixing - End
 }
