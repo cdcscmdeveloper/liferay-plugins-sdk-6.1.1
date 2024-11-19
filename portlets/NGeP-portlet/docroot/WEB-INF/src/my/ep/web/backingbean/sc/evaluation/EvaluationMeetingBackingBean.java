@@ -55,6 +55,7 @@ import my.ep.constant.sc.QTAuditConstant;
 import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -2117,14 +2118,14 @@ public class EvaluationMeetingBackingBean extends
 		EvaluationBackingBean evalBB = this.getManagedBean().getEvalBB();
 		String mainPage = evalBB != null ? "/xhtml/sc/evaluation/evaluationMain.xhtml?faces-redirect=true"
 				: "/xhtml/sc/confirmMeeting/confirmMeetingView.xhtml?faces-redirect=true";
-		if ("back".equalsIgnoreCase(action)) {
+		if (CommonConstants.ACTION_BACK.equalsIgnoreCase(action)) {
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
-		} else if ("update".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_UPDATE.equalsIgnoreCase(action)) {
 			updateAction();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "/xhtml/sc/confirmMeeting/memberUpdate.xhtml");
-		} else if ("confirm".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_CONFIRM.equalsIgnoreCase(action)) {
 			this.getManagedBean().setCommitteeModified(true);
 			if (evalBB != null) {
 				confirmAction();
@@ -2334,8 +2335,9 @@ public class EvaluationMeetingBackingBean extends
 			checkCommitteeFormation(meetingReqDTO);
 			boolean modified = isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity())
 					&& this.getManagedBean().isValidFor25037();
-			if (!modified)
+			if (!modified) {
 				return;
+			}
 			evalBB.submitCommitteeUpdate();
 		} else {
 			submitMettingDetails(outcome);
@@ -2349,7 +2351,7 @@ public class EvaluationMeetingBackingBean extends
 	 * Determine the popup that should appear upon submission.
 	 */
 	public void resolveSubmitMeetingDialog() {
-		if (isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity())) {
+		if (isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()) && this.getManagedBean().isValidFor25037()) {
 			RequestContext.getCurrentInstance().execute("confirmSubmitToApproverPopup.show();");
 		} else {
 			RequestContext.getCurrentInstance().execute("confirmSubmitMeetingPopup.show();");
@@ -2436,12 +2438,16 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
-			List<AuditTrailReqDTO> newCommitteeList = insertCommitteeAuditTrail(auditResDTO,newCommitteeMembers
-					,QTAuditConstant.AU_TYPE_CREATE,qtAuditTrailSO);
-			List<AuditTrailReqDTO> deleteCommitteeList = insertCommitteeAuditTrail(auditResDTO,deletedCommitteeMembers
-					,QTAuditConstant.AU_TYPE_DELETE,qtAuditTrailSO);		
-			auditReqList.addAll(newCommitteeList);
-			auditReqList.addAll(deleteCommitteeList);
+			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
+				List<AuditTrailReqDTO> newCommitteeList = insertCommitteeAuditTrail(auditResDTO,newCommitteeMembers
+						,QTAuditConstant.AU_TYPE_CREATE,qtAuditTrailSO);
+				auditReqList.addAll(newCommitteeList);
+			}
+			if (CollectionUtils.isNotEmpty(deletedCommitteeMembers)) {
+				List<AuditTrailReqDTO> deleteCommitteeList = insertCommitteeAuditTrail(auditResDTO,deletedCommitteeMembers
+						,QTAuditConstant.AU_TYPE_DELETE,qtAuditTrailSO);
+				auditReqList.addAll(deleteCommitteeList);
+			}
 
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		}

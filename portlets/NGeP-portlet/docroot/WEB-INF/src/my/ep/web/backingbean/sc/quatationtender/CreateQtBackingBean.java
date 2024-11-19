@@ -1185,7 +1185,7 @@ public class CreateQtBackingBean extends
 			}
 			
 			//Start Reopen 9019 #note-289 remove the alert message while save
-			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+			//#35061 - remove to allow show the the panel
 				// 25729#174 start
 				//BugBug #35061 - asyrafhaziq
 				// get total indicative price threshold validation value
@@ -1201,7 +1201,7 @@ public class CreateQtBackingBean extends
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
 				// 25729#174 end
-			}
+		
 			//End Reopen 9019 #note-289 remove the alert message while save
 			
 		} finally {

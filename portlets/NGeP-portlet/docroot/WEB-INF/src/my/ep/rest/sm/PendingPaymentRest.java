@@ -31,7 +31,7 @@ public class PendingPaymentRest {
 		try {
 			PendingPaymentResDTO resDTO = SmServiceLookup.getPendingPaymentSO().retrievePendingProcess();
 			//#33948 - Start
-			resDTO = SmServiceLookup.getPendingPaymentSO().filterAndUpdateSmPendingProcess(resDTO);
+			resDTO = SmServiceLookup.getPendingPaymentSO().updateSmPendingProcessIsPickup(resDTO);
 			//#33948 - End
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
 				// #36401 - Start
@@ -42,6 +42,9 @@ public class PendingPaymentRest {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
 				} catch (Exception e) {
 					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
+					//#33948 - Start
+					smPendingProcess.setPickup(false);
+					//#33948 - End
 					smPendingProcess.setErrorMsg(e.getMessage());
 					try {
 						SmServiceLookup.getPendingPaymentSO().updateFailPending(smPendingProcess);

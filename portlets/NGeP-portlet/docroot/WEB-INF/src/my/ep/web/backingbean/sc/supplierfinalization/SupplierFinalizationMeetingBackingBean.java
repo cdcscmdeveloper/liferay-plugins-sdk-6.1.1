@@ -2018,14 +2018,14 @@ if (CollectionUtils.isNotEmpty(
 		mainPage = finalBiddingBB == null ? mainPage
 				: "/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/endorsement.xhtml";
 
-		if ("back".equalsIgnoreCase(action)) {
+		if (CommonConstants.ACTION_BACK.equalsIgnoreCase(action)) {
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
-		} else if ("update".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_UPDATE.equalsIgnoreCase(action)) {
 			updateAction();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
-		} else if ("confirm".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_CONFIRM.equalsIgnoreCase(action)) {
 			validateCommitteeChanges();
 			//28895 - 35500 start
 			List<ScCommitteeMember> newCommitteeMembers = this.getManagedBean().getNewCommitteeAuditTrailList() != null
@@ -2365,15 +2365,18 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
-
-			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
-			List<AuditTrailReqDTO> newCommitteeList = insertCommitteeAuditTrail(auditResDTO,newCommitteeMembers
-					,QTAuditConstant.AU_TYPE_CREATE,qtAuditTrailSO);
-			List<AuditTrailReqDTO> deleteCommitteeList = insertCommitteeAuditTrail(auditResDTO,deletedCommitteeMembers
-					,QTAuditConstant.AU_TYPE_DELETE,qtAuditTrailSO);								
 			
-			auditReqList.addAll(newCommitteeList);
-			auditReqList.addAll(deleteCommitteeList);
+			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
+			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
+				List<AuditTrailReqDTO> newCommitteeList = insertCommitteeAuditTrail(auditResDTO,newCommitteeMembers
+						,QTAuditConstant.AU_TYPE_CREATE,qtAuditTrailSO);
+				auditReqList.addAll(newCommitteeList);
+			}
+			if (CollectionUtils.isNotEmpty(deletedCommitteeMembers)) {
+				List<AuditTrailReqDTO> deleteCommitteeList = insertCommitteeAuditTrail(auditResDTO,deletedCommitteeMembers
+						,QTAuditConstant.AU_TYPE_DELETE,qtAuditTrailSO);
+				auditReqList.addAll(deleteCommitteeList);
+			}
 
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		}
