@@ -66,12 +66,15 @@
 				</td>
 				<td>
 					<p:inputTextarea id="tenderTitle"
-						label="#{lbl['lbl.rpt.tender.title']}" value="#{cc.attrs.bBean.managedBean.quotationTitle}" cols="110" rows="3"
+						label="#{lbl['lbl.sc.qt.epv.rpt.error.message']}" value="#{cc.attrs.bBean.managedBean.quotationTitle}" cols="110" rows="3"
 						required="#{scPropValidPeriodExtListReportBackingBean.showErrorWhenTitleAndNumberNull()}"
+						requiredMessage="#{lbl['lbl.sc.qt.epv.rpt.error.message']}"
 						onkeyup="limitTextArea(this,1000);"
 						onkeydown="limitTextArea(this,1000);"
 						onmouseout="limitTextArea(this,1000);"
 						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
+					<p:ajax event="change" process="@this" update="@form" partialSubmit="true"
+						listener="#{scPropValidPeriodExtListReportBackingBean.clearTenderTitle()}"/>
 					</p:inputTextarea>
 				</td>
 			</tr>
