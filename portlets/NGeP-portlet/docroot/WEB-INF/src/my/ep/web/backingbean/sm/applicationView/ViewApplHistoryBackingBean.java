@@ -217,6 +217,8 @@ public class ViewApplHistoryBackingBean extends
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 - AUDIT TRAIL SM
+		checkAuditAccess();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(true);
@@ -256,8 +258,6 @@ public class ViewApplHistoryBackingBean extends
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
 			getManagedBean().setDisciplinaryAction(!EntityHelper.isCollectionEmpty(resultList));	
 		} //26238 - end
-		// #28895_35501 - AUDIT TRAIL SM
-		checkAuditAccess();
 
 		SmCommonUtil.redirectToPage("/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml","", null);
 	}
@@ -2026,32 +2026,4 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END	
-	// #28895_35501 Start - AUDIT TRAIL SM
-	private void checkAuditAccess() {
-		this.getManagedBean().setAuditAccess(false);
-		if (checkFromAudit()) {
-			FacesScopes facesScopes = new FacesScopes();
-			String[] roles = { RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(), RoleCode.AUDITOR_INTERNAL.value(),
-					RoleCode.SYS_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
-			for (String role : roles) {
-				if (facesScopes.hasRoleUser(role)) {
-					this.getManagedBean().setAuditAccess(true);
-					break;
-				}
-			}
-		}
-	}
-
-	private boolean checkFromAudit() {
-		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		log.info("#28895_35501 - AUDIT TRAIL SM - Breadcrumbs : "+PortalUtil.getPortletBreadcrumbs(request));
-		return true;
-	}
-	
-	private void initAuditTab() {
-		SmAppl suppAppl = getManagedBean().getSmAppl();
-		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		auSmView.initAuditTab(suppAppl);
-	}
-	// #28895_35501 End
 }
