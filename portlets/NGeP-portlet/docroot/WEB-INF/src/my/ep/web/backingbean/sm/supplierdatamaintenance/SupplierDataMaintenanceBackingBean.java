@@ -56,7 +56,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -70,9 +69,11 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -112,12 +113,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	private static final long serialVersionUID = 3781591594455061750L;
 	//26238 - start
 	private static Map<Long, Object> identityType; 
-	private boolean gmapDisabled;
 	private static String defaultAccPurpose = "P";
 	private static String addrPermanent = "permenant";
 	private static String addrBusiness = "business";
 	private static String addrResidential = "residential";
-	//26238 - end
 	//26238 -  Disciplonary action - 28146
 	/**
 	 * Pre-render and redirect to Search Page
@@ -418,8 +417,11 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(!EntityHelper.isCollectionEmpty(getManagedBean().getOwnerAndDirectorList())){
 				reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
 			}
+			//#26238
 			List<SmTrackingDairyVO> listSmTrackingDiary = new ArrayList<>();
-			listSmTrackingDiary.add(setDisciplinaryAction(reqDTO, null));
+			if (getManagedBean().isEditDisciplinaryAction()) {
+				listSmTrackingDiary.add(setDisciplinaryAction(reqDTO, null));
+			}
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
 			//27906: Disciplinary Action - start - 
 			// set portalPath
@@ -433,8 +435,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			setBasicSupplierPostSubmit();
 			//26238 - Disciplinary Action - 28798 - end
 			
-		} catch (NullPointerException nex) {
-			throw new EpException(nex.getMessage());
+		} catch (NullPointerException e) {
+			SLAUtils.getInstance().logSLAError("SM", "basic", getManagedBean().getSmAppl().getApplNo(),
+					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
 		}
 		getManagedBean().setDisplaySearchPage(true);
 		//27437 : Disciplinary Action
@@ -537,6 +540,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			
 			// set active status for newly added category
 			setActiveStatusForNewAddedCategories();
+			reqDTO.setSupplier(getManagedBean().getSmSupplier());
 			reqDTO.setListRegCategories(getManagedBean().getSmAppl().getSmSupplierCategories());
 			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
@@ -689,15 +693,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setEditDisciplinaryAction(false);
 			setMOFSupplierPostSubmit();
 
-		} catch (OptimisticLockException opt) {
-			throw new EpException(opt.getMessage());
-		} catch (PersistenceException pers) {
-			throw new EpException(pers.getMessage());
-		} catch (NullPointerException nex) {
-			throw new EpException(nex.getMessage());
-		} catch (RuntimeException re) {
-			throw new EpException(re.getMessage());
-				}
+		} catch (RuntimeException e) {
+			SLAUtils.getInstance().logSLAError("SM", "supplier", getManagedBean().getSmAppl().getApplNo(),
+					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
+		}
 		getManagedBean().setWarningExist(false);
 		getManagedBean().setDisplaySearchPage(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -759,6 +758,30 @@ public class SupplierDataMaintenanceBackingBean extends
 		//Fix 26238 -08/04/2021- start - checking if active appl  != null
 		SmAppl appl = activeAppl != null ? activeAppl : getManagedBean().getSmAppl();
 		return assignTrackingDairyValues(appl, getTrackingActionDesc(reqDTO,"DA"));
+	}
+	
+	private void validateUpdateDisciplinaryAction(SmDisciplinaryAction da){
+		if (da.getDisciplinaryActionId() == null){
+			return;
+		}
+		SmDisciplinaryAction oldDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionByDisciplinaryId(
+				da.getDisciplinaryActionId());
+		if (oldDA == null || oldDA.getStartDate() == null || oldDA.getEndDate() == null){
+			return;
+		}
+		boolean isSameDates = oldDA.getStartDate().toString().contentEquals(da.getStartDate().toString()) 
+				&& oldDA.getEndDate().toString().contentEquals(da.getEndDate().toString());
+		boolean isSameType = getManagedBean().isWarning() == oldDA.isWarning();
+		boolean isSameRemarks = oldDA.getRemark() == da.getRemark();
+		isSameType &= getManagedBean().isSuspendRegistration() == oldDA.isSuspendRegistration();
+		isSameType &= getManagedBean().isCancelRegistration() == oldDA.isCancelRegistration();
+		isSameType &= getManagedBean().isBlacklistOwnerOrDirector() == oldDA.isBlacklistOwner();
+		isSameType &= getManagedBean().isCancelCategoryCode() == oldDA.isCancelCategory();
+		isSameType &= getManagedBean().isManufacturerStatusCancel() == oldDA.isManufacturerCancel();
+		isSameType &= getManagedBean().isBumiputeraStatusCancel() == oldDA.isBumiputeraCancel();
+		if (isSameDates && isSameType && isSameRemarks){
+			throw new EpException(MessageConst.ERROR_100045);
+		}
 	}
 	
 	//#26238 - start
@@ -1055,6 +1078,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void showConfirmDialog() {
 		//27460 : Disciplinary Action, //32827
+		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
 		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
@@ -2543,31 +2567,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 
 		return null;
-	}
-	
-	public boolean isGmapDisabled() {
-		gmapDisabled = false;
-		
-		if(getManagedBean().getSmBusinessAdd() != null){
-			SmAddress bizAddress = getManagedBean().getSmBusinessAdd();
-
-			if(bizAddress.getPmCountry() == null || bizAddress.getPmDistrict() == null || 
-					bizAddress.getPmState() == null || bizAddress.getPmCity() == null || 
-					bizAddress.getAddress1() == null ){
-					gmapDisabled = true;
-			}else{
-				if(StringUtils.isBlank(bizAddress.getAddress1()) || bizAddress.getPmCountry().getCountryId() == null ||
-						bizAddress.getPmDistrict().getDistrictId() == null || bizAddress.getPmState().getStateId() == null ||
-						bizAddress.getPmCity().getCityId() == null){
-					gmapDisabled = true;
-				}
-
-			}
-		}else{
-			gmapDisabled = true;
-		}
-
-		return gmapDisabled;
 	}
 	
 	public void initGstInfo(SmSupplier sup,

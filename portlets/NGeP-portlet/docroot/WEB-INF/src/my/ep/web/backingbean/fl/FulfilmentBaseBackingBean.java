@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
@@ -778,16 +779,31 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return true if the action is only a warning, false if otherwise actions
 	 */
 	public boolean isWarningOnly(SmDisciplinaryAction smDisciplinaryAction) {
-		Set<Boolean> actionsSet = new HashSet<>();
-		actionsSet.add(smDisciplinaryAction.isCancelCategory());
-		actionsSet.add(smDisciplinaryAction.isSuspendRegistration());
-		actionsSet.add(smDisciplinaryAction.isCancelRegistration());
-		actionsSet.add(smDisciplinaryAction.isBlacklistOwner());
-		actionsSet.add(smDisciplinaryAction.isBumiputeraCancel());
-		actionsSet.add(smDisciplinaryAction.isManufacturerCancel());
+		Set<Boolean> actionSet = new HashSet<>();
+		actionSet.add(smDisciplinaryAction.isCancelCategory());
+		actionSet.add(smDisciplinaryAction.isSuspendRegistration());
+		actionSet.add(smDisciplinaryAction.isCancelRegistration());
+		actionSet.add(smDisciplinaryAction.isBlacklistOwner());
+		actionSet.add(smDisciplinaryAction.isBumiputeraCancel());
+		actionSet.add(smDisciplinaryAction.isManufacturerCancel());
 
-		boolean isNotWarningAction = actionsSet.contains(true);
-		return !isNotWarningAction && smDisciplinaryAction.isWarning();
+		boolean isImposedAction  = actionSet.contains(true);
+		return !isImposedAction && smDisciplinaryAction.isWarning();
+	}
+	
+	/**
+	 * Sets the disciplinary action message
+	 * 
+	 * @param smDisciplinaryAction
+	 * @return warningOrDisciplinaryActionMsg
+	 */
+	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
+
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
+				language, isWarningOnly);
+
 	}
 
 	// 26279 - end
