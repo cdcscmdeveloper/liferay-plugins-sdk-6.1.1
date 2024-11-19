@@ -2764,7 +2764,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		Long statusId;
 		String orgName;
 		String auditActionType;
-		String roleCode = null;
+		String roleCode;
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 			// audit fl supplier

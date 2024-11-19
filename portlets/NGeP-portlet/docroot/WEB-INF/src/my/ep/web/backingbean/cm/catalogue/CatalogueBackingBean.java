@@ -11943,7 +11943,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			// get disicplinary action history
 			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
 
-			if (!EntityHelper.isCollectionEmpty(voList) && !voList.isEmpty()) {
+			if (!EntityHelper.isCollectionEmpty(voList)) {
 				voObj = voList.get(0);
 				log.info("[#26282] DA effective date: " + voObj.getStartDate());
 				log.info("[#26282] DA expire date: " + voObj.getEndDate());
@@ -11999,8 +11999,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if (disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
 		}
 	}
 	// [#26282] check for Disciplinary Action - End
