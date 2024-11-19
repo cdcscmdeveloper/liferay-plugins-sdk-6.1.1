@@ -3164,7 +3164,6 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 
 	// 36671 - start
 	private void loadQtDetails() {
-		String pageAppr = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
 		QTDetailBackingBean qtDetailBB = new QTDetailBackingBean();
 		qtDetailBB.editQuationTenderDetails(getManagedBean().getQt(), false);
 		qtDetailBB.getManagedBean().setAdditionalPages(null);
@@ -3207,10 +3206,10 @@ private String prepareOriginalText(SmSupplier smSupplier) {
 
 		if (isEvalCommittee || isFullTablist) {
 			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString(),
-					pageAppr);
+					QTConstants.QT_CMT_APPROVER_PANEL);
 			qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
 		} else {
-			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApproval.toString(), pageAppr);
+			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApproval.toString(), QTConstants.QT_CMT_APPROVER_PANEL);
 			qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApproval);
 		}
 
