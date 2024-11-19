@@ -3883,7 +3883,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 	// 36671 - start
 	private void loadQtDetails() {
-		String pageAppr = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
 		QTDetailBackingBean qtDetailBB = new QTDetailBackingBean();
 		qtDetailBB.editQuationTenderDetails(getManagedBean().getQt(), false);
 		qtDetailBB.getManagedBean().setAdditionalPages(null);
@@ -3926,10 +3925,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		if (isEvalCommittee || isFullTablist) {
 			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString(),
-					pageAppr);
+					QTConstants.QT_CMT_APPROVER_PANEL);
 			qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
 		} else {
-			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApproval.toString(), pageAppr);
+			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApproval.toString(), QTConstants.QT_CMT_APPROVER_PANEL);
 			qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApproval);
 		}
 

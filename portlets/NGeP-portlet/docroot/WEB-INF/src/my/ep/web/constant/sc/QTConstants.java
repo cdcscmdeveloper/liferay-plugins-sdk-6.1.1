@@ -378,4 +378,9 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "9";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "10";
 	// Bug #35688@Syazani 10/07/2024 -- End
+	
+	// 36671 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671 - end
+ 
 }
