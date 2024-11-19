@@ -772,13 +772,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		boolean isSameDates = oldDA.getStartDate().toString().contentEquals(da.getStartDate().toString()) 
 				&& oldDA.getEndDate().toString().contentEquals(da.getEndDate().toString());
 		boolean isSameType = getManagedBean().isWarning() == oldDA.isWarning();
+		boolean isSameRemarks = oldDA.getRemark() == da.getRemark();
 		isSameType &= getManagedBean().isSuspendRegistration() == oldDA.isSuspendRegistration();
 		isSameType &= getManagedBean().isCancelRegistration() == oldDA.isCancelRegistration();
 		isSameType &= getManagedBean().isBlacklistOwnerOrDirector() == oldDA.isBlacklistOwner();
 		isSameType &= getManagedBean().isCancelCategoryCode() == oldDA.isCancelCategory();
 		isSameType &= getManagedBean().isManufacturerStatusCancel() == oldDA.isManufacturerCancel();
 		isSameType &= getManagedBean().isBumiputeraStatusCancel() == oldDA.isBumiputeraCancel();
-		if (isSameDates && isSameType){
+		if (isSameDates && isSameType && isSameRemarks){
 			throw new EpException(MessageConst.ERROR_100045);
 		}
 	}
