@@ -2312,7 +2312,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
 			if(state != null){
 			if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-				
+				getManagedBean().setResidentialDistrictLs(new ArrayList<SelectItem>());//#34159
 				//#13320 - Rahim Added If Only and Else(content)
 				if(this.getManagedBean().getSmResAdd().getPmDivision()==null) {
 					getManagedBean().getSmResAdd().setPmDivision(new PmDivision());
@@ -2363,7 +2363,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
 			if(state !=null){
 				if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-					
+					getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());//#34159
 					//#13320 - Rahim Added If Only and Else(content)
 					if(this.getManagedBean().getSmPermenantAdd().getPmDivision()==null) {
 						getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
