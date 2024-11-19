@@ -72,7 +72,8 @@
 		 enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null 
+	or createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" 
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						action="#{createDOBackingBean.backAction}" /></td>
 				<h:panelGroup

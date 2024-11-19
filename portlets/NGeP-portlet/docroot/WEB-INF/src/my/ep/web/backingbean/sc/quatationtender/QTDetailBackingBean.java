@@ -920,8 +920,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 		}
@@ -1305,14 +1304,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//9019 - End (Harun)
 			
 			// #29732 Start
-			//qtmaintenance from audit search ,ADD ISREADONLY
-			//add !isdeskofficer, DO suppose not to show alert message
+			// qtmaintenance from audit search ,ADD ISREADONLY
 			if ((this.getManagedBean().getQt().getQtStatus().getStatusId()
-					.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && !isDeskOfficer() || 
-					this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
-							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) && !this.getManagedBean().isReadOnly()) {
+					.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) && !this.getManagedBean().isReadOnly()) {
 				if (isQTRoleMaintenanceValidation()) {
 					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 				}
@@ -4141,8 +4135,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 // #29732 End - reOpen Fix
@@ -4449,7 +4442,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		List<ScQtApproval> scQtApprovals = this.getManagedBean().getQt().getScQtApprovals();
 		//#30477 Start Vinod
-		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod
 			boolean isCmtPendingRevision = false;
 			
@@ -4470,10 +4464,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				boolean valConditionOthers = !approval.getApprovalCategory().getParameterCode()
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
-						&& (CollectionUtils.isEmpty(approval.getApproverSettings()) && this.getManagedBean()
-								.isFirstViewPageCAUsers());
-
-				if (valCondition || valConditionOthers) {
+						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
+				
+				if ((valCondition && approval.getApprovalCategory().getParameterCode()
+						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
+						|| valConditionOthers) {
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174);
 					// #11299 End Vinod
@@ -8026,7 +8021,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.equals(QTStatusConst.SE_COMPLETED);
 			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 			//29732
@@ -8047,8 +8042,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//end #25037
 			//28895 - 35500 start
 			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
-			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			
-			//28895 - 35500 end
+			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			//28895 - 35500 end
 			// 25037 - end
 
 			QuationTenderResDTO quationTenderResDTO = detailSO
@@ -13663,16 +13657,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	//12471 - end
-	
-	// 29732 start
-	private boolean isQTRoleMaintenanceValidation() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
-	}
-	// 29732 end
 
 	
 	/**
@@ -13680,23 +13664,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * 
 	 */
 	public void checkRolesToAuditView() {
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		if (CollectionUtils.isNotEmpty(roleDesc)) {
-			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				if (pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.EP_ADMIN.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.BPK_AUDITOR.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_INTERNAL.value())
-						|| pmRoleDesc.getPmRole().getRoleCode().equals(RoleCode.AUDITOR_GENERAL.value())) {
-					this.getManagedBean().setAuditViewRole(true);
-				}
-
-			}
+		FacesScopes facesScopes = new FacesScopes();
+		if (isQTSearchScreen()
+				&& (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value()) || facesScopes
+							.hasRoleUser(RoleCode.EP_ADMIN.value()))) {
+			this.getManagedBean().setAuditViewRole(true);
 		}
 	}
 	
@@ -14017,4 +13991,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	// 25791 -end-
+	
+	//29732 start
+    private boolean isQTRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
+	}
+    //29732 end
 }
