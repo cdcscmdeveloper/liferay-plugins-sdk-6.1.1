@@ -1659,28 +1659,48 @@ public class QTDetailBackingBean extends
 								scAddress.setPmDivision(null);
 								
 								// 11104-start
-								if (null != briefingsamplebean && null != briefingsamplebean.getDivisionId()) {
-									scAddress.setPmDivision(retrievePmDivsById(briefingsamplebean.getDivisionId()));
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getDivisionId()) {
+									scAddress
+											.setPmDivision(retrievePmDivsById(briefingsamplebean
+													.getDivisionId()));
 								}
 								// 11104-End
 							}
 							
 							// 11104-start
-							if (null != scAddress.getPmState() && scAddress.getPmState().getStateId() == null) {
-								if (null != briefingsamplebean && null != briefingsamplebean.getStateId()) {
-									scAddress.setPmState(retrievePmStateById(briefingsamplebean.getStateId()));
+							if (null != scAddress.getPmState()
+									&& scAddress.getPmState().getStateId() == null) {
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getStateId()) {
+									scAddress
+											.setPmState(retrievePmStateById(briefingsamplebean
+													.getStateId()));
 								}
 							}
 
-							if (null != scAddress.getPmDistrict() && scAddress.getPmDistrict().getDistrictId() == null) {
-								if (null != briefingsamplebean && null != briefingsamplebean.getDistrictid()) {
-									scAddress.setPmDistrict(retrievePmDistById(briefingsamplebean.getDistrictid()));
+							if (null != scAddress.getPmDistrict()
+									&& scAddress.getPmDistrict()
+											.getDistrictId() == null) {
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getDistrictid()) {
+									scAddress
+											.setPmDistrict(retrievePmDistById(briefingsamplebean
+													.getDistrictid()));
 								}
 							}
 
-							if (null != scAddress.getPmCity() && scAddress.getPmCity().getCityId() == null) {
-								if (null != briefingsamplebean && null != briefingsamplebean.getCityId()) {
-									scAddress.setPmCity(retrievePmCityById(briefingsamplebean.getCityId()));
+							if (null != scAddress.getPmCity()
+									&& scAddress.getPmCity().getCityId() == null) {
+								if (null != briefingsamplebean
+										&& null != briefingsamplebean
+												.getCityId()) {
+									scAddress
+											.setPmCity(retrievePmCityById(briefingsamplebean
+													.getCityId()));
 								}
 							}
 							// 11104-End
@@ -3428,36 +3448,8 @@ public class QTDetailBackingBean extends
 			// #25077 End
 
 			// #30477, #25426 Start
-			if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-				for (ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()) {
-					if ((committee.getScCommittee().getCommitteStatus().getStatusId()
-							.equals(QTStatusConst.CMT_PENDING_REVISION) || currentStatus
-							.equals(QTStatusConst.QT_RE_EVALUATION)) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-						for (ScQtApproval approval : this.getManagedBean().getQt().getScQtApprovals()) {
-							for (ScQtApproverSettings approverSetting : approval.getApproverSettings()) {
-								if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),
-										RoleCode.COMMITTEE_APPROVER.value())) {
-									throw new EpException(MessageConst.ERROR_775171);
-								}
-							}
-						}
-					}
-				}
-			}
-
-			if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
-				if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION) || currentStatus
-						.equals(QTStatusConst.QT_REVISION_PUBLICATION)) && outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
-					for (ScQtApproverSettings approverSetting : this.getManagedBean().getPublicationApproval().getApproverSettings()) {
-						if (isInactiveCommiteeApproverRole(approverSetting.getPmUser().getUserId(),
-								RoleCode.PUBLICATION_APPROVER.value())) {
-							this.getManagedBean().setResetBpkCurrentArea(false); //#25077
-
-							throw new EpException(MessageConst.ERROR_775172);
-						}
-					}
-				}
-			}
+			validateUserInactive(taskName, currentStatus, outcome);
+			
 			// #30477, #25426 End
 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
@@ -3635,6 +3627,156 @@ public class QTDetailBackingBean extends
 			committeSO=null;
 		}
 		return null;
+	}
+	
+	/**
+	 * #30477
+	 * To validate User Inactive
+	 * @param taskName
+	 * @param currentStatus
+	 * @param outcome
+	 */
+	public void validateUserInactive(String taskName, Long currentStatus, String outcome){
+		
+		List<ScQtApproval> scQtApprovals = this.getManagedBean().getQt().getScQtApprovals();
+		//#30477 Start Vinod
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
+			// #11299 Start Vinod
+			boolean isCmtPendingRevision = false;
+			
+			for (ScQtCommittee committee : this.getManagedBean().getQt().getScQtCommittees()) {
+				if (committee.getScCommittee().getCommitteStatus().getStatusId()
+						.equals(QTStatusConst.CMT_PENDING_REVISION)) {
+					isCmtPendingRevision = true;
+					break;
+				}
+			}
+						
+			for (ScQtApproval approval : scQtApprovals) {
+
+				boolean valCondition = (isCmtPendingRevision || currentStatus.equals(QTStatusConst.QT_RE_EVALUATION))
+						&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)
+						&& isInactiveCommiteeApproverRole(null, approval.getApproverSettings(),
+								RoleCode.COMMITTEE_APPROVER.value());
+
+				boolean valConditionOthers = !approval.getApprovalCategory().getParameterCode()
+						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
+						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
+				
+				if ((valCondition && approval.getApprovalCategory().getParameterCode()
+						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
+						|| valConditionOthers) {
+					// #11299 Start Vinod
+					throw new EpException(MessageConst.ERROR_775174);
+					// #11299 End Vinod
+				}
+			}
+		}
+			
+		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
+			// #11299 Start Vinod updated error message
+			List<ScQtApproverSettings> approverSettings = this.getManagedBean().getPublicationApproval()
+					.getApproverSettings();
+
+			if (CollectionUtils.isEmpty(approverSettings)) {
+				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+				throw new EpException(MessageConst.ERROR_775174);
+			}
+
+			if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) || currentStatus
+						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)
+					) {
+
+				validatePublicationApproverInactive(approverSettings);
+				validateDOAInactive();
+				validateBPKInactive();
+			}
+			// #11299 End Vinod
+		}	
+	}
+	
+	/**
+	 * #30477
+	 * validate DOA inactive
+	 */
+	public void validateDOAInactive() {
+		
+		List<ScQtContactPerson> scQtContactPersons = this.getManagedBean().getQt().getScQtContactPersons();
+			
+		if (scQtContactPersons == null || scQtContactPersons.isEmpty()){
+			IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+			scQtContactPersons = detailSO.retrieveContactPersonByQtIdNType(
+					this.getManagedBean().getQt().getQtId(), SourcingConstants.OFFICER_TYPE_DOAA);	
+		}
+		
+		List<Long> userIds = new ArrayList<>();
+		for (ScQtContactPerson scQtContactPerson : scQtContactPersons) {
+			if (scQtContactPerson.getOfficerType().equals(SourcingConstants.OFFICER_TYPE_DOAA)){
+				userIds.add(scQtContactPerson.getUser().getUserId());
+			}	
+		}
+
+		if (isInactiveCommiteeApproverRole(userIds, null, RoleCode.DESK_ASSISTANT.value())) {
+			String roleName = getEpRoleDescByRoleCode(RoleCode.DESK_ASSISTANT.value());
+			
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_775171, new String[] {
+					roleName},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+		}
+	}
+	
+	/**
+	 * #30477
+	 * validate BPK inactive
+	 */
+	public void validateBPKInactive() {
+		
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		
+		List<ScQtApproval> scQtApprovals = this.getManagedBean().getQt().getScQtApprovals();
+		if (detailSO.isApprovalRequired(scQtApprovals, ParameterConst.APPROVAL_CATEGORY_BPK)) {
+
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			reqDTO.setOrgType(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN.value());
+			List<PmUser> pmUsers = userSO.retrieveUserListByRole(reqDTO).getUserList();
+			List<Long> userIds = new ArrayList<>();
+			for (PmUser mUser : pmUsers) {
+				userIds.add(mUser.getUserId());
+			}
+
+			if (isInactiveCommiteeApproverRole(userIds, null, RoleCode.BPK_APPROVER.value())) {
+				String roleName = getEpRoleDescByRoleCode(RoleCode.BPK_APPROVER.value());
+				throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_775171, new String[] { roleName },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+
+			}
+		}
+	}
+	
+	/**
+	 * #30477
+	 * validate publication Approver inactive
+	 * @param approverSettings
+	 */
+	public void validatePublicationApproverInactive(List<ScQtApproverSettings> approverSettings) {
+
+		if (isInactiveCommiteeApproverRole(null, approverSettings, RoleCode.PUBLICATION_APPROVER.value())) {
+			String roleName = getEpRoleDescByRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+			this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_775171, new String[] { roleName },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
+
+		}
 	}
 
 	/**
@@ -10768,81 +10910,50 @@ public class QTDetailBackingBean extends
 	// 29464-end
 	  	
 	// #30477, #25426 - Start
-	public boolean isInactiveCommiteeApproverRole(Long userId, String approverRole) {
+  	/**
+  	 * @param userIds
+  	 * @param approverSettings
+  	 * @param approverRole
+  	 * @return
+  	 */
+  	public boolean isInactiveCommiteeApproverRole(List<Long> userIds, List<ScQtApproverSettings> approverSettings, String approverRole) {
 		IQTDetailSO detailSO = null;
-		
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTDetailSO.class);
 
-			boolean inactive = DbValueConst.FLAG_NO;
-
 			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-			PmUserOrg pmUserOrgs = new PmUserOrg();
 
-			quationTenderReqDTO.setUserId(userId);
-			
-			pmUserOrgs = detailSO.retrievePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
+			List<Long> newUserIds = new ArrayList<>();
 
-			if (pmUserOrgs != null && pmUserOrgs.getUserOrgId() != null) {
-
-				PmUserOrg pmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(userId, pmUserOrgs.getUserOrgId());
-
-				if (approverRole.equals(RoleCode.COMMITTEE_APPROVER.value())) {
-					for (PmUserRole rolesCA : pmUserOrg.getPmUserRoles()) {
-						String roleCodeCA = rolesCA.getPmRole().getRoleCode();
-						int statusFlagCA = rolesCA.getRecordStatusFlg();
-						
-						if (roleCodeCA.equals(RoleCode.COMMITTEE_APPROVER.value())
-								&& (statusFlagCA == DbValueConst.RECORD_STATUS_SUSPENDED)) {
-							inactive = DbValueConst.FLAG_YES;
-						}
-					}
-				}
-				
-				if (approverRole.equals(RoleCode.PUBLICATION_APPROVER.value())) {
-					for (PmUserRole rolesPA : pmUserOrg.getPmUserRoles()) {
-						String roleCodePA = rolesPA.getPmRole().getRoleCode();
-						
-						int statusFlagPA = rolesPA.getRecordStatusFlg();
-						
-						if (roleCodePA.equals(RoleCode.PUBLICATION_APPROVER.value())
-								&& (statusFlagPA == DbValueConst.RECORD_STATUS_SUSPENDED)) {
-							inactive = DbValueConst.FLAG_YES;
-						}
-					}
-				}
-
+			if (userIds != null) {
+				newUserIds = userIds;
 			} else {
-
-				pmUserOrgs = detailSO.retrieveInactivePmUserOrgByUserid(quationTenderReqDTO).getPmUserOrg();
-
-				if (null != pmUserOrgs && null != pmUserOrgs.getRecordStatusFlg()) {
-					int statusFlag = pmUserOrgs.getRecordStatusFlg();
-					
-					if (approverRole.equals(RoleCode.COMMITTEE_APPROVER.value())
-							&& (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)) {
-						inactive = DbValueConst.FLAG_YES;
-					}
-					if (approverRole.equals(RoleCode.PUBLICATION_APPROVER.value())
-							&& (statusFlag == DbValueConst.RECORD_STATUS_SUSPENDED)) {
-						inactive = DbValueConst.FLAG_YES;
-					}
+				for (ScQtApproverSettings approverSetting : approverSettings) {
+					newUserIds.add(approverSetting.getPmUser().getUserId());
 				}
 			}
 
-			return inactive;
+			for (Long userId : newUserIds) {
+				quationTenderReqDTO.setUserId(userId);
+				quationTenderReqDTO.setRoleCode(approverRole);
+				List<PmUserOrg> listPmUserOrgs = detailSO.retrievePmUserOrgByUseridByIdRoleCode(quationTenderReqDTO)
+						.getListPmUserOrgs();
+				if (listPmUserOrgs.isEmpty()) {
+					return true;
+				}
+			}
+
+			return false;
 
 		} finally {
-			detailSO = null;
+			// set nothing
 		}
 	}
-	// #30477, #25426 -end-
   	
-	// #30477, #25426 -start-
-	public boolean isCommitteeApprovalReviseTask(String taskName) {
-		return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
-	}
+    public boolean isCommitteeApprovalReviseTask(String taskName) {
+     	return (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName));
+    }
 	// #30477, #25426 - End
 
   	/**11104-start
@@ -10853,11 +10964,12 @@ public class QTDetailBackingBean extends
 	 * @return PmState object
 	 */
 	public static PmState retrievePmStateById(Long stateId) {
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IStateSO.class);
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setStateId(stateId);
-		
+
 		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
 
 		return resDTO.getPmState();
@@ -10873,11 +10985,12 @@ public class QTDetailBackingBean extends
 	 * @return PmCity object
 	 */
 	public static PmCity retrievePmCityById(Long cityId) {
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ICitySO.class);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
 		CityReqDTO reqDTO = new CityReqDTO();
 		reqDTO.setCityId(cityId);
-		
+
 		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
 
 		return resDTO.getPmCity();
@@ -10893,11 +11006,12 @@ public class QTDetailBackingBean extends
 	 * @return PmDistrict object
 	 */
 	public static PmDistrict retrievePmDistById(Long distId) {
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setDistrictId(distId);
-		
+
 		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
 
 		return resDTO.getPmDistrict();
@@ -10905,12 +11019,18 @@ public class QTDetailBackingBean extends
 	// 11104 -end-
 	
 	// 11104 -start-
+	/**
+	 * Retrieve pm division by id.
+	 * @param divnId
+	 * @return pmdivision.
+	 */
 	public static PmDivision retrievePmDivsById(Long divnId) {
-		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
 		DivisionReqDTO reqDTO = new DivisionReqDTO();
 		reqDTO.setDivisionId(divnId);
-		
+
 		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
 
 		return resDTO.getPmDivision();

@@ -7,34 +7,46 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel id="technicalCheckListSampleTemplateTable"
-		header="#{lbl['lbl.sc.qt.sampel.technical.panel.template.header']}" 
+		header="#{lbl['lbl.sc.qt.sampel.technical.panel.template.header']}"
 		toggleable="true">
-
-
+		<ui:remove> #11104 - start </ui:remove>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.spec.sample.spec.main.instruction']}"
+			escape="false" />
+		<ui:remove> #11104 - end </ui:remove>
 		<p:dataTable var="technicalSampletemplate"
 			id="technicalSampleTemplateTableId"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{specificationBackingBean.managedBean.sampleSpecCheckList}"
 			rowIndexVar="index" style="width:100%"
 			rowKey="#{technicalSampletemplate}">
-    
+			<ui:remove> #11104 - start </ui:remove>
+			<ui:param name="samplerequired"
+				value="#{specificationBackingBean.checkTemplateRequiredSample(technicalSampletemplate)}"></ui:param>
 
 			<p:column headerText="#{lbl['lbl.sc.qt.sampel.technical.template']}"
-				style="width:85%;white-space: normal;">
+				style="width:65%;white-space: normal;">
 				<h:outputText value="#{technicalSampletemplate.title}"></h:outputText>
 			</p:column>
-
-
-
+			<ui:remove> #11104 - end </ui:remove>
+			<ui:remove> #11104 - start </ui:remove>
+			<p:column
+				headerText="#{lbl['lbl.sc.qt.spec.sample.question.requird.sample']}"
+				style="width:20%; white-space:normal;">
+				<h:outputText
+					value="#{lbl[samplerequired ? 'lbl.txt.yes' : 'lbl.txt.no']}"></h:outputText>
+			</p:column>
+			<ui:remove> #11104 - end </ui:remove>
 			<p:column style="width:15%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 
 				</f:facet>
-				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this" 
-				action="#{specificationBackingBean.sampleTemplateView(technicalSampletemplate)}"	partialSubmit="true" />
-					</p:column>
-					
+				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
+					action="#{specificationBackingBean.sampleTemplateView(technicalSampletemplate)}"
+					partialSubmit="true" />
+			</p:column>
+
 		</p:dataTable>
 	</p:panel>
 </ui:composition>
