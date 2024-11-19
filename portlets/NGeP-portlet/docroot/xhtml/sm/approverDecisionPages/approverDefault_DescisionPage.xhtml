@@ -46,15 +46,18 @@
 						oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
 					<!-- #12483 - START -->
+					<!-- #31043 - START -->
 						<ui:repeat var="bpmAction" value="#{backingBean.managedBean.bpmActions}">
 							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.revise']}"
 								update=":form:tt:approverRevDialog" partialSubmit="true"
+								disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								process="@this" onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignFinalApproveOrReject('approverRevDialog')}" />
 							</h:panelGroup>	
 						</ui:repeat>
+					<!-- #31043 - END -->
 					<!-- #12483 - END -->
 				</div> <c:if
 					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
@@ -237,23 +240,6 @@
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
-		update=":form:tt:approverAppDialog"/>
-	
-	<ac:confirmationPopup id="pendingQTPopUpApproverCloseId"
-		widget="pendingQTPopUpApproverClose"
-		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
-		update=":form:tt:approverAppDialog"/>
-			
-	<ac:confirmationPopup id="pendingQTPopUpApproverTwoId"
-		widget="pendingQTPopUpApproverTwo"
-		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt; &lt;br&gt;
-		#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
 		update=":form:tt:approverAppDialog"/>
 	<!-- END #29727 -->
 </ui:composition>

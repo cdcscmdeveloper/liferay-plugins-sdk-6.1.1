@@ -1708,6 +1708,7 @@ public class LOIDetailBackingBean extends
 		}
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setButtonFlag(false);
+		getManagedBean().setReadOnly(false);// 36293
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -3234,7 +3235,7 @@ public class LOIDetailBackingBean extends
 				}
 			}
 
-			if (getManagedBean().getScQtCommittee() != null) {// #27502, Adding Condition only
+			if (getManagedBean().getScQtCommittee() != null) {// #27502, Adding Condition only  - Bug #36187
 				for (ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee()
 						.getMeetingAttendances()) {
 					if (meetingAttendance.isSelected() || meetingAttendance != null) {
@@ -5595,8 +5596,9 @@ public class LOIDetailBackingBean extends
 					}
 					offeredQuantity = offeredQuantity.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
-					BigDecimal offerPrice = proposalItem.getOfferPrice();
-					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					//Bug #36417 - start
+					BigDecimal finalPrice = proposalItem.getFinalPrice(); 
+					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
 					ScRequestItem requestItem = recommendDtl
 							.getScQtRecommend().getRequestItem();
@@ -5604,7 +5606,8 @@ public class LOIDetailBackingBean extends
 					BigDecimal offeredPrice = TemplateSpecHelper
 							.getInstance().calculateTotalAmount(
 									requestItem.getTplSpecQuestion(),
-									offerPrice, offeredQuantity);
+									finalPrice, offeredQuantity);
+					//Bug #36417 - end
 					if (offeredPrice != null) {
 						offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					}
@@ -6358,6 +6361,11 @@ public class LOIDetailBackingBean extends
 	 * @return true, if is loi required disabled
 	 */
 	public boolean isLoiRequiredDisabled(ScLoiLoa scLoiLoa){
+		// 36293 - start
+		if (scLoiLoa.isLoiRequiredDisabled()) {
+			return Boolean.TRUE;
+		}
+		// 36293 - end
 		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
 			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
 			if(scLoi.getScWorkFlowStatus() != null){
@@ -6658,6 +6666,8 @@ public class LOIDetailBackingBean extends
 				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL)))
 				&& isValidFor21692
 				) ? true : false;
+		
+		getManagedBean().setAbleToCancelLOI(supplierStatus);//#36339, #21692
 		
 		return supplierStatus;
 	}

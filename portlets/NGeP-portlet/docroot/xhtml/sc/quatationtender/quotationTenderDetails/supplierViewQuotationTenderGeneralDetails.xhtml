@@ -263,10 +263,11 @@
 											value="#{scQt.tmpExpectedIntendedPrice}" required="#{empty param['skipvalidation']}"
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											</p:ajax>
-
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										</p:inputText> <p:message id="expIntendedPriceMsg" for="expIntendedPrice"

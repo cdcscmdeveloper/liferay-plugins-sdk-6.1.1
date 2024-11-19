@@ -171,6 +171,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -1138,8 +1139,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					face.getUserLocale()));
 			int i = 1;
 			for (PmStatusDesc statusDesc : statusDescs) {
+				//start - 36615 - revert to previous code
 				items[i++] = new SelectItem(statusDesc.getPmStatus()
 						.getStatusId(), statusDesc.getStatusName());
+				//end - 36615
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1193,7 +1196,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-	
+
 	/**
 	 * Get Status description by status id.
 	 * 
@@ -1503,21 +1506,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//25638 - End
 
+	// 25037 - start
 	/**
-	 * Success message.
+	 * Return success message by message code.
 	 * 
 	 * @param messageCode
-	 *            the message code
-	 * @param String
-	 *            [] params
+	 * @param params
 	 */
-	//#25037-START
-	public void successMessage(String messageCode, String [] params){
+	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
-	//#25037-END
 
-	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
+	/**
+	 * Return success message by message code. Navigate to acknowledgment page
+	 * if required.
+	 * 
+	 * @param messageCode
+	 * @param params
+	 * @param isAcknowledgeRequired
+	 */
+	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
+	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -1526,13 +1535,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 								params,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		//#25037-START
+		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
-		//#25037-END
-
+		// 25037 - end
 	}
 
 	/**
@@ -2479,8 +2487,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+			// 25037 - start
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
-			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());//25037
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
+			// 25037 - end
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2488,31 +2498,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
 	private String[] sortOutcomes(String[] outComes) {
-		outComes = outComes==null ? new String[]{} : outComes;//29253-start
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[]{
-					BpmOutcomeConst.BPM_ENDORSE, 
-					BpmOutcomeConst.BPM_CANCEL}; 
-			//last index will appear on the far right, 
-			//if outcome not ranked, order come as is,
-			//existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});//29253-end
+
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
+		}
+
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
 	}
+
 
 	/**
 	 * Get Rule Type Description by rule type
@@ -3101,6 +3101,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				SsmReqDTO ssmReqDTO = new SsmReqDTO();
 				ssmReqDTO.setRegNo(smSupplier.getRegNo());
 				ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+				//#29582
+				ssmReqDTO.setSmSupp(smSupplier);
 				//27329
 				ssmReqDTO.setPreRegistration(true);
 				//ssmReqDTO.setCheckOnly(true);
@@ -3319,6 +3321,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		if(ssmResDTO.getSeverity().equalsIgnoreCase("SUCC")){
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			this.getManagedBean().setSmSupplierSsm(new SmSupplier());
+			//#24819 - START
+			if(this.getManagedBean().getSmSupplier() == null){
+				this.getManagedBean().setSmSupplier(new SmSupplier());
+				this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
+			}
+			//#24819 - END
 			/*this.getManagedBean().setBusinessTypeParamCode(getManagedBean().getSmAppl().getSupplierType()
 					.equals("J") ? ParameterTypeConst.SUPPLIER_BUSINESS_TYPE_CONSULTANT
 					: ParameterTypeConst.SUPPLIER_BUSINESS_TYPE);*/
@@ -4134,4 +4142,27 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
+	
+	// #28854 - Start
+	/**
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null or empty, it returns null.
+	 * 
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br />");
+	}
+	// #28854 - End
 }

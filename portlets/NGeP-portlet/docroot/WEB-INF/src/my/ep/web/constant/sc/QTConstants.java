@@ -3,8 +3,6 @@
  */
 package my.ep.web.constant.sc;
 
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
-
 /**
  * QTConstants for constants for sourcing.
  * 
@@ -274,9 +272,10 @@ public interface QTConstants {
 	
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	
-	//25037 QT Bpm Composite Version Validity ID
+	// 25037 - start
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
 
 	//#11104
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
@@ -312,6 +311,7 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	public static final String LAMPIRAN_A3_JUSTIFICATION = "Dikemas kini atas sebab ";
 	//#29007 End Vinod
 	// #29007 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
@@ -360,6 +360,27 @@ public interface QTConstants {
 	//#29732 -Start
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A = "lbl.sc.category.has.changes.on.prerender.view.2.a";
 	public static final String QT_CAT_CODE_CHANGE_ALERT_SHOW = "catCodeChangeAlert.show()";
+	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
 	//#29732 -End
+	
+	// Bug #35688@Syazani 10/07/2024 -- Start
+	public static final String TAB_SC_GENERAL_INFORMATION = "0";
+	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
+	public static final String TAB_SC_TECHNICAL_CHECKLIST = "2";
+	public static final String TAB_SC_FINANCIAL_CHECKLIST = "3";
+	public static final String TAB_SC_TECHNICAL_SCORING = "4";
+	public static final String TAB_SC_FINANCIAL_SCORING = "5";
+	public static final String TAB_SC_OVERALL_SCORING = "6";
+	public static final String TAB_SC_DELIVERY_ADDRESS = "7";
+	public static final String TAB_SC_PAYMENT_DEDUCTION = "8";
+	public static final String TAB_SC_FULFILMENT_SCHEDULE = "9";
+	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "10";
+	// Bug #35688@Syazani 10/07/2024 -- End
+	
+	// 36671 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671 - end
+ 
 }
