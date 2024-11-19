@@ -67,6 +67,7 @@
 				<td>
 					<p:inputTextarea id="tenderTitle"
 						label="#{lbl['lbl.rpt.tender.title']}" value="#{cc.attrs.bBean.managedBean.quotationTitle}" cols="110" rows="3"
+						required="#{scPropValidPeriodExtListReportBackingBean.showErrorWhenTitleAndNumberNull()}"
 						onkeyup="limitTextArea(this,1000);"
 						onkeydown="limitTextArea(this,1000);"
 						onmouseout="limitTextArea(this,1000);"

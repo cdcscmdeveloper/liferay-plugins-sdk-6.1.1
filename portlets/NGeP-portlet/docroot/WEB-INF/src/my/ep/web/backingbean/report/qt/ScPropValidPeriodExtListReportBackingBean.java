@@ -83,4 +83,13 @@ public class ScPropValidPeriodExtListReportBackingBean extends QtReportBackingBe
 		return params;
 	}
 	
+	/**
+	 * Html error will appear if qt title AND number is not keyed in.
+	 * 
+	 * @return
+	 */
+	public boolean showErrorWhenTitleAndNumberNull() {
+		return this.getManagedBean().getQuotationNumber() == null && (this.getManagedBean().getQuotationTitle() == null || this.getManagedBean().getQuotationTitle() == "");
+	}
+	
 }
