@@ -4,11 +4,9 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -392,13 +390,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return "BPMtesting";
 
 	}
-
+    
+	/**
+	 * bpmTesting
+	 * 
+	 * @param action
+	 * @return BPMtesting
+	 */
 	public String bpmTesting(String action){
 
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+		ICodificationSO unspscSO = BusinessDelegate
 				.getInstance()
 				.getServiceObject("cm", ICodificationSO.class);
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate
+		IStatusSO statusSO = BusinessDelegate
 				.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
 
@@ -440,8 +444,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		if (action.equalsIgnoreCase("RECOMMEND_TO_SUPPLIER")) {
 
 			if (!(this.getManagedBean().getRequestCode()
-					.getCmRecommendCodes() != null && this.getManagedBean()
-					.getRequestCode().getCmRecommendCodes().size() > 0)) {
+					.getCmRecommendCodes() != null && !this.getManagedBean()
+					.getRequestCode().getCmRecommendCodes().isEmpty())) {
 				log.info("**********warning***************");
 
 				FacesContext facesContext = FacesContext
@@ -475,7 +479,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.getCmRecommendCodes().size());
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 
-		CodificationResDTO resDTO = null;
+		CodificationResDTO resDTO;
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 		if (this.getManagedBean().getRequestCode().isBrandNew()) {
@@ -494,7 +498,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 
-			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
+			if(userResDTO.getUserList()!=null && !userResDTO.getUserList().isEmpty()){
 				for(PmUser user :userResDTO.getUserList()){
 					log.info("user.getLoginId():"+user.getLoginId());
 					reqDTO.getCdAdminList().add(user.getLoginId());
@@ -505,7 +509,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			if(!this.isAllSupplier()){
 				reqDTO.setRemark(this.getManagedBean().getSelectedRemarks().get(0));
 			}
-			resDTO = unspscSO.addCodificationRequest(reqDTO);
+			unspscSO.addCodificationRequest(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();   
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -523,9 +527,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			//[#15028] to remove CmRecommendCodes object list if action equal to REJECT
 			if(action.equalsIgnoreCase("REJECT") 
 				&& (reqDTO.getRequestCode().getCmRecommendCodes() != null) 
-					&& (reqDTO.getRequestCode().getCmRecommendCodes().size() > 0)){
+					&& (!reqDTO.getRequestCode().getCmRecommendCodes().isEmpty())){
 				reqDTO.getRequestCode().getCmRecommendCodes().clear();
-				//log.info("[#15028] size after: " + reqDTO.getRequestCode().getCmRecommendCodes().size());
 			}				
 			
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -604,14 +607,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		//20190830@emy - CR15028 - end
 		
-		//#30878@08052021 - start
+		//#30878- start
 		log.info("DA CMCD 1 " + action);
-		if (action.equalsIgnoreCase("OK")) {
-			log.info("azzatest01 " + this.getManagedBean().getRequestCode().getRequestId());
+		if (action.equalsIgnoreCase(CmConst.ACTIONSTATUS)) {
+			log.info("DA CMCD IN REQUEST_ID " + this.getManagedBean().getRequestCode().getRequestId());
 			reqDTO.setDocId(this.getManagedBean().getRequestCode().getRequestId());
-			resDTO = unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
+			unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
 		}
-		//#30878@08052021 - end
+		//#30878- end
 
 		return "BPMtesting";
 
@@ -2561,14 +2564,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		boolean isDDMeasurementSelected = false;
 		boolean isDDColorSelected = false;
 		
-		//#30878@08052021 - start
+		//#30878- start
 		log.info("DA CMCD 2 " + action);
-		if (action.equalsIgnoreCase("OK")) {
-			log.info("azzatest02 " + this.getManagedBean().getRequestCode().getRequestId());
+		if (action.equalsIgnoreCase(CmConst.ACTIONSTATUS)) {
+			log.info("DA CMCD IN REQUEST_ID " + this.getManagedBean().getRequestCode().getRequestId());
 			reqDTO.setDocId(this.getManagedBean().getRequestCode().getRequestId());
-			resDTO = unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
+			unspscSO.updateIsCompletedTaskWorkflowStatus(reqDTO);
 		}
-		//#30878@08052021 - end
+		//#30878- end
 
 			if (this.getManagedBean().getReviewExtCodeList() != null
 					&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
@@ -3022,7 +3025,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				log.info("Submit extension for endorsement.");
 				statusReqDTO.setStatusId(15004L);
 				actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (CDC) untuk kelulusan";
-			};
+			}
 			
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
@@ -3134,7 +3137,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			return 1;
 		}
 		return last;
-	}; 
+	} 
 	
 	private void arrangeOutcomeButton(){
 		String[] actions=this.getManagedBean().getAction();
@@ -3154,12 +3157,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		}
 		this.getManagedBean().setAction(actions);
 	}
+	
+	//#26282 and SonarLint Fixing - Start
+	/**
+	 * preRenderExtensionView
+	 */
 	public void preRenderExtensionView() {
 		log.info("**********preRenderExtensionView**************");
-
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
 
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
@@ -3195,9 +3199,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		log.info("********isPublished******"+unspsc.isPublished());
 
-		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
+		IRequestCodeSO requestSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+		ICodificationSO codificationSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 
@@ -3205,7 +3209,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		RequestCodeResDTO resDTO = null;
 		this.getManagedBean().setReviewExtCodeList(null);
 
-		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
+		if (unspsc.getItemId() != null && !unspsc.getItemId().isEmpty()) {
 			for (String itemId : unspsc.getItemId()) {
 				log.info("itemId:" + itemId);
 
@@ -3240,7 +3244,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		remarkResDTO.setRequestCode(this.getManagedBean().getRequestCode());
 		loadRemark(remarkResDTO, res);
 		
-		reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
+		if (resDTO != null && resDTO.getRequestCode().getTempCode() != null) {
+			reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
+		}
 		CodificationResDTO resCodeDTO = codificationSO
 				.searchCommodityObj(reqCodeDTO);
 		
@@ -3264,7 +3270,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
 			
-			if (res.getTaskName().equalsIgnoreCase("Approve and Publish Extension Code") || res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {				code.setReviewedColorName(code.getColorName());
+			if (res.getTaskName().equalsIgnoreCase("Approve and Publish Extension Code") || res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {				
+				code.setReviewedColorName(code.getColorName());
 				code.setReviewedBrandName(code.getBrandName());
 				code.setReviewedTypeName(code.getTypeName());
 				code.setReviewedMeasurementName(code.getMeasurementName());
@@ -3355,7 +3362,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		    }
 
 		});
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+		IStatusSO statusSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
@@ -3375,14 +3382,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		log.info("[#26282] Task action: " + StringUtils.join(this.getManagedBean().getAction(), "-"));
 		
 		log.info("[#26282] check for Disciplinary Action - Start");
-		if(isAllSupplier()) {
+		if (isAllSupplier()) {
 			checkForDisciplinaryAction();
 		}
 		log.info("[#26282] check for Disciplinary Action - End");
 		
 		assertView("Review Extension Code", obj);
 	}
-
+	//#26282 and SonarLint Fixing - End
 
 	public void claimTask()  {
 		log.info("**********claimTask");
@@ -3559,7 +3566,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			}else{
 				this.getManagedBean().setSelectedLovUnspscSegment(null);
-				this.getManagedBean().setSelectedLovUnspscfamily(null);;
+				this.getManagedBean().setSelectedLovUnspscfamily(null);
 				this.getManagedBean().setSelectedLovUnspscClass(null);
 				this.getManagedBean().setSelectedLovUnspsc(null);
 				checkIfLovEditable(null);
@@ -3588,7 +3595,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			this.getManagedBean().setDisableLovCommodity(!checkCo);
 		}
 	}
-	
+
+	/**
+	 * preRenderView
+	 */
+	//#26282 and SonarLint Fixing - Start
 	public void preRenderView() {
 		log.debug("**********preRenderView**************");
 		this.getManagedBean().setSelectedLovUnspscSegment(null);
@@ -3631,16 +3642,16 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setPayLoad(obj);
 		CDRequestDataType unspsc = (CDRequestDataType) obj;
 
-		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
+		IRequestCodeSO requestSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+		ICodificationSO codificationSO = BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO remarkReqDTO = new CodificationReqDTO();
 
 		this.getManagedBean().setReviewExtCodeList(null);
 
-		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
+		if (unspsc.getItemId() != null && !unspsc.getItemId().isEmpty()) {
 			for (String itemId : unspsc.getItemId()) {
 				log.info("itemId:" + itemId);
 
@@ -3669,7 +3680,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		this.getManagedBean().setAction(res.getAction());
 		arrangeOutcomeButton();
 
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+		IStatusSO statusSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
@@ -3688,8 +3699,8 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					res.getTaskName().equalsIgnoreCase("Revise Temporary Code")){
 			this.getManagedBean().setDisableRevise(true);
 			CodificationReqDTO lovReqDTO = new CodificationReqDTO();
-			CodificationResDTO lovResDTO = null;
-			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+			CodificationResDTO lovResDTO;
+			ICodificationSO unspscSO = BusinessDelegate
 					.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 			lovReqDTO.setUnspscCode(StringUtils.rightPad(this.getManagedBean().getRequestCode().getTempCode().substring(0,2), 8, '0'));
@@ -3718,13 +3729,14 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		log.info("[#26282] Task action: " + StringUtils.join(this.getManagedBean().getAction(), "-"));
 		
 		log.info("[#26282] check for Disciplinary Action - Start");
-		if(isAllSupplier()) {
+		if (isAllSupplier()) {
 			checkForDisciplinaryAction();
 		}
 		log.info("[#26282] check for Disciplinary Action - End");
 		
 		assertView("Review UNSPSC Code",obj);
 	}
+	//#26282 and SonarLint Fixing - End
 
 	public SearchFilterBean getColorFilterBean() {
 		return colorFilterBean;
@@ -4399,37 +4411,39 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		return resDTO.getRemarkList();
 	}
 	
-	//[#26282]
-	public void checkForDisciplinaryAction() {		
-		//check for disciplinary action
+	//[#26282] check for Disciplinary Action - Start
+	/**
+	 * To check what DA the supplier involve
+	 */
+	public void checkForDisciplinaryAction() {
+		// check for disciplinary action
 		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(null);
-		
-		if(disciplinaryActList != null && disciplinaryActList.size() > 0) {
+
+		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
 			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
-			
+
 			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
 			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
 			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
 			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
-			
-			//disciplinary action - Warning
-			if(disciplinaryAct.isWarning()) {
+
+			// disciplinary action - Warning
+			if (disciplinaryAct.isWarning()) {
 				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
 			}
-			//disciplinary action - Suspend Registration
-			if(disciplinaryAct.isSuspendRegistration()) {
+			// disciplinary action - Suspend Registration
+			if (disciplinaryAct.isSuspendRegistration()) {
 				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
 			}
-			//disciplinary action - Cancel Registration
-			if(disciplinaryAct.isCancelRegistration()) {
+			// disciplinary action - Cancel Registration
+			if (disciplinaryAct.isCancelRegistration()) {
 				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
 			}
-			//disciplinary action - Blacklist  Owner/Director of Company
-			if(disciplinaryAct.isBlacklistOwner()) {
+			// disciplinary action - Blacklist Owner/Director of Company
+			if (disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
-		}		 
+		}
 	}
+	//[#26282] check for Disciplinary Action - End
 }

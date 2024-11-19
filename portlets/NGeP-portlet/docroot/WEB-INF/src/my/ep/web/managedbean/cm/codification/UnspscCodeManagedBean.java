@@ -140,19 +140,19 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	};
 	public void setRecommendExtension(boolean recommendExtension){
 		this.recommendExtension = recommendExtension;
-	};
+	}
 	
 	public void toggleShowRecommend(){
 		this.showRecommend = !this.showRecommend;
-	};
+	}
 
 	public boolean isShowRecommend(){
 		return this.showRecommend;
-	};
+	}
 	
 	public boolean isCodeExtension(){
 		return this.requestCode.getDocNo().indexOf("RNE")>=0;
-	};
+	}
 	
 	
 	public CmBrand getSelectedBrand() {
@@ -819,6 +819,8 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setShowRecommend(boolean showRecommend) {
 		this.showRecommend = showRecommend;
 	}
+	
+	//[#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -843,5 +845,5 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
-
+	//[#26282] disciplinary action - end
 }
