@@ -1679,6 +1679,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean selectAllTechPreview;
 	private boolean selectAllFinPreview;
 	private boolean saveForSendNotification;
+	private boolean saveForSpecPrepareReport;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
@@ -11479,6 +11480,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.saveForSendNotification = saveForSendNotification;
 	}
 
+	public boolean isSaveForSpecPrepareReport() {
+		return saveForSpecPrepareReport;
+	}
+
+	public void setSaveForSpecPrepareReport(boolean saveForSpecPrepareReport) {
+		this.saveForSpecPrepareReport = saveForSpecPrepareReport;
+	}
+	
 	// #10141 - end
 		
 		//#9019 - Start (Harun) 08082022 Missing remarks issue

@@ -17,7 +17,7 @@
 			
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
-				action="#{specificationBackingBean.downloadTechnicalChecklistPreview(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
+				action="#{specificationBackingBean.downloadTechnicalChecklistSummaryReport(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>
@@ -60,7 +60,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
-				action="#{specificationBackingBean.downloadSelectedTechnicalChecklistPreview()}"
+				action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"
 				styleClass="BtnSpacing" process="@this"  />
 		</div>
 	</p:panel>

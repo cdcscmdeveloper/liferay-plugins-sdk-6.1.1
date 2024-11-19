@@ -19,9 +19,9 @@
 				<ui:include src="/xhtml/sc/specification/common/commonHeader.xhtml" />
 				<ui:remove>#10141 Start Vinod -- Added print button to print screen</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.print']}" rendered="#{specificationBackingBean.renderPtintButtonForSpecCommittee()}"
-					process="@all" type="button" style="float:right;">
-					<p:printer target="printSpecCommitteeid" />
-				</p:commandButton>
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					onclick="this.form.target='_blank'" process="@form"
+					style="float:right;" action="#{specificationBackingBean.downloadScoreReport}" />
 				<ui:remove>#10141 End Vinod </ui:remove>
 				<ui:include
 					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMenu.xhtml" />
