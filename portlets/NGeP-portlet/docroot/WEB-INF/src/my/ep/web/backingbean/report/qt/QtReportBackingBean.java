@@ -803,6 +803,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		String reportCode = this.getManagedBean().getReportCode();
 		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
 				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {//#21692
+			this.getManagedBean().setQuotationTitle(null);//#21692
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
 			reportFileSearchBean.setScStatus(null);//#21692 reset status
