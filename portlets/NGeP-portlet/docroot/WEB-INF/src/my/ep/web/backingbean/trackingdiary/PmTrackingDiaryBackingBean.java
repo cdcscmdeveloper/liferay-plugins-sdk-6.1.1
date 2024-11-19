@@ -354,7 +354,7 @@ public class PmTrackingDiaryBackingBean extends
 		if(getManagedBean().getSelectedDocNo() != null){
 			paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getSelectedDocNo());
 		}else{
-			paramMap.put(ReportConst.PARAM_DOC_NO, null);
+			paramMap.put(ReportConst.PARAM_DOC_NO, ReportConst.EMPTY_VAL);
 		}
 		// End Fix - #36608
 		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
