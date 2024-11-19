@@ -6170,11 +6170,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa.getPmStatus().getStatusId())){
 						getManagedBean().setSelectedTabIndex(1);
 					}
-					
-					// 25791 -start-
-					setTabActiveIndex();
-					// 25791 -end-
-					
+
+					setTabActiveIndex(); // 25791
+
 					return editLOAAction(resDTO.getScLoa());
 				} else if (resDTO.getScLoi() != null) {
 					return null;
