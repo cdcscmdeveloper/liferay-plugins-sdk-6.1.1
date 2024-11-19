@@ -795,21 +795,15 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * Sets the disciplinary action message
 	 * 
 	 * @param smDisciplinaryAction
+	 * @return warningOrDisciplinaryActionMsg
 	 */
 	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
 		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
-		String warningOrDisciplinaryActionMsg = StringUtils.EMPTY;
+
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
+				language, isWarningOnly);
 
-		} else {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-
-		}
-		return warningOrDisciplinaryActionMsg;
 	}
 
 	// 26279 - end
