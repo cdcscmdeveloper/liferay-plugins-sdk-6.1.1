@@ -195,11 +195,14 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td>
+					<td><!-- #36483 - START - add ajax -->
 						<p:inputText size="35" required="true" id="smSupAddr1"
 							maxlength="100" label="#{lbl['lbl.sm.companyaddress']}"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddress(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 'Addr1', SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
+						</p:inputText>
+						<!-- #36483 - END -->
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}" 
 							poUser="true" />
@@ -244,10 +247,13 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td>
+					<td><!-- #36483 - START - add ajax -->
 						<p:inputText size="35" maxlength="100" id="smSupAddr2"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddress(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 'Addr2', SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
+						</p:inputText>
+						<!-- #36483 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" 
@@ -291,10 +297,13 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td>
+					<td><!-- #36483 - START - add ajax -->
 						<p:inputText size="35" maxlength="100" id="smSupAddr3"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddress(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 'Addr3', SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
+						</p:inputText>
+						<!-- #36483 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" 

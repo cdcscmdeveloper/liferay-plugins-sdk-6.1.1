@@ -4871,6 +4871,16 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicCompanyFacility().getSmAddress(),
 					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
+		
+		//#36483 - START
+		if(getManagedBean().getBasicCompanyFacility().getOwnershipType().equals(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			SmApplicationUtil.getInstance().cloneAddress(
+					getManagedBean().getBasicCompanyFacility().getSmAddress(),
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().get(0).getSmAddress());
+		}
+		//#36483 - END
+		
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		
 		// 32064 - Start
@@ -12595,6 +12605,22 @@ public class SmApplicationBackingBean extends
 						.isShowWorkShopPanel());
 	}
 
+	//#36483 - START
+	public void onChangeAddress(SmAddress addr, String addrLine, String panelName){
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			if(addrLine.equals("Addr1")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress1(addr.getAddress1());
+			}
+			if(addrLine.equals("Addr2")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress2(addr.getAddress2());
+			}
+			if(addrLine.equals("Addr3")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress3(addr.getAddress3());
+			}
+		}
+	}
+	//#36483 - END
+	
 	/**
 	 * Ajax call when select country to populate states
 	 * 
@@ -12620,6 +12646,11 @@ public class SmApplicationBackingBean extends
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
 		setRoleStaffAddrReqd();
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
+		}
+		//#36483 - END
 	}
 
 	/**
@@ -12653,6 +12684,18 @@ public class SmApplicationBackingBean extends
 		addr.setPmDistrict(null);
 		addr.setPmCity(null);
 		setRoleStaffAddrReqd();
+		
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getStateId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setStateId(addr.getStateId());
+			if(!addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(null);
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
+			}
+		}
+		//#36483 - END
 		
 		/*//13320-start
 		Long stateId = addr.getStateId();
@@ -12701,6 +12744,13 @@ public class SmApplicationBackingBean extends
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getDistrictId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
+		}
+		//#36483 - END
 	}
 
 	/**
@@ -12713,6 +12763,13 @@ public class SmApplicationBackingBean extends
 	public void onChangeCity(SmAddress addr, String panelName) {
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getCityId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
+		}
+		//#36483 - END
 	}
 
 	/**
@@ -16379,6 +16436,13 @@ public class SmApplicationBackingBean extends
 		setRoleStaffAddrReqd();
 		//#13320 - SmCommonUtil change method
 		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+				&& addr.getDivisionId()!=null){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
+		}
+		//#36483 - END
 	}
 	//13320-End	
 	
