@@ -89,6 +89,9 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
 						<ui:include src="step6.2ViewProfileEquipmentInfo.xhtml" />
 					</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.auditAccess and viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+						<ui:include src="step13ViewAuditTrailInfo.xhtml" />
+					</c:if>
 					</c:otherwise>
 					</c:choose>
 					<!-- <c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">

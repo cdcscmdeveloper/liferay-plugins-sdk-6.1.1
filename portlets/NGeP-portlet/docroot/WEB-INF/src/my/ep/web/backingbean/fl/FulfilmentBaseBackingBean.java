@@ -756,7 +756,15 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	// 26279 - Remove the retrieveDisciplinaryActions method because the method
 	// from the SM module is used for displaying the Disciplinary Action info in
 	// the pop-up
-
+	
+	/**
+	 * Retrieve message based on the specified key, parameters, and language code.
+	 *
+	 * @param key 
+	 * @param params 
+	 * @param langCode
+	 * @return msg
+	 */
 	private String getMessageByKey(String key, String[] params, String langCode) {
 		String msg;
 		Locale loc = new Locale("en", "EN");

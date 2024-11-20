@@ -4360,7 +4360,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	/**
 	 * Processes the given string by replacing newline characters with HTML line
 	 * break tags and encoding the < and > characters to their HTML entity
-	 * equivalents. If the string is null or empty, it returns null.
+	 * equivalents. If the string is null, empty or contains only whitespace, it returns null.
 	 * 
 	 * @param value
 	 *            the string to be processed; may be null
@@ -4369,13 +4369,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *         respectively; {@code null} if the input is null or empty
 	 */
 	public String encodeHtmlStringOrNull(String value) {
-		if (value == null || value.isEmpty()) {
+		if (value == null || value.trim().isEmpty()) {
 			return null;
 		}
 		// Replace < and > with their HTML entity equivalents
 		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
 		// Replace any newline characters (\r\n or \n) with <br/>
-		return formatted.replaceAll("(\r\n|\n)", "<br />");
+		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
 	// #28854,#25000 - End
 	
