@@ -172,6 +172,8 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 			}
 			this.getManagedBean().setActiveIndex(activeIndex);
 			reloadTabData();
+		} else {
+			RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
 		}
 	}
 	
