@@ -93,7 +93,20 @@
 							style="margin-top:5px;width:130px;" />
 					</td>
 					
-					<td><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+					<td>
+					<c:if test="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile eq null}">
+					<ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+						headerText="#{lbl['lbl.rpt.agency']}"
+						selectionMode="single"
+						saveObject="scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile"
+						size="106"
+						label="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile.orgName}"
+						update="@form"
+						conditionField="#{cc.attrs.bBean.constuctConditionFields()}" 
+						/>
+					</c:if>
+					<c:if test="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile ne null}">
+					<ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
 						headerText="#{lbl['lbl.rpt.agency']}"
 						selectionMode="single"
 						saveObject="scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile"
@@ -101,7 +114,9 @@
 						value="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile.orgName}"
 						update="@form"
 						conditionField="#{cc.attrs.bBean.constuctConditionFields()}" 
-						/></td>
+						/>
+					</c:if>
+					</td>
 				</tr>
 				
 				<tr>
