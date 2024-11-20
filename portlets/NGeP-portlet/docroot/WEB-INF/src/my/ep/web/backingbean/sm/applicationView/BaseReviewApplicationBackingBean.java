@@ -164,6 +164,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -763,6 +765,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl() != null) {
 			getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 		}
+		// #28895_35501 Start - AUDIT TRAIL SM
+		if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)){
+			initAuditTab();
+		}
+		// #28895_35501 End
 	}
 
 	/**
@@ -5113,5 +5120,37 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	/**
+	 * Check if user have access to Audit Trail page
+	 */
+	public void checkAuditAccess() {
+		this.getManagedBean().setAuditAccess(false);
+		if (checkFromAudit()) {
+			FacesScopes facesScopes = new FacesScopes();
+			String[] roles = { RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(), RoleCode.AUDITOR_INTERNAL.value(),
+					RoleCode.SYS_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
+			for (String role : roles) {
+				if (facesScopes.hasRoleUser(role)) {
+					this.getManagedBean().setAuditAccess(true);
+					break;
+				}
+			}
+		}
+	}
+
+	private boolean checkFromAudit() {
+		return true;
+	}
+	
+	/**
+	 * initialize Audit Trail data selected application
+	 */
+	public void initAuditTab() {
+		SmAppl suppAppl = getManagedBean().getSmAppl();
+		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+		auSmView.initAuditTab(suppAppl);
+	}
+	// #28895_35501 End
 	
 }

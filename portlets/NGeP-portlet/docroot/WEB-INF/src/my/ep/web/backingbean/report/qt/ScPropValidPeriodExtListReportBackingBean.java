@@ -75,12 +75,30 @@ public class ScPropValidPeriodExtListReportBackingBean extends QtReportBackingBe
 		if (StringUtils.isNotEmpty(reportFieldBean.getScDeskOfficer())) {
 			params.put(QtReportConst.PARAM_DESK_OFFCR_EQ, reportFieldBean.getScDeskOfficer());
 		}
-		
+		//Send title with all Uppercase
 		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationTitle())) {
-			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getQuotationTitle());
+			params.put(QtReportConst.QUOTATION_TENDER_TITLE, this.getManagedBean().getQuotationTitle().toUpperCase());
 		}
 
 		return params;
+	}
+	
+	/**
+	 * Html error will appear if qt title AND number is not keyed in.
+	 * 
+	 * @return
+	 */
+	public boolean showErrorWhenTitleAndNumberNull() {
+		return this.getManagedBean().getQuotationNumber() == null && StringUtils.isEmpty(this.getManagedBean().getQuotationTitle());
+	}
+	
+	/**
+	 * Clear all search criteria, this enable error message to show up when user delete Tender Title
+	 */
+	public void clearTenderTitle() {
+		if (StringUtils.isEmpty(this.getManagedBean().getQuotationTitle())) {
+			resetSearchBB();
+		}
 	}
 	
 }
