@@ -26,6 +26,9 @@ public class PendingPaymentRest {
 		// #36401 - End
 		try {
 			PendingPaymentResDTO resDTO = SmServiceLookup.getPendingPaymentSO().retrievePendingProcess();
+			//#36401 - Start
+			resDTO = SmServiceLookup.getPendingPaymentSO().updateSmPendingProcessIsPickup(resDTO);
+			//#36401 - End
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
 				// #36401 - Start
 				log.info("#36401 :: logger :: " + smPendingProcess.getApplId()
@@ -36,6 +39,9 @@ public class PendingPaymentRest {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
 				} catch (Exception e) {
 					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
+					//#36401 - Start
+					smPendingProcess.setPickup(false);
+					//#36401 - End
 					smPendingProcess.setErrorMsg(e.getMessage());
 					try {
 						SmServiceLookup.getPendingPaymentSO().updateFailPending(smPendingProcess);
