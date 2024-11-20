@@ -80,7 +80,6 @@ public class ViewSuppProfileBackingBean extends
 		if(map.containsKey("auditAccess")){
 			boolean auditAccess = (boolean) map.get("auditAccess");
 			this.getManagedBean().setAuditAccess(auditAccess);
-			map.remove("auditAccess");
 		}
 		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);

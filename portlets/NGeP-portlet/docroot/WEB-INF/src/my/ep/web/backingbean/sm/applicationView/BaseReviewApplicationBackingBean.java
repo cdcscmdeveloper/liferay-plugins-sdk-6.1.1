@@ -3267,11 +3267,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void redirectToSupplierProfileOrHistoryPage() {
 		// #28895_35501 Start - AUDIT TRAIL SM
 		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-		map.remove("auditAccess");
-		log.info(map.keySet());
 		map.put("auditAccess", this.getManagedBean().isAuditAccess());
-		Map<String, Object> map2 = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-		log.info(map2.keySet());
 		// #28895_35501 End
 		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl()
 				+ "?supplierId=" + getManagedBean().getSupplierIdParam());
