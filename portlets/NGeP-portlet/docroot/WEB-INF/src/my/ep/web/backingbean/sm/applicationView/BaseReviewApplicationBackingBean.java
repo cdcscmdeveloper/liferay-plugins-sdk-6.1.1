@@ -3265,6 +3265,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Redirect to Supplier Profile or Supplier History Page
 	 */
 	public void redirectToSupplierProfileOrHistoryPage() {
+		// #28895_35501 Start - AUDIT TRAIL SM
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		map.remove("auditAccess");
+		log.info(map.keySet());
+		map.put("auditAccess", this.getManagedBean().isAuditAccess());
+		Map<String, Object> map2 = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		log.info(map2.keySet());
+		// #28895_35501 End
 		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl()
 				+ "?supplierId=" + getManagedBean().getSupplierIdParam());
 	}
@@ -5125,7 +5133,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Check if user have access to Audit Trail page
 	 */
 	public void checkAuditAccess() {
-		getManagedBean().setAuditAccess(false);
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		if (PortalUtil.getCurrentURL(request).contains(SupplierManagementConst.SUPPLIER_APPL_SEARCH_URL)) {
 			FacesScopes facesScopes = new FacesScopes();
@@ -5133,13 +5140,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					RoleCode.SYS_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
 			for (String role : roles) {
 				if (facesScopes.hasRoleUser(role)) {
-					getManagedBean().setAuditAccess(true);
-					
+					this.getManagedBean().setAuditAccess(true);
 					break;
 				}
 			}
 		}
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("auditAccess", getManagedBean().isAuditAccess());
 	}
 	
 	/**

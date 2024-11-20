@@ -76,8 +76,12 @@ public class ViewSuppProfileBackingBean extends
 		initLogin();
 		// #28895_35501 Start - AUDIT TRAIL SM
 		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-		boolean auditAccess = (boolean) map.get("auditAccess");
-		getManagedBean().setAuditAccess(auditAccess);
+		log.info(map.keySet());
+		if(map.containsKey("auditAccess")){
+			boolean auditAccess = (boolean) map.get("auditAccess");
+			this.getManagedBean().setAuditAccess(auditAccess);
+			map.remove("auditAccess");
+		}
 		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
