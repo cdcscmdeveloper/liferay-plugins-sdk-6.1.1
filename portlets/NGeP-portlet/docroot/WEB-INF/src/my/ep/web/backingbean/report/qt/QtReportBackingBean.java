@@ -807,6 +807,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		String reportCode = this.getManagedBean().getReportCode();
 		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
 				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {//#21692
+			this.getManagedBean().setQuotationTitle(null);//#21692
 			reportFileSearchBean.setScPtj(null);
 			reportFileSearchBean.setScPtjName(null);
 			reportFileSearchBean.setScStatus(null);//#21692 reset status
@@ -1006,9 +1007,10 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
+		boolean procurementBoardSecUser = facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()) && 
-				!(facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
-						|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()));
+				!(procurementBoardSecUser);
 	}
 	
 	/**
