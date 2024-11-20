@@ -769,10 +769,19 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (oldDA == null || oldDA.getStartDate() == null || oldDA.getEndDate() == null){
 			return;
 		}
-		boolean isSameDates = oldDA.getStartDate().toString().contentEquals(da.getStartDate().toString()) 
+
+		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
+				.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
+		boolean isSameRemarks = false;
+		if (!EntityHelper.isCollectionEmpty(remarksList)) {
+			isSameRemarks = remarksList.get(0).getRemark().equals(da.getRemark());
+		} else {
+			isSameRemarks = oldDA.getRemark().equals(da.getRemark());
+		}
+
+		boolean isSameDates = oldDA.getStartDate().toString().contentEquals(da.getStartDate().toString())
 				&& oldDA.getEndDate().toString().contentEquals(da.getEndDate().toString());
 		boolean isSameType = getManagedBean().isWarning() == oldDA.isWarning();
-		boolean isSameRemarks = oldDA.getRemark() == da.getRemark();
 		isSameType &= getManagedBean().isSuspendRegistration() == oldDA.isSuspendRegistration();
 		isSameType &= getManagedBean().isCancelRegistration() == oldDA.isCancelRegistration();
 		isSameType &= getManagedBean().isBlacklistOwnerOrDirector() == oldDA.isBlacklistOwner();
