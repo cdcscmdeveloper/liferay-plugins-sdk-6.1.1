@@ -171,15 +171,16 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
 //import my.ep.biz.service.ct.dtl.ContractItemSO;
 
 /**
  * Backing Bean For Contract
  * 
  * @author kieyun
- * @since 13/11/2013	 
+ * @since 13/11/2013
  */
-@ManagedBean(name="ctBackingBean")
+@ManagedBean(name = "ctBackingBean")
 @ViewScoped
 public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
@@ -189,18 +190,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private CtSchedule[] selectedSchedule;
 	private CtProgressivePayment[] selectedProgressive;
 	private CtDeductionClause[] selectedDeductionClauses;
-	private BigDecimal paidPercentage = new BigDecimal(0);	
-	private BigDecimal paidsumPercentage = new BigDecimal(0);	
+	private BigDecimal paidPercentage = new BigDecimal(0);
+	private BigDecimal paidsumPercentage = new BigDecimal(0);
 	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
 	private BigDecimal balanceToPaid = new BigDecimal(0);
 	private SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
+	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
-	
-	
-	static
-	{
+
+	static {
 		months = new HashMap<String, String>();
 		months.put("01", "January");
 		months.put("02", "February");
@@ -213,7 +212,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		months.put("09", "September");
 		months.put("10", "October");
 		months.put("11", "November");
-		months.put("12", "December");  
+		months.put("12", "December");
 	}
 
 	/**
@@ -221,46 +220,55 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public ContractBackingBean() {
 		if (getManagedBean().getFileDirectory() == null) {
-			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
+			getManagedBean()
+					.setFileDirectory(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
+									+ "/CT");
 		}
 	}
 
 	/**
-	 * Constructor used for specifying the directory of file storage.	 
-	 * If the fileDirectory is null, default to temporary directory.
+	 * Constructor used for specifying the directory of file storage. If the
+	 * fileDirectory is null, default to temporary directory.
 	 * 
-	 * @param fileDirectory  the directory for file storage. 
+	 * @param fileDirectory
+	 *            the directory for file storage.
 	 */
 	public ContractBackingBean(String fileDirectory) {
 		if (fileDirectory == null) {
-			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
+			getManagedBean()
+					.setFileDirectory(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)
+									+ "/CT");
 		} else {
 			getManagedBean().setFileDirectory(fileDirectory);
 		}
 	}
 
 	/**
-	 * The method used for initializing the remarks and attachments.
-	 * This method will create new remark and attachment object
-	 * for every single new process, else will display all
-	 * remarks and attachments.
+	 * The method used for initializing the remarks and attachments. This method
+	 * will create new remark and attachment object for every single new
+	 * process, else will display all remarks and attachments.
 	 * 
-	 * @param ctWorkflowStatus  the status of current contract. It is null for every single new process
-	 * @param remarkList        the list of remarks to display. If the remarkList is null, 
-	 *              		    initiate a new remark
-	 * @param attachmentList    the list of attachments to display. If the attachmentList is null, 
-	 *              		    initiate a new attachment
+	 * @param ctWorkflowStatus
+	 *            the status of current contract. It is null for every single
+	 *            new process
+	 * @param remarkList
+	 *            the list of remarks to display. If the remarkList is null,
+	 *            initiate a new remark
+	 * @param attachmentList
+	 *            the list of attachments to display. If the attachmentList is
+	 *            null, initiate a new attachment
 	 */
-	public void initializeRemarkAndAttachement(CtWorkflowStatus ctWorkflowStatus, 
-			List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
+	public void initializeRemarkAndAttachement(CtWorkflowStatus ctWorkflowStatus, List<CtRemark> remarkList,
+			List<CtAttachment> attachmentList) {
 		FacesScopes facesScopes = new FacesScopes();
 
 		boolean ctWorkflowStatusMatch = false;
 		if (ctWorkflowStatus != null) {
 			if (remarkList.size() > 0 && remarkList.get(0).getCtWorkflowStatus() != null) {
-				if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+				if (ctWorkflowStatus.getWorkflowStatusId() == remarkList.get(0).getCtWorkflowStatus()
+						.getWorkflowStatusId().longValue()) {
 					ctWorkflowStatusMatch = true;
 				}
 			}
@@ -268,9 +276,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			ctWorkflowStatusMatch = true;
 		}
 
-		//Bug #29446 - start
+		// Bug #29446 - start
 		log.info(!getManagedBean().isViewContract());
-		if(!getManagedBean().isViewContract()){
+		if (!getManagedBean().isViewContract()) {
 			if (remarkList.size() == 0 || !ctWorkflowStatusMatch) {
 				CtRemark remark = new CtRemark();
 				PmUser pmUser = facesScopes.getUserSessionBean();
@@ -284,26 +292,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			} else {
 				getManagedBean().setRemarkList(remarkList);
 			}
-		} else if (getManagedBean().isViewContract()){
+		} else if (getManagedBean().isViewContract()) {
 			getManagedBean().setRemarkList(remarkList);
 		}
 		getManagedBean().setAttachmentList(attachmentList);
-		//Bug #29446 - end
-	}	
-	
-	
+		// Bug #29446 - end
+	}
 
 	/**
-	 * Returns a representative icon filename that can then be displayed
-	 * on the screen for the attachment.
+	 * Returns a representative icon filename that can then be displayed on the
+	 * screen for the attachment.
 	 * 
-	 * @param  attachment     an object of attached file
-	 * @return imageFileName  the icon filename base on the filename extension
+	 * @param attachment
+	 *            an object of attached file
+	 * @return imageFileName the icon filename base on the filename extension
 	 */
 	public String determineIcon(CtAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
 		String fileExtension = "";
-		
+
 		// #25956 - Start
 		// Handle null attachment
 		if (attachment == null) {
@@ -316,18 +323,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		// Retrieve the file extension base on filename
 		if (fileName != null) {
 			int mid = fileName.lastIndexOf(".");
-			fileExtension = fileName.substring(mid + 1, fileName.length());  
+			fileExtension = fileName.substring(mid + 1, fileName.length());
 		}
 
 		if ("doc".equals(fileExtension) || "docx".equals(fileExtension)) {
 			imageFileName = "icon_doc.png";
 		} else if ("pdf".equals(fileExtension)) {
 			imageFileName = "icon_pdf.png";
-		} else if ("xls".equals(fileExtension) || "xlsx".equals(fileExtension) 
-				|| "csv".equals(fileExtension)) {
+		} else if ("xls".equals(fileExtension) || "xlsx".equals(fileExtension) || "csv".equals(fileExtension)) {
 			imageFileName = "icon_exel.png";
-		} else if ("jpg".equals(fileExtension) || "bmp".equals(fileExtension) 
-				|| "png".equals(fileExtension) || "gif".equals(fileExtension)) {
+		} else if ("jpg".equals(fileExtension) || "bmp".equals(fileExtension) || "png".equals(fileExtension)
+				|| "gif".equals(fileExtension)) {
 			imageFileName = "icon_image.png";
 		} else if ("txt".equals(fileExtension)) {
 			imageFileName = "icon_txt.png";
@@ -338,9 +344,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to upload file into the attachment list.
 	 * 
-	 * @param  event      the upload event for file upload from screen
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param event
+	 *            the upload event for file upload from screen
+	 * @throws Exception
+	 *             if an exception occurred
+	 * @see Exception
 	 */
 	public void fileUpload(FileUploadEvent event) throws Exception {
 
@@ -354,110 +362,121 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
 
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); // #31849 add
+																// log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
-		if (event.getComponent().getId().equalsIgnoreCase("uploadAgency1")){
+		if (event.getComponent().getId().equalsIgnoreCase("uploadAgency1")) {
 			getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("uploadItemId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadItemId")) {
 			getManagedBean().getContractVer().getItemAttachments().add(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("uploadDeductId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadDeductId")) {
 			getManagedBean().getContractVer().getDeductionAttachments().add(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("uploadScheduleId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadScheduleId")) {
 			getManagedBean().getContractVer().getScheduleAttachments().add(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("uploadItemAmendId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadItemAmendId")) {
 			getManagedBean().getContractVer().getItemAmendAttachments().add(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("uploadTermLetterId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadTermLetterId")) {
 			getManagedBean().getContractVer().getTerminationLetterAttachments().add(attachment);
 			RequestContext.getCurrentInstance().execute("uploadTermLetterDlg.hide()");
-		} else if (event.getComponent().getId().equalsIgnoreCase("approvalLetterId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("approvalLetterId")) {
 			getManagedBean().getContractVer().setApprovalLetterAttachement(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("pbqcDecisionLetterId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("pbqcDecisionLetterId")) {
 			getManagedBean().getContractVer().setPbqcDecisionLetterAttachment(attachment);
-		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")) {
 			getManagedBean().getContractVer().setMofDecisionLetterAttachment(attachment);
-		} 
-		//26186 start
-		else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")){
+		}
+		// 26186 start
+		else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")) {
 			getManagedBean().getContractVer().getDisciplinaryActionAttachments().add(attachment);
-		} 
-		//26186 end
+		}
+		// 26186 end
 		else {
 			getManagedBean().getAttachmentList().add(attachment);
 		}
 	}
-	
-	//#Start Fix - #31657
+
+	// #Start Fix - #31657
 	/**
 	 * The method used to remove file from the attachment list.
 	 * 
-	 * @param  event      the delete event for file attach from screen
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param event
+	 *            the delete event for file attach from screen
+	 * @throws Exception
+	 *             if an exception occurred
+	 * @see Exception
 	 */
 	public void deleteAttachmentActionByEvent(ActionEvent event) throws Exception {
 		CtAttachment attachment = new CtAttachment();
-		if(event.getComponent().getId().equalsIgnoreCase("deleteItemAttachment")){
-			attachment = getManagedBean().getContractVer().getItemAttachments().get(this.getManagedBean().getAttachFileIndex());
-			 if(attachment.getAttachmentId() != null){
-					getManagedBean().getDeleteAttachmentList().add(attachment);
-				}
-				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
-		}
-		//#26186 start
-		else if(event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")){
-			attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(this.getManagedBean().getAttachFileIndex());
-			if(attachment.getAttachmentId() != null){
+		if (event.getComponent().getId().equalsIgnoreCase("deleteItemAttachment")) {
+			attachment = getManagedBean().getContractVer().getItemAttachments()
+					.get(this.getManagedBean().getAttachFileIndex());
+			if (attachment.getAttachmentId() != null) {
 				getManagedBean().getDeleteAttachmentList().add(attachment);
 			}
-			getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(this.getManagedBean().getAttachFileIndex());
+			this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
 		}
-		//#26186 end
-		//#13847 start
-		//Latest 
-		else if(event.getComponent().getId().equalsIgnoreCase("delLatestWaiver")){
-			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()!= null
-					&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!= null){
+		// #26186 start
+		else if (event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")) {
+			attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments()
+					.get(this.getManagedBean().getAttachFileIndex());
+			if (attachment.getAttachmentId() != null) {
+				getManagedBean().getDeleteAttachmentList().add(attachment);
+			}
+			getManagedBean().getContractVer().getDisciplinaryActionAttachments()
+					.remove(this.getManagedBean().getAttachFileIndex());
+		}
+		// #26186 end
+		// #13847 start
+		// Latest
+		else if (event.getComponent().getId().equalsIgnoreCase("delLatestWaiver")) {
+			if (getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
+					&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment() != null) {
 				attachment = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment();
-				if(attachment.getAttachmentId() != null){
+				if (attachment.getAttachmentId() != null) {
 					getManagedBean().getDeleteAttachmentList().add(attachment);
 				}
 				getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtAttachment(null);
 			}
 		}
-		//History
-		else if(event.getComponent().getId().equalsIgnoreCase("delHistoryWaiver")){
-			attachment = getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getAttachFileIndex()).getCtAttachment();
-			if(attachment.getAttachmentId() != null){
+		// History
+		else if (event.getComponent().getId().equalsIgnoreCase("delHistoryWaiver")) {
+			attachment = getManagedBean().getContractVer().getBondWaiverDefermentHistory()
+					.get(getManagedBean().getAttachFileIndex()).getCtAttachment();
+			if (attachment.getAttachmentId() != null) {
 				getManagedBean().getDeleteAttachmentList().add(attachment);
 			}
-			getManagedBean().getContractVer().getBondWaiverDefermentHistory().get(getManagedBean().getAttachFileIndex()).setCtAttachment(null);
+			getManagedBean().getContractVer().getBondWaiverDefermentHistory()
+					.get(getManagedBean().getAttachFileIndex()).setCtAttachment(null);
 		}
-		//#13847 end
+		// #13847 end
 		else {
 			attachment = this.getManagedBean().getAttachmentList().get(getManagedBean().getAttachFileIndex());
-			if(attachment.getAttachmentId() != null){
+			if (attachment.getAttachmentId() != null) {
 				getManagedBean().getDeleteAttachmentList().add(attachment);
 			}
 			this.getManagedBean().getAttachmentList().remove(getManagedBean().getAttachFileIndex());
 		}
 	}
-	//#End Fix - #31657
+
+	// #End Fix - #31657
 
 	/**
 	 * The method used to download the attached file.
 	 * 
-	 * @param  attachment   an object of attached file
-	 * @throws IOException  if an input or output exception occurred
-	 * @see    IOException
+	 * @param attachment
+	 *            an object of attached file
+	 * @throws IOException
+	 *             if an input or output exception occurred
+	 * @see IOException
 	 */
 	public void downloadFile(CtAttachment attachment) throws IOException {
 		commonDownload(attachment.getFilePath(), attachment.getFileName());
@@ -466,7 +485,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to set the file index of attachment list.
 	 * 
-	 * @param index  file index of attachment list
+	 * @param index
+	 *            file index of attachment list
 	 */
 	public void setAttachFileIndex(int index) {
 		this.getManagedBean().setAttachFileIndex(index);
@@ -475,11 +495,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete attachment from the list.
 	 * 
-	 * @param index  file index of attachment list
+	 * @param index
+	 *            file index of attachment list
 	 */
 	public void deleteAttachmentActionByIndex(int index) {
 		CtAttachment attachment = this.getManagedBean().getAttachmentList().get(index);
-		if(attachment.getAttachmentId() != null){
+		if (attachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		this.getManagedBean().getAttachmentList().remove(index);
@@ -488,24 +509,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete attachment from the list.
 	 * 
-	 * @param ctAttachment  an object of attached file
+	 * @param ctAttachment
+	 *            an object of attached file
 	 */
 	public void deleteAttachmentAction(CtAttachment ctAttachment) {
-		if (ctAttachment.getAttachmentId() != null){
+		if (ctAttachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(ctAttachment);
 		}
 		ctAttachment.setFileName(null);
-		ctAttachment.setFilePath(null);		
+		ctAttachment.setFilePath(null);
 	}
 
 	/**
 	 * The method used to delete agency attachment from the list.
 	 * 
-	 * @param index  file index of attachment list
+	 * @param index
+	 *            file index of attachment list
 	 */
 	public void deleteAgncyAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getAgencyAttachements().get(index);
-		if(attachment.getAttachmentId() != null){
+		if (attachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
@@ -514,11 +537,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete termination letter attachment from the list.
 	 * 
-	 * @param index  file index of attachment list
+	 * @param index
+	 *            file index of attachment list
 	 */
 	public void deleteTerminationLetterAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getTerminationLetterAttachments().get(index);
-		if(attachment.getAttachmentId() != null){
+		if (attachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		getManagedBean().getContractVer().getTerminationLetterAttachments().remove(index);
@@ -527,11 +551,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete item attachment from the list.
 	 * 
-	 * @param index  file index of attachment list
+	 * @param index
+	 *            file index of attachment list
 	 */
 	public void deleteItemAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getItemAmendAttachments().get(index);
-		if(attachment.getAttachmentId() != null){
+		if (attachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		getManagedBean().getContractVer().getItemAmendAttachments().remove(index);
@@ -540,11 +565,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete deduction attachment from the list.
 	 * 
-	 * @param index  file index of attachment list
+	 * @param index
+	 *            file index of attachment list
 	 */
 	public void deleteDeductAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getDeductionAttachments().get(index);
-		if(attachment.getAttachmentId() != null){
+		if (attachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		getManagedBean().getContractVer().getDeductionAttachments().remove(index);
@@ -553,62 +579,76 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete schedule attachment from the list.
 	 * 
-	 * @param index  file index of attachment list
+	 * @param index
+	 *            file index of attachment list
 	 */
-	public void deleteScheduleAttachmentAction(int index){
+	public void deleteScheduleAttachmentAction(int index) {
 		CtAttachment attachment = getManagedBean().getContractVer().getScheduleAttachments().get(index);
-		if(attachment.getAttachmentId() != null){
+		if (attachment.getAttachmentId() != null) {
 			getManagedBean().getDeleteAttachmentList().add(attachment);
 		}
 		getManagedBean().getContractVer().getScheduleAttachments().remove(index);
 	}
-		
+
 	/**
 	 * The method used to retrieve the address of supplier.
 	 * 
-	 * @param ajax event
+	 * @param ajax
+	 *            event
 	 */
 	public void retrieveSupplierAddress(AjaxBehaviorEvent event) {
-		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
-			getManagedBean().setCtAddress(CtAddressUtil.retrieveSupplierAddress(getManagedBean().getContractVer().getCtContract().getSmSupplier()));
-			//Start Fix - #35358
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setContactPerson(getManagedBean().getCtAddress().getContactPerson());
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setContactEmail(getManagedBean().getCtAddress().getContactEmail());
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setPhoneCountry(getManagedBean().getCtAddress().getContactPhoneCountry());
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setPhoneArea(getManagedBean().getCtAddress().getContactPhoneArea());
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setPhoneNo(getManagedBean().getCtAddress().getContactPhoneNo());
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setFaxCountry(getManagedBean().getCtAddress().getContactFaxCountry());
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setFaxArea(getManagedBean().getCtAddress().getContactFaxArea());
-			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress().setFaxNo(getManagedBean().getCtAddress().getContactFaxNo());
-			//End Fix - #35358
-		}
-		else {
+		if (((SelectBooleanCheckbox) event.getSource()).isSelected()) {
+			getManagedBean().setCtAddress(
+					CtAddressUtil.retrieveSupplierAddress(getManagedBean().getContractVer().getCtContract()
+							.getSmSupplier()));
+			// Start Fix - #35358
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setContactPerson(getManagedBean().getCtAddress().getContactPerson());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setContactEmail(getManagedBean().getCtAddress().getContactEmail());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setPhoneCountry(getManagedBean().getCtAddress().getContactPhoneCountry());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setPhoneArea(getManagedBean().getCtAddress().getContactPhoneArea());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setPhoneNo(getManagedBean().getCtAddress().getContactPhoneNo());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setFaxCountry(getManagedBean().getCtAddress().getContactFaxCountry());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setFaxArea(getManagedBean().getCtAddress().getContactFaxArea());
+			getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()
+					.setFaxNo(getManagedBean().getCtAddress().getContactFaxNo());
+			// End Fix - #35358
+		} else {
 			if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {
 				getManagedBean().setCtAddress(
-						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierAddress());
+						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue()
+								.getSupplierAddress());
 			} else {
 				getManagedBean().setCtAddress(
 						getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-			} 
+			}
 		}
 		getManagedBean().setSupplierAddress(getFullAddress(getManagedBean().getCtAddress()));
-	}	
+	}
 
 	/**
 	 * The method used to retrieve the company name of supplier.
 	 * 
-	 * @param ajax event
+	 * @param ajax
+	 *            event
 	 */
 	public void retrieveCompanyName(AjaxBehaviorEvent event) {
-		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
+		if (((SelectBooleanCheckbox) event.getSource()).isSelected()) {
 			// Supplier Company Name
 			getManagedBean().setSupplierCompanyName(
 					getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName());
 			// Retrieve Supplier Branch Name
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 			reqDTO.setSmAppl(getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl());
-			SupplierSearchResDTO resDTO = supplierSearchSO.retrieveUpdateSmSupplierBranchFromLatestApplication(reqDTO);			
+			SupplierSearchResDTO resDTO = supplierSearchSO.retrieveUpdateSmSupplierBranchFromLatestApplication(reqDTO);
 			if (resDTO.getLatestBranch() != null) {
 				getManagedBean().setSupplierBranchName(resDTO.getLatestBranch().getBranchName());
 			}
@@ -616,7 +656,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setSupplierRegNo(
 					getManagedBean().getContractVer().getCtContract().getSmSupplier().getRegNo());
 			// Retrieve Mof No by supplier id
-			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
 			MofAccountReqDTO mofReqDTO = new MofAccountReqDTO();
 			mofReqDTO.setSupplierId(getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
 			MofAccountResDTO mofresDTO = mofAccountSO.retrieveMofNoBySupplierId(mofReqDTO);
@@ -625,48 +666,64 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		} else {
 			if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null) {
-				getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierName());
-				getManagedBean().setSupplierBranchName(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierBranch());
-				getManagedBean().setSupplierRegNo(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierRegNo());
-				getManagedBean().setSupplierMofNo(getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue().getSupplierMofNo());
+				getManagedBean().setSupplierCompanyName(
+						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue()
+								.getSupplierName());
+				getManagedBean().setSupplierBranchName(
+						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue()
+								.getSupplierBranch());
+				getManagedBean().setSupplierRegNo(
+						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue()
+								.getSupplierRegNo());
+				getManagedBean().setSupplierMofNo(
+						getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractValue()
+								.getSupplierMofNo());
 			} else {
-				getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-				getManagedBean().setSupplierBranchName(getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
-				getManagedBean().setSupplierRegNo(getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
-				getManagedBean().setSupplierMofNo(getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
+				getManagedBean().setSupplierCompanyName(
+						getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+				getManagedBean().setSupplierBranchName(
+						getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
+				getManagedBean().setSupplierRegNo(
+						getManagedBean().getContractVer().getCtContractValue().getSupplierRegNo());
+				getManagedBean().setSupplierMofNo(
+						getManagedBean().getContractVer().getCtContractValue().getSupplierMofNo());
 			}
 		}
 	}
 
 	/**
-	 * The method used to check whether contract is services with LOA signed 
+	 * The method used to check whether contract is services with LOA signed
 	 * before GST effective date (01/04/2015).
 	 * 
 	 * @return true, if contract is services and LOA is signed before 01/04/2015
-	 *         false, if contract is not services or LOA is not signed before 01/04/2015
+	 *         false, if contract is not services or LOA is not signed before
+	 *         01/04/2015
 	 */
 	public boolean imposedServiceTaxCondition() {
 		try {
 			if (getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory() != null
-					&& getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode() != null) {
-				if (getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(
-						ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)) {
-					if (getManagedBean().getContractVer().getCtContract().getAckDate().getTime() < getGstLaunchDate().getTime()) {
+					&& getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory()
+							.getParameterCode() != null) {
+				if (getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory()
+						.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)) {
+					if (getManagedBean().getContractVer().getCtContract().getAckDate().getTime() < getGstLaunchDate()
+							.getTime()) {
 						return true;
 					}
 				}
 			}
 		} catch (Exception e) {
 			log.error(e.toString());
-		}	
+		}
 		return false;
 	}
 
 	/**
-	 * The method used to check whether current date is before the GST relief due date (31/03/2017).
+	 * The method used to check whether current date is before the GST relief
+	 * due date (31/03/2017).
 	 * 
-	 * @return true, if current date is before or equal 31/03/2017
-	 *         false, if current date is after 31/03/2017
+	 * @return true, if current date is before or equal 31/03/2017 false, if
+	 *         current date is after 31/03/2017
 	 */
 	public boolean isBeforeGstReliefDueDate() {
 		try {
@@ -680,17 +737,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to set the alert flag 
-	 * when the original contract imposed service tax.
+	 * The method used to set the alert flag when the original contract imposed
+	 * service tax.
 	 */
 	public void chkServiceTaxAlert() {
 		try {
-			if (isBeforeGstReliefDueDate()	// currentDate <= 31/3/2017
-					&& imposedServiceTaxCondition()	// ack_date < 01/04/2015 & procurement category = Service
-					&& isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())	// supplier gst is effective
-					&& !getManagedBean().getContractVer().getCtContractValue().isServiceTax()	// imposed_service_tax = No
-					&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() > getGstReliefDueDate().getTime()) {	// contract_end_date > 31/3/2017
-				getManagedBean().setServiceTaxAlertFlg(true);				
+			if (isBeforeGstReliefDueDate() // currentDate <= 31/3/2017
+					&& imposedServiceTaxCondition() // ack_date < 01/04/2015 &
+													// procurement category =
+													// Service
+					&& isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate()) // supplier
+																													// gst
+																													// is
+																													// effective
+					&& !getManagedBean().getContractVer().getCtContractValue().isServiceTax() // imposed_service_tax
+																								// =
+																								// No
+					&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() > getGstReliefDueDate()
+							.getTime()) { // contract_end_date > 31/3/2017
+				getManagedBean().setServiceTaxAlertFlg(true);
 			}
 		} catch (Exception e) {
 			log.error(e.toString());
@@ -698,16 +763,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to verify the login user is BPK CC approver 
-	 * or contract approver.
+	 * The method used to verify the login user is BPK CC approver or contract
+	 * approver.
 	 * 
 	 * @return true, if login user is BPK CC approver or contract approver
 	 *         false, if login user is not BPK CC approver or contract approver
 	 */
 	public boolean isApprover() {
 		FacesScopes facesScopes = new FacesScopes();
-		return (facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value()) 
-				|| facesScopes.hasRoleUser(RoleCode.BPK_CC_APPROVER.value()));
+		return (facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value()) || facesScopes
+				.hasRoleUser(RoleCode.BPK_CC_APPROVER.value()));
 	}
 
 	/**
@@ -719,8 +784,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		QTDocumentReqDTO reqDTO = new QTDocumentReqDTO();
 
 		String docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER; // AQ
-		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-				ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // AD
 		}
 		reqDTO.setDocCategory(docCategory);
@@ -731,14 +796,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		reqDTO.setScReport(scLoaReport);
 
 		QTDocumentResDTO resDTO = qtDocumentSO.retriveScQtReportByDefKey(reqDTO);
-		scLoaReport = (ScLoaReport)resDTO.getScReport();
+		scLoaReport = (ScLoaReport) resDTO.getScReport();
 
-		String filePath = (scLoaReport != null && scLoaReport.getScLoaReportAttachment() != null) ? scLoaReport.getScLoaReportAttachment().getFilePath() : null;
+		String filePath = (scLoaReport != null && scLoaReport.getScLoaReportAttachment() != null) ? scLoaReport
+				.getScLoaReportAttachment().getFilePath() : null;
 		getManagedBean().setBranchInfoFilePath(filePath);
 	}
 
 	/**
-	 * The method used to download Item and Specification Guideline file 
+	 * The method used to download Item and Specification Guideline file
 	 */
 	public void downloadItemSpecGuideline() throws IOException {
 		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
@@ -753,31 +819,33 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		commonDownload(filePath.toString(), ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 	}
 
-	/* Implementation of contract schedule start*/
+	/* Implementation of contract schedule start */
 	/**
-	 * The method used to reset the schedule information once 
-	 * user select the schedule type.
+	 * The method used to reset the schedule information once user select the
+	 * schedule type.
 	 */
-	public void changeScheduleTypeListener() {		
+	public void changeScheduleTypeListener() {
 		getManagedBean().setChkSchedule(false);
 		getManagedBean().setChkProgressive(false);
 		getManagedBean().setProgSchedButtonDeactive(false);
 		getManagedBean().setButtonHideSchActive(true);
 		if (getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
 			getManagedBean().getContractVer().getCtContract().setFrequencySchedule(true);
-		} else if (getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
+		} else if (getManagedBean().getFrequencySchedule().equalsIgnoreCase(
+				ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
 			getManagedBean().getContractVer().getCtContract().setFrequencySchedule(false);
-		}   
+		}
 	}
 
 	/**
-	 * The method used for generating a list of available start month
-	 * as selection. 
+	 * The method used for generating a list of available start month as
+	 * selection.
 	 * 
-	 * @param tableStartYear  start year
-	 * @return selectItems    the selection list of start month
+	 * @param tableStartYear
+	 *            start year
+	 * @return selectItems the selection list of start month
 	 */
-	public List<SelectItem> retrieveStartMonthList(String  tableStartYear) {
+	public List<SelectItem> retrieveStartMonthList(String tableStartYear) {
 		List<SelectItem> selectItems = null;
 
 		try {
@@ -795,21 +863,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			int endYear = Integer.valueOf(enddate.substring(6, 10));
 
 			selectItems = new ArrayList<SelectItem>();
-			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));		
-			if (schedStartYear == 0 && startYear == endYear) { 
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			if (schedStartYear == 0 && startYear == endYear) {
 				for (int i = startMonth; i <= endMonth; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} else if ((schedStartYear == 0) || (schedStartYear == startYear && schedStartYear != endYear)) { 
+			} else if ((schedStartYear == 0) || (schedStartYear == startYear && schedStartYear != endYear)) {
 				for (int i = startMonth; i <= 12; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} else if (schedStartYear == startYear  && schedStartYear == endYear) { 
+			} else if (schedStartYear == startYear && schedStartYear == endYear) {
 				for (int i = startMonth; i <= endMonth; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} else if (schedStartYear != startYear  && schedStartYear == endYear) { 
+			} else if (schedStartYear != startYear && schedStartYear == endYear) {
 				for (int i = 1; i <= endMonth; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
@@ -817,25 +885,27 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				for (int i = 1; i <= 12; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} 
-		} finally { }
+			}
+		} finally {
+		}
 
 		return selectItems;
 	}
 
 	/**
-	 * The method used for generating a list of available end month
-	 * as selection.
+	 * The method used for generating a list of available end month as
+	 * selection.
 	 * 
-	 * @param tableEndYear   end year
-	 * @return selectItems   the selection list of end month
+	 * @param tableEndYear
+	 *            end year
+	 * @return selectItems the selection list of end month
 	 */
 	public List<SelectItem> retrieveEndMonthList(String tableEndYear) {
 		List<SelectItem> selectItems = null;
 
 		try {
 
-			int schedEndYear =0;
+			int schedEndYear = 0;
 			String fromdate = dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 			int startMonth = Integer.valueOf(fromdate.substring(3, 5));
 			int startYear = Integer.valueOf(fromdate.substring(6, 10));
@@ -849,35 +919,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			int endYear = Integer.valueOf(enddate.substring(6, 10));
 
 			selectItems = new ArrayList<SelectItem>();
-			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));						 
-			if (schedEndYear == endYear && schedEndYear == startYear) { 
+			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			if (schedEndYear == endYear && schedEndYear == startYear) {
 				for (int i = startMonth; i <= endMonth; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} else if (schedEndYear == endYear && schedEndYear != startYear) { 
+			} else if (schedEndYear == endYear && schedEndYear != startYear) {
 				for (int i = 1; i <= endMonth; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} else if (schedEndYear != endYear && schedEndYear == startYear) { 
-				for (int i = startMonth; i <= 12; i++) { 
+			} else if (schedEndYear != endYear && schedEndYear == startYear) {
+				for (int i = startMonth; i <= 12; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} else if ( schedEndYear >  startYear && schedEndYear < endYear) {
+			} else if (schedEndYear > startYear && schedEndYear < endYear) {
 				for (int i = 1; i <= 12; i++) {
 					selectItems.add(new SelectItem(changeIntToString(i), months.get(changeIntToString(i))));
 				}
-			} 
-		} finally { }
+			}
+		} finally {
+		}
 		return selectItems;
 	}
 
 	/**
-	 * The method used to convert the month index to
-	 * string text. 
+	 * The method used to convert the month index to string text.
 	 * 
-	 * @param index    the index of the month
-	 * @return months  the string text of the month
+	 * @param index
+	 *            the index of the month
+	 * @return months the string text of the month
 	 */
 	private String changeIntToString(int index) {
 		String months = "";
@@ -906,13 +977,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		} else if (index == 12) {
 			months = "12";
 		}
-		return months;		
+		return months;
 	}
 
 	/**
-	 * The method used for validating the period of frequency schedule.
-	 * A warning message will display on screen when the end date is 
-	 * larger than start date.
+	 * The method used for validating the period of frequency schedule. A
+	 * warning message will display on screen when the end date is larger than
+	 * start date.
 	 */
 	public void validateScheduleDate(CtSchedule ctSchedule, int index) {
 		getManagedBean().getContractVer().getCtSchedules().remove(index);
@@ -920,37 +991,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		getManagedBean().setProgSchedButtonDeactive(false);
 		if (ctSchedule.getEndMonth() != null && ctSchedule.getStartMonth() != null) {
-			int startYear = Integer.valueOf((String) ctSchedule.getStartYear());  
+			int startYear = Integer.valueOf((String) ctSchedule.getStartYear());
 			int endYear = Integer.valueOf((String) ctSchedule.getEndYear());
-			int startMonth = Integer.valueOf((String) ctSchedule.getStartMonth());  
+			int startMonth = Integer.valueOf((String) ctSchedule.getStartMonth());
 			int endMonth = Integer.valueOf((String) ctSchedule.getEndMonth());
 
-			if ((startMonth > endMonth && startYear >= endYear)|| (startMonth <= endMonth && startYear > endYear)) {
-				for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {			            
+			if ((startMonth > endMonth && startYear >= endYear) || (startMonth <= endMonth && startYear > endYear)) {
+				for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
 					if (dataList.toString().equalsIgnoreCase(ctSchedule.toString())) {
 						getManagedBean().setProgSchedButtonDeactive(true);
 						throw new EpException(MessageConst.ERROR_750023);
 					}
 				}
-			} 
+			}
 		}
 	}
 
 	/**
-	 * The method used to add a new frequency schedule.
-	 * This method will generate a new record in frequency schedule
-	 * list. 
+	 * The method used to add a new frequency schedule. This method will
+	 * generate a new record in frequency schedule list.
 	 */
 	public void addScheduleDetails() {
 		CtSchedule ctSchedules = new CtSchedule();
 		int number = 1;
 		if (getManagedBean().getContractVer().getCtSchedules().size() > 0) {
-			// Get the last schedule record from the list and plus 1 to the schedule no
-			number = getManagedBean().getContractVer().getCtSchedules().get(
-					getManagedBean().getContractVer().getCtSchedules().size() - 1).getScheduleNo() + 1;
+			// Get the last schedule record from the list and plus 1 to the
+			// schedule no
+			number = getManagedBean().getContractVer().getCtSchedules()
+					.get(getManagedBean().getContractVer().getCtSchedules().size() - 1).getScheduleNo() + 1;
 		}
 		ctSchedules.setScheduleNo(number);
-		getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
+		getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);
 	}
 
 	/**
@@ -958,10 +1029,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void deleteScheduleDetails() {
 		try {
-			Iterator<CtSchedule> ctScheduleIterator = getManagedBean().getContractVer().getCtSchedules() .iterator();
-			while(ctScheduleIterator.hasNext()){
-				CtSchedule  ctSchedules = ctScheduleIterator.next();
-				if(ctSchedules.isSelectedCheckBox()){
+			Iterator<CtSchedule> ctScheduleIterator = getManagedBean().getContractVer().getCtSchedules().iterator();
+			while (ctScheduleIterator.hasNext()) {
+				CtSchedule ctSchedules = ctScheduleIterator.next();
+				if (ctSchedules.isSelectedCheckBox()) {
 					ctScheduleIterator.remove();
 				}
 			}
@@ -969,39 +1040,43 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setButtonHideSchActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
 	/**
 	 * The method used to delete the selected progressive payment(s).
 	 */
-	public void deleteProgressiveDetails(){
+	public void deleteProgressiveDetails() {
 		try {
-			Iterator<CtProgressivePayment> ctProIterator = getManagedBean().getContractVer().getCtProgressivePayments().iterator();
-			while(ctProIterator.hasNext()){
-				CtProgressivePayment  ctProgressivePayments = ctProIterator.next();
-				if(ctProgressivePayments.isSelectedCheckBox()){
+			Iterator<CtProgressivePayment> ctProIterator = getManagedBean().getContractVer().getCtProgressivePayments()
+					.iterator();
+			while (ctProIterator.hasNext()) {
+				CtProgressivePayment ctProgressivePayments = ctProIterator.next();
+				if (ctProgressivePayments.isSelectedCheckBox()) {
 					ctProIterator.remove();
 				}
 			}
 			getManagedBean().setSelectAll(false);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
 	/**
-	 * The method used for generating a list of available year
-	 * as selection.
+	 * The method used for generating a list of available year as selection.
 	 * 
 	 * @return the selection list of year
 	 */
 	public List<String> getYearList() {
 		getManagedBean().setYearList(new ArrayList<String>());
-		int startYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
-		int endYear = Integer.valueOf(dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
+		int startYear = Integer.valueOf(dateFormat.format(
+				getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
+		int endYear = Integer.valueOf(dateFormat.format(
+				getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
 		for (int i = startYear; i <= endYear; i++) {
 			getManagedBean().getYearList().add(String.valueOf(i));
 		}
@@ -1009,23 +1084,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used for validating the period of progressive payment.
-	 * A warning message will display on screen when the end date is 
-	 * larger than start date.
+	 * The method used for validating the period of progressive payment. A
+	 * warning message will display on screen when the end date is larger than
+	 * start date.
 	 */
-	public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment, int index) {
+	public void validateProgressiveDate(CtProgressivePayment ctProgressivePayment, int index) {
 		getManagedBean().getContractVer().getCtProgressivePayments().remove(index);
 		getManagedBean().getContractVer().getCtProgressivePayments().add(index, ctProgressivePayment);
 
 		calculatePercentage(ctProgressivePayment);
 		getManagedBean().setProgSchedButtonDeactive(false);
 		if (ctProgressivePayment.getEndMonth() != null && ctProgressivePayment.getStartMonth() != null) {
-			int startYear = Integer.valueOf((String) ctProgressivePayment.getStartYear());  
+			int startYear = Integer.valueOf((String) ctProgressivePayment.getStartYear());
 			int endYear = Integer.valueOf((String) ctProgressivePayment.getEndYear());
-			int startMonth = Integer.valueOf((String) ctProgressivePayment.getStartMonth());  
+			int startMonth = Integer.valueOf((String) ctProgressivePayment.getStartMonth());
 			int endMonth = Integer.valueOf((String) ctProgressivePayment.getEndMonth());
 
-			if ((startMonth > endMonth  &&  startYear >= endYear)||(startMonth <= endMonth  && startYear > endYear)) {
+			if ((startMonth > endMonth && startYear >= endYear) || (startMonth <= endMonth && startYear > endYear)) {
 				for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (dataList.equals(ctProgressivePayment)) {
 						getManagedBean().setProgSchedButtonDeactive(true);
@@ -1037,19 +1112,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used for calculating the percentage of progressive payment.
-	 * A warning message will display on screen when the percentage
-	 * is more than 100%.
+	 * The method used for calculating the percentage of progressive payment. A
+	 * warning message will display on screen when the percentage is more than
+	 * 100%.
 	 */
 	public void calculatePercentage(CtProgressivePayment progPayment) {
 		double addValue = 0.0f;
 		getManagedBean().setProgSchedButtonDeactive(false);
-		for (CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
-			if(progressivePayment.getPercentage()!=null) {
+		for (CtProgressivePayment progressivePayment : getManagedBean().getContractVer().getCtProgressivePayments()) {
+			if (progressivePayment.getPercentage() != null) {
 				addValue = addValue + progressivePayment.getPercentage().doubleValue();
 			}
 		}
-		for (CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
+		for (CtProgressivePayment progressivePayment : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			if (progressivePayment.equals(progPayment)) {
 				if (Math.abs(addValue) > 100) {
 					getManagedBean().setProgSchedButtonDeactive(true);
@@ -1063,12 +1138,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			} else {
 				progressivePayment.setPercentageExceeded(false);
 			}
-		}  
+		}
 	}
 
 	/**
-	 * The method used to retrieve the total month from selected
-	 * start month to selected end month.
+	 * The method used to retrieve the total month from selected start month to
+	 * selected end month.
 	 * 
 	 * @return the total number of month(s)
 	 */
@@ -1077,19 +1152,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		String fromDate = null;
 		String toDate = null;
 
-		try {		     
-			dateFormat = new SimpleDateFormat("MM-yyyy");		  
+		try {
+			dateFormat = new SimpleDateFormat("MM-yyyy");
 			if (frequencyType.equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
-				CtSchedule schedules = (CtSchedule)Var;
+				CtSchedule schedules = (CtSchedule) Var;
 				if (schedules.getEndMonth() != null) {
-					fromDate = schedules.getStartMonth()+"-"+ schedules.getStartYear();
-					toDate = schedules.getEndMonth() +"-"+schedules.getEndYear();
+					fromDate = schedules.getStartMonth() + "-" + schedules.getStartYear();
+					toDate = schedules.getEndMonth() + "-" + schedules.getEndYear();
 				}
 			} else if (frequencyType.equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
-				CtProgressivePayment progressivePayment = (CtProgressivePayment)Var;
+				CtProgressivePayment progressivePayment = (CtProgressivePayment) Var;
 				if (progressivePayment.getEndMonth() != null) {
 					fromDate = progressivePayment.getStartMonth() + "-" + progressivePayment.getStartYear();
-					toDate =  progressivePayment.getEndMonth() + "-" + progressivePayment.getEndYear();
+					toDate = progressivePayment.getEndMonth() + "-" + progressivePayment.getEndYear();
 				}
 			}
 			Date startDate = dateFormat.parse((fromDate));
@@ -1099,23 +1174,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			sDate.setTime(startDate);
 			eDate.setTime(endDate);
 
-			int months  = (eDate.get(Calendar.YEAR) - sDate.get(Calendar.YEAR)) * 12
-					+ (eDate.get(Calendar.MONTH)- sDate.get(Calendar.MONTH));
+			int months = (eDate.get(Calendar.YEAR) - sDate.get(Calendar.YEAR)) * 12
+					+ (eDate.get(Calendar.MONTH) - sDate.get(Calendar.MONTH));
 
 			if (months < 0) {
 				return 0;
 			}
 			return months + 1;
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 
-		} finally { }
+		} finally {
+		}
 		return 0;
 	}
 
 	/**
-	 * The method used to add a new progressive payment.
-	 * This method will generate a new record in progressive payment
-	 * list. 
+	 * The method used to add a new progressive payment. This method will
+	 * generate a new record in progressive payment list.
 	 */
 	public void addFrequencyDetails() {
 		CtProgressivePayment ctProgressivePayment = new CtProgressivePayment();
@@ -1125,8 +1200,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used for generating a list of fulfillment type
-	 * for schedule as selection.
+	 * The method used for generating a list of fulfillment type for schedule as
+	 * selection.
 	 * 
 	 * @return the selection list of fulfillment type
 	 */
@@ -1135,17 +1210,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ISearchBean<PmParameterDesc> searchBean = null;
 
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.SCHEDULE_TYPE, searchBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					ParameterTypeConst.SCHEDULE_TYPE, searchBean);
 			items = new SelectItem[parameterDescs.size()];
 			int i = 0;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(
-						parameterDesc.getPmParameter().getParameterId(), 
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
 						parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
@@ -1158,7 +1234,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * @param selectedSchedule the selectedSchedule to set
+	 * @param selectedSchedule
+	 *            the selectedSchedule to set
 	 */
 	public void setSelectedSchedule(CtSchedule[] selectedSchedule) {
 		this.selectedSchedule = selectedSchedule;
@@ -1172,28 +1249,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * @param selectedProgressive the selectedProgressive to set
+	 * @param selectedProgressive
+	 *            the selectedProgressive to set
 	 */
 	public void setSelectedProgressive(CtProgressivePayment[] selectedProgressive) {
 		this.selectedProgressive = selectedProgressive;
-	}/* Implementation of contract schedule end*/
+	}/* Implementation of contract schedule end */
 
-	/* Implementation of contract deduction start*/
+	/* Implementation of contract deduction start */
 	/**
 	 * This method used to get parameter code using parameter id
 	 * 
-	 * @param parameterObj an object of pmparameter
+	 * @param parameterObj
+	 *            an object of pmparameter
 	 * @return String, parameter code
 	 */
-	public String getParameterCode(PmParameter parameterObj){
-		if(parameterObj == null || parameterObj.getParameterId() == null) {
+	public String getParameterCode(PmParameter parameterObj) {
+		if (parameterObj == null || parameterObj.getParameterId() == null) {
 			return "Str";
 		}
 		return ParameterHelper.getInstance().getPmParameterById(parameterObj.getParameterId()).getParameterCode();
 	}
 
 	/**
-	 * This method used to retrieve deduction type from database 
+	 * This method used to retrieve deduction type from database
 	 * 
 	 * @return the selection list of deduction type
 	 */
@@ -1212,31 +1291,37 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			deductionType.add(ParameterConst.DEDUCTION_TYPE_NON_FIXED);
 			deductionType.add(ParameterConst.DEDUCTION_TYPE_OTHERS);
 
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_IN.value(), deductionType));
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DEDUCTION_TYPE, searchBean);
+			searchBean.getDataFilterBeans()
+					.add(new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+							deductionType));
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					ParameterTypeConst.DEDUCTION_TYPE, searchBean);
 			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
+						parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
 
 	/**
-	 * The method used to validate deduction type.
-	 * User can not selected same type of deduction again.
-	 */	
-	public void validateDeductionType(CtDeduction deduction)  {
+	 * The method used to validate deduction type. User can not selected same
+	 * type of deduction again.
+	 */
+	public void validateDeductionType(CtDeduction deduction) {
 
-		if(getManagedBean().getContractVer().getCtDeductions().size() > 0 ) {
+		if (getManagedBean().getContractVer().getCtDeductions().size() > 0) {
 			int count = 0;
 			String parameterCode;
-			for(CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()){
+			for (CtDeduction deId : getManagedBean().getContractVer().getCtDeductions()) {
 				PmParameter deductionTypeById = deId.getDeductionType();
 				PmParameter deductionType = deduction.getDeductionType();
 				if (deductionTypeById == null || deductionType == null)
@@ -1244,21 +1329,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				if (deductionTypeById.getParameterId() != null && deductionType.getParameterId() != null
 						&& deductionType.getParameterId().intValue() == deductionTypeById.getParameterId().intValue()) {
 					count++;
-					parameterCode =  getParameterCode(deductionTypeById);
-					if(!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS) &&
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)  && 
-							!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
+					parameterCode = getParameterCode(deductionTypeById);
+					if (!parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_OTHERS)
+							&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_FIXED)
+							&& !parameterCode.equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_NON_FIXED) && count == 2)
 						throw new EpException(MessageConst.ERROR_100046,
-								new String[] {getParameterDesc(ParameterHelper.getInstance().getPmParameterById(deduction.getDeductionType().getParameterId()))});
+								new String[] { getParameterDesc(ParameterHelper.getInstance().getPmParameterById(
+										deduction.getDeductionType().getParameterId())) });
 				}
 			}
 		}
 	}
 
 	/**
-	 * The method used to add new deduction.
-	 * This method will generate new record in deduction.
-	 */	
+	 * The method used to add new deduction. This method will generate new
+	 * record in deduction.
+	 */
 	public void addDeduction() {
 
 		CtDeduction deduction = new CtDeduction();
@@ -1272,9 +1358,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void deleteDeductionDetails() {
 		try {
 			Iterator<CtDeduction> deductionIterator = getManagedBean().getContractVer().getCtDeductions().iterator();
-			while(deductionIterator.hasNext()){
-				CtDeduction  deducts = deductionIterator.next();
-				if(deducts.isSelectedCheckBox()){
+			while (deductionIterator.hasNext()) {
+				CtDeduction deducts = deductionIterator.next();
+				if (deducts.isSelectedCheckBox()) {
 					deductionIterator.remove();
 				}
 			}
@@ -1283,15 +1369,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setButtonHideDedActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
 	/**
-	 * The method used to add new deduction clause.
-	 * This method will generate new record in deduction clause
-	 * list. 
-	 */	
+	 * The method used to add new deduction clause. This method will generate
+	 * new record in deduction clause list.
+	 */
 	public void addDeductionClause() {
 		CtDeductionClause clause = new CtDeductionClause();
 		this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().add(clause);
@@ -1302,10 +1388,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void deleteClauseDetails() {
 		try {
-			Iterator<CtDeductionClause> deductionClauseIterator = getManagedBean().getSelectedDeduction().getCtDeductionClauses() .iterator();
-			while(deductionClauseIterator.hasNext()){
-				CtDeductionClause  clause = deductionClauseIterator.next();
-				if(clause.isSelectedCheckBox()){
+			Iterator<CtDeductionClause> deductionClauseIterator = getManagedBean().getSelectedDeduction()
+					.getCtDeductionClauses().iterator();
+			while (deductionClauseIterator.hasNext()) {
+				CtDeductionClause clause = deductionClauseIterator.next();
+				if (clause.isSelectedCheckBox()) {
 					deductionClauseIterator.remove();
 				}
 			}
@@ -1313,116 +1400,116 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setButtonHideDedActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
 	/**
-	 * The method used for getter
-	 *  and setter for deduction clause
+	 * The method used for getter and setter for deduction clause
 	 */
 	public CtDeductionClause[] getSelectedDeductionClauses() {
 		return selectedDeductionClauses;
 	}
 
 	/**
-	 * The method used for getter
-	 *  and setter for deduction clause
+	 * The method used for getter and setter for deduction clause
 	 */
-	public void setSelectedDeductionClauses(
-			CtDeductionClause[] selectedDeductionClauses) {
+	public void setSelectedDeductionClauses(CtDeductionClause[] selectedDeductionClauses) {
 		this.selectedDeductionClauses = selectedDeductionClauses;
 	}
 
 	/**
 	 * Function to check / uncheck single checkbox into datatable.
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOneCheckboxSelect(AjaxBehaviorEvent e) {
 
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideActive(true);
-		}	
+		}
 	}
 
 	/**
 	 * Function to check / uncheck single checkbox into deduction datatable.
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOneDeductCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOneDeductCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
-			if(deduct.isSelectedCheckBox()){
+			if (deduct.isSelectedCheckBox()) {
 				getManagedBean().setButtonHideDedActive(false);
 				return;
 			}
 		}
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideDedActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideDedActive(true);
-		}	
+		}
 	}
 
 	/**
-	 * Function to check / uncheck single checkbox into deduction clause datatable
+	 * Function to check / uncheck single checkbox into deduction clause
+	 * datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOneClauseCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOneClauseCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		for (CtDeductionClause ctDeductionClauses : getManagedBean().getSelectedDeduction().getCtDeductionClauses()) {
-			if(ctDeductionClauses.isSelectedCheckBox()){
+			if (ctDeductionClauses.isSelectedCheckBox()) {
 				getManagedBean().setButtonHideDedActive(false);
 				return;
 			}
 		}
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideDedActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideDedActive(true);
-		}	
+		}
 	}
 
 	/**
 	 * @return the paidPercentage
 	 */
 	public BigDecimal getPaidPercentage() {
-		if(getManagedBean().getPaidInvoiceAmt() != null && getManagedBean().getPaidInvoiceAmt().intValue() > 0) {
-			paidPercentage = (getManagedBean().getPaidInvoiceAmt().multiply(
-					BigDecimal.valueOf(100)).divide(
-							getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
+		if (getManagedBean().getPaidInvoiceAmt() != null && getManagedBean().getPaidInvoiceAmt().intValue() > 0) {
+			paidPercentage = (getManagedBean().getPaidInvoiceAmt().multiply(BigDecimal.valueOf(100)).divide(
+					getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
 		}
 		return paidPercentage;
 	}
-	
-
 
 	/**
-	 * @param paidPercentage the paidPercentage to set
+	 * @param paidPercentage
+	 *            the paidPercentage to set
 	 */
 	public void setPaidPercentage(BigDecimal paidPercentage) {
 		this.paidPercentage = paidPercentage;
 	}
-	
+
 	/**
 	 * @return the paidsumPercentage
 	 */
 	public BigDecimal getPaidsumPercentage() {
-		if(getManagedBean().getPaidsumInvoiceAmt() != null && getManagedBean().getPaidsumInvoiceAmt().intValue() > 0) {
-			paidsumPercentage = (getManagedBean().getPaidsumInvoiceAmt().multiply(
-					BigDecimal.valueOf(100)).divide(
-							getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
+		if (getManagedBean().getPaidsumInvoiceAmt() != null && getManagedBean().getPaidsumInvoiceAmt().intValue() > 0) {
+			paidsumPercentage = (getManagedBean().getPaidsumInvoiceAmt().multiply(BigDecimal.valueOf(100)).divide(
+					getManagedBean().getGstTotalAmount(), 2, RoundingMode.HALF_UP));
 		}
 		return paidsumPercentage;
 	}
-	
+
 	/**
-	 * @param paidsumPercentage the paidsumPercentage to set
+	 * @param paidsumPercentage
+	 *            the paidsumPercentage to set
 	 */
 	public void setPaidsumPercentage(BigDecimal paidsumPercentage) {
 		this.paidsumPercentage = paidsumPercentage;
@@ -1433,17 +1520,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public BigDecimal getPaidAdvancePercentage() {
 
-		if (getManagedBean().getPaidAdvancePaymentAmt() != null && 
-				getManagedBean().getPaidAdvancePaymentAmt().doubleValue() != 0) {
-			paidAdvancePercentage = (getManagedBean().getPaidAdvancePaymentAmt().multiply(
-					BigDecimal.valueOf(100)).divide(
-							BigDecimal.valueOf(getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
+		if (getManagedBean().getPaidAdvancePaymentAmt() != null
+				&& getManagedBean().getPaidAdvancePaymentAmt().doubleValue() != 0) {
+			paidAdvancePercentage = (getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100))
+					.divide(BigDecimal.valueOf(getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
 		}
 		return paidAdvancePercentage;
 	}
 
 	/**
-	 * @param paidAdvancePercentage the paidAdvancePercentage to set
+	 * @param paidAdvancePercentage
+	 *            the paidAdvancePercentage to set
 	 */
 	public void setPaidAdvancePercentage(BigDecimal paidAdvancePercentage) {
 		this.paidAdvancePercentage = paidAdvancePercentage;
@@ -1453,51 +1540,55 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the balanceToPaid
 	 */
 	public BigDecimal getBalanceToPaid() {
-		balanceToPaid = (BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()).subtract(
-				this.getManagedBean().getPaidAdvancePaymentAmt()));
+		balanceToPaid = (BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()).subtract(this
+				.getManagedBean().getPaidAdvancePaymentAmt()));
 		return balanceToPaid;
 	}
 
 	/**
-	 * @param balanceToPaid the balanceToPaid to set
+	 * @param balanceToPaid
+	 *            the balanceToPaid to set
 	 */
 	public void setBalanceToPaid(BigDecimal balanceToPaid) {
 		this.balanceToPaid = balanceToPaid;
-	}    
+	}
 
-	/*Zone start*/
+	/* Zone start */
 	/**
 	 * The method used for creating the zone tree node.
 	 */
 	public void retriveZonesByContractVer() {
-		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
-		TreeNode zoneNode =  null;
+		TreeNode rootLocationTree = new DefaultTreeNode("Root", null);
+		TreeNode zoneNode = null;
 
 		for (CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
 			if (zone.getDeliveryTermUom() == null) {
-				PmParameter pmParameter = getParameterByTypeAndCode(
-						ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS);
-				zone.setDeliveryTermUom(pmParameter); 
+				PmParameter pmParameter = getParameterByTypeAndCode(ParameterTypeConst.DELIVERY_TERM,
+						ParameterConst.DELIVERY_TERM_DAYS);
+				zone.setDeliveryTermUom(pmParameter);
 				if (pmParameter != null) {
 					zone.getDeliveryTermUom().setParameterId(pmParameter.getParameterId());
 				}
 			}
-			zoneNode = new DefaultTreeNode("zone", new LocationDTO(
-					zone.toString(), zone.getZoneName(), zone.getDeliveryTerm(), 
-					zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
+			zoneNode = new DefaultTreeNode("zone", new LocationDTO(zone.toString(), zone.getZoneName(),
+					zone.getDeliveryTerm(), zone.getDeliveryTermUom().getParameterId()), rootLocationTree);
 			List<PmState> state = new ArrayList<PmState>();
 			if (zone.getCtContractZoneDtls() != null) {
 				for (CtContractZoneDtl zoneDtl : zone.getCtContractZoneDtls()) {
-					if (zoneDtl.getState() != null && getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode().equalsIgnoreCase(
-							ParameterConst.LOCATION_LEVEL_STATE)) {
+					if (zoneDtl.getState() != null
+							&& getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode()
+									.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)) {
 						if (!state.contains(zoneDtl.getState())) {
-							new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(), zoneDtl.getState()), zoneNode);
+							new DefaultTreeNode("state", new LocationDTO(zoneDtl.getContractZoneDtlId(),
+									zoneDtl.getState()), zoneNode);
 						}
 						state.add(zoneDtl.getState());
 					}
-					if (zoneDtl.getDistrict() != null && getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode().equalsIgnoreCase(
-							ParameterConst.LOCATION_LEVEL_DISTRICT)) {
-						new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(), zoneDtl.getDistrict()), zoneNode);
+					if (zoneDtl.getDistrict() != null
+							&& getManagedBean().getContractVer().getCtContract().getLocationLevel().getParameterCode()
+									.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
+						new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(),
+								zoneDtl.getDistrict()), zoneNode);
 					}
 				}
 			}
@@ -1505,87 +1596,109 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		this.getManagedBean().setCtZoneTrees(rootLocationTree);
 	}
 
-	/*Agency start here*/
+	/* Agency start here */
 	/**
-	 * The method used for validating the ceiling amount of agencies.
-	 * A warning message will display on screen when the total ceiling amount is 
-	 * larger than contract value.
+	 * The method used for validating the ceiling amount of agencies. A warning
+	 * message will display on screen when the total ceiling amount is larger
+	 * than contract value.
 	 */
 	public void validateCeilingAmount(CtAgency agencyData) {
 		List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
-		// Start added log for  Bug #31740
-		log.info(" Bug #31740 agencyList : "+agencyList.size()+" and  Contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo());
-		log.info(" Bug #31740 Changes value using(agencyData) in ContractBackingBean  :"+agencyData.getCeilingAmount()+" and Contract NO : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id : "+agencyData.getOrgProfile().getOrgProfileId());
+		// Start added log for Bug #31740
+		log.info(" Bug #31740 agencyList : " + agencyList.size() + " and  Contract No : "
+				+ getManagedBean().getContractVer().getCtContract().getContractNo());
+		log.info(" Bug #31740 Changes value using(agencyData) in ContractBackingBean  :"
+				+ agencyData.getCeilingAmount() + " and Contract NO : "
+				+ getManagedBean().getContractVer().getCtContract().getContractNo() + " agency_profile_id : "
+				+ agencyData.getOrgProfile().getOrgProfileId());
 		if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
 			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				// Start Fix -#31740
-				if(ctAgency.getOrgProfile().getOrgProfileId().equals(agencyData.getOrgProfile().getOrgProfileId())){
-					log.info(" Bug #31740 Changes value Before set using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+				if (ctAgency.getOrgProfile().getOrgProfileId().equals(agencyData.getOrgProfile().getOrgProfileId())) {
+					log.info(" Bug #31740 Changes value Before set using(ctAgency) in ContractBackingBean  :"
+							+ ctAgency.getCeilingAmount() + " and contract No : "
+							+ getManagedBean().getContractVer().getCtContract().getContractNo()
+							+ " agency_profile_id  :" + ctAgency.getOrgProfile().getOrgProfileId());
 					ctAgency.setCeilingAmount(agencyData.getCeilingAmount());
-					log.info(" Bug #31740 Changes value After set using(ctAgency) in ContractBackingBean  :"+ctAgency.getCeilingAmount()+" and contract No : "+getManagedBean().getContractVer().getCtContract().getContractNo()+" agency_profile_id  :"+ctAgency.getOrgProfile().getOrgProfileId());
+					log.info(" Bug #31740 Changes value After set using(ctAgency) in ContractBackingBean  :"
+							+ ctAgency.getCeilingAmount() + " and contract No : "
+							+ getManagedBean().getContractVer().getCtContract().getContractNo()
+							+ " agency_profile_id  :" + ctAgency.getOrgProfile().getOrgProfileId());
 
 				}
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 				// End Fix -#31740
-		// End added log for  Bug #31740 			
-				
+				// End added log for Bug #31740
+
 			}
 			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
-          
+
 			double overallContractAmount = 0.0;
-			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
-				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
-						&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
-					overallContractAmount = contractAmt.getContractAmount().doubleValue();					
-					
+			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()) {
+				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt
+						.getEffDate().getTime()
+						&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt
+								.getExpDate().getTime()) {
+					overallContractAmount = contractAmt.getContractAmount().doubleValue();
+
 					if (contractAmt.getGstAmount() != null || contractAmt.getStaxAmount() != null) {
-						//28203				   
+						// 28203
 						double gstAmt = 0.0;
-					    double StaxAmt = 0.0;
-					     if(contractAmt.getGstAmount() != null){
-					        gstAmt = contractAmt.getGstAmount().doubleValue();
-					       }	 
-					     if(contractAmt.getStaxAmount() != null){
-					    	 StaxAmt = contractAmt.getStaxAmount().doubleValue();
-						   }	 
-					     //overallContractAmount += contractAmt.getGstAmount().doubleValue() + contractAmt.getStaxAmount().doubleValue();					    	 	 
-					     overallContractAmount += gstAmt + StaxAmt;
+						double StaxAmt = 0.0;
+						if (contractAmt.getGstAmount() != null) {
+							gstAmt = contractAmt.getGstAmount().doubleValue();
+						}
+						if (contractAmt.getStaxAmount() != null) {
+							StaxAmt = contractAmt.getStaxAmount().doubleValue();
+						}
+						// overallContractAmount +=
+						// contractAmt.getGstAmount().doubleValue() +
+						// contractAmt.getStaxAmount().doubleValue();
+						overallContractAmount += gstAmt + StaxAmt;
 					}
 					overallContractAmount = Double.valueOf(df.format(overallContractAmount));
 					break;
-					
+
 				}
 			}
 			if (ceilingAmt > overallContractAmount) {
 				agencyData.setCeilingAmount(BigDecimal.valueOf(0.00));
 				CommonUtils commonUtils = new CommonUtils();
-				DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
-						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-				throw new EpException(MessageConst.ERROR_750007,
-						new String[] {nf.format(overallContractAmount)}); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+				DecimalFormat nf = new DecimalFormat(
+						commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+				throw new EpException(MessageConst.ERROR_750007, new String[] { nf.format(overallContractAmount) }); // Total
+																														// ceiling
+																														// value
+																														// exceeded
+																														// contract
+																														// value.
+																														// Please
+																														// check
+																														// your
+																														// ceiling
+																														// amount.
 			}
-			
+
 			// Start Fix - #31740
-			getManagedBean().getSelectedAgencyChanges().put(agencyData.getOrgProfile().getOrgProfileId(),agencyData);
-//			log.info("List of selected agency to update : "+getManagedBean().getSelectedAgencyChanges().size());
+			getManagedBean().getSelectedAgencyChanges().put(agencyData.getOrgProfile().getOrgProfileId(), agencyData);
+			// log.info("List of selected agency to update : "+getManagedBean().getSelectedAgencyChanges().size());
 			// End Fix - #31740
-			
-		  
-		}		
+
+		}
 	}
-	
-	
 
 	/**
-	 * The method used to set status of agency.
-	 * The status is displayed according to the effective date.
+	 * The method used to set status of agency. The status is displayed
+	 * according to the effective date.
 	 * 
-	 * @param  ctAgency  an object of agency
+	 * @param ctAgency
+	 *            an object of agency
 	 */
 	public void checkAgencyStatus(CtAgency ctAgency) {
-		// If effective date is after current date, status is still display old status
+		// If effective date is after current date, status is still display old
+		// status
 		if (ctAgency.getRecordStatusFlg() == 0) {
 			if (ctAgency.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
 				ctAgency.setChkStatus(true);
@@ -1599,7 +1712,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setChkStatus(true);
 			}
 		}
-		
+
 		// #25703 start
 		// check status from PM_ORG_VALIDITY
 		if (ctAgency.getOrgProfile().getPmOrgValidity().getRecordStatusFlg() == 0) {
@@ -1619,14 +1732,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to set the upload index for
-	 * file upload purpose.
-	 * The index is used to differentiate what type of file has
-	 * been uploaded.
+	 * The method used to set the upload index for file upload purpose. The
+	 * index is used to differentiate what type of file has been uploaded.
 	 * 
-	 * @param index index of the uploaded file
+	 * @param index
+	 *            index of the uploaded file
 	 */
-	public void setIndexProperty(int index){
+	public void setIndexProperty(int index) {
 		getManagedBean().setIndex(index);
 	}
 
@@ -1634,10 +1746,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetAgencyDetails() {
-		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
-				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+		getManagedBean().setMinistryProfileId(
+				retrieveMinistryOrgProfile(
+						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId())
+						.getOrgProfileId());
 		getManagedBean().setJabatanProfileId(null);
-		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
 		agencyDataModel.resetData();
@@ -1647,10 +1761,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetMinistryDetails() {
-		
+
 		System.out.println("<<<======== WE HERE ON resetMinistryDetails() ========>>>");
 		getManagedBean().setJabatanProfileId(null);
-		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
 		agencyDataModel.resetData();
@@ -1661,15 +1775,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetJabatanDetails() {
-		
+
 		System.out.println("<<<======== WE HERE ON resetJabatanDetails() ========>>>");
-		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
 		agencyDataModel.resetData();
 		System.out.println("<<<======== WE DONE resetJabatanDetails() ========>>>");
 	}
-
 
 	/**
 	 * @return the agencyDataModel
@@ -1679,7 +1792,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * @param agencyDataModel the agencyDataModel to set
+	 * @param agencyDataModel
+	 *            the agencyDataModel to set
 	 */
 	public void setAgencytDataModel(IPagingDataModel<PmOrgProfile> agencyDataModel) {
 		this.agencyDataModel = agencyDataModel;
@@ -1703,27 +1817,25 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {			
+		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {
 			try {
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				
+
 				Date currentDate = DateUtils.getCurrentDateWithoutTime();
 				// Filter By - Org effDate
-				searchBean.getDataFilterBeans()
-						.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmOrgValidity.effDate", SearchOperator.OPERATOR_LESS_EQUAL.value(),
+								currentDate));
 
 				// Filter By - Org expDate
 				searchBean.getDataFilterBeans().add(
-						new SearchMultiFilterBean(new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-								currentDate), new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_IS_NULL.value(), null,
+						new SearchMultiFilterBean(new SearchFilterBean("pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(), currentDate), new SearchFilterBean(
+								"pmOrgValidity.expDate", SearchOperator.OPERATOR_IS_NULL.value(), null,
 								SearchCondition.CONDITION_OR.value())));
-				
+
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
 				if (resDTO.isSuccessful()) {
@@ -1738,128 +1850,124 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	private ISearchBean<PmOrgProfile> generateAgencySearchBean(ISearchBean<PmOrgProfile> searchBean) {
 		// Filter By - parameterType
-		searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.ORGANISATION_TYPES));
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("orgTypeCode.pmParameterType.parameterType", SearchOperator.OPERATOR_EQUALS
+						.value(), ParameterTypeConst.ORGANISATION_TYPES));
 
 		// Filter By - Org Type
-		searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
-
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("orgTypeCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
+						OrganizationType.DIVISION.value()));
 
 		// Filter By - Ministry Profile Id
 		if (getManagedBean().getMinistryProfileId() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getManagedBean().getMinistryProfileId()));
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getMinistryProfileId()));
 		}
-
 
 		if (getManagedBean().getJabatanProfileId() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getManagedBean().getJabatanProfileId()));
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getJabatanProfileId()));
 		}
 
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
 		// Filter By - Org effDate
-		searchBean.getDataFilterBeans()
-		.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmOrgValidity.effDate", SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
 		// Filter By - Org expDate
 		searchBean.getDataFilterBeans().add(
-				new SearchMultiFilterBean(new SearchFilterBean(
-						"pmOrgValidity.expDate",
-						SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-						currentDate), new SearchFilterBean(
-								"pmOrgValidity.expDate",
-								SearchOperator.OPERATOR_IS_NULL.value(), null,
-								SearchCondition.CONDITION_OR.value())));
+				new SearchMultiFilterBean(new SearchFilterBean("pmOrgValidity.expDate",
+						SearchOperator.OPERATOR_GREATER_EQUAL.value(), currentDate), new SearchFilterBean(
+						"pmOrgValidity.expDate", SearchOperator.OPERATOR_IS_NULL.value(), null,
+						SearchCondition.CONDITION_OR.value())));
+
+		searchBean.getDataFilterBeans()
+				.add(new SearchFilterBean("epPtj", SearchOperator.OPERATOR_EQUALS.value(), true));
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("epPtj",
-						SearchOperator.OPERATOR_EQUALS.value(), true));
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatus",
-						SearchOperator.OPERATOR_EQUALS.value(), true));
+				new SearchFilterBean("recordStatus", SearchOperator.OPERATOR_EQUALS.value(), true));
 
 		if (getManagedBean().getPtjCodeName() != null
-				&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
+				&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean()
+						.getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
 			if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
-				SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+				SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode",
+						SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
 				filterBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(filterBean);
 
 			} else if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_NAME)) {
-				SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
+				SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName",
+						SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
 				filterBean.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(filterBean);
 			}
 		}
 		// Filter By - existing agency
-		if (CollectionUtils.isNotEmpty(
-				getManagedBean().getContractVer().getCtAgencies())) {
+		if (CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getCtAgencies())) {
 			List<Long> orgProfileIdList = new ArrayList<Long>();
 			for (CtAgency agency : getManagedBean().getContractVer().getCtAgencies()) {
 				orgProfileIdList.add(agency.getOrgProfile().getOrgProfileId());
 			}
-			//  sql maximum number of expressions IN is 1000, if > 1000 handle in else
-			//#25406 - Start Fixing 
-			if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+			// sql maximum number of expressions IN is 1000, if > 1000 handle in
+			// else
+			// #25406 - Start Fixing
+			if (getManagedBean().getContractVer().getDocType()
+					.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 				orgProfileIdList.clear();
-				orgProfileIdList.add(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				orgProfileIdList.add(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile()
+						.getOrgProfileId());
 				SearchFilterBean filterDefaultPtj = new SearchFilterBean("orgProfileId",
-						SearchOperator.OPERATOR_NOT_IN.value(),
-						orgProfileIdList);
+						SearchOperator.OPERATOR_NOT_IN.value(), orgProfileIdList);
 				searchBean.getDataFilterBeans().add(filterDefaultPtj);
-			}else {
-				if (orgProfileIdList.size() <= 1000 && !getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {				
+			} else {
+				if (orgProfileIdList.size() <= 1000
+						&& !getManagedBean().getContractVer().getDocType()
+								.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 					SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							orgProfileIdList);
+							SearchOperator.OPERATOR_NOT_IN.value(), orgProfileIdList);
 					searchBean.getDataFilterBeans().add(filterBean);
-			}else {
-				//#25406 - End Fixing 
-				List<List<Long>> subOrgProfileIdList = new ArrayList<List<Long>>();
-				int count = orgProfileIdList.size();
-				for (int i = 0; i < count; i += 1000) {
-					subOrgProfileIdList.add(new ArrayList<Long>(
-							orgProfileIdList.subList(i, Math.min(count, i + 1000)))
-							);
-				}
-				SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
-						SearchOperator.OPERATOR_NOT_IN.value(),
-						subOrgProfileIdList.get(0));
-				SearchMultiFilterBean multi = null;
-
-				for (int i = 1; i < subOrgProfileIdList.size(); i++) {
-					SearchFilterBean subOrgProfileBean = new SearchFilterBean("orgProfileId",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							subOrgProfileIdList.get(i));
-					if (i == 1) {
-						multi = new SearchMultiFilterBean(filterBean, subOrgProfileBean);
-					} else {
-						multi = new SearchMultiFilterBean(multi, subOrgProfileBean);
+				} else {
+					// #25406 - End Fixing
+					List<List<Long>> subOrgProfileIdList = new ArrayList<List<Long>>();
+					int count = orgProfileIdList.size();
+					for (int i = 0; i < count; i += 1000) {
+						subOrgProfileIdList.add(new ArrayList<Long>(orgProfileIdList.subList(i,
+								Math.min(count, i + 1000))));
 					}
+					SearchFilterBean filterBean = new SearchFilterBean("orgProfileId",
+							SearchOperator.OPERATOR_NOT_IN.value(), subOrgProfileIdList.get(0));
+					SearchMultiFilterBean multi = null;
+
+					for (int i = 1; i < subOrgProfileIdList.size(); i++) {
+						SearchFilterBean subOrgProfileBean = new SearchFilterBean("orgProfileId",
+								SearchOperator.OPERATOR_NOT_IN.value(), subOrgProfileIdList.get(i));
+						if (i == 1) {
+							multi = new SearchMultiFilterBean(filterBean, subOrgProfileBean);
+						} else {
+							multi = new SearchMultiFilterBean(multi, subOrgProfileBean);
+						}
+					}
+					searchBean.getDataFilterBeans().add(multi);
 				}
-				searchBean.getDataFilterBeans().add(multi);
-			}
-			} //#25406
+			} // #25406
 		}
 		return searchBean;
 	}
 
 	/**
-	 * The method used to add new agency's delivery address.
-	 * This method will generate new record in delivery address
-	 * list. 
-	 */	
+	 * The method used to add new agency's delivery address. This method will
+	 * generate new record in delivery address list.
+	 */
 	public void addDeliveryAddress(List<VCtAgencyDeliveryAddress> addressAddressList) {
 
 		try {
 			if (addressAddressList != null) {
 				List<CtAgencyAddress> ctAgencyAddress = new ArrayList<CtAgencyAddress>();
-				List<CtAgencyAddress> agencyAddressList = new ArrayList<CtAgencyAddress>();				
+				List<CtAgencyAddress> agencyAddressList = new ArrayList<CtAgencyAddress>();
 				ctAgencyAddress = getManagedBean().getSelectedAgency().getCtAgencyAddresses();
 
 				for (VCtAgencyDeliveryAddress deliveryAddress : addressAddressList) {
@@ -1867,11 +1975,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					boolean isAddressExist = false;
 					// if already exist, skip to avoid duplicate
 					for (CtAgencyAddress address : ctAgencyAddress) {
-						if( address.getAddressType().getAddressTypeId().equals(addressType.getAddressTypeId())) {
+						if (address.getAddressType().getAddressTypeId().equals(addressType.getAddressTypeId())) {
 							isAddressExist = true;
 							break;
 						}
-					}				
+					}
 					if (isAddressExist) {
 						continue;
 					}
@@ -1883,28 +1991,35 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					AddressReqDTO addReqDTO = new AddressReqDTO();
 					addReqDTO.setAddressTypeId(addressType.getAddressTypeId());
 					addReqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
-					IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+					IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 					AddressResDTO addResDTO = addressSO.retrieveAddressTypeList(addReqDTO);
 					if (!addResDTO.getAddressTypeList().isEmpty()) {
-						agencyAddress.setDeliveryAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(addResDTO.getAddressTypeList().get(0)));
+						agencyAddress.setDeliveryAddress(CtAddressUtil.convertPmAddressTypeToCtAddress(addResDTO
+								.getAddressTypeList().get(0)));
 					}
 					agencyAddressList.add(agencyAddress);
 				}
 				ctAgencyAddress.addAll(agencyAddressList);
-				//CT_CHANGE_LOG
-				if((!getManagedBean().getSelectedAgency().isBrandNew() || getManagedBean().getSelectedAgency().isCloned()) && 
-						!getManagedBean().getUpdateAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode()) && 
-						!getManagedBean().getNewAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
-					getManagedBean().getUpdateAgencyMap().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+				// CT_CHANGE_LOG
+				if ((!getManagedBean().getSelectedAgency().isBrandNew() || getManagedBean().getSelectedAgency()
+						.isCloned())
+						&& !getManagedBean().getUpdateAgencyMap().containsKey(
+								getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())
+						&& !getManagedBean().getNewAgencyMap().containsKey(
+								getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
+					getManagedBean().getUpdateAgencyMap().put(
+							getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(),
+							getManagedBean().getSelectedAgency());
 				}
 			}
 			getManagedBean().setButtonHideActive(true);
 
-			RequestContext.getCurrentInstance().execute(
-					"deliveryAddressTblWidget.paginator.endLink.click()");
+			RequestContext.getCurrentInstance().execute("deliveryAddressTblWidget.paginator.endLink.click()");
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
@@ -1914,7 +2029,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the condition
 	 */
 	public String getDeliveryAddressCondition() {
-		String condition = "ORG_PROFILE_ID^" + this.getManagedBean().getSelectedAgency().getOrgProfile().getOrgProfileId();
+		String condition = "ORG_PROFILE_ID^"
+				+ this.getManagedBean().getSelectedAgency().getOrgProfile().getOrgProfileId();
 
 		PmParameter locationLevel = getManagedBean().getContractVer().getCtContract().getLocationLevel();
 		if (locationLevel != null) {
@@ -1950,18 +2066,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to delete the selected agency's delivery address.
 	 */
-	public void deleteDeliveryAddress() {		
+	public void deleteDeliveryAddress() {
 		try {
-			getManagedBean().getSelectedAgency().getCtAgencyAddresses().removeAll(getManagedBean().getSelectedListOfAddress());
-			//CT_CHANGE_LOG
-			if((!getManagedBean().getSelectedAgency().isBrandNew() || getManagedBean().getSelectedAgency().isCloned()) && 
-					!getManagedBean().getUpdateAgencyMap().containsKey(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
-				getManagedBean().getUpdateAgencyMap().put(getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(), getManagedBean().getSelectedAgency());
+			getManagedBean().getSelectedAgency().getCtAgencyAddresses()
+					.removeAll(getManagedBean().getSelectedListOfAddress());
+			// CT_CHANGE_LOG
+			if ((!getManagedBean().getSelectedAgency().isBrandNew() || getManagedBean().getSelectedAgency().isCloned())
+					&& !getManagedBean().getUpdateAgencyMap().containsKey(
+							getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode())) {
+				getManagedBean().getUpdateAgencyMap().put(
+						getManagedBean().getSelectedAgency().getOrgProfile().getOrgCode(),
+						getManagedBean().getSelectedAgency());
 			}
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
@@ -1983,68 +2104,75 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						// #36138 - Fixing Start
 						removeCtItemCeilingQties(agency, ctContractItems);
 						// #36138 - Fixing End
-						//CT_CHANGE_LOG
-						if((agency.isBrandNew() && !agency.isCloned()) || 
-								getManagedBean().getNewAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
+						// CT_CHANGE_LOG
+						if ((agency.isBrandNew() && !agency.isCloned())
+								|| getManagedBean().getNewAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
 							getManagedBean().getNewAgencyMap().remove(agency.getOrgProfile().getOrgCode());
 						} else {
-							if(getManagedBean().getUpdateAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
+							if (getManagedBean().getUpdateAgencyMap().containsKey(agency.getOrgProfile().getOrgCode())) {
 								getManagedBean().getUpdateAgencyMap().remove(agency.getOrgProfile().getOrgCode());
 							}
 							getManagedBean().getDeleteAgencyMap().put(agency.getOrgProfile().getOrgCode(), agency);
 							// Fix - #31740
-							getManagedBean().getAgencyDataDeletion().put(agency.getOrgProfile().getOrgProfileId(), agency);
+							getManagedBean().getAgencyDataDeletion().put(agency.getOrgProfile().getOrgProfileId(),
+									agency);
 						}
 					}
 				}
-				//Reset ceiling amount and ceiling quantity to Zero if only single agency
+				// Reset ceiling amount and ceiling quantity to Zero if only
+				// single agency
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() == 1) {
 					this.getManagedBean().getContractVer().getCtAgencies().get(0).setCeilingAmount(BigDecimal.ZERO);
-					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
-						if (contractItem.getCtItemCeilingQties() != null && contractItem.getCtItemCeilingQties().size() > 0) {//25703
+					for (CtContractItem contractItem : this.getManagedBean().getCtItemList()) {
+						if (contractItem.getCtItemCeilingQties() != null
+								&& contractItem.getCtItemCeilingQties().size() > 0) {// 25703
 							contractItem.getCtItemCeilingQties().get(0).setCeilingQuantity(BigDecimal.ZERO);
 						}
 					}
 				}
-				//Reset show item
+				// Reset show item
 				if (this.getManagedBean().getContractVer().getCtAgencies().size() <= 1) {
 					if (getManagedBean().getShowItem() != null
-							&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+							&& getManagedBean().getShowItem().equalsIgnoreCase(
+									ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 						getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 					}
 				}
 
 			}
-			
-			if(this.getManagedBean().getContractVer().getCtAgencies() == null  || this.getManagedBean().getContractVer().getCtAgencies().isEmpty() ){
+
+			if (this.getManagedBean().getContractVer().getCtAgencies() == null
+					|| this.getManagedBean().getContractVer().getCtAgencies().isEmpty()) {
 				getManagedBean().setDisableAgent(true);
 			}
-			
+
 			this.getManagedBean().setSelectedAgency(null);
 			getManagedBean().setButtonHideActive(true);
-			
+
 			Long minstryId = retrieveMinistryOrgProfile(
-					getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
+					getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId())
+					.getOrgProfileId();
 			getManagedBean().setOwnerOrgProfile(true);
-			
-			for(CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
-				if(!minstryId.equals(agencies.getOrgProfile().getMinstryId())){
+
+			for (CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()) {
+				if (!minstryId.equals(agencies.getOrgProfile().getMinstryId())) {
 					getManagedBean().setOwnerOrgProfile(false);
 					getManagedBean().setDisableAgent(false);
 					break;
 				}
 			}
 
-			if(getManagedBean().isSelectAll()){
+			if (getManagedBean().isSelectAll()) {
 				getManagedBean().setSelectAll(false);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
-	
+
 	// #36138 - Fixing Start
 	/**
 	 * Removes the specified CtItemCeilingQties from the contract items.
@@ -2060,13 +2188,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator = contractItem.getCtItemCeilingQties().iterator();
 				while (ctItemCeilingQtyIterator.hasNext()) {
 					CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
-					if (ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(agency.getOrgProfile().getOrgProfileId())) {
+					if (ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId()
+							.equals(agency.getOrgProfile().getOrgProfileId())) {
 						ctItemCeilingQtyIterator.remove();
 					}
 				}
 			}
 		}
 	}
+
 	// #36138 - Fixing End
 
 	/**
@@ -2077,16 +2207,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			agencyDataModel.reloadData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), "contract search failed."));
 		}
 	}
 
 	/**
-	 * The method used to add a new agency record.
-	 * This method will generate a new record in agency
-	 * list, user allow to enter the agency details. 
+	 * The method used to add a new agency record. This method will generate a
+	 * new record in agency list, user allow to enter the agency details.
 	 * 
-	 * @param selectedOnly   the boolean to indicate only selected agency to be added
+	 * @param selectedOnly
+	 *            the boolean to indicate only selected agency to be added
 	 */
 	public void addAgencyDetails(boolean selectedOnly) {
 		List<CtAgency> ctAgencyList = null;
@@ -2094,13 +2225,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<PmOrgProfile> orgProfileList = null;
 		getManagedBean().setOwnerOrgProfile(true);
 		Long ministryId = retrieveMinistryOrgProfile(
-				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
-		
-		if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() >0 && selectedOnly) {
+				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId())
+				.getOrgProfileId();
+
+		if (getManagedBean().getAgencySelected() != null && getManagedBean().getAgencySelected().size() > 0
+				&& selectedOnly) {
 			ctAgencyList = new ArrayList<CtAgency>();
-			for(PmOrgProfile pmOrgProfiles : getManagedBean().getAgencySelected()) {		
+			for (PmOrgProfile pmOrgProfiles : getManagedBean().getAgencySelected()) {
 				CtAgency ctAgency = new CtAgency();
-				if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(DateUtils.getCurrentDateWithoutTime())) {
+				if (getManagedBean().getContractVer().getCtContractValue().getEffDate()
+						.before(DateUtils.getCurrentDateWithoutTime())) {
 					ctAgency.setEffDate(DateUtils.getCurrentDateWithoutTime());
 				} else {
 					ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
@@ -2108,32 +2242,34 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 				ctAgency.setCeilingAmount(new BigDecimal(0));
 				ctAgency.setChkStatus(true);
-				//#25703 start
+				// #25703 start
 				ctAgency.setChkStatusPmOrgValidity(true);
-				//#25703 end
+				// #25703 end
 				pmOrgProfiles.setMinstryId(getManagedBean().getMinistryProfileId());
 				ctAgency.setOrgProfile(pmOrgProfiles);
 				ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
 				ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(pmOrgProfiles.getOrgProfileId()));
 
-				StringBuilder str =  new StringBuilder();
-				int len = (getManagedBean().getContractVer().getCtContract().getContractId()+pmOrgProfiles.getOrgProfileId().toString()).length();
-				for(int i=len; i<16; i++){
+				StringBuilder str = new StringBuilder();
+				int len = (getManagedBean().getContractVer().getCtContract().getContractId() + pmOrgProfiles
+						.getOrgProfileId().toString()).length();
+				for (int i = len; i < 16; i++) {
 					str = str.append("0");
 				}
 				str.append(getManagedBean().getContractVer().getCtContract().getContractId());
 				str.append(ctAgency.getOrgProfile().getOrgProfileId());
-				ctAgency.setCommitmentNo("K"+str.toString());
+				ctAgency.setCommitmentNo("K" + str.toString());
 				if (!pmOrgProfiles.getMinstryId().equals(ministryId)) {
 					ctAgency.setAp178(true);
 					getManagedBean().setDisableAgent(false);
-	
-				}		  	
+
+				}
 				ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 				ctAgencyList.add(ctAgency);
 
-				if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
-					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
+				if (ctAgency != null && this.getManagedBean().getCtItemList() != null
+						&& this.getManagedBean().getCtItemList().size() > 0) {
+					for (CtContractItem contractItem : this.getManagedBean().getCtItemList()) {
 						CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
 						itemCeilingQty.setCtAgency(ctAgency);
 						itemCeilingQty.setCtContractItem(contractItem);
@@ -2144,59 +2280,64 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 			}
-		} else {    	
+		} else {
 			boolean contractSharing = true;
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			try {
 				ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
 				ctAgencyList = new ArrayList<CtAgency>();
 				reqDTO = new OrgProfileReqDTO();
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
-				orgProfileList =  orgProfileSO.searchOrgProfile(reqDTO).getOrgProfileResultBean().getResultList();				
+				orgProfileList = orgProfileSO.searchOrgProfile(reqDTO).getOrgProfileResultBean().getResultList();
 			} catch (Exception e) {
 				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 			}
 
-			for(PmOrgProfile orgProfile : orgProfileList) {
+			for (PmOrgProfile orgProfile : orgProfileList) {
 				CtAgency ctAgency = new CtAgency();
 				orgProfile.setMinstryId(getManagedBean().getMinistryProfileId());
 				ctAgency.setOrgProfile(orgProfile);
 				ctAgency.setMinistryName(retrieveMinistryByOrgProfileId(orgProfile.getOrgProfileId()));
 				ctAgency.setKumpulanPtjName(retrieveJabatanByOrgProfileId(orgProfile.getOrgProfileId()));
 
-				StringBuilder str =  new StringBuilder();
-				int len = (getManagedBean().getContractVer().getCtContract().getContractId()+ctAgency.getOrgProfile().getOrgProfileId().toString()).length();
-				for(int i=len; i<16; i++){
+				StringBuilder str = new StringBuilder();
+				int len = (getManagedBean().getContractVer().getCtContract().getContractId() + ctAgency.getOrgProfile()
+						.getOrgProfileId().toString()).length();
+				for (int i = len; i < 16; i++) {
 					str = str.append("0");
 				}
 				str.append(getManagedBean().getContractVer().getCtContract().getContractId());
 				str.append(ctAgency.getOrgProfile().getOrgProfileId());
-				ctAgency.setCommitmentNo("K"+str.toString());
-				if(!ctAgency.getOrgProfile().getMinstryId().equals(ministryId)){
+				ctAgency.setCommitmentNo("K" + str.toString());
+				if (!ctAgency.getOrgProfile().getMinstryId().equals(ministryId)) {
 					ctAgency.setAp178(true);
 					getManagedBean().setDisableAgent(false);
 				}
-				if(contractSharing){
+				if (contractSharing) {
 					ctAgency.setContractSharing(contractSharing);
 					contractSharing = false;
 				}
-				if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(DateUtils.getCurrentDateWithoutTime())) {
+				if (getManagedBean().getContractVer().getCtContractValue().getEffDate()
+						.before(DateUtils.getCurrentDateWithoutTime())) {
 					ctAgency.setEffDate(DateUtils.getCurrentDateWithoutTime());
 				} else {
 					ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 				}
 				ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 				ctAgency.setCeilingAmount(new BigDecimal(0));
-				ctAgency.setChkStatus(true);  	
-				//#25703 start
+				ctAgency.setChkStatus(true);
+				// #25703 start
 				ctAgency.setChkStatusPmOrgValidity(true);
-				//#25703 end
+				// #25703 end
 				ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 				ctAgencyList.add(ctAgency);
 
-				if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
-					for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
+				if (ctAgency != null && this.getManagedBean().getCtItemList() != null
+						&& this.getManagedBean().getCtItemList().size() > 0) {
+					for (CtContractItem contractItem : this.getManagedBean().getCtItemList()) {
 						CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
 						itemCeilingQty.setCtAgency(ctAgency);
 						itemCeilingQty.setCtContractItem(contractItem);
@@ -2206,18 +2347,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						contractItem.getCtItemCeilingQties().add(itemCeilingQty);
 					}
 				}
-			}	
+			}
 		}
-		if (ctAgencyList.size()>0) {
+		if (ctAgencyList.size() > 0) {
 			this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
-			//CT_CHANGE_LOG
-			for(CtAgency ctAgency : ctAgencyList) {
+			// CT_CHANGE_LOG
+			for (CtAgency ctAgency : ctAgencyList) {
 				getManagedBean().getNewAgencyMap().put(ctAgency.getOrgProfile().getOrgCode(), ctAgency);
 			}
 		}
 
-		for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()){
-			if(!ctAgencies.getOrgProfile().getMinstryId().equals(ministryId)){
+		for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
+			if (!ctAgencies.getOrgProfile().getMinstryId().equals(ministryId)) {
 				getManagedBean().setOwnerOrgProfile(false);
 				break;
 			}
@@ -2227,16 +2368,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to check whether is contract sharing for agencies.
 	 * 
-	 * @return true, if added agency's ministry different with contract's ministry
-	 *         false, if added agency's ministry same with contract's ministry
+	 * @return true, if added agency's ministry different with contract's
+	 *         ministry false, if added agency's ministry same with contract's
+	 *         ministry
 	 */
 	public boolean isContractSharing() {
-		PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
-				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract()
+				.getOwnerOrgProfile().getOrgProfileId());
 		PmOrgProfile agencyMinistry = null;
 		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			agencyMinistry = retrieveMinistryOrgProfile(ctAgency.getOrgProfile().getOrgProfileId());
-			if (agencyMinistry==null || !contractMinistry.getOrgProfileId().equals(agencyMinistry.getOrgProfileId())) {
+			if (agencyMinistry == null || !contractMinistry.getOrgProfileId().equals(agencyMinistry.getOrgProfileId())) {
 				return true;
 			}
 		}
@@ -2246,57 +2388,61 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to upload agency file.
 	 * 
-	 * @param  event      the upload event for file upload from screen
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param event
+	 *            the upload event for file upload from screen
+	 * @throws Exception
+	 *             if an exception occurred
+	 * @see Exception
 	 */
 	public void ComonFileUpload(FileUploadEvent event) throws Exception {
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		FacesScopes facesScopes = new FacesScopes();
-		UploadedFile item = event.getFile();		
+		UploadedFile item = event.getFile();
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
 
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
-		
-		//#13847 start
+
+		// #13847 start
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-		attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
+		attachment.setCreatedBy(getUserIdSessionFromLoginId()); // #31849 add
+																// log key
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		//#13847 end
+		// #13847 end
 
-		if(event.getComponent().getId().equalsIgnoreCase("agencyUploadId")){
-			//#13847 start
-//			CtAttachment attachment = new CtAttachment();
-//			attachment.setFileName(item.getFileName());
-//			attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-//			attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849 add log key
-//			attachment.setCreatedUser(facesScopes.getUserSessionBean());
-//			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			//#13847 end
+		if (event.getComponent().getId().equalsIgnoreCase("agencyUploadId")) {
+			// #13847 start
+			// CtAttachment attachment = new CtAttachment();
+			// attachment.setFileName(item.getFileName());
+			// attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+			// attachment.setCreatedBy(getUserIdSessionFromLoginId()); //#31849
+			// add log key
+			// attachment.setCreatedUser(facesScopes.getUserSessionBean());
+			// attachment.setCreatedDate(new
+			// Timestamp(System.currentTimeMillis()));
+			// #13847 end
 			attachment.setSectionId(ContractConst.ATTACHMENT_AGENCY_CONTRACT_SHARING);
-			//#25703 start
+			// #25703 start
 			getManagedBean().getContractVer().getAgencyContractSharingAttachements().add(attachment);
-			//RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
-			//#25703 end
+			// RequestContext.getCurrentInstance().execute("ctSharingAttachDlg.hide()");
+			// #25703 end
 		}
-		//#13847 start
-		else if(event.getComponent().getId().equalsIgnoreCase("uploadWaiver")){
+		// #13847 start
+		else if (event.getComponent().getId().equalsIgnoreCase("uploadWaiver")) {
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
 			attachment.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 			getManagedBean().getContractVer().getBondWaiverDefermentLatest().setCtAttachment(attachment);
 			RequestContext.getCurrentInstance().execute("uploadWaiverDlg.hide()");
-		}
-		else if(event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")){
+		} else if (event.getComponent().getId().equalsIgnoreCase("uploadHistoryWaiver")) {
 			attachment.setDocType(getManagedBean().getContractVer().getDocType());
 			attachment.setDocId(getManagedBean().getContractVer().getContractVerId());
 			attachment.setSectionId(ContractConst.ATTACHMENT_BOND_WAIVER);
@@ -2307,29 +2453,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					.get(getManagedBean().getAttachFileIndex()).setCtAttachment(attachment);
 			RequestContext.getCurrentInstance().execute("uploadHistoryWaiverDlg.hide()");
 		}
-		//#13847 - end
+		// #13847 - end
 	}
-	
-	//13847 start
+
+	// 13847 start
 	/**
-	 * The method to validate the latest waiver and attachment.
-	 * Check the waiver detail, attachment, the duration of the waiver 
-	 * and check whether the detail has been saved previously in the history table.
+	 * The method to validate the latest waiver and attachment. Check the waiver
+	 * detail, attachment, the duration of the waiver and check whether the
+	 * detail has been saved previously in the history table.
 	 * 
 	 */
-	public void validationBondDefermentBeforeHistory(){
-		//#Enhancement 13847 - start
+	public void validationBondDefermentBeforeHistory() {
+		// #Enhancement 13847 - start
 		Date bondStartDate = null, bondEndDate = null, entryBondStartDate = null, entryBondEndDate = null;
-		boolean sameStartLessEnd = false, overStartSameEnd = false, lessStartLessEndMoreStart = false, lessStartMoreEnd = false, 
-				moreStartLessEndMoreEnd = false, lessStartSameEnd = false, sameStartMoreEnd = false, moreStartLessEnd = false;
-		//#Enhancement 13847 - end
-				
-		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate() == null &&
-				getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate() == null &&
-				StringUtils.isBlank(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo()) &&
-				(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment() == null || 
-				(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment() != null && 
-					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName() == null))){
+		boolean sameStartLessEnd = false, overStartSameEnd = false, lessStartLessEndMoreStart = false, lessStartMoreEnd = false, moreStartLessEndMoreEnd = false, lessStartSameEnd = false, sameStartMoreEnd = false, moreStartLessEnd = false;
+		// #Enhancement 13847 - end
+
+		if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate() == null
+				&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate() == null
+				&& StringUtils.isBlank(getManagedBean().getContractVer().getBondWaiverDefermentLatest()
+						.getReferenceNo())
+				&& (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment() == null || (getManagedBean()
+						.getContractVer().getBondWaiverDefermentLatest().getCtAttachment() != null && getManagedBean()
+						.getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName() == null))) {
 			throw new EpException(MessageConst.ERROR_750061);
 		}
 		if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate() == null) {
@@ -2341,107 +2487,120 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (StringUtils.isBlank(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getReferenceNo())) {
 			throw new EpException(MessageConst.ERROR_750064);
 		}
-		if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()==null || 
-				(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!=null && 
-				StringUtils.isBlank(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getFileName()))) {
+		if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment() == null
+				|| (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment() != null && StringUtils
+						.isBlank(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()
+								.getFileName()))) {
 			throw new EpException(MessageConst.ERROR_750065);
 		}
-		
+
 		checkPerformanceBondExceedDate();
-		
-		if(CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+
+		if (CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())) {
 			long noOfDays = 0;
-			for(CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
+			for (CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer()
+					.getBondWaiverDefermentHistory()) {
 				bondStartDate = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate();
 				bondEndDate = getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate();
 				entryBondStartDate = bondWaiverHistory.getWaiverStartDate();
 				entryBondEndDate = bondWaiverHistory.getWaiverEndDate();
-				
-				//for easier reading
-				sameStartLessEnd = bondStartDate.compareTo(entryBondStartDate) == 0 && bondEndDate.compareTo(entryBondEndDate) < 0;
-				overStartSameEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate.compareTo(entryBondEndDate) < 0) &&
-						bondEndDate.compareTo(entryBondEndDate) == 0;
-				lessStartLessEndMoreStart = bondStartDate.compareTo(entryBondStartDate) < 0 &&
-						(bondEndDate.compareTo(entryBondEndDate) < 0 && bondEndDate.compareTo(entryBondStartDate) > 0);
-				lessStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) < 0 && bondEndDate.compareTo(entryBondEndDate) > 0;
-				moreStartLessEndMoreEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate.compareTo(entryBondEndDate) < 0) && 
-						bondEndDate.compareTo(entryBondEndDate) > 0;
-				lessStartSameEnd = bondStartDate.compareTo(entryBondStartDate) < 0 && bondEndDate.compareTo(entryBondEndDate) == 0;
-				sameStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) == 0 && bondEndDate.compareTo(entryBondEndDate) > 0;
-				moreStartLessEnd = bondStartDate.compareTo(entryBondStartDate) > 0 && bondEndDate.compareTo(entryBondEndDate) < 0;
-				
-				if(entryBondStartDate.compareTo(bondStartDate) == 0 && entryBondEndDate.compareTo(bondEndDate) == 0){
-					//date same as history entry
-	 				throw new EpException(MessageConst.ERROR_750066);
-				} else if (sameStartLessEnd || overStartSameEnd || lessStartLessEndMoreStart || lessStartMoreEnd || moreStartLessEndMoreEnd ||
-						lessStartSameEnd || sameStartMoreEnd || moreStartLessEnd){
-					//date range overlaps with history entry
-	 				throw new EpException(MessageConst.ERROR_750067);
+
+				// for easier reading
+				sameStartLessEnd = bondStartDate.compareTo(entryBondStartDate) == 0
+						&& bondEndDate.compareTo(entryBondEndDate) < 0;
+				overStartSameEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate
+						.compareTo(entryBondEndDate) < 0) && bondEndDate.compareTo(entryBondEndDate) == 0;
+				lessStartLessEndMoreStart = bondStartDate.compareTo(entryBondStartDate) < 0
+						&& (bondEndDate.compareTo(entryBondEndDate) < 0 && bondEndDate.compareTo(entryBondStartDate) > 0);
+				lessStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) < 0
+						&& bondEndDate.compareTo(entryBondEndDate) > 0;
+				moreStartLessEndMoreEnd = (bondStartDate.compareTo(entryBondStartDate) > 0 && bondStartDate
+						.compareTo(entryBondEndDate) < 0) && bondEndDate.compareTo(entryBondEndDate) > 0;
+				lessStartSameEnd = bondStartDate.compareTo(entryBondStartDate) < 0
+						&& bondEndDate.compareTo(entryBondEndDate) == 0;
+				sameStartMoreEnd = bondStartDate.compareTo(entryBondStartDate) == 0
+						&& bondEndDate.compareTo(entryBondEndDate) > 0;
+				moreStartLessEnd = bondStartDate.compareTo(entryBondStartDate) > 0
+						&& bondEndDate.compareTo(entryBondEndDate) < 0;
+
+				if (entryBondStartDate.compareTo(bondStartDate) == 0 && entryBondEndDate.compareTo(bondEndDate) == 0) {
+					// date same as history entry
+					throw new EpException(MessageConst.ERROR_750066);
+				} else if (sameStartLessEnd || overStartSameEnd || lessStartLessEndMoreStart || lessStartMoreEnd
+						|| moreStartLessEndMoreEnd || lessStartSameEnd || sameStartMoreEnd || moreStartLessEnd) {
+					// date range overlaps with history entry
+					throw new EpException(MessageConst.ERROR_750067);
 				}
 				noOfDays += findDifference(entryBondStartDate, entryBondEndDate);
 			}
-			
-			getManagedBean().setDisableDeferment(noOfDays >= 60?true:false);
-			if((findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(),
-					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) +
-					noOfDays) > 60){
+
+			getManagedBean().setDisableDeferment(noOfDays >= 60 ? true : false);
+			if ((findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(),
+					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) + noOfDays) > 60) {
 				throw new EpException(MessageConst.ERROR_750082);
 			}
 		}
 		RequestContext.getCurrentInstance().execute("addPBConfirmDlg.show()");
 	}
-	
+
 	/**
-	 * method to set the latest waiver and attachment into history table 
-	 * and still maintain the latest waiver.
+	 * method to set the latest waiver and attachment into history table and
+	 * still maintain the latest waiver.
 	 * 
 	 * @exception SLAUtils
 	 */
-	public void saveBondWaiverToTable(){
+	public void saveBondWaiverToTable() {
 		long noOfDays = 0;
-		
-		try{
-			if(CollectionUtils.isEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
+
+		try {
+			if (CollectionUtils.isEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())) {
 				getManagedBean().getContractVer().setBondWaiverDefermentHistory(new ArrayList<CtBondWaiverDetail>());
 			}
-			
-			//reverse list to insert new data at first row
-			Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());	
 
-			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(getManagedBean().getContractVer().getBondWaiverDefermentLatest());
+			// reverse list to insert new data at first row
+			Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());
+
+			CtBondWaiverDetail bondWaiver = SerializationUtils.clone(getManagedBean().getContractVer()
+					.getBondWaiverDefermentLatest());
 			bondWaiver.setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 			bondWaiver.getCtAttachment().setRecordStatusFlg(DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
-			
+
 			getManagedBean().getContractVer().getBondWaiverDefermentHistory().add(bondWaiver);
 			Collections.reverse(getManagedBean().getContractVer().getBondWaiverDefermentHistory());
-			
-			//renewing latest deferment after clone to make sure id is not duplicate in database
-			if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getBondWaiverDetailId()!=null){
-				CtBondWaiverDetail bondWaiverLatest = (CtBondWaiverDetail) getManagedBean().getContractVer().getBondWaiverDefermentLatest().cloneEntity();
+
+			// renewing latest deferment after clone to make sure id is not
+			// duplicate in database
+			if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getBondWaiverDetailId() != null) {
+				CtBondWaiverDetail bondWaiverLatest = (CtBondWaiverDetail) getManagedBean().getContractVer()
+						.getBondWaiverDefermentLatest().cloneEntity();
 				bondWaiverLatest.setBondWaiverDetailId(null);
 				bondWaiverLatest.setAttachmentId(null);
 				bondWaiverLatest.setBrandNew(true);
-				
-				CtAttachment bondWaiverAttach = (CtAttachment) getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().cloneEntity();
+
+				CtAttachment bondWaiverAttach = (CtAttachment) getManagedBean().getContractVer()
+						.getBondWaiverDefermentLatest().getCtAttachment().cloneEntity();
 				bondWaiverAttach.setAttachmentId(null);
 				bondWaiverAttach.setBrandNew(true);
-				
+
 				bondWaiverLatest.setCtAttachment(bondWaiverAttach);
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(bondWaiverLatest);
 			}
-			
-			for(CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()){
+
+			for (CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer()
+					.getBondWaiverDefermentHistory()) {
 				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 			}
-			getManagedBean().setDisableDeferment(noOfDays >= 60?true:false);
-			
+			getManagedBean().setDisableDeferment(noOfDays >= 60 ? true : false);
+
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "saveBondWaiverToTable", 
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "saveBondWaiverToTable", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "saveBondWaiverToTable",
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "saveBondWaiverToTable",
+					getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
-		
+
 	/**
 	 * method to check differences between two days for bond deferment
 	 * 
@@ -2450,20 +2609,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return differenceInDays (include the start date)
 	 * 
 	 */
-	public long findDifference(Date startDate, Date endDate){
-		return TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS)+1;
+	public long findDifference(Date startDate, Date endDate) {
+		return TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS) + 1;
 	}
-		
+
 	/**
-	 * method to calculate current start and end date of the deferment
-	 * throw exception when waiver exceed more than 60 days, use at xhtml during add current to history.
+	 * method to calculate current start and end date of the deferment throw
+	 * exception when waiver exceed more than 60 days, use at xhtml during add
+	 * current to history.
 	 * 
 	 * @throws EpException
 	 */
-	public void checkPerformanceBondExceedDate(){
-		if(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate()!=null && getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()!=null){
-			if(findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(),
-					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 60){
+	public void checkPerformanceBondExceedDate() {
+		if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate() != null
+				&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate() != null) {
+			if (findDifference(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate(),
+					getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverEndDate()) > 60) {
 				throw new EpException(MessageConst.ERROR_750070);
 			}
 			if (getManagedBean().getContractVer().getBondWaiverDefermentLatest().getWaiverStartDate()
@@ -2472,27 +2633,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 	}
-	
+
 	/**
 	 * method to delete bond exemption document when the bond exemp is unclicked
 	 * 
 	 * @exception SLAUtils
 	 */
-	public void bondExempDocReset(){
-		try{
-			if(!getManagedBean().getCtContractAmount().isBondExempted()){
+	public void bondExempDocReset() {
+		try {
+			if (!getManagedBean().getCtContractAmount().isBondExempted()) {
 				delBondExemptedDoc();
 			}
-		}catch(Exception e){
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "bondExempReset", 
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "bondExempReset", getUserIdSessionFromLoginId(), e);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "bondExempReset",
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "bondExempReset",
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
-	//Enhancement 13847 - end
+
+	// Enhancement 13847 - end
 
 	/**
 	 * The method used to delete the uploaded agency file.
-	 */    
+	 */
 	// #25703 start
 	public void delCtMinstrySharringAttach(int index) {
 
@@ -2528,18 +2691,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	// #25703 end
 
 	/**
-	 * The method used for generating a list of available ministry
-	 * for searching agency as selection.
+	 * The method used for generating a list of available ministry for searching
+	 * agency as selection.
 	 * 
 	 * @return the selection list of ministry
 	 */
-	public SelectItem[] getMinistryDropdown() {		
+	public SelectItem[] getMinistryDropdown() {
 		SelectItem[] items = null;
 
 		try {
 			int i = 0;
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IOrgProfileSO.class);
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
 
@@ -2550,18 +2713,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
 
 	/**
-	 * The method used for generating a list of available jabatan
-	 * for searching agency as selection.
+	 * The method used for generating a list of available jabatan for searching
+	 * agency as selection.
 	 * 
 	 * @return the selection list of jabatan
 	 */
-	public SelectItem[] getJabatanDropdown() {		
+	public SelectItem[] getJabatanDropdown() {
 		SelectItem[] items = null;
 		try {
 			int i = 1;
@@ -2574,15 +2738,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 			List<Object[]> list = resDTO.getOrgProfileDDList();
 			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
-			for(Object[] object : list){
+			for (Object[] object : list) {
 				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 		return items;
 	}
@@ -2590,20 +2755,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to get the modifiability of contract physical no.
 	 * 
-	 * @return true, if contract physical no field is disabled
-	 *         false, if contract physical no field is enabled
+	 * @return true, if contract physical no field is disabled false, if
+	 *         contract physical no field is enabled
 	 */
 	public boolean getConditionalValue() {
-		//If agreement is = NO, Physical contract no. = No and please disable the text box. And
-		//If agreement is = NO, Physical contract no. = No, Consession = Yes, enable text box for Physical contract no.
+		// If agreement is = NO, Physical contract no. = No and please disable
+		// the text box. And
+		// If agreement is = NO, Physical contract no. = No, Consession = Yes,
+		// enable text box for Physical contract no.
 		if (getManagedBean().isViewContract()) {
 			return true;
-		} else if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
+		} else if (getManagedBean().getContractVer().getDocType()
+				.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)) {
 			return true;
-		} else if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_NOTIFICATION_SETTING)){
+		} else if (getManagedBean().getContractVer().getDocType()
+				.equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_NOTIFICATION_SETTING)) {
 			return true;
-		}
-		else if (!getManagedBean().getCtContractAmount().isAgreement() 
+		} else if (!getManagedBean().getCtContractAmount().isAgreement()
 				&& getManagedBean().getContractVer().getContractPhysicalNo() == null) {
 			if (getManagedBean().getContractVer().getCtContractValue().isConcession()) {
 				return false;
@@ -2616,18 +2784,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to 
-	 * calculate over all amount with GST AND STAX
+	 * The method used to calculate over all amount with GST AND STAX
 	 */
-	public void calculateOrverAllAmt(){
-		if(getManagedBean().getCtContractAmount()!= null) {
+	public void calculateOrverAllAmt() {
+		if (getManagedBean().getCtContractAmount() != null) {
 			BigDecimal gstAmt = BigDecimal.ZERO;
 			BigDecimal staxAmt = BigDecimal.ZERO;
 			BigDecimal contractAmt = BigDecimal.ZERO;
 
 			if (getManagedBean().getCtContractAmount().getGstAmount() != null)
 				gstAmt = getManagedBean().getCtContractAmount().getGstAmount();
-			
+
 			if (getManagedBean().getCtContractAmount().getStaxAmount() != null)
 				staxAmt = getManagedBean().getCtContractAmount().getStaxAmount();
 
@@ -2635,40 +2802,49 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				contractAmt = getManagedBean().getCtContractAmount().getContractAmount();
 
 			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
-			
-			
 
 		}
 		// Recalculate the performance bond amount
-		//#24333
+		// #24333
 		// Start - Fix - #32663
-//		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
-//
-//		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-//			if (proc_type != null ) {
-//				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
-//						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-//					// pk7 contract with bond from LOA
-//					calculateNewBondAmount();
-//					// Start Fix - #33491 
-//				} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-//					   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-//					   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
-//					   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
-//					   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
-//					   		        	//recalculate the bond and set into CtcontractAmount 
-//					   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
-//					   		        }
-//					   		  }else{
-//									calculateNewBondAmount(); 
-//					   		  }	
-//				} 
-//			   }
-//			}
-			
-		   }
-	    // End Fix - #33491
-		// End - Fix - #32663
+		// String proc_type =
+		// getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+		//
+		// if (!getManagedBean().isDirectPurchase() &&
+		// !getManagedBean().getCtContractAmount().isBondExempted()) {
+		// if (proc_type != null ) {
+		// if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
+		// &&
+		// getManagedBean().getContractVer().getCtContract().getLoa().isBondReq())
+		// {
+		// // pk7 contract with bond from LOA
+		// calculateNewBondAmount();
+		// // Start Fix - #33491
+		// } else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7))
+		// {
+		// if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa())
+		// &&
+		// getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+		// //To carry over whatever setting regarding is_bond_req from LOA to
+		// set in CT
+		// getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
+		// if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
+		// //recalculate the bond and set into CtcontractAmount
+		// getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(),
+		// new
+		// BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+		// }
+		// }else{
+		// calculateNewBondAmount();
+		// }
+		// }
+		// }
+		// }
+
+	}
+
+	// End Fix - #33491
+	// End - Fix - #32663
 
 	/**
 	 * The method used to calculate the new performance bond amount.
@@ -2679,90 +2855,102 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setOverallContractAmt(getManagedBean().getGstTotalAmount());
-		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()));
+		reqDTO.setContractPeriod(new BigDecimal(getManagedBean().getContractVer().getCtContractValue()
+				.getContractPeriod()));
 		reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
 
 		ContractResDTO resDTO = contractSO.retrievePerformanceBondAmt(reqDTO);
-		//#24333 - Start
-		if(resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()){
+		// #24333 - Start
+		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {
 			getManagedBean().getCtContractAmount().setBondReq(resDTO.isBondReq());
-		}else{
+		} else {
 			getManagedBean().getCtContractAmount().setBondReq(false);
 		}
-		
-		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {				 
+
+		if (resDTO.isBondReq() == reqDTO.getScLoa().isBondReq()) {
 			getManagedBean().getCtContractAmount().setTotalBondAmt(resDTO.getBondAmount());
 		} else {
 			getManagedBean().getCtContractAmount().setTotalBondAmt(null);
 		}
-		//#24333 - End
+		// #24333 - End
 	}
-	
-	//#13847 start
+
+	// #13847 start
 	/**
-	 * This method will run when user clicked the radio button for bond deferment.
-	 * If unchecked, the current deferment will be null and all the history that is not approved will be deleted.
-	 * If checked, it will renew the current deferment.
+	 * This method will run when user clicked the radio button for bond
+	 * deferment. If unchecked, the current deferment will be null and all the
+	 * history that is not approved will be deleted. If checked, it will renew
+	 * the current deferment.
 	 */
-	public void chkBondWaiverAction(){
+	public void chkBondWaiverAction() {
 		try {
 			int noOfDays = 0;
 			getManagedBean().setDisableDeferment(false);
-			
+
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
-				if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()!=null &&
-						getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()!=null &&
-						getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment().getAttachmentId() != null){
-					getManagedBean().getDeleteAttachmentList().add(getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment());
+				if (getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
+						&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment() != null
+						&& getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment()
+								.getAttachmentId() != null) {
+					getManagedBean().getDeleteAttachmentList().add(
+							getManagedBean().getContractVer().getBondWaiverDefermentLatest().getCtAttachment());
 				}
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
-				
-				//remove bond waiver that hasn't been approved
-				if(CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
-					
-					Iterator<CtBondWaiverDetail> iter = getManagedBean().getContractVer().getBondWaiverDefermentHistory().iterator();
-					while(iter.hasNext()){
+
+				// remove bond waiver that hasn't been approved
+				if (CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())) {
+
+					Iterator<CtBondWaiverDetail> iter = getManagedBean().getContractVer()
+							.getBondWaiverDefermentHistory().iterator();
+					while (iter.hasNext()) {
 						CtBondWaiverDetail bondWaiverHistory = iter.next();
 						if (!bondWaiverHistory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-							if(bondWaiverHistory.getCtAttachment().getAttachmentId() != null){
+							if (bondWaiverHistory.getCtAttachment().getAttachmentId() != null) {
 								getManagedBean().getDeleteAttachmentList().add(bondWaiverHistory.getCtAttachment());
 							}
 							iter.remove();
 						}
 					}
 				}
-				
+
 				if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null) {
 					getManagedBean().getContractVer().setCtBondWaiverDetails(null);
-				} 
-			}else{
+				}
+			} else {
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
 			}
-			
-			if(CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())){
-				for (CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer().getBondWaiverDefermentHistory()) {
-					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
+
+			if (CollectionUtils.isNotEmpty(getManagedBean().getContractVer().getBondWaiverDefermentHistory())) {
+				for (CtBondWaiverDetail bondWaiverHistory : getManagedBean().getContractVer()
+						.getBondWaiverDefermentHistory()) {
+					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(),
+							bondWaiverHistory.getWaiverEndDate());
 				}
 				if (noOfDays >= 60) {
 					getManagedBean().setDisableDeferment(true);
 				}
 			}
-			
+
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaiverAction", 
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaiverAction", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaiverAction",
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaiverAction",
+					getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
-		
+
 	}
-	//#13847 end
-	
+
+	// #13847 end
+
 	/**
 	 * The method used to upload bond exempted file.
 	 * 
-	 * @param  event      the upload event for file upload from screen
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param event
+	 *            the upload event for file upload from screen
+	 * @throws Exception
+	 *             if an exception occurred
+	 * @see Exception
 	 */
 	public void uploadBondExemptedFile(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
@@ -2772,31 +2960,33 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 
 		getManagedBean().getCtContractAmount().setBondExemptedFileName(item.getFileName());
 		getManagedBean().getCtContractAmount().setBondExemptedFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-//		RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();"); //#13847
+		// RequestContext.getCurrentInstance().execute("uploadBondExemptedDlg.hide();");
+		// //#13847
 	}
 
 	/**
 	 * Function to check / uncheck all checkbox into performance bond datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectAllBond(AjaxBehaviorEvent e) { 
+	public void selectAllBond(AjaxBehaviorEvent e) {
 
 		for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
 			if (getManagedBean().isSelectAll()) {
 				bonds.setSelectedCheckBox(true);
-				if(getManagedBean().isButtonHideActive()){
+				if (getManagedBean().isButtonHideActive()) {
 					getManagedBean().setButtonHideActive(false);
 				}
-			} else{
+			} else {
 				bonds.setSelectedCheckBox(false);
-				if(!getManagedBean().isButtonHideActive()){
+				if (!getManagedBean().isButtonHideActive()) {
 					getManagedBean().setButtonHideActive(true);
 				}
 			}
@@ -2804,39 +2994,42 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck single checkbox into performance bond datatable
+	 * Function to check / uncheck single checkbox into performance bond
+	 * datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOnePerformanceCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOnePerformanceCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		for (CtPerformanceBond bonds : getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
-			if(bonds.isSelectedCheckBox()){
+			if (bonds.isSelectedCheckBox()) {
 				getManagedBean().setButtonHideActive(false);
 				return;
 			}
 		}
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideActive(true);
-		}	
+		}
 	}
 
 	/**
 	 * Function to check / uncheck all checkbox into deduction datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void selectAllDeduction(AjaxBehaviorEvent e) {
 		getManagedBean().setButtonHideDedActive(true);
 		for (CtDeduction deduct : getManagedBean().getContractVer().getCtDeductions()) {
 			if (getManagedBean().isSelectAll() && !deduct.isFromDpQt()) {
-				if(getManagedBean().isButtonHideDedActive()){
+				if (getManagedBean().isButtonHideDedActive()) {
 					getManagedBean().setButtonHideDedActive(false);
 				}
 				deduct.setSelectedCheckBox(true);
-			}else {
+			} else {
 				deduct.setSelectedCheckBox(false);
 			}
 		}
@@ -2845,41 +3038,43 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Function to check / uncheck all checkbox into deduction clause datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void selectAllDeductionClause(AjaxBehaviorEvent e) {
 
 		for (CtDeductionClause ctDeductionClauses : getManagedBean().getSelectedDeduction().getCtDeductionClauses()) {
 			if (getManagedBean().isSelectAll()) {
 				ctDeductionClauses.setSelectedCheckBox(true);
-			}else {
+			} else {
 				ctDeductionClauses.setSelectedCheckBox(false);
 			}
 		}
 
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideDedActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideDedActive(true);
-		}	
+		}
 	}
 
 	/**
 	 * Function to check / uncheck all checkbox into schedule datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void selectAllScheduleDtl(AjaxBehaviorEvent e) {
 
 		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
 			if (getManagedBean().isSelectAll()) {
 				ctSchedules.setSelectedCheckBox(true);
-				if(getManagedBean().isButtonHideSchActive()){
+				if (getManagedBean().isButtonHideSchActive()) {
 					getManagedBean().setButtonHideSchActive(false);
 				}
-			}else {
+			} else {
 				ctSchedules.setSelectedCheckBox(false);
-				if(!getManagedBean().isButtonHideSchActive()){
+				if (!getManagedBean().isButtonHideSchActive()) {
 					getManagedBean().setButtonHideSchActive(true);
 				}
 			}
@@ -2889,39 +3084,41 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Function to check / uncheck single checkbox into schedule datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOneScheCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
-			if(ctSchedules.isSelectedCheckBox()){
+			if (ctSchedules.isSelectedCheckBox()) {
 				getManagedBean().setButtonHideSchActive(false);
 				return;
 			}
 		}
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideSchActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideSchActive(true);
-		}	
+		}
 	}
 
 	/**
 	 * Function to check / uncheck all checkbox into PID datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void selectAllPidDtl(AjaxBehaviorEvent e) {
 
 		for (CtPidReason ctPidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
 			if (getManagedBean().isSelectAll()) {
 				ctPidReasons.setSelectedCheckBox(true);
-				if(getManagedBean().isButtonHideActive()){
+				if (getManagedBean().isButtonHideActive()) {
 					getManagedBean().setButtonHideActive(false);
 				}
-			}else {
+			} else {
 				ctPidReasons.setSelectedCheckBox(false);
-				if(!getManagedBean().isButtonHideActive()){
+				if (!getManagedBean().isButtonHideActive()) {
 					getManagedBean().setButtonHideActive(true);
 				}
 			}
@@ -2931,39 +3128,42 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Function to check / uncheck single checkbox into PID datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOnePidCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		for (CtPidReason ctPidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
-			if(ctPidReasons.isSelectedCheckBox()){
+			if (ctPidReasons.isSelectedCheckBox()) {
 				getManagedBean().setButtonHideActive(false);
 				return;
 			}
 		}
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideActive(true);
-		}	
+		}
 	}
 
 	/**
-	 * Function to check / uncheck all checkbox into progressive payment datatable
+	 * Function to check / uncheck all checkbox into progressive payment
+	 * datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void selectAllProPaymentDtl(AjaxBehaviorEvent e) {
 
 		for (CtProgressivePayment ctProgressivePayments : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			if (getManagedBean().isSelectAll()) {
 				ctProgressivePayments.setSelectedCheckBox(true);
-				if(getManagedBean().isButtonHideSchActive()){
+				if (getManagedBean().isButtonHideSchActive()) {
 					getManagedBean().setButtonHideSchActive(false);
 				}
-			}else {
+			} else {
 				ctProgressivePayments.setSelectedCheckBox(false);
-				if(!getManagedBean().isButtonHideSchActive()){
+				if (!getManagedBean().isButtonHideSchActive()) {
 					getManagedBean().setButtonHideSchActive(true);
 				}
 			}
@@ -2971,85 +3171,92 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Function to check / uncheck single checkbox into progressive payment datatable
+	 * Function to check / uncheck single checkbox into progressive payment
+	 * datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOneProPaymentCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOneProPaymentCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		for (CtProgressivePayment ctProgressivePayments : getManagedBean().getContractVer().getCtProgressivePayments()) {
-			if(ctProgressivePayments.isSelectedCheckBox()){
+			if (ctProgressivePayments.isSelectedCheckBox()) {
 				getManagedBean().setButtonHideSchActive(false);
 				return;
 			}
 		}
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			getManagedBean().setButtonHideSchActive(false);
-		}else{
+		} else {
 			getManagedBean().setButtonHideSchActive(true);
-		}	
+		}
 	}
 
 	/**
 	 * Function to check / uncheck all checkbox into agency datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectAllAgencyCheckbox(){
+	public void selectAllAgencyCheckbox() {
 		for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
 			if (getManagedBean().isSelectAll()) {
 				ctAgencies.setSelectedCheckBox(true);
 				getManagedBean().setButtonHideActive(false);
-			}else{
+			} else {
 				ctAgencies.setSelectedCheckBox(false);
 				getManagedBean().setButtonHideActive(true);
 			}
-		}	
+		}
 	}
 
 	/**
 	 * Function to check / uncheck single checkbox into agency datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
-	public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e){
+	public void selectOneAgencyCheckboxSelect(AjaxBehaviorEvent e) {
 		getManagedBean().setSelectAll(false);
 		Long orgProfileId = new Long(0);
-		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
-				getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		getManagedBean().setMinistryProfileId(
+				retrieveMinistryOrgProfile(
+						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId())
+						.getOrgProfileId());
+		if ((boolean) e.getComponent().getAttributes().get("value")) {
 			for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
-				if(ctAgencies.isSelectedCheckBox()){
+				if (ctAgencies.isSelectedCheckBox()) {
 					orgProfileId = ctAgencies.getOrgProfile().getMinstryId();
 				}
 			}
-			if(!getManagedBean().getMinistryProfileId().equals(orgProfileId)){
+			if (!getManagedBean().getMinistryProfileId().equals(orgProfileId)) {
 				for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
-					if(orgProfileId.equals(ctAgencies.getOrgProfile().getMinstryId())){
+					if (orgProfileId.equals(ctAgencies.getOrgProfile().getMinstryId())) {
 						ctAgencies.setSelectedCheckBox(true);
 					}
 				}
 			}
 			getManagedBean().setButtonHideActive(false);
-		}else{
+		} else {
 			for (CtAgency ctAgencies : getManagedBean().getContractVer().getCtAgencies()) {
-				if(!ctAgencies.isSelectedCheckBox()){
+				if (!ctAgencies.isSelectedCheckBox()) {
 					orgProfileId = ctAgencies.getOrgProfile().getMinstryId();
-					if(orgProfileId == null){
+					if (orgProfileId == null) {
 						orgProfileId = new Long(0);
 					}
 				}
 			}
-			if(!getManagedBean().getMinistryProfileId().equals(orgProfileId)){
-				for (CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()){
-					if(orgProfileId.equals(agencies.getOrgProfile().getMinstryId())){
+			if (!getManagedBean().getMinistryProfileId().equals(orgProfileId)) {
+				for (CtAgency agencies : getManagedBean().getContractVer().getCtAgencies()) {
+					if (orgProfileId.equals(agencies.getOrgProfile().getMinstryId())) {
 						agencies.setSelectedCheckBox(false);
 					}
 				}
 			}
 			getManagedBean().setButtonHideActive(true);
-		}	
+		}
 	}
+
 	/**
 	 * The method used for generating a list of available financial institution
 	 * for performance bond as selection.
@@ -3057,7 +3264,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the selection list of financial institution
 	 */
 	public SelectItem[] retrieveFinancialOrgList() {
-		SelectItem[] items = null; 
+		SelectItem[] items = null;
 		IFinancialOrgSO financialOrgSO;
 
 		try {
@@ -3070,15 +3277,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 			List<PmFinancialOrg> list = resDTO.getFinancialOrgList();
 			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 
 			for (PmFinancialOrg pmFinancialOrg : list) {
-				items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName()); 
+				items[i++] = new SelectItem(pmFinancialOrg.getFinancialOrgId(), pmFinancialOrg.getFinOrgName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			financialOrgSO = null;
 		}
@@ -3086,50 +3294,56 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to add a new performance bond record.
-	 * This method will generate a new record in performance bond
-	 * list, user allow to enter the bond details and attachment. 
+	 * The method used to add a new performance bond record. This method will
+	 * generate a new record in performance bond list, user allow to enter the
+	 * bond details and attachment.
 	 */
 	public void addBondDetails() {
-	    CtPerformanceBond newBond = new CtPerformanceBond();
-	    newBond.setFinancialOrg(new PmFinancialOrg());
-	    newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-	    
-	    Calendar cal = Calendar.getInstance();
-	    cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-	    cal.add(Calendar.YEAR, 1); 
-	    newBond.setExpDate(cal.getTime());
-	    
-	    //#24333,#36491 - Start
-	    // Decide bond type and add to the right collections
-	    boolean isExtendedOrNewBond = isContractExtendOrIsBond();
-	    newBond.setBondNew(isExtendedOrNewBond);
-	    
-	    addBondToCollections(newBond, isExtendedOrNewBond);
-	    //#24333,#36491 - End
+		CtPerformanceBond newBond = new CtPerformanceBond();
+		newBond.setFinancialOrg(new PmFinancialOrg());
+		newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		cal.add(Calendar.YEAR, 1);
+		newBond.setExpDate(cal.getTime());
+
+		// #24333,#36491 - Start
+		// Decide bond type and add to the right collections
+		boolean isExtendedOrNewBond = isContractExtendOrIsBond();
+		newBond.setBondNew(isExtendedOrNewBond);
+
+		addBondToCollections(newBond, isExtendedOrNewBond);
+		// #24333,#36491 - End
 	}
 
-	//#24333,#36491 - Start
+	// #24333,#36491 - Start
 	/**
 	 * Helper method to add the bond to specific collections based on bond type.
-	 * @param bond The performance bond to add.
-	 * @param isExtendedOrNewBond True if bond is new or extended, false if original.
+	 * 
+	 * @param bond
+	 *            The performance bond to add.
+	 * @param isExtendedOrNewBond
+	 *            True if bond is new or extended, false if original.
 	 */
 	private void addBondToCollections(CtPerformanceBond bond, boolean isExtendedOrNewBond) {
-	    if (isExtendedOrNewBond) {
-	        getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(bond);
-	    } else {
-	        getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(bond);
-	    }
+		if (isExtendedOrNewBond) {
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(bond);
+		} else {
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(bond);
+		}
 	}
-	//#24333,#36491 - End		    
+
+	// #24333,#36491 - End
 
 	/**
 	 * The method used to upload performance bond file.
 	 * 
-	 * @param  event      the upload event for file upload from screen
-	 * @throws Exception  if an exception occurred
-	 * @see    Exception
+	 * @param event
+	 *            the upload event for file upload from screen
+	 * @throws Exception
+	 *             if an exception occurred
+	 * @see Exception
 	 */
 	public void fileUploadPerformance(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
@@ -3139,12 +3353,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
-		//#24333 - Start
-		if(isContractExtendOrIsBond()){
-			for (CtPerformanceBond ctPerformanceBondNew : getManagedBean().getCtContractAmount().getCtPerformanceBondsNew()) {
+		// #24333 - Start
+		if (isContractExtendOrIsBond()) {
+			for (CtPerformanceBond ctPerformanceBondNew : getManagedBean().getCtContractAmount()
+					.getCtPerformanceBondsNew()) {
 				if (ctPerformanceBondNew.equals(getManagedBean().getCtPerformanceBond())) {
 					ctPerformanceBondNew.setFileName(item.getFileName());
 					ctPerformanceBondNew.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
@@ -3157,15 +3372,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					ctPerformanceBonds.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 				}
 			}
-		}else{
-			for (CtPerformanceBond ctPerformanceBond : getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal()) {
+		} else {
+			for (CtPerformanceBond ctPerformanceBond : getManagedBean().getCtContractAmount()
+					.getCtPerformanceBondsOriginal()) {
 				if (ctPerformanceBond.equals(getManagedBean().getCtPerformanceBond())) {
 					ctPerformanceBond.setFileName(item.getFileName());
 					ctPerformanceBond.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 				}
 			}
 		}
-		//#24333 - End
+		// #24333 - End
 		RequestContext.getCurrentInstance().execute("uploadBondDlg.hide()");
 	}
 
@@ -3174,62 +3390,66 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void removePerformanceBond() {
 		try {
-			//#24333 - Start
-			if(isContractExtendOrIsBond()){
+			// #24333 - Start
+			if (isContractExtendOrIsBond()) {
 				if (getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() != null) {
-					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().iterator();
+					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount()
+							.getCtPerformanceBondsNew().iterator();
 					while (performanceBond.hasNext()) {
-						CtPerformanceBond  bond = performanceBond.next();
+						CtPerformanceBond bond = performanceBond.next();
 						if (bond.isSelectedCheckBox()) {
 							performanceBond.remove();
 						}
 					}
 				}
-			}else{
+			} else {
 				if (getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() != null) {
-					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().iterator();
+					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount()
+							.getCtPerformanceBondsOriginal().iterator();
 					while (performanceBond.hasNext()) {
-						CtPerformanceBond  bond = performanceBond.next();
+						CtPerformanceBond bond = performanceBond.next();
 						if (bond.isSelectedCheckBox()) {
 							performanceBond.remove();
 						}
 					}
 				}
-				//Start - Fix #24333
+				// Start - Fix #24333
 				if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
-					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
+					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount()
+							.getCtPerformanceBonds().iterator();
 					while (performanceBond.hasNext()) {
-						CtPerformanceBond  bond = performanceBond.next();
+						CtPerformanceBond bond = performanceBond.next();
 						if (bond.isSelectedCheckBox()) {
 							performanceBond.remove();
 						}
 					}
 				}
-				//End - Fix #24333
-				
-				
+				// End - Fix #24333
+
 			}
-		//#24333 - End
+			// #24333 - End
 			getManagedBean().setSelectAll(false);
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 
 		}
 	}
 
 	/**
-	 * The method used to render the ceiling quantity information
-	 * of the selected product item.
+	 * The method used to render the ceiling quantity information of the
+	 * selected product item.
 	 */
 	public void onSelectProductItem() {
-		try{
-			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			log.info("Selected Item ***"+getManagedBean().getSelectedItem());
-			log.info("Show Item ****"+getManagedBean().getShowItem());
-			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
+		try {
+			// ContractItemSearchBackingBean cisbb = new
+			// ContractItemSearchBackingBean();
+			log.info("Selected Item ***" + getManagedBean().getSelectedItem());
+			log.info("Show Item ****" + getManagedBean().getShowItem());
+			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem() != null) {
 
 				if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
@@ -3238,195 +3458,226 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
 					refreshAgencyCeilingQuantityList();
-				}  else if (getManagedBean().getShowItem() != null
+				} else if (getManagedBean().getShowItem() != null
 						&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
-					//refreshAgencyCeilingQuantityServiceList();
+					// refreshAgencyCeilingQuantityServiceList();
 				} else {
 					getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				}
 				// retrieve zone label for new price
-				if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-					
-					//#34961 start
+				if (getManagedBean().getSelectedItem().getPriceType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode()
+								.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode()
+								.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+
+					// #34961 start
 					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 					ContractItemResDTO resDTO = new ContractItemResDTO();
-					IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+					IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 					reqDTO.setCtContactItem(getManagedBean().getSelectedItem());
 					resDTO = contractItemSO.getPreviousCtContractItemByCtContractItem(reqDTO);
-					
-					if(resDTO.getCtContractItem()!=null && getManagedBean().getSelectedItem()!=null){
-						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemPrices())
-								&& getManagedBean().getSelectedItem().getCtItemPrices().size()>resDTO.getCtContractItem().getCtItemPrices().size()){
+
+					if (resDTO.getCtContractItem() != null && getManagedBean().getSelectedItem() != null) {
+						if (CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemPrices())
+								&& getManagedBean().getSelectedItem().getCtItemPrices().size() > resDTO
+										.getCtContractItem().getCtItemPrices().size()) {
 							itemPriceZoneLabelList(getManagedBean().getSelectedItem(), resDTO.getCtContractItem());
 						}
-						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemMaxQties())
-								&& getManagedBean().getSelectedItem().getCtItemMaxQties().size()>resDTO.getCtContractItem().getCtItemMaxQties().size()){
+						if (CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemMaxQties())
+								&& getManagedBean().getSelectedItem().getCtItemMaxQties().size() > resDTO
+										.getCtContractItem().getCtItemMaxQties().size()) {
 							itemMaxQtyZoneLabelList(getManagedBean().getSelectedItem(), resDTO.getCtContractItem());
 						}
 					}
-					//#34961 end
+					// #34961 end
 				}
 			}
-		} catch(Exception ex ) {
+		} catch (Exception ex) {
 			log.error(ex.toString());
 		}
 	}
-	
+
 	/**
-	 * The method used to render the ceiling quantity information
-	 * of the selected product item.
+	 * The method used to render the ceiling quantity information of the
+	 * selected product item.
 	 */
 	public void onSelectServiceItem() {
-		try{
-			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
-			log.info("Selected Item onSelectServiceItem ***"+getManagedBean().getServiceselectedItem());
-			log.info("Show Item  onSelectServiceItem ****"+getManagedBean().getShowItem());
-			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
-				//cisbb.getManagedBean().setItemProductExist(false);
+		try {
+			// ContractItemSearchBackingBean cisbb = new
+			// ContractItemSearchBackingBean();
+			log.info("Selected Item onSelectServiceItem ***" + getManagedBean().getServiceselectedItem());
+			log.info("Show Item  onSelectServiceItem ****" + getManagedBean().getShowItem());
+			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem() != null) {
+				// cisbb.getManagedBean().setItemProductExist(false);
 				if (getManagedBean().getShowServiceItem() != null
-						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(
+								ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				} else if (getManagedBean().getShowServiceItem() != null
-						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(
+								ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
 					refreshAgencyCeilingQuantityServiceList();
-				}  else if (getManagedBean().getShowServiceItem() != null
-						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+				} else if (getManagedBean().getShowServiceItem() != null
+						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(
+								ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
 					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
 					refreshAgencyCeilingQuantityServiceList();
 				} else {
 					getManagedBean().setShowServiceItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
 				}
 				// retrieve zone label for new price
-				if (getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-					
-					//#34961 start
+				if (getManagedBean().getServiceselectedItem().getPriceType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode()
+								.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+						|| getManagedBean().getServiceselectedItem().getPriceType().getParameterCode()
+								.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+
+					// #34961 start
 					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 					ContractItemResDTO resDTO = new ContractItemResDTO();
-					IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+					IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 					reqDTO.setCtContactItem(getManagedBean().getServiceselectedItem());
 					resDTO = contractItemSO.getPreviousCtContractItemByCtContractItem(reqDTO);
-					
-					if(resDTO.getCtContractItem()!=null && getManagedBean().getServiceselectedItem()!=null){
-						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemPrices())
-								&& getManagedBean().getServiceselectedItem().getCtItemPrices().size()>resDTO.getCtContractItem().getCtItemPrices().size()){
-							itemPriceZoneLabelList(getManagedBean().getServiceselectedItem(), resDTO.getCtContractItem());
+
+					if (resDTO.getCtContractItem() != null && getManagedBean().getServiceselectedItem() != null) {
+						if (CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemPrices())
+								&& getManagedBean().getServiceselectedItem().getCtItemPrices().size() > resDTO
+										.getCtContractItem().getCtItemPrices().size()) {
+							itemPriceZoneLabelList(getManagedBean().getServiceselectedItem(),
+									resDTO.getCtContractItem());
 						}
-						if(CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemMaxQties())
-								&& getManagedBean().getServiceselectedItem().getCtItemMaxQties().size()>resDTO.getCtContractItem().getCtItemMaxQties().size()){
-							itemMaxQtyZoneLabelList(getManagedBean().getServiceselectedItem(), resDTO.getCtContractItem());
+						if (CollectionUtils.isNotEmpty(resDTO.getCtContractItem().getCtItemMaxQties())
+								&& getManagedBean().getServiceselectedItem().getCtItemMaxQties().size() > resDTO
+										.getCtContractItem().getCtItemMaxQties().size()) {
+							itemMaxQtyZoneLabelList(getManagedBean().getServiceselectedItem(),
+									resDTO.getCtContractItem());
 						}
 					}
-					//#34961 end
+					// #34961 end
 				}
 			}
-		} catch(Exception ex ) {
+		} catch (Exception ex) {
 			log.error(ex.toString());
 		}
 	}
 
-
 	/**
-	 * The method used to refresh the ceiling quantity information of Product details listing in UI.
+	 * The method used to refresh the ceiling quantity information of Product
+	 * details listing in UI.
 	 */
 	private void refreshAgencyCeilingQuantityList() {
 		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
 		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
 			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
 		}
-		
+
 		getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
-		//getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
+		// getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
 		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
 				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
 				ctItemCeilingQty.setCtAgency(ctAgency);
 				ctItemCeilingQty.setCtContractItem(getManagedBean().getSelectedItem());
-				
-				
+
 				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
 				ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 				ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
-				
+
 			} else {
-				getManagedBean().getSelectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
-				
+				getManagedBean().getSelectedItem().getCtItemCeilingQties()
+						.add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+
 			}
 		}
 	}
+
 	/**
-	 * The method used to refresh the ceiling quantity information of Service Details listing in UI.
+	 * The method used to refresh the ceiling quantity information of Service
+	 * Details listing in UI.
 	 */
 	private void refreshAgencyCeilingQuantityServiceList() {
 		Map<Long, CtItemCeilingQty> itemCeilingQtyMap = new HashMap<Long, CtItemCeilingQty>();
-		
+
 		for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getServiceselectedItem().getCtItemCeilingQties()) {
 			itemCeilingQtyMap.put(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId(), ctItemCeilingQty);
 		}
-		
+
 		getManagedBean().getServiceselectedItem().getCtItemCeilingQties().clear();
-		//getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
+		// getManagedBean().getSelectedItem().getCtItemCeilingQties().clear();
 		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			if (!itemCeilingQtyMap.containsKey(ctAgency.getOrgProfile().getOrgProfileId())) {
 				CtItemCeilingQty ctItemCeilingQty = new CtItemCeilingQty();
 				ctItemCeilingQty.setCtAgency(ctAgency);
-				
+
 				ctItemCeilingQty.setCtContractItem(getManagedBean().getServiceselectedItem());
-				
+
 				ctItemCeilingQty.setCeilingQuantity(new BigDecimal(0));
 				ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 				ctItemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-				
+
 				getManagedBean().getServiceselectedItem().getCtItemCeilingQties().add(ctItemCeilingQty);
 			} else {
-		
-				getManagedBean().getServiceselectedItem().getCtItemCeilingQties().add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
+
+				getManagedBean().getServiceselectedItem().getCtItemCeilingQties()
+						.add(itemCeilingQtyMap.get(ctAgency.getOrgProfile().getOrgProfileId()));
 			}
 		}
 	}
-	
-	//#34961 start
+
+	// #34961 start
 	/**
-	 * The method used to indicate the label flag for new price of contract item.  
+	 * The method used to indicate the label flag for new price of contract
+	 * item.
 	 */
 	@SuppressWarnings("unchecked")
 	private void itemPriceZoneLabelList(CtContractItem ctContractItem, CtContractItem preCtContractItem) {
-		
-		try{			
+
+		try {
 			if (CollectionUtils.isNotEmpty(ctContractItem.getCtItemPrices())) {
-				if(preCtContractItem.getScRequestItem()!=null 
-						&& preCtContractItem.getScRequestItem().getRequestNoteItemId()!=null
-						&& preCtContractItem.getScRequestItem().getRequestNoteItemId().equals(ctContractItem.getScRequestItem().getRequestNoteItemId())){						
-					
+				if (preCtContractItem.getScRequestItem() != null
+						&& preCtContractItem.getScRequestItem().getRequestNoteItemId() != null
+						&& preCtContractItem.getScRequestItem().getRequestNoteItemId()
+								.equals(ctContractItem.getScRequestItem().getRequestNoteItemId())) {
+
 					Predicate conditionPredicate;
-					for(final CtItemPrice currentCtItemPrice : ctContractItem.getCtItemPrices()){
+					for (final CtItemPrice currentCtItemPrice : ctContractItem.getCtItemPrices()) {
 						List<CtItemPrice> itemPriceSelect;
 						currentCtItemPrice.setChangeZoneLabel(false);
-						if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-								|| ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
+						if (ctContractItem.getPriceType().getParameterCode()
+								.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+								|| ctContractItem.getPriceType().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+								|| ctContractItem.getPriceType().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+								|| ctContractItem.getPriceType().getParameterCode()
+										.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
 							conditionPredicate = new Predicate() {
 								@Override
 								public boolean evaluate(Object object) {
 									CtItemPrice itemPricePredicate = (CtItemPrice) object;
 									return itemPricePredicate.getFromQty().equals(currentCtItemPrice.getFromQty())
 											&& itemPricePredicate.getToQty().equals(currentCtItemPrice.getToQty())
-											&& itemPricePredicate.getUnitPrice().equals(currentCtItemPrice.getUnitPrice())
+											&& itemPricePredicate.getUnitPrice().equals(
+													currentCtItemPrice.getUnitPrice())
 											&& itemPricePredicate.getEffDate().equals(currentCtItemPrice.getEffDate())
 											&& itemPricePredicate.getCtContractZone().getZoneName() != null
-											&& itemPricePredicate.getCtContractZone().getZoneName().trim()
-											.equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName().trim());
+											&& itemPricePredicate
+													.getCtContractZone()
+													.getZoneName()
+													.trim()
+													.equalsIgnoreCase(
+															currentCtItemPrice.getCtContractZone().getZoneName().trim());
 								}
 							};
-						}
-						else{
+						} else {
 							conditionPredicate = new Predicate() {
 								@Override
 								public boolean evaluate(Object object) {
@@ -3434,34 +3685,40 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 									return itemPricePredicate.getUnitPrice().equals(currentCtItemPrice.getUnitPrice())
 											&& itemPricePredicate.getEffDate().equals(currentCtItemPrice.getEffDate())
 											&& itemPricePredicate.getCtContractZone().getZoneName() != null
-											&& itemPricePredicate.getCtContractZone().getZoneName()
-											.equalsIgnoreCase(currentCtItemPrice.getCtContractZone().getZoneName());
+											&& itemPricePredicate
+													.getCtContractZone()
+													.getZoneName()
+													.equalsIgnoreCase(
+															currentCtItemPrice.getCtContractZone().getZoneName());
 								}
 							};
 						}
-						 
-						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(preCtContractItem.getCtItemPrices(), conditionPredicate);
-						if(CollectionUtils.isEmpty(itemPriceSelect) && itemPriceSelect.isEmpty()){
+
+						itemPriceSelect = (List<CtItemPrice>) CollectionUtils.select(
+								preCtContractItem.getCtItemPrices(), conditionPredicate);
+						if (CollectionUtils.isEmpty(itemPriceSelect) && itemPriceSelect.isEmpty()) {
 							currentCtItemPrice.setChangeZoneLabel(true);
 						}
 					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			log.info(e);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
 	/**
-	 * The method used to indicate the label flag for new max qty of contract item.
+	 * The method used to indicate the label flag for new max qty of contract
+	 * item.
 	 */
 	@SuppressWarnings("unchecked")
 	private void itemMaxQtyZoneLabelList(CtContractItem ctContractItem, CtContractItem preCtContractItem) {
-		try{			
+		try {
 			if (!ctContractItem.getCtItemMaxQties().isEmpty()) {
 				Predicate conditionPredicate;
-				for(final CtItemMaxQty currentCtItemMaxQty : ctContractItem.getCtItemMaxQties()){
+				for (final CtItemMaxQty currentCtItemMaxQty : ctContractItem.getCtItemMaxQties()) {
 					List<CtItemMaxQty> itemMaxQtySelect;
 					currentCtItemMaxQty.setChangeZoneLabel(false);
 					conditionPredicate = new Predicate() {
@@ -3471,100 +3728,104 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							return itemMaxQtyPredicate.getEffDate().equals(currentCtItemMaxQty.getEffDate())
 									&& itemMaxQtyPredicate.getCtContractZone().getZoneName() != null
 									&& itemMaxQtyPredicate.getCtContractZone().getZoneName()
-									.equalsIgnoreCase(currentCtItemMaxQty.getCtContractZone().getZoneName());
+											.equalsIgnoreCase(currentCtItemMaxQty.getCtContractZone().getZoneName());
 						}
 					};
-					 
-					itemMaxQtySelect = (List<CtItemMaxQty>) CollectionUtils.select(preCtContractItem.getCtItemMaxQties(), conditionPredicate);
-					if(CollectionUtils.isEmpty(itemMaxQtySelect) && itemMaxQtySelect.isEmpty()){
+
+					itemMaxQtySelect = (List<CtItemMaxQty>) CollectionUtils.select(
+							preCtContractItem.getCtItemMaxQties(), conditionPredicate);
+					if (CollectionUtils.isEmpty(itemMaxQtySelect) && itemMaxQtySelect.isEmpty()) {
 						currentCtItemMaxQty.setChangeZoneLabel(true);
 					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			log.info(e);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
-	//#34961 end
+
+	// #34961 end
 
 	/**
 	 * The method used to render the selected product item information.
 	 */
 	public void changeShowItem() {
 		try {
-				if(getManagedBean().getShowItem()!=null)
-				{
-					if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
-						refreshAgencyCeilingQuantityList();
-					}else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
-						refreshAgencyCeilingQuantityList();
-					}// Start Fix - #34539
-					else if(getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
-						refreshAgencyCeilingQuantityList();
-					}// End Fix - #34539	
-				}
+			if (getManagedBean().getShowItem() != null) {
+				if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
+					refreshAgencyCeilingQuantityList();
+				} else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+					refreshAgencyCeilingQuantityList();
+				}// Start Fix - #34539
+				else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
+					refreshAgencyCeilingQuantityList();
+				}// End Fix - #34539
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * The method used to render the selected service item information.
 	 */
 	public void changeServiceShowItem() {
 		try {
-			
-			if(getManagedBean().getShowServiceItem()!=null)
-			{
+
+			if (getManagedBean().getShowServiceItem() != null) {
 				if (getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_QTY)) {
 					refreshAgencyCeilingQuantityServiceList();
-				}else if (getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+				} else if (getManagedBean().getShowServiceItem().equalsIgnoreCase(
+						ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
 					refreshAgencyCeilingQuantityServiceList();
-				}	
-			}	
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * The method used to retrieve the item ceiling quantity which in active status
-	 * to be displayed on screen.
+	 * The method used to retrieve the item ceiling quantity which in active
+	 * status to be displayed on screen.
 	 * 
-	 * @return activeList  the list of active ceiling quantity to be displayed 
+	 * @return activeList the list of active ceiling quantity to be displayed
 	 */
 	public List<CtItemCeilingQty> getActiveItemCeilingQty() {
 		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
 		if (getManagedBean().getSelectedItem() != null) {
-			if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
-			  for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
-				  //#30428 - agency not display because isChkStatus is false
-				  //to re-check status for isChkStatus if it is false
-				  if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
-					  if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0 
-							  && ctItemCeilingQty.getCtAgency().getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
-						  ctItemCeilingQty.getCtAgency().setChkStatus(false);
-					  } else {
-						  ctItemCeilingQty.getCtAgency().setChkStatus(true);
-					  }
-				  }
-				  
-				  if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
-					activeList.add(ctItemCeilingQty);
-				  }
-			  }
-			}	  
+			if (getManagedBean().getSelectedItem().getCtItemCeilingQties().size() > 0) {
+				for (CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+					// #30428 - agency not display because isChkStatus is false
+					// to re-check status for isChkStatus if it is false
+					if (!ctItemCeilingQty.getCtAgency().isChkStatus()) {
+						if (ctItemCeilingQty.getCtAgency().getRecordStatusFlg() != 0
+								&& ctItemCeilingQty.getCtAgency().getEffDate()
+										.after(DateUtils.getCurrentDateWithoutTime())) {
+							ctItemCeilingQty.getCtAgency().setChkStatus(false);
+						} else {
+							ctItemCeilingQty.getCtAgency().setChkStatus(true);
+						}
+					}
+
+					if (ctItemCeilingQty.getCtAgency().isChkStatus()) {
+						activeList.add(ctItemCeilingQty);
+					}
+				}
+			}
 		}
 		return activeList;
 	}
 
 	/**
-	 * The method used for validating the ceiling quantity of items.
-	 * A warning message will display on screen when the total ceiling quantity is 
-	 * larger than the maximum quantity of the item.
+	 * The method used for validating the ceiling quantity of items. A warning
+	 * message will display on screen when the total ceiling quantity is larger
+	 * than the maximum quantity of the item.
 	 * 
-	 * @param ceilingQtyData   object of item ceiling quantity
+	 * @param ceilingQtyData
+	 *            object of item ceiling quantity
 	 */
 	public void validateCeilingQty(CtItemCeilingQty ceilingQtyData) {
 		double totalCeilingQuantity = 0.0;
@@ -3573,9 +3834,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
 				totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
 
-			} if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
+			}
+			if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
 				ceilingQtyData.setCeilingQuantity(BigDecimal.valueOf(0.00));
-				throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
+				throw new EpException(MessageConst.ERROR_750009, new String[] { item.getScRequestItem().getItemName() });
 			}
 		}
 	}
@@ -3583,47 +3845,53 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to validate the entered minimum order quantity.
 	 * 
-	 * @param ctContractItem   object of contract item
+	 * @param ctContractItem
+	 *            object of contract item
 	 */
 	public void onChangeMinimumQty(CtContractItem ctContractItem) {
 
-		//Bug #28356 - Start
-		//#28479 - Start Putra
-		if(ctContractItem.getContractItemId() != null){	//28292	- null checker
+		// Bug #28356 - Start
+		// #28479 - Start Putra
+		if (ctContractItem.getContractItemId() != null) { // 28292 - null
+															// checker
 			if (ctContractItem.getMinimumOrderQty() <= 0) {
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
+					if (ctContractItem.getScRequestItem().getRequestNoteItemId()
+							.equals(item.getScRequestItem().getRequestNoteItemId())) {
 						item.setMinimumOrderQty(0);
 						ctContractItem.setMinimumOrderQty(0);
-						throw new EpException(MessageConst.ERROR_100033,
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						throw new EpException(MessageConst.ERROR_100033, new String[] { ResourceBundleUtils.getMessage(
+								"lbl.ct.min.order.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
 					}
 				}
 			}
-			
-	if (ctContractItem.getMinimumOrderQty() > 0) {
-		for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-		if(ctContractItem.getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-		   item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
-			if (!item.getCtItemMaxQties().isEmpty()) {
-				Double maxValue = new Double(0);							
-				for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
-					if(maxQty.getMaxQuantity().doubleValue() > maxValue)
-						maxValue = maxQty.getMaxQuantity().doubleValue();				
-				}
-				if (item.getMinimumOrderQty() > maxValue) {
-					throw new EpException(MessageConst.ERROR_100034,
-							new String[]{ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});					
-							}				
+
+			if (ctContractItem.getMinimumOrderQty() > 0) {
+				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+					if (ctContractItem.getScRequestItem().getRequestNoteItemId()
+							.equals(item.getScRequestItem().getRequestNoteItemId())) {
+						item.setMinimumOrderQty(ctContractItem.getMinimumOrderQty());
+						if (!item.getCtItemMaxQties().isEmpty()) {
+							Double maxValue = new Double(0);
+							for (CtItemMaxQty maxQty : item.getCtItemMaxQties()) {
+								if (maxQty.getMaxQuantity().doubleValue() > maxValue)
+									maxValue = maxQty.getMaxQuantity().doubleValue();
+							}
+							if (item.getMinimumOrderQty() > maxValue) {
+								throw new EpException(MessageConst.ERROR_100034,
+										new String[] { ResourceBundleUtils.getMessage("lbl.ct.min.order.qty",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes().getUserLocale()) });
+							}
 						}
-					}//#28479 - End Putra
+					}// #28479 - End Putra
 				}
-			}			
+			}
 		}
-		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(), ctContractItem);
-		log.info("Putra Check Item :"+ctContractItem.getMinimumOrderQty() );			
+		getManagedBean().getUpdateItemMap().put(ctContractItem.getScRequestItem().getRequestNoteItemId(),
+				ctContractItem);
+		log.info("Putra Check Item :" + ctContractItem.getMinimumOrderQty());
 	}
 
 	/**
@@ -3632,26 +3900,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void onChangeDeliveryTerm(LocationDTO locationDTO) {
 		if (!getManagedBean().getContractVer().getCtContractZones().isEmpty()) {
 			for (CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
-				if(ctContractZone.getZoneName().equalsIgnoreCase(locationDTO.getZone())) {
-					ctContractZone.setDeliveryTerm(locationDTO.getDeliveryTerm()); //#34191
+				if (ctContractZone.getZoneName().equalsIgnoreCase(locationDTO.getZone())) {
+					ctContractZone.setDeliveryTerm(locationDTO.getDeliveryTerm()); // #34191
 					getManagedBean().getUpdateZoneMap().put(locationDTO.getZone(), ctContractZone);
 					break;
 				}
 			}
 		}
-	}	
-
-
+	}
 
 	/**
 	 * The method used to set the date of frequency sSchedule.
 	 */
-	public void scheduleDate() {	
-		for(CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {			   
+	public void scheduleDate() {
+		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
 			if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
 				String fromDate = dateFormat.format(ctSchedules.getFromDate());
 				ctSchedules.setStartMonth(fromDate.substring(3, 5));
-				ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
+				ctSchedules.setStartYear(fromDate.substring(6, fromDate.length()));
 
 				String toDate = dateFormat.format(ctSchedules.getToDate());
 				ctSchedules.setEndMonth(toDate.substring(3, 5));
@@ -3663,12 +3929,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * The method used to set the date of progressive payment.
 	 */
-	public void progressiveDate() {	
-		for(CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {			   
+	public void progressiveDate() {
+		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			if (ctSchedules.getFromDate() != null && ctSchedules.getToDate() != null) {
 				String fromDate = dateFormat.format(ctSchedules.getFromDate());
 				ctSchedules.setStartMonth(fromDate.substring(3, 5));
-				ctSchedules.setStartYear(fromDate.substring(6,fromDate.length()));
+				ctSchedules.setStartYear(fromDate.substring(6, fromDate.length()));
 
 				String toDate = dateFormat.format(ctSchedules.getToDate());
 				ctSchedules.setEndMonth(toDate.substring(3, 5));
@@ -3678,15 +3944,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to validation 
-	 * for amendment if user selected other change
+	 * The method used to validation for amendment if user selected other change
 	 * 
-	 * @return true, if other change is selected
-	 *         false, if other change is not selected
+	 * @return true, if other change is selected false, if other change is not
+	 *         selected
 	 */
-	public boolean getValueFromAmendment(){
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
-			if(getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
+	public boolean getValueFromAmendment() {
+		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)) {
+			if (getManagedBean().getContractVer().getCtAmendment().isOtherChange()) {
 				return false;
 			}
 			return true;
@@ -3695,17 +3960,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to retrieve schedule or progressive 
-	 * from date and to date value.
+	 * The method used to retrieve schedule or progressive from date and to date
+	 * value.
 	 */
-	public void scheduleProgressiveDate() {    	
+	public void scheduleProgressiveDate() {
 		if (getManagedBean().getContractVer().getCtContract().isFrequencySchedule()) {
-			if (getManagedBean().getContractVer().getCtSchedules() != null 
+			if (getManagedBean().getContractVer().getCtSchedules() != null
 					&& !getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
 				for (CtSchedule schedule : getManagedBean().getContractVer().getCtSchedules()) {
 					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
-						String fromDate =  "01/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
-						String toDate = "01/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+						String fromDate = "01/" + schedule.getStartMonth() + "/" + schedule.getStartYear();
+						String toDate = "01/" + schedule.getEndMonth() + "/" + schedule.getEndYear();
 						try {
 							schedule.setFromDate(dateFormat.parse(fromDate));
 							schedule.setToDate(dateFormat.parse(toDate));
@@ -3717,12 +3982,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().getContractVer().setCtProgressivePayments(null);
 			}
 		} else {
-			if (getManagedBean().getContractVer().getCtProgressivePayments() != null 
+			if (getManagedBean().getContractVer().getCtProgressivePayments() != null
 					&& !getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
 				for (CtProgressivePayment schedule : getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (schedule.getStartMonth() != null && schedule.getEndMonth() != null) {
-						String fromDate = "01/" + schedule.getStartMonth() + "/"+ schedule.getStartYear();
-						String toDate = "01/" + schedule.getEndMonth() + "/"+ schedule.getEndYear();
+						String fromDate = "01/" + schedule.getStartMonth() + "/" + schedule.getStartYear();
+						String toDate = "01/" + schedule.getEndMonth() + "/" + schedule.getEndYear();
 						try {
 							schedule.setFromDate(dateFormat.parse(fromDate));
 							schedule.setToDate(dateFormat.parse(toDate));
@@ -3732,23 +3997,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					}
 				}
 				getManagedBean().getContractVer().setCtSchedules(null);
-			} 
-		}	
+			}
+		}
 	}
 
 	/**
-	 * The method used to find active circular 
-	 * record return boolean value in case record true
-	 *
-	 * @return true, if there is an active circular record
-	 *         false, if there isn't active circular record
+	 * The method used to find active circular record return boolean value in
+	 * case record true
+	 * 
+	 * @return true, if there is an active circular record false, if there isn't
+	 *         active circular record
 	 */
-	public boolean chkCircularActiveRecord(){
-		ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+	public boolean chkCircularActiveRecord() {
+		ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		reqDTO.setContractId(getManagedBean().getContractVer().getCtContract().getContractId());
 		CircularResDTO resDTO = circularSO.retrieveCircularVerByContractId(reqDTO);
-		if(resDTO.getCircularVer()!=null) {
+		if (resDTO.getCircularVer() != null) {
 			getManagedBean().setCtCircularVer(resDTO.getCircularVer());
 			return true;
 		} else {
@@ -3757,62 +4023,66 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to render the check box for company name
-	 * and supplier address if there are any updates from profile
-	 * management module.
+	 * The method used to render the check box for company name and supplier
+	 * address if there are any updates from profile management module.
 	 * 
-	 * @param ctContractVer   an object of contract version
+	 * @param ctContractVer
+	 *            an object of contract version
 	 */
 	public void renderUpdateCheckbox(CtContractVer ctContractVer) {
 		getManagedBean().setUpdateCompanyName(false);
 		getManagedBean().setUpdateSupplierAddress(false);
 		if (ctContractVer.getCtContractValue().isCompanyNameChange()
-				|| !ctContractVer.getCtContractValue().getSupplierName().equalsIgnoreCase(
-						getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName())) {
+				|| !ctContractVer
+						.getCtContractValue()
+						.getSupplierName()
+						.equalsIgnoreCase(
+								getManagedBean().getContractVer().getCtContract().getSmSupplier().getCompanyName())) {
 			getManagedBean().setUpdateCompanyName(true);
 		}
 		if (ctContractVer.getCtContractValue().isAddressChange()
-				|| CtAddressUtil.isSupplierInfoChanged(
-						getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl(),
-						ctContractVer.getCtContractValue().getSupplierAddress())) {
+				|| CtAddressUtil.isSupplierInfoChanged(getManagedBean().getContractVer().getCtContract()
+						.getSmSupplier().getSmAppl(), ctContractVer.getCtContractValue().getSupplierAddress())) {
 			getManagedBean().setUpdateSupplierAddress(true);
 		}
 	}
 
 	/**
-	 * @param ctPerformanceBond the ctPerformanceBond to set
+	 * @param ctPerformanceBond
+	 *            the ctPerformanceBond to set
 	 */
-	public void PerformanceBondValue(CtPerformanceBond ctBond){
+	public void PerformanceBondValue(CtPerformanceBond ctBond) {
 		getManagedBean().setCtPerformanceBond(ctBond);
 
 	}
 
 	/**
-	 * The method used to delete 
-	 * the uploaded bond attached file
-	 */    
-	public void deleteBondAttachement(){
-		//#24333
-		if(isContractExtendOrIsBond()){			
-			CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().get(getManagedBean().getIndex());
+	 * The method used to delete the uploaded bond attached file
+	 */
+	public void deleteBondAttachement() {
+		// #24333
+		if (isContractExtendOrIsBond()) {
+			CtPerformanceBond ctBondAttch = getManagedBean().getCtContractAmount().getCtPerformanceBondsNew()
+					.get(getManagedBean().getIndex());
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().remove(getManagedBean().getIndex());
 			ctBondAttch.setFileName(null);
 			ctBondAttch.setFilePath(null);
-			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew().add(getManagedBean().getIndex(), ctBondAttch);
-		}else{
-			CtPerformanceBond ctBondAttch =  getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().get(getManagedBean().getIndex());
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsNew()
+					.add(getManagedBean().getIndex(), ctBondAttch);
+		} else {
+			CtPerformanceBond ctBondAttch = getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal()
+					.get(getManagedBean().getIndex());
 			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().remove(getManagedBean().getIndex());
 			ctBondAttch.setFileName(null);
 			ctBondAttch.setFilePath(null);
-			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal().add(getManagedBean().getIndex(), ctBondAttch);
+			getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal()
+					.add(getManagedBean().getIndex(), ctBondAttch);
 		}
-		
 
-		
 	}
 
 	/**
-	 * This method used to retrieve PID reason code from database 
+	 * This method used to retrieve PID reason code from database
 	 * 
 	 * @return the selection list of PID reason code
 	 */
@@ -3822,7 +4092,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		ReasonReqDTO reqDTO = null;
 		IReasonSO reasonSO = null;
 		List<PmReasonDesc> list = null;
-		ReasonResDTO resDTO  = null;
+		ReasonResDTO resDTO = null;
 		ISearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>();
 		int i = 1;
 		try {
@@ -3831,23 +4101,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setLanguage(facesScopes.getUserLocale().getLanguage());
 			reqDTO.setSortBy("pmReason.reasonId");
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(), ReasonCategory.PID_JUSTIFICATION.value()));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.pmPIDReasonList.docType", SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_MINISTRY));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmReason.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmReason.reasonCategoryCode.parameterCode", SearchOperator.OPERATOR_EQUALS
+							.value(), ReasonCategory.PID_JUSTIFICATION.value()));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmReason.pmPIDReasonList.docType", SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterConst.CONTRACT_TYPE_MINISTRY));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmReason.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
 			reqDTO.setReasonDescSearchBean(searchBean);
 
-			reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+			reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IReasonSO.class);
 			resDTO = reasonSO.retrieveReasonDescBySearchBean(reqDTO);
 			list = resDTO.getReasonDescResultBean().getResultList();
 			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()));
 			for (PmReasonDesc reasonDesc : list) {
 				items[i++] = new SelectItem(reasonDesc.getPmReason().getReasonId(), reasonDesc.getReasonDesc());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			reqDTO = null;
 			reasonSO = null;
@@ -3859,10 +4137,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * This method used to add
-	 *  list of PID reason into data table
-	 */		
-	public void addPurchaseInDefault(){
+	 * This method used to add list of PID reason into data table
+	 */
+	public void addPurchaseInDefault() {
 		CtPidReason ctPidReasons = new CtPidReason();
 		ctPidReasons.setPmReason(new PmReason());
 		getManagedBean().getContractVer().getCtPidReasons().add(ctPidReasons);
@@ -3870,13 +4147,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * This method used to delete the selected PID reason(s).
-	 */		
-	public void deletePidPurchase(){
+	 */
+	public void deletePidPurchase() {
 		try {
 			Iterator<CtPidReason> ctPidReasonIterator = getManagedBean().getContractVer().getCtPidReasons().iterator();
-			while(ctPidReasonIterator.hasNext()){
-				CtPidReason  ctPidReasons = ctPidReasonIterator.next();
-				if(ctPidReasons.isSelectedCheckBox()){
+			while (ctPidReasonIterator.hasNext()) {
+				CtPidReason ctPidReasons = ctPidReasonIterator.next();
+				if (ctPidReasons.isSelectedCheckBox()) {
 					ctPidReasonIterator.remove();
 				}
 			}
@@ -3884,38 +4161,43 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setButtonHideActive(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 
 	/**
-	 * This method used to compare
-	 * of purchase in default category reason equals other
+	 * This method used to compare of purchase in default category reason equals
+	 * other
 	 * 
-	 * @param reasonId   selected PID reason id
-	 * @return true,     if selected PID reason code is equals other
-	 *         false,    if selected PID reason code is not equals other
-	 */	
+	 * @param reasonId
+	 *            selected PID reason id
+	 * @return true, if selected PID reason code is equals other false, if
+	 *         selected PID reason code is not equals other
+	 */
 	public boolean PidPurchaseTypeOther(Long reasonId) {
-		if(reasonId == null || reasonId.intValue() == 0)
+		if (reasonId == null || reasonId.intValue() == 0)
 			return false;
 
 		ReasonReqDTO reqDTO = null;
 		IReasonSO reasonSO = null;
 		PmReason pmReason = null;
 		try {
-			FacesScopes facesScope = new FacesScopes(); 
+			FacesScopes facesScope = new FacesScopes();
 			reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonId(reasonId);
 			reqDTO.setLanguage(facesScope.getUserLocale().getLanguage());
-			reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+			reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IReasonSO.class);
 			pmReason = reasonSO.retrieveReasonById(reqDTO).getPmReason();
-			if(pmReason != null && pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_OTHER)){
+			if (pmReason != null
+					&& pmReason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_OTHER)) {
 				return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			reqDTO = null;
 			reasonSO = null;
@@ -3927,21 +4209,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * This method used to validate the duplicated pid reason
 	 * 
-	 * @param reasonId   selected PID reason id
+	 * @param reasonId
+	 *            selected PID reason id
 	 */
-	public void validatePidReason(Long resonId){
+	public void validatePidReason(Long resonId) {
 
-		if(resonId == null || resonId.intValue() == 0){
+		if (resonId == null || resonId.intValue() == 0) {
 			return;
 		}
-		if(getManagedBean().getContractVer().getCtPidReasons().size() > 0){
+		if (getManagedBean().getContractVer().getCtPidReasons().size() > 0) {
 			int counter = 0;
-			for(CtPidReason  pidReasons : getManagedBean().getContractVer().getCtPidReasons()){
-				if(pidReasons.getPmReason() != null 
-						&& pidReasons.getPmReason().getReasonId() != null
-						&& pidReasons.getPmReason().getReasonId().equals(resonId)){
+			for (CtPidReason pidReasons : getManagedBean().getContractVer().getCtPidReasons()) {
+				if (pidReasons.getPmReason() != null && pidReasons.getPmReason().getReasonId() != null
+						&& pidReasons.getPmReason().getReasonId().equals(resonId)) {
 					counter++;
-					if(!PidPurchaseTypeOther(resonId) && counter == 2){
+					if (!PidPurchaseTypeOther(resonId) && counter == 2) {
 						throw new EpException(MessageConst.ERROR_750020);
 					}
 				}
@@ -3950,12 +4232,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Route to Central Contract Circular Page. 
+	 * Route to Central Contract Circular Page.
 	 * 
 	 * @param contractVerId
 	 * @return page url
 	 */
-	public String gotoCicularPage(Long contractVerId){
+	public String gotoCicularPage(Long contractVerId) {
 		CentralContractBackingBean centralBB = new CentralContractBackingBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		centralBB.getManagedBean().setSelectedCircularContract(null);
@@ -3965,7 +4247,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		centralBB.getManagedBean().setAction("view");
 		centralBB.getManagedBean().setViewContract(true);
 		centralBB.getManagedBean().setUpdateAction(false);
-		centralBB.getManagedBean().setOutComes(new String[]{});
+		centralBB.getManagedBean().setOutComes(new String[] {});
 		centralBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
 		centralBB.getManagedBean().setChkCentralCircular(true);
 		centralBB.gotoCommonPage(contractVerId);
@@ -3973,61 +4255,62 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to navigate to contract details screen
-	 * for view purpose.
+	 * The method used to navigate to contract details screen for view purpose.
 	 * 
-	 * @return the navigate URL 
+	 * @return the navigate URL
 	 */
 	public void goToLoaView(ScLoa scLoa) {
-		//Enhancement 15851 - shaqimi start
+		// Enhancement 15851 - shaqimi start
 		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
 		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
-		
-		//Bug 34030 - shaqimi start
+
+		// Bug 34030 - shaqimi start
 		String docType = getManagedBean().getContractVer().getDocType();
 		Long statusId = getManagedBean().getContractVer().getStatus().getStatusId();
-		
-		if(getManagedBean().getTaskIdFromAgreementTaskList() != null){
+
+		if (getManagedBean().getTaskIdFromAgreementTaskList() != null) {
 			docType = getManagedBean().getDocTypeFromAgreementTaskList();
 		}
-		
-		getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
-		//Bug 34030 - shaqimi end
-		
-		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+
+		getManagedBean().setInPage(false);// Bug 34142 - shaqimi 04/12/2022
+		// Bug 34030 - shaqimi end
+
+		if (slLoaNo.substring(0, 2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 
-			//Bug 34142, 15851 - shaqimi start 04122022
-			if(getManagedBean().getTaskIdFromTaskList() != null || getManagedBean().getTaskIdFromAgreementTaskList() != null){
+			// Bug 34142, 15851 - shaqimi start 04122022
+			if (getManagedBean().getTaskIdFromTaskList() != null
+					|| getManagedBean().getTaskIdFromAgreementTaskList() != null) {
 				getManagedBean().setAmendFromTaskList(true);
 			}
-			//Bug 34142, 15851 - shaqimi end 04122022
-			//follow structure but for amendment
+			// Bug 34142, 15851 - shaqimi end 04122022
+			// follow structure but for amendment
 			FacesContext fc = FacesContext.getCurrentInstance();
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId() + "?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
 			getManagedBean().setViewSCL(true);
-			//Bug 33096 - shaqimi start
+			// Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
-			//Bug 33096 - shaqimi end
-			//Bug 34142, 15851 - shaqimi end 04/12/2022
+			// Bug 33096 - shaqimi end
+			// Bug 34142, 15851 - shaqimi end 04/12/2022
 			getManagedBean().setStatusIdFromTaskList(statusId);
 			getManagedBean().setDocTypeFromTaskList(docType);
-			//Bug 34142, 15851 - shaqimi end 04/12/2022
-			//Bug 34142 - shaqimi start 16112022
-			if(getManagedBean().isViewContractFromAgreement()){
+			// Bug 34142, 15851 - shaqimi end 04/12/2022
+			// Bug 34142 - shaqimi start 16112022
+			if (getManagedBean().isViewContractFromAgreement()) {
 				getManagedBean().setViewSCLFromContract(true);
 			}
-			//Bug 34142 - shaqimi end 16112022
+			// Bug 34142 - shaqimi end 16112022
 			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
 		}
-		//Enhancement 15851 - shaqimi end
-		else if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+		// Enhancement 15851 - shaqimi end
+		else if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { // Direct
+																											// Nego
 			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
-			directLoaBackingBean.getManagedBean().setIconForDL(true); //28854
+			directLoaBackingBean.getManagedBean().setIconForDL(true); // 28854
 			directLoaBackingBean.viewLOA(scLoa.getLoaId());
 		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
@@ -4040,29 +4323,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	/**
 	 * The method used to retrieve the zone object.
-	 */		
+	 */
 	public void getZoneObjDetails() {
 		if (!getManagedBean().getContractVer().getCtContractZones().isEmpty()) {
 			for (CtContractZone ctContractZone : getManagedBean().getContractVer().getCtContractZones()) {
 				for (TreeNode zonename : getManagedBean().getCtZoneTrees().getChildren()) {
-					if (ctContractZone.toString().equalsIgnoreCase(((LocationDTO)zonename.getData()).getZoneId())) {
+					if (ctContractZone.toString().equalsIgnoreCase(((LocationDTO) zonename.getData()).getZoneId())) {
 						if (ctContractZone.getDeliveryTermUom() == null) {
 							ctContractZone.setDeliveryTermUom(new PmParameter());
 						}
-						ctContractZone.getDeliveryTermUom().setParameterId(((LocationDTO)zonename.getData()).getUomId());
-						ctContractZone.setDeliveryTerm(((LocationDTO)zonename.getData()).getDeliveryTerm());
+						ctContractZone.getDeliveryTermUom().setParameterId(
+								((LocationDTO) zonename.getData()).getUomId());
+						ctContractZone.setDeliveryTerm(((LocationDTO) zonename.getData()).getDeliveryTerm());
 					}
 				}
 			}
-		}	     
+		}
 	}
 
 	/**
 	 * The method used to verify loa/contract is with GST.
 	 * 
-	 * @param gstEffDate  the gst effective date
-	 * @return true, if loa/contract is with GST
-	 * 		   false, if loa/contract is without GST
+	 * @param gstEffDate
+	 *            the gst effective date
+	 * @return true, if loa/contract is with GST false, if loa/contract is
+	 *         without GST
 	 */
 	public boolean isLoaContractWithGst(Date gstEffDate) {
 		if (gstEffDate != null && gstEffDate.getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
@@ -4092,7 +4377,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public Date getGstReliefDueDate() {
 		try {
-			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_RELIEF_DUE_DATE);
+			return DateUtils
+					.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_RELIEF_DUE_DATE);
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
@@ -4100,19 +4386,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * The method used to 
-	 * calculate over all amount with GST
+	 * The method used to calculate over all amount with GST
 	 */
 	public void onChangeServiceTax() {
 		chkServiceTaxAlert();
 		getManagedBean().setDisableContractAmount(true);
 
 		if (isLoaContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())) {
-			getManagedBean().setDisableGstAmount(false);			  
+			getManagedBean().setDisableGstAmount(false);
 			if (getManagedBean().getContractVer().getCtContractValue().isServiceTax()) {
 				getManagedBean().setDisableContractAmount(false);
 			} else {
-				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= getGstReliefDueDate().getTime()) {
+				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= getGstReliefDueDate()
+						.getTime()) {
 					getManagedBean().setDisableGstAmount(true);
 				}
 			}
@@ -4122,50 +4408,50 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 
-	 * Set boolean value for user action 
+	 * Method to set boolean value for checkbox Set boolean value for user
+	 * action
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void onToggleSelect(ToggleSelectEvent event) {
 		getManagedBean().setButtonHideActive(false);
 	}
 
 	/**
-	 * Method to set boolean value for checkbox 
-	 * @param pass ajax event type
-	 * Set boolean value for user action 
+	 * Method to set boolean value for checkbox
+	 * 
+	 * @param pass
+	 *            ajax event type Set boolean value for user action
 	 * */
 	public void onRowSelect(SelectEvent event) {
 		getManagedBean().setButtonHideActive(false);
 	}
 
 	/**
-	 * Method to uncheck boolean value for checkbox 
-	 * Set boolean value false for user action 
+	 * Method to uncheck boolean value for checkbox Set boolean value false for
+	 * user action
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void onRowUnselect(UnselectEvent event) {
 		getManagedBean().setButtonHideActive(true);
 	}
 
-
 	/**
-	 * The method used for generating a list of available display type
-	 * of product or service item as selection.
+	 * The method used for generating a list of available display type of
+	 * product or service item as selection.
 	 * 
 	 * @return the selection list of display type
 	 */
 	public SelectItem[] getItemDisplayTypeDropdownList(String itemType) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
-		List<String> itemDisplayTypeList = new ArrayList<String> ();
-			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);	
-			//itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
-		
-		
-		
+		List<String> itemDisplayTypeList = new ArrayList<String>();
+		itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
+		// itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
+
 		if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null
 					&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
@@ -4173,18 +4459,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
 		} else if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);	
+			itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_QTY);
 			if (this.getManagedBean().getContractVer().getCtAgencies() != null
-					&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1){
+					&& this.getManagedBean().getContractVer().getCtAgencies().size() > 1) {
 				itemDisplayTypeList.add(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
 			}
-			
-		}			
+
+		}
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_IN.value(),itemDisplayTypeList));
-		 //log.info("itemDisplayTypeList ****"+itemDisplayTypeList.size());
+				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(),
+						itemDisplayTypeList));
+		// log.info("itemDisplayTypeList ****"+itemDisplayTypeList.size());
 		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 	}
 
@@ -4197,16 +4483,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
 		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode()
 				.getParameterCode();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			handleDirectPurchaseMode(requestItemSO, requestItemId);
+			handleDirectPurchaseMode(itemSpecOfferList);
 		} else if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
-			handleQuotationTenderOrDirectNegoMode(requestItemSO, requestItemId);
+			handleQuotationTenderOrDirectNegoMode(itemSpecOfferList);
 		}
 
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
@@ -4221,9 +4509,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleDirectPurchaseMode(IRequestItemSO requestItemSO, Long requestItemId) {
-		List<String> itemSpecList = new ArrayList<String>();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+	private void handleDirectPurchaseMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
+		List<String> itemSpecList = new ArrayList<>();
 
 		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
 			String questionType = itemSpecOffer.getQuestionType();
@@ -4247,11 +4534,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
-		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
-																		
+	private void handleQuotationTenderOrDirectNegoMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
 
-		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator(); iterator.hasNext();) {
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOfferList.iterator(); iterator.hasNext();) {
 			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
 
 			// Encoding by directly applying to non-null fields
@@ -4265,17 +4550,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 
-		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOfferList);
 	}
 	// #28854 - End
 
-
-
 	/**
-	 * The method used to set  bond 
-	 * exempted file path and file name value is null.
+	 * The method used to set bond exempted file path and file name value is
+	 * null.
 	 */
-	public void delBondExemptedDoc(){
+	public void delBondExemptedDoc() {
 		getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFilePath(null);
 		getManagedBean().getContractVer().getCtContractAmount().setBondExemptedFileName(null);
 	}
@@ -4283,7 +4566,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Function to check / uncheck all checkbox into agency datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void selectAllMinstryAgency(AjaxBehaviorEvent e) {
 		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
@@ -4299,14 +4583,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setButtonHideActive(false);
 			} else {
 				getManagedBean().setButtonHideActive(true);
-			}	
+			}
 		}
 	}
 
 	/**
 	 * Function to check / uncheck single checkbox into agency datatable
 	 * 
-	 * @param pass ajax event type
+	 * @param pass
+	 *            ajax event type
 	 * */
 	public void selectOneAgyCheckboxSelect(AjaxBehaviorEvent e) {
 		if (getAgencyDataModel() != null && getAgencyDataModel().getList() != null) {
@@ -4322,22 +4607,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setButtonHideActive(false);
 			} else {
 				getManagedBean().setButtonHideActive(true);
-			}	
+			}
 		}
 	}
 
 	/**
 	 * Get Full Delivery Address based on CtAddress
 	 * 
-	 * @param ctAddress   an object of contract address
+	 * @param ctAddress
+	 *            an object of contract address
 	 * @return full delivery address
 	 */
 	public String getFullDeliveryAddress(CtAddress ctAddress) {
 		String separator = ", ";
 		StringBuilder address = new StringBuilder();
 		if (ctAddress != null) {
-			if (StringUtils.isNotBlank(
-					ctAddress.getAddressName())) {
+			if (StringUtils.isNotBlank(ctAddress.getAddressName())) {
 				address.append(ctAddress.getAddressName());
 				address.append(separator);
 			}
@@ -4349,19 +4634,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Function to check if bond required for contract
 	 * 
-	 * @return true, if performance bond is required
-	 *         false, if performance bond is not required
+	 * @return true, if performance bond is required false, if performance bond
+	 *         is not required
 	 * */
-	public boolean isPerformanceBond(){
-		//#24333
-		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
-						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
-						&& !getManagedBean().getCtContractAmount().isBondExempted()
-						&& (!getManagedBean().isCommonView()
-								|| getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().
-								equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY))){
-								
-			return  true;
+	public boolean isPerformanceBond() {
+		// #24333
+		if (getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+				&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
+				&& !getManagedBean().getCtContractAmount().isBondExempted()
+				&& (!getManagedBean().isCommonView() || getManagedBean().getContractVer().getCtContract()
+						.getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY))) {
+
+			return true;
 		}
 		return false;
 	}
@@ -4369,60 +4653,66 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Function to convert date into string for view only
 	 * 
-	 * @param Date date
+	 * @param Date
+	 *            date
 	 * @return String date
 	 * */
-	public String getMonthYears(Date date){
-		if(date == null || date.toString() == ""){
+	public String getMonthYears(Date date) {
+		if (date == null || date.toString() == "") {
 			return " ";
 		}
 		String dates = dateFormat.format(date);
-		String monthYear =months.get(String.valueOf(dates.substring(3, 5)))+", "
-				+String.valueOf(dates.substring(6, 10));
+		String monthYear = months.get(String.valueOf(dates.substring(3, 5))) + ", "
+				+ String.valueOf(dates.substring(6, 10));
 		return monthYear;
 	}
 
-	//#35642 start
+	// #35642 start
 	/**
-	 * The method used to check whether bond waiver attachment is uploaded in previous version.
+	 * The method used to check whether bond waiver attachment is uploaded in
+	 * previous version.
 	 * 
-	 * @param  attachment     an object of attached file
-	 * @return true, if bond waiver attachment is attached
-	 *         false, if bond waiver attachment is not attached
+	 * @param attachment
+	 *            an object of attached file
+	 * @return true, if bond waiver attachment is attached false, if bond waiver
+	 *         attachment is not attached
 	 */
-	/*public boolean disableBondAttachmentBtn(){
+	/*
+	 * public boolean disableBondAttachmentBtn(){
+	 * 
+	 * boolean isEqual = false;
+	 * 
+	 * if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(
+	 * ParameterConst.DOCTYPE_CONTRACT_UPDATE) ||
+	 * getManagedBean().getContractVer
+	 * ().getDocType().equalsIgnoreCase(ParameterConst
+	 * .DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){ for (CtContractAmount
+	 * contractAmt :
+	 * getManagedBean().getContractVer().getCtContract().getLatestContractVer
+	 * ().getCtContractAmounts()){ if
+	 * (getManagedBean().getContractVer().getCtContractValue
+	 * ().getExpDate().getTime() >= contractAmt.getEffDate().getTime() &&
+	 * getManagedBean
+	 * ().getContractVer().getCtContractValue().getExpDate().getTime() <=
+	 * contractAmt.getExpDate().getTime()){
+	 * getManagedBean().setCtTestBondWaiverAmount(contractAmt); break; } }
+	 * isEqual =
+	 * getManagedBean().getCtContractAmount().isBondWaived()==getManagedBean
+	 * ().getCtTestBondWaiverAmount().isBondWaived(); }
+	 * 
+	 * if(getManagedBean().isViewContract()){ return true; }else
+	 * if(!getManagedBean().getCtContractAmount().isBondWaived() &&
+	 * getManagedBean().getContractVer().getCtContract().getLatestContractVer()
+	 * == null){ return true; }else if(isEqual){ return true; } else
+	 * if(!getManagedBean().getCtContractAmount().isBondReq()){ return true; }
+	 * return false; }
+	 */
+	// #35642 end
 
-		boolean isEqual = false;
-
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContract().getLatestContractVer().getCtContractAmounts()){
-				if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
-						&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
-					getManagedBean().setCtTestBondWaiverAmount(contractAmt);
-					break;
-				}
-			}
-			isEqual = getManagedBean().getCtContractAmount().isBondWaived()==getManagedBean().getCtTestBondWaiverAmount().isBondWaived();
-		}
-
-		if(getManagedBean().isViewContract()){
-			return true;
-		}else if(!getManagedBean().getCtContractAmount().isBondWaived() &&
-				getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null){
-			return true;
-		}else if(isEqual){
-			return true;
-		} else if(!getManagedBean().getCtContractAmount().isBondReq()){
-			return true;
-		}
-		return false;
-	}*/
-	//#35642 end
-	
-	//#29418 start
+	// #29418 start
 	/**
-	 * This function is used to filter and sort the agreement when user change reference no at the fulfilment details page.
+	 * This function is used to filter and sort the agreement when user change
+	 * reference no at the fulfilment details page.
 	 * 
 	 * @return newCtAgreementList
 	 */
@@ -4433,17 +4723,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		CtAgreement tempCtAgreement = null;
 		int index = 0;
 
-		if(CollectionUtils.isNotEmpty(currentCtAgreementList))
-		{
-			//currentCtAgreementList is sorted by created date in descending order
-			for(index = 0; index < currentCtAgreementList.size(); index++)
-			{
+		if (CollectionUtils.isNotEmpty(currentCtAgreementList)) {
+			// currentCtAgreementList is sorted by created date in descending
+			// order
+			for (index = 0; index < currentCtAgreementList.size(); index++) {
 				tempCtAgreement = currentCtAgreementList.get(index);
-				if(tempCtAgreement.getAgreementId().equals(getManagedBean().getContractVer().getCtContractAmount().getCtAgreement().getAgreementId())) // Fix - #32622
+				if (tempCtAgreement.getAgreementId().equals(
+						getManagedBean().getContractVer().getCtContractAmount().getCtAgreement().getAgreementId())) // Fix
+																													// -
+																													// #32622
 				{
-					while(index >= 0)
-					{
-						//sort agreementList in ascending order starting from the selected Reference File No.
+					while (index >= 0) {
+						// sort agreementList in ascending order starting from
+						// the selected Reference File No.
 						newCtAgreementList.add(0, currentCtAgreementList.get(index));
 						index--;
 					}
@@ -4451,100 +4743,97 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 					break;
 				}
 			}
-			if(newCtAgreementList.isEmpty())
-			{ 
+			if (newCtAgreementList.isEmpty()) {
 				index = currentCtAgreementList.size() - 1;
-				while(index >= 0)
-				{
-					//sort agreementList in ascending order
+				while (index >= 0) {
+					// sort agreementList in ascending order
 					newCtAgreementList.add(0, currentCtAgreementList.get(index));
 					index--;
 				}
 			}
-	
+
 		}
 
 		return newCtAgreementList;
 	}
-	//#29418 end
-	
+
+	// #29418 end
+
 	public String getAgreementLoaPhysicalNo(CtAgreement ctAgreement) {
 		IContractSO contractSO = null;
 		ContractReqDTO reqDTO = new ContractReqDTO();
-		ContractResDTO resDTO = null; 
-		
+		ContractResDTO resDTO = null;
+
 		reqDTO.setCtAgreement(ctAgreement);
-		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
 		resDTO = contractSO.retrieveContractVerByAgreement(reqDTO);
-		
+
 		return resDTO.getCtContractVer().getCtContractValue().getLoaPhysicalNo();
 	}
-	
+
 	public Date getAgreementSignedDate(CtAgreement ctAgreement) {
 		IContractSO contractSO = null;
 		ContractReqDTO reqDTO = new ContractReqDTO();
-		ContractResDTO resDTO = null; 
-		
+		ContractResDTO resDTO = null;
+
 		reqDTO.setCtAgreement(ctAgreement);
-		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
 		resDTO = contractSO.retrieveContractVerByAgreement(reqDTO);
-		
+
 		return resDTO.getCtContractVer().getSignedDate();
 	}
-	
-	public String newProcurement(){
+
+	public String newProcurement() {
 		String procur = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
+		if (getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null) {
+			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem()
+					.getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
 			return procur;
 		}
 		return null;
 	}
-	
-	public String newJustification(){
+
+	public String newJustification() {
 		String justifi = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
+		if (getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null) {
+			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem()
+					.getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
 
 			return justifi;
 		}
 		return null;
 	}
 
-
-
 	public String getLanguage() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.getUserLocale().getLanguage();
 	}
-	
+
 	public List<CtAttachment> getSupplementalContractLetter(CtAgreement ctAgreement) {
 		IAgreementSO agreementSO = null;
 		List<CtAttachment> ctAttachments = null;
-		agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+		agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 		ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 		ContractAgreementResDTO resDTO = null;
-		
-		if(ctAgreement != null) 
-		{
-			if(ctAgreement.getCtAmendment() != null)
-			{
+
+		if (ctAgreement != null) {
+			if (ctAgreement.getCtAmendment() != null) {
 				reqDTO.setContractVerId(ctAgreement.getCtAmendment().getCtContractVer().getContractVerId());
 				resDTO = agreementSO.retrieveSupplementalContractLetterAttachment(reqDTO);
 				ctAttachments = resDTO.getCtAttachments();
 			}
-		}			
-						
+		}
+
 		return ctAttachments;
 	}
-	
+
 	/**
-	 * The method used to retrieve the bond amount
-	 * in text format.
-	 * Putra 24333
-	 * @return  bond amount in text format.
+	 * The method used to retrieve the bond amount in text format. Putra 24333
+	 * 
+	 * @return bond amount in text format.
 	 */
 	public String getBondAmountInText() {
 		Locale locale = null;
@@ -4556,140 +4845,147 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
 			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
-			DecimalFormat df = new DecimalFormat("#.00");		
-			return NumberWordUtilEn.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+			DecimalFormat df = new DecimalFormat("#.00");
+			return NumberWordUtilEn.convert(df.format(getManagedBean().getContractVer().getCtContract().getLoa()
+					.getBondAmt()));
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
 			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
 			DecimalFormat df = new DecimalFormat("#.00");
-			return NumberWordUtil.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
-		}else{
+			return NumberWordUtil.convert(df.format(getManagedBean().getContractVer().getCtContract().getLoa()
+					.getBondAmt()));
+		} else {
 			return "";
 		}
 	}
 
-	//#24333 - Start
+	// #24333 - Start
 	/**
 	 * The method used to retrieve thecontract period
 	 * 
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
+		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				|| getManagedBean().getContractVer().getDocType()
+						.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
 			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
 
-		} 
-			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
+		}
+		return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
 
 	}
-	//#24333 - End	
+
+	// #24333 - End
 	/**
 	 * Function to check if bond required for contract is extend
 	 * 
-	 * @return true, if performance bond is required contract extend
-	 *         false, if performance bond is not required contract extend
+	 * @return true, if performance bond is required contract extend false, if
+	 *         performance bond is not required contract extend
 	 * */
-	
+
 	public boolean isContractExtendOrIsBond() {
-		//#24333 - Start
+		// #24333 - Start
 		String currentPeriod = null;
 		String extendPeriod = null;
 		boolean isContractExtendOrIsBond = false;
 		getManagedBean().setExtendContract(false);
 		getManagedBean().setDisableOriginalBond(false);
-		
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration() != null) {
-			currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
-		}
-		if(getManagedBean().getContractVer().getCtContractValue().getContractPeriod() > 0) {
-			extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
-		}		
 
-		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-				|| getManagedBean().isViewContract() == true)
-				&& isAlreadyAmendment() //#35137
-				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+		if (getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration() != null) {
+			currentPeriod = BigDecimal.valueOf(
+					getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue())
+					.toString();
+		}
+		if (getManagedBean().getContractVer().getCtContractValue().getContractPeriod() > 0) {
+			extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
+		}
+
+		if ((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				|| getManagedBean().getContractVer().getDocType()
+						.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || getManagedBean()
+				.isViewContract() == true) && isAlreadyAmendment() // #35137
+				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
 			isContractExtendOrIsBond = true;
 			getManagedBean().setDisableOriginalBond(true);
-			if(currentPeriod != null && extendPeriod != null) {
-				if(!extendPeriod.equals(currentPeriod) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
+			if (currentPeriod != null && extendPeriod != null) {
+				if (!extendPeriod.equals(currentPeriod)
+						&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
 					isContractExtendOrIsBond = true;
 					getManagedBean().setExtendContract(true);
 					getManagedBean().setDisableOriginalBond(true);
-					
+
 				}
 			}
 		}
 		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
-				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-			if(getManagedBean().getContractVer().getCtAmendment() != null && getManagedBean().getContractVer().getCtAmendment().isContractExtend())
-			isContractExtendOrIsBond = true;
+				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+			if (getManagedBean().getContractVer().getCtAmendment() != null
+					&& getManagedBean().getContractVer().getCtAmendment().isContractExtend())
+				isContractExtendOrIsBond = true;
 		}
 
 		return isContractExtendOrIsBond;
-		//#24333 - End	
-		}
-	
+		// #24333 - End
+	}
+
 	/**
 	 * Function to check if bond required for contract status
 	 * 
-	 * @return true, if performance bond is Pending Amendment With Supplemental Submission
-	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
+	 * @return true, if performance bond is Pending Amendment With Supplemental
+	 *         Submission false, if performance bond is not Pending Amendment
+	 *         With Supplemental Submission
 	 * */
-	public boolean isPendingSupplementalContractLetter(){
-		if(getManagedBean().getContractVer().getStatus() != null && //#25956
-				(getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue())){								
+	public boolean isPendingSupplementalContractLetter() {
+		if (getManagedBean().getContractVer().getStatus() != null
+				&& // #25956
+				(getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_SUBMISSION
+						.longValue()
+						|| getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT
+								.longValue()
+						|| getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_LOA_APPROVAL
+								.longValue() || getManagedBean().getContractVer().getStatus().getStatusId() == ContractStatusConst.FA_PENDING_VERIFICATION
+						.longValue())) {
 			return true;
 		}
 		return false;
-		
+
 	}
-	
-	
+
 	/**
 	 * The method used to retreive the factoring attachment from the list.
 	 */
-	public List<CtAttachment> retrieveAttachmentList() {	
-		/*#28868 - basri start*/
-		if(!getManagedBean().getContractVer().getCtContract().isFactoringExpired()){
+	public List<CtAttachment> retrieveAttachmentList() {
+		/* #28868 - basri start */
+		if (!getManagedBean().getContractVer().getCtContract().isFactoringExpired()) {
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
-				} else{
+				} else {
 					return null;
 				}
 			} else {
 				return null;
 			}
-		}else{
+		} else {
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement();
-				} else{
+				} else {
 					return null;
 				}
 			} else {
 				return null;
 			}
 		}
-		/*#28868 - basri end*/
-		
+		/* #28868 - basri end */
+
 	}
-	
-	/*#21387 - basri start*/
+
+	/* #21387 - basri start */
 	public SelectItem[] getUsersByAgency() {
 		ISearchBean<PmUser> searchBean = contractAdminSearchBean();
-		IUserSO uSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IUserSO uSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 
 		ISearchResultBean<PmUser> resultBean = uSO.retrieveMinistryUserList(searchBean);
 		List<PmUser> pmUsers = resultBean.getResultList();
@@ -4704,17 +5000,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		PmOrgProfile pmOrgProfile = this.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile();
 		String roleCode = contractAdminRoleCode();
-		
-		if (null != pmOrgProfile.getPmOrgValidity()) {
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE
-						.value(), pmOrgProfile.getPmOrgValidity().getOrgCode()));
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmUserOrgs.pmOrgProfile."
-						+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-						SearchOperator.OPERATOR_EQUALS.value(), retrieveMinistryOrgProfile(
-								pmOrgProfile.getOrgProfileId()).getOrgProfileId()));
+		if (null != pmOrgProfile.getPmOrgValidity()) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE
+							.value(), pmOrgProfile.getPmOrgValidity().getOrgCode()));
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile."
+							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), retrieveMinistryOrgProfile(
+									pmOrgProfile.getOrgProfileId()).getOrgProfileId()));
 		}
 		if (roleCode != null) {
 			searchBean.getDataFilterBeans().add(
@@ -4724,19 +5020,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		return searchBean;
 	}
-	
-	
-	public boolean isToShow(){
-		
+
+	public boolean isToShow() {
+
 		boolean show = false;
-		
-		if(this.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getStatus().getStatusId().intValue()
-				== ContractStatusConst.RA_PENDING_APPROVAL){
+
+		if (this.getManagedBean().getContractVer().getCtContract().getCurrentContractVer().getStatus().getStatusId()
+				.intValue() == ContractStatusConst.RA_PENDING_APPROVAL) {
 			show = true;
-		}else{
-			show =  this.getManagedBean().getContractVer().getCtContract().isAssignedCtAdminFlag();
+		} else {
+			show = this.getManagedBean().getContractVer().getCtContract().isAssignedCtAdminFlag();
 		}
-		
+
 		return show;
 	}
 
@@ -4750,116 +5045,129 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		return roleCode;
 	}
-	/*#21387 - basri end*/
-	
-	//#30428 - Start
+
+	/* #21387 - basri end */
+
+	// #30428 - Start
 	/**
 	 * The method used to entered new ceiling quantity.
 	 * 
-	 * @param ctItemCeilingQty   object of CeilingQty item
+	 * @param ctItemCeilingQty
+	 *            object of CeilingQty item
 	 */
 	public void onChangeCeilingQty(CtItemCeilingQty ctItemCeilingQty) {
-	
-		if(getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+
+		if (getManagedBean().getSelectedItem().getCtItemCeilingQties().size() > 0) {
 			for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				if(getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId().equals(item.getScRequestItem().getRequestNoteItemId())){
-					// Start Fix - #34539  
+				if (getManagedBean().getSelectedItem().getScRequestItem().getRequestNoteItemId()
+						.equals(item.getScRequestItem().getRequestNoteItemId())) {
+					// Start Fix - #34539
 					if (item.isBrandNew()) {
-						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
-							getManagedBean().getSelectedItem().getCtItemCeilingQties().remove(item.getCtItemCeilingQties());
+						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem()
+								.getCtItemCeilingQties().size()) {
+							getManagedBean().getSelectedItem().getCtItemCeilingQties()
+									.remove(item.getCtItemCeilingQties());
 							getManagedBean().getSelectedItem().setCtItemCeilingQties(item.getCtItemCeilingQties());
-						} 
+						}
 					} else {
-						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem().getCtItemCeilingQties().size()) {
+						if (item.getCtItemCeilingQties().size() != getManagedBean().getSelectedItem()
+								.getCtItemCeilingQties().size()) {
 							item.getCtItemCeilingQties().clear();
-							item.getCtItemCeilingQties().addAll(getManagedBean().getSelectedItem().getCtItemCeilingQties());
-						} 
+							item.getCtItemCeilingQties().addAll(
+									getManagedBean().getSelectedItem().getCtItemCeilingQties());
+						}
 					}
 					// End Fix - #34539
-					if (!item.getCtItemCeilingQties().isEmpty()) {						
+					if (!item.getCtItemCeilingQties().isEmpty()) {
 						for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {
-							if(ceilingQty.getCtAgency().getCommitmentNo().equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())){
+							if (ceilingQty.getCtAgency().getCommitmentNo()
+									.equalsIgnoreCase(ctItemCeilingQty.getCtAgency().getCommitmentNo())) {
 								ceilingQty.setCeilingQuantity(ctItemCeilingQty.getCeilingQuantity());
 								break;
-							}								
+							}
 						}
-					}							
+					}
 				}
 			}
 		}
 	}
-	//#30428 - End
-	
-	//#25002 - start
-		
-	public List<ScAttachment> getApprovalLetter(){
+
+	// #30428 - End
+
+	// #25002 - start
+
+	public List<ScAttachment> getApprovalLetter() {
 		List<ScAttachment> listAttachments = new ArrayList<>();
-		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTAwardSO.class);
 		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
-		listAttachments = awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
+		listAttachments = awardSO.retrieveScAttachmentByDocID(loaid, ParameterConst.EP_DOC_LOA);
 		return listAttachments;
 	}
 
-	public void downloadScAttachmentFile(ScAttachment scAttachment){
+	public void downloadScAttachmentFile(ScAttachment scAttachment) {
 		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 		try {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
-			//start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
-			//stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+			// start - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile",
+					scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
+			// stop - Sonarqube DP Vilnerability Minor Muhamad Za'im [8/8/2023]
 		}
 	}
-	
-	//#25002 - end
-		
-	//Enhancement 29418 - shaqimi start
-	
+
+	// #25002 - end
+
+	// Enhancement 29418 - shaqimi start
+
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
+
 	/**
 	 * Generate report.
-	 *
-	 * @param dpObj the dp obj
+	 * 
+	 * @param dpObj
+	 *            the dp obj
 	 */
-	public void generateReportPDF(CtAgreement agreement){
+	public void generateReportPDF(CtAgreement agreement) {
 		log.info("generateReportPDF");
-		
+
 		IContractAmendmentSO caSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-		
+
 		Map<String, Boolean> downloadReports = new HashMap<String, Boolean>();
 		Map<String, Map<String, String>> paramMaps = new HashMap<String, Map<String, String>>();
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, Integer> reports = new HashMap<String, Integer>();
 		List<String> reportNames = new ArrayList<String>();
-		
+
 		Long contractId = agreement.getCtContract().getContractId();
 		String contractNo = agreement.getCtContract().getContractNo();
-		
+
 		Long prvContractVerId = caSO.getFDContractVerIdByContractId(contractId);
 		Long currContractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId();
-		
-		//checking for previous agreement in list. the last agreementid that is less than currentagreementid is the direct previous agreement
-		for(CtAgreement currAgreement : filterAgreementList()){
-			if((currAgreement.getCreatedDate().equals(agreement.getCreatedDate())
-					|| currAgreement.getCreatedDate().before(agreement.getCreatedDate())) 
+
+		// checking for previous agreement in list. the last agreementid that is
+		// less than currentagreementid is the direct previous agreement
+		for (CtAgreement currAgreement : filterAgreementList()) {
+			if ((currAgreement.getCreatedDate().equals(agreement.getCreatedDate()) || currAgreement.getCreatedDate()
+					.before(agreement.getCreatedDate()))
 					&& currAgreement.getCtAmendment() != null
-					&& currContractVerId!=currAgreement.getCtAmendment().getCtContractVer().getContractVerId()){
-				//set previous amendment data for retrieval
+					&& currContractVerId != currAgreement.getCtAmendment().getCtContractVer().getContractVerId()) {
+				// set previous amendment data for retrieval
 				prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
 			}
 		}
-	
+
 		reports = caSO.callAmendmentReportSP(currContractVerId, prvContractVerId);
-		
-		for(Map.Entry<String, Integer> entry : reports.entrySet()){
-			if(entry.getValue() != null){
-				if(entry.getValue() > 0){
-					switch(entry.getKey()){
+
+		for (Map.Entry<String, Integer> entry : reports.entrySet()) {
+			if (entry.getValue() != null) {
+				if (entry.getValue() > 0) {
+					switch (entry.getKey()) {
 					case "P_AMENDMENT_DETAIL":
 						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL, true);
 						break;
@@ -4885,18 +5193,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 		}
-		
-		//download reports
+
+		// download reports
 		for (Map.Entry<String, Boolean> entry : downloadReports.entrySet()) {
-			if(entry.getValue()){
+			if (entry.getValue()) {
 				paramMap.put(ReportConst.PARAM_PREV_VER_ID, prvContractVerId.toString());
 				paramMap.put(ReportConst.PARAM_CURRENT_VER_ID, currContractVerId.toString());
-				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId() + "");
 				paramMaps.put(entry.getKey(), paramMap);
 				reportNames.add(entry.getKey());
 			}
 		}
-		
+
 		try {
 			generateReportPDF(contractNo, reportNames, paramMaps);
 		} catch (IOException e) {
@@ -4905,24 +5213,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			FacesContext.getCurrentInstance().responseComplete();
 		}
 	}
-	//Enhancement 29418 - shaqimi end
-		
-	//Enhancement 15851 - Start
+
+	// Enhancement 29418 - shaqimi end
+
+	// Enhancement 15851 - Start
 	/**
-	 * The method used to navigate to Original contract details screen
-	 * for view purpose.
+	 * The method used to navigate to Original contract details screen for view
+	 * purpose.
 	 * 
-	 * @return the navigate URL 
+	 * @return the navigate URL
 	 */
 	public void goToOriginalLoaView(ScLoa scLoa) {
-			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
-			FacesContext fc = FacesContext.getCurrentInstance();
-			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+		loaDetailBackingBean.viewLOA(scLoa.getLoaId());
 	}
-	//Enhancement 15851 - End
-	
+
+	// Enhancement 15851 - End
+
 	/*
 	 * To identify user role based on user logged in return true if user has
 	 * role as supplier else return false
@@ -4939,8 +5249,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		return Boolean.FALSE;
 	}
+
 	// End Fix - #35202
-	
+
 	// #35137,#24333 - Start
 	/**
 	 * Method to Checking Amendment process

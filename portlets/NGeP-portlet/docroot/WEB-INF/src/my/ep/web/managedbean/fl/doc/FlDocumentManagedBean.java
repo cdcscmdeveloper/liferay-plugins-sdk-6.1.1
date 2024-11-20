@@ -402,6 +402,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				receivedNoteSO  = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 				resDTO = receivedNoteSO.getReceivedNoteById(reqDTO);
 				if(null != resDTO.getFulfilmentNote()){
+					orderInfo.setDeliveryOrderId(resDTO.getFlDeliveryOrder().getDeliveryOrderId());//36361
 					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
 						orderInfo.setOrderId(reqDTO.getFlOrderId());
@@ -411,11 +412,25 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentRecevingOfficer()) {
-											orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
-										} else if(isAcknowledgeOfficer()) {
-											orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+										// 36386-start
+										if (getSearchFunctionType() != null) {
+											if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+												if (isFlFulfilmentRecevingOfficer()) {
+													orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
+												} else if (isAcknowledgeOfficer()) {
+													orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+												}
+											} else if (getSearchFunctionType().equalsIgnoreCase(
+													ParameterConst.ORG_TYPE_SUPPLIER)
+													&& isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+											}
+										} else {
+											if (isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+											}
 										}
+										// 36386-end
 									}
 								}
 							}
@@ -785,6 +800,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			}
 			// 35508-end
 		}
+		
+		//36386 -Start
+		if(getSearchFunctionType() !=null && getSearchFunctionType().equalsIgnoreCase("ParameterConst.ORG_TYPE_SUPPLIER")){
+			flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); 
+		}
+		//36386 -End
 		
 		return flDocTypes;
 	}
