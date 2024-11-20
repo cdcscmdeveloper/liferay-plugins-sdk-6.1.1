@@ -202,7 +202,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 							itemValue="#{null}"></f:selectItem>
 					<f:selectItems value="#{cc.attrs.bBean.generateApprovalStatusList()}" var="item" itemLabel="${item.label}" itemValue="#{item.value}"></f:selectItems>
-					<p:ajax event="change" process="@this" partialSubmit="true" />
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						listener="#{scPropValidPeriodExtListReportBackingBean.clearDecisionStatus()}"/>
 				</p:selectOneMenu></td>
 			</TR>
 		</TABLE>
