@@ -1899,7 +1899,7 @@ public class EvaluationBackingBean extends
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
 		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
-		this.getManagedBean().setAllSupplierRejectEpv(false);
+		this.getManagedBean().setAllSupplierRejectEpv(false);//#21692 note 481
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -9257,7 +9257,7 @@ public class EvaluationBackingBean extends
 		retrieveReportHeader();
 		IQTEvaluationSO evaluationSO;
 		EvaluationResDTO resDTO = null;
-		this.getManagedBean().setAllSupplierRejectEpv(false);
+		this.getManagedBean().setAllSupplierRejectEpv(false);//#21692 note 481
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -13753,17 +13753,6 @@ private void retriveCommitteeRemarksList(){
 										new FacesScopes().getUserLocale())));
 
 			}
-			//#21692 note-418 issue 6 - Start
-//			if (this.getManagedBean().isAllSupplierRejectEpv()) {
-//				FacesContext.getCurrentInstance().addMessage(
-//						null,
-//						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-//								MessageUtils.getMessage(
-//										MessageConst.WARN_760530,
-//										MessageUtils.BUNDLE_COMMON_MESSAGES,
-//										new FacesScopes().getUserLocale())));
-//			}
-			//#21692 note-418 issue 6 - End
 		}
 
 	}
@@ -13788,17 +13777,6 @@ private void retriveCommitteeRemarksList(){
 										new FacesScopes().getUserLocale())));
 
 			}
-			//#21692 note-418 issue 6 - Start
-//			if (this.getManagedBean().isAllSupplierRejectEpv()) {
-//				FacesContext.getCurrentInstance().addMessage(
-//						null,
-//						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-//								MessageUtils.getMessage(
-//										MessageConst.WARN_760530,
-//										MessageUtils.BUNDLE_COMMON_MESSAGES,
-//										new FacesScopes().getUserLocale())));
-//			}
-			//#21692 note-418 issue 6 - End
 		}
 
 	}
