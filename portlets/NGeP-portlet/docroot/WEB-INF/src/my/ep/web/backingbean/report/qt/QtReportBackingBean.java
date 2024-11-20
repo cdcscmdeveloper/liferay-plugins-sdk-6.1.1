@@ -1005,10 +1005,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 	public boolean isDeskOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
+		//#21692 note 481 - Start
 		boolean procurementBoardSecUser = facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
 				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()) && 
 				!(procurementBoardSecUser);
+		//#21692 note 481 - End
 	}
 	
 	/**
