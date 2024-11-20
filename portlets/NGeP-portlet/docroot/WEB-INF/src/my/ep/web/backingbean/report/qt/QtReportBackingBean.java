@@ -842,6 +842,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 	public List<SelectItem> retrieveDescOfficerByAgency() {
 		List<SelectItem> scDescOfficerList = new ArrayList<>();
+		//#21692 note 481 - Start
 		if (isDeskOfficer()) {
 			SelectItem selectItem = new SelectItem();
 			selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
@@ -865,6 +866,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				}
 			}
 		}
+		//#21692 note 481 - End
 		return scDescOfficerList;
 	}
 
