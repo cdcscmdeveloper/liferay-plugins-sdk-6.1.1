@@ -93,7 +93,6 @@ import org.primefaces.context.RequestContext;
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementPersonnelBackingBean;
@@ -2406,10 +2405,8 @@ public class SmPersonnelBackingBean extends
 			log.info("Result:" + resDTO.isSuccessful());
 			if (resDTO.isSuccessful()) {
 				// #28895_35501 Start - AUDIT TRAIL SM
-				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-						IAuditTrailSO.class);
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-					LogKey logKey = new LogKey();
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
@@ -2877,10 +2874,8 @@ public class SmPersonnelBackingBean extends
 
 		if (resDTO.isSuccessful()) {
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-					IAuditTrailSO.class);
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
 				auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 			}
@@ -3865,10 +3860,8 @@ public class SmPersonnelBackingBean extends
 				}
 			}
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-					IAuditTrailSO.class);
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
-				LogKey logKey = new LogKey();
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
 				auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 			}
@@ -4204,10 +4197,9 @@ public class SmPersonnelBackingBean extends
 			oldRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
 		}
 		getManagedBean().setOldRole(oldRole);
-		LogKey logKey = new LogKey();
 		PmOrgProfile orgProfile = new PmOrgProfile();
-		if (logKey.getUserId() != null) {
-			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(logKey.getUserId());
+		if (getUserIdSessionFromLoginId() != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(getUserIdSessionFromLoginId());
 			if (!orgList.isEmpty()) {
 				orgProfile = orgList.get(0).getPmOrgProfile();
 			}

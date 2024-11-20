@@ -1405,8 +1405,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 			}
 			// #28895_35501 Start - AUDIT TRAIL SM
-			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
-					IAuditTrailSO.class);
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				getManagedBean().setForceReplace(true);
 				getManagedBean().setOldIdentification(getManagedBean().getReactivateBasic().getIdentificationNo());

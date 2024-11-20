@@ -18,17 +18,23 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId.longValue() == FulfilmentStatusCont.prPendingPurchaseRequestCreation.longValue() 
-		or purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId.longValue() == FulfilmentStatusCont.prPendingApproval.longValue() 
-		or purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId.longValue() == FulfilmentStatusCont.prPendingRevision.longValue() 
-		or purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId.longValue() == FulfilmentStatusCont.prPendingRevisionApproval.longValue() 
-		or purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId.longValue() == FulfilmentStatusCont.prPendingQueryVerification.longValue()) 
-		and not empty purchaseRequestBackingBean.managedBean.disciplinaryActionMessage}">
-		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
-		<h:outputText class="ui-messages-info-icon" /><ul><li>
-		<h:outputText class="ui-messages-info-detail" /> #{purchaseRequestBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{purchaseRequestBackingBean.viewDisciplinaryAction(purchaseRequestBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		<!--#26279 Start-->
+		<h:panelGroup layout="block" class="ui-messages ui-widget"
+			rendered="#{not empty purchaseRequestBackingBean.managedBean.disciplinaryActionMessage}">
+			<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+				<h:outputText class="ui-messages-info-icon" />
+				<ul>
+					<li><h:outputText class="ui-messages-info-detail" />
+						#{purchaseRequestBackingBean.managedBean.disciplinaryActionMessage}
+						<p:commandLink id="sharedcommand" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{purchaseRequestBackingBean.viewDisciplinaryAction(purchaseRequestBackingBean.managedBean.smDisciplinaryAction)}"
+							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
+						#{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li>
+				</ul>
+			</h:panelGroup>
 		</h:panelGroup>
-		</h:panelGroup>	
+		<!--#26279 End-->
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
@@ -75,6 +81,7 @@
 				or purchaseRequestBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
 						action="#{purchaseRequestBackingBean.backToPervious}"  /></td>
 				<td colspan="4" style="text-align: right">
+			<c:if test='#{not empty purchaseRequestBackingBean.managedBean.outComes}'><ui:remove>#36624 - Start</ui:remove>
 			<c:choose>
 			<c:when test="#{purchaseRequestBackingBean.managedBean.isPidValidityExpired()}">
 			<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
@@ -102,6 +109,7 @@
 					</ui:repeat>
 			</c:otherwise>
 			</c:choose>
+			</c:if><ui:remove>#36624 - End</ui:remove>
 				</td>
 				
 				<c:if
