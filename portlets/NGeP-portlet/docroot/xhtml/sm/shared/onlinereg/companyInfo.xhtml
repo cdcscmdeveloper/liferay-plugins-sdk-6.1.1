@@ -311,9 +311,11 @@
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.businessStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
+						<!-- #34159 - Start -->
 						<p:ajax event="change" process="@this"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
+						<!-- #34159 - End -->
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 					</tr>
 					<!-- 13320 -->
@@ -427,8 +429,12 @@
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" />
-						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this"
-							listener="#{registrationBackingBean.onSelectCity('business')}"/>
+						<!-- #34159 - Start -->
+						<p:ajax event="change"
+							update=":form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId"
+							process="@this"
+							listener="#{registrationBackingBean.onSelectCity('business')}" />
+						<!-- #34159 - End -->
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
 			</tr>
 
