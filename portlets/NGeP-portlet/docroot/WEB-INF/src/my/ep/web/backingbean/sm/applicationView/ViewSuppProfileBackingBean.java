@@ -46,6 +46,8 @@ import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 //#28175 ReOpen
 import my.ep.web.constant.sm.SupplierManagementConst;
 //#28175 end
+//#28895_35501 - AUDIT TRAIL SM
+import java.util.Map;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -72,8 +74,11 @@ public class ViewSuppProfileBackingBean extends
 		long subStartTime = 0L;
 		renewSesionObject();
 		initLogin();
-		// #28895_35501 - AUDIT TRAIL SM
-		checkAuditAccess();
+		// #28895_35501 Start - AUDIT TRAIL SM
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		boolean auditAccess = (boolean) map.get("auditAccess");
+		getManagedBean().setAuditAccess(auditAccess);
+		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);

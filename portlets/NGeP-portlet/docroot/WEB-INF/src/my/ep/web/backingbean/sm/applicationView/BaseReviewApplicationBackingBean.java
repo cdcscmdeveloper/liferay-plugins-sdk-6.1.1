@@ -5125,22 +5125,21 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Check if user have access to Audit Trail page
 	 */
 	public void checkAuditAccess() {
-		this.getManagedBean().setAuditAccess(false);
-		if (checkFromAudit()) {
+		getManagedBean().setAuditAccess(false);
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		if (PortalUtil.getCurrentURL(request).contains(SupplierManagementConst.SUPPLIER_APPL_SEARCH_URL)) {
 			FacesScopes facesScopes = new FacesScopes();
 			String[] roles = { RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(), RoleCode.AUDITOR_INTERNAL.value(),
 					RoleCode.SYS_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
 			for (String role : roles) {
 				if (facesScopes.hasRoleUser(role)) {
-					this.getManagedBean().setAuditAccess(true);
+					getManagedBean().setAuditAccess(true);
+					
 					break;
 				}
 			}
 		}
-	}
-
-	private boolean checkFromAudit() {
-		return true;
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("auditAccess", getManagedBean().isAuditAccess());
 	}
 	
 	/**
