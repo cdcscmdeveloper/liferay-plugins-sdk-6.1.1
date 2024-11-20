@@ -67,8 +67,8 @@ public class ViewSuppProfileManagedBean extends
 	private Long divisionId;
 	private boolean divisionBox = true;
 	//13320-End
-	
-	private Map<Long, String> tempCategoryLs; //#34209
+
+	private Map<Long, String> tempCategoryLs; //#30766 & #34209
 	
 	private SmPersonnel smPersonnel;
 	public ViewSuppProfileManagedBean() {
@@ -377,6 +377,7 @@ public class ViewSuppProfileManagedBean extends
 		this.divisionBox = divisionBox;
 	}
 
+	//#30766 & #34209 - START
 	public Map<Long, String> getTempCategoryLs() {
 		return tempCategoryLs;
 	}
@@ -384,4 +385,5 @@ public class ViewSuppProfileManagedBean extends
 	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
 		this.tempCategoryLs = tempCategoryLs;
 	}
+	//#30766 & #34209 - END
 }

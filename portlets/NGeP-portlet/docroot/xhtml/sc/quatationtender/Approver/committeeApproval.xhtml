@@ -12,23 +12,25 @@
 			rowIndexVar="index" editable="true" rowKey="#{committeeapprover}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			selection="#{selectedMembersList}">
-            
-			
-					<p:column style="width:3px;text-align:center;">
+			<!-- 25037 -start- -->
+			<ui:param name="assertDisabledRole"
+				value="#{approvalBackingBean.assertCommitteeMemberRoleIsDisabled(committeeapprover.memberRole.parameterCode)}" />
+			<!-- 25037 -end- -->
+			<p:column style="width:3px;text-align:center;">
 				<f:facet name="header">
-					<!-- 25692 -start- -->
+					<!-- 25692,25037 -start- -->
 					<p:selectBooleanCheckbox
-						disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}"
+						disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or approvalBackingBean.assertCommitteeMemberRoleIsDisabled('S')}"
 						value="#{qTDetailBB.managedBean.templateSpecBean.selectAll}">
-						<!-- 25692 -end- -->
+						<!-- 25692,25037 -end- -->
 						<p:ajax partialSubmit="true" process="@this" update="@form"
 							listener="#{qTDetailBB.selectAll(qTDetailBB.managedBean.templateSpecBean.selectAll, membersList.scCommitteeMembers)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<!-- 25692 -start- -->
+				<!-- 25692,25037 -start- -->
 				<p:selectBooleanCheckbox value="#{committeeapprover.selected}"
-					disabled="#{approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection}">
-					<!-- 25692 -end- -->
+					disabled="#{(approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or assertDisabledRole}">
+					<!-- 25692,25037 -end- -->
 					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -71,20 +73,26 @@
 					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
 
-				<!-- 25692 -start- -->
+				<!-- 25037 -start- -->
+				<ui:param name="filteredRoles"
+					value="#{approvalBackingBean.managedBean.roleFilterList}" />
+				<!-- 25037 -end- -->
+				<!-- 25692,25037 -start- -->
 				<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 					value="#{committeeapprover.memberRoleId}"
 					style="width: 110px;margin-bottom: 5px;"
-					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or (approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection)}">
-					<!-- 25692 -end- -->
+					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED or (approvalBackingBean.managedBean.readOnly and not approvalBackingBean.inApprovalEditableSection) or assertDisabledRole}">
+					<!-- 25692,25037 -end- -->
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						listener="#{approvalBackingBean.roleChangedListener(committeeapprover)}" />
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
-					<f:selectItems var="role"
-						value="#{approvalBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(committeeapprover.PNP,approvalBackingBean.managedBean.qt,committeeapprover.pmUser)}"
+					<!-- 25037 -start- -->
+					<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+						value="#{approvalBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(committeeapprover.PNP,approvalBackingBean.managedBean.qt,committeeapprover.pmUser, filteredRoles)}"
 						itemLabel="#{role.codeName}"
 						itemValue="#{role.pmParameter.parameterId}" />
+					<!-- 25037 -end- -->
 				</p:selectOneMenu>
 				<p:message id="roleidMsg" for="roleid" display="icon" />
 				<!-- </ui:fragment> -->

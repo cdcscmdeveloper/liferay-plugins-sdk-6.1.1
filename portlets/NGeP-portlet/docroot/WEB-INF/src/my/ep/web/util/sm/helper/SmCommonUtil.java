@@ -4624,7 +4624,7 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
-			//29582, 30064, 35300 start
+			//29582,35300 start
 			PmParameter ic = retrieveParameterByTypeAndCode(
 					ParameterTypeConst.IDENTIFICATION_TYPES,
 					SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
@@ -4636,8 +4636,8 @@ public class SmCommonUtil {
 					&& per.isPermanentResident()){
 				per.setIdentificationType(per.getIdentificationType());
 				per.setIdentificationType(ic);
-			}//29582, 30064, 35300 end
-		else {
+			//29582,35300 end
+			} else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
 						StringUtils.EMPTY);
@@ -6024,7 +6024,7 @@ public class SmCommonUtil {
 		}
 	}
 	
-//13220-Start
+	//13220-Start
 	public static List<SelectItem> getDistrictListByID(Long divisionId) {
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -6041,63 +6041,67 @@ public class SmCommonUtil {
 		}
 		return districtList;
 	}
-		public PmDivision getDivisionByUsingId(Long divisionId) {
-			if (divisionId != null) {
-				DivisionReqDTO reqDTO = new DivisionReqDTO();
-				reqDTO.setDivisionId(divisionId);
-				return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
-						.getPmDivision();
-			} else {
-				return null;
+	
+	public PmDivision getDivisionByUsingId(Long divisionId) {
+		if (divisionId != null) {
+			DivisionReqDTO reqDTO = new DivisionReqDTO();
+			reqDTO.setDivisionId(divisionId);
+			return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
+					.getPmDivision();
+		} else {
+			return null;
+		}
+	}
+	//13320-End
+
+	// #29582- start
+	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
+		if (resDTO.getSmPersonnelAll() != null) {
+			boolean hasMykadOwnerOrDirector = false;
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+
+			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
+				if (per.getIdentificationTypeSsm() != null) {
+					String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+							ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+					if (ssmTypeDesc == null) {
+						ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+								ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+					}
+
+					sb.append("<br/>");
+					sb.append(++i + ". ");
+					sb.append(per.getName() + " ");
+					sb.append("("
+							+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationNo() + ", ");
+					sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationTypeSsm() + " = ");
+					sb.append(ssmTypeDesc + ")");
+					sb.append("<br/>");
+				}
+
+				// Check for MYKAD owner/director and break if found
+				if (per.getIdentificationTypeSsm() != null
+						&& per.getIdentificationType().equals(ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
+					hasMykadOwnerOrDirector = true;
+					break;
+				}
+			}
+
+			// Handle error based on application type
+			if (hasMykadOwnerOrDirector) {
+				if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())) {
+					throw new EpException(MessageConst.ERROR_775196);
+				} else {
+					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+				}
 			}
 		}
-		//13320-End
-		//#29582- start
-		public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
-			if (resDTO.getSmPersonnelAll() != null) {
-				boolean hasMykadOwnerOrDirector = false;
-				StringBuilder sb = new StringBuilder();
-				int i = 0;
+	}
+	// #29582- end
 
-				for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
-					if (per.getIdentificationTypeSsm() != null) {
-						String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
-								ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
-						if (ssmTypeDesc == null) {
-							ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
-									ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
-						}
-
-						sb.append("<br/>");
-						sb.append(++i + ". ");
-						sb.append(per.getName() + " ");
-						sb.append("("
-								+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
-						sb.append(per.getIdentificationNo() + ", ");
-						sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
-						sb.append(per.getIdentificationTypeSsm() + " = ");
-						sb.append(ssmTypeDesc + ")");
-						sb.append("<br/>");
-					}
-
-					// Check for MYKAD owner/director and break if found
-					if (per.getIdentificationTypeSsm() != null
-							&& per.getIdentificationType().equals(ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
-						hasMykadOwnerOrDirector = true;
-						break;
-					}
-				}
-
-				// Handle error based on application type
-				if (hasMykadOwnerOrDirector) {
-					if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())) {
-						throw new EpException(MessageConst.ERROR_775196); 
-					} else {
-						throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
-					}
-				}
-			}
-		}//#29582- end
 }

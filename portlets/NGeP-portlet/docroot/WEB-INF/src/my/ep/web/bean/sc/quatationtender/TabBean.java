@@ -65,6 +65,8 @@ public class TabBean implements Serializable {
 	private String icon;
 	
 	private String tooltip;
+	
+	private boolean disabled; // 25037
 
 	/**
 	 * Instantiates a new tab bean.
@@ -332,4 +334,13 @@ public class TabBean implements Serializable {
 		this.tooltip = tooltip;
 	}
 
+	// 25037 - start
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+	// 25037 - end
 }
