@@ -75,6 +75,12 @@ import org.primefaces.event.FileUploadEvent;
 //#28765 - Start
 //#28765 - End
 import org.primefaces.event.SelectEvent;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -1397,6 +1403,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 							MessageConst.INFO_721036, null, null);
 				}
 			}
+			// #28895_35501 Start - AUDIT TRAIL SM
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				getManagedBean().setForceReplace(true);
+				getManagedBean().setOldIdentification(getManagedBean().getReactivateBasic().getIdentificationNo());
+				getManagedBean().setNewIdentifiction(getManagedBean().getReactivateBasic().getNewIdentificationNo());
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), null);
+			}
+			// #28895_35501 End
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
 		}

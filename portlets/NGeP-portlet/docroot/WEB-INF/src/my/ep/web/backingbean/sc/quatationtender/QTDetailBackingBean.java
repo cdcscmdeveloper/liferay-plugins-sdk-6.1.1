@@ -166,7 +166,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-//#21695 Farid
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -248,8 +247,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
-import my.ep.web.managedbean.ct.circular.CircularManagedBean; //30866
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -263,6 +260,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
@@ -282,7 +280,6 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-//#21695 Farid
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.UserTasks;
@@ -292,7 +289,6 @@ import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.ApproverSettings;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.QTFieldMapper;
@@ -307,6 +303,10 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.util.Constants;
+//#21695 Farid
+//Fix - #30866
+//30866
+//#21695 Farid
 //#21695 Farid
 //#21695 Farid
 //#29732 Start
@@ -908,8 +908,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 		}
@@ -1293,12 +1292,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			// #29732 Start
 			//qtmaintenance from audit search ,ADD ISREADONLY
-			//add !isdeskofficer, DO suppose not to show alert message
 			if ((this.getManagedBean().getQt().getQtStatus().getStatusId()
-					.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && !isDeskOfficer() ||
-					this.getManagedBean().getQt().getQtStatus().getStatusId()
-							.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF)
-							|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 							.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) && !this.getManagedBean().isReadOnly()) {
 				if(isQTRoleMaintenanceValidation()){
 					this.getManagedBean().setCategoryDescriptionChange(true); // 29732
@@ -1321,6 +1315,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			// #29732 End
+
 			
 			// 25037 - start
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(),
@@ -4097,8 +4092,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String changedCatCodeList = checkCatCodeChange();
 			if (!changedCatCodeList.isEmpty()) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute(
-						"catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW);
 				return;
 			}
 // #29732 End - reOpen Fix
@@ -4401,7 +4395,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		List<ScQtApproval> scQtApprovals = this.getManagedBean().getQt().getScQtApprovals();
 		//#30477 Start Vinod
-		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
+		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.ASSIGN_REEVALUATE_COMMITTEE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod
 			boolean isCmtPendingRevision = false;
 			
@@ -4422,10 +4417,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				boolean valConditionOthers = !approval.getApprovalCategory().getParameterCode()
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
-						&& (CollectionUtils.isEmpty(approval.getApproverSettings()) && this.getManagedBean()
-								.isFirstViewPageCAUsers());
-
-				if (valCondition || valConditionOthers) {
+						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
+				
+				if ((valCondition && approval.getApprovalCategory().getParameterCode()
+						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
+						|| valConditionOthers) {
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174);
 					// #11299 End Vinod
@@ -7929,7 +7925,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.equals(QTStatusConst.SE_COMPLETED);
 			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
-				RequestContext.getCurrentInstance().execute("catCodeChangeAlert.show()");
+				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW); 
 				return;
 			}
 			//29732
@@ -12268,31 +12264,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
   	public Boolean isDisabledGroupPtj(){
   		return !isGroupPTJRuleSet();
   	}
-  	//#29472 - start
-  	public void reviseQtDocument() {
-  		
-		IQTDetailSO detailSO;
-		try {
-			ScQt scQt = this.getManagedBean().getQt();
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtdetail(this.getManagedBean().getQt());
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_REVISE);
-			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			detailSO.qtReviseDocument(reqDTO);
-			
-			if (scQt.getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
-				successMessage(MessageConst.INFO_700107, getMessageCommon("lbl.qt.maintenance.tender"), scQt.getQtNo(), Boolean.TRUE);
-			} else {
-				successMessage(MessageConst.INFO_700107, getMessageCommon("lbl.qt.maintenance.quotation"), scQt.getQtNo(), Boolean.TRUE);
-			}
-		} finally {
-			detailSO = null;
-		}
-	
-  	}
-  	//#29472 - end
   	
   	/**11104-start
 	 * Retrieve pm state by id.
@@ -13576,14 +13547,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
-	
+
 	//29732 start
     private boolean isQTRoleMaintenanceValidation(){
     	FacesScopes facesScopes = new FacesScopes();
-		return  facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_MEMBER.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_CHAIRPERSON.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
+		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
 	}
     //29732 end
 

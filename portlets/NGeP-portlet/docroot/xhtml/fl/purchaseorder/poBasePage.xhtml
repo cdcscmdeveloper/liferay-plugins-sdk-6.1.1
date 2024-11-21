@@ -72,9 +72,10 @@
 			enableAutoUpdate="#{flOrderBB.enableAutoUpdate()}"/>
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 					action="#{flOrderBB.backToPervious}"
 					rendered="#{flOrderBB.managedBean.taskId==null
+					or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView
 					or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" />
 				</td>
 				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>
@@ -160,10 +161,11 @@
 				</td>
 				</c:if>
 				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
+				<ui:remove>25790 - po and pr continuity</ui:remove>
 				<td colspan="4" style="text-align: right"><p:commandLink
 						rendered="#{!flOrderBB.managedBean.isHyperLinkPage()}"
 						value="#{lbl['lbl.td.doc.trackingDiary']}"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId)}"
+						action="#{pmTrackingDiaryBackingBean.redirectToPoContinuityTrackingDiary(flOrderBB.managedBean.fulfilmentOrder.docType,flOrderBB.managedBean.fulfilmentOrder.fulfilmentOrderId,flOrderBB.managedBean.flRequest.docNo)}"
 						immediate="true" />&#160;
 				</td>
 				</c:if>

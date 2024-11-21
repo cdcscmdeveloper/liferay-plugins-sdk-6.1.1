@@ -1899,6 +1899,7 @@ public class EvaluationBackingBean extends
 		EvaluationResDTO resDTO = null;
 		this.getManagedBean().setComplianceActiveIndex(0);
 		this.getManagedBean().setNonScoringActiveIndex(0);//#25138
+		this.getManagedBean().setAllSupplierRejectEpv(false);//#21692 note 481
 		try {
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2578,6 +2579,11 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
+			}
+			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			//#25138 - one item only - start
 			this.getManagedBean().setSingleItemCheckList(resDTO
@@ -9251,6 +9257,7 @@ public class EvaluationBackingBean extends
 		retrieveReportHeader();
 		IQTEvaluationSO evaluationSO;
 		EvaluationResDTO resDTO = null;
+		this.getManagedBean().setAllSupplierRejectEpv(false);//#21692 note 481
 		try {
 			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
@@ -11080,6 +11087,10 @@ private void retriveCommitteeRemarksList(){
 
 		SCEvaluationDataType evaluationDataType = getBpmTaskDetails(
 				SCEvaluationDataType.class, null);
+		// 25037 - start
+		String[] outcomes = this.getManagedBean().getOutComes();
+		this.getManagedBean().setOutComes(this.sortQtOutcomes(outcomes));
+		// 25037 - end
 		FacesScopes facesScopes = new FacesScopes();
 
 		// FacesScopes facesScopes = new FacesScopes();
@@ -13742,17 +13753,6 @@ private void retriveCommitteeRemarksList(){
 										new FacesScopes().getUserLocale())));
 
 			}
-			//#21692 note-418 issue 6 - Start
-			if (this.getManagedBean().isAllSupplierRejectEpv()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
-								MessageUtils.getMessage(
-										MessageConst.WARN_760530,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}
-			//#21692 note-418 issue 6 - End
 		}
 
 	}
@@ -13761,7 +13761,8 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {//6906
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906
 				this.getManagedBean().setCheckFinancialQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(

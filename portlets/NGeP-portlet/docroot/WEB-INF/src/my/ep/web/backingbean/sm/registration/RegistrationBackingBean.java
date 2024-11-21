@@ -128,6 +128,14 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 //#13320 - Rahim
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -1612,6 +1620,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//		FacesMessage.SEVERITY_INFO,
 				//		null,
 				//		MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
@@ -2314,6 +2329,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().setBusinessDivisionLs(new ArrayList<SelectItem>());
 				getManagedBean().setBusinessDistrictLs(new ArrayList<SelectItem>());
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+				populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+				getManagedBean().getSmSupp().setLocalAuthorityId(null);
 				//#34159 - END
 			}
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
@@ -2369,7 +2386,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
 			if(state != null){
 			if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-				
+				getManagedBean().setResidentialDistrictLs(new ArrayList<SelectItem>());//#34159
 				//#13320 - Rahim Added If Only and Else(content)
 				if(this.getManagedBean().getSmResAdd().getPmDivision()==null) {
 					getManagedBean().getSmResAdd().setPmDivision(new PmDivision());
@@ -2420,7 +2437,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
 			if(state !=null){
 				if(state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-					
+					getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());//#34159
 					//#13320 - Rahim Added If Only and Else(content)
 					if(this.getManagedBean().getSmPermenantAdd().getPmDivision()==null) {
 						getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
@@ -2474,6 +2491,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (typeAdd.equals("business")) {
 			if(reset){
 				getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
+				//#34159 - Start
+				populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+				getManagedBean().getSmSupp().setLocalAuthorityId(null);
+				//#34159 - End
+				
 			}else{ //start #30964
 				// start - #30483
 				PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd()
@@ -2528,6 +2550,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			} else {
 				this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 			}
+			populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+			getManagedBean().getSmSupp().setLocalAuthorityId(null);
 			//#34159 - END
 		}
 	}
@@ -3257,7 +3281,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//END CHANGES SSM
 				//START 17906
 				if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
-										
+					// #28895_35501 Start - AUDIT TRAIL SM
+					this.getManagedBean().setOldBanks(
+							CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
+					// #28895_35501 End
 					StringBuilder sb = new StringBuilder();
 					for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
 						if(bank.getAccountNo() != null){
@@ -5496,6 +5523,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 			getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
+			populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+			getManagedBean().getSmSupp().setLocalAuthorityId(null);
 			//#34159 - END
 		}
 		if((typeAdd.equals("residential"))){
