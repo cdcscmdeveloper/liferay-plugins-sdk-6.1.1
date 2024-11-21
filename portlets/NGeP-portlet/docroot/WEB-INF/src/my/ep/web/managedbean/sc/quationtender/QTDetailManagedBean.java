@@ -28,7 +28,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.VCtContract;//25791
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -1877,6 +1877,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isCheckUserCanRevise;
 
 	private boolean isSampleShowHide;//11104wip
+
 	// 25791-start
 	private List<ScQt> qtTrackingdiaryView;
 	private String qtAuditORMaintenanceView;
@@ -1889,7 +1890,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
 	private Map<Long, VCtContract> checkLoaContract;
 	// 25791-End
-	
+
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11917,7 +11918,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.nullEPVRemark = nullEPVRemark;
 	}
 	//#21692 - End
-	
+
 	// 25791-start
 	/**
 	 * @return the qtTrackingdiaryView
@@ -12070,5 +12071,3 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// 25791-End
 }
-
-// ***25201

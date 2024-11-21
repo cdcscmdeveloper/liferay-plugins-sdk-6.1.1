@@ -130,6 +130,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	// 25791 -start-
 	private boolean isBiddingUrl = Boolean.FALSE;
 	// 25791 -end-
+
 	public String getBackURL() {
 		return backURL;
 	}
@@ -1248,11 +1249,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.purchaseRequestMapList = purchaseRequestMapList;
 	}
 	// #25790 - end
-	
-	
-	//25791 -start-
+
+	// 25791 -start-
 	/**
-	 *
+	 * 
 	 * @return the isBiddingUrl
 	 */
 	public boolean isBiddingUrl() {
@@ -1260,11 +1260,12 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isBiddingUrl the isBiddingUrl to set
+	 * @param isBiddingUrl
+	 *            the isBiddingUrl to set
 	 */
 	public void setBiddingUrl(boolean isBiddingUrl) {
 		this.isBiddingUrl = isBiddingUrl;
 	}
-	//25791-end
+	// 25791-end
 
 }
