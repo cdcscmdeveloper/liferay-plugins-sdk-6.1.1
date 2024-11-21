@@ -186,6 +186,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
@@ -17821,7 +17822,7 @@ public class SmApplicationBackingBean extends
 	public String setRenewalTnc(){
 		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		
-		String word = SmApplicationUtil.changeNumberToWord(renewalPeriod);
+		String word = NumberWordUtil.changeNumberToWord(renewalPeriod);
 		
 		return ResourceBundleUtils.getMessage(
 				"lbl.sm.renewMof.descData", new String[] {word , String.valueOf(renewalPeriod)},
