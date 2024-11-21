@@ -8778,24 +8778,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	
 	// 29468 - Begin
 	/**
-	 * when Proc category changed this method will update the procurement Category in ScQt.
-	 *
+	 * when Proc category changed this method will update the procurement
+	 * Category in ScQt.
+	 * 
 	 * @param scLoa
 	 */
 	public void procCategoryChanged(ScLoa scLoa) {
 		IParameterSO parameterSO = null;
 		try {
 			Long parameterId = scLoa.getScQt().getPmProcurementCategory().getParameterId();
-			
-			if(parameterId!=null){
-				parameterSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+			if (parameterId != null) {
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(parameterId);
 				PmParameter procurementCategory = parameterSO.retrieveParameterById(reqDTO).getPmParameter();
 				scLoa.getScQt().setPmProcurementCategory(procurementCategory);
 			}
-			
+
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, scLoa.getLoaNo(),
@@ -11920,7 +11921,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 		checkZonalandUpdateforCreateTemplateSpec(tplSpecMaster, specMaster);
 
-		addNewQuestionsforCreateTemplateSpec(templateSpecBean, questionsListCreate, questionsListNew);
+		addNewQuestionsForCreateTemplateSpec(templateSpecBean, questionsListCreate, questionsListNew);
 
 		if (null != specMaster) {
 			specMaster.setTplSpecQuestions(questionsListNew);
@@ -11990,25 +11991,18 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 	}
 
-	private void addNewQuestionsforCreateTemplateSpec(TemplateSpecBean templateSpecBean,
+	private void addNewQuestionsForCreateTemplateSpec(TemplateSpecBean templateSpecBean,
 			List<TplSpecQuestion> questionsListCreate, List<TplSpecQuestion> questionsListNew) {
-		for (TplSpecQuestion question : questionsListCreate) {
-			List<TplSpecAnswer> specAnswers = null;
-			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question.getQuestionType())) {
-				TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
-				TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(templateSpecBean, question, null, null);
 
-				specAnswers = new ArrayList<>();
-				specAnswers.add(specAnswer);
-			}
-			question.setTplSpecAnswers(specAnswers);
-			question.setTplSpecZoneQties(new ArrayList<TplSpecZoneQty>());
+		// Process each question and add it to the new list
+		for (TplSpecQuestion question : questionsListCreate) {
+			TplSpecAnswer specAnswer = createSpecAnswerIfNeeded(templateSpecBean, question);
+			addAnswerAndZoneQtyToQuestion(question, specAnswer);
 			questionsListNew.add(question);
 		}
-		int questionOrder = 0;
-		for (TplSpecQuestion question : questionsListNew) {
-			question.setQuestionOrder(++questionOrder);
-		}
+
+		// Set the question order for all the new questions
+		setQuestionOrder(questionsListNew);
 	}
 
 	/**
@@ -12354,6 +12348,32 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				new FacesScopes().getUserLocale());
 	}
 
+	private TplSpecAnswer createSpecAnswerIfNeeded(TemplateSpecBean templateSpecBean, TplSpecQuestion question) {
+		// Create spec answer only for questions of ITEM type
+		if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question.getQuestionType())) {
+			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+			return specHelper.createNewSpecAnswer(templateSpecBean, question, null, null);
+		}
+		return null;
+	}
+
+	private void addAnswerAndZoneQtyToQuestion(TplSpecQuestion question, TplSpecAnswer specAnswer) {
+		// Set the answer list for the question
+		List<TplSpecAnswer> specAnswers = new ArrayList<>();
+		if (specAnswer != null) {
+			specAnswers.add(specAnswer);
+		}
+		question.setTplSpecAnswers(specAnswers);
+		question.setTplSpecZoneQties(new ArrayList<TplSpecZoneQty>());
+	}
+
+	private void setQuestionOrder(List<TplSpecQuestion> questionsListNew) {
+		int questionOrder = 0;
+		for (TplSpecQuestion question : questionsListNew) {
+			question.setQuestionOrder(++questionOrder);
+		}
+	}
+	
 	// #29468 Vinod End
 			//#26130 start 
 			
