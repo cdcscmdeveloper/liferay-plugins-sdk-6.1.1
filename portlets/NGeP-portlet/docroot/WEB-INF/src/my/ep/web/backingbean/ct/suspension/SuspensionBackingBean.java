@@ -193,6 +193,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 		ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+		
 		setSuspensionContractVer(ctReqDTO);
 		/*End*/
 	}
@@ -216,6 +217,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
+			
+			//#15851 start
+			if(getManagedBean().getTaskId()!= null){
+				ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());//#15851
+			}
+			//#15851 end
 
 			//CT_CHANGE_LOG
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
@@ -823,7 +830,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
 				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
 			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-				itemSpecList.add(itemSpecOffer.getItemSpec());
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
 			}
 		}
 		getManagedBean().setItemSpecification(itemSpecList);
@@ -841,13 +848,16 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
 		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
-		Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator();
 
-		while (iterator.hasNext()) {
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator(); iterator.hasNext();) {
 			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
-			if (itemSpecOffer.getNewOfferSpec() != null) {
-				itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-			}
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
 			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
 				iterator.remove();
 			}
@@ -855,7 +865,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 
 		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
 	}
-
 	// #28854 - End
 	
 	/**
@@ -999,14 +1008,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(this.getManagedBean().getContractVer().getDocType());
+			ctBB.getManagedBean().setStatusIdFromTaskList(getManagedBean().getContractVer().getStatus().getStatusId());
 			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
 			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){

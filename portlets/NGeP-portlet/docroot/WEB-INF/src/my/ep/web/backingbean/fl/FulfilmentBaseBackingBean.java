@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -897,4 +898,42 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return false;
 	}
 	//29728 - end
+	
+	// 36386 -Start
+	/**
+	 * Checks if is Government User Role
+	 * 
+	 * @return true, if user has Government User Role
+	 */
+	public boolean hasFlGovernmentUserRole() {
+		List<String> roles = Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.FL_APPROVER.value(),
+				RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(), RoleCode.PAY_OFFICER.value(),
+				RoleCode.BPK_APPROVER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(),
+				RoleCode.AUDITOR_INTERNAL.value(), RoleCode.SYS_ADMIN.value());
+
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Determines whether the PRCR link can be viewed based on user roles.
+	 * 
+	 * @return {@code true} if the user can view the PRCR link, {@code false}
+	 *         otherwise
+	 */
+	public boolean canViewPRCRLink() {
+
+		if (hasSupplierRole() || hasFactoringUserRole()) {
+			if (hasGovtSellerRole() && hasFlGovernmentUserRole()) {
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
+	// 36386 -End
 }

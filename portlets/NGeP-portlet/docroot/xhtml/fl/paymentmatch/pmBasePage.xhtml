@@ -83,9 +83,10 @@
 				
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
-						rendered="#{paymentMatchBackingBean.managedBean.taskId==null}"
-						action="#{paymentMatchBackingBean.backToPervious}" /></td>			
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+						rendered="#{paymentMatchBackingBean.managedBean.taskId==null
+						or paymentMatchBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}"
+						action="#{paymentMatchBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right;">
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
 						<ui:define name="outComeSection">
