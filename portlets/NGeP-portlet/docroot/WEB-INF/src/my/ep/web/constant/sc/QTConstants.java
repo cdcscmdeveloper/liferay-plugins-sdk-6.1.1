@@ -289,9 +289,10 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
 	//#15391 #11104 -end-
 
-	//#11104
+	//#11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	//#11104 -end-
 	
 	// 32453, #21695, #25138 -start-
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER = "FISA";
@@ -345,9 +346,11 @@ public interface QTConstants {
 	// #29007 End Vinod	
 
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
+	//#11104 -start-
 	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148
 	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
+	//#11104 -end-
 
 	public static final String SERVICE_OBJECT_CC = "cc";
 
@@ -358,5 +361,8 @@ public interface QTConstants {
 	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
 	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
 	//#10542 End Dayan
-
+	
+	// 36671 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671 - end
 }
