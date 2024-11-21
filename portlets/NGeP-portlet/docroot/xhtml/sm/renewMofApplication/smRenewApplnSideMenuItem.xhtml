@@ -88,7 +88,8 @@
 				tabNo="6" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
 		</p:menuitem>
 		<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+			<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 				
 				<p:menuitem>
 					<ac:smApplMenuItem
@@ -722,7 +723,8 @@
 				tabNo="5" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
 		</p:menuitem>
 		<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+			<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 				
 				<p:menuitem>
 					<ac:smApplMenuItem
@@ -1357,7 +1359,8 @@
 				tabNo="5" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
 		</p:menuitem>
 		<c:choose>
-			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+			<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+			<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 				<p:menuitem>
 					<ac:smApplMenuItem
 						disciplinary="#{backingBean.managedBean.editVO.disciplinary}"
